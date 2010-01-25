@@ -1,0 +1,71 @@
+
+2.0.02 / 2008.03.02
+-------------------
+  * run  config::update_graph  after select in  config::add_config_select
+
+
+2.0.03 / 2008.03.03
+-------------------
+  * move  handle-bar  selection into config-panel
+
+
+2.0.04 / 2008.03.03
+-------------------
+  * draw  handle-bar  on selection in config-panel
+
+
+2.0.05 / 2008.03.04
+-------------------
+  * change sequence in create bicycle-frame in drafting
+  * modify display of bicycle-frame-outlines
+  * lib_canvas::draw_circle : add    fill -option
+  * drafting:  add dimension at different wheel size
+  * tube_miter:  add array CURRENT_Miter in lib_geometry::compute_frame_geometry
+
+
+2.0.06 / 2008.03.05
+-------------------
+  * close bug on Wheel-Diameter (Rim-Diameter,Tyre-Height) on Load File
+  
+  
+
+
+2.1.00 / 2008.04.02
+-------------------
+  * replace lib_file with lib_control and move some procedures form lib_config
+  * add lib_preview for a complete preview mode
+  
+2.2.00
+-------------------
+  * berechnung des Oberrohres
+  * pivot oberrohr center_lug head
+  * neuer Punkt anstelle Pivot-Punkt für Bemassung
+  * Konfig - Überstandspunkt durch Steuerrohrhöhe ersetzen
+  * kontrolle aller Parameter aus Init_list auf veränderung und neuzeichnen nur dann, wenn 
+     Parameter verändert wurden
+  
+2.7.00
+-------------------
+  * zusätzl. Bemassung für Vorrichtung lt. Dave BOHM
+  
+2.8.00
+-------------------
+  * zusätzl. Gabel-Darstellung
+  * Auswahl Gabeltyp auch im Detail-Bereich
+    
+2.8.01
+-------------------
+  * geänderte Felgendarstellung
+  * geometry::draw_rims, geometry::draw_wheels
+    
+2.8.02
+-------------------
+  * berechne Position der hinteren Bremszange
+  * geometry::compute_frame_geometry, 
+    drafting::create_frame_dimensions, 
+	drafting::create_frame_centerlines
+
+2.8.03 / 2009.12.30
+-------------------
+  * zusätzliche Bemaßung hinteren Bremszange
+  * erweiterung der Maßbibliothek: perpendicular
