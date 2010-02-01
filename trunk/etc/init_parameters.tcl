@@ -77,7 +77,7 @@
 	             [list SeatTube_Angle          {SeatTube Angle}           ] \
 	             [list SeatTube_BB_Diameter    {SeatTube Diameter BB}     ] \
 	             [list SeatTube_Diameter       {SeatTube Diameter}        ] \
-	             [list SeatTube_Lug            {SeatTube Lug}             ] \
+	             [list SeatTube_Lug            {SeatTube Extension}       ] \
 	             [list Stem_Angle              {Stem Angle}               ] \
 	             [list Stem_Heigth             {Stem Heigth}              ] \
 	             [list Stem_Length             {Stem Length}              ] \
