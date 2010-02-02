@@ -843,13 +843,13 @@
                                      [expr 0.5*$control::CURRENT_Config(Wheel_Rear_Rim_Diameter) + 5]  \
                                      [list $tag rim_rearwheel] \
                                      $rim_colour \
-                                     0.1 \
+                                     $lw \
                                      {}
         lib_canvas::draw_circle  $w  $PRJ_DATA(CENTER_FrontWheel) \
                                      [expr 0.5*$control::CURRENT_Config(Wheel_Front_Rim_Diameter) + 5] \
                                      [list $tag rim_frontwheel] \
                                      $rim_colour \
-                                     0.1 \
+                                     $lw \
                                      {}
    }
 
