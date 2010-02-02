@@ -1,0 +1,91 @@
+
+     The rattleCAD package is copyrighted, owned
+     and distributed by 
+        Manfred ROSENBERGER.
+
+     If you want to use this software, let me know 
+     and you will get a legal copy of this software:
+
+              manfred.rosenberger@gmx.net
+
+        Many thanks to the 
+           Tcl/Tk - Community
+
+        and especially to :
+           Gerhard REITHOFER   [www.tech-edv.co.at]
+           Johann  OBERDORFER
+
+
+
+
+
+...  is based on Tcl/Tk:
+------------------------
+
+      License: http://www.tcl.tk/software/tcltk/license.html
+
+
+
+... uses following packages and modules:
+----------------------------------------
+
+
+       BWidget
+      ---------
+           see License of BWidgets
+
+       dimension
+      -----------
+           by Manfred ROSENBERGER
+
+       switchpage
+      ------------
+           by Manfred ROSENBERGER
+
+       AppUtil
+      ---------
+           ... based on Code from 
+                 Gerhard REITHOFER   [www.tech-edv.co.at]
+            
+       vectorfont
+      ------------
+           ... based on Code from 
+                 Gerhard REITHOFER   [www.tech-edv.co.at]  
+                 Johann  OBERDORFER
+            
+       rattle_cad
+      ------------
+   
+         rattle_cad.tcl
+       
+         lib_canvas.tcl
+           ... based on Code from 
+                  rotate_item: kvetter@DELETETHIS.alltel.net
+                                 http://wiki.tcl.tk/8595
+                  zoom:        masse-navette.glfs@wanadoo.fr
+                                 http://wiki.tcl.tk/4844
+                      
+         lib_config.tcl
+         
+         lib_control.tcl
+       
+         lib_cv_design.tcl
+       
+         lib_cv_detail.tcl
+       
+         lib_cv_drafting.tcl
+       
+         lib_cv_preview.tcl
+       
+         lib_geometry.tcl  /  lib_geometry_2x.tcl
+            
+         lib_mathematic.tcl
+                  vector algorythms: kvetter@DELETETHIS.alltel.net
+                                 http://wiki.tcl.tk/8447
+            
+         lib_tubemitter.tcl
+            
+         lib_version_info.tcl
+                  ... is reading this file
+
+
