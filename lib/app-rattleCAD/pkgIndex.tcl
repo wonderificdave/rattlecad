@@ -19,7 +19,6 @@ package ifneeded   rattleCAD  3.1 "\
         [list source  [file join $dir lib_frame_visualisation.tcl]]; \		
         [list source  [file join $dir lib_cv_custom_00.tcl]]; \		
         [list source  [file join $dir lib_version_info.tcl]]; \
-        [list source  [file join $dir lib_txt_report.tcl]]; \
    "
 
  # .. unused since 3.1.00

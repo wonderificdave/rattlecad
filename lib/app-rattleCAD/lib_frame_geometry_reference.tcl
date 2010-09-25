@@ -338,28 +338,28 @@
 		#  exchange project attributes
 	proc update_referenceResultDelta {domConfig} {
 
-					foreach	{xpath xpathPersonal} 		[list 	/root/Reference/Result/HandleBar_Distance 	/root/Personal/HandleBar_Distance	\
-																/root/Reference/Result/HandleBar_Height		/root/Personal/HandleBar_Height		\
-																/root/Reference/Result/BottomBracket/Depth	/root/Custom/BottomBracket/Depth	\
-																/root/Reference/Result/Fork/Rake			/root/Component/Fork/Rake			\
-																/root/Reference/Result/SeatTube_Angle 		/root/Personal/SeatTube_Angle		\
-																/root/Reference/Result/Stem/Angle			/root/Component/Stem/Angle			\
-																/root/Reference/Result/Stem/Length			/root/Component/Stem/Length			\
-																/root/Reference/Result/WheelPosition/Front	/root/Custom/WheelPosition/Front	\
-																/root/Reference/Result/WheelPosition/Rear	/root/Custom/WheelPosition/Rear   ] \
-							{
-									# puts "  $xpath $value"
-									set personal 		[$domConfig selectNodes $xpathPersonal/text()]
-									set personalValue 	[$personal asText]
+			foreach	{xpath xpathPersonal} 		[list 	/root/Reference/Result/HandleBar_Distance 	/root/Personal/HandleBar_Distance	\
+														/root/Reference/Result/HandleBar_Height		/root/Personal/HandleBar_Height		\
+														/root/Reference/Result/BottomBracket/Depth	/root/Custom/BottomBracket/Depth	\
+														/root/Reference/Result/Fork/Rake			/root/Component/Fork/Rake			\
+														/root/Reference/Result/SeatTube_Angle 		/root/Personal/SeatTube_Angle		\
+														/root/Reference/Result/Stem/Angle			/root/Component/Stem/Angle			\
+														/root/Reference/Result/Stem/Length			/root/Component/Stem/Length			\
+														/root/Reference/Result/WheelPosition/Front	/root/Custom/WheelPosition/Front	\
+														/root/Reference/Result/WheelPosition/Rear	/root/Custom/WheelPosition/Rear   ] \
+					{
+							# puts "  $xpath $value"
+							set personal 		[$domConfig selectNodes $xpathPersonal/text()]
+							set personalValue 	[$personal asText]
 
-									set reference		[$domConfig selectNodes $xpath/value/text()]
-									set referenceValue 	[$reference asText]
-									
-									set delta			[$domConfig selectNodes $xpath/delta/text()]
-									set deltaValue 		[expr $personalValue - $referenceValue]
-									
-									$delta nodeValue [format "%.2f" $deltaValue]
-							}						
+							set reference		[$domConfig selectNodes $xpath/value/text()]
+							set referenceValue 	[$reference asText]
+							
+							set delta			[$domConfig selectNodes $xpath/delta/text()]
+							set deltaValue 		[expr $personalValue - $referenceValue]
+							
+							$delta nodeValue [format "%.2f" $deltaValue]
+					}						
 
 	}
 	
@@ -368,23 +368,23 @@
 		#  exchange project attributes
 	proc export_parameter_2_geometry_custom {domConfig} {
 
-					foreach	{xpath xpathPersonal} 		[list 	/root/Reference/Result/HandleBar_Distance 	/root/Personal/HandleBar_Distance	\
-																/root/Reference/Result/HandleBar_Height		/root/Personal/HandleBar_Height		\
-																/root/Reference/Result/BottomBracket/Depth	/root/Custom/BottomBracket/Depth	\
-																/root/Reference/Result/Fork/Rake			/root/Component/Fork/Rake			\
-																/root/Reference/Result/SeatTube_Angle 		/root/Personal/SeatTube_Angle		\
-																/root/Reference/Result/Stem/Angle			/root/Component/Stem/Angle			\
-																/root/Reference/Result/Stem/Length			/root/Component/Stem/Length			\
-																/root/Reference/Result/WheelPosition/Front	/root/Custom/WheelPosition/Front	\
-																/root/Reference/Result/WheelPosition/Rear	/root/Custom/WheelPosition/Rear   ] \
-							{
-									# puts "  $xpath $value"
-									set reference		[$domConfig selectNodes $xpath/value/text()]
-									set referenceValue 	[$reference asText]
-									
-									set personal 		[$domConfig selectNodes $xpathPersonal/text()]
-									$personal nodeValue [format "%.2f" $referenceValue]
-							}						
+			foreach	{xpath xpathPersonal} 		[list 	/root/Reference/Result/HandleBar_Distance 	/root/Personal/HandleBar_Distance	\
+														/root/Reference/Result/HandleBar_Height		/root/Personal/HandleBar_Height		\
+														/root/Reference/Result/BottomBracket/Depth	/root/Custom/BottomBracket/Depth	\
+														/root/Reference/Result/Fork/Rake			/root/Component/Fork/Rake			\
+														/root/Reference/Result/SeatTube_Angle 		/root/Personal/SeatTube_Angle		\
+														/root/Reference/Result/Stem/Angle			/root/Component/Stem/Angle			\
+														/root/Reference/Result/Stem/Length			/root/Component/Stem/Length			\
+														/root/Reference/Result/WheelPosition/Front	/root/Custom/WheelPosition/Front	\
+														/root/Reference/Result/WheelPosition/Rear	/root/Custom/WheelPosition/Rear   ] \
+					{
+							# puts "  $xpath $value"
+							set reference		[$domConfig selectNodes $xpath/value/text()]
+							set referenceValue 	[$reference asText]
+							
+							set personal 		[$domConfig selectNodes $xpathPersonal/text()]
+							$personal nodeValue [format "%.2f" $referenceValue]
+					}						
 
 			
 			
