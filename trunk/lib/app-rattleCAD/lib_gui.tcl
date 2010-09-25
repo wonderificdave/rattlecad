@@ -36,7 +36,8 @@
 						{command "E&xit"                  {File_Exit}     		"Exit rattle_CAD"       {Ctrl x} -command { exit }                        	}
 				}
 				"Info"   all info 0 {
-						{command "Info"                   {}              		"Version-Information"      {}    -command { version_info::create  .v_info} 	}
+						{command "Info"              {}              		"Version-Information"      {}    -command { version_info::create  .v_info 0} }
+						{command "Help"              {}              		"Version-Information"      {}    -command { version_info::create  .v_info 1} }
 				}
 			}
 		
@@ -65,7 +66,7 @@
 		Button	$tb_frame.resize   -image  $iconArray(resize)	-helptext "resize"			-command { lib_gui::notebook_refitCanvas }  
 		
 		Button	$tb_frame.ref2pers -text   {Reference Geometry}	-helptext "export reference to personal geometry" \
-																							-command { frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Project ; lib_gui::fill_canvasCAD cv_Custom01}  
+																							-command { lib_gui::geometry_reference2personal }
 		  
 		Button	$tb_frame.exit     -image  $iconArray(exit)     -command { exit }
 		  
@@ -328,6 +329,24 @@
 				return
 		}
 		$varName clean_StageContent
+	}
+
+
+	#-------------------------------------------------------------------------
+       #  update Personal Geometry with parameters of Reference Geometry 
+       #
+	proc geometry_reference2personal {} {
+		
+			set answer	[tk_messageBox -icon question -type okcancel -title "Reference to Personal" -default cancel\
+										-message "Do you really wants to overwrite your \"Personal\" parameter \n with \"Reference\" settings" ]
+				#tk_messageBox -message "$answer"	
+				
+			switch $answer {
+				cancel	return				
+				ok		{	frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Project
+							lib_gui::fill_canvasCAD cv_Custom01 
+						}
+			}
 	}
 
 }

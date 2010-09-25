@@ -10,7 +10,7 @@
    #-------------------------------------------------------------------------
        #  create_config_design
        #
-   proc create { w } {
+   proc create { w {tab 0}} {
          
         ::Debug  p  
         
@@ -18,9 +18,10 @@
 
 
         if {[winfo exists $w]} {
-          wm deiconify  $w
-             Debug t "$w allready exists"  1
-          return
+			wm deiconify  $w
+			$w.nb	raise [ $w.nb page $tab ]
+			Debug t "$w allready exists"  1			 
+			return
         }
         
         set widget_font {-*-Courier-Medium-R-Normal--*-120-*-*-*-*-*-*}
@@ -46,6 +47,28 @@
              
              
         ;# =======================================================================
+          ;# -- version_help-------------
+          ;#
+        set version_help        [ $INFO_Notebook insert end help \
+                                           -text      "Help" ]
+             ;# -- text -----------------
+        pack [set sw_help       [ ScrolledWindow $version_help.sw] ] -fill both  -expand 1 
+
+        set help_text           [ text $sw_help.text \
+                                    -width       40 \
+                                    -height      10 \
+                                    -relief      sunken \
+                                    -wrap        none \
+                                    -background  white \
+                                    -font        $widget_font
+                               ]
+      
+             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
+        $sw_help setwidget $sw_help.text
+                                           
+             
+             
+        ;# =======================================================================
           ;# -- version_env -------------
           ;#
         set version_env        [ $INFO_Notebook insert end environment \
@@ -64,28 +87,6 @@
       
              ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
         $sw_env setwidget $sw_env.text
-                                           
-             
-             
-        ;# =======================================================================
-          ;# -- project_cfg -------------
-          ;#
-        set project_cfg        [ $INFO_Notebook insert end project \
-                                           -text      "Project" ]
-             ;# -- text -----------------
-        pack [set sw_prj       [ ScrolledWindow $project_cfg.sw] ] -fill both  -expand 1 
-
-        set prj_text           [ text $sw_prj.text \
-                                    -width       40 \
-                                    -height      10 \
-                                    -relief      sunken \
-                                    -wrap        none \
-                                    -background  white \
-                                    -font        $widget_font
-                               ]
-      
-             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
-        $sw_prj setwidget $sw_prj.text
                                            
              
              
@@ -135,11 +136,6 @@
         $env_text  insert end "     APPL_Env(USER_Dir):      $APPL_Env(USER_Dir)\n"
         $env_text  insert end "\n"
         $env_text  insert end "     APPL_Env(USER_Init):     $APPL_Env(USER_Init)\n"
-        $env_text  insert end "\n"
-        $env_text  insert end "\n\n"
-        $env_text  insert end "     APPL_Env(CONFIG_Window):    $APPL_Env(CONFIG_Window)\n"
-        $env_text  insert end "     APPL_Env(CONFIG_Notebook):  $APPL_Env(CONFIG_Notebook)\n"
-        $env_text  insert end "     APPL_Env(TUBEMITER_Window): $APPL_Env(TUBEMITER_Window)\n"
         $env_text  insert end "\n\n"
         $env_text  insert end "   Packages:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
@@ -177,63 +173,36 @@
         #  }
 		  
         $env_text  insert end "\n\n"
-
-
-
-        ;# =======================================================================
-          ;# -- insert into current Project ---------
-          ;#
-        $prj_text  insert end "\n\n"
-        $prj_text  insert end "  ====================================================\n"
-        $prj_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
-        $prj_text  insert end "  ====================================================\n"
-        $prj_text  insert end "\n\n"
-        $prj_text  insert end "    current Project\n"
-        $prj_text  insert end "  ----------------------------------------------------\n"
-        $prj_text  insert end "\n"
-        $prj_text  insert end "       $APPL_Config(PROJECT_Name)\n"
-        $prj_text  insert end "\n"
-        
-        
-        $prj_text  insert end "  ------- control::CURRENT_Config\n"
-        $prj_text  insert end "\n"
-        foreach id [lsort [array names control::CURRENT_Config]] \
-          {
-        $prj_text  insert end [format "          %-30s   %10s\n"  $id $control::CURRENT_Config($id)]
-          }
-        
-        
-        $prj_text  insert end "\n\n"        
-        $prj_text  insert end "  ------- geometry::CURRENT_Project\n"
-        $prj_text  insert end "\n"
-        foreach id [lsort [array names geometry::CURRENT_Project]] \
-          {
-        $prj_text  insert end [format "          %-30s   %s\n"    $id $geometry::CURRENT_Project($id)]
-          }
-
-        
-        $prj_text  insert end "\n\n"
-        $prj_text  insert end "  ------- geometry::CURRENT_Replace\n"
-        $prj_text  insert end "\n"
-        foreach id [lsort [array names geometry::CURRENT_Replace]] \
-          {
-        $prj_text  insert end [format "          %-30s   %10s\n"  $id $geometry::CURRENT_Replace($id)]
-          }
-        
-        
-        $prj_text  insert end "\n\n"
-
        
 
 
         ;# =======================================================================
+          ;# -- insert into version_help ---------
+          ;#
+        $help_text  insert end "\n\n"
+        $help_text  insert end "  ====================================================\n"
+        $help_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $help_text  insert end "  ====================================================\n"
+        $help_text  insert end ""
+        
+        set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] help.txt] r]
+        while {![eof $fd]} {
+	         set line [gets $fd]
+	         $help_text  insert end "    $line\n"
+        }
+        close $fd
+
+        $help_text  insert end "\n\n"
+        
+
+        ;# =======================================================================
           ;# -- insert into version_license ---------
           ;#
-        $lic_text  insert end "\n\n"
-        $lic_text  insert end "  ====================================================\n"
-        $lic_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
-        $lic_text  insert end "  ====================================================\n"
-        $lic_text  insert end ""
+        $lic_text   insert end "\n\n"
+        $lic_text   insert end "  ====================================================\n"
+        $lic_text   insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $lic_text   insert end "  ====================================================\n"
+        $lic_text   insert end ""
         
         set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] license.txt] r]
         while {![eof $fd]} {
@@ -242,16 +211,16 @@
         }
         close $fd
 
-        $lic_text  insert end "\n\n"
+        $lic_text   insert end "\n\n"
         
 
                                
-        $version_intro         configure  -borderwidth 2 
-        $version_env           configure  -borderwidth 2 
-        $project_cfg           configure  -borderwidth 2
-        $version_license       configure  -borderwidth 2 
+        $version_intro			configure  -borderwidth 2 
+        $version_help			configure  -borderwidth 2 
+        $version_env			configure  -borderwidth 2 
+        $version_license		configure  -borderwidth 2 
 
-        $INFO_Notebook         raise [ $INFO_Notebook page 0 ]
+        $INFO_Notebook			raise [ $INFO_Notebook page $tab ]
         
         return $INFO_Notebook
    }
