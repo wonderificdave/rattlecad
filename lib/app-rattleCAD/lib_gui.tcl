@@ -115,9 +115,9 @@
 		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom02  "Frame"   			A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom03  "Assembly"   		A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom04  "Dimensions"   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom05  "Drafting - Frame"	A3  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom05  "Drafting - Frame"	A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom06  "Drafting - Jig"		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom07  "Tube Mitter"		A3  1.0 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom07  "Tube Mitter"		A4  1.0 -bd 2  -bg white  -relief sunken
 		
 		$gui_NoteBook add [frame $gui_NoteBook.cfg_report] 	-text "Config-Report" 
 			# $gui_NoteBook add [frame $gui_NoteBook.txt_report] 	-text "Text-Report" 
