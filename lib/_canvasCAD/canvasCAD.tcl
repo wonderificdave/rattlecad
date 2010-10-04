@@ -15,7 +15,7 @@
 #
 #
 
-package provide canvasCAD 0.4
+package provide canvasCAD 0.6
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ package require tdom
 		# -------------------------------------------- 
 			# initial exported creation procedure
 			#   cv_width cv_height st_width st_height
-		proc newCanvas {name w cv_width cv_height st_width st_height unit scale args} {
+		proc newCanvas {name w cv_width cv_height stageFormat stageScale args} {
 
 				variable __packageRoot
 					
@@ -75,13 +75,17 @@ package require tdom
 					$node appendChild [$childNode cloneNode -deep]
 				}				
 
-
+					# -- get stage width/height
+				foreach {st_width st_height st_unit } 	[canvasCAD::getFormatSize $stageFormat] break
+						#puts "   -> $st_width $st_height $unit"
+									
 					# -- insert base values
 				set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 				setNodeAttribute  $canvasDOMNode  Stage  width	$st_width
 				setNodeAttribute  $canvasDOMNode  Stage  height	$st_height
-				setNodeAttribute  $canvasDOMNode  Stage  unit	$unit 
-				setNodeAttribute  $canvasDOMNode  Stage  scale	$scale 					
+				setNodeAttribute  $canvasDOMNode  Stage  unit	$st_unit 
+				setNodeAttribute  $canvasDOMNode  Stage  scale	$stageScale 					
+				setNodeAttribute  $canvasDOMNode  Stage  format	$stageFormat 					
 			
 			# ------- Create the object ----------------------------------
 				proc $name {method args} [format { canvasCAD::ObjectMethods %s $method $args } $name]
@@ -151,7 +155,12 @@ package require tdom
 				scaleToCenter {		set scale 			[lindex $argList 0]
 									return [ scaleToCenter 	$name $scale ] }
 					# ------------------------			
-				refitToCanvas {		return [ refitToCanvas 	$name ] }		
+				refitToCanvas {		return [ refitToCanvas 	$name ] }
+					# ------------------------			
+				centerContent {		set offSet		[lindex $argList 0]
+									set tagList		[lindex $argList 1]
+									return [ centerContent 	$name $offSet $tagList] 
+								}			
 					# ------------------------			
 				repositionToCanvasCenter { return [ repositionToCanvasCenter $name ] }
 					# ------------------------		
@@ -176,13 +185,23 @@ package require tdom
 				getNode { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									return [ getNode $canvasDOMNode [lindex $argList 0] ]
 								}
+					# ------------------------		
+				getFormatSize {		set formatKey 		[lindex $argList 0]
+									return [getFormatSize $formatKey]									
+								}
+				formatCanvas {		set format 			[lindex $argList 0]
+									set scale 			[lindex $argList 1]
+									return [ formatCanvas 	$name $format $scale ] 
+								}							
+					# ------------------------		
 				reportXML { 		eval "$method" $name $argList}
 				reportXMLRoot { 	eval "$method" }
 					# ------------------------			
 				readSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									switch [llength $argList] {
 										2 {	return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ] }
-										3 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
+										3 {	return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
+										4 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
 									}
 								}
 					# ------------------------			
@@ -357,6 +376,8 @@ package require tdom
 				error "canvasCAD::create -> Error:  could not get \$w" 
 			}
 			
+			# ------ search for: -tags ------
+			
 			# -------------------------------
 			switch -exact -- $type {
 				line -	
@@ -377,6 +398,11 @@ package require tdom
 									lappend args [lindex $new_args $x]
 									# tk_messageBox -message "createCircle {-radius} not found:  [lindex $args $x]"
 								}
+								if {[string equal [lindex $new_args $x] {-tags} ]} {
+									set tagList	[ flatten_nestedList [lindex $new_args $x+1] ]
+									lappend args [list $tagList ]
+									incr x
+								}								
 							}
 								# tk_messageBox -message "createCircle Radius $Radius \n   $args"
 							foreach {x y} $CoordList break
@@ -492,7 +518,13 @@ package require tdom
 								set pos_y [expr [lindex $CoordList 1]]								
 								vectorfont::setposition  $pos_x $pos_y
 							  set myItem 	[vectorfont::drawtext $w $myText]
-							}			
+							}
+				button {
+							button $w.button -text "Click button 3 to drag"
+							$w create window 50 35 \
+							-window .c.button -anchor w -tags {$w.button}
+							}
+
 				default		{}
 			}
 

@@ -24,6 +24,10 @@
 						#
 						# -- geometry - of existing Frame
 						#
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
+						#
 					set xy			[ frame_geometry_reference::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
 					$cv_Name 		clean_StageContent				
 						#
@@ -35,12 +39,18 @@
 						#
 					#createDimension								$cv_Name $xy	points_00		
 					#createDimension								$cv_Name $xy	points_02		
-					createDimension_Reference						$cv_Name $xy	geometry_fg	
-					puts " update: $cv_Name"
-				}
+					createDimension_Reference						$cv_Name $xy	geometry_fg
+						#
+					lib_gui::notebook_createButton					$cv_Name 		Reference2Custom
+						#
+					}
 			lib_gui::cv_Custom00 {
 						#
 						# -- personal - details
+						#
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
 					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
 					$cv_Name 		clean_StageContent					
@@ -55,11 +65,16 @@
 					createDimension								$cv_Name $xy	points_01								
 					createDimension								$cv_Name $xy	personal_fg								
 						#          update frame_geometry_reference delta to frame_geometry_custom
-					frame_geometry_reference::update_referenceResultDelta $::APPL_Project							
+					frame_geometry_reference::update_referenceResultDelta $::APPL_Project	
+						#
 				}
 			lib_gui::cv_Custom01 {
 						#
 						# -- geometry - details
+						#
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
 					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
 					$cv_Name 		clean_StageContent				
@@ -74,11 +89,16 @@
 					createDimension								$cv_Name $xy	points_02		
 					createDimension								$cv_Name $xy	geometry_fg								
 						#          update frame_geometry_reference delta to frame_geometry_custom
-					frame_geometry_reference::update_referenceResultDelta $::APPL_Project							
+					frame_geometry_reference::update_referenceResultDelta $::APPL_Project	
+						#
 				}
 			lib_gui::cv_Custom02 {
 						#
 						# -- frame - details
+						#
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
 					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame ]					
 					$cv_Name 		clean_StageContent	
@@ -117,6 +137,10 @@
 						#
 						# -- assembly
 						#
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
+						#
 					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
 					$cv_Name 		clean_StageContent				
 					frame_visualisation::createBaseline 	$cv_Name $xy	custom
@@ -134,11 +158,16 @@
 					frame_visualisation::createDecoration	$cv_Name $xy 	Stem				
 					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			$updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	RearDerailleur		$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand
+						#
 				}
 			lib_gui::cv_Custom04 {
 						#
 						# -- dimension summary
+						#
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
 					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
 					$cv_Name 		clean_StageContent
@@ -170,15 +199,17 @@
 					createDimension							$cv_Name $xy	summary_bg		
 						#						
 					frame_visualisation::createBaseline 	$cv_Name $xy	custom	black
+						#
 				}				
 			lib_gui::cv_Custom05 {
 						#
 						# -- drafting - frame
 						#
-					set stageScale	0.2
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
 					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
-					set xy			[ vectormath::addVector $xy {-20 170} ]
 						#
 					$cv_Name 		clean_StageContent	
 						#
@@ -195,18 +226,23 @@
 					createDimension								$cv_Name $xy	points_06	
 					createDimension								$cv_Name $xy 	frame_drafting
 						#
-					createDraftingFrame							$cv_Name		{A4}	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
+					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
+						#
+					$cv_Name 		centerContent				{-20  20}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__  }
+						#
+					lib_gui::notebook_createButton				$cv_Name 		changeFormatScale
 						#
 				}
 			lib_gui::cv_Custom06 {
 						#
 						# -- drafting - framejig
 						#
-					set stageScale	0.2
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
 					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
-					set xy			[ vectormath::addVector $xy {-20 170} ]
 						#
 					$cv_Name 		clean_StageContent	
 						#
@@ -223,15 +259,21 @@
 					createDimension								$cv_Name $xy	points_07	
 					createDimension								$cv_Name $xy 	frame_jig
 						#
-					createDraftingFrame							$cv_Name		{A4}	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
+					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
+						#
+					$cv_Name 		centerContent				{ 10  25}		{__Frame__  __Decoration__  __CenterLine__  __Dimension__}
+						#
+					lib_gui::notebook_createButton				$cv_Name 		changeFormatScale
 						#
 				}
 			lib_gui::cv_Custom07 {
 						#
 						# -- tubemitter
 						#
-					set stageScale	1
+						# set stageScale	1
+					set stageScale	[eval $cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
 						#
 					$cv_Name 		clean_StageContent	
 						#
@@ -247,6 +289,19 @@
 		}
 	}
 
+	
+	proc get_FormatFactor {stageFormat} {
+			puts "  get_FormatFactor: $stageFormat"
+			switch -regexp $stageFormat {
+				^A[0-9] {	set factorInt	[expr 1.0 * [string index $stageFormat end] ]
+							return			[expr pow(sqrt(2), $factorInt)]
+						}
+				default	{return 1.0}
+			}
+		}	
+
+
+	
 	proc createDimension {cv_Name BB_Position type {active {on}}} {
 			
 			## -- read from domConfig
@@ -316,54 +371,54 @@
 			# --- create dimension -------------------
 		switch $type {
 			points_00 {
-						$cv_Name create circle 	$BottomBracket	-radius 20  -outline darkred 	-width 1.0
-						$cv_Name create circle 	$HandleBar		-radius 10  -outline darkred 	-width 1.0
-						$cv_Name create circle 	$Saddle			-radius 10  -outline darkred 	-width 1.0
+						$cv_Name create circle 	$BottomBracket	-radius 20  -outline darkred 	-width 1.0			-tags __CenterLine__
+						$cv_Name create circle 	$HandleBar		-radius 10  -outline darkred 	-width 1.0			-tags __CenterLine__
+						$cv_Name create circle 	$Saddle			-radius 10  -outline darkred 	-width 1.0			-tags __CenterLine__
 						#$cv_Name create circle 	$help_91		-radius  6  -outline gray50 	-width 1.0
 						#$cv_Name create circle 	$LegClearance	-radius 10  -outline darkred 	-width 1.0			
 					}
 			points_01 {
-						$cv_Name create circle 	$LegClearance	-radius  5  -outline darkred 	-width 1.0			
+						$cv_Name create circle 	$LegClearance	-radius  5  -outline darkred 	-width 1.0			-tags __CenterLine__		
 					}
 			points_02 {
-						$cv_Name create circle 	$help_91		-radius  6  -outline gray50 	-width 1.0
+						$cv_Name create circle 	$help_91		-radius  6  -outline gray50 	-width 1.0			-tags __CenterLine__
 					}
 			points_03 {
-						$cv_Name create circle 	$BaseCenter		-radius 10  -outline gray50 	-width 1.0			
+						$cv_Name create circle 	$BaseCenter		-radius 10  -outline gray50 	-width 1.0			-tags __CenterLine__	
 					}
 			points_04 {
 						$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $Steerer_Stem $Steerer_Ground ] \
-																			-fill gray50 		-width 0.25			
+																			-fill gray50 		-width 0.25			-tags __CenterLine__	
 						$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $Saddle $BottomBracket ] \
-																			-fill gray50 		-width 0.25			
-						$cv_Name create circle 	$HeadTube_Stem	-radius  5  -outline blue 		-width 1.0			
-						$cv_Name create circle 	$HandleBar		-radius  5  -outline darkblue	-width 1.0			
-						$cv_Name create circle 	$Saddle			-radius  5  -outline gray50		-width 1.0						
+																			-fill gray50 		-width 0.25			-tags __CenterLine__		
+						$cv_Name create circle 	$HeadTube_Stem	-radius  5  -outline blue 		-width 1.0			-tags __CenterLine__		
+						$cv_Name create circle 	$HandleBar		-radius  5  -outline darkblue	-width 1.0			-tags __CenterLine__		
+						$cv_Name create circle 	$Saddle			-radius  5  -outline gray50		-width 1.0			-tags __CenterLine__					
 					}
 			points_05 {
 						$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $Saddle $SeatTube_TopTube ] \
-																			-fill gray50 		-width 0.25			
+																			-fill gray50 		-width 0.25			-tags __CenterLine__		
 					}
 			points_06 {
-						$cv_Name create circle 	$RearBrakeShoe		-radius  5  -outline gray50		-width 0.35
-						$cv_Name create circle 	$RearBrakeMount		-radius  5  -outline gray50		-width 0.35	
+						$cv_Name create circle 	$RearBrakeShoe		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__
+						$cv_Name create circle 	$RearBrakeMount		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__	
 						$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $RearBrakeShoe $RearBrakeHelp $RearBrakeMount] \
-																			-fill gray50 		-width 0.25			
+																			-fill gray50 		-width 0.25			-tags __CenterLine__			
 
-						$cv_Name create circle 	$FrontBrakeShoe		-radius  5  -outline gray50		-width 0.35	
-						$cv_Name create circle 	$FrontBrakeMount	-radius  5  -outline gray50		-width 0.35	
+						$cv_Name create circle 	$FrontBrakeShoe		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__
+						$cv_Name create circle 	$FrontBrakeMount	-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__	
 						$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $FrontBrakeShoe $FrontBrakeHelp $FrontBrakeMount] \
-																			-fill gray50 		-width 0.25																				
+																			-fill gray50 		-width 0.25			-tags __CenterLine__																			
 					}
 			points_07 {
 							set help_fk			[ vectormath::intersectPoint   	$Steerer_Fork 	$Steerer_Stem   $FrontWheel $RearWheel ]
 					
-						$cv_Name create circle 	$FrameJig_HeadTube	-radius  5  -outline gray50		-width 0.35
-						$cv_Name create circle 	$FrameJig_SeatTube	-radius  7  -outline gray50		-width 0.35		
+						$cv_Name create circle 	$FrameJig_HeadTube	-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__
+						$cv_Name create circle 	$FrameJig_SeatTube	-radius  7  -outline gray50		-width 0.35		-tags __CenterLine__	
 						$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $FrameJig_HeadTube $RearWheel] \
-																			-fill gray50 		-width 0.25			
+																			-fill gray50 		-width 0.25			-tags __CenterLine__		
 						$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $RearWheel $help_fk] \
-																			-fill gray50 		-width 0.25			
+																			-fill gray50 		-width 0.25			-tags __CenterLine__		
 					}
 				# -----------------------
 			personal_fg {
@@ -867,6 +922,7 @@
 	
 	}
 
+	
 	proc createDimensionType {cv_Name BB_Position type {updateCommand {}}} {
 			
 			## -- read from domConfig
@@ -1101,6 +1157,7 @@
 		
 	}
 
+	
 	proc createCenterline {cv_Name BB_Position {extend_Saddle {}}} {
 			
 			## -- read from domConfig
@@ -1111,39 +1168,39 @@
 
 			# --- get defining Point coords ----------
 		set BottomBracket		$BB_Position	
-		set RearWheel			[ frame_geometry_custom::point_position  RearWheel					$BB_Position ]
+		set RearWheel			[ frame_geometry_custom::point_position  RearWheel				$BB_Position ]
 		set FrontWheel			[ frame_geometry_custom::point_position  FrontWheel				$BB_Position ]
 		set Saddle				[ frame_geometry_custom::point_position  Saddle					$BB_Position ]
-		set SeatStay_SeatTube	[ frame_geometry_custom::tube_values     SeatStay SeatTube			$BB_Position ]
-		set SeatTube_TopTube	[ frame_geometry_custom::tube_values  	  SeatTube TopTube			$BB_Position ]	
+		set SeatStay_SeatTube	[ frame_geometry_custom::tube_values     SeatStay SeatTube		$BB_Position ]
+		set SeatTube_TopTube	[ frame_geometry_custom::tube_values  	 SeatTube TopTube		$BB_Position ]	
 		set SeatStay_RearWheel	[ frame_geometry_custom::tube_values     SeatStay RearWheel		$BB_Position ]
-		set ChainStay_RearWheel	[ frame_geometry_custom::tube_values     ChainStay RearWheel		$BB_Position ]
-		set TopTube_SeatTube	[ frame_geometry_custom::tube_values     TopTube SeatTube			$BB_Position ]
-		set TopTube_Steerer		[ frame_geometry_custom::tube_values  	  TopTube HeadTube			$BB_Position ]
-		set Steerer_Stem		[ frame_geometry_custom::point_position  Steerer_Stem				$BB_Position ]
-		set Steerer_Fork		[ frame_geometry_custom::point_position  Steerer_Fork				$BB_Position ]
-		set DownTube_Steerer	[ frame_geometry_custom::tube_values  	  DownTube HeadTube 		$BB_Position ]
-		set DownTube_BB			[ frame_geometry_custom::tube_values  	  DownTube BottomBracket 	$BB_Position ]
-		set HandleBar			[ frame_geometry_custom::point_position  HandleBar 				$BB_Position ]
-		set LegClearance		[ frame_geometry_custom::point_position  LegClearance 				$BB_Position ]
-		set BaseCenter			[ frame_geometry_custom::point_position  BB_Ground					$BB_Position ]	
+		set ChainStay_RearWheel	[ frame_geometry_custom::tube_values     ChainStay RearWheel	$BB_Position ]
+		set TopTube_SeatTube	[ frame_geometry_custom::tube_values     TopTube SeatTube		$BB_Position ]
+		set TopTube_Steerer		[ frame_geometry_custom::tube_values  	 TopTube HeadTube		$BB_Position ]
+		set Steerer_Stem		[ frame_geometry_custom::point_position  Steerer_Stem			$BB_Position ]
+		set Steerer_Fork		[ frame_geometry_custom::point_position  Steerer_Fork			$BB_Position ]
+		set DownTube_Steerer	[ frame_geometry_custom::tube_values  	 DownTube HeadTube 		$BB_Position ]
+		set DownTube_BB			[ frame_geometry_custom::tube_values  	 DownTube BottomBracket $BB_Position ]
+		set HandleBar			[ frame_geometry_custom::point_position	 HandleBar 				$BB_Position ]
+		set LegClearance		[ frame_geometry_custom::point_position  LegClearance 			$BB_Position ]
+		set BaseCenter			[ frame_geometry_custom::point_position  BB_Ground				$BB_Position ]	
 		set Steerer_Ground		[ frame_geometry_custom::point_position  Steerer_Ground			$BB_Position ]
-		set ChainSt_SeatSt_IS	[ frame_geometry_custom::point_position  ChainSt_SeatSt_IS	$BB_Position ]	
+		set ChainSt_SeatSt_IS	[ frame_geometry_custom::point_position  ChainSt_SeatSt_IS		$BB_Position ]	
 		
 		set help_01				[ vectormath::intersectPerp		  $Steerer_Stem $Steerer_Fork $FrontWheel ] 
 
 		
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $Steerer_Stem   	$HandleBar 			] -fill gray60 
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $Steerer_Stem   	$help_01 			] -fill gray60 
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $FrontWheel		   	$help_01 			] -fill gray60 
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $DownTube_BB  		$DownTube_Steerer 	] -fill gray60 
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $TopTube_SeatTube	$TopTube_Steerer 	] -fill gray60 
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $SeatStay_SeatTube	$ChainSt_SeatSt_IS  ] -fill gray60 
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $ChainSt_SeatSt_IS	$BottomBracket		] -fill gray60
+		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $Steerer_Stem   	$HandleBar 			] -fill gray60 -tags __CenterLine__
+		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $Steerer_Stem   	$help_01 			] -fill gray60 -tags __CenterLine__ 
+		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $FrontWheel		   	$help_01 			] -fill gray60 -tags __CenterLine__ 
+		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $DownTube_BB  		$DownTube_Steerer 	] -fill gray60 -tags __CenterLine__ 
+		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $TopTube_SeatTube	$TopTube_Steerer 	] -fill gray60 -tags __CenterLine__ 
+		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $SeatStay_SeatTube	$ChainSt_SeatSt_IS  ] -fill gray60 -tags __CenterLine__ 
+		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $ChainSt_SeatSt_IS	$BottomBracket		] -fill gray60 -tags __CenterLine__
 		if {$extend_Saddle == {}} {
-			$cv_Name create centerline [ canvasCAD::flatten_nestedList  $BottomBracket	$SeatTube_TopTube	] -fill gray60 
+			$cv_Name create centerline [ canvasCAD::flatten_nestedList  $BottomBracket	$SeatTube_TopTube	] -fill gray60 -tags __CenterLine__ 
 		} else {
-			$cv_Name create centerline [ canvasCAD::flatten_nestedList  $BottomBracket	$Saddle				] -fill gray60 
+			$cv_Name create centerline [ canvasCAD::flatten_nestedList  $BottomBracket	$Saddle				] -fill gray60 -tags __CenterLine__ 
 		}
 		
 			# puts "\n =================\n"
@@ -1152,6 +1209,7 @@
 						
 	}
 
+	
 	proc createDraftingFrame {cv_Name DIN_Format scale projectFile date} {
 			
 			## -- read from domConfig
@@ -1161,7 +1219,13 @@
 		set stageWidth		[ $cv_Name	getNodeAttr  Stage  width  ]
 		set stageHeight		[ $cv_Name	getNodeAttr  Stage  height ]
 		set stageScale 		[ $cv_Name  getNodeAttr  Stage	scale  ]
-		set scaleFactor		[ expr round([ expr 1 / $stageScale ]) ]
+		
+		set scaleFactor		[ expr 1 / $stageScale ]
+			if {[expr round($scaleFactor)] == $scaleFactor} {
+				set formatScaleFactor		[ expr round($scaleFactor) ]
+			} else {
+				set formatScaleFactor		[ format "%.1f" $scaleFactor ]
+			}
 
 		proc scale_toStage	{ptList factor} {
 			return [ vectormath::scalePointList {0 0} $ptList $factor ]
@@ -1206,7 +1270,7 @@
 		$cv_Name create draftLine $line_Coords 		-fill black -width 0.7		;# title block - second left column separator
 		
 			
-			# --- create Text: DIN Format
+			# --- create Text: 
 		set textSize			5
 		set textHeight			[expr $textSize * $scaleFactor ]
 		
@@ -1222,7 +1286,7 @@
 
 			# --- create Text: Scale
 		set textPos				[scale_toStage [list [expr $df_Border + $tb_BottomLeft +   5 ] [ expr $df_Border +  3.0 ] ]	$scaleFactor]
-		set textText			"1:$scaleFactor"
+		set textText			"1:$formatScaleFactor"
 		$cv_Name create draftText $textPos  -text $textText -size $textSize
 		
 			# --- create Text: Project-File
@@ -1478,7 +1542,7 @@
 				# -----------------------
 		}
 	}	
-	
-	
+
+
 	
 }

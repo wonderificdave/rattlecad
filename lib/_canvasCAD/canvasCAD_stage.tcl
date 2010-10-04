@@ -9,9 +9,7 @@
 		#
 	proc canvasCAD::clean_StageContent { w } {
 			catch [ $w delete {__Content__} ]			
-	}
-			
-		
+	}	
 	#-------------------------------------------------------------------------
 		#  a copy from wiki.tcl.tk/8595
 		#
@@ -190,6 +188,126 @@
 				
 			return $cvScale
 	
+	}
+	
+
+	#-------------------------------------------------------------------------
+		#  center Content
+		#
+	proc canvasCAD::centerContent  {cv_ObjectName v_offSet tagList} {
+			set canvasDOMNode	[ getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_ObjectName] ]							 
+			set w				[ getNodeAttribute	$canvasDOMNode	Canvas	path ]			
+
+				# -- check offset
+				#
+			set offSet	[list [lindex $v_offSet 0] [expr -1 * [lindex $v_offSet 1] ] ]
+				# -- centerStage
+				#
+			set coords			[ $w coords {__Stage__} ] 
+			foreach {x1 y1 x2 y2}  $coords break
+			set centerStage		[ list [expr $x1 + 0.5 * ($x2 - $x1)] [expr $y1 + 0.5 * ($y2 - $y1)] ]
+			
+				# -- centerContent
+				#
+			set bb_x1 99999; set bb_x2 -99999; set bb_y1 99999; set bb_y2 -99999
+			set tagList_ {__Dimension__ __Frame__ __CenterLine__}
+			set tagList_ {}
+			foreach tagID $tagList_ {
+					set contentIDs	[$w find withtag $tagID]
+									# puts "  contentIDs  -> $contentIDs"
+					foreach id $contentIDs {
+							foreach	{x1 y1 x2 y2} [$w coords $id] {
+									# puts "    ... $id   [$w gettags $id]"
+									# puts "              $x1 $y1 $x2 $y2"					
+								if {$x1 < $bb_x1} {set bb_x1 $x1}
+								if {$x2 > $bb_x2} {set bb_x2 $x2}
+								if {$y1 < $bb_y1} {set bb_y1 $y1}
+								if {$y2 > $bb_y2} {set bb_y2 $y2}
+							}
+					}
+				#puts  " --> bbox   $bb_x1 / $bb_y1 / $bb_x2 / $bb_y2 "
+			}
+				#puts  " --> bbox   $bb_x1 / $bb_y1 / $bb_x2 / $bb_y2 "
+				
+			foreach tagID $tagList {
+					set coords [ $w bbox $tagID ]
+					foreach	{x1 y1 x2 y2} $coords {
+							# puts "    ... $id   [$w gettags $id]"
+							# puts "              $x1 $y1 $x2 $y2"					
+						if {$x1 < $bb_x1} {set bb_x1 $x1}
+						if {$x2 > $bb_x2} {set bb_x2 $x2}
+						if {$y1 < $bb_y1} {set bb_y1 $y1}
+						if {$y2 > $bb_y2} {set bb_y2 $y2}
+					}
+				#puts  " --> bbox  $tagID:    $bb_x1 / $bb_y1 / $bb_x2 / $bb_y2 "
+			}
+				#puts  " --> bbox   $bb_x1 / $bb_y1 / $bb_x2 / $bb_y2 "
+				
+			set centerContent	[ list [expr $bb_x1 + 0.5 * ($bb_x2 - $bb_x1)] [expr $bb_y1 + 0.5 * ($bb_y2 - $bb_y1)] ]
+				
+				# -- move Vector
+				#
+			set xy				[ vectormath::subVector $centerStage $centerContent ]
+
+			foreach tagID $tagList {
+					$w move $tagID [lindex $xy 0] 		[lindex $xy 1]
+					$w move $tagID [lindex $offSet 0] 	[lindex $offSet 1]
+			}
+			
+			foreach tagID __Frame__ {
+					set contentIDs	[$w find withtag $tagID]
+									# puts "  contentIDs  -> $contentIDs"
+					foreach id $contentIDs {
+							#$w itemconfigure $id -coulor green
+					}
+			}
+			#$w move {__Dimension__} 	[lindex $xy 0] [lindex $xy 1] 			
+			#$w move {__Frame__} 		[lindex $xy 0] [lindex $xy 1]
+			#$w move {__CenterLine__} 	[lindex $xy 0] [lindex $xy 1]
+	 			
+	}
+	#-------------------------------------------------------------------------
+		#  format Canvas DIN_Format, Stage Scale
+		#
+	proc canvasCAD::formatCanvas  {cv_ObjectName st_format st_Scale} {
+			set canvasDOMNode	[ getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_ObjectName] ]							 
+			set w				[ getNodeAttribute	$canvasDOMNode	Canvas	path ]			
+			#set wScale			[ getNodeAttribute	$canvasDOMNode	Canvas	scale ]			
+			#set Unit			[ getNodeAttribute	$canvasDOMNode	Stage	unit ]
+
+
+			foreach {stageWidth stageHeight stageUnit} 	[getFormatSize $st_format] break
+
+
+
+			puts "   $canvasDOMNode -> [ getNodeAttribute	$canvasDOMNode	Stage  width   ] / [ getNodeAttribute	$canvasDOMNode	Stage  height   ]"
+			set oldWidth	[ getNodeAttribute	$canvasDOMNode		Stage  width   ]
+			set oldHeight	[ getNodeAttribute	$canvasDOMNode		Stage  height  ]
+						
+			setNodeAttribute		$canvasDOMNode		Stage  width   		$stageWidth
+			setNodeAttribute		$canvasDOMNode		Stage  height  		$stageHeight
+			setNodeAttribute		$canvasDOMNode		Stage  format  		$st_format
+			setNodeAttribute		$canvasDOMNode		Stage  scale   		$st_Scale
+						
+			set fontSize	[getNodeAttributeRoot /root/_package_/DIN_Format/$st_format f2]
+			setNodeAttribute		$canvasDOMNode		Style  linewidth	[expr 0.1* $fontSize]	
+			setNodeAttribute		$canvasDOMNode		Style  fontsize		$fontSize
+						
+			puts "   $canvasDOMNode -> [ getNodeAttribute	$canvasDOMNode	Stage  width   ] / [ getNodeAttribute	$canvasDOMNode	Stage  height   ]"
+						
+			set coords	[ $w coords {__StageShadow__} ] 
+			set coords	[ $w coords {__Stage__} ] 
+			puts "\n   -> $coords\n"
+			foreach {x1 y1 x2 y2}  $coords break
+			set width 	[expr $x2 - $x1]
+			set formatScale [expr 1.0 * $stageWidth / $oldWidth]
+			puts "       ->   $stageWidth / $oldWidth  => $formatScale"
+		
+			$w 	scale  {__Stage__}  		$x1 $y1 $formatScale $formatScale
+			$w 	scale  {__StageShadow__}  	$x1 $y1 $formatScale $formatScale
+
+			return $canvasDOMNode
+
 	}
 		
 
