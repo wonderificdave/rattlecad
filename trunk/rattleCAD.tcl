@@ -25,8 +25,8 @@ exec wish "$0" "$@"
 	
 	array set APPL_Env { 
 						RELEASE_Version    {3.1}  
-						RELEASE_Revision   {04}  
-						RELEASE_Date       {25. Sep. 2010}  
+						RELEASE_Revision   {06}  
+						RELEASE_Date       {28. Sep. 2010}  
 						BASE_Dir           {}
 						ROOT_Dir           {}
 						CONFIG_Dir         {}
@@ -78,15 +78,14 @@ exec wish "$0" "$@"
 
 
 	lappend auto_path           [file join $APPL_Env(BASE_Dir) lib]
-  
-	package require   Tk
-	package require   BWidget 
+	
+	package require   Tk		8.5
+	package require   BWidget 	    
+	package require   rattleCAD 3.1 
+	package require   AppUtil	0.8
+	package require   canvasCAD	0.6
     
-	package require   rattleCAD  
-	package require   AppUtil
-	package require   canvasCAD
-    
-		puts "  $APPL_Env(VECTOR_Font)  "
+		puts "  -> $APPL_Env(VECTOR_Font)  "
 
  
  

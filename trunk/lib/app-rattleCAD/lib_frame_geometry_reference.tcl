@@ -489,16 +489,31 @@
 			variable _updateValue
 			
 			# --- local procedures ---
+				proc change_ValueEdit {cv_Name updateCommand textVar xpath cvEntr direction} {
+						#
+						# --- update value of spinbox ---
+							if {$direction eq "up"} {\
+								set ::$textVar [expr {[set ::$textVar]+1.0}]\
+							} else {\
+								set ::$textVar [expr {[set ::$textVar]-1.0}]\
+							}
+				}
 				proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText textVar updateCommand xpath} {					
 						#
 						# --- create cvLabel, cvEntry ---
 							set	cvLabel [label  $cvContentFrame.label_${index} -text "${labelText} : "]
-							set cvEntry [entry  $cvContentFrame.value_${index} -textvariable $textVar  -justify right  -relief sunken -bd 1  -width 10]
+								# set cvEntry [entry  $cvContentFrame.value_${index} -textvariable $textVar  -justify right  -relief sunken -bd 1  -width 10]
+							set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable $textVar -justify right -relief sunken -width 10 -bd 1]
+							$cvEntry configure -command \
+								"[namespace current]::change_ValueEdit $cv_Name $updateCommand $textVar $xpath $cvEntry %d"
+							set	cvUpdate 	[button $cvContentFrame.update_${index} -image $lib_gui::iconArray(confirm)]
+							$cvUpdate configure -command \
+								"[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry"
 							if {$index == {oneLine}} {
 								set	cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
-								grid	$cvLabel $cvEntry $cvClose  -sticky news
+								grid	$cvLabel $cvEntry $cvUpdate $cvClose -sticky news
 							} else {	
-								grid	$cvLabel $cvEntry -sticky news
+								grid	$cvLabel $cvEntry $cvUpdate -sticky news
 							}
 							grid configure $cvLabel  -padx 3 -sticky nws
 							grid configure $cvEntry  -padx 2

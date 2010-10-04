@@ -7,7 +7,7 @@
 	#-------------------------------------------------------------------------
 		#  read SVG from File
 		#
-	proc canvasCAD::readSVG {canvasDOMNode file {position {0 0}} {angle {0}} } {
+	proc canvasCAD::readSVG {canvasDOMNode file {position {0 0}} {angle {0}} {tagList {}} } {
 		
 			set fp [open $file]
 					
@@ -48,8 +48,8 @@
 					
 					case [$node nodeName] {
 							rect {
-									set x [expr  [$node getAttribute x] - $svgPosition(x) + $pos_x]
-									set y [expr -[$node getAttribute y] + $svgPosition(y) + $pos_y]
+									set x [expr  [$node getAttribute x] - $svgPosition(x) ]
+									set y [expr -[$node getAttribute y] + $svgPosition(y) ]
 									set width   [$node getAttribute  width ]
 									set height  [$node getAttribute  height]
 									set x2 [expr $x + $width ]
@@ -109,12 +109,6 @@
 								}
 							default {}
 					}
-						#
-						# -- rotate content if required
-						#
-					if {$angle != 0} { 
-						# set objectValues [vectormath::rotatePointList {0 0} $objectValues $angle] 
-					}
 					
 						#
 						# -- move the content to its position
@@ -129,11 +123,11 @@
 						# -- create object
 						#
 					case [$node nodeName] {
-								rect 		{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectValues -outline black -fill white]}
-								polygon 	{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectValues -outline black -fill white]}
-								polyline 	{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectValues -fill black]}
-								line 		{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectValues -fill black]}
-								circle 		{ $w addtag $svgListName withtag [create oval 		$canvasDOMNode $pos_objectValues -outline black -fill white]}
+								rect 		{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectValues -outline black -fill white  -tags $tagList]}
+								polygon 	{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectValues -outline black -fill white  -tags $tagList]}
+								polyline 	{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectValues -fill black  -tags $tagList]}
+								line 		{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectValues -fill black  -tags $tagList]}
+								circle 		{ $w addtag $svgListName withtag [create oval 		$canvasDOMNode $pos_objectValues -outline black -fill white -tags $tagList]}
 								default 	{}
 					}
 			}
