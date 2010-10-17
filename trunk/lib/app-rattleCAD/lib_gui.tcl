@@ -15,10 +15,13 @@
 	variable 	canvasUpdate
 	array	set canvasUpdate {}
 	
-	variable	gui_NoteBook
+	variable	noteBook_top
 	
 	variable	stageFormat
 	variable	stageScale
+
+	variable 	external_canvasCAD	
+	array	set external_canvasCAD {}
 
 
 							
@@ -99,41 +102,51 @@
 	proc create_Notebook {frame} {
 		variable canvasGeometry
 		variable canvasUpdate
-		variable gui_NoteBook
+		variable noteBook_top
 		
 			# --- 	initialize canvasUpdate
 		set canvasUpdate(recompute)	0
 		
 			# --- 	create ttk::notebook
-		set gui_NoteBook 	[ ttk::notebook $frame.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
-			pack $gui_NoteBook -expand yes  -fill both  
+		set noteBook_top 	[ ttk::notebook $frame.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]				
+			pack $noteBook_top -expand yes  -fill both  
 		
 			# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom99  "Reference"   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom00  "Personal "   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom01  "Details"			A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom02  "Frame"   			A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom03  "Assembly"   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom04  "Dimensions"   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom05  "Drafting - Frame"	A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom06  "Drafting - Jig"		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $gui_NoteBook  cv_Custom07  "Tube Mitter"		A4  1.0 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom99  "Reference"   		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "Personal "   		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "Details"			A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "Frame"   			A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "Assembly"   		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "Dimensions"   		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "Drafting - Frame"	A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "Drafting - Jig"		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom07  "Tube Mitter"		A4  1.0 -bd 2  -bg white  -relief sunken
 		
-		$gui_NoteBook add [frame $gui_NoteBook.cfg_report] 	-text "Config-Report" 
-			# $gui_NoteBook add [frame $gui_NoteBook.txt_report] 	-text "Text-Report" 
-	
-			# --- 	fill with Report Widgets
-		lib_cfg_report::createReport $gui_NoteBook.cfg_report
-			# lib_txt_report::createReport $gui_NoteBook.txt_report
+		$noteBook_top add [frame $noteBook_top.report] 	-text "... info" 
+		
+		set noteBook_report	[ ttk::notebook $noteBook_top.report.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
+			pack $noteBook_report -expand yes  -fill both  
+		$noteBook_report add [frame $noteBook_report.complib] 	-text "Components Library" 
+		$noteBook_report add [frame $noteBook_report.report] 	-text "... current Settings" 
 
+			# --- 	fill with Report Widgets
+		lib_cfg_report::createReport 	$noteBook_report.report
+			# --- 	fill with Library Widgets
+		lib_comp_library::createLibrary $noteBook_report.complib
+		lib_comp_library::update_compList
+	
+		
 			# --- 	bind event to update Tab on selection
-		bind $gui_NoteBook <<NotebookTabChanged>> {lib_gui::notebook_updateCanvas}
+		bind $noteBook_top <<NotebookTabChanged>> {lib_gui::notebook_updateCanvas}
+
+			# --- 	bind event Control-Tab and Shift-Control-Tab
+		ttk::notebook::enableTraversal $noteBook_top
 		
 			# --- 	select and update following Tab
-		$gui_NoteBook select $gui_NoteBook.cv_Custom04
+		$noteBook_top select $noteBook_top.cv_Custom04
 				
 			# --- 	return
-		return $gui_NoteBook
+		return $noteBook_top
 	
 	}
 
@@ -162,7 +175,7 @@
 		#  fill cv_Custom01   
 		#
 	proc fill_canvasCAD {varName} {
-		variable gui_NoteBook
+		variable noteBook_top
 		switch -exact -- $varName {
 			cv_Custom99 -
 			cv_Custom00 -
@@ -173,9 +186,15 @@
 			cv_Custom05 -
 			cv_Custom06 -
 			cv_Custom07 {
-					$gui_NoteBook select $gui_NoteBook.$varName
+					$noteBook_top select $noteBook_top.$varName
 					cv_custom_00::update 	lib_gui::$varName 
 				}
+			cv_Component {
+					::update
+					lib_gui::notebook_refitCanvas
+					lib_comp_library::updateCanvas
+				}
+			
 		}
 	}
 
@@ -198,30 +217,52 @@
 	#-------------------------------------------------------------------------
        #  get notebook window    
        #
-	proc notebook_getVarName {widgetName} {
+	proc notebook_getVarName {tabID} {
 		variable notebookCanvas
-		
-		set widgetName $widgetName.cvCAD
+		variable external_canvasCAD
+
+			# -- lib_gui::notebookCanvas
+		set cvID $tabID.cvCAD
 		foreach varName [array names notebookCanvas] {
-			   # puts "          -> $varName $notebookCanvas($varName) "
-			if {$notebookCanvas($varName) == $widgetName} {
+				# puts "          -> $varName $notebookCanvas($varName) "
+			if {$notebookCanvas($varName) == $cvID} {
 				return [namespace current]::$varName
 			}
 		}
+			# -- lib_gui::external_canvasCAD
+		foreach varName [array names external_canvasCAD] {
+			    # puts "          -> $varName $external_canvasCAD($varName) equal? $tabID"
+			if {$varName == $tabID} {
+				return $external_canvasCAD($varName)
+			}
+		}
+		
+		
 	}
 
 	
 	#-------------------------------------------------------------------------
+       #  register external canvasCAD-Widgets
+       #
+	 proc register_external_canvasCAD {tabID cvID} {
+		variable external_canvasCAD
+		set external_canvasCAD($tabID) $cvID	
+		puts " \n   		register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
+		puts "               [$cvID getNodeAttr Canvas path]"
+	 }
+	   
+	   
+	#-------------------------------------------------------------------------
        #  refit notebookCanvas in current notebook-Tab  
        #
 	proc notebook_refitCanvas {} {
-		variable gui_NoteBook
+		variable noteBook_top
 
-		set currentTab [$gui_NoteBook select]
+		set currentTab [$noteBook_top select]
 		set varName    [notebook_getVarName $currentTab]
-			# puts "   varName: $varName"
+			# puts "  notebook_refitCanvas: varName: $varName"
 		if { $varName == {} } {
-				puts "   notebook_refitCanvas::varName: $varName"
+				puts "     notebook_refitCanvas::varName: $varName ... undefined"
 				return
 		}
 		  # tk_messageBox -message "currentTab: $currentTab   /  varName  $varName"
@@ -233,9 +274,9 @@
        #  scale canvasCAD in current notebook-Tab  
        #
 	proc notebook_scaleCanvas {value} {
-		variable gui_NoteBook
+		variable noteBook_top
 
-		set currentTab [$gui_NoteBook select]
+		set currentTab [$noteBook_top select]
 		set varName    [notebook_getVarName $currentTab]
 			# puts "   varName: $varName"
 		if { $varName == {} } {
@@ -254,12 +295,13 @@
        #  update canvasCAD in current notebook-Tab  
        #
 	proc notebook_updateCanvas {{mode {}}} {
-		variable gui_NoteBook
+		variable noteBook_top
 		variable canvasUpdate
 				
-		set currentTab 				[$gui_NoteBook select]
+		set currentTab 				[$noteBook_top select]
 		set varName    				[notebook_getVarName $currentTab]
 		set varName    				[lindex [split $varName {::}] end]
+
 		
 		if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
 			set canvasUpdate($varName) [ expr $::APPL_Update -1 ]
@@ -271,7 +313,7 @@
 					fill_canvasCAD $varName
 					set canvasUpdate($varName) [ clock milliseconds ]
 				} else {
-					# puts "\n       ... notebook_updateCanvas ... update $varName not required\n"
+					puts "\n       ... notebook_updateCanvas ... update $varName not required\n"
 				}
 		} else {
 					puts "\n       ... notebook_updateCanvas ... update $varName .. force\n"
@@ -284,9 +326,9 @@
        #  clean canvasCAD in current notebook-Tab  
        #
 	proc notebook_cleanCanvas {} {
-		variable gui_NoteBook
+		variable noteBook_top
 
-		set currentTab [$gui_NoteBook select]
+		set currentTab [$noteBook_top select]
 		set varName    [notebook_getVarName $currentTab]
 		if { $varName == {} } {
 				puts "   notebook_cleanCanvas::varName: $varName"
@@ -300,13 +342,13 @@
        #  print canvasCAD from current notebook-Tab  
        #
 	proc notebook_printCanvas {printDir} {
-		variable gui_NoteBook
+		variable noteBook_top
 		
 			## -- read from domConfig
 		set domConfig $::APPL_Project
 
 			# --- get currentTab
-		set currentTab 	[ $gui_NoteBook select ]
+		set currentTab 	[ $noteBook_top select ]
 		set cv_Name    	[ notebook_getVarName $currentTab]
 		if { $cv_Name == {} } {
 				puts "   notebook_printCanvas::cv_Name: $cv_Name"
@@ -456,14 +498,14 @@
        #
 	proc notebook_formatCanvas {stageFormat stageScale} {
 		variable canvasUpdate
-		variable gui_NoteBook
+		variable noteBook_top
 
 			# puts "\n=================="
 			# puts "    stageFormat $stageFormat"
 			# puts "    stageScale  $stageScale"
 			# puts "=================="
 				
-		set currentTab [$gui_NoteBook select]
+		set currentTab [$noteBook_top select]
 		set varName    [notebook_getVarName $currentTab]
 
 			# puts "   varName: $varName"

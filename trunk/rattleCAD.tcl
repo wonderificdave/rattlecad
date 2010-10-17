@@ -25,8 +25,8 @@ exec wish "$0" "$@"
 	
 	array set APPL_Env { 
 						RELEASE_Version    {3.1}  
-						RELEASE_Revision   {06a}  
-						RELEASE_Date       {04. Okt. 2010}  
+						RELEASE_Revision   {12}  
+						RELEASE_Date       {17. Okt. 2010}  
 						BASE_Dir           {}
 						ROOT_Dir           {}
 						CONFIG_Dir         {}
@@ -34,10 +34,6 @@ exec wish "$0" "$@"
 						VECTOR_Font        {}
 						USER_Dir           {}
 						USER_Init          {}
-						CONFIG_Window      {.cfg}
-						CONFIG_Notebook    {}
-						FILE_List          {.fl}
-						TUBEMITER_Window   {.tm}
                      }
 
 	array set APPL_Config { 
