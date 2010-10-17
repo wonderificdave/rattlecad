@@ -1052,7 +1052,7 @@
 									# updateConfig {cv_Name updateCommand xpath cvEntry}
 						  
 									set _listBoxValues $values
-									puts " _listBoxValues $_listBoxValues"
+									puts " create_ListEdit:  _listBoxValues $_listBoxValues"
 									set toplevel_widget  .__select_box							  
 									if {[winfo exists $toplevel_widget]} {
 										destroy $toplevel_widget
@@ -1060,18 +1060,23 @@
 							  
 									toplevel  $toplevel_widget
 									frame     $toplevel_widget.f
-									pack      $toplevel_widget.f							  
 									listbox   $toplevel_widget.f.lbox \
 												  -listvariable   [namespace current]::_listBoxValues \
 												  -selectmode     single \
 												  -relief         sunken \
 												  -width		  35 \
-												  -yscrollcommand "$toplevel_widget.f.svert  set" 							  
-									scrollbar $toplevel_widget.f.svert \
+												  -yscrollcommand "$toplevel_widget.f.scb_y  set" \
+												  -xscrollcommand "$toplevel_widget.f.scb_x  set" 							  
+									scrollbar $toplevel_widget.f.scb_y \
 												  -orient         v \
 												  -command        "$toplevel_widget.f.lbox yview"
+									scrollbar $toplevel_widget.f.scb_x \
+												  -orient         h \
+												  -command        "$toplevel_widget.f.lbox xview"
 							  							  
-									pack $toplevel_widget.f.lbox $toplevel_widget.f.svert -side left -fill y
+									grid	$toplevel_widget.f.lbox $toplevel_widget.f.scb_y	-sticky news
+									grid							$toplevel_widget.f.scb_x	-sticky news
+									grid 	$toplevel_widget.f  -sticky news -padx 1 
 							  
 									bind .                        <Configure>		[list [namespace current]::::bind_parent_move  $toplevel_widget  $parent]
 									bind $toplevel_widget.f.lbox <<ListboxSelect>>	[list [namespace current]::::closeSelectBox    %W  $target_var $cv_Name $updateCommand $xpath $cvEntry]
@@ -1086,18 +1091,34 @@
 						case $type {
 								{fileList} {
 										eval set currentFile $[namespace current]::_updateValue($xpath)
-										set dir 		[file join $::APPL_Env(CONFIG_Dir)/components [file dirname $currentFile] ]
-										puts "currentFile $currentFile"
-										puts "dir $dir"
-										set fileList	[ glob -directory $dir *.svg ]
-										puts "fileList $fileList"
-										foreach value $fileList {
-											puts "   -> $value"
-											set fileString [ string map [list $::APPL_Env(CONFIG_Dir)/components/ {} ] $value ]
-											puts "    -> fileString $fileString"
-											set listBoxContent [ lappend listBoxContent $fileString ]
+										set listBoxContent {}
+											# puts "createEdit::create_ListEdit::fileList:"
+										puts "     currentFile: $currentFile"
+										switch -glob $currentFile {
+												user:* 	-
+												etc:* 	{ 	set currentFile [lindex [split $currentFile :] 1]}
 										}
-										puts "--> $listBoxContent"
+										set userDir 	[ file join $::APPL_Env(USER_Dir)/components   [file dirname $currentFile ] ]
+										set etcDir 		[ file join $::APPL_Env(CONFIG_Dir)/components [file dirname $currentFile ] ]
+										puts "            user: $userDir"
+										puts "            etc:  $etcDir"
+										catch {
+											foreach file [ glob -directory $userDir  *.svg ] {
+													# puts "     ... fileList: $file"
+												set fileString [ string map [list $::APPL_Env(USER_Dir)/components/ {user:} ] $file ]
+												set listBoxContent   [ lappend listBoxContent $fileString]
+											}
+										}
+										foreach file [ glob -directory $etcDir  *.svg ] {
+												# puts "  ... fileList: $file"
+											set fileString [ string map [list $::APPL_Env(CONFIG_Dir)/components/ {etc:} ] $file ]
+											set listBoxContent   [ lappend listBoxContent $fileString]
+										}
+										
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+										
 									}
 						}
 						#
@@ -1199,7 +1220,7 @@
 						
 						case $xpath {
 							{file://*} { 
-										# puts "   ... \$xpath $xpath"
+										puts "\n   ... \$xpath $xpath\n"
 									set updateMode fileList
 									set xpath	[string range $xpath 7 end]
 										# puts "   ... \$xpath $xpath"									
@@ -1263,10 +1284,11 @@
 			set domDoc $::APPL_Project
 			set node 		[$domDoc selectNodes /root/$xpath/text()]
 			set nodeValue 	[$node asText]
-			# --- check Value ---
-			puts "    -> $_updateValue($xpath)"
+			# --- check Value --- ,/.
+			puts "  ... updateConfig -> $_updateValue($xpath)"
 			set newValue [ string map {, .} $_updateValue($xpath)]
 			set _updateValue($xpath) $newValue
+			
 			# --- update or return on errorID
 			if {[file tail $xpath] != {File}} {
 
@@ -1387,9 +1409,9 @@
 				set $target_var $widget_value
             }
             
-            puts "   control::update_parameter   $target_var"
+				# puts "   control::update_parameter   $target_var"
 			$cvEntry configure -state normal
-			#focus $cvEntry
+				# focus $cvEntry
 			$cvEntry icursor  end
 			[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry
               # control::update_graph    

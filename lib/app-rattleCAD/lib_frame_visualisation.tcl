@@ -53,14 +53,31 @@
 		set domConfig $::APPL_Project
 
 			# --- get stageScale
-		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]		
+		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
+
+		# --- check existance of File --- regarding on user/etc
+		proc checkFileString {fileString} {
+			switch -glob $fileString {
+					user:* 	{ 	set svgFile [file join $::APPL_Env(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
+					etc:* 	{ 	set svgFile [file join $::APPL_Env(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
+					default {	set svgFile [file join $::APPL_Env(CONFIG_Dir)/components $fileString ]}
+				}
+				# puts "            ... createDecoration::checkFileString $svgFile"
+			if {![file exists $svgFile]} {
+						# puts "           ... does not exist, therfore .."
+					set svgFile [file join $::APPL_Env(CONFIG_Dir)/components default_exception.svg]
+			}
+				# puts "            ... createDecoration::checkFileString $svgFile"
+			return $svgFile
+		}
+
 		
 		switch $type {
 			HandleBar {
 							# --- create Handlebar -------------
 						set HandleBar(position)		[ frame_geometry_custom::point_position  HandleBar  $BB_Position]
-						set HandleBar(file)			[ [ $domConfig selectNodes /root/Component/HandleBar/File ]  asText ]
-						set HandleBar(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $HandleBar(file)] $HandleBar(position) -5  __Decoration__ ]		
+						set HandleBar(file)			[ checkFileString [ [ $domConfig selectNodes /root/Component/HandleBar/File ]  asText ]]
+						set HandleBar(object)		[ $cv_Name readSVG $HandleBar(file) $HandleBar(position) -5  __Decoration__ ]		
 						if {$updateCommand != {}} 	{ $cv_Name bind	$HandleBar(object)	<Double-ButtonPress-1> \
 																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/HandleBar/File	\
@@ -71,8 +88,8 @@
 			RearDerailleur {
 							# --- create RearDerailleur --------
 						set Derailleur(position)	[ frame_geometry_custom::point_position  Derailleur  $BB_Position]
-						set Derailleur(file)		[ [ $domConfig selectNodes /root/Component/Derailleur/File ]  asText ]
-						set Derailleur(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $Derailleur(file)] $Derailleur(position)  0  __Decoration__ ]		
+						set Derailleur(file)		[ checkFileString [ [ $domConfig selectNodes /root/Component/Derailleur/File ]  asText ] ]
+						set Derailleur(object)		[ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  0  __Decoration__ ]		
 						if {$updateCommand != {}} 	{ $cv_Name bind	$Derailleur(object)	<Double-ButtonPress-1> \
 																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/Derailleur/File	\
@@ -91,8 +108,8 @@
 			CrankSet {
 							# --- create Crankset --------------
 						set CrankSet(position)		$BB_Position
-						set CrankSet(file)			[ [ $domConfig selectNodes /root/Component/CrankSet/File ]  asText ]
-						set CrankSet(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $CrankSet(file)] $CrankSet(position)  0  __Decoration__ ]
+						set CrankSet(file)			[ checkFileString [ [ $domConfig selectNodes /root/Component/CrankSet/File ]  asText ] ]	
+						set CrankSet(object)		[ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __Decoration__ ]
 						if {$updateCommand != {}} 	{ $cv_Name bind	$CrankSet(object)	<Double-ButtonPress-1> \
 																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/CrankSet/File \
@@ -120,8 +137,8 @@
 						set ss_direction	[ frame_geometry_custom::tube_values SeatStay direction ]
 						set ss_angle		[ expr - [ vectormath::angle {0 1} {0 0} $ss_direction ] ]
 						set RearBrake(position)		[ frame_geometry_custom::point_position  RearBrakeMount  $BB_Position]
-						set RearBrake(file)			[ [ $domConfig selectNodes /root/Component/Brake/Rear/File ]  asText ]
-						set RearBrake(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearBrake(file)] $RearBrake(position) $ss_angle  __Decoration__ ]		
+						set RearBrake(file)			[ checkFileString [ [ $domConfig selectNodes /root/Component/Brake/Rear/File ]  asText ] ]
+						set RearBrake(object)		[ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __Decoration__ ]		
 						if {$updateCommand != {}} 	{ $cv_Name bind	$RearBrake(object)	<Double-ButtonPress-1> \
 																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/Brake/Rear/File	\
@@ -137,8 +154,8 @@
 						set fb_angle		[ [ $domConfig selectNodes /root/Component/Fork/Crown/Brake/Angle  ]  asText ]
 						set fb_angle		[ expr $ht_angle + $fb_angle ]
 						set FrontBrake(position)	[ frame_geometry_custom::point_position  FrontBrakeMount  $BB_Position]
-						set FrontBrake(file)		[ [ $domConfig selectNodes /root/Component/Brake/Front/File ]  asText ]
-						set FrontBrake(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $FrontBrake(file)] $FrontBrake(position) $fb_angle  __Decoration__ ]		
+						set FrontBrake(file)		[ checkFileString [ [ $domConfig selectNodes /root/Component/Brake/Front/File ]  asText ] ]
+						set FrontBrake(object)		[ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __Decoration__ ]		
 						if {$updateCommand != {}} 	{ $cv_Name bind	$FrontBrake(object)	<Double-ButtonPress-1> \
 																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/Brake/Front/File	\
@@ -151,8 +168,8 @@
 			Saddle {
 							# --- create Saddle --------------------
 						set Saddle(position)		[ frame_geometry_custom::point_position  Saddle  $BB_Position]
-						set Saddle(file)			[ [ $domConfig selectNodes /root/Component/Saddle/File ]  asText ]
-						set Saddle(object)			[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $Saddle(file)] $Saddle(position)   0  __Decoration__ ]		
+						set Saddle(file)			[ checkFileString [ [ $domConfig selectNodes /root/Component/Saddle/File ]  asText ] ]
+						set Saddle(object)			[ $cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Decoration__ ]	
 						if {$updateCommand != {}} 	{ $cv_Name bind	$Saddle(object)	<Double-ButtonPress-1> \
 																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/Saddle/File	\

@@ -159,6 +159,7 @@
 					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			$updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	RearDerailleur		$updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand
+					::update
 						#
 				}
 			lib_gui::cv_Custom04 {

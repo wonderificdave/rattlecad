@@ -31,8 +31,8 @@
 	proc debug_out { msg {args 0} } {
 		Debug t $msg $args
 	}
-  
-  
+
+
 	#-------------------------------------------------------------------------
        #  startup intro image
        #
@@ -128,11 +128,11 @@
 			set lib_gui::canvasGeometry(height)	[ $node getAttribute {height} ]	
 	}
 
-  
+	
 	#-------------------------------------------------------------------------
        #  set Window Title
        #
-  proc set_window_title { {filename {}} } {
+	proc set_window_title { {filename {}} } {
       
       Debug  p
       
@@ -145,73 +145,10 @@
       Debug  t  "   $filename " 1
       
       wm title . $APPL_Config(WINDOW_Title)
-  }
+	}
 
 
 
-    proc create_file_list {} {
-
-       global APPL_Env
-	   
-	   ::Debug  p  1
-
-       ::Debug  t  "  try to create __file_list"
-	   
-       set toplevel_widget  $APPL_Env(FILE_List)
-      
-       if {[winfo exists $toplevel_widget]} {
-           return
-       }
-       
-	   toplevel  $toplevel_widget 
-
-       frame     $toplevel_widget.f -bd 2
-       pack      $toplevel_widget.f
-	   
-			  # listbox   $toplevel_widget.f.lbox \
-		      #                    -listvariable   control::FILE_List \
-		      #                    -selectmode     single \
-		      #                    -relief         sunken \
-		      #		               -width          50 \
-		      #                    -yscrollcommand "$toplevel_widget.f.svert  set" 
-		      #
-		      # scrollbar $toplevel_widget.f.svert \
-		      #                    -orient         v \
-		      #                    -command        "$toplevel_widget.f.lbox yview"
-      
-	        # $toplevel_widget.f.lbox 
-	        # $toplevel_widget.f.svert 
-	   
-	   
-	   set control::FILE_List_Widget  [ComboBox  $toplevel_widget.f.cbox \
-	                      -values $control::FILE_List \
-						  -width  35 \
-						  -height  5 \
-						  -modifycmd "control::openFile_FileList"]
-						  
-       pack $toplevel_widget.f.cbox \
-			              -side left -fill both
-	   
-	   wm  minsize    $toplevel_widget   [winfo width  $toplevel_widget]   [winfo height  $toplevel_widget]
-	   wm  transient  $toplevel_widget   .
-	   wm  resizable  $toplevel_widget   0 1
-	   wm  title      $toplevel_widget   "File - List"
-
-	     # $toplevel_widget.f.cbox  setvalue  first 
-	   
-	   set parent_geometry [ get_w_geometry .]
-	   set  parent_x  [expr 15 + [lindex $parent_geometry 0] ]
-	   set  parent_y  [expr 95 + [lindex $parent_geometry 1] ]
-	   
-	   update
-	   set  size_x  [ winfo width  $toplevel_widget]
-	   set  size_y  [ winfo height $toplevel_widget]
-
-	      # 200x200+654+54
-	   wm geometry $toplevel_widget [format "%dx%d+%d+%d" $size_x  $size_y  $parent_x  $parent_y]	 
-	    
-  }
- 
 
 
 
