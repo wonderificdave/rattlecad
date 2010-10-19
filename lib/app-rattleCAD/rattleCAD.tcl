@@ -73,8 +73,8 @@
 			set y [expr 0.5*$start_image_h]
       
 			$w.cv create text  [expr $x+ 85]  [expr $y+155]  -font "Swiss 18"  -text "Version"			      -fill white
-			$w.cv create text  [expr $x+155]  [expr $y+155]  -font "Swiss 18"  -text "$APPL_Env(RELEASE_Version)"     -fill white 
-			$w.cv create text  [expr $x+200]  [expr $y+156]  -font "Swiss 14"  -text "  $APPL_Env(RELEASE_Revision)"  -fill white 
+			$w.cv create text  [expr $x+155]  [expr $y+155]  -font "Swiss 18"  -text "$APPL_Env(RELEASE_Version)."  -fill white 
+			$w.cv create text  [expr $x+195]  [expr $y+156]  -font "Swiss 14"  -text "$APPL_Env(RELEASE_Revision)"  -fill white 
       
 				;# --- beautify --- but i dont know the reason, why to center manually
 			$w.cv move   all   1 1			
