@@ -1,0 +1,43 @@
+
+1)
+
+     Start 
+        -> Ausführen 
+            -> tclsh
+	  
+	       pwd
+
+	       cd "E:\manfred\_devlp\_svn_local\rattleCAD\__compile"
+	       cd "E:/manfred/_devlp/_svn_local/rattleCAD/__compile"
+               cd {E:/manfred/_devlp/tcl/rattle_cad/_compile/current}
+	       pwd
+            
+
+
+2) create KIT-File
+
+     tclsh:>   tclkit-8.5.8-win32.upx.exe sdx.kit qwrap rattleCAD.tcl
+	          -> exit
+
+     tclsh:>   source rattleCAD.kit
+
+
+
+3) extract virtual Filesystem
+     
+     tclsh:>   tclkit-8.5.8-win32.upx.exe sdx.kit unwrap rattleCAD.kit
+	          -> exit
+
+       
+    
+     
+4) update KIT-File
+     
+     tclsh:>   tclkit-8.5.8-win32.upx.exe rattleCAD.vfs/main.tcl
+     
+     
+4) create binary
+
+     file copy  -force tclkit-8.5.8-win32.upx.exe example.rt
+     
+     tclkit-8.5.8-win32.upx.exe sdx.kit wrap rattleCAD.exe -runtime example.rt
