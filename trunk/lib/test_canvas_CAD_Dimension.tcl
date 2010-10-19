@@ -85,7 +85,8 @@
 		proc createStage {cv_path cv_width cv_height st_width st_height unit st_scale args} {
 			variable myCanvas
 			variable cv_scale
-			set myCanvas [canvasCAD::newCanvas cv01  $cv_path 	$cv_width $cv_height 	$st_width $st_height m 0.5 $args]
+			set myCanvas [canvasCAD::newCanvas cv01  $cv_path 	$cv_width $cv_height 	A3 0.5 $args]
+			# set myCanvas [canvasCAD::newCanvas cv01  $cv_path 	$cv_width $cv_height 	$st_width $st_height m 0.5 $args]
 			set cv_scale [$myCanvas getNodeAttr Canvas scale]
 			return $myCanvas
 		}

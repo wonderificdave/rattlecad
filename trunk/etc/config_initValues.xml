@@ -19,6 +19,7 @@
 		<image name="resize"	src="resize.gif" />
 		<image name="exit"     	src="exit.gif" />
 		<image name="iconClose" src="iconClose.gif" />
+		<image name="confirm" 	src="confirm.gif" />
  	</images>
 	<!-- i think <frame> will not be necessary any more  -->
 	<frame>
