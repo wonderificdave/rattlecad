@@ -109,7 +109,8 @@
 			# -- $fileName is not empty
 		if {$fileName == {} } return
 			# -- $fileName has extension xml
-		if {! [string equal [file extension $fileName] {xml}]} {
+				# puts " [file extension $fileName] "
+		if {! [string equal [file extension $fileName] {.xml}]} {
 			set fileName [format "%s.%s" $fileName xml]
 			puts "   new $fileName"
 		}
@@ -156,8 +157,6 @@
 	proc openProject_xml {} {		
 		set types {
 				{{Project Files 3.x }       {.xml}  }
-				#{{Project Files     }       {.rcadx} }
-				#{{Project Files 2.x }       {.rcad}  }
 			}
 	   	set userDir		[check_user_dir]
 			puts "   openProject_xml - userDir    $userDir"
@@ -250,23 +249,20 @@
 		# http://stackoverflow.com/questions/429386/tcl-recursively-search-subdirectories-to-source-all-tcl-files
 		# 2010.10.15
 	proc findFiles { basedir pattern } {
-
-			# Fix the directory name, this ensures the directory name is in the
-			# native format for the platform and contains a final directory seperator
+					# Fix the directory name, this ensures the directory name is in the
+					# native format for the platform and contains a final directory seperator
 			set basedir [string trimright [file join [file normalize $basedir] { }]]
 			set fileList {}
-
-			# Look in the current directory for matching files, -type {f r}
-			# means ony readable normal files are looked at, -nocomplain stops
-			# an error being thrown if the returned list is empty
+					# Look in the current directory for matching files, -type {f r}
+					# means ony readable normal files are looked at, -nocomplain stops
+					# an error being thrown if the returned list is empty
 			foreach fileName [glob -nocomplain -type {f r} -path $basedir $pattern] {
 				lappend fileList $fileName
 			}
-
-			# Now look for any sub direcories in the current directory
+					# Now look for any sub direcories in the current directory
 			foreach dirName [glob -nocomplain -type {d  r} -path $basedir *] {
-				# Recusively call the routine on the sub directory and append any
-				# new files to the results
+						# Recusively call the routine on the sub directory and append any
+						# new files to the results
 				set subDirList [findFiles $dirName $pattern]
 				if { [llength $subDirList] > 0 } {
 					foreach subDirFile $subDirList {
@@ -275,7 +271,7 @@
 				}
 			}
 			return $fileList
-	 }	
+	}	
 	
 	
 	
