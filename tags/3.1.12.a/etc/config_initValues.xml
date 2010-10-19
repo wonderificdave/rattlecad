@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<values>
+	<geometry>
+		<position x="30" y="20"/>
+		<canvas width="900" height="650"/>
+	</geometry>
+ 	<images directory="image">
+		<image name="open"		src="open.gif" />
+		<image name="recent"	src="open_recent.gif" />
+		<image name="save"		src="save.gif" />
+		<image name="print"		src="print.gif" />
+		<image name="clear"		src="clean.gif" />
+		<image name="design"	src="design.gif" />
+		<image name="drawing"	src="drawing.gif" />
+		<image name="reset_r"	src="reset_road.gif" />
+		<image name="reset_o"	src="reset_offroad.gif" />
+		<image name="scale_p"	src="scale_plus.gif" />
+		<image name="scale_m"	src="scale_minus.gif" />
+		<image name="resize"	src="resize.gif" />
+		<image name="exit"     	src="exit.gif" />
+		<image name="iconClose" src="iconClose.gif" />
+		<image name="confirm" 	src="confirm.gif" />
+ 	</images>
+	<!-- i think <frame> will not be necessary any more  -->
+	<frame>
+		<config_Id value="0" />
+		<CANVAS_Scale value="1.0" />
+	</frame>
+</values>
