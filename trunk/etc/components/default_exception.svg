@@ -1,17 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Creator:  -->
-<svg
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   width="297mm"
-   height="210mm"
-   viewBox="0 0 297 210">
-
-
-
- <g	id="Ebene_x0020_1" >
-  <circle	cx="100"	cy="110"	r="35"	id="circle5"/>
-  <circle	cx="100"	cy="110"	r="4.5"	id="center_00"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="210mm" height="297mm" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 210 297">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:red;stroke-width:0.3528}
+    .fil0 {fill:white}
+   ]]>
+  </style>
+ </defs>
+ <g id="Ebene_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <circle id="circle5" class="fil0 str0" cx="56.5" cy="153.5" r="35"/>
+  <circle id="center_00" class="fil0 str0" cx="56.5" cy="153.5" r="4.5"/>
+  <polygon id="polygon26" class="fil0 str0" points="60.8672,180.261 50.793,180.261 50.7931,170.187 60.8672,170.187 "/>
+  <polygon id="polygon26_0" class="fil0 str0" points="73.7275,137.687 74.427,140.49 74.497,143.248 73.7599,146.38 72.6555,148.556 71.2896,150.36 69.9561,151.809 68.3434,153.383 66.6037,154.954 64.8276,156.471 63.2175,157.867 62.0058,159.065 61.1441,160.098 60.3453,161.732 59.9856,164.156 59.9373,166.71 50.793,166.71 50.7681,165.322 50.7608,163.788 50.8804,161.844 51.2748,159.575 52.1014,157.241 53.1783,155.461 54.108,154.303 56.1534,152.221 58.3525,150.332 60.8288,148.267 62.6047,146.664 63.7508,145.29 64.4448,143.781 64.711,141.958 64.5097,140.31 63.9339,138.856 62.3611,136.914 60.6425,135.766 58.7628,135.11 56.5126,134.829 54.148,134.965 52.6162,135.334 51.7136,135.683 50.7217,136.206 49.6055,137.012 48.7703,137.829 47.5066,139.635 46.6638,141.527 46.0557,143.684 36.8135,142.533 37.3479,139.262 38.4572,136.426 40.0216,133.999 41.5986,132.25 43.8115,130.422 47.0263,128.683 49.7399,127.805 52.1141,127.364 55.6034,127.147 59.1741,127.358 62.4052,127.987 64.9795,128.887 67.7093,130.374 69.7675,132.01 71.782,134.213 73.0426,136.171 "/>
  </g>
-
 </svg>

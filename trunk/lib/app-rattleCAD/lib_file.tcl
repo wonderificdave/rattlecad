@@ -1,7 +1,41 @@
-# -----------------------------------------------------------------------------------
-#
-#: Functions : namespace      L I B _ F I L E
-#
+ ##+##########################################################################
+ #
+ # package: rattleCAD	->	lib_file.tcl
+ #
+ #   canvasCAD is software of Manfred ROSENBERGER
+ #       based on tclTk, BWidgets and tdom on their 
+ #       own Licenses.
+ # 
+ # Copyright (c) Manfred ROSENBERGER, 2010/10/24
+ #
+ # The author  hereby grant permission to use,  copy, modify, distribute,
+ # and  license this  software  and its  documentation  for any  purpose,
+ # provided that  existing copyright notices  are retained in  all copies
+ # and that  this notice  is included verbatim  in any  distributions. No
+ # written agreement, license, or royalty  fee is required for any of the
+ # authorized uses.  Modifications to this software may be copyrighted by
+ # their authors and need not  follow the licensing terms described here,
+ # provided that the new terms are clearly indicated on the first page of
+ # each file where they apply.
+ #
+ # IN NO  EVENT SHALL THE AUTHOR  OR DISTRIBUTORS BE LIABLE  TO ANY PARTY
+ # FOR  DIRECT, INDIRECT, SPECIAL,  INCIDENTAL, OR  CONSEQUENTIAL DAMAGES
+ # ARISING OUT  OF THE  USE OF THIS  SOFTWARE, ITS DOCUMENTATION,  OR ANY
+ # DERIVATIVES  THEREOF, EVEN  IF THE  AUTHOR  HAVE BEEN  ADVISED OF  THE
+ # POSSIBILITY OF SUCH DAMAGE.
+ #
+ # THE  AUTHOR  AND DISTRIBUTORS  SPECIFICALLY  DISCLAIM ANY  WARRANTIES,
+ # INCLUDING,   BUT   NOT  LIMITED   TO,   THE   IMPLIED  WARRANTIES   OF
+ # MERCHANTABILITY,    FITNESS   FOR    A    PARTICULAR   PURPOSE,    AND
+ # NON-INFRINGEMENT.  THIS  SOFTWARE IS PROVIDED  ON AN "AS  IS" BASIS,
+ # AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
+ # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
+ #
+ # ---------------------------------------------------------------------------
+ #	namespace:  rattleCAD::lib_file
+ # ---------------------------------------------------------------------------
+ #
+ # 
 
  namespace eval lib_file {
 
@@ -159,11 +193,14 @@
 				{{Project Files 3.x }       {.xml}  }
 			}
 	   	set userDir		[check_user_dir]
-			puts "   openProject_xml - userDir    $userDir"
+			# puts "   openProject_xml - userDir    $userDir"
+			# puts "   openProject_xml - types      $types"
 		set fileName 	[tk_getOpenFile -initialdir $userDir -filetypes $types]		  
-			puts "   openProject_xml - fileName:   $fileName"
+			# puts "   openProject_xml - fileName:   $fileName"
 		if { [file readable $fileName ] } {
 				set ::APPL_Project	[lib_file::openFile_xml $fileName show]
+					#
+				check_FileVersion {31-32}
 					#
 				frame_geometry_custom::set_base_Parameters $::APPL_Project
 					# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -172,6 +209,55 @@
 				lib_gui::notebook_updateCanvas
 		}
 			puts "   openProject_xml - APPL_Config:		$::APPL_Config(PROJECT_Name)"			
+	}
+
+
+	#-------------------------------------------------------------------------
+		#  open Template File Type: xml
+		#	
+	proc openTemplate_xml {window_title template_file } {		
+		puts "   openTemplate_xml:	window_title   $template_file"	
+		if { [file readable $template_file ] } {
+				set ::APPL_Project	[lib_file::openFile_xml $template_file show]
+					#
+				frame_geometry_custom::set_base_Parameters $::APPL_Project
+					# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
+				set_window_title $window_title
+					#
+				lib_gui::notebook_updateCanvas
+		} else {
+			tk_messageBox -message "... could not load template: $window_title"
+		}
+	}
+
+
+	#-------------------------------------------------------------------------
+		#  check File Version 3.1 -> 3.2
+		#	
+	proc check_FileVersion {Version} {
+		puts " ... check_FileVersion:  $Version"
+		case $Version {
+			{31-32} {	set node {}
+						set node [$::APPL_Project selectNode /root/Rendering]
+						if {$node == {}} {
+							puts "        ...  $Version   ... update File ..."
+							set node [$::APPL_Project selectNode /root]
+							$node appendXML "<Rendering>
+												<Fork>SteelLugged</Fork>
+												<Brakes>Road</Brakes>
+											</Rendering>"
+						}
+					}
+			{ab-xy} {	set node {}
+						set node [$::APPL_Project selectNode /root/Project/rattleCADVersion/text()]
+						puts " ... [$node nodeValue] .."
+						puts " ... [$node asText] .."
+						$node nodeValue [format "%s.%s" $::APPL_Env(RELEASE_Version) $::APPL_Env(RELEASE_Revision)] 
+						return
+					}
+
+			default {}
+		}
 	}
 
 

@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <Project>
-        <rattleCADVersion>3.1.00</rattleCADVersion>
-        <Name>Template 01</Name>
-        <modified>2010.09.19/12:00</modified>
+        <rattleCADVersion>3.1.02</rattleCADVersion>
+        <Name>Template 02</Name>
+        <modified>2010.09.25/12:00</modified>
     </Project>
 	
 	<!-- reference geometry of an existing frame -->
 	<Reference>
         <Wheel>
-			<Diameter>676.00</Diameter>
+			<Front>
+				<RimDiameter>622.00</RimDiameter>
+				<TyreHeight>23.00</TyreHeight>
+			</Front>
+			<Rear>
+				<RimDiameter>622.00</RimDiameter>
+				<TyreHeight>23.00</TyreHeight>
+			</Rear>
 			<Distance>995.00</Distance>
 			<Chainstay_Length>410.00</Chainstay_Length>
 			<BottomBracket_Depth>66.00</BottomBracket_Depth>
         </Wheel>
         <Seat>
-			<Angle>73.20</Angle>
+			<Angle>72.90</Angle>
 			<Height>986.00</Height>
 		</Seat>
 		<Steering>
@@ -35,6 +42,52 @@
 		<HandleBar>
 			<Height>900.00</Height>
 		</HandleBar>
+		<Result>			
+			<Fork>
+				<Rake>
+					<value>0.00</value>
+					<delta>0.00</delta>
+				</Rake>
+			</Fork>				
+			<Stem>
+				<Angle>
+					<value>0.00</value>
+					<delta>0.00</delta>
+				</Angle>				
+				<Length>
+					<value>0.00</value>
+					<delta>0.00</delta>
+				</Length>
+			</Stem>
+			<BottomBracket>
+				<Depth>
+					<value>0.00</value>
+					<delta>0.00</delta>
+				</Depth>
+			</BottomBracket>	
+			<WheelPosition>
+				<Front>
+					<value>0.00</value>
+					<delta>0.00</delta>
+				</Front>
+				<Rear>
+					<value>0.00</value>
+					<delta>0.00</delta>
+				</Rear>			
+			</WheelPosition>		
+			<HandleBar_Distance>
+				<value>0.00</value>
+				<delta>0.00</delta>
+			</HandleBar_Distance> 				
+			<HandleBar_Height>
+				<value>0.00</value>
+				<delta>0.00</delta>
+			</HandleBar_Height>				
+			<SeatTube_Angle>
+				<value>0.00</value>
+				<delta>0.00</delta>
+			</SeatTube_Angle>	
+		</Result>			
 	</Reference>
 
 	<!-- personal geometry based on cyclist body profile -->
@@ -207,6 +260,12 @@
 			<File>rear_derailleur/campagnolo_2006_short.svg</File>
 		</Derailleur>
 	</Component>
+	
+	<!-- rendering information -->
+	<Rendering>
+		<Fork>SteelLugged</Fork>
+		<Brakes>Road</Brakes>
+	</Rendering>
 	
 </root>
 
