@@ -45,11 +45,13 @@ puts "\n ========================\n"
 puts "     update starkit\n"
 set dir_compile [file normalize .]
 set dir_trunk   [file join [file dirname [file normalize .]] trunk]
+set dir_version [file join [file dirname [file normalize .]] ___version/newVersion]
 set vfsDir [file join $dir_compile rattleCAD.vfs]
 
 puts "   -> $vfsDir"
 puts "   -> $dir_compile"
 puts "   -> $dir_trunk"
+puts "   -> $dir_version"
 
 
 	# -- cleanup $dir_compile
@@ -96,11 +98,10 @@ foreach file [findFiles $vfsDir .svn {d r hidden} ] {
 }
 
 
-
 	# -- test 
 	#
 exec tclkit-8.5.8-win32.upx.exe rattleCAD.vfs/main.tcl
-     
+   
 	# -- update 
 	#
 file copy  -force tclkit-8.5.8-win32.upx.exe example.rt
