@@ -1,7 +1,42 @@
-# -----------------------------------------------------------------------------------
-#
-#: Functions : namespace      L I B _ C F G _ R E P O R T
-#
+ ##+##########################################################################
+ #
+ # package: rattleCAD	->	lib_cfg_report.tcl
+ #
+ #   canvasCAD is software of Manfred ROSENBERGER
+ #       based on tclTk, BWidgets and tdom on their 
+ #       own Licenses.
+ # 
+ # Copyright (c) Manfred ROSENBERGER, 2010/10/24
+ #
+ # The author  hereby grant permission to use,  copy, modify, distribute,
+ # and  license this  software  and its  documentation  for any  purpose,
+ # provided that  existing copyright notices  are retained in  all copies
+ # and that  this notice  is included verbatim  in any  distributions. No
+ # written agreement, license, or royalty  fee is required for any of the
+ # authorized uses.  Modifications to this software may be copyrighted by
+ # their authors and need not  follow the licensing terms described here,
+ # provided that the new terms are clearly indicated on the first page of
+ # each file where they apply.
+ #
+ # IN NO  EVENT SHALL THE AUTHOR  OR DISTRIBUTORS BE LIABLE  TO ANY PARTY
+ # FOR  DIRECT, INDIRECT, SPECIAL,  INCIDENTAL, OR  CONSEQUENTIAL DAMAGES
+ # ARISING OUT  OF THE  USE OF THIS  SOFTWARE, ITS DOCUMENTATION,  OR ANY
+ # DERIVATIVES  THEREOF, EVEN  IF THE  AUTHOR  HAVE BEEN  ADVISED OF  THE
+ # POSSIBILITY OF SUCH DAMAGE.
+ #
+ # THE  AUTHOR  AND DISTRIBUTORS  SPECIFICALLY  DISCLAIM ANY  WARRANTIES,
+ # INCLUDING,   BUT   NOT  LIMITED   TO,   THE   IMPLIED  WARRANTIES   OF
+ # MERCHANTABILITY,    FITNESS   FOR    A    PARTICULAR   PURPOSE,    AND
+ # NON-INFRINGEMENT.  THIS  SOFTWARE IS PROVIDED  ON AN "AS  IS" BASIS,
+ # AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
+ # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
+ #
+ # ---------------------------------------------------------------------------
+ #	namespace:  rattleCAD::lib_cfg_report
+ # ---------------------------------------------------------------------------
+ #
+ # 
+
 
  namespace eval lib_cfg_report {
                             
@@ -24,9 +59,9 @@
 		pack configure $treeFrame	-expand yes
 
         button 	$menueFrame.open	-text {Open xml-File}					-width 30	-command { lib_file::openFile_xml {}	visualize}
-        button 	$menueFrame.bt01	-text {config_init_values.xml}			-width 30	-command { lib_file::openFile_xml etc/config_initValues.xml 		visualize}
-        button 	$menueFrame.bt02	-text {config_selection_values.xml}		-width 30	-command { lib_file::openFile_xml etc/config_selectionValues.xml 	visualize}
-        button 	$menueFrame.bt03	-text {template_project_20100413.xml}	-width 30	-command { lib_file::openFile_xml etc/template_project_20100413.xml visualize}
+        button 	$menueFrame.bt01	-text {rattleCAD_init.xml}				-width 30	-command { lib_file::openFile_xml etc/rattleCAD_init.xml 				visualize}
+        button 	$menueFrame.bt02	-text {template_road_3.2_20101024.xml}	-width 30	-command { lib_file::openFile_xml etc/template_road_3.2_20101024.xml 	visualize}
+        button 	$menueFrame.bt03	-text {template_mtb_3.2_20101024.xml}	-width 30	-command { lib_file::openFile_xml etc/template_mtb_3.2_20101024.xml 	visualize}
         button 	$menueFrame.bt04	-text {current Project}					-width 30	-command { lib_cfg_report::fillTree_Variable $::APPL_Project}
         button 	$menueFrame.bt05	-text {current Values}					-width 30	-command { lib_cfg_report::fillTree_Variable $frame_geometry_custom::domFrame}
         button 	$menueFrame.bt06	-text {canvasCAD}					    -width 30	-command { lib_cfg_report::fillTree_Variable $canvasCAD::__packageRoot}

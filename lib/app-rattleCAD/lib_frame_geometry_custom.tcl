@@ -1,7 +1,41 @@
-# -----------------------------------------------------------------------------------
-#
-#: Functions : namespace      F R A M E _ G E O M E T R Y _ C U S T O M
-#
+ ##+##########################################################################
+ #
+ # package: rattleCAD	->	lib_frame_geometry_custom.tcl
+ #
+ #   canvasCAD is software of Manfred ROSENBERGER
+ #       based on tclTk, BWidgets and tdom on their 
+ #       own Licenses.
+ # 
+ # Copyright (c) Manfred ROSENBERGER, 2010/10/24
+ #
+ # The author  hereby grant permission to use,  copy, modify, distribute,
+ # and  license this  software  and its  documentation  for any  purpose,
+ # provided that  existing copyright notices  are retained in  all copies
+ # and that  this notice  is included verbatim  in any  distributions. No
+ # written agreement, license, or royalty  fee is required for any of the
+ # authorized uses.  Modifications to this software may be copyrighted by
+ # their authors and need not  follow the licensing terms described here,
+ # provided that the new terms are clearly indicated on the first page of
+ # each file where they apply.
+ #
+ # IN NO  EVENT SHALL THE AUTHOR  OR DISTRIBUTORS BE LIABLE  TO ANY PARTY
+ # FOR  DIRECT, INDIRECT, SPECIAL,  INCIDENTAL, OR  CONSEQUENTIAL DAMAGES
+ # ARISING OUT  OF THE  USE OF THIS  SOFTWARE, ITS DOCUMENTATION,  OR ANY
+ # DERIVATIVES  THEREOF, EVEN  IF THE  AUTHOR  HAVE BEEN  ADVISED OF  THE
+ # POSSIBILITY OF SUCH DAMAGE.
+ #
+ # THE  AUTHOR  AND DISTRIBUTORS  SPECIFICALLY  DISCLAIM ANY  WARRANTIES,
+ # INCLUDING,   BUT   NOT  LIMITED   TO,   THE   IMPLIED  WARRANTIES   OF
+ # MERCHANTABILITY,    FITNESS   FOR    A    PARTICULAR   PURPOSE,    AND
+ # NON-INFRINGEMENT.  THIS  SOFTWARE IS PROVIDED  ON AN "AS  IS" BASIS,
+ # AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
+ # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
+ #
+ # ---------------------------------------------------------------------------
+ #	namespace:  rattleCAD::frame_geometry_custom
+ # ---------------------------------------------------------------------------
+ #
+ # 
 
  
  namespace eval frame_geometry_custom {
@@ -26,14 +60,10 @@
 			variable SeatStay		; array set SeatStay	 	{}
 			
 			variable Project		; array set Project	 		{}
-					
-				
+
+
 			#-------------------------------------------------------------------------
 				#  update loop and delay; store last value
-			variable _update
-					array set _update {}
-					set _update(loops)   1 ;# loops until update target value
-					set _update(delay)   5 ;# miliseconds
 			variable _updateValue
 					array set _updateValue {}
 				
@@ -68,10 +98,18 @@
 					variable SeatStay		; array set SeatStay	 	{} 
 			}
 
-	
+		namespace import ::frame_geometry::coords_addVector 	;#  add vector to list of coordinates	
+		namespace import ::frame_geometry::closeEdit			;#  close ProjectEdit Widget		
+		namespace import ::frame_geometry::dragStart			;#  binding: dragStart		
+		namespace import ::frame_geometry::drag					;#  binding: drag
+		namespace import ::frame_geometry::bind_parent_move
+		namespace import ::frame_geometry::coords_flip_y	
+		namespace import ::frame_geometry::coords_get_xy		;#  get xy in a flat list of coordinates, start with    0, 1, 2, 3, ... 
+
+		
  	#-------------------------------------------------------------------------
 		#  base: fill current Project Values and namespace frameCoords::
-	proc set_base_Parameters {domConfig} {
+	proc set_base_Parameters {domProject} {
 			variable Reference
 			
 			variable BottomBracket
@@ -104,23 +142,23 @@
 	
 				#
 				# --- set Project attributes
-			set Project(Project)		[ [ $domConfig selectNodes /root/Project/Name 						]  asText ]
-			set Project(modified)		[ [ $domConfig selectNodes /root/Project/modified 					]  asText ]
+			set Project(Project)		[ [ $domProject selectNodes /root/Project/Name 						]  asText ]
+			set Project(modified)		[ [ $domProject selectNodes /root/Project/modified 					]  asText ]
 			
 				#
 				# --- set LegClearance
-			set LegClearance(Length)	[ [ $domConfig selectNodes /root/Personal/InnerLeg_Length 			]  asText ]
+			set LegClearance(Length)	[ [ $domProject selectNodes /root/Personal/InnerLeg_Length 			]  asText ]
 			
 				#
 				# --- get BottomBracket (1)
-			set BottomBracket(depth)	[ [ $domConfig selectNodes /root/Custom/BottomBracket/Depth  		]  asText ]
+			set BottomBracket(depth)	[ [ $domProject selectNodes /root/Custom/BottomBracket/Depth  		]  asText ]
 
 				#
 				# --- get RearWheel
-			set RearWheel(RimDiameter)	[ [ $domConfig selectNodes /root/Component/Wheel/Rear/RimDiameter	]  asText ]
-			set RearWheel(TyreHeight)	[ [ $domConfig selectNodes /root/Component/Wheel/Rear/TyreHeight	]  asText ]
+			set RearWheel(RimDiameter)	[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter	]  asText ]
+			set RearWheel(TyreHeight)	[ [ $domProject selectNodes /root/Component/Wheel/Rear/TyreHeight	]  asText ]
 			set RearWheel(Radius)		[ expr 0.5*$RearWheel(RimDiameter) + $RearWheel(TyreHeight) ]
-			set RearWheel(DistanceBB)	[ [ $domConfig selectNodes /root/Custom/WheelPosition/Rear			]  asText ]
+			set RearWheel(DistanceBB)	[ [ $domProject selectNodes /root/Custom/WheelPosition/Rear			]  asText ]
 			set RearWheel(Distance_X)	[ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($BottomBracket(depth),2)) ]
 				# set RearWheel(Distance_X)	450
 				
@@ -130,114 +168,114 @@
 		
 				#
 				# --- get FrontWheel 
-			set FrontWheel(RimDiameter)	[ [ $domConfig selectNodes /root/Component/Wheel/Front/RimDiameter	]  asText ]
-			set FrontWheel(TyreHeight)	[ [ $domConfig selectNodes /root/Component/Wheel/Front/TyreHeight	]  asText ]
+			set FrontWheel(RimDiameter)	[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter	]  asText ]
+			set FrontWheel(TyreHeight)	[ [ $domProject selectNodes /root/Component/Wheel/Front/TyreHeight	]  asText ]
 			set FrontWheel(Radius)		[ expr 0.5*$FrontWheel(RimDiameter) + $FrontWheel(TyreHeight) ]
-			set FrontWheel(DistanceBB)	[ [ $domConfig selectNodes /root/Custom/WheelPosition/Front			]  asText ]
+			set FrontWheel(DistanceBB)	[ [ $domProject selectNodes /root/Custom/WheelPosition/Front			]  asText ]
 			set FrontWheel(Distance_X)	[ expr sqrt(pow($FrontWheel(DistanceBB),2) - pow(($FrontWheel(Radius) - $BottomBracket(height)),2)) ]
 
 				#
 				# --- get HandleBar - Position
-			set HandleBar(Distance)		[ [ $domConfig selectNodes /root/Personal/HandleBar_Distance		]  asText ]
-			set HandleBar(Height)		[ [ $domConfig selectNodes /root/Personal/HandleBar_Height			]  asText ]
+			set HandleBar(Distance)		[ [ $domProject selectNodes /root/Personal/HandleBar_Distance		]  asText ]
+			set HandleBar(Height)		[ [ $domProject selectNodes /root/Personal/HandleBar_Height			]  asText ]
 
 				#
 				# --- get LegClearance - Position
-			set LegClearance(Length)	[ [ $domConfig selectNodes /root/Personal/InnerLeg_Length			]  asText ]
+			set LegClearance(Length)	[ [ $domProject selectNodes /root/Personal/InnerLeg_Length			]  asText ]
 			
 				#
 				# --- get Fork -----------------------------
-			set Fork(Height)				[ [ $domConfig selectNodes /root/Component/Fork/Height				]  asText ]
-			set Fork(Rake)					[ [ $domConfig selectNodes /root/Component/Fork/Rake				]  asText ]
-			set Fork(BladeWith)				[ [ $domConfig selectNodes /root/Component/Fork/Blade/Width			]  asText ]
-			set Fork(BladeDiameterDO)		[ [ $domConfig selectNodes /root/Component/Fork/Blade/DiameterDO	]  asText ]
-			set Fork(BladeTaperLength)		[ [ $domConfig selectNodes /root/Component/Fork/Blade/TaperLength	]  asText ]
-			set Fork(BladeOffset)			[ [ $domConfig selectNodes /root/Component/Fork/Blade/Offset		]  asText ]
-			set Fork(BladeOffsetCrown)		[ [ $domConfig selectNodes /root/Component/Fork/Crown/Blade/Offset		]  asText ]
-			set Fork(BladeOffsetCrownPerp)	[ [ $domConfig selectNodes /root/Component/Fork/Crown/Blade/OffsetPerp	]  asText ]
-			set Fork(BladeOffsetDO)			[ [ $domConfig selectNodes /root/Component/Fork/DropOut/Offset		]  asText ]
-			set Fork(BladeOffsetDOPerp)		[ [ $domConfig selectNodes /root/Component/Fork/DropOut/OffsetPerp	]  asText ]
-			set Fork(BrakeAngle)			[ [ $domConfig selectNodes /root/Component/Fork/Crown/Brake/Angle		]  asText ]
-			set Fork(BrakeOffset)			[ [ $domConfig selectNodes /root/Component/Fork/Crown/Brake/Offset		]  asText ]
-			set Fork(BrakeOffsetPerp)		[ [ $domConfig selectNodes /root/Component/Fork/Crown/Brake/OffsetPerp	]  asText ]
+			set Fork(Height)				[ [ $domProject selectNodes /root/Component/Fork/Height				]  asText ]
+			set Fork(Rake)					[ [ $domProject selectNodes /root/Component/Fork/Rake				]  asText ]
+			set Fork(BladeWith)				[ [ $domProject selectNodes /root/Component/Fork/Blade/Width			]  asText ]
+			set Fork(BladeDiameterDO)		[ [ $domProject selectNodes /root/Component/Fork/Blade/DiameterDO	]  asText ]
+			set Fork(BladeTaperLength)		[ [ $domProject selectNodes /root/Component/Fork/Blade/TaperLength	]  asText ]
+			set Fork(BladeOffset)			[ [ $domProject selectNodes /root/Component/Fork/Blade/Offset		]  asText ]
+			set Fork(BladeOffsetCrown)		[ [ $domProject selectNodes /root/Component/Fork/Crown/Blade/Offset		]  asText ]
+			set Fork(BladeOffsetCrownPerp)	[ [ $domProject selectNodes /root/Component/Fork/Crown/Blade/OffsetPerp	]  asText ]
+			set Fork(BladeOffsetDO)			[ [ $domProject selectNodes /root/Component/Fork/DropOut/Offset		]  asText ]
+			set Fork(BladeOffsetDOPerp)		[ [ $domProject selectNodes /root/Component/Fork/DropOut/OffsetPerp	]  asText ]
+			set Fork(BrakeAngle)			[ [ $domProject selectNodes /root/Component/Fork/Crown/Brake/Angle		]  asText ]
+			set Fork(BrakeOffset)			[ [ $domProject selectNodes /root/Component/Fork/Crown/Brake/Offset		]  asText ]
+			set Fork(BrakeOffsetPerp)		[ [ $domProject selectNodes /root/Component/Fork/Crown/Brake/OffsetPerp	]  asText ]
 			
 				#
 				# --- get Stem -----------------------------
-			set Stem(Angle)				[ [ $domConfig selectNodes /root/Component/Stem/Angle				]  asText ]
-			set Stem(Length)			[ [ $domConfig selectNodes /root/Component/Stem/Length				]  asText ]
+			set Stem(Angle)				[ [ $domProject selectNodes /root/Component/Stem/Angle				]  asText ]
+			set Stem(Length)			[ [ $domProject selectNodes /root/Component/Stem/Length				]  asText ]
 
 				#
 				# --- get HeadTube -------------------------
 			set HeadTube(ForkRake)		$Fork(Rake)
 			set HeadTube(ForkHeight)	$Fork(Height)
-			set HeadTube(Diameter)		[ [ $domConfig selectNodes /root/FrameTubes/HeadTube/Diameter		]  asText ]
-			set HeadTube(Length)		[ [	$domConfig selectNodes /root/FrameTubes/HeadTube/Length			]  asText ]
+			set HeadTube(Diameter)		[ [ $domProject selectNodes /root/FrameTubes/HeadTube/Diameter		]  asText ]
+			set HeadTube(Length)		[ [	$domProject selectNodes /root/FrameTubes/HeadTube/Length			]  asText ]
 
 				#
 				# --- get SeatTube -------------------------
-			set SeatTube(Angle)			[ [ $domConfig selectNodes /root/Personal/SeatTube_Angle  			]  asText ]
+			set SeatTube(Angle)			[ [ $domProject selectNodes /root/Personal/SeatTube_Angle  			]  asText ]
 			set SeatTube(Length)		[ expr 0.88*$LegClearance(Length) ]
-			set SeatTube(DiameterBB)	[ [ $domConfig selectNodes /root/FrameTubes/SeatTube/DiameterBB		]  asText ]
-			set SeatTube(DiameterTT)	[ [ $domConfig selectNodes /root/FrameTubes/SeatTube/DiameterTT		]  asText ]
-			set SeatTube(TaperLength)	[ [ $domConfig selectNodes /root/FrameTubes/SeatTube/TaperLength	]  asText ]
-			set SeatTube(Extension)		[ [ $domConfig selectNodes /root/Custom/SeatTube/Extension			]  asText ]
+			set SeatTube(DiameterBB)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterBB		]  asText ]
+			set SeatTube(DiameterTT)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterTT		]  asText ]
+			set SeatTube(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/TaperLength	]  asText ]
+			set SeatTube(Extension)		[ [ $domProject selectNodes /root/Custom/SeatTube/Extension			]  asText ]
 
 				#
 				# --- get DownTube -------------------------
-			set DownTube(DiameterBB)	[ [ $domConfig selectNodes /root/FrameTubes/DownTube/DiameterBB		]  asText ]
-			set DownTube(DiameterHT)	[ [ $domConfig selectNodes /root/FrameTubes/DownTube/DiameterHT		]  asText ]
-			set DownTube(TaperLength)	[ [ $domConfig selectNodes /root/FrameTubes/DownTube/TaperLength	]  asText ]
-			set DownTube(OffsetHT)		[ [ $domConfig selectNodes /root/Custom/DownTube/OffsetHT			]  asText ]
-			set DownTube(OffsetBB)		[ [ $domConfig selectNodes /root/Custom/DownTube/OffsetBB			]  asText ]				
+			set DownTube(DiameterBB)	[ [ $domProject selectNodes /root/FrameTubes/DownTube/DiameterBB		]  asText ]
+			set DownTube(DiameterHT)	[ [ $domProject selectNodes /root/FrameTubes/DownTube/DiameterHT		]  asText ]
+			set DownTube(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/DownTube/TaperLength	]  asText ]
+			set DownTube(OffsetHT)		[ [ $domProject selectNodes /root/Custom/DownTube/OffsetHT			]  asText ]
+			set DownTube(OffsetBB)		[ [ $domProject selectNodes /root/Custom/DownTube/OffsetBB			]  asText ]				
 
 				#
 				# --- get TopTube --------------------------
-			set TopTube(DiameterHT)		[ [ $domConfig selectNodes /root/FrameTubes/TopTube/DiameterHT		]  asText ]
-			set TopTube(DiameterST)		[ [ $domConfig selectNodes /root/FrameTubes/TopTube/DiameterST		]  asText ]
-			set TopTube(TaperLength)	[ [ $domConfig selectNodes /root/FrameTubes/TopTube/TaperLength		]  asText ]
-			set TopTube(PivotPosition)	[ [ $domConfig selectNodes /root/Custom/TopTube/PivotPosition		]  asText ]
-			set TopTube(OffsetHT)		[ [ $domConfig selectNodes /root/Custom/TopTube/OffsetHT			]  asText ]
-			set TopTube(Angle)			[ [ $domConfig selectNodes /root/Custom/TopTube/Angle				]  asText ]
+			set TopTube(DiameterHT)		[ [ $domProject selectNodes /root/FrameTubes/TopTube/DiameterHT		]  asText ]
+			set TopTube(DiameterST)		[ [ $domProject selectNodes /root/FrameTubes/TopTube/DiameterST		]  asText ]
+			set TopTube(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/TopTube/TaperLength		]  asText ]
+			set TopTube(PivotPosition)	[ [ $domProject selectNodes /root/Custom/TopTube/PivotPosition		]  asText ]
+			set TopTube(OffsetHT)		[ [ $domProject selectNodes /root/Custom/TopTube/OffsetHT			]  asText ]
+			set TopTube(Angle)			[ [ $domProject selectNodes /root/Custom/TopTube/Angle				]  asText ]
 				
 				#
 				# --- get ChainStay ------------------------
-			set ChainStay(DiameterBB)	[ [ $domConfig selectNodes /root/FrameTubes/ChainStay/DiameterBB    ]  asText ]
-			set ChainStay(DiameterSS)	[ [ $domConfig selectNodes /root/FrameTubes/ChainStay/DiameterSS    ]  asText ]
-			set ChainStay(TaperLength)	[ [ $domConfig selectNodes /root/FrameTubes/ChainStay/TaperLength	]  asText ]
+			set ChainStay(DiameterBB)	[ [ $domProject selectNodes /root/FrameTubes/ChainStay/DiameterBB    ]  asText ]
+			set ChainStay(DiameterSS)	[ [ $domProject selectNodes /root/FrameTubes/ChainStay/DiameterSS    ]  asText ]
+			set ChainStay(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/ChainStay/TaperLength	]  asText ]
 				
 				#
 				# --- get SeatStay -------------------------
-			set SeatStay(DiameterST)	[ [ $domConfig selectNodes /root/FrameTubes/SeatStay/DiameterST		]  asText ]
-			set SeatStay(DiameterCS)	[ [ $domConfig selectNodes /root/FrameTubes/SeatStay/DiameterCS		]  asText ]
-			set SeatStay(TaperLength)	[ [ $domConfig selectNodes /root/FrameTubes/SeatStay/TaperLength	]  asText ]
-			set SeatStay(OffsetTT)		[ [ $domConfig selectNodes /root/Custom/SeatStay/OffsetTT			]  asText ]
+			set SeatStay(DiameterST)	[ [ $domProject selectNodes /root/FrameTubes/SeatStay/DiameterST		]  asText ]
+			set SeatStay(DiameterCS)	[ [ $domProject selectNodes /root/FrameTubes/SeatStay/DiameterCS		]  asText ]
+			set SeatStay(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/SeatStay/TaperLength	]  asText ]
+			set SeatStay(OffsetTT)		[ [ $domProject selectNodes /root/Custom/SeatStay/OffsetTT			]  asText ]
 
 				#
 				# --- get RearDropOut ----------------------
-			set RearDrop(OffsetCS)		[ [ $domConfig selectNodes /root/Component/RearDropOut/ChainStay/Offset	]  asText ]
-			set RearDrop(OffsetCSPerp)	[ [ $domConfig selectNodes /root/Component/RearDropOut/ChainStay/OffsetPerp ]  asText ]
-			set RearDrop(OffsetSS)		[ [ $domConfig selectNodes /root/Component/RearDropOut/SeatStay/Offset		]  asText ]
-			set RearDrop(OffsetSSPerp)	[ [ $domConfig selectNodes /root/Component/RearDropOut/SeatStay/OffsetPerp	]  asText ]
-			set RearDrop(Derailleur_x)	[ [ $domConfig selectNodes /root/Component/RearDropOut/Derailleur/x	]  asText ]
-			set RearDrop(Derailleur_y)	[ [ $domConfig selectNodes /root/Component/RearDropOut/Derailleur/y	]  asText ]
+			set RearDrop(OffsetCS)		[ [ $domProject selectNodes /root/Component/RearDropOut/ChainStay/Offset	]  asText ]
+			set RearDrop(OffsetCSPerp)	[ [ $domProject selectNodes /root/Component/RearDropOut/ChainStay/OffsetPerp ]  asText ]
+			set RearDrop(OffsetSS)		[ [ $domProject selectNodes /root/Component/RearDropOut/SeatStay/Offset		]  asText ]
+			set RearDrop(OffsetSSPerp)	[ [ $domProject selectNodes /root/Component/RearDropOut/SeatStay/OffsetPerp	]  asText ]
+			set RearDrop(Derailleur_x)	[ [ $domProject selectNodes /root/Component/RearDropOut/Derailleur/x	]  asText ]
+			set RearDrop(Derailleur_y)	[ [ $domProject selectNodes /root/Component/RearDropOut/Derailleur/y	]  asText ]
 
 				#
 				# --- get Saddle ---------------------------
-			set Saddle(SeatPost_x)		[ [ $domConfig selectNodes /root/Component/Saddle/SeatPost/x		]  asText ]
-			set Saddle(SeatPost_y)		[ [ $domConfig selectNodes /root/Component/Saddle/SeatPost/y		]  asText ]
-			set Saddle(SeatPost_DM)		[ [ $domConfig selectNodes /root/Component/Saddle/SeatPost/Diameter	]  asText ]
+			set Saddle(SeatPost_x)		[ [ $domProject selectNodes /root/Component/Saddle/SeatPost/x		]  asText ]
+			set Saddle(SeatPost_y)		[ [ $domProject selectNodes /root/Component/Saddle/SeatPost/y		]  asText ]
+			set Saddle(SeatPost_DM)		[ [ $domProject selectNodes /root/Component/Saddle/SeatPost/Diameter	]  asText ]
 
 				#
 				# --- get HeadSet --------------------------
-			set HeadSet(Diameter)		[ [ $domConfig selectNodes /root/Component/HeadSet/Diameter			]  asText ]
-			set HeadSet(Height_Top) 	[ [	$domConfig selectNodes /root/Component/HeadSet/Height/Top		]  asText ]
-			set HeadSet(Height_Bottom) 	[ [	$domConfig selectNodes /root/Component/HeadSet/Height/Bottom	]  asText ]
+			set HeadSet(Diameter)		[ [ $domProject selectNodes /root/Component/HeadSet/Diameter			]  asText ]
+			set HeadSet(Height_Top) 	[ [	$domProject selectNodes /root/Component/HeadSet/Height/Top		]  asText ]
+			set HeadSet(Height_Bottom) 	[ [	$domProject selectNodes /root/Component/HeadSet/Height/Bottom	]  asText ]
 			set HeadSet(ShimDiameter)	36
 				
 				#
 				# --- get Front/Rear Brake PadLever --------------
-			set RearBrake(LeverLength)	[ [ $domConfig selectNodes /root/Component/Brake/Rear/LeverLength	]  asText ]
-			set FrontBrake(LeverLength)	[ [ $domConfig selectNodes /root/Component/Brake/Front/LeverLength	]  asText ]
+			set RearBrake(LeverLength)	[ [ $domProject selectNodes /root/Component/Brake/Rear/LeverLength	]  asText ]
+			set FrontBrake(LeverLength)	[ [ $domProject selectNodes /root/Component/Brake/Front/LeverLength	]  asText ]
 				
 				#
 				#
@@ -784,12 +822,11 @@
 					
 					#puts " Stem(polygon): 00  $polygon"
 					#puts " Stem(polygon): 01  $polygon"
-		#set HeadSet(Diameter)		[ [ $domConfig selectNodes /root/Component/HeadSet/Diameter			]  asText ]
-		#set HeadSet(Height) 		[ [	$domConfig selectNodes /root/Component/HeadSet/Bottom_Heigth	]  asText ]
+		#set HeadSet(Diameter)		[ [ $domProject selectNodes /root/Component/HeadSet/Diameter			]  asText ]
+		#set HeadSet(Height) 		[ [	$domProject selectNodes /root/Component/HeadSet/Bottom_Heigth	]  asText ]
 
 
 	}
-
 
  	#-------------------------------------------------------------------------
 		#  return BottomBracket coords 
@@ -851,7 +888,6 @@
 			return [list $BtmBracket_x $BtmBracket_y]
 	
 	}
-
 	
  	#-------------------------------------------------------------------------
 		#  return all geometry-values to create specified tube in absolute position
@@ -873,45 +909,6 @@
 			variable Project
 			return $Project($attribute)
 	}
-
- 	#-------------------------------------------------------------------------
-		#  add vector to list of coordinates
- 	proc coords_addVector {coordlist vector} {
-			set returnList {}
-			set vector_x [lindex $vector 0]
-			set vector_y [lindex $vector 1]
-			foreach {x y} $coordlist {
-				set new_x [expr $x + $vector_x]
-				set new_y [expr $y + $vector_y]
-				set returnList [lappend returnList $new_x $new_y]
-			}
-			return $returnList
-	} 
-
- 	#-------------------------------------------------------------------------
-		#  add vector to list of coordinates
- 	proc coords_flip_y {coordlist} {
-			set returnList {}
-			foreach {x y} $coordlist {
-				set new_y [expr -$y]
-				set returnList [lappend returnList $x $new_y]
-			}
-			return $returnList
-	} 
-
- 	#-------------------------------------------------------------------------
-		#  get xy in a flat list of coordinates, start with    0, 1, 2, 3, ...
- 	proc coords_get_xy {coordlist index} {
-			if {$index == {end}} {
-				set index_y [expr [llength $coordlist] -1]
-				set index_x [expr [llength $coordlist] -2]
-			} else {
-				set index_x [ expr 2 * $index ]
-				set index_y [ expr $index_x + 1 ]
-				if {$index_y > [llength $coordlist]} { return {0 0} }
-			}
-			return [list [lindex $coordlist $index_x] [lindex $coordlist $index_y] ]
-	} 
 
  	#-------------------------------------------------------------------------
 		#  create TubeIntersection
@@ -951,7 +948,8 @@
 		return $coordList
 	}		
 
- 	#-------------------------------------------------------------------------
+ 	
+	#-------------------------------------------------------------------------
 		#  create TubeMitter
 		#
 		#         \     \ direction_isect
@@ -1052,7 +1050,7 @@
 									# updateConfig {cv_Name updateCommand xpath cvEntry}
 						  
 									set _listBoxValues $values
-									puts " create_ListEdit:  _listBoxValues $_listBoxValues"
+									# puts " create_ListEdit:  _listBoxValues $_listBoxValues"
 									set toplevel_widget  .__select_box							  
 									if {[winfo exists $toplevel_widget]} {
 										destroy $toplevel_widget
@@ -1120,15 +1118,44 @@
 										}
 										
 									}
+								{APPL_RimList} {
+										eval set currentValue $[namespace current]::_updateValue($xpath)
+										set listBoxContent {}
+										puts "     currentValue: $currentValue"
+										set listBoxContent $::APPL_RimList
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+									}
+								{APPL_ForkTypes} {
+										eval set currentValue $[namespace current]::_updateValue($xpath)
+										set listBoxContent {}
+										puts "     currentValue: $currentValue"
+										set listBoxContent $::APPL_ForkTypes
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+									}	
+								{APPL_BrakeTypes} {
+										eval set currentValue $[namespace current]::_updateValue($xpath)
+										set listBoxContent {}
+										puts "     currentValue: $currentValue"
+										set listBoxContent $::APPL_ForkTypes
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+									}	
 						}
 						#
 						# --- create cvLabel, cvEntry, Select ---
 							set cvFrame		[ frame 		$cvContentFrame.frame_${index} ]
 							set	  cvLabel	[ label  		$cvFrame.label   -text "${labelText} : "]
-							set   cvEntry 	[ entry  		$cvFrame.value   -justify left -textvariable [namespace current]::_updateValue($xpath)  -disabledbackground white  -disabledforeground black  -state disabled -justify right  -relief sunken -bd 1  -width 10]
+							set   cvEntry 	[ entry  		$cvFrame.value   -justify left -textvariable [namespace current]::_updateValue($xpath)  -disabledbackground white  -disabledforeground black  -justify right  -relief sunken -bd 1  -width 10]
 							set   cvSelect	[ ArrowButton	$cvFrame.select  -dir bottom  -height 17 -width 20  -fg SlateGray  \
 															-armcommand  "[namespace current]::createSelectBox $cvEntry  [list $listBoxContent]  [namespace current]::_updateValue($xpath) $cv_Name  $updateCommand  $xpath  $cvEntry" ]
-															
+							
+								 $cvEntry configure -state disabled
+							
 							if {$index == {oneLine}} {
 								set	cvUpdat [button $cvContentFrame.update -image $lib_gui::iconArray(confirm)]
 								$cvUpdat configure -command \
@@ -1140,7 +1167,7 @@
 								grid	$cvLabel $cvEntry $cvSelect 		 -sticky news
 								grid 	configure $cvLabel   -padx 2 -sticky nws
 								grid	columnconfigure 	$cvFrame 1 	-weight 1 
-								grid 	$cvFrame  -sticky news -padx 1 -columnspan 2
+								grid 	$cvFrame  -sticky news -padx 1 -columnspan 3
 							}
 						#
 						# --- define bindings ---
@@ -1192,6 +1219,23 @@
 												$cv $cv_Name $cvEdit $cvContentFrame \
 												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
 							}
+							{list://*} {
+										puts "   ... \$xpath $xpath"
+									set xpath		[string range $xpath 7 end]
+									set xpathList	[split $xpath {@} ]
+										# puts "   ... \$xpathList $xpathList"
+									set xpath		[lindex $xpathList 0]										 
+									set listName	[lindex $xpathList 1]										 
+									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
+									set _updateValue($xpath) $value
+										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
+									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
+										#
+										# --- create widgets per xpath list element ---
+									create_ListEdit $listName \
+												$cv $cv_Name $cvEdit $cvContentFrame \
+												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
+							}
 							default {
 									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
 									set _updateValue($xpath) $value
@@ -1220,7 +1264,7 @@
 						
 						case $xpath {
 							{file://*} { 
-										puts "\n   ... \$xpath $xpath\n"
+										# puts "\n   ... \$xpath $xpath\n"
 									set updateMode fileList
 									set xpath	[string range $xpath 7 end]
 										# puts "   ... \$xpath $xpath"									
@@ -1234,6 +1278,23 @@
 												$cv $cv_Name $cvEdit $cvContentFrame \
 												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath
 								}
+							{list://*} {
+										puts "   ... \$xpath $xpath"
+									set xpath		[string range $xpath 7 end]
+									set xpathList	[split $xpath {@} ]
+										# puts "   ... \$xpathList $xpathList"
+									set xpath		[lindex $xpathList 0]										 
+									set listName	[lindex $xpathList 1]										 
+									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
+									set _updateValue($xpath) $value
+										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
+									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
+										#
+										# --- create widgets per xpath list element ---
+									create_ListEdit $listName \
+												$cv $cv_Name $cvEdit $cvContentFrame \
+												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
+							}
 							default {
 									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
 									set _updateValue($xpath) $value
@@ -1265,18 +1326,11 @@
 			  # puts "  -> reposition $dx $dy"
 	} 
 
- 	#-------------------------------------------------------------------------
-		#  close ProjectEdit Widget
-	proc closeEdit {cv cvEdit} {
-			$cv delete $cvEdit
-			destroy $cvEdit
-			catch [ destroy .__select_box ]
-	}
 
  	#-------------------------------------------------------------------------
 		#  update Project 
 	proc updateConfig {cv_Name updateCommand xpath cvEntry} {
-			variable _update
+			#variable _update
 			variable _updateValue
 			
 				# puts "   --updateConfig-> $_updateValue($xpath) $xpath "
@@ -1284,106 +1338,57 @@
 			set domDoc $::APPL_Project
 			set node 		[$domDoc selectNodes /root/$xpath/text()]
 			set nodeValue 	[$node asText]
-			# --- check Value --- ,/.
 			puts "  ... updateConfig -> $_updateValue($xpath)"
+			
+			# --- check Value --- ","/"."]
 			set newValue [ string map {, .} $_updateValue($xpath)]
+			# --- check Value --- ";" ... like in APPL_RimList
+			set newValue [lindex [split $newValue ;] 0]
+			# --- check Value --- update 
 			set _updateValue($xpath) $newValue
 			
-			# --- update or return on errorID
-			if {[file tail $xpath] != {File}} {
+			# --- puts message
+			puts "        ... updateConfig: $xpath  $newValue "
+			
+			# --- update or return on errorID		
+			set checkValue {mathValue}
+			puts "               ... [file dirname $xpath] "
+			puts "               ... [file tail    $xpath] "
 
-				puts "  _update(loops) $_update(loops)"
-				if { [catch { expr 1.0 * $newValue } errorID] } {
+			if {[file dirname $xpath] == {Rendering}} { set checkValue {}}
+			if {[file tail $xpath]    == {File}     } { set checkValue {}}
+			puts "               ... checkValue: $checkValue "
+			
+			if {$checkValue == {mathValue} } {
+				if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
 					puts "\n$errorID\n"
 					focus $cvEntry
 					$cvEntry selection range 0 end
 					return
-				} else {		
-						# $_update(loops) is set to {1}, so lower if {... } does never run
-					if {$_update(loops) > 1} {
-						set loopValue $nodeValue
-						set gap [expr 1.0*($newValue - $nodeValue)/$_update(loops)]
-						if {[expr abs($gap)] > 0 } {
-							while {$loopValue < $newValue } {
-								set loopValue [ expr $loopValue + $gap ]
-									puts "      --> $loopValue"
-								$node nodeValue $loopValue
-								frame_geometry_custom::set_base_Parameters $domDoc
-								update
-								after $_update(delay)
-								$updateCommand $cv_Name
-							}
-						} else {
-							while {$loopValue > $newValue } {
-								set loopValue [ expr $loopValue + $gap ]
-									puts "      --> $loopValue"
-								$node nodeValue $loopValue
-								frame_geometry_custom::set_base_Parameters $domDoc
-								update
-								after $_update(delay)
-								$updateCommand $cv_Name
-							}
-						}
-					}
+				} else {
+					set newValue [format "%.2f" $newValue]
 				}
-				
 			}
+			puts "               ... newValue: $newValue "
+			
 			#
 			# --- finaly update
 				# why 2010 06 20 ?
 			$node nodeValue $newValue
 			frame_geometry_custom::set_base_Parameters $domDoc
+			update
 			$updateCommand $cv_Name
 			focus $cvEntry
 			$cvEntry selection range 0 end
 
 	} 
 
- 	#-------------------------------------------------------------------------
-		#  binding: dragStart
-	proc dragStart {x y} {
-			variable _drag
-			set _drag(lastx) $x
-			set _drag(lasty) $y
-			puts "$x $y"
-	}
 
  	#-------------------------------------------------------------------------
-		#  binding: drag
-	proc drag {x y cv id} {
-			variable _drag 
-			set dx [expr {$x - $_drag(lastx)}]
-			set dy [expr {$y - $_drag(lasty)}]
-			set cv_width  [ winfo width  $cv ]
-			set cv_height [ winfo height $cv ]
-			set id_bbox   [ $cv bbox $id ]
-			if {[lindex $id_bbox 0] < 4} {set dx  1}
-			if {[lindex $id_bbox 1] < 4} {set dy  1}
-			if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
-			if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
-			
-			$cv move $id $dx $dy
-			set _drag(lastx) $x
-			set _drag(lasty) $y
-	} 
- 
- 	#-------------------------------------------------------------------------
-		#  create createSelectBox 
-
-       proc bind_parent_move {toplevel_widget parent} {
-            ::Debug  p  1
-            if {![winfo exists $toplevel_widget]} return
-            set toplevel_x    [winfo rootx $parent]
-            set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
-            wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
-            wm  deiconify     $toplevel_widget
-       }
-      
-       proc closeSelectBox {source_window  target_var  cv_Name  updateCommand  xpath  cvEntry} {
+		#  close SelectBox 
+    proc closeSelectBox {source_window  target_var  cv_Name  updateCommand  xpath  cvEntry} {
             
-              variable CURRENT_Config
-
-            ::Debug  p  1
+            variable CURRENT_Config
 
             puts "   source_window $source_window"
             puts "       index: [$source_window curselection]"

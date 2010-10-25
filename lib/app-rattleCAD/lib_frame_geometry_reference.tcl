@@ -1,7 +1,41 @@
-# -----------------------------------------------------------------------------------
-#
-#: Functions : namespace      F R A M E _ G E O M E T R Y _ R E F E R E N C E
-#
+ ##+##########################################################################
+ #
+ # package: rattleCAD	->	lib_frame_geometry_reference.tcl
+ #
+ #   canvasCAD is software of Manfred ROSENBERGER
+ #       based on tclTk, BWidgets and tdom on their 
+ #       own Licenses.
+ # 
+ # Copyright (c) Manfred ROSENBERGER, 2010/10/24
+ #
+ # The author  hereby grant permission to use,  copy, modify, distribute,
+ # and  license this  software  and its  documentation  for any  purpose,
+ # provided that  existing copyright notices  are retained in  all copies
+ # and that  this notice  is included verbatim  in any  distributions. No
+ # written agreement, license, or royalty  fee is required for any of the
+ # authorized uses.  Modifications to this software may be copyrighted by
+ # their authors and need not  follow the licensing terms described here,
+ # provided that the new terms are clearly indicated on the first page of
+ # each file where they apply.
+ #
+ # IN NO  EVENT SHALL THE AUTHOR  OR DISTRIBUTORS BE LIABLE  TO ANY PARTY
+ # FOR  DIRECT, INDIRECT, SPECIAL,  INCIDENTAL, OR  CONSEQUENTIAL DAMAGES
+ # ARISING OUT  OF THE  USE OF THIS  SOFTWARE, ITS DOCUMENTATION,  OR ANY
+ # DERIVATIVES  THEREOF, EVEN  IF THE  AUTHOR  HAVE BEEN  ADVISED OF  THE
+ # POSSIBILITY OF SUCH DAMAGE.
+ #
+ # THE  AUTHOR  AND DISTRIBUTORS  SPECIFICALLY  DISCLAIM ANY  WARRANTIES,
+ # INCLUDING,   BUT   NOT  LIMITED   TO,   THE   IMPLIED  WARRANTIES   OF
+ # MERCHANTABILITY,    FITNESS   FOR    A    PARTICULAR   PURPOSE,    AND
+ # NON-INFRINGEMENT.  THIS  SOFTWARE IS PROVIDED  ON AN "AS  IS" BASIS,
+ # AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
+ # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
+ #
+ # ---------------------------------------------------------------------------
+ #	namespace:  rattleCAD::frame_geometry_reference
+ # ---------------------------------------------------------------------------
+ #
+ # 
 
  
  namespace eval frame_geometry_reference {
@@ -26,14 +60,10 @@
 			variable SeatStay		; array set SeatStay	 	{}
 			
 			variable Project		; array set Project	 		{}
-					
-				
+
+
 			#-------------------------------------------------------------------------
 				#  update loop and delay; store last value
-			variable _update
-					array set _update {}
-					set _update(loops)   1 ;# loops until update target value
-					set _update(delay)   5 ;# miliseconds
 			variable _updateValue
 					array set _updateValue {}
 				
@@ -68,11 +98,18 @@
 					variable SeatStay		; array set SeatStay	 	{} 
 			}
 
-
+		namespace import ::frame_geometry::coords_addVector 	;#  add vector to list of coordinates	
+		namespace import ::frame_geometry::closeEdit			;#  close ProjectEdit Widget		
+		namespace import ::frame_geometry::dragStart			;#  binding: dragStart		
+		namespace import ::frame_geometry::drag					;#  binding: drag
+		namespace import ::frame_geometry::bind_parent_move
+	
+	
+	
 	
  	#-------------------------------------------------------------------------
 		#  base: fill current Project Values and namespace frameCoords::
-	proc set_base_Parameters {domConfig} {
+	proc set_base_Parameters {domProject} {
 			variable Reference
 			
 			variable BottomBracket
@@ -105,69 +142,72 @@
 	
 				#
 				# --- set Project attributes
-			set Project(Project)		[ [ $domConfig selectNodes /root/Project/Name 						]  asText ]
-			set Project(modified)		[ [ $domConfig selectNodes /root/Project/modified 					]  asText ]
+			set Project(Project)		[ [ $domProject selectNodes /root/Project/Name 						]  asText ]
+			set Project(modified)		[ [ $domProject selectNodes /root/Project/modified 					]  asText ]
 			
 				#
 				# --- set LegClearance
-			set LegClearance(Length)	[ [ $domConfig selectNodes /root/Personal/InnerLeg_Length 			]  asText ]
-			
-				#
-			set BottomBracket(depth)	[ [ $domConfig selectNodes /root/Reference/Wheel/BottomBracket_Depth 		]  asText ]
-
-				#
-				# --- get RearWheel
-			set Wheel(Diameter)			[ [ $domConfig selectNodes /root/Reference/Wheel/Diameter 			]  asText ]
-			set Wheel(Radius)			[ expr 0.5 * $Wheel(Diameter) ]
+			set LegClearance(Length)	[ [ $domProject selectNodes /root/Personal/InnerLeg_Length 			]  asText ]
 			
 				#
 				# --- get RearWheel
-			set RearWheel(Radius)		$Wheel(Radius)
-			set RearWheel(DistanceBB)	[ [ $domConfig selectNodes /root/Reference/Wheel/Chainstay_Length	]  asText ]
-			set RearWheel(Distance_X)	[ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($BottomBracket(depth),2)) ]
+			set RearWheel(RimDiameter)	[ [ $domProject selectNodes /root/Reference/Wheel/Rear/RimDiameter 	]  asText ]
+			set RearWheel(TyreHeight)	[ [ $domProject selectNodes /root/Reference/Wheel/Rear/TyreHeight 	]  asText ]
+			set RearWheel(Radius)		[ expr 0.5 * $RearWheel(RimDiameter) + $RearWheel(TyreHeight) ]
 				
+				#
+				# --- get BottomBracket 
+			set BottomBracket(depth)	[ [ $domProject selectNodes /root/Reference/Wheel/BottomBracket_Depth 	]  asText ]
+
 				#
 				# --- get BottomBracket (2)
 			set BottomBracket(height)	[ expr $RearWheel(Radius) - $BottomBracket(depth) ]
-		
+
+				#
+				# --- get RearWheel (2)
+			set RearWheel(DistanceBB)	[ [ $domProject selectNodes /root/Reference/Wheel/Chainstay_Length	]  asText ]
+			set RearWheel(Distance_X)	[ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($BottomBracket(depth),2)) ]
+
 				#
 				# --- get FrontWheel 
-			set FrontWheel(Radius)		$Wheel(Radius)
-			set FrontWheel(DistanceRW)	[ [ $domConfig selectNodes /root/Reference/Wheel/Distance			]  asText ]
+			set FrontWheel(RimDiameter)	[ [ $domProject selectNodes /root/Reference/Wheel/Front/RimDiameter 	]  asText ]
+			set FrontWheel(TyreHeight)	[ [ $domProject selectNodes /root/Reference/Wheel/Front/TyreHeight 	]  asText ]
+			set FrontWheel(Radius)		[ expr 0.5 * $FrontWheel(RimDiameter) + $FrontWheel(TyreHeight) ]
+			set FrontWheel(DistanceRW)	[ [ $domProject selectNodes /root/Reference/Wheel/Distance			]  asText ]
 			set FrontWheel(Distance_X)	[ expr $FrontWheel(DistanceRW) - $RearWheel(Distance_X) ]
 
 				#
 				# --- get HandleBar - Position
-			set HandleBar(Height)		[ [ $domConfig selectNodes /root/Reference/HandleBar/Height			]  asText ]
+			set HandleBar(Height)		[ [ $domProject selectNodes /root/Reference/HandleBar/Height			]  asText ]
 
 				#
 				# --- get LegClearance - Position
-			set LegClearance(Length)	[ [ $domConfig selectNodes /root/Personal/InnerLeg_Length			]  asText ]
+			set LegClearance(Length)	[ [ $domProject selectNodes /root/Personal/InnerLeg_Length			]  asText ]
 			
 				#
 				# --- get Stem -----------------------------
-			set Stem(Angle)				[ [ $domConfig selectNodes /root/Reference/Steering/Stem/Angle		]  asText ]
-			set Stem(Length)			[ [ $domConfig selectNodes /root/Reference/Steering/Stem/Length		]  asText ]
+			set Stem(Angle)				[ [ $domProject selectNodes /root/Reference/Steering/Stem/Angle		]  asText ]
+			set Stem(Length)			[ [ $domProject selectNodes /root/Reference/Steering/Stem/Length		]  asText ]
 
 				#
 				# --- get Fork -----------------------------
-			set Fork(Height)			[ [ $domConfig selectNodes /root/Reference/Steering/Fork/Height		]  asText ]
-			set Fork(Rake)				[ [ $domConfig selectNodes /root/Reference/Steering/Fork/Rake		]  asText ]
+			set Fork(Height)			[ [ $domProject selectNodes /root/Reference/Steering/Fork/Height		]  asText ]
+			set Fork(Rake)				[ [ $domProject selectNodes /root/Reference/Steering/Fork/Rake		]  asText ]
 			
 				#
 				# --- get HeadTube -------------------------
-			set HeadTube(Angle)			[ [ $domConfig selectNodes /root/Reference/Steering/HeadTube/Angle	]  asText ]
-			set HeadTube(Length)		[ [ $domConfig selectNodes /root/Reference/Steering/HeadTube/Length	]  asText ]
+			set HeadTube(Angle)			[ [ $domProject selectNodes /root/Reference/Steering/HeadTube/Angle	]  asText ]
+			set HeadTube(Length)		[ [ $domProject selectNodes /root/Reference/Steering/HeadTube/Length	]  asText ]
 
 				#
 				# --- get TopTube --------------------------
-			set TopTube(PivotPosition)	[ [ $domConfig selectNodes /root/Custom/TopTube/PivotPosition		]  asText ]
+			set TopTube(PivotPosition)	[ [ $domProject selectNodes /root/Custom/TopTube/PivotPosition		]  asText ]
 			set TopTube(Angle)			{5.00}
 
 				#
 				# --- get SeatTube -------------------------
-			set Saddle(Height)			[ [ $domConfig selectNodes /root/Reference/Seat/Height 				]  asText ]
-			set SeatTube(Angle)			[ [ $domConfig selectNodes /root/Reference/Seat/Angle 				]  asText ]
+			set Saddle(Height)			[ [ $domProject selectNodes /root/Reference/Seat/Height 				]  asText ]
+			set SeatTube(Angle)			[ [ $domProject selectNodes /root/Reference/Seat/Angle 				]  asText ]
 				
 				#
 				#
@@ -179,7 +219,13 @@
 			set frameCoords::BB_Ground		[ list 0 	[expr - $RearWheel(Radius) + $BottomBracket(depth) ] ];# Point on the Ground perp. to BB
 				
 			
-			
+				# puts "   ... RearWheel(RimDiameter)  $RearWheel(RimDiameter)"
+				# puts "   ... RearWheel(TyreHeight)   $RearWheel(TyreHeight)"
+				# puts "   ... RearWheel(Radius)       $RearWheel(Radius)"
+				# puts "   ... BottomBracket(depth)    $BottomBracket(depth)"
+				# puts "   ... BottomBracket(height)   $BottomBracket(height)"
+
+
 				#
 				#
 				# --- set basePoints Attributes
@@ -298,7 +344,7 @@
 			
 				#
 				# --- update /root/Reference/Result/... ---
-			proc update_referenceResult {domConfig} {
+			proc update_referenceResult {domProject} {
 					variable Stem
 					variable RearWheel
 					variable FrontWheel
@@ -318,25 +364,24 @@
 																/root/Reference/Result/WheelPosition/Rear	$RearWheel(DistanceBB) 	/root/Custom/WheelPosition/Rear   ] \
 							{
 									# puts "  $xpath $value"
-									set reference 	[$domConfig selectNodes $xpath/value/text()]
+									set reference 	[$domProject selectNodes $xpath/value/text()]
 									$reference nodeValue [format "%.2f" $value]
 									
-									set personal 	[$domConfig selectNodes $xpathPersonal/text()]
+									set personal 	[$domProject selectNodes $xpathPersonal/text()]
 									set personalValue 	[$personal asText]
 
-									set delta		[$domConfig selectNodes $xpath/delta/text()]
+									set delta		[$domProject selectNodes $xpath/delta/text()]
 									set deltaValue	[expr $personalValue - $value]
 									
 									$delta nodeValue [format "%.2f" $deltaValue]
 							}						
 			}
-			update_referenceResult $domConfig
+			update_referenceResult $domProject
 	}
-
 
  	#-------------------------------------------------------------------------
 		#  exchange project attributes
-	proc update_referenceResultDelta {domConfig} {
+	proc update_referenceResultDelta {domProject} {
 
 			foreach	{xpath xpathPersonal} 		[list 	/root/Reference/Result/HandleBar_Distance 	/root/Personal/HandleBar_Distance	\
 														/root/Reference/Result/HandleBar_Height		/root/Personal/HandleBar_Height		\
@@ -349,24 +394,25 @@
 														/root/Reference/Result/WheelPosition/Rear	/root/Custom/WheelPosition/Rear   ] \
 					{
 							# puts "  $xpath $value"
-							set personal 		[$domConfig selectNodes $xpathPersonal/text()]
+							set personal 		[$domProject selectNodes $xpathPersonal/text()]
 							set personalValue 	[$personal asText]
 
-							set reference		[$domConfig selectNodes $xpath/value/text()]
+							set reference		[$domProject selectNodes $xpath/value/text()]
 							set referenceValue 	[$reference asText]
 							
-							set delta			[$domConfig selectNodes $xpath/delta/text()]
+							set delta			[$domProject selectNodes $xpath/delta/text()]
 							set deltaValue 		[expr $personalValue - $referenceValue]
 							
 							$delta nodeValue [format "%.2f" $deltaValue]
-					}						
+					}		
 
 	}
 	
 
- 	#-------------------------------------------------------------------------
+ 	
+	#-------------------------------------------------------------------------
 		#  exchange project attributes
-	proc export_parameter_2_geometry_custom {domConfig} {
+	proc export_parameter_2_geometry_custom {domProject} {
 
 			foreach	{xpath xpathPersonal} 		[list 	/root/Reference/Result/HandleBar_Distance 	/root/Personal/HandleBar_Distance	\
 														/root/Reference/Result/HandleBar_Height		/root/Personal/HandleBar_Height		\
@@ -378,22 +424,36 @@
 														/root/Reference/Result/WheelPosition/Front	/root/Custom/WheelPosition/Front	\
 														/root/Reference/Result/WheelPosition/Rear	/root/Custom/WheelPosition/Rear   ] \
 					{
-							# puts "  $xpath $value"
-							set reference		[$domConfig selectNodes $xpath/value/text()]
+								# puts "  $xpath $xpathPersonal"
+							set reference		[$domProject selectNodes $xpath/value/text()]
 							set referenceValue 	[$reference asText]
 							
-							set personal 		[$domConfig selectNodes $xpathPersonal/text()]
+							set personal 		[$domProject selectNodes $xpathPersonal/text()]
+							$personal nodeValue [format "%.2f" $referenceValue]
+					}	
+				
+			foreach	{xpath xpathPersonal} 		[list 	/root/Reference/Wheel/Rear/RimDiameter 		/root/Component/Wheel/Rear/RimDiameter		\
+			                                            /root/Reference/Wheel/Rear/TyreHeight 		/root/Component/Wheel/Rear/TyreHeight		\
+			                                            /root/Reference/Wheel/Front/RimDiameter 	/root/Component/Wheel/Front/RimDiameter	\
+			                                            /root/Reference/Wheel/Front/TyreHeight 		/root/Component/Wheel/Front/TyreHeight 	  ] \
+					{
+								# puts "  $xpath $xpathPersonal"
+							set reference		[$domProject selectNodes $xpath/text()]
+							set referenceValue 	[$reference asText]
+							
+							set personal 		[$domProject selectNodes $xpathPersonal/text()]
 							$personal nodeValue [format "%.2f" $referenceValue]
 					}						
 
 			
 			
 			set ::APPL_Update			[ clock milliseconds ]
-			frame_geometry_custom::set_base_Parameters $domConfig
+			frame_geometry_custom::set_base_Parameters $domProject
 	}
 	
 
- 	#-------------------------------------------------------------------------
+ 	
+	#-------------------------------------------------------------------------
 		#  return BottomBracket coords 
 	proc get_BottomBracket_Position {cv_Name bottomCanvasBorder {option {bicycle}} {stageScale {}}} {
 						
@@ -428,7 +488,7 @@
 			set Stage(unscaled)		[ expr ($Stage(width))/$Stage(scale_fmt) ]
 			
 				#
-				# ---  get border outside content to Stage		
+				# ---  get left/right/bottom border outside content to Stage		
 			set border				[ expr  0.5 *( $Stage(unscaled) - $SummaryLength ) ]
 			
 				#
@@ -452,7 +512,6 @@
 			return [list $BtmBracket_x $BtmBracket_y]
 	
 	}
-
 	
  	#-------------------------------------------------------------------------
 		#  return all geometry-values to create specified tube in absolute position
@@ -467,20 +526,6 @@
 			eval set value $[format "frameCoords::%s" $point]
 			return [ coords_addVector  $value  $centerPoint]
 	}
-
- 	#-------------------------------------------------------------------------
-		#  add vector to list of coordinates
- 	proc coords_addVector {coordlist vector} {
-			set returnList {}
-			set vector_x [lindex $vector 0]
-			set vector_y [lindex $vector 1]
-			foreach {x y} $coordlist {
-				set new_x [expr $x + $vector_x]
-				set new_y [expr $y + $vector_y]
-				set returnList [lappend returnList $new_x $new_y]
-			}
-			return $returnList
-	} 
 
  	#-------------------------------------------------------------------------
 		#  create ProjectEdit Widget
@@ -538,7 +583,7 @@
 									# updateConfig {cv_Name updateCommand xpath cvEntry}
 						  
 									set _listBoxValues $values
-									puts " _listBoxValues $_listBoxValues"
+									# puts " create_ListEdit:  _listBoxValues $_listBoxValues"
 									set toplevel_widget  .__select_box							  
 									if {[winfo exists $toplevel_widget]} {
 										destroy $toplevel_widget
@@ -546,18 +591,23 @@
 							  
 									toplevel  $toplevel_widget
 									frame     $toplevel_widget.f
-									pack      $toplevel_widget.f							  
 									listbox   $toplevel_widget.f.lbox \
 												  -listvariable   [namespace current]::_listBoxValues \
 												  -selectmode     single \
 												  -relief         sunken \
 												  -width		  35 \
-												  -yscrollcommand "$toplevel_widget.f.svert  set" 							  
-									scrollbar $toplevel_widget.f.svert \
+												  -yscrollcommand "$toplevel_widget.f.scb_y  set" \
+												  -xscrollcommand "$toplevel_widget.f.scb_x  set" 							  
+									scrollbar $toplevel_widget.f.scb_y \
 												  -orient         v \
 												  -command        "$toplevel_widget.f.lbox yview"
+									scrollbar $toplevel_widget.f.scb_x \
+												  -orient         h \
+												  -command        "$toplevel_widget.f.lbox xview"
 							  							  
-									pack $toplevel_widget.f.lbox $toplevel_widget.f.svert -side left -fill y
+									grid	$toplevel_widget.f.lbox $toplevel_widget.f.scb_y	-sticky news
+									grid							$toplevel_widget.f.scb_x	-sticky news
+									grid 	$toplevel_widget.f  -sticky news -padx 1 
 							  
 									bind .                        <Configure>		[list [namespace current]::::bind_parent_move  $toplevel_widget  $parent]
 									bind $toplevel_widget.f.lbox <<ListboxSelect>>	[list [namespace current]::::closeSelectBox    %W  $target_var $cv_Name $updateCommand $xpath $cvEntry]
@@ -572,19 +622,62 @@
 						case $type {
 								{fileList} {
 										eval set currentFile $[namespace current]::_updateValue($xpath)
-										set dir 		[file join $::APPL_Env(CONFIG_Dir)/components [file dirname $currentFile] ]
-										puts "currentFile $currentFile"
-										puts "dir $dir"
-										set fileList	[ glob -directory $dir *.svg ]
-										puts "fileList $fileList"
-										foreach value $fileList {
-											puts "   -> $value"
-											set fileString [ string map [list $::APPL_Env(CONFIG_Dir)/components/ {} ] $value ]
-											puts "    -> fileString $fileString"
-											set listBoxContent [ lappend listBoxContent $fileString ]
+										set listBoxContent {}
+											# puts "createEdit::create_ListEdit::fileList:"
+										puts "     currentFile: $currentFile"
+										switch -glob $currentFile {
+												user:* 	-
+												etc:* 	{ 	set currentFile [lindex [split $currentFile :] 1]}
 										}
-										puts "--> $listBoxContent"
+										set userDir 	[ file join $::APPL_Env(USER_Dir)/components   [file dirname $currentFile ] ]
+										set etcDir 		[ file join $::APPL_Env(CONFIG_Dir)/components [file dirname $currentFile ] ]
+										puts "            user: $userDir"
+										puts "            etc:  $etcDir"
+										catch {
+											foreach file [ glob -directory $userDir  *.svg ] {
+													# puts "     ... fileList: $file"
+												set fileString [ string map [list $::APPL_Env(USER_Dir)/components/ {user:} ] $file ]
+												set listBoxContent   [ lappend listBoxContent $fileString]
+											}
+										}
+										foreach file [ glob -directory $etcDir  *.svg ] {
+												# puts "  ... fileList: $file"
+											set fileString [ string map [list $::APPL_Env(CONFIG_Dir)/components/ {etc:} ] $file ]
+											set listBoxContent   [ lappend listBoxContent $fileString]
+										}
+										
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+										
 									}
+								{APPL_RimList} {
+										eval set currentValue $[namespace current]::_updateValue($xpath)
+										set listBoxContent {}
+										puts "     currentValue: $currentValue"
+										set listBoxContent $::APPL_RimList
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+									}
+								{APPL_ForkTypes} {
+										eval set currentValue $[namespace current]::_updateValue($xpath)
+										set listBoxContent {}
+										puts "     currentValue: $currentValue"
+										set listBoxContent $::APPL_ForkTypes
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+									}	
+								{APPL_BrakeTypes} {
+										eval set currentValue $[namespace current]::_updateValue($xpath)
+										set listBoxContent {}
+										puts "     currentValue: $currentValue"
+										set listBoxContent $::APPL_ForkTypes
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+									}	
 						}
 						#
 						# --- create cvLabel, cvEntry, Select ---
@@ -593,8 +686,13 @@
 							set   cvEntry 	[ entry  		$cvFrame.value   -justify left -textvariable [namespace current]::_updateValue($xpath)  -disabledbackground white  -disabledforeground black  -state disabled -justify right  -relief sunken -bd 1  -width 10]
 							set   cvSelect	[ ArrowButton	$cvFrame.select  -dir bottom  -height 17 -width 20  -fg SlateGray  \
 															-armcommand  "[namespace current]::createSelectBox $cvEntry  [list $listBoxContent]  [namespace current]::_updateValue($xpath) $cv_Name  $updateCommand  $xpath  $cvEntry" ]
-															
+																					
+								 $cvEntry configure -state disabled
+							
 							if {$index == {oneLine}} {
+								set	cvUpdat [button $cvContentFrame.update -image $lib_gui::iconArray(confirm)]
+								$cvUpdat configure -command \
+									"[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry"
 								set	cvClose [ button 		$cvFrame.close   -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
 								grid	$cvLabel $cvEntry $cvSelect $cvClose -sticky news
 								grid 	$cvFrame  -sticky news -padx 1 
@@ -602,7 +700,7 @@
 								grid	$cvLabel $cvEntry $cvSelect 		 -sticky news
 								grid 	configure $cvLabel   -padx 2 -sticky nws
 								grid	columnconfigure 	$cvFrame 1 	-weight 1 
-								grid 	$cvFrame  -sticky news -padx 1 -columnspan 2
+								grid 	$cvFrame  -sticky news -padx 1 -columnspan 3
 							}
 						#
 						# --- define bindings ---
@@ -654,6 +752,23 @@
 												$cv $cv_Name $cvEdit $cvContentFrame \
 												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
 							}
+							{list://*} {
+										puts "   ... \$xpath $xpath"
+									set xpath		[string range $xpath 7 end]
+									set xpathList	[split $xpath {@} ]
+										# puts "   ... \$xpathList $xpathList"
+									set xpath		[lindex $xpathList 0]										 
+									set listName	[lindex $xpathList 1]										 
+									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
+									set _updateValue($xpath) $value
+										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
+									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
+										#
+										# --- create widgets per xpath list element ---
+									create_ListEdit $listName \
+												$cv $cv_Name $cvEdit $cvContentFrame \
+												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
+							}
 							default {
 									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
 									set _updateValue($xpath) $value
@@ -682,7 +797,7 @@
 						
 						case $xpath {
 							{file://*} { 
-										# puts "   ... \$xpath $xpath"
+										# puts "\n   ... \$xpath $xpath\n"
 									set updateMode fileList
 									set xpath	[string range $xpath 7 end]
 										# puts "   ... \$xpath $xpath"									
@@ -696,6 +811,23 @@
 												$cv $cv_Name $cvEdit $cvContentFrame \
 												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath
 								}
+							{list://*} {
+										puts "   ... \$xpath $xpath"
+									set xpath		[string range $xpath 7 end]
+									set xpathList	[split $xpath {@} ]
+										# puts "   ... \$xpathList $xpathList"
+									set xpath		[lindex $xpathList 0]										 
+									set listName	[lindex $xpathList 1]										 
+									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
+									set _updateValue($xpath) $value
+										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
+									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
+										#
+										# --- create widgets per xpath list element ---
+									create_ListEdit $listName \
+												$cv $cv_Name $cvEdit $cvContentFrame \
+												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
+							}
 							default {
 									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
 									set _updateValue($xpath) $value
@@ -727,13 +859,6 @@
 			  # puts "  -> reposition $dx $dy"
 	} 
 
- 	#-------------------------------------------------------------------------
-		#  close ProjectEdit Widget
-	proc closeEdit {cv cvEdit} {
-			$cv delete $cvEdit
-			destroy $cvEdit
-			catch [ destroy .__select_box ]
-	}
 
  	#-------------------------------------------------------------------------
 		#  update Project 
@@ -746,105 +871,58 @@
 			set domDoc $::APPL_Project
 			set node 		[$domDoc selectNodes /root/$xpath/text()]
 			set nodeValue 	[$node asText]
-			# --- check Value ---
-			puts "    -> $_updateValue($xpath)"
+			puts "  ... updateConfig -> $_updateValue($xpath)"
+			
+			# --- check Value --- ","/"."]
 			set newValue [ string map {, .} $_updateValue($xpath)]
+			# --- check Value --- ";" ... like in APPL_RimList
+			set newValue [lindex [split $newValue ;] 0]
+			# --- check Value --- update 
+			set newValue [string trim $newValue { }]
 			set _updateValue($xpath) $newValue
-			# --- update or return on errorID
-			if {[file tail $xpath] != {File}} {
+			
+			# --- puts message
+			puts "        ... updateConfig: $xpath  $newValue "
+			
+			# --- update or return on errorID		
+			set checkValue {mathValue}
+			puts "               ... [file dirname $xpath] "
+			puts "               ... [file tail    $xpath] "
 
-				puts "  _update(loops) $_update(loops)"
-				if { [catch { expr 1.0 * $newValue } errorID] } {
+			if {[file dirname $xpath] == {Rendering}} { set checkValue {}}
+			if {[file tail $xpath]    == {File}     } { set checkValue {}}
+			puts "               ... checkValue: $checkValue "
+			
+			if {$checkValue == {mathValue} } {
+				if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
 					puts "\n$errorID\n"
 					focus $cvEntry
 					$cvEntry selection range 0 end
 					return
-				} else {		
-						# $_update(loops) is set to {1}, so lower if {... } does never run
-					if {$_update(loops) > 1} {
-						set loopValue $nodeValue
-						set gap [expr 1.0*($newValue - $nodeValue)/$_update(loops)]
-						if {[expr abs($gap)] > 0 } {
-							while {$loopValue < $newValue } {
-								set loopValue [ expr $loopValue + $gap ]
-									puts "      --> $loopValue"
-								$node nodeValue $loopValue
-								frame_geometry_reference::set_base_Parameters $domDoc
-								update
-								after $_update(delay)
-								$updateCommand $cv_Name
-							}
-						} else {
-							while {$loopValue > $newValue } {
-								set loopValue [ expr $loopValue + $gap ]
-									puts "      --> $loopValue"
-								$node nodeValue $loopValue
-								frame_geometry_reference::set_base_Parameters $domDoc
-								update
-								after $_update(delay)
-								$updateCommand $cv_Name
-							}
-						}
-					}
+				} else {
+					set newValue [format "%.2f" $newValue]
 				}
-				
 			}
+			puts "               ... newValue: $newValue "
+
 			#
 			# --- finaly update
 				# why 2010 06 20 ?
 			$node nodeValue $newValue
 			frame_geometry_reference::set_base_Parameters $domDoc
+			update
 			$updateCommand $cv_Name
 			focus $cvEntry
 			$cvEntry selection range 0 end
 
 	} 
 
- 	#-------------------------------------------------------------------------
-		#  binding: dragStart
-	proc dragStart {x y} {
-			variable _drag
-			set _drag(lastx) $x
-			set _drag(lasty) $y
-			puts "$x $y"
-	}
 
  	#-------------------------------------------------------------------------
-		#  binding: drag
-	proc drag {x y cv id} {
-			variable _drag 
-			set dx [expr {$x - $_drag(lastx)}]
-			set dy [expr {$y - $_drag(lasty)}]
-			set cv_width  [ winfo width  $cv ]
-			set cv_height [ winfo height $cv ]
-			set id_bbox   [ $cv bbox $id ]
-			if {[lindex $id_bbox 0] < 4} {set dx  1}
-			if {[lindex $id_bbox 1] < 4} {set dy  1}
-			if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
-			if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
-			
-			$cv move $id $dx $dy
-			set _drag(lastx) $x
-			set _drag(lasty) $y
-	} 
- 
- 	#-------------------------------------------------------------------------
-		#  create createSelectBox 
-
-       proc ___bind_parent_move {toplevel_widget parent} {
-            ::Debug  p  1
-            if {![winfo exists $toplevel_widget]} return
-            set toplevel_x    [winfo rootx $parent]
-            set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
-            wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
-            wm  deiconify     $toplevel_widget
-       }
-      
-       proc ___closeSelectBox {source_window  target_var  cv_Name  updateCommand  xpath  cvEntry} {
+		#  close SelectBox 
+    proc closeSelectBox {source_window  target_var  cv_Name  updateCommand  xpath  cvEntry} {
             
-              variable CURRENT_Config
-
-            ::Debug  p  1
+            variable CURRENT_Config
 
             puts "   source_window $source_window"
             puts "       index: [$source_window curselection]"
@@ -870,47 +948,14 @@
 				set $target_var $widget_value
             }
             
-            puts "   control::update_parameter   $target_var"
+				# puts "   control::update_parameter   $target_var"
 			$cvEntry configure -state normal
-			#focus $cvEntry
+				# focus $cvEntry
 			$cvEntry icursor  end
 			[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry
               # control::update_graph    
             destroy  [winfo toplevel $source_window]
-       }
- 	#-------------------------------------------------------------------------
-		#  return project attributes
-	proc ___project_attribute {attribute } {
-			variable Project
-			return $Project($attribute)
-	}
-
- 	#-------------------------------------------------------------------------
-		#  add vector to list of coordinates
- 	proc ___coords_flip_y {coordlist} {
-			set returnList {}
-			foreach {x y} $coordlist {
-				set new_y [expr -$y]
-				set returnList [lappend returnList $x $new_y]
-			}
-			return $returnList
-	} 
-
- 	#-------------------------------------------------------------------------
-		#  get xy in a flat list of coordinates, start with    0, 1, 2, 3, ...
- 	proc ___coords_get_xy {coordlist index} {
-			if {$index == {end}} {
-				set index_y [expr [llength $coordlist] -1]
-				set index_x [expr [llength $coordlist] -2]
-			} else {
-				set index_x [ expr 2 * $index ]
-				set index_y [ expr $index_x + 1 ]
-				if {$index_y > [llength $coordlist]} { return {0 0} }
-			}
-			return [list [lindex $coordlist $index_x] [lindex $coordlist $index_y] ]
-	} 
-
-
+    }
  
  }  
 
