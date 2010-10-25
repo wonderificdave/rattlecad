@@ -110,4 +110,32 @@ file copy  -force tclkit-8.5.8-win32.upx.exe example.rt
 exec tclkit-8.5.8-win32.upx.exe sdx.kit wrap rattleCAD.exe -runtime example.rt
 
 
+	# -- copy to ../___version 
+	#
+puts "\n ========================\n"
+puts "         version Directory\n"
+file_delete	$dir_version
+file mkdir  $dir_version
+file mkdir  [file join $dir_version lib]
+
+file_update [file join $vfsDir  help.txt]       $dir_version
+file_update [file join $vfsDir  license.txt]    $dir_version
+file_update [file join $vfsDir  rattleCAD.tcl]  $dir_version
+
+file_update [file join $vfsDir  etc      ]                          $dir_version
+file_update [file join $vfsDir  image    ]                          $dir_version
+file_update [file join $vfsDir  lib/_apputil      ]                 [file join $dir_version lib]
+file_update [file join $vfsDir  lib/_canvasCAD    ]                 [file join $dir_version lib]
+file_update [file join $vfsDir  lib/app-rattleCAD ]                 [file join $dir_version lib]
+file_update [file join $vfsDir  lib/test_canvas_CAD_ChainWheel.tcl] [file join $dir_version lib]
+file_update [file join $vfsDir  lib/test_canvas_CAD_Dimension.tcl ] [file join $dir_version lib]
+file_update [file join $vfsDir  lib/test_canvas_CAD_notebook.tcl  ] [file join $dir_version lib]
+file_update rattleCAD.exe                                           $dir_version
+
+
+	# -- ready 
+	#
+puts "\n ========================\n"
+puts "         ready ! \n\n\n"
+
 return
