@@ -152,6 +152,7 @@
 					createCenterline							$cv_Name $xy	Saddle
 						#
 					createDimension								$cv_Name $xy	points_06	
+					createDimension								$cv_Name $xy	frameDetail_bg	
 						#
 					createDimensionType							$cv_Name $xy 	RearWheel_Clearance 	
 					createDimensionType							$cv_Name $xy 	LegClearance			
@@ -230,7 +231,7 @@
 						#
 					createDimension							$cv_Name $xy	personal_fg		
 						#
-					createDimension							$cv_Name $xy	summary_bg		
+					createDimension							$cv_Name $xy	dimensionSummary_bg		
 						#						
 					frame_visualisation::createBaseline 	$cv_Name $xy	custom	black
 						#
@@ -258,7 +259,7 @@
 					createCenterline							$cv_Name $xy
 						#
 					createDimension								$cv_Name $xy	points_06	
-					createDimension								$cv_Name $xy 	frame_drafting
+					createDimension								$cv_Name $xy 	frameDrafting_bg
 						#
 					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
@@ -291,7 +292,7 @@
 						#
 					createDimension								$cv_Name $xy	points_06	
 					createDimension								$cv_Name $xy	points_07	
-					createDimension								$cv_Name $xy 	frame_jig
+					createDimension								$cv_Name $xy 	frameJig_bg
 						#
 					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
@@ -466,6 +467,30 @@
 																			-fill gray50 		-width 0.25			-tags __CenterLine__		
 					}
 				# -----------------------
+			personal_bg {
+						
+						set help_01				[ list [lindex $BottomBracket 0] [lindex $LegClearance 1] ]
+
+						set _dim_ST_Length 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BottomBracket $Saddle ] \
+															aligned		[expr  100 * $stageScale]   [expr -210 * $stageScale]  \
+															gray50 ] 
+						set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $Saddle $BottomBracket ] \
+															horizontal	[expr  -80 * $stageScale]    0 \
+															gray50 ] 
+						set _dim_ST_YPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BottomBracket $Saddle ] \
+															vertical	[expr -580 * $stageScale]  [expr -130 * $stageScale]  \
+															gray50 ] 
+						set _dim_SD_Height		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BaseCenter  $Saddle ] \
+															vertical    [expr -660 * $stageScale]  [expr -190 * $stageScale]  \
+															gray50 ] 
+						set _dim_HB_Height		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $HandleBar $BaseCenter ] \
+															vertical    [expr -350 * $stageScale]  [expr  230 * $stageScale]  \
+															gray50 ] 
+						set _dim_SD_HB_Height	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $HandleBar $Saddle ] \
+															vertical	[expr  350 * $stageScale]  [expr -100 * $stageScale]  \
+															gray50 ] 
+					}
+				# -----------------------
 			personal_fg {
 
 						set help_00				[ vectormath::addVector $BottomBracket {-200 0} ]
@@ -499,28 +524,42 @@
 						}
 					}
 				# -----------------------
-			personal_bg {
-						
-						set help_01				[ list [lindex $BottomBracket 0] [lindex $LegClearance 1] ]
+			geometry_bg {
 
-						set _dim_ST_Length 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BottomBracket $Saddle ] \
-															aligned		[expr  100 * $stageScale]   [expr -210 * $stageScale]  \
-															gray50 ] 
-						set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $Saddle $BottomBracket ] \
-															horizontal	[expr  -80 * $stageScale]    0 \
-															gray50 ] 
-						set _dim_ST_YPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BottomBracket $Saddle ] \
-															vertical	[expr -580 * $stageScale]  [expr -130 * $stageScale]  \
-															gray50 ] 
-						set _dim_SD_Height		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BaseCenter  $Saddle ] \
-															vertical    [expr -660 * $stageScale]  [expr -190 * $stageScale]  \
-															gray50 ] 
-						set _dim_HB_Height		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $HandleBar $BaseCenter ] \
-															vertical    [expr -350 * $stageScale]  [expr  230 * $stageScale]  \
-															gray50 ] 
-						set _dim_SD_HB_Height	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $HandleBar $Saddle ] \
-															vertical	[expr  350 * $stageScale]  [expr -100 * $stageScale]  \
-															gray50 ] 
+						set _dim_BB_Height 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BottomBracket  $BaseCenter ] \
+																				vertical    [expr  -80 * $stageScale]   [expr  -30 * $stageScale]  \
+																				gray50 ] 
+						set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$Saddle  $BottomBracket ] \
+																				horizontal  [expr  -80 * $stageScale]    0 \
+																				gray50 ] 
+						set _dim_SD_Height		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BaseCenter  $Saddle ] \
+																				vertical    [expr -660 * $stageScale]  [expr -190 * $stageScale]  \
+																				gray50 ] 
+						set _dim_HB_XPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$HandleBar  $BottomBracket ] \
+																				horizontal  [expr   (80 + $hb_seat_height) * $stageScale ]    0 \
+																				gray50 ] 
+						set _dim_HB_Height		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$HandleBar  $BaseCenter ] \
+																				vertical    [expr -350 * $stageScale]  [expr  230 * $stageScale]  \
+																				gray50 ] 
+						set _dim_CS_LengthX 	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$RearWheel_Ground  $BaseCenter ] \
+																				horizontal  [expr   70 * $stageScale]   0 \
+																				gray50 ] 
+						set _dim_FW_DistanceX	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BaseCenter  $FrontWheel ] \
+																				horizontal  [expr   70 * $stageScale]   0 \
+																				gray50 ] 
+						set _dim_Wh_Distance	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$RearWheel_Ground  $FrontWheel_Ground ] \
+																				horizontal  [expr  130 * $stageScale]	0 \
+																				gray50 ] 
+						set _dim_FW_Lag			[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$FrontWheel_Ground  $Steerer_Ground ] \
+																				horizontal  [expr   70 * $stageScale]   [expr  -70 * $stageScale] \
+																				gray20 ] 
+						set _dim_HT_Angle  		[ $cv_Name dimension  angle   	[ canvasCAD::flatten_nestedList  	$Steerer_Ground  $Steerer_Fork  $BaseCenter ] \
+																				150   0  \
+																				gray20 ]
+															
+						set _dim_BT_Clearance	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $help_91  $help_92 ] \
+																				aligned		0   [expr -100 * $stageScale]  \
+																				gray50 ] 
 					}
 				# -----------------------
 			geometry_fg {
@@ -575,47 +614,19 @@
 						$cv_Name bind $_dim_RW_Radius   	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  {list://Component/Wheel/Rear/RimDiameter@APPL_RimList Component/Wheel/Rear/TyreHeight} {Rear Wheel Parameter}]
 						$cv_Name bind $_dim_FW_Radius   	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  {list://Component/Wheel/Front/RimDiameter@APPL_RimList Component/Wheel/Front/TyreHeight} {Front Wheel Parameter}]
 						$cv_Name bind $_dim_CR_Length   	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/CrankSet/Length]
-					}		
+					}	
 				# -----------------------
-			geometry_bg {
-
-						set _dim_BB_Height 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BottomBracket  $BaseCenter ] \
-																				vertical    [expr  -80 * $stageScale]   [expr  -30 * $stageScale]  \
-																				gray50 ] 
-						set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$Saddle  $BottomBracket ] \
-																				horizontal  [expr  -80 * $stageScale]    0 \
-																				gray50 ] 
-						set _dim_SD_Height		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BaseCenter  $Saddle ] \
-																				vertical    [expr -660 * $stageScale]  [expr -190 * $stageScale]  \
-																				gray50 ] 
-						set _dim_HB_XPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$HandleBar  $BottomBracket ] \
-																				horizontal  [expr   (80 + $hb_seat_height) * $stageScale ]    0 \
-																				gray50 ] 
-						set _dim_HB_Height		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$HandleBar  $BaseCenter ] \
-																				vertical    [expr -350 * $stageScale]  [expr  230 * $stageScale]  \
-																				gray50 ] 
-						set _dim_CS_LengthX 	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$RearWheel_Ground  $BaseCenter ] \
-																				horizontal  [expr   70 * $stageScale]   0 \
-																				gray50 ] 
-						set _dim_FW_DistanceX	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BaseCenter  $FrontWheel ] \
-																				horizontal  [expr   70 * $stageScale]   0 \
-																				gray50 ] 
-						set _dim_Wh_Distance	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$RearWheel_Ground  $FrontWheel_Ground ] \
-																				horizontal  [expr  130 * $stageScale]	0 \
-																				gray50 ] 
-						set _dim_FW_Lag			[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$FrontWheel_Ground  $Steerer_Ground ] \
-																				horizontal  [expr   70 * $stageScale]   [expr  -70 * $stageScale] \
-																				gray20 ] 
-						set _dim_HT_Angle  		[ $cv_Name dimension  angle   	[ canvasCAD::flatten_nestedList  	$Steerer_Ground  $Steerer_Fork  $BaseCenter ] \
-																				150   0  \
-																				gray20 ]
-															
-						set _dim_BT_Clearance	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $help_91  $help_92 ] \
-																				aligned		0   [expr -100 * $stageScale]  \
-																				gray50 ] 
+			frameDetail_bg {
+					
+							# -- Dimensions ------------------------
+							#
+						set _dim_ST_Length_02		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BottomBracket  $TopTube_SeatTube ] \
+																					aligned  	[expr   75 * $stageScale]	0 \
+																					gray30 ]
 					}
 				# -----------------------
-			summary_bg {
+			dimensionSummary_bg {
+			
 						set help_rw				[ vectormath::rotateLine $RearWheel 	$RearWheel_Radius 	230 ]
 						set help_fw				[ vectormath::rotateLine $FrontWheel 	$FrontWheel_Radius 	-50 ]
 						set help_fk				[ vectormath::addVector   $Steerer_Fork [ vectormath::unifyVector $Steerer_Stem  $Steerer_Fork   $ForkHeight ] ]
@@ -687,7 +698,7 @@
 					}
 					
 				# -----------------------
-			frame_drafting {
+			frameDrafting_bg {
 						
 							set help_fk				[ vectormath::addVector   	$Steerer_Fork 	[ vectormath::unifyVector $Steerer_Stem  $Steerer_Fork   $ForkHeight ] ]
 							set help_rw_rim			[ vectormath::rotateLine 	$RearWheel 		[expr 0.5 * $RearRimDiameter ] 70 ]
@@ -936,7 +947,7 @@
 					
 					}
 				# -----------------------
-			frame_jig {
+			frameJig_bg {
 						
 							set help_fk			[ vectormath::intersectPoint   	$Steerer_Fork 	$Steerer_Stem   $FrontWheel $RearWheel ]
 					
