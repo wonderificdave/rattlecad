@@ -400,7 +400,6 @@
 						set offset					[ expr $Project_ForkRake-$Suspension_ForkRake]
 						set vct_move				[ vectormath::rotatePoint {0 0} [list 0 $offset] [expr 90 + $do_angle] ]
 						set ForkDropout(position)	[ vectormath::addVector [ frame_geometry_custom::point_position  FrontWheel  $BB_Position] $vct_move]
-						set updateCommand 			{}
 						}
 			default {}
 		}
@@ -524,6 +523,12 @@
 		$cv_Name create circle  $BB_Position			-radius 20	-fill white	-tags __Frame__
 		$cv_Name create circle  $ForkDropout(position)	-radius 4.5	-fill white	-tags __Frame__
 
+			# --- check bindings and remove ----------
+		switch $Rendering(Fork) {
+			Composite 	-
+			Suspension 	{}
+			default {}
+		}
 			#set debug_01				[ frame_geometry_custom::tube_values ForkBlade debug $BB_Position  ]
 			#$cv_Name create line    $debug_01 -fill purple -width 1 
 			#$cv_Name delete 	$ForkDropout(object)
