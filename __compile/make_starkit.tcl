@@ -61,6 +61,7 @@ puts "         cleanup complete\n"
 
 file_delete [file join $vfsDir help.txt]
 file_delete [file join $vfsDir license.txt]
+file_delete [file join $vfsDir exclusion.txt]
 file_delete [file join $vfsDir rattleCAD.tcl]
 
 file_delete [file join $vfsDir etc]
@@ -81,6 +82,7 @@ foreach _dir [glob -directory [file join $dir_compile   _lib] *] {
 
 file_update [file join $dir_trunk help.txt]       $vfsDir
 file_update [file join $dir_trunk license.txt]    $vfsDir
+file_update [file join $dir_trunk exclusion.txt]    $vfsDir
 file_update [file join $dir_trunk rattleCAD.tcl]  $vfsDir
 
 	# -- remove unused files
@@ -121,6 +123,8 @@ file mkdir  [file join $dir_version lib]
 
 file_update [file join $vfsDir  help.txt]       $dir_version
 file_update [file join $vfsDir  license.txt]    $dir_version
+file_update [file join $vfsDir  exclusion.txt]  $dir_version
+file_update [file join $vfsDir  main.tcl]  		$dir_version
 file_update [file join $vfsDir  rattleCAD.tcl]  $dir_version
 
 file_update [file join $vfsDir  etc      ]                          $dir_version
