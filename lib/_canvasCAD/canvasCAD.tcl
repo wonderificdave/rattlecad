@@ -36,7 +36,19 @@
  #	namespace:  canvasCAD
  # ---------------------------------------------------------------------------
  #
- #
+ #                    rotate_item:
+ #                            kvetter@DELETETHIS.alltel.net
+ #                            http://wiki.tcl.tk/8595
+ #                    zoom:
+ #                            masse-navette.glfs@wanadoo.fr
+ #                            http://wiki.tcl.tk/4844
+ #                    vector algorythms:
+ #                            kvetter@DELETETHIS.alltel.net
+ #                            http://wiki.tcl.tk/8447
+ # ---------------------------------------------------------------------------							
+ #								
+ #															
+
 
 package provide canvasCAD 0.7
 package require tdom

@@ -91,11 +91,10 @@
 
 			canvas $w.cv	-width  $start_image_w \
 							-height $start_image_h \
-							-bd     $cv_border \
-							-relief sunken \
+							-bd     0 \
 							-bg     gray 
 						 
-			pack   $w.cv   -fill both  -expand yes
+			pack   $w.cv   -fill both  -expand yes -padx $cv_border -pady $cv_border 
       
 			$w.cv create image  [expr 0.5*$start_image_w] \
 								[expr 0.5*$start_image_h] \

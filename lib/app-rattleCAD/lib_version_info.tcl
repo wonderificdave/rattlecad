@@ -74,7 +74,7 @@
                                            -text      "Intro" ]
                                            
              ;# -- intro image ----------
-        set version_intro_content [::create_intro  $version_intro  content ]
+        set version_intro_content [::create_intro  $version_intro  content  30]
           ;# wm  resizable  $w  0 0
         
              
@@ -146,6 +146,28 @@
 
 
         ;# =======================================================================
+          ;# -- version_exclusion ---------
+          ;#
+        set version_exclusion    [ $INFO_Notebook insert end exclusion \
+                                           -text      "Exclusion" ]
+             ;# -- text -----------------
+        pack [set sw_excl      [ ScrolledWindow $version_exclusion.sw] ] -fill both  -expand 1 
+
+        set excl_text          [ text $sw_excl.text \
+                                    -width       40 \
+                                    -height      10 \
+                                    -relief      sunken \
+                                    -wrap        none \
+                                    -background  white \
+                                    -font        $widget_font
+                               ]
+      
+             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
+        $sw_excl setwidget $sw_excl.text
+
+
+
+        ;# =======================================================================
           ;# -- insert into version_env -------------
           ;#
         $env_text  insert end "\n\n"
@@ -181,34 +203,6 @@
         
         
 
-        #$env_text  insert end "     config::Language\n"
-        #$env_text  insert end "  ----------------------------------------------------\n"
-        #$env_text  insert end "\n"
-        #foreach value [lsort $config::Language_Command] \
-        #  {
-        #$env_text  insert end "          $value\n"
-        #  }
-        #$env_text  insert end "\n\n\n"
-		  
-        $env_text  insert end "     APPL_Config(Window_Position)\n"
-        $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "\n"
-		#$env_text  insert end "          current:      [get_w_geometry .]\n"
-		$env_text  insert end "          user-setting: $APPL_Config(Window_Position)\n"
-        $env_text  insert end "\n\n\n"
-		  
-        #$env_text  insert end "     $control::FILE_List\n"
-        #$env_text  insert end "  ----------------------------------------------------\n"
-        #$env_text  insert end "\n"
-        #foreach value $control::FILE_List \
-        #  {
-        #$env_text  insert end "          $value\n"
-        #  }
-		  
-        $env_text  insert end "\n\n"
-       
-
-
         ;# =======================================================================
           ;# -- insert into version_help ---------
           ;#
@@ -228,6 +222,7 @@
         $help_text  insert end "\n\n"
         
 
+		
         ;# =======================================================================
           ;# -- insert into version_license ---------
           ;#
@@ -245,6 +240,26 @@
         close $fd
 
         $lic_text   insert end "\n\n"
+
+        
+
+        ;# =======================================================================
+          ;# -- insert into exclusion ---------
+          ;#
+        $excl_text  insert end "\n\n"
+        $excl_text  insert end "  ====================================================\n"
+        $excl_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $excl_text  insert end "  ====================================================\n"
+        $excl_text  insert end ""
+        
+        set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] exclusion.txt] r]
+        while {![eof $fd]} {
+	         set line [gets $fd]
+	         $excl_text  insert end "    $line\n"
+        }
+        close $fd
+
+        $excl_text  insert end "\n\n"
         
 
                                
@@ -252,6 +267,7 @@
         $version_help			configure  -borderwidth 2 
         $version_env			configure  -borderwidth 2 
         $version_license		configure  -borderwidth 2 
+        $version_exclusion		configure  -borderwidth 2 
 
         $INFO_Notebook 			compute_size
         $INFO_Notebook			raise [ $INFO_Notebook page $tab ]

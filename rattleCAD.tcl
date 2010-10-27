@@ -61,8 +61,8 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{01}  
-						RELEASE_Date		{26. Okt. 2010}
+						RELEASE_Revision	{02}  
+						RELEASE_Date		{27. Okt. 2010}
 						TemplateFile		{}
 						BASE_Dir			{}
 						ROOT_Dir			{}
@@ -105,11 +105,12 @@ exec wish "$0" "$@"
 		# -- Libraries  ---------------
 	lappend auto_path           [file join $APPL_Env(BASE_Dir) lib]
 	
-	package require   Tk		8.5
+	package require   Tk		 8.5
 	package require   BWidget 	    
-	package require   rattleCAD 3.2 
-	package require   AppUtil	0.8
-	package require   canvasCAD	0.7
+	package require   rattleCAD  3.2 
+	package require   AppUtil	 0.8
+	package require   canvasCAD	 0.7
+	package require	  extSummary 0.1
 
     
 		# -- AppUtil  -----------------
