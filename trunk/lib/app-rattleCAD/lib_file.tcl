@@ -200,7 +200,7 @@
 		if { [file readable $fileName ] } {
 				set ::APPL_Project	[lib_file::openFile_xml $fileName show]
 					#
-				check_FileVersion {31-32}
+				check_FileVersion {3.1}
 					#
 				frame_geometry_custom::set_base_Parameters $::APPL_Project
 					# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -237,16 +237,33 @@
 	proc check_FileVersion {Version} {
 		puts " ... check_FileVersion:  $Version"
 		case $Version {
-			{31-32} {	set node {}
+			{3.1} {	set node {}
 						set node [$::APPL_Project selectNode /root/Rendering]
 						if {$node == {}} {
-							puts "        ...  $Version   ... update File ..."
+							puts "        ...  $Version   ... update File ... /root/Rendering"
 							set node [$::APPL_Project selectNode /root]
 							$node appendXML "<Rendering>
 												<Fork>SteelLugged</Fork>
 												<Brakes>Road</Brakes>
 											</Rendering>"
 						}
+						
+						set node [$::APPL_Project selectNode /root/Personal/SeatTube_Length]
+						if {$node == {}} {
+							puts "        ...  $Version   ... update File ... /root/Personal/SeatTube_Length"
+							set LegLength [expr 0.88 * [[$::APPL_Project selectNode /root/Personal/InnerLeg_Length] asText ] ]
+							set node [$::APPL_Project selectNode /root/Personal]
+							$node appendXML "<SeatTube_Length>$LegLength</SeatTube_Length>"
+						}
+						
+							#set node [$::APPL_Project selectNode /root/Temporary]
+							#if {$node == {}} 
+							#	puts "        ...  $Version   ... update File ... /root/Temporary"
+							#	set node [$::APPL_Project selectNode /root]
+							#	$node appendXML "<Temporary>
+							#						<Saddle_OffsetX/>
+							#					</Temporary>"
+							#
 					}
 			{ab-xy} {	set node {}
 						set node [$::APPL_Project selectNode /root/Project/rattleCADVersion/text()]

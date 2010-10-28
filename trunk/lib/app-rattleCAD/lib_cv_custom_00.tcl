@@ -229,7 +229,7 @@
 						#
 					createDimension							$cv_Name $xy	personal_bg		
 						#
-					createDimension							$cv_Name $xy	personal_fg		
+					createDimension							$cv_Name $xy	personal_fg		off
 						#
 					createDimension							$cv_Name $xy	dimensionSummary_bg		
 						#						
@@ -371,6 +371,7 @@
 		set RearWheel			[ frame_geometry_custom::point_position		RearWheel					$BB_Position ]
 		set FrontWheel			[ frame_geometry_custom::point_position		FrontWheel				$BB_Position ]
 		set Saddle				[ frame_geometry_custom::point_position 	Saddle					$BB_Position ]
+		set SaddleProposal		[ frame_geometry_custom::point_position 	SaddleProposal			$BB_Position ]
 		set SeatStay_SeatTube	[ frame_geometry_custom::tube_values		SeatStay SeatTube		$BB_Position ]
 		set TopTube_SeatTube	[ frame_geometry_custom::tube_values		TopTube SeatTube		$BB_Position ]
 		set TopTube_Steerer		[ frame_geometry_custom::tube_values		TopTube HeadTube		$BB_Position ]
@@ -416,6 +417,7 @@
 						$cv_Name create circle 	$BottomBracket	-radius 20  -outline darkred 	-width 1.0			-tags __CenterLine__
 						$cv_Name create circle 	$HandleBar		-radius 10  -outline darkred 	-width 1.0			-tags __CenterLine__
 						$cv_Name create circle 	$Saddle			-radius 10  -outline darkred 	-width 1.0			-tags __CenterLine__
+						$cv_Name create circle 	$SaddleProposal	-radius 10  -outline gray 		-width 1.0			-tags __CenterLine__
 						#$cv_Name create circle 	$help_91		-radius  6  -outline gray50 	-width 1.0
 						#$cv_Name create circle 	$LegClearance	-radius 10  -outline darkred 	-width 1.0			
 					}
@@ -471,12 +473,6 @@
 						
 						set help_01				[ list [lindex $BottomBracket 0] [lindex $LegClearance 1] ]
 
-						set _dim_ST_Length 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BottomBracket $Saddle ] \
-															aligned		[expr  100 * $stageScale]   [expr -210 * $stageScale]  \
-															gray50 ] 
-						set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $Saddle $BottomBracket ] \
-															horizontal	[expr  -80 * $stageScale]    0 \
-															gray50 ] 
 						set _dim_ST_YPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BottomBracket $Saddle ] \
 															vertical	[expr -580 * $stageScale]  [expr -130 * $stageScale]  \
 															gray50 ] 
@@ -501,6 +497,12 @@
 						set _dim_HB_YPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $HandleBar		$BottomBracket ] \
 															vertical    [expr -270 * $stageScale]    [expr  180 * $stageScale]  \
 															darkblue ] 
+						set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $Saddle $BottomBracket ] \
+															horizontal	[expr  -80 * $stageScale]    0 \
+															darkblue ] 
+						set _dim_ST_Length 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $BottomBracket $Saddle ] \
+															aligned		[expr  100 * $stageScale]   [expr -210 * $stageScale]  \
+															darkblue ] 
 						set _dim_LC_Position_x	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $LegClearance  $BottomBracket ] \
 															horizontal  [expr   40 * $stageScale]   0  \
 															darkred ] 
@@ -517,6 +519,8 @@
 						if {$active == {on}} {
 								$cv_Name bind $_dim_HB_XPosition	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/HandleBar_Distance]
 								$cv_Name bind $_dim_HB_YPosition	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/HandleBar_Height]
+								$cv_Name bind $_dim_ST_Length		<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/SeatTube_Length]
+								$cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  combinedValue://Saddle_OffsetX]
 								$cv_Name bind $_dim_LC_Position_x	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Custom/TopTube/PivotPosition]
 								$cv_Name bind $_dim_LC_Position_y	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/InnerLeg_Length]
 								$cv_Name bind $_dim_ST_Angle  		<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/SeatTube_Angle]

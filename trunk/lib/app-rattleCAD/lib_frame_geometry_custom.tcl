@@ -214,7 +214,7 @@
 				#
 				# --- get SeatTube -------------------------
 			set SeatTube(Angle)			[ [ $domProject selectNodes /root/Personal/SeatTube_Angle  			]  asText ]
-			set SeatTube(Length)		[ expr 0.88*$LegClearance(Length) ]
+			set SeatTube(Length)		[ [ $domProject selectNodes /root/Personal/SeatTube_Length			]  asText ]
 			set SeatTube(DiameterBB)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterBB		]  asText ]
 			set SeatTube(DiameterTT)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterTT		]  asText ]
 			set SeatTube(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/TaperLength	]  asText ]
@@ -285,6 +285,7 @@
 			set frameCoords::FrontWheel		[ list $FrontWheel(Distance_X)	[expr $BottomBracket(depth) + ($FrontWheel(Radius) - $RearWheel(Radius))] ]
 			set frameCoords::HandleBar 		[ list $HandleBar(Distance)  	$HandleBar(Height) ]
 			set frameCoords::Saddle 		[ vectormath::rotateLine {0 0}  $SeatTube(Length)  [ expr 180 - $SeatTube(Angle) ] ]
+			set frameCoords::SaddleProposal	[ vectormath::rotateLine {0 0}  [ expr 0.88*$LegClearance(Length) ]  [ expr 180 - $SeatTube(Angle) ] ]
 			set frameCoords::Derailleur 	[ vectormath::addVector  $frameCoords::RearWheel  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
 			set frameCoords::LegClearance	[ list $TopTube(PivotPosition) 	[expr $LegClearance(Length) - ($RearWheel(Radius) - $BottomBracket(depth)) ] ]
 			set frameCoords::BB_Ground		[ list 0 	[expr - $RearWheel(Radius) + $BottomBracket(depth) ] ];# Point on the Ground perp. to BB
@@ -1001,7 +1002,7 @@
 			variable _updateValue
 			
 			# --- local procedures ---
-				proc change_ValueEdit {cv_Name updateCommand textVar xpath cvEntr direction} {
+				proc change_ValueEdit {textVar direction} {
 						#
 						# --- update value of spinbox ---
 							if {$direction eq "up"} {\
@@ -1010,6 +1011,7 @@
 								set ::$textVar [expr {[set ::$textVar]-1.0}]\
 							}
 				}
+				
 				proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText textVar updateCommand xpath} {					
 						#
 						# --- create cvLabel, cvEntry ---
@@ -1017,7 +1019,7 @@
 								# set cvEntry [entry  $cvContentFrame.value_${index} -textvariable $textVar  -justify right  -relief sunken -bd 1  -width 10]
 							set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable $textVar -justify right -relief sunken -width 10 -bd 1]
 							$cvEntry configure -command \
-								"[namespace current]::change_ValueEdit $cv_Name $updateCommand $textVar $xpath $cvEntry %d"
+								"[namespace current]::change_ValueEdit $textVar %d"
 							set	cvUpdate 	[button $cvContentFrame.update_${index} -image $lib_gui::iconArray(confirm)]
 							$cvUpdate configure -command \
 								"[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry"
@@ -1041,6 +1043,76 @@
 							bind $cvLabel	<B1-Motion> 		[list [namespace current]::drag 		%X %Y $cv $cvEdit]			
 							bind $cvEntry	<Return> 			[list [namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry]			
 				}
+				
+				proc create_CombinedEdit {cv cv_Name cvEdit cvContentFrame index textVar updateCommand xpath} {					
+						#
+						# --- get the project ---
+							set domDoc $::::APPL_Project	
+
+						#
+						# --- get type ---------- xpath given as combinedValue://Saddle_OffsetX
+							set type	[lindex [split $xpath /] 2]
+										# puts "\n .. $xpath "
+										# puts "\n .. $type "
+						
+						#
+						# --- get value to edit ---
+							switch $type {
+									{Saddle_OffsetX} {
+												set SeatTube_Length	[ [ $domDoc selectNodes /root/Personal/SeatTube_Length  ]	asText ] 
+												set SeatTube_Angle 	[ [ $domDoc selectNodes /root/Personal/SeatTube_Angle  ]	asText ] 
+												set value  			[ expr $SeatTube_Length * cos([expr $SeatTube_Angle*$vectormath::CONST_PI/180.0]) ]
+												set value 			[format "%.2f" $value]
+												set textVar			[format "%s(%s)" $textVar $type]
+												set $textVar 		$value
+													# puts "    ... SeatTube_Length $SeatTube_Length"
+													# puts "    ... SeatTube_Angle  $SeatTube_Angle"
+													# puts "    ... value  $value"
+													# puts "    ... textVar  $textVar"
+											}
+									default {
+											puts "\n"
+											puts "     WARNING!"
+											puts "\n"
+											puts "        ... this combinedValue:  "
+											puts "                 $type"
+											puts "            ... is not registered!"
+											puts "\n"
+											return
+									}
+							}
+							
+						#
+						# --- create cvLabel, cvEntry ---
+							set	cvLabel [label  $cvContentFrame.label_${index} -text "${type} : "]
+							set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable $textVar -justify right -relief sunken -width 10 -bd 1]
+							$cvEntry configure -command \
+								"[namespace current]::change_ValueEdit $textVar %d"
+							set	cvUpdate 	[button $cvContentFrame.update_${index} -image $lib_gui::iconArray(confirm)]
+							$cvUpdate configure -command \
+								"[namespace current]::updateConfig $cv_Name $updateCommand combinedValue:$type $cvEntry"
+							if {$index == {oneLine}} {
+								set	cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+								grid	$cvLabel $cvEntry $cvUpdate $cvClose -sticky news
+							} else {	
+								grid	$cvLabel $cvEntry $cvUpdate -sticky news
+							}
+							grid configure $cvLabel  -padx 3 -sticky nws
+							grid configure $cvEntry  -padx 2
+						#
+						# --- select entries content ---
+							if {$index == {oneLine}} {
+									focus $cvEntry
+									$cvEntry selection range 0 end
+							}
+						#
+						# --- define bindings ---
+							bind $cvLabel	<ButtonPress-1> 	[list [namespace current]::dragStart 	%X %Y]
+							bind $cvLabel	<B1-Motion> 		[list [namespace current]::drag 		%X %Y $cv $cvEdit]			
+							bind $cvEntry	<Return> 			[list [namespace current]::updateConfig $cv_Name $updateCommand combinedValue:$type $cvEntry]			
+				}
+				
+			
 				proc create_ListEdit {type cv cv_Name cvEdit cvContentFrame index labelText textVar updateCommand xpath} {					
 
 							proc createSelectBox {parent  values  target_var  cv_Name  updateCommand  xpath  cvEntry} {
@@ -1196,7 +1268,7 @@
 					pack configure $cvTitleFrame 	  -fill x -padx 2 -pady 2
 					pack configure $cvContentFrame 	  -fill both
 					
-					
+			puts "  0-> $xpathList"		
 			# --- cvContentFrame ---
 			if {[llength $xpathList] == 1 } {
 					pack forget $cvTitleFrame
@@ -1204,8 +1276,16 @@
 					set xpath [lindex $xpathList 0]
 					set index oneLine
 					
-					case $xpath {
+					puts "     1-> $xpath"
+					switch -glob $xpath {
+							{combinedValue://*} {
+										#
+										# --- create widgets per xpath list element ---
+									create_CombinedEdit $cv $cv_Name $cvEdit $cvContentFrame \
+														$index [namespace current]::_updateValue $updateCommand $xpath 
+							}
 							{file://*} {
+									puts "       4-> $xpath"
 									set updateMode fileList
 									set xpath	[string range $xpath 7 end]
 										# puts "   ... \$xpath $xpath"							
@@ -1237,6 +1317,7 @@
 												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
 							}
 							default {
+									puts "       5-> $xpath"
 									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
 									set _updateValue($xpath) $value
 										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
@@ -1262,7 +1343,7 @@
 					foreach xpath $xpathList {						
 						set index [expr $index +1]
 						
-						case $xpath {
+						switch -glob $xpath {
 							{file://*} { 
 										# puts "\n   ... \$xpath $xpath\n"
 									set updateMode fileList
@@ -1336,8 +1417,32 @@
 				# puts "   --updateConfig-> $_updateValue($xpath) $xpath "
 				# tk_messageBox -message " .... updateConfig:\n  ${xpath}: $value"
 			set domDoc $::APPL_Project
+			
+			# ---exception on combinedValue --- 
+			switch -glob $xpath {
+				{combinedValue:*} {
+					# --- xpath is given as e.g.:  combinedValue:Saddle_OffsetX
+						# puts "\n  ... updateConfig:  $xpath"
+					set type [lindex [split $xpath :] 1]
+						# puts "         ... type:  $type"
+					switch $type {
+						{Saddle_OffsetX} {
+								set SeatTube_Length	[ [ $domDoc selectNodes /root/Personal/SeatTube_Length  ]	asText ]
+									# puts "  updateConfig: SeatTube_Length  $SeatTube_Length"
+									# puts "  updateConfig: Value            $_updateValue($type)"
+								set angle	[ expr acos( $_updateValue($type) / $SeatTube_Length) *180 / $vectormath::CONST_PI ]
+									# puts "   ... $angle"								
+								set xpath 				Personal/SeatTube_Angle
+								set _updateValue($xpath) $angle	
+							}
+					}
+				}			
+				default {}			
+			}
+			
 			set node 		[$domDoc selectNodes /root/$xpath/text()]
 			set nodeValue 	[$node asText]
+			
 			puts "  ... updateConfig -> $_updateValue($xpath)"
 			
 			# --- check Value --- ","/"."]
