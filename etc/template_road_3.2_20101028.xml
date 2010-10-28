@@ -96,6 +96,7 @@
 		<HandleBar_Distance>471.24</HandleBar_Distance>
 		<HandleBar_Height>646.31</HandleBar_Height>
 		<SeatTube_Angle>73.20</SeatTube_Angle>
+		<SeatTube_Length>750.00</SeatTube_Length>
 	</Personal>	
 	
 	<!-- custom details of bicycle frame -->
@@ -266,6 +267,5 @@
 		<Fork>SteelLugged</Fork>
 		<Brakes>Road</Brakes>
 	</Rendering>
-	
-</root>
 
+</root>

@@ -1,4 +1,4 @@
- ##+##########################################################################
+ ##+##########################################################################te
  #
  # package: rattleCAD	->	lib_comp_library.tcl
  #
@@ -44,11 +44,12 @@
 	
 	variable	compList_System {}
 	variable	compList_Custom {}
+	variable	rdials_list	{}
 	
 	variable 	compFile  {}
-	variable 	compAngle 		0
-	variable 	compOffset_X	0
-	variable 	compOffset_y	0
+	variable 	compAngle 		0.0
+	variable 	compOffset_X	0.0
+	variable 	compOffset_y	0.0
 
 
 	#-------------------------------------------------------------------------
@@ -71,10 +72,10 @@
 		pack configure $canvasFrame -expand yes	
 
 			# -- file Listbox
-		frame	$menueFrame.lf  -width 30 -relief sunken -bd 1
-			pack $menueFrame.lf  -expand no -fill none
+		ttk::labelframe	$menueFrame.lf  -text "FileList" -width 34 
+			pack $menueFrame.lf  -expand no -fill x
 		set nb_fileList	[ ttk::notebook $menueFrame.lf.nb ]
-			pack $nb_fileList  	-expand no -fill none   
+			pack $nb_fileList  	-expand no -fill both   
 		$nb_fileList add [frame $nb_fileList.system] 	-text "... system" 		
 		$nb_fileList add [frame $nb_fileList.custom] 	-text "... custom" 
 			# -- system Content
@@ -124,30 +125,34 @@
 		bind $f_custom.lbox <<ListboxSelect>> [list [namespace current]::::ListboxChanged %W]
 
 			# -- Button
-		frame	$menueFrame.bt -relief groove -bd 1
-			pack $menueFrame.bt  -expand yes -fill both
+			# -- ButtonFrame
+		frame	 		$menueFrame.bf -relief flat -bd 1			
+		ttk::labelframe	$menueFrame.bf.update   -text "Update" 			
+		ttk::labelframe	$menueFrame.bf.scale    -text "Positioning" 
+			pack $menueFrame.bf  		-side top  -fill x 
+			pack $menueFrame.bf.update  \
+				 $menueFrame.bf.scale   -expand yes  -side top  -fill x  -pady 4
 
-		button 	$menueFrame.bt.l_clear	-text {clear List}			-width 30	-command [list [namespace current]::update_compList {clear} ]
-        button 	$menueFrame.bt.l_update	-text {update List}			-width 30	-command [list [namespace current]::update_compList {} ]
-		button 	$menueFrame.bt.c_update	-text {update Canvas}		-width 30	-command [list [namespace current]::updateCanvas]
-		pack 	$menueFrame.bt.l_clear \
-				$menueFrame.bt.l_update \
-				$menueFrame.bt.c_update \
+			# -- Button
+		button 	$menueFrame.bf.update.l_clear	-text {clear List}			-width 20	-command [list [namespace current]::update_compList {clear} ]
+        button 	$menueFrame.bf.update.l_update	-text {update List}			-width 20	-command [list [namespace current]::update_compList {} ]
+		button 	$menueFrame.bf.update.c_update	-text {update Canvas}		-width 20	-command [list [namespace current]::updateCanvas]
+		pack 	$menueFrame.bf.update.l_clear \
+				$menueFrame.bf.update.l_update \
+				$menueFrame.bf.update.c_update \
 				-side top
 
 			# -- Scale
-		ttk::labelframe	$menueFrame.bt.sc -text "Positioning" 
-			pack $menueFrame.bt.sc  -expand yes -fill both
-		create_config_line $menueFrame.bt.sc.off_x	"Offset x"	[namespace current]::compOffset_X  -180  180	 1	  [list [namespace current]::updateCanvas]
-		create_config_line $menueFrame.bt.sc.off_y	"Offset y"	[namespace current]::compOffset_y  -180  180	 1	  [list [namespace current]::updateCanvas]
-		create_config_line $menueFrame.bt.sc.angle	"Angle"	 	[namespace current]::compAngle     -180  180	 1	  [list [namespace current]::updateCanvas]
-		pack 	$menueFrame.bt.sc.off_x \
-		        $menueFrame.bt.sc.off_y \
-				$menueFrame.bt.sc.angle \
+		create_config_line $menueFrame.bf.scale.off_x	"Offset x"	[namespace current]::compOffset_X  -180  180	 1	  [list [namespace current]::updateCanvas]
+		create_config_line $menueFrame.bf.scale.off_y	"Offset y"	[namespace current]::compOffset_y  -180  180	 1	  [list [namespace current]::updateCanvas]
+		create_config_line $menueFrame.bf.scale.angle	"Angle"	 	[namespace current]::compAngle     -180  180	 1	  [list [namespace current]::updateCanvas]
+		pack 	$menueFrame.bf.scale.off_x \
+		        $menueFrame.bf.scale.off_y \
+				$menueFrame.bf.scale.angle \
 				-side top
 				
-		button 	$menueFrame.bt.sc.reset	-text {reset}			-width 15	-command [list [namespace current]::reset_Positioning ] 
-		pack 	$menueFrame.bt.sc.reset \
+		button 	$menueFrame.bf.scale.reset	-text {reset}			-width 20	-command [list [namespace current]::reset_Positioning ] 
+		pack 	$menueFrame.bf.scale.reset \
 				-side top
 
 
@@ -197,13 +202,17 @@
        #  reset Positioning
        #
 	proc reset_Positioning {} {		
-			variable compAngle		0
-			variable compOffset_X	0
-			variable compOffset_y	0			
-				set angle       0
-				set offset_x    0
-				set offset_y    0
-			[namespace current]::updateCanvas
+			variable rdials_list
+			variable compAngle	    0.0
+			variable compOffset_X	0.0
+			variable compOffset_y	0.0			
+				#set angle       0
+				#set offset_x    0
+				#set offset_y    0
+			foreach rd $rdials_list {
+				rdial::configure $rd -value 0
+			}
+			[namespace current]::updateCanvas 
 	}	
 	
 	#-------------------------------------------------------------------------
@@ -218,13 +227,17 @@
 	#-------------------------------------------------------------------------
        #  update Canvas
        #
-	proc updateCanvas {{value {0}}} {
+	proc updateCanvas {{entry_var ""} {value {0}}} {
 			variable compCanvas
 			variable compFile
 			variable compAngle
 			variable compOffset_X
 			variable compOffset_y
 
+			if {$entry_var ne ""} {
+			  global $entry_var
+                          set $entry_var $value
+                        }
 				# puts "\n ... $compCanvas\n    ... $compFile"
 			$compCanvas clean_StageContent
 			[namespace current]::create_Centerline
@@ -290,6 +303,7 @@
        #  create config_line
        #
 	proc create_config_line {w lb_text entry_var start end resolution command} {		
+			variable	rdials_list
 			frame   $w
 			pack    $w
 	 
@@ -297,22 +311,17 @@
 
 			label   $w.lb	-text $lb_text            -width 10  -bd 1  -anchor w 
 			entry   $w.cfg	-textvariable $entry_var  -width  4  -bd 1  -justify right -bg white 
-		 
-			scale   $w.scl	-width        12 \
-							-length       90 \
-							-bd           1  \
-							-sliderlength 15 \
-							-showvalue    0  \
+			frame	$w.f	-relief sunken -bd 2 -padx 3
+
+			rdial::create   $w.f.scl	-height        10 \
+							-width       84 \
 							-orient       horizontal \
-							-command      [list $command] \
-							-variable     $entry_var
-							
-			$w.scl configure -from $start -to $end -resolution $resolution	
-
-			#	bind $w.cfg <FocusIn> 		[list $w.cfg -textvariable {} ]
-			#	bind $w.cfg <Leave> 		[list $command]
-
-			pack      $w.lb  $w.cfg $w.scl    -side left  -fill x		    
+							-callback    [list $command $entry_var]
+			lappend rdials_list $w.f.scl
+			
+				bind $w.cfg <Leave> 		[list $command]
+				bind $w.cfg <Return> 		[list $command]
+			pack      $w.lb  $w.cfg  $w.f  $w.f.scl    -side left  -fill x	
 	}	
 	
 }
