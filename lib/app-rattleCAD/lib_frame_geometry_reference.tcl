@@ -298,7 +298,7 @@
 					variable HeadSet
 					
 					set frameCoords::HeadTube(direction) 		[ vectormath::unifyVector 	$frameCoords::Steerer_Fork		$frameCoords::Steerer_Stem ]
-					set frameCoords::HeadTube(Fork)				[ vectormath::addVector 	$frameCoords::Steerer_Fork		$frameCoords::HeadTube(direction) ]
+					set frameCoords::HeadTube(Fork)				$frameCoords::Steerer_Fork
 					set frameCoords::HeadTube(Stem)				[ vectormath::addVector 	$frameCoords::HeadTube(Fork)	$frameCoords::HeadTube(direction)	$HeadTube(Length) ]
 			}
 			get_HeadTube

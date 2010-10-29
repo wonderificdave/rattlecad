@@ -148,15 +148,14 @@
 			pack $noteBook_top -expand yes  -fill both  
 		
 			# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom99  "Reference"   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "Personal "   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "Details"			A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "Frame"   			A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "Assembly"   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "Dimensions"   		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "Drafting - Frame"	A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "Drafting - Jig"		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom07  "Tube Mitter"		A4  1.0 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom99  "Reference"			A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "Base Geometry "   	A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "Frame Tubing"		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "Frame Drafting"		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "Drafting - Jig"		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "Tube Mitter"		A4  1.0 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "Assembly"   		A4  0.2 -bd 2  -bg white  -relief sunken
 		
 		$noteBook_top add [frame $noteBook_top.report] 	-text "... info" 
 		
@@ -179,7 +178,7 @@
 		ttk::notebook::enableTraversal $noteBook_top
 		
 			# --- 	select and update following Tab
-		$noteBook_top select $noteBook_top.cv_Custom04
+		$noteBook_top select $noteBook_top.cv_Custom02
 				
 			# --- 	return
 		return $noteBook_top
@@ -424,7 +423,7 @@
 				Reference2Custom {
 							# -- create a Button to execute geometry_reference2personal
 							catch {	button $cv.button_R2C \
-											-text "copy settings to Personal" \
+											-text "copy settings to Base Geometry" \
 											-command lib_gui::geometry_reference2personal								
 									$cv create window 7 19 \
 											-window $cv.button_R2C \
@@ -459,7 +458,7 @@
 		switch $answer {
 			cancel	return				
 			ok		{	frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Project
-						lib_gui::fill_canvasCAD cv_Custom01 
+						lib_gui::fill_canvasCAD cv_Custom00 
 					}
 		}
 	}
