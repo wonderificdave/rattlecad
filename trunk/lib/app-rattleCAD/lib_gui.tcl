@@ -148,7 +148,7 @@
 			pack $noteBook_top -expand yes  -fill both  
 		
 			# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom99  "Reference"			A4  0.2 -bd 2  -bg white  -relief sunken
+		# lib_gui::create_canvasCAD  $noteBook_top  cv_Custom99  "Reference"			A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "Base Geometry "   	A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "Frame Tubing"		A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken

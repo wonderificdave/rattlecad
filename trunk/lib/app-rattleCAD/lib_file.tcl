@@ -238,16 +238,8 @@
 		puts " ... check_FileVersion:  $Version"
 		case $Version {
 			{3.1} {	set node {}
-						set node [$::APPL_Project selectNode /root/Rendering]
-						if {$node == {}} {
-							puts "        ...  $Version   ... update File ... /root/Rendering"
-							set node [$::APPL_Project selectNode /root]
-							$node appendXML "<Rendering>
-												<Fork>SteelLugged</Fork>
-												<Brakes>Road</Brakes>
-											</Rendering>"
-						}
-						
+
+							# --- /root/Personal/SeatTube_Length
 						set node [$::APPL_Project selectNode /root/Personal/SeatTube_Length]
 						if {$node == {}} {
 							puts "        ...  $Version   ... update File ... /root/Personal/SeatTube_Length"
@@ -256,14 +248,48 @@
 							$node appendXML "<SeatTube_Length>$LegLength</SeatTube_Length>"
 						}
 						
-							#set node [$::APPL_Project selectNode /root/Temporary]
-							#if {$node == {}} 
-							#	puts "        ...  $Version   ... update File ... /root/Temporary"
-							#	set node [$::APPL_Project selectNode /root]
-							#	$node appendXML "<Temporary>
-							#						<Saddle_OffsetX/>
-							#					</Temporary>"
-							#
+							# --- /root/Result
+						set node [$::APPL_Project selectNode /root/Result]
+						if {$node == {}} {
+							puts "        ...  $Version   ... update File ... /root/Temporary"
+							set node [$::APPL_Project selectNode /root]
+							$node appendXML "<Result>
+												<HeadTube>
+													<ReachLength>0.00</ReachLength>
+													<StackHeight>0.00</StackHeight>
+													<Angle>0.00</Angle>
+												</HeadTube>
+												<SeatTube>
+													<TubeLength>0.00</TubeLength>
+													<TubeHeight>0.00</TubeHeight>
+												</SeatTube>
+												<Saddle>
+													<Offset_BB>
+														<horizontal>0.00</horizontal>
+													</Offset_BB>
+												</Saddle>
+												<WheelPosition>
+													<front>
+														<horizontal>0.00</horizontal>
+													</front>
+													<rear>
+														<horizontal>0.00</horizontal>
+													</rear>
+												</WheelPosition>
+											</Result>"
+						}
+						
+							# --- /root/Rendering
+						set node [$::APPL_Project selectNode /root/Rendering]
+						if {$node == {}} {
+							puts "        ...  $Version   ... update File ... /root/Rendering"
+							set node [$::APPL_Project selectNode /root]
+							$node appendXML "<Rendering>
+												<Fork>SteelLugged</Fork>
+												<Brakes>Road</Brakes>
+											</Rendering>"
+						}	
+						
 					}
 			{ab-xy} {	set node {}
 						set node [$::APPL_Project selectNode /root/Project/rattleCADVersion/text()]

@@ -225,18 +225,18 @@
        #
 	proc set_window_title { {filename {}} } {
       
-      Debug  p
+			# Debug  p     
+		global APPL_Config APPL_Env
       
-      global APPL_Config APPL_Env
-      
-      set  prj_name  [file tail $filename]
+		set  prj_name  [file tail $filename]
 
-      set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision) - $prj_name"
-      set  APPL_Config(PROJECT_Name)  "$filename"
-      Debug  t  "   $filename " 1
-      
-      wm title . $APPL_Config(WINDOW_Title)
+		set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision) - $prj_name"
+		set  APPL_Config(PROJECT_Name)  "$filename"
+		
+			# Debug  t  "   $filename " 1      
+		wm title . $APPL_Config(WINDOW_Title)
 	}
+
 
 
 
