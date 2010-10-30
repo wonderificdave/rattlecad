@@ -7,7 +7,7 @@
     </Project>
 	
 	<!-- reference geometry of an existing frame -->
-	<Reference>
+	<!--Reference>
         <Wheel>
 			<Front>
 				<RimDiameter>622.00</RimDiameter>
@@ -88,7 +88,7 @@
 				<delta>0.00</delta>
 			</SeatTube_Angle>	
 		</Result>			
-	</Reference>
+	</Reference-->
 
 	<!-- personal geometry based on cyclist body profile -->
 	<Personal>
@@ -102,7 +102,6 @@
 	<!-- custom details of bicycle frame -->
 	<Custom>
 		<HeadTube>
-			<Length>150.00</Length>
 			<PositonTT>8.50</PositonTT>
 			<PositonDT>8.50</PositonDT>
 		</HeadTube>
@@ -261,6 +260,32 @@
 			<File>rear_derailleur/campagnolo_2006_short.svg</File>
 		</Derailleur>
 	</Component>
+	
+	<!-- resulting values -->
+	<Result>
+		<HeadTube>
+			<ReachLength>0.00</ReachLength>
+			<StackHeight>0.00</StackHeight>
+			<Angle>0.00</Angle>
+		</HeadTube>
+		<SeatTube>
+			<TubeLength>0.00</TubeLength>
+			<TubeHeight>0.00</TubeHeight>
+		</SeatTube>
+		<Saddle>
+			<Offset_BB>
+				<horizontal>0.00</horizontal>
+			</Offset_BB>
+		</Saddle>
+		<WheelPosition>
+			<front>
+				<horizontal>0.00</horizontal>
+			</front>
+			<rear>
+				<horizontal>0.00</horizontal>
+			</rear>
+		</WheelPosition>
+	</Result>
 	
 	<!-- rendering information -->
 	<Rendering>

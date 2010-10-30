@@ -61,8 +61,8 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{05}  
-						RELEASE_Date		{29. Okt. 2010}
+						RELEASE_Revision	{09}  
+						RELEASE_Date		{30. Okt. 2010}
 						TemplateFile		{}
 						BASE_Dir			{}
 						ROOT_Dir			{}
@@ -175,45 +175,6 @@ exec wish "$0" "$@"
 
 
 
-  
-
-
- 
- 
-
-
-	
-	# -- CONST_PI ---------------
-		# set CONST_PI            $mathematic::CONST_PI
-
-    # -- RIM - listbox content --------
-	#set  rim_definition_file         [file join $APPL_Env(CONFIG_Dir) rim_diameter.csv]
-		#set fd [open $rim_definition_file r]
-		#while {![eof $fd]} \
-		{  set line [gets $fd]
-			#lappend rim_lbox_value $line
-		#}
-		#close $fd
-
-    # -- HANDLEBAR - listbox content --
-	#set  handlebar_definition_file   [file join $APPL_Env(CONFIG_Dir) handlebar_type.csv]
-    #set fd [open $handlebar_definition_file r]
-    #while {![eof $fd]} \
-       {  set line [gets $fd]
-          #lappend handlebar_type $line
-    #   }
-    #close $fd
-
-    # -- FORK - listbox content --
-	#set  fork_definition_file   [file join $APPL_Env(CONFIG_Dir) fork_type.csv]
-    #set fd [open $fork_definition_file r]
-    #while {![eof $fd]} \
-       {  set line [gets $fd]
-          #lappend fork_type $line
-       #}
-    #close $fd
-
-
     # -- initialize road/offroad - templates 
     # -- initialize user - settings 
   set APPL_Env(USER_Dir) [lib_file::check_user_dir]
@@ -269,9 +230,6 @@ exec wish "$0" "$@"
 
 	
 	
-		# --------------------------------------------
-		#	create reference base Parameters
-	frame_geometry_reference::set_base_Parameters $APPL_Project
 		# --------------------------------------------
 		#	create custom base Parameters
 	frame_geometry_custom::set_base_Parameters $APPL_Project

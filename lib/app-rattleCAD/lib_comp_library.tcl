@@ -187,8 +187,8 @@
 		variable	compList_System
 		variable	compList_Custom
 		
-		puts "\n\n -> mode $mode \n"
 		if {[string match $mode {clear}]} { 
+			puts "    ... update_compList -> mode $mode    ... clear "
 			set compList_System {}
 			set compList_Custom {}
 		} else {

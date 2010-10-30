@@ -45,28 +45,17 @@
 	array	set	baseLine	{}
 
 
-	proc createBaseline {cv_Name BB_Position geometry_type {colour {gray}}} {
+	proc createBaseline {cv_Name BB_Position {colour {gray}}} {
 	
 			## -- read from domProject
 		set domProject $::APPL_Project
 		
 			# --- get distance to Ground
-		switch $geometry_type {
-			reference	{	
-					set BB_Ground(position)		[ frame_geometry_reference::point_position	BB_Ground  	$BB_Position] 
-					set RimDiameter_Front		[ [ $domProject selectNodes /root/Reference/Wheel/Front/RimDiameter ]  asText ]
-					set RimDiameter_Rear		[ [ $domProject selectNodes /root/Reference/Wheel/Rear/RimDiameter  ]  asText ]
-					set FrontWheel(position)	[ frame_geometry_reference::point_position  FrontWheel  $BB_Position]
-					set RearWheel(position)		[ frame_geometry_reference::point_position  RearWheel  	$BB_Position]
-				}
-			custom		{	
-					set BB_Ground(position)		[ frame_geometry_custom::point_position  	BB_Ground  	$BB_Position] 
-					set RimDiameter_Front		[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter ]  asText ]
-					set RimDiameter_Rear		[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter  ]  asText ]
-					set FrontWheel(position)	[ frame_geometry_custom::point_position  FrontWheel  	$BB_Position]
-					set RearWheel(position)		[ frame_geometry_custom::point_position  RearWheel  	$BB_Position]
-				}
-		}
+		set BB_Ground(position)		[ frame_geometry_custom::point_position  	BB_Ground  	$BB_Position] 
+		set RimDiameter_Front		[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter ]  asText ]
+		set RimDiameter_Rear		[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter  ]  asText ]
+		set FrontWheel(position)	[ frame_geometry_custom::point_position  FrontWheel  	$BB_Position]
+		set RearWheel(position)		[ frame_geometry_custom::point_position  RearWheel  	$BB_Position]
 						
 			# --- get RearWheel
 		foreach {x y} $RearWheel(position) break
@@ -549,7 +538,7 @@
 	}
 
 	
-	proc createFrame_Centerline {cv_Name BB_Position geometry_type {highlightList {}} {excludeList {}} } {
+	proc createFrame_Centerline {cv_Name BB_Position {highlightList {}} {excludeList {}} } {
 			
 			## -- read from domProject
 		set domProject $::APPL_Project
@@ -558,58 +547,30 @@
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 	
 	
-		switch $geometry_type {
-			reference	{
-						# --- get defining Values ----------
-					set CrankSetLength		170
-						# --- get defining Point coords ----------
-					set BottomBracket		$BB_Position	
-					set RearWheel			[ frame_geometry_reference::point_position  RearWheel			$BB_Position ]
-					set FrontWheel			[ frame_geometry_reference::point_position  FrontWheel			$BB_Position ]
-					set Saddle				[ frame_geometry_reference::point_position  Saddle				$BB_Position ]
-					set SeatTube_Ground		[ frame_geometry_reference::point_position  SeatTube_Ground		$BB_Position ]
-					set SeatStay_SeatTube	[ frame_geometry_reference::tube_values		SeatStay SeatTube	$BB_Position ]
-					set SeatStay_RearWheel	[ frame_geometry_reference::tube_values		SeatStay RearWheel	$BB_Position ]
-					set TopTube_SeatTube	[ frame_geometry_reference::tube_values		TopTube SeatTube	$BB_Position ]
-					set TopTube_Steerer		[ frame_geometry_reference::tube_values		TopTube HeadTube	$BB_Position ]
-					set Steerer_Stem		[ frame_geometry_reference::point_position  Steerer_Stem		$BB_Position ]
-					set Steerer_Fork		[ frame_geometry_reference::point_position  Steerer_Fork		$BB_Position ]
-					set DownTube_Steerer	[ frame_geometry_reference::tube_values		DownTube HeadTube 	$BB_Position ]
-					set HandleBar			[ frame_geometry_reference::point_position  HandleBar 			$BB_Position ]
-					set BaseCenter			[ frame_geometry_reference::point_position  BB_Ground			$BB_Position ]
-					set Steerer_Ground		[ frame_geometry_reference::point_position  Steerer_Ground		$BB_Position ]		
-					set LegClearance		[ frame_geometry_reference::point_position  LegClearance 		$BB_Position ]
-					set RimDiameter_Front	[ [ $domProject selectNodes /root/Reference/Wheel/Front/RimDiameter ]  asText ]
-					set TyreHeight_Front	[ [ $domProject selectNodes /root/Reference/Wheel/Front/TyreHeight  ]  asText ]
-					set RimDiameter_Rear	[ [ $domProject selectNodes /root/Reference/Wheel/Rear/RimDiameter  ]  asText ]
-					set TyreHeight_Rear		[ [ $domProject selectNodes /root/Reference/Wheel/Rear/TyreHeight   ]  asText ]			
-				}
-			custom		{
-						# --- get defining Values ----------
-					set CrankSetLength			[ [ $domProject selectNodes /root/Component/CrankSet/Length		 ]  asText ]
-						# --- get defining Point coords ----------
-					set BottomBracket		$BB_Position	
-					set RearWheel			[ frame_geometry_custom::point_position  RearWheel				$BB_Position ]
-					set FrontWheel			[ frame_geometry_custom::point_position  FrontWheel				$BB_Position ]
-					set Saddle				[ frame_geometry_custom::point_position  Saddle					$BB_Position ]
-					set SeatTube_Ground		[ frame_geometry_custom::point_position  SeatTube_Ground		$BB_Position ]
-					set SeatStay_SeatTube	[ frame_geometry_custom::tube_values     SeatStay SeatTube		$BB_Position ]
-					set SeatStay_RearWheel	[ frame_geometry_custom::tube_values     SeatStay RearWheel		$BB_Position ]
-					set TopTube_SeatTube	[ frame_geometry_custom::tube_values     TopTube SeatTube		$BB_Position ]
-					set TopTube_Steerer		[ frame_geometry_custom::tube_values  	  TopTube HeadTube		$BB_Position ]
-					set Steerer_Stem		[ frame_geometry_custom::point_position  Steerer_Stem			$BB_Position ]
-					set Steerer_Fork		[ frame_geometry_custom::point_position  Steerer_Fork			$BB_Position ]
-					set DownTube_Steerer	[ frame_geometry_custom::tube_values  	  DownTube HeadTube 	$BB_Position ]
-					set HandleBar			[ frame_geometry_custom::point_position  HandleBar 				$BB_Position ]
-					set BaseCenter			[ frame_geometry_custom::point_position  BB_Ground				$BB_Position ]
-					set Steerer_Ground		[ frame_geometry_custom::point_position  Steerer_Ground			$BB_Position ]		
-					set LegClearance		[ frame_geometry_custom::point_position  LegClearance 			$BB_Position ]
-					set RimDiameter_Front	[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter ]  asText ]
-					set TyreHeight_Front	[ [ $domProject selectNodes /root/Component/Wheel/Front/TyreHeight  ]  asText ]
-					set RimDiameter_Rear	[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter  ]  asText ]
-					set TyreHeight_Rear		[ [ $domProject selectNodes /root/Component/Wheel/Rear/TyreHeight   ]  asText ]
-				}		
-		}
+			# --- get defining Values ----------
+		set CrankSetLength			[ [ $domProject selectNodes /root/Component/CrankSet/Length		 ]  asText ]
+			# --- get defining Point coords ----------
+		set BottomBracket		$BB_Position	
+		set RearWheel			[ frame_geometry_custom::point_position  RearWheel				$BB_Position ]
+		set FrontWheel			[ frame_geometry_custom::point_position  FrontWheel				$BB_Position ]
+		set Saddle				[ frame_geometry_custom::point_position  Saddle					$BB_Position ]
+		set SeatTube_Ground		[ frame_geometry_custom::point_position  SeatTube_Ground		$BB_Position ]
+		set SeatStay_SeatTube	[ frame_geometry_custom::tube_values     SeatStay SeatTube		$BB_Position ]
+		set SeatStay_RearWheel	[ frame_geometry_custom::tube_values     SeatStay RearWheel		$BB_Position ]
+		set TopTube_SeatTube	[ frame_geometry_custom::tube_values     TopTube SeatTube		$BB_Position ]
+		set TopTube_Steerer		[ frame_geometry_custom::tube_values  	  TopTube HeadTube		$BB_Position ]
+		set Steerer_Stem		[ frame_geometry_custom::point_position  Steerer_Stem			$BB_Position ]
+		set Steerer_Fork		[ frame_geometry_custom::point_position  Steerer_Fork			$BB_Position ]
+		set DownTube_Steerer	[ frame_geometry_custom::tube_values  	  DownTube HeadTube 	$BB_Position ]
+		set HandleBar			[ frame_geometry_custom::point_position  HandleBar 				$BB_Position ]
+		set BaseCenter			[ frame_geometry_custom::point_position  BB_Ground				$BB_Position ]
+		set Steerer_Ground		[ frame_geometry_custom::point_position  Steerer_Ground			$BB_Position ]		
+		set LegClearance		[ frame_geometry_custom::point_position  LegClearance 			$BB_Position ]
+		set RimDiameter_Front	[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter ]  asText ]
+		set TyreHeight_Front	[ [ $domProject selectNodes /root/Component/Wheel/Front/TyreHeight  ]  asText ]
+		set RimDiameter_Rear	[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter  ]  asText ]
+		set TyreHeight_Rear		[ [ $domProject selectNodes /root/Component/Wheel/Rear/TyreHeight   ]  asText ]
+
 			
 			# ------ rearwheel representation
 		$cv_Name create circle 	$RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]  	-outline gray60	-width 1.0	-tags __CenterLine__	
@@ -657,9 +618,16 @@
 
 		puts "  $highlightList "
 			# --- highlightList
+				# set highlight(colour) firebrick
+				# set highlight(colour) darkorchid
+				# set highlight(colour) darkred
+				# set highlight(colour) firebrick
+				# set highlight(colour) blue
+		set highlight(colour) red
+		set highlight(width)  1.5
 		foreach item $highlightList {
-			catch {$cv_Name itemconfigure $item  -fill 		red -width 1.5 } error
-			catch {$cv_Name itemconfigure $item  -outline 	red -width 1.5 } error
+			catch {$cv_Name itemconfigure $item  -fill 		$highlight(colour) -width $highlight(width) } error
+			catch {$cv_Name itemconfigure $item  -outline 	$highlight(colour) -width $highlight(width) } error
 		}
 
 		puts "  $excludeList "

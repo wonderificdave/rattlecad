@@ -36,8 +36,8 @@
 	</Startup>
 	
 	<Template>
-		<Road>template_road_3.2_20101028.xml</Road>
-		<MTB>template_mtb_3.2_20101028.xml</MTB>
+		<Road>template_road_3.2_20101029.xml</Road>
+		<MTB>template_mtb_3.2_20101029.xml</MTB>
 	</Template>
 
 	<Options>
