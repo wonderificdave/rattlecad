@@ -131,6 +131,7 @@ file_update [file join $vfsDir  etc      ]                          $dir_version
 file_update [file join $vfsDir  image    ]                          $dir_version
 file_update [file join $vfsDir  lib/_apputil      ]                 [file join $dir_version lib]
 file_update [file join $vfsDir  lib/_canvasCAD    ]                 [file join $dir_version lib]
+file_update [file join $vfsDir  lib/_extSummary   ]                 [file join $dir_version lib]
 file_update [file join $vfsDir  lib/app-rattleCAD ]                 [file join $dir_version lib]
 file_update [file join $vfsDir  lib/test_canvas_CAD_ChainWheel.tcl] [file join $dir_version lib]
 file_update [file join $vfsDir  lib/test_canvas_CAD_Dimension.tcl ] [file join $dir_version lib]
