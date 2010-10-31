@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <rattleCAD>
+        <Version>3.2.00</Version>
+        <Name>rattleCAD_init</Name>
+        <modified>2010.10.24/00:00</modified>
+    </rattleCAD>
+	
+	<!-- Startup Settings -->
+	<lib_gui>
+		<geometry>
+			<canvas width="900" height="650"/>
+		</geometry>
+		<images directory="image">
+			<image name="open"		src="open.gif" />
+			<image name="recent"	src="open_recent.gif" />
+			<image name="save"		src="save.gif" />
+			<image name="print"		src="print.gif" />
+			<image name="clear"		src="clean.gif" />
+			<image name="design"	src="design.gif" />
+			<image name="drawing"	src="drawing.gif" />
+			<image name="reset_r"	src="reset_road.gif" />
+			<image name="reset_o"	src="reset_offroad.gif" />
+			<image name="scale_p"	src="scale_plus.gif" />
+			<image name="scale_m"	src="scale_minus.gif" />
+			<image name="resize"	src="resize.gif" />
+			<image name="exit"     	src="exit.gif" />
+			<image name="iconClose" src="iconClose.gif" />
+			<image name="confirm" 	src="confirm.gif" />
+		</images>
+	</lib_gui>	
+	
+	
+	<Startup>
+		<TemplateFile>Road</TemplateFile>
+	</Startup>
+	
+	<Template>
+		<Road>template_road_3.2_20101029.xml</Road>
+		<MTB>template_mtb_3.2_20101029.xml</MTB>
+	</Template>
+
+	<Options>
+	
+		<Fork>
+			<SteelLugged>
+				<Geometry>
+					<Height>365.00</Height>
+					<Rake>45.00</Rake>
+				</Geometry>
+				<Visualization>
+					<Crown>
+						<File>fork/crown/longshen_max_36_5.svg</File>
+						<Brake>
+							<Offset>20.00</Offset>
+							<OffsetPerp>8.00</OffsetPerp>
+							<Angle>0.00</Angle>
+						</Brake>
+						<Blade>
+							<Offset>35.00</Offset>
+							<OffsetPerp>3.50</OffsetPerp>
+						</Blade>
+					</Crown>
+					<Blade>
+						<Width>36.00</Width>
+						<DiameterDO>14.00</DiameterDO>
+						<TaperLength>250.00</TaperLength>
+						<Offset>6.00</Offset>
+					</Blade>
+					<DropOut>
+						<File>fork/dropout/dropout_14.svg</File>
+						<Offset>20.00</Offset>
+						<OffsetPerp>0.00</OffsetPerp>
+					</DropOut>
+				</Visualization>
+			</SteelLugged>
+			<Composite>    
+				<Geometry>
+					<Height>365.00</Height>
+					<Rake>45.00</Rake>
+				</Geometry>
+				<Visualization>
+					<Crown>
+						<File>fork/crown/longshen_max_36_5.svg</File>
+						<Brake>
+							<Offset>20.00</Offset>
+							<OffsetPerp>8.00</OffsetPerp>
+							<Angle>0.00</Angle>
+						</Brake>
+						<Blade>
+							<Offset>35.00</Offset>
+							<OffsetPerp>3.50</OffsetPerp>
+						</Blade>
+					</Crown>
+					<Blade>
+						<Width>36.00</Width>
+						<DiameterDO>14.00</DiameterDO>
+						<TaperLength>250.00</TaperLength>
+						<Offset>6.00</Offset>
+					</Blade>
+					<DropOut>
+						<File>fork/dropout/dropout_14.svg</File>
+						<Offset>20.00</Offset>
+						<OffsetPerp>0.00</OffsetPerp>
+					</DropOut>
+				</Visualization>
+			</Composite>
+			<Suspension>   
+				<Geometry>
+					<Rake>40.00</Rake>
+				</Geometry>
+				<Visualization>
+					<Crown>
+						<File>fork/_suspension/fork_crown.svg</File>
+					</Crown>
+					<DropOut>
+						<File>fork/_suspension/suspension_bridge.svg</File>
+					</DropOut>
+				</Visualization>
+			</Suspension>
+		</Fork>
+		
+		<Rim>
+			<rim inch="28&#8221;" metric="622" standard="ertro-road" />
+			<rim inch="26&#8221;" metric="559" standard="ertro-mtb"  />
+			<rim inch="26&#8221;" metric="571" standard="ertro-tria" />
+			<separator/>
+			<rim inch="26&#8221;" metric="590" standard="ertro" />
+			<rim inch="24&#8221;" metric="507" standard="ertro" />
+			<rim inch="20&#8221;" metric="451" standard="ertro" />
+			<rim inch="20&#8221;" metric="406" standard="ertro" />
+			<rim inch="18&#8221;" metric="355" standard="ertro" />
+			<rim inch="18&#8221;" metric="349" standard="ertro" />
+			<rim inch="18&#8221;" metric="340" standard="ertro" />
+			<rim inch="16&#8221;" metric="330" standard="ertro" />
+			<rim inch="16&#8221;" metric="305" standard="ertro" />
+			<separator/>	
+			<rim inch="28&#8221;" metric="635" standard="french" />
+			<rim inch="27&#8221;" metric="630" standard="english" />
+			<rim inch="26&#8221;" metric="584" standard="french" />
+			<rim inch="24&#8221;" metric="540" standard="french" /> 
+			<rim inch="22&#8221;" metric="490" standard="french" />
+			<rim inch="22&#8221;" metric="440" standard="french" />
+			<rim inch="20&#8221;" metric="390" standard="french" />
+			<rim inch="16&#8221;" metric="340" standard="french" />
+			<rim inch="14&#8221;" metric="298" standard="french" />
+		</Rim>
+
+		<Brake>
+			<Road/>
+			<V-Brake/>
+			<Disc/>
+		</Brake>
+
+		<TubeSet>
+			<Vintage>
+				<TopTube  DiameterST="25.4" DiameterHT="25.4" TaperLength="300.0" />
+				<DownTube DiameterBB="28.6" DiameterHT="28.6" TaperLength="300.0" />
+				<SeatTube DiameterBB="28.6" DiameterTT="28.6" TaperLength="300.0" />
+				<HeadTube Diameter="31.8" />
+			</Vintage>
+			<Standard>
+				<TopTube  DiameterST="28.6" DiameterHT="28.6" TaperLength="300.0" />
+				<DownTube DiameterBB="31.8" DiameterHT="31.8" TaperLength="300.0" />
+				<SeatTube DiameterBB="28.6" DiameterTT="28.6" TaperLength="300.0" />
+				<HeadTube Diameter="31.8" />
+			</Standard>
+			<Oversize>
+				<TopTube  DiameterST="31.8" DiameterHT="31.8" TaperLength="300.0" />
+				<DownTube DiameterBB="34.9" DiameterHT="34.9" TaperLength="300.0" />
+				<SeatTube DiameterBB="31.8" DiameterTT="31.8" TaperLength="300.0" />
+				<HeadTube Diameter="36.0" />
+			</Oversize>
+			<Tapered> 
+				<TopTube  DiameterST="28.6" DiameterHT="28.6" TaperLength="300.0" />
+				<DownTube DiameterBB="34.9" DiameterHT="31.8" TaperLength="300.0" />
+				<SeatTube DiameterBB="31.8" DiameterTT="28.6" TaperLength="300.0" />
+				<HeadTube Diameter="36.0" />
+			</Tapered>
+		</TubeSet>
+				
+	</Options>
+
+</root>
