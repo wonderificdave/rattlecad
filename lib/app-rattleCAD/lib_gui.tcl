@@ -70,6 +70,8 @@
 						{command "&Open Project XML"      {File_Open_Project}  	"Open Project-XML File" {Ctrl o} -command { lib_file::openProject_xml } 	}
 						{command "&Save"                  {File_Save}     		"Save Configuration"    {Ctrl s} -command { lib_file::saveProject_xml }		}
 						{separator}
+						{command "&Rendering"             {Rendering}     		"Component Rendering"   {Ctrl r} -command { lib_gui::set_RenderingSettings }		}
+						{separator}
 						{command "&Print"                 {File_Print}    		"Print current Graphic" {Ctrl p} -command { lib_gui::notebook_printCanvas $APPL_Env(USER_Dir) }	}
 						{separator}
 						{command "&Intro-Image"           {File_Intro}    		"Show Intro Window"     {Ctrl i} -command { create_intro .intro}          	}
@@ -212,7 +214,6 @@
 	proc fill_canvasCAD {varName} {
 		variable noteBook_top
 		switch -exact -- $varName {
-			cv_Custom99 -
 			cv_Custom00 -
 			cv_Custom01 -
 			cv_Custom02 -
@@ -529,6 +530,41 @@
 			
 	}
 
+
+
+	#-------------------------------------------------------------------------
+       #  change Rendering Settings 
+       #
+	proc set_RenderingSettings  {{type {}}}  {
+		variable noteBook_top
+
+		set currentTab [$noteBook_top select]
+		set varName    [notebook_getVarName $currentTab]
+		set cv_Name    [notebook_getWidget  $varName]
+			# puts "  notebook_refitCanvas: varName: $varName"
+		if { $varName == {} } {
+				puts "     notebook_refitCanvas::varName: $varName ... undefined"
+				return
+		}
+		
+		puts "   ... $type"
+		puts "   ... $currentTab"
+		puts "   ... $varName"
+		puts "   ... $cv_Name"
+	
+		switch $type {
+				Fork	{ set listDefinition list://Rendering/Fork@APPL_ForkTypes }
+				Brake	{ set listDefinition list://Rendering/Brakes@APPL_BrakeTypes }
+				default { set listDefinition {list://Rendering/Fork@APPL_ForkTypes list://Rendering/Brakes@APPL_BrakeTypes} }
+		}
+		
+			# update
+			# set canvasUpdate($varName) [ expr $::APPL_Update -1 ]
+		frame_geometry_custom::createEdit  10 50  $varName  cv_custom_00::update  $listDefinition  {Rendering Settings}
+				
+			# set canvasUpdate($varName) [ expr $::APPL_Update -1 ]
+			# notebook_updateCanvas force
+	}
 	
 	#-------------------------------------------------------------------------
        #  change canvasCAD Format and Scale
