@@ -1393,7 +1393,7 @@
 										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
-										set listBoxContent $::APPL_ForkTypes
+										set listBoxContent $::APPL_BrakeTypes
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
 										}
