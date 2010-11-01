@@ -82,7 +82,7 @@ foreach _dir [glob -directory [file join $dir_compile   _lib] *] {
 
 file_update [file join $dir_trunk help.txt]       $vfsDir
 file_update [file join $dir_trunk license.txt]    $vfsDir
-file_update [file join $dir_trunk exclusion.txt]    $vfsDir
+file_update [file join $dir_trunk exclusion.txt]  $vfsDir
 file_update [file join $dir_trunk rattleCAD.tcl]  $vfsDir
 
 	# -- remove unused files
@@ -95,11 +95,18 @@ puts "         cleanup\n"
 foreach file [findFiles [file join $vfsDir etc] *.cdr {f r}] {
 	file_delete $file
 }
+foreach file [findFiles [file join $vfsDir etc] *.jpg {f r}] {
+	file_delete $file
+}
 foreach file [findFiles $vfsDir .svn {d r hidden} ] {
 	file_delete $file
 }
 
 
+	# -- test starkit 
+	#
+puts "\n ========================\n"
+puts "         test Starkit\n"
 	# -- test 
 	#
 exec tclkit-8.5.8-win32.upx.exe rattleCAD.vfs/main.tcl
@@ -110,6 +117,8 @@ file copy  -force tclkit-8.5.8-win32.upx.exe example.rt
    
 	# -- compile 
 	#
+puts "\n ========================\n"
+puts "         compile Starkit\n"
 exec tclkit-8.5.8-win32.upx.exe sdx.kit wrap rattleCAD.exe -runtime example.rt
 
 
