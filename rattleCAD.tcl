@@ -61,7 +61,7 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{10}  
+						RELEASE_Revision	{12}  
 						RELEASE_Date		{31. Oct. 2010}
 						TemplateFile		{}
 						BASE_Dir			{}
@@ -138,6 +138,10 @@ exec wish "$0" "$@"
 	set APPL_Project  [ lib_file::openFile_xml 	[file join $APPL_Env(CONFIG_Dir) $APPL_Env(TemplateFile) ] ]
 
 	
+	puts ""
+	puts "  Template Road        -> $APPL_Env(TemplateRoad)"
+	puts "  Template Road        -> $APPL_Env(TemplateMTB)"
+
 	puts "\n  APPL_ForkTypes"
 	foreach entry $APPL_ForkTypes {
 		puts "        -> $entry"

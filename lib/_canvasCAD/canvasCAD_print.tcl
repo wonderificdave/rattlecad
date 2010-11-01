@@ -39,63 +39,106 @@
  #
 
 
-	proc canvasCAD::printPostScript { canvasDOMNode printDir} {
-			set w			[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	path  ]			
-			set wScale		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	scale ]			
-			set Unit		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	unit  ]
-        
-        # ::Debug  p  1
-
+	proc canvasCAD::printPostScript { cv_name printDir} {
+			
+			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_name] ]
+									
+			set w			[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	path   ]			
+			set wScale		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	scale  ]			
+			set Unit		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	unit   ]
+			set Format		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	format ]			
+			set FormatSize  [ $cv_name getFormatSize $Format]
+			
+			puts "\n"
+ 			puts "         printPostScript:"
+ 			puts "       ---------------------------------------------"
+ 			puts "               $cv_name"
+ 			puts "               $printDir"
+ 			puts "            ----------------------------------------"
+			puts ""
+  			puts "               w           $w			"
+ 			puts "               wScale      $wScale	"
+ 			puts "               Unit        $Unit		"
+ 			puts "               Format      $Format	"
+ 			puts "               FormatSize  $FormatSize"
+ 			puts ""
   	     
-        set page_a4_width   297
-        set page_a4_height  210
+        set pageWidth   [lindex $FormatSize 0]
+        set pageHeight  [lindex $FormatSize 1]
         
-          # tk_messageBox -message " print_postscript"
-        set bbox      [$w bbox __Stage__]
-			# set bbox_size [get_BBoxInfo  size  [$w bbox __Stage__] ]
-		set bbox_size [get_BBoxInfo  size  $bbox ]
-        set bbox_x    [lindex $bbox_size 0]
-        set bbox_y    [lindex $bbox_size 1]
-        set cv_size   [get_Size $w]
-        
-           # debug::create
-        # ::Debug  t  "bbox         $bbox"       1
-        # ::Debug  t  "bbox size    $bbox_size"  1
-        # ::Debug  t  "bbox size x  $bbox_x"     1
-        # ::Debug  t  "bbox size y  $bbox_y"     1
-        # ::Debug  t  "cv   size    $cv_size"     1
-        
-        if {[expr $bbox_x/sqrt(2)] < $bbox_y} {
-           set bbox_x [expr $bbox_y*sqrt(2)] 
-        }
-        
-        #control::get_user_dir
-        # ::Debug  t  "control::get_user_dir   $control::USER_Dir"     1
+  			puts "               pageWidth   $pageWidth	"
+ 			puts "               pageHeight  $pageHeight"
+ 			puts ""
 
-        set w_name          [winfo name $w]
-        # set printfile_name	$printFile
-		set printfile_name  [file join $printDir __print_$w_name.ps]
-        # ::Debug  t  "printfile_name   $printfile_name"     1
+			# tk_messageBox -message " print_postscript"
+		set printBorder	50
+        set bbox		[$w bbox __Stage__]
+		set stageSize	[get_BBoxInfo  size  $bbox ]
+        set stageWidth	[lindex $stageSize 0]
+        set stageHeight	[lindex $stageSize 1]
+		set stage_x		[lindex $bbox 0]
+		set stage_y		[lindex $bbox 1]
         
-		#$w move __Stage__ 		-3000 -3000
-		#$w move __StageShadow__ -3000 -3000
-		
-        $w postscript  -file        $printfile_name \
-                       -rotate      1         \
-                       -width       $bbox_x   \
-                       -height      $bbox_y   \
-                       -x           [lindex $bbox 0] \
-                       -y           [lindex $bbox 1] \
-                       -pagewidth   [format "%sm" $page_a4_width] \
-                       -pageheight  [format "%sm" $page_a4_height] \
-                       -pageanchor  sw \
-                       -pagex       [format "%sm" $page_a4_height] \
-                       -pagey       0m	
+  			puts "               bbox         $bbox	"
+  			puts "               stageWidth   $stageWidth"
+  			puts "               stageHeight  $stageHeight"
+  			puts "               stage_x      $stage_x"
+  			puts "               stage_y      $stage_y"
+  			puts "               printBorder  $printBorder"
+ 			puts ""
+
+		set w_name          [winfo name $w]
+		set printFile  [file join $printDir __print_$w_name.ps]
+  			
+ 			puts "               printFile   $printFile"
+ 			puts ""
         
-		#$w move __Stage__ 		 3000  3000
-		#$w move __StageShadow__  3000  3000
+        $w postscript	-file        $printFile \
+						-rotate      1         \
+						-width       $stageWidth \
+						-height      $stageHeight \
+						-x           $stage_x \
+						-y           $stage_y \
+						-pageanchor  nw \
+						-pagewidth   [format "%s.m" $pageWidth] \
+						-pageheight  [format "%s.m" $pageHeight] 
+					   
+					#$w postscript  -file        $printFile \
+								   -rotate      1         \
+								   -width       $stageWidth \
+								   -height      $stageHeight \
+								   -x           $stage_x \
+								   -y           $stage_y \
+								   -pagewidth   [format "%s.m" [expr $pageWidth  - 2*$printBorder] ] \
+								   -pageheight  [format "%s.m" [expr $pageHeight - 2*$printBorder] ] 
+								   
+					#$w postscript  -file        $printFile \
+								   -rotate      1         \
+								   -width       [ expr $stageWidth  - 2 * $printBorder ]  \
+								   -height      [ expr $stageHeight - 2 * $printBorder ] \
+								   -x           [ expr $stage_x + $printBorder ] \
+								   -y           [ expr $stage_y + $printBorder ]
+								   
+								   #-x           $stage_x \
+								   -y           $stage_y 
+								   
+					#$w postscript  -file        $printFile \
+								   -rotate      1         \
+								   -pagewidth   [format "%s.m" $pageWidth] \
+								   -pageheight  [format "%s.m" $pageHeight] \
+								   -pageanchor  nw \
+								   -pagex       [format "%s.m" [expr 0 + $printBorder]] \
+								   -pagey       [format "%s.m" [expr $pageHeight - $printBorder]]	\
+								   -width       $stageWidth   \
+								   -height      $stageHeight  \
+								   -x           $stage_x \
+								   -y           $stage_y 
+								   
+								   # -pagex       [format "%sm" $pageHeight] 
+								   # -pagey       0m	
+
 		
-        start_psview  $printfile_name
+        start_psview  $printFile
 	}
    
 	proc canvasCAD::start_psview {ps_file} {
@@ -160,9 +203,11 @@
 					return
 				}
 			default {
+					puts  "\n"  
 					puts  "sorry !"  
 					puts  "  it seems that there is currently no direct connection "
 					puts  "      to a printer for this platform yet"  
+					puts  "\n"  
 				}
 		}
 		return

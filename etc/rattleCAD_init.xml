@@ -44,10 +44,10 @@
 	
 		<Fork>
 			<SteelLugged>
-				<Geometry>
+				<!--Geometry>
 					<Height>365.00</Height>
 					<Rake>45.00</Rake>
-				</Geometry>
+				</Geometry-->
 				<Visualization>
 					<Crown>
 						<File>fork/crown/longshen_max_36_5.svg</File>
@@ -75,33 +75,30 @@
 				</Visualization>
 			</SteelLugged>
 			<Composite>    
-				<Geometry>
+				<!--Geometry>
 					<Height>365.00</Height>
 					<Rake>45.00</Rake>
-				</Geometry>
+				</Geometry-->
 				<Visualization>
 					<Crown>
-						<File>fork/crown/longshen_max_36_5.svg</File>
+						<File>fork/_composite/fork_crown.svg</File>
 						<Brake>
 							<Offset>20.00</Offset>
 							<OffsetPerp>8.00</OffsetPerp>
 							<Angle>0.00</Angle>
 						</Brake>
 						<Blade>
-							<Offset>35.00</Offset>
-							<OffsetPerp>3.50</OffsetPerp>
+							<Offset>70.00</Offset>
+							<OffsetPerp>-4.00</OffsetPerp>
 						</Blade>
 					</Crown>
 					<Blade>
-						<Width>36.00</Width>
-						<DiameterDO>14.00</DiameterDO>
-						<TaperLength>250.00</TaperLength>
-						<Offset>6.00</Offset>
+						<Width>50.00</Width>
+						<DiameterDO>21.00</DiameterDO>
 					</Blade>
 					<DropOut>
-						<File>fork/dropout/dropout_14.svg</File>
+						<File>fork/_composite/dropout.svg</File>
 						<Offset>20.00</Offset>
-						<OffsetPerp>0.00</OffsetPerp>
 					</DropOut>
 				</Visualization>
 			</Composite>

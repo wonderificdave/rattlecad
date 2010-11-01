@@ -240,9 +240,8 @@ package require tdom
 									}
 								}
 					# ------------------------			
-				print {				set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									set printDir 		[lindex $argList 0]
-									printPostScript $canvasDOMNode $printDir }
+				print {				set printDir 		[lindex $argList 0]
+									printPostScript $name $printDir }
 					# ------------------------			
 				clean_StageContent {set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]

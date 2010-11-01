@@ -150,7 +150,6 @@
 			pack $noteBook_top -expand yes  -fill both  
 		
 			# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-		# lib_gui::create_canvasCAD  $noteBook_top  cv_Custom99  "Reference"			A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "Base Geometry "   	A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "Frame Tubing"		A4  0.2 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
@@ -220,8 +219,7 @@
 			cv_Custom03 -
 			cv_Custom04 -
 			cv_Custom05 -
-			cv_Custom06 -
-			cv_Custom07 {
+			cv_Custom06 {
 					$noteBook_top select $noteBook_top.$varName
 					cv_custom_00::update 	lib_gui::$varName 
 				}
@@ -547,10 +545,10 @@
 				return
 		}
 		
-		puts "   ... $type"
-		puts "   ... $currentTab"
-		puts "   ... $varName"
-		puts "   ... $cv_Name"
+			# puts "   ... $type"
+			# puts "   ... $currentTab"
+			# puts "   ... $varName"
+			# puts "   ... $cv_Name"
 	
 		switch $type {
 				Fork	{ set listDefinition list://Rendering/Fork@APPL_ForkTypes }
@@ -558,12 +556,8 @@
 				default { set listDefinition {list://Rendering/Fork@APPL_ForkTypes list://Rendering/Brakes@APPL_BrakeTypes} }
 		}
 		
-			# update
-			# set canvasUpdate($varName) [ expr $::APPL_Update -1 ]
 		frame_geometry_custom::createEdit  10 50  $varName  cv_custom_00::update  $listDefinition  {Rendering Settings}
 				
-			# set canvasUpdate($varName) [ expr $::APPL_Update -1 ]
-			# notebook_updateCanvas force
 	}
 	
 	#-------------------------------------------------------------------------

@@ -369,14 +369,26 @@
 
 			# --- create Fork Representation ----------------
 		switch $Rendering(Fork) {
-			Composite 	-
 			SteelLugged {
 						set ForkBlade(polygon) 		[ frame_geometry_custom::tube_values ForkBlade polygon $BB_Position  ]
 						set ForkCrown(file)			[ checkFileString [ [ $domProject selectNodes /root/Component/Fork/Crown/File ] asText ] ]
 						set ForkDropout(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/Fork/DropOut/File ]  asText ] ]
 						set ForkDropout(position)	[ frame_geometry_custom::point_position  FrontWheel  $BB_Position]
 						set do_direction			[ frame_geometry_custom::tube_values ForkDropout direction ]
-						set do_angle				[expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
+						set do_angle				[ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
+						}
+			Composite 	{
+						set ForkBlade(polygon)		[ frame_geometry_custom::set_compositeFork $::APPL_Init $BB_Position ]
+						set ForkCrown(file)			[ checkFileString [ [ $domInit    selectNodes /root/Options/Fork/Composite/Visualization/Crown/File ] asText ] ]
+						set ForkDropout(file)		[ checkFileString [ [ $domInit    selectNodes /root/Options/Fork/Composite/Visualization/DropOut/File ]  asText ] ]
+						set ForkDropout(position)	[ frame_geometry_custom::point_position  FrontWheel    $BB_Position]
+						set Steerer_Fork(position)	[ frame_geometry_custom::point_position  Steerer_Fork  $BB_Position]
+						set ht_direction			[ frame_geometry_custom::tube_values HeadTube direction ]
+						set ht_angle				[ vectormath::angle {0 1} {0 0} $ht_direction ]
+						set vct_01					[ vectormath::rotatePoint {0 0} {4 70} $ht_angle ]
+						set help_01					[ vectormath::subVector $Steerer_Fork(position) $vct_01 ]
+						set help_02					[ list 0 [lindex  $ForkDropout(position) 1] ]
+						set do_angle				[ expr 90 - [ vectormath::angle $help_01 $ForkDropout(position) $help_02  ] ]
 						}
 			Suspension 	{
 						set ForkBlade(polygon) 		{}
@@ -435,7 +447,6 @@
 													]
 				}
 		
-				
 			# --- create HeadTube --------------------
 		set HeadTube(polygon) 		[ frame_geometry_custom::tube_values HeadTube polygon $BB_Position  ]
 		set HeadTube(object)		[ $cv_Name create polygon $HeadTube(polygon) -fill white -outline black  -tags __Frame__]
@@ -518,6 +529,25 @@
 			Suspension 	{}
 			default {}
 		}
+		
+			#switch $Rendering(Fork) 
+			#	SteelLugged {
+			#				}
+			#	Composite 	{
+			#					$cv_Name create circle  $Steerer_Fork(position)	-radius 10  -outline darkred
+			#					$cv_Name create circle  $ForkDropout(position)  -radius 10  -outline darkred
+			#					$cv_Name create circle  $help_01  				-radius 10  -outline darkblue
+			#					$cv_Name create circle  $help_02  				-radius 10  -outline blue
+			#					$cv_Name create line    [list $help_01 $ForkDropout(position)]                 -fill red -width 1 
+			#					$cv_Name create line    [list $Steerer_Fork(position) $ForkDropout(position)] -fill purple -width 1 
+			#					#$cv_Name create line    [list $help_01 $ForkDropout(position)] -fill purple -width 1 
+			#				}
+			#	Suspension 	{
+			#					set Steerer_Fork(position)	[ frame_geometry_custom::point_position  Steerer_Fork  $BB_Position]
+			#					$cv_Name create circle  $ForkDropout(position)  -radius 10  -outline darkred
+			#					$cv_Name create line    [list $Steerer_Fork(position) $ForkDropout(position)] -fill purple -width 1 
+			#				}
+			#
 			#set debug_01				[ frame_geometry_custom::tube_values ForkBlade debug $BB_Position  ]
 			#$cv_Name create line    $debug_01 -fill purple -width 1 
 			#$cv_Name delete 	$ForkDropout(object)
@@ -695,6 +725,10 @@
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
 				}
+			Reference {
+					set Mitter(polygon)		[ frame_geometry_custom::tube_values Reference mitter $xy  ]
+					set Mitter(header)		"Reference"
+				}
 			default {return}
 		}
 		
@@ -704,39 +738,50 @@
 		
 				# --- polygon reference lines
 				#
-			set pt_01	[ vectormath::addVector $xy {0   5} ]
-			set pt_02	[ vectormath::addVector $xy {0 -75} ]
-		$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25	
-			set pt_03	[ frame_geometry_custom::coords_get_xy $Mitter(polygon) 0 ]
-			set pt_03	[ vectormath::addVector $pt_03 {+5  20} ]
-			set pt_04	[frame_geometry_custom::coords_get_xy $Mitter(polygon) end]
-			set pt_04	[ vectormath::addVector $pt_04 {-5  20} ]
-		$cv_Name create line 		[ canvasCAD::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25	
-			set pt_05	[ vectormath::addVector $pt_03 { 0  50} ]
-			set pt_06	[ vectormath::addVector $pt_04 { 0  50} ]
-		$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25	
+		switch $type {
 		
-				# --- defining values
-				#
-			set Mitter(text_01)		"diameter: $minorDiameter / $majorDiameter"
-					set		minorAngle			[ vectormath::angle {0 1} {0 0} $minorDirection   ]
-					set		majorAngle			[ vectormath::angle {0 1} {0 0} $majorDirection   ]
-					set		angle				[ expr abs($majorAngle - $minorAngle) ]
-						if {$angle > 90} {set angle [expr 180 - $angle]}
-					set 	angle [ format "%.2f" $angle ]
-					set		angleComplement		[ format "%.2f" [ expr 180 - $angle ] ]
-			set Mitter(text_02)		"angle:  $angle / $angleComplement"
-			set Mitter(text_03)		"offset: $offSet"
+			Reference {
+							# --- defining values
+							#
+						set Mitter(text_01)		"Reference: 100.00 x 10.00 "
+						set textPos		[vectormath::addVector $xy {10 3}]
+					$cv_Name create draftText $textPos  -text $Mitter(text_01) -size 2.5			
+					}
+			default {
+						set pt_01	[ vectormath::addVector $xy {0   5} ]
+						set pt_02	[ vectormath::addVector $xy {0 -75} ]
+					$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25	
+						set pt_03	[ frame_geometry_custom::coords_get_xy $Mitter(polygon) 0 ]
+						set pt_03	[ vectormath::addVector $pt_03 {+5  20} ]
+						set pt_04	[frame_geometry_custom::coords_get_xy $Mitter(polygon) end]
+						set pt_04	[ vectormath::addVector $pt_04 {-5  20} ]
+					$cv_Name create line 		[ canvasCAD::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25	
+						set pt_05	[ vectormath::addVector $pt_03 { 0  50} ]
+						set pt_06	[ vectormath::addVector $pt_04 { 0  50} ]
+					$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25	
+					
+							# --- defining values
+							#
+						set Mitter(text_01)		"diameter: $minorDiameter / $majorDiameter"
+								set		minorAngle			[ vectormath::angle {0 1} {0 0} $minorDirection   ]
+								set		majorAngle			[ vectormath::angle {0 1} {0 0} $majorDirection   ]
+								set		angle				[ expr abs($majorAngle - $minorAngle) ]
+									if {$angle > 90} {set angle [expr 180 - $angle]}
+								set 	angle [ format "%.2f" $angle ]
+								set		angleComplement		[ format "%.2f" [ expr 180 - $angle ] ]
+						set Mitter(text_02)		"angle:  $angle / $angleComplement"
+						set Mitter(text_03)		"offset: $offSet"
 
-			set textPos		[vectormath::addVector $xy {-20 -48}]
-		$cv_Name create draftText $textPos  -text $Mitter(header) -size 3.5
-			set textPos		[vectormath::addVector $xy {-10 -55}]
-		$cv_Name create draftText $textPos  -text $Mitter(text_01) -size 2.5
-			set textPos		[vectormath::addVector $xy {-10 -60}]
-		$cv_Name create draftText $textPos  -text $Mitter(text_02) -size 2.5
-			set textPos		[vectormath::addVector $xy {-10 -65}]
-		$cv_Name create draftText $textPos  -text $Mitter(text_03) -size 2.5
-
+						set textPos		[vectormath::addVector $xy {-20 -48}]
+					$cv_Name create draftText $textPos  -text $Mitter(header) -size 3.5
+						set textPos		[vectormath::addVector $xy {-10 -55}]
+					$cv_Name create draftText $textPos  -text $Mitter(text_01) -size 2.5
+						set textPos		[vectormath::addVector $xy {-10 -60}]
+					$cv_Name create draftText $textPos  -text $Mitter(text_02) -size 2.5
+						set textPos		[vectormath::addVector $xy {-10 -65}]
+					$cv_Name create draftText $textPos  -text $Mitter(text_03) -size 2.5
+				}
+		}
 		
 	}
 	

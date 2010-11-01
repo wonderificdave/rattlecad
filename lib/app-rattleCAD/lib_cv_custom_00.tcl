@@ -54,28 +54,6 @@
 			# puts " ->  $cv_Name"
 			
 		switch $cv_Name {
-			__lib_gui::cv_Custom99 {
-						#
-						# -- geometry - of existing Frame
-						#
-					set stageScale	[$cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						# set factor 		[ get_FormatFactor $stageFormat ]
-						#
-					set xy			[ frame_geometry_reference::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
-					$cv_Name 		clean_StageContent				
-						#
-					frame_visualisation::createBaseline 			$cv_Name $xy	reference
-						#
-					createDimension_Reference						$cv_Name $xy	geometry_bg		
-						#
-					frame_visualisation::createFrame_Centerline		$cv_Name $xy	{saddle seattube steerer chainstay fork} {crankset}
-						#
-					createDimension_Reference						$cv_Name $xy	geometry_fg
-						#
-					lib_gui::notebook_createButton					$cv_Name 		Reference2Custom
-						#
-					}
 			lib_gui::cv_Custom00 {
 						#
 						# -- base geometry
@@ -258,9 +236,10 @@
 						#
 					frame_visualisation::createTubemitter		$cv_Name { 80 190}	TopTube_Seat		
 					frame_visualisation::createTubemitter		$cv_Name {200 190}	TopTube_Head	
-					frame_visualisation::createTubemitter		$cv_Name { 80  90}	DownTube_Head	
-					frame_visualisation::createTubemitter		$cv_Name {180  90}	SeatStay_01	
-					frame_visualisation::createTubemitter		$cv_Name {250  90}	SeatStay_02	
+					frame_visualisation::createTubemitter		$cv_Name { 80 105}	DownTube_Head	
+					frame_visualisation::createTubemitter		$cv_Name {180 105}	SeatStay_01	
+					frame_visualisation::createTubemitter		$cv_Name {250 105}	SeatStay_02	
+					frame_visualisation::createTubemitter		$cv_Name {220  15}	Reference	
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
 						#
 				}
