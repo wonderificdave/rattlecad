@@ -549,8 +549,9 @@
 						# --- set Fork Dropout --------------------
 					set frameCoords::ForkDropout(direction)	[ vectormath::unifyVector $pt_12 $pt_11 ]
 			}
-			get_Fork
-
+			get_Fork			
+			
+			
 				#
 				# --- set Steerer -------------------------
 			proc get_Steerer {} {
@@ -919,6 +920,7 @@
 							set dir 		[ vectormath::addVector {0 0} $frameCoords::SeatStay(direction) -1] 
 					set frameCoords::SeatStay_01(mitter) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $frameCoords::SeatTube(direction)  $frameCoords::SeatStay(SeatTube)  right -$offset]	
 					set frameCoords::SeatStay_02(mitter) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $frameCoords::SeatTube(direction)  $frameCoords::SeatStay(SeatTube)  right +$offset]	
+					set frameCoords::Reference(mitter) 			{ -50 0  50 0  50 10  -50 10 }	
 			}
 			get_TubeMitter
 				
@@ -941,7 +943,6 @@
 
 
 	}
-
 
 
  	#-------------------------------------------------------------------------
@@ -1022,9 +1023,9 @@
 
 								# --- get HandleBar(Reach)
 								# 
-							set xpath 				Personal/HandleBar_Distance					
-							set oldValue			[ [ $domProject selectNodes $xpath  ]	asText ]
-							set HandleBar(Reach)	[expr $oldValue + $delta]
+							set xpath 					Personal/HandleBar_Distance					
+							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+							set HandleBar(Reach)		[expr $oldValue + $delta]
 								puts "          $oldValue + $delta = $HandleBar(Reach)"
 								# --- update value
 								# 
@@ -1037,18 +1038,38 @@
 						
 				{Result/Saddle/Offset_BB/horizontal}	{			
 							puts "               ... $xpath"
-							set newValue				[ [ $domProject selectNodes /root/Personal/SeatTube_Length  ]	asText ]
-							set SeatTube(Length)		[set_projectValue $xpath  $newValue]
-							set _updateValue($xpath) 	$newValue
+							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+							set Saddle(X)				[set_projectValue $xpath  $_updateValue($xpath)]
+							set _updateValue($xpath) 	$Saddle(X)
+							
+							set SeatTube(Length)		[ [ $domProject selectNodes /root/Personal/SeatTube_Length  ]	asText ]
+							set Saddle(Height)			[expr sqrt(pow($SeatTube(Length),2) - pow($oldValue,2)) ]
+							
+							
+
+								 puts "          old Value:         $oldValue"
+								 puts "          current Value:     $Saddle(X)"
 								 puts "          SeatTube(Length):  $SeatTube(Length)"
-								 puts "          current Value:    $_updateValue($xpath)"
-							set angle	[ expr 90 - asin( $_updateValue($xpath) / $SeatTube(Length)) *180 / $vectormath::CONST_PI ]
-								 puts "                 ...  $angle"								
+								 
+								# --- get SeatTube Length
+								# 
+							set  SeatTube(Length) 		[ format "%.2f" [ expr hypot($Saddle(Height), $Saddle(X)) ] ]
+
+								# --- update value: 
+								#
+							set xpath 				Personal/SeatTube_Length	
+							set_projectValue $xpath  $SeatTube(Length)
+							
+
+								# --- get SeatTube Angle
+								# 
+							set SeatTube((angle)	[ expr atan( $Saddle(Height) / $Saddle(X) ) *180 / $vectormath::CONST_PI ]
+								 puts "                 ...  $SeatTube((angle)"								
 								
 								# --- update value: 
 								#
 							set xpath 				Personal/SeatTube_Angle	
-							set_projectValue $xpath  $angle
+							set_projectValue $xpath  $SeatTube((angle)
 							
 								# --- update Project
 								# 
@@ -1151,7 +1172,56 @@
 			return $Project($attribute)
 	}	
 
+	
+	#-------------------------------------------------------------------------
+		#  Fork Blade Polygon for composite Fork
+	proc set_compositeFork {domInit BB_Position} {
+			
+			set ForkDropout(position)	[ frame_geometry_custom::point_position  FrontWheel    $BB_Position]
+			set Steerer_Fork(position)	[ frame_geometry_custom::point_position  Steerer_Fork  $BB_Position]
+			set ht_direction			[ frame_geometry_custom::tube_values HeadTube direction ]
 
+			set Fork(BladeWith)				[ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Blade/Width			]  asText ]
+			set Fork(BladeDiameterDO)		[ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Blade/DiameterDO	]  asText ]
+			set Fork(BladeOffsetCrown)		[ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Crown/Blade/Offset		]  asText ]
+			set Fork(BladeOffsetCrownPerp)	[ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Crown/Blade/OffsetPerp	]  asText ]
+			set Fork(BladeOffsetDO)			[ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/DropOut/Offset		]  asText ]
+			
+				# puts ""
+				# puts "   Fork(BladeWith)			$Fork(BladeWith)			"
+				# puts "   Fork(BladeDiameterDO)		$Fork(BladeDiameterDO)		"
+				# puts "   Fork(BladeOffsetCrown)		$Fork(BladeOffsetCrown)		"
+				# puts "   Fork(BladeOffsetCrownPerp)	$Fork(BladeOffsetCrownPerp)	"
+				# puts "   Fork(BladeOffsetDO)		$Fork(BladeOffsetDO)		"
+		
+			set ht_angle				[ vectormath::angle {0 1} {0 0} $ht_direction ]
+				set vct_03					[list [expr -1 * $Fork(BladeOffsetCrownPerp)] $Fork(BladeOffsetCrown) ]
+				set vct_04					[ vectormath::rotatePoint {0 0} $vct_03 $ht_angle ]
+			set pt_02				[ vectormath::subVector $Steerer_Fork(position) $vct_04 ]
+				set help_02					[ list 0 [lindex  $ForkDropout(position) 1] ]			
+				set do_angle				[ expr 90 - [ vectormath::angle $pt_02 $ForkDropout(position) $help_02  ] ]			
+				set vct_05					[ list $Fork(BladeOffsetDO) 0 ]
+				set vct_06					[ vectormath::rotatePoint {0 0} $vct_05 [expr 90 + $do_angle] ]
+			set pt_03				[ vectormath::addVector $ForkDropout(position)  $vct_06 ]
+				set vct_01					[ vectormath::rotatePoint {0 0} {0 5} $do_angle ]
+			set pt_01				[ vectormath::addVector $pt_02 $vct_01 ]
+			
+			set vct_10 		[ vectormath::parallel $pt_01 $pt_02 [expr 0.5*$Fork(BladeWith) -1] ]
+			set vct_11 		[ vectormath::parallel $pt_02 $pt_03 [expr 0.5*$Fork(BladeWith)] ]
+			set vct_12 		[ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] ]
+			set vct_13 		[ vectormath::parallel $pt_03 $pt_01 [expr 0.5*$Fork(BladeDiameterDO)] ]
+			set vct_14 		[ vectormath::parallel $pt_03 $pt_02 [expr 0.5*$Fork(BladeWith)] ]
+			set vct_15 		[ vectormath::parallel $pt_02 $pt_01 [expr 0.5*$Fork(BladeWith) -1] ]
+			
+			set ForkBlade(polygon) 		[format "%s %s %s %s %s %s" \
+													[lindex $vct_10 0]  [lindex $vct_11 0]  [lindex $vct_12 1]  \
+													[lindex $vct_13 0]  [lindex $vct_14 1]  [lindex $vct_15 1] ]
+													
+			return $ForkBlade(polygon)
+			
+	}		
+
+	
  	#-------------------------------------------------------------------------
 		#  create TubeIntersection
 		#
