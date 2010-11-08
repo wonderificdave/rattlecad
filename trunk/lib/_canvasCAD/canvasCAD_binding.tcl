@@ -63,7 +63,7 @@
 			foreach {bL_x bL_y} $bottomLeft break
 			set stage_x 	[ format "%4.2f" [expr  ( [eval $w canvasx $x] - $bL_x ) /   $unitScale ] ]
 			set stage_y 	[ format "%4.2f" [expr  ( [eval $w canvasy $y] - $bL_y ) /  -$unitScale ] ]
-			set fmtScale 	[ format "%4.2f" $stageScale ]
+			set fmtScale 	[ format "%4.4f" $stageScale ]
 			set fmtOrig_x	[ format "%4.2f" [expr $stage_x/($stageScale*$wScale)]]
 			set fmtOrig_y	[ format "%4.2f" [expr $stage_y/($stageScale*$wScale)]]
 			$w delete __PointerPostion__
@@ -239,7 +239,7 @@
 				return $wScale
 			} 			
 				# -- modify scale parameter from extern
-			set newScale	[ eval format "%.2f" [ expr	$wScale * $scale ] ]
+			set newScale	[ eval format "%.4f" [ expr	$wScale * $scale ] ]
 					# set FRAME(Reposition_Scale)  [expr $scale*$FRAME(Reposition_Scale)]
 			
 				# puts "    ->   wScale         $wScale"

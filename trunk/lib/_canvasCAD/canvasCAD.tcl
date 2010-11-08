@@ -50,7 +50,7 @@
  #															
 
 
-package provide canvasCAD 0.7
+package provide canvasCAD 0.8
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -60,28 +60,35 @@ package require tdom
   
 	namespace eval canvasCAD {
 
-		# --------------------------------------------
-				# Export as global command
-		namespace  export newCanvas 
+			# --------------------------------------------
+					# Export as global command
+			namespace  export newCanvas 
 
-		# --------------------------------------------
-				# Export as global command
-		variable packageHomeDir [file normalize [file join [pwd] [file dirname [info script]]] ]
-			set fp [open [file join $packageHomeDir canvasCAD.xml] ]
-			fconfigure    $fp -encoding utf-8
-		set __packageXML [read $fp]
-			close         $fp
+			# --------------------------------------------
+					# Export as global command
+			variable packageHomeDir [file normalize [file join [pwd] [file dirname [info script]]] ]
+				set fp [open [file join $packageHomeDir canvasCAD.xml] ]
+				fconfigure    $fp -encoding utf-8
+			set __packageXML [read $fp]
+				close         $fp
+			
+			set __packageDoc  [dom parse $__packageXML]
+			set __packageRoot [$__packageDoc documentElement]
+
+
+
 		
-		set __packageDoc  [dom parse $__packageXML]
-		set __packageRoot [$__packageDoc documentElement]
-								
-		# -------------------------------------------- 
-			# initial exported creation procedure
-			#   cv_width cv_height st_width st_height
-		proc newCanvas {name w cv_width cv_height stageFormat stageScale args} {
+			# -------------------------------------------- 
+				# initial exported creation procedure
+				#   cv_width cv_height st_width st_height
+		proc newCanvas {name w title cv_width cv_height stageFormat stageScale args} {
 
 				variable __packageRoot
-					
+
+					# puts "        ... $name"
+					# puts "        ... $w"
+					# puts "        ... $title"
+				
 			# ------- qualify the name ----------------------------------- 
 				if {![string match "::*" $name]} {
 					# append :: if not global namespace.
@@ -116,6 +123,7 @@ package require tdom
 									
 					# -- insert base values
 				set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+				setNodeAttribute  $canvasDOMNode  Stage  title	$title
 				setNodeAttribute  $canvasDOMNode  Stage  width	$st_width
 				setNodeAttribute  $canvasDOMNode  Stage  height	$st_height
 				setNodeAttribute  $canvasDOMNode  Stage  unit	$st_unit 
@@ -239,9 +247,12 @@ package require tdom
 										4 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
 									}
 								}
+				exportSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									exportSVG $canvasDOMNode [lindex $argList 0]
+								}
 					# ------------------------			
-				print {				set printDir 		[lindex $argList 0]
-									printPostScript $name $printDir }
+				print {				set printFile 		[lindex $argList 0]
+									printPostScript $name $printFile }
 					# ------------------------			
 				clean_StageContent {set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
@@ -297,35 +308,40 @@ package require tdom
 				#		100m
 				#		4i
 				# -- mm ----
-			$w create rectangle   0  0  10m  10m  	-tags {__StageReference_mm__}  	-fill gray  -outline gray  -width 0			
+			$w create rectangle   0  0  100m  100m  	-tags {__StageReference_mm__}  	-fill gray  -outline gray  -width 0			
 					set coords	[ $w coords __StageReference_mm__ ] 
-					set scale 	[ expr [lindex $coords 2]/10]
+					set scale 	[ expr [lindex $coords 2]/100]
 					setNodeAttributeRoot /root/_package_/UnitScale m $scale
-				catch [ $w delete {__StageReference_mm__} ] 
+				catch [ $w delete {__StageReference_mm__} ]
+						# puts "       ->  mm : 0  0  10m  10m  / $coords / $scale"
 				# -- cm ----
-			$w create rectangle   0  0  1c  1c    	-tags {__StageReference_cm__} 	-fill gray  -outline gray  -width   0			
+			$w create rectangle   0  0  10c  10c    	-tags {__StageReference_cm__} 	-fill gray  -outline gray  -width   0			
 					set coords	[ $w coords __StageReference_cm__ ] 
-					set scale 	[ lindex $coords 2]
+					set scale 	[ expr [lindex $coords 2]/10]
 					setNodeAttributeRoot /root/_package_/UnitScale c $scale
 				catch [ $w delete {__StageReference_cm__} ] 
+						# puts "       ->   c : 0  0  1c  1c  / $coords"
 				# -- inch --
 			$w create rectangle   0  0  1i  1i  	-tags {__StageReference_inch__}	-fill gray  -outline gray  -width   0			
 					set coords	[ $w coords __StageReference_inch__ ] 
 					set scale 	[ lindex $coords 2]
 					setNodeAttributeRoot /root/_package_/UnitScale i $scale
 				catch [ $w delete {__StageReference_inch__} ] 
+						# puts "       ->   i : 0  0  1i  1i  / $coords"
 				# -- p -----
 			$w create rectangle   0  0  10p  10p  	-tags {__StageReference_p__}  	-fill gray  -outline gray  -width   0			
 					set coords	[ $w coords __StageReference_p__ ] 
 					set scale 	[ expr [lindex $coords 2]/10]
 					setNodeAttributeRoot /root/_package_/UnitScale p $scale
 				catch [ $w delete {__StageReference_p__} ] 
+						# puts "       ->   p : 0  0  10p  10p  / $coords"
 				# -- std -----
 			$w create rectangle   0  0  10  10  	-tags {__StageReference_std__}  -fill gray  -outline gray  -width   0			
 					set coords	[ $w coords __StageReference_std__ ] 
 					set scale 	[ expr [lindex $coords 2]/10]
 					setNodeAttributeRoot /root/_package_/UnitScale std $scale
 				catch [ $w delete {__StageReference_std__} ] 
+						# puts "       -> std : 0  0  10  10  / $coords"
 				
 
 				# -- create Stage
@@ -352,15 +368,20 @@ package require tdom
 			set stage_y		[ expr $y2 - $y1]
 			set w_width_st	[ expr $w_width  - 2*$cvBorder ]
 			set w_height_st	[ expr $w_height - 2*$cvBorder ]
-			set scale_x		[ format "%.2f" [ expr $w_width_st  / $stage_x ] ]
-			set scale_y		[ format "%.2f" [ expr $w_height_st / $stage_y ] ]
+			set scale_x		[ format "%.4f" [ expr $w_width_st  / $stage_x ] ]
+			set scale_y		[ format "%.4f" [ expr $w_height_st / $stage_y ] ]
 			if { $scale_x < $scale_y } { 
 					set cvScale $scale_x 
 			} else {
 					set cvScale $scale_y 
 			}
 			
-			puts "   $scale_x  - $scale_y :  $cvScale"
+				# -- debug
+				#
+			puts "         $w:  $scale_x  - $scale_y :  $cvScale"
+			
+				# -- set Scale Attribute
+				#
 			setNodeAttribute	$canvasDOMNode  Canvas scale $cvScale
 				
 				# -- scale stage
@@ -532,7 +553,6 @@ package require tdom
 				centerline	{ set myItem 	[ centerLine $canvasDOMNode $CoordList  [flatten_nestedList $args] ] }
 				draftLine	-
 				line		{ set myItem	[ eval $w create line  		$CoordList  [flatten_nestedList $args] ] }
-				centerline_	{ set myItem	[ eval $w create line  		$CoordList  [flatten_nestedList $args] -dash \{15 1 1 1\}] }  
 				oval -
 				circle 		{ set myItem	[ eval $w create oval  		$CoordList  [flatten_nestedList $args] ] }
 				arc			{ set myItem	[ eval $w create arc		$CoordList  [flatten_nestedList $args] ] }
@@ -641,8 +661,8 @@ package require tdom
 			
 			#set dash_01		[ expr 15 / $stageScale ]
 			#set dash_02		[ expr  1 / $stageScale ]
-			set dash_01		15
-			set dash_02		 1
+			set dash_01		25
+			set dash_02		 3
 			
 			set myItem  	[ eval $w create  line  $CoordList  \
 								-dash	\{$dash_01 $dash_02 $dash_02 $dash_02 \} \

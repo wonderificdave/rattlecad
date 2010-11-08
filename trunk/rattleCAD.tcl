@@ -61,16 +61,14 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{12}  
-						RELEASE_Date		{31. Oct. 2010}
-						TemplateFile		{}
+						RELEASE_Revision	{14}  
+						RELEASE_Date		{07. Nov. 2010}
 						BASE_Dir			{}
 						ROOT_Dir			{}
 						CONFIG_Dir			{}
 						IMAGE_Dir			{}
-						VECTOR_Font			{}
 						USER_Dir			{}
-						USER_Init			{}
+						EXPORT_Dir			{}
                      }	
 					 
 					 
@@ -108,15 +106,10 @@ exec wish "$0" "$@"
 	package require   Tk		 8.5
 	package require   BWidget 	    
 	package require   rattleCAD  3.2 
-	package require   AppUtil	 0.8
-	package require   canvasCAD	 0.7
+	package require   canvasCAD	 0.8
 	package require	  extSummary 0.1
 
-    
-		# -- AppUtil  -----------------
-	SetDebugLevel 20
-
-	
+    	
 		# -- default Parameters  ------
 		set XML "<root> empty </root>"
 		set emptyDOM  [dom parse $XML]
@@ -179,15 +172,11 @@ exec wish "$0" "$@"
 
 
 
-    # -- initialize road/offroad - templates 
     # -- initialize user - settings 
-  set APPL_Env(USER_Dir) [lib_file::check_user_dir]
-  # control::user_settings $APPL_Env(USER_Dir)
-  
-  
-    # -- Language  --------------------
-  # update_language  $APPL_Config(Language)
+  set APPL_Env(USER_Dir) 	[lib_file::check_user_dir user]
+  set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir export]
 
+  
     # -- set standard font ------------
   option add *font $APPL_Config(GUI_Font)
   

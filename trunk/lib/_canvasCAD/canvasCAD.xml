@@ -11,8 +11,8 @@
 			<A4 width="297"    height="210"  unit="m"	f1="5.0"   f2="3.5"  f3="2.5" />
 		</DIN_Format>
 		<Object_Template>
-			<Canvas path="" iborder="40" scale="" />
-			<Stage 	format="" unit="" scale="" width="" height="" />
+			<Canvas path="" iborder="40" scale=""/>
+			<Stage 	format="" unit="" scale="" width="" height="" title=""/>
 			<Style  linewidth="0.35" linecolour="black" fontstyle="vector" fontsize="3.5" fontdist="1" font="Arial" fontcolour="black" />
 		</Object_Template>
 	</_package_>

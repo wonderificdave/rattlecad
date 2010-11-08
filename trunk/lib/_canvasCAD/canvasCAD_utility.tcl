@@ -208,11 +208,11 @@
 	#-------------------------------------------------------------------------
 		#
 	proc canvasCAD::getFormatSize {formatKey} {
-									# return {1 2}
-									# puts "  -> canvasCAD::getFormatSize $formatKey"
-									set stageWidth		[getNodeAttributeRoot /root/_package_/DIN_Format/$formatKey width ]
-									set stageHeight		[getNodeAttributeRoot /root/_package_/DIN_Format/$formatKey height]
-									set stageUnit		[getNodeAttributeRoot /root/_package_/DIN_Format/$formatKey unit ]
-									return [ list $stageWidth $stageHeight $stageUnit ]			
+			# return {1 2}
+			# puts "  -> canvasCAD::getFormatSize $formatKey"
+			set stageWidth		[getNodeAttributeRoot /root/_package_/DIN_Format/$formatKey width ]
+			set stageHeight		[getNodeAttributeRoot /root/_package_/DIN_Format/$formatKey height]
+			set stageUnit		[getNodeAttributeRoot /root/_package_/DIN_Format/$formatKey unit ]
+			return [ list $stageWidth $stageHeight $stageUnit ]			
 	}
 

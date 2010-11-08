@@ -40,16 +40,9 @@
  
   package provide rattleCAD  3.2
 
-    # -- AppUtil  ---------------
-  namespace import AppUtil::SetConfig \
-                   AppUtil::GetConfig \
-                   AppUtil::DelConfig \
-                   AppUtil::SetDebugLevel \
-                   AppUtil::Debug 
-
                    
     # -- default Parameters  ----
-  # source  [file join $APPL_Env(CONFIG_Dir) init_parameters.tcl]   
+	# source  [file join $APPL_Env(CONFIG_Dir) init_parameters.tcl]   
   
     
     
@@ -70,16 +63,13 @@
        #
 	proc create_intro {w {type toplevel} {cv_border 0} } {
 
-		Debug  p
-
 		global APPL_Env
 		
-		::Debug  t "   \$APPL_Env(IMAGE_Dir)  $APPL_Env(IMAGE_Dir)"
+		puts "\n"
+		puts "  create_intro: \$APPL_Env(IMAGE_Dir)  $APPL_Env(IMAGE_Dir)"
 
 		
 		proc intro_content {w cv_border} {
-
-			Debug  p
       
 			global APPL_Env
 
@@ -87,7 +77,7 @@
 			set  start_image_w  [image width   $start_image]
 			set  start_image_h  [image height  $start_image]
       
-			::Debug  t "   \$start_image  $start_image  $start_image_w  $start_image_h "
+			puts "      create_intro: \$start_image:  $start_image  -> $start_image_w  $start_image_h \n"
 
 			canvas $w.cv	-width  $start_image_w \
 							-height $start_image_h \
@@ -237,11 +227,4 @@
 		wm title . $APPL_Config(WINDOW_Title)
 	}
 
-
-
-
-
-
-
- 
-
+	

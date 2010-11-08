@@ -186,7 +186,7 @@
 					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
 						#
-					$cv_Name 		centerContent				{-20  20}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__  }
+					$cv_Name 		centerContent				{ 0  25}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__  }
 						#
 					lib_gui::notebook_createButton				$cv_Name 		changeFormatScale
 						#
@@ -219,7 +219,7 @@
 					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
 						#
-					$cv_Name 		centerContent				{ 10  25}		{__Frame__  __Decoration__  __CenterLine__  __Dimension__}
+					$cv_Name 		centerContent				{0  15}		{__Frame__  __Decoration__  __CenterLine__  __Dimension__}
 						#
 					lib_gui::notebook_createButton				$cv_Name 		changeFormatScale
 						#

@@ -1106,6 +1106,16 @@
 			}
 
 				#
+				# --- debug
+				# puts "----------------------------------------"
+				# puts "   get_BottomBracket_Position:"
+				# puts "        \$cv_Name               $cv_Name "
+				# puts "        \$bottomCanvasBorder    $bottomCanvasBorder "
+				# puts "        \$option                $option"
+				# puts "        \$stageScale            $stageScale"
+
+
+				#
 				# --- get canvasCAD-Stage information
 			set Stage(width)		[ eval $cv_Name getNodeAttr Stage  width  ]
 			set Stage(scale_curr) 	[ eval $cv_Name getNodeAttr Stage  scale ] 		
@@ -1114,7 +1124,11 @@
 			} else {
 					set Stage(scale)		[ expr 0.8 * $Stage(width) / $SummaryLength ]
 			}
-			set Stage(scale_fmt)  	[ format "%.2f" $Stage(scale) ]	
+			set Stage(scale_fmt)  	[ format "%.4f" $Stage(scale) ]	
+				# puts ""
+				# puts "        \$SummaryLength         $SummaryLength"
+				# puts "        \$Stage(scale_fmt)      $Stage(scale_fmt)"
+
 			
 				#
 				# --- reset canvasCAD - scale to fit the content
@@ -1123,14 +1137,17 @@
 				#
 				# ---  get unscaled width of Stage 		
 			set Stage(unscaled)		[ expr ($Stage(width))/$Stage(scale_fmt) ]
+				# puts "        \$Stage(unscaled)       $Stage(unscaled)"
 			
 				#
 				# ---  get border outside content to Stage		
 			set border				[ expr  0.5 *( $Stage(unscaled) - $SummaryLength ) ]
+				# puts "        \$border                $border"
 			
 				#
 				# ---  get left/right/bottom border outside content to Stage		
 			set cvBorder			[ expr $bottomCanvasBorder/$Stage(scale_fmt) ]			
+				# puts "        \$cvBorder              $cvBorder"
 			
 				#
 				# ---  get baseLine Coordinates  					
@@ -1140,6 +1157,7 @@
 					# puts "\n -> get_BottomBracket_Position:  $cvBorder + $RearWheel(Radius) - $BottomBracket(depth) " 
 					# puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n" 
 			} else {
+				# puts "        \$option                $option"
 				set BtmBracket_x		[ expr $border + $RearWheel(Distance_X) ] 
 				set BtmBracket_y		$cvBorder
 					# set BtmBracket_y		[ expr $bottomCanvasBorder + 50 ]
@@ -1147,6 +1165,7 @@
 					# puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n" 
 			}
 			
+				# puts "       $BtmBracket_x $BtmBracket_y"
 			return [list $BtmBracket_x $BtmBracket_y]
 	
 	}
@@ -1752,14 +1771,9 @@
 
             if {[string is wordchar $widget_value]} {
                     # tk_messageBox -message " alpha   $widget_value"
-                  #set      CURRENT_Config($target_var)     $widget_value
 				set $target_var $widget_value
             } else {
                     # tk_messageBox -message " integer   $widget_value"
-                  #set      target_value    [expr 1.0 * [string trim [lindex [split $widget_value {;}] 1] { }] ]
-                  #set      CURRENT_Config($target_var)     $target_value
-                    # control::lock_check_value  $target_var  
-                  #::Debug t     "  $target_var     $target_value"
 				set $target_var $widget_value
             }
             

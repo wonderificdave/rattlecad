@@ -44,10 +44,8 @@
        #  create_config_design
        #
    proc create { w {tab 0}} {
-         
-        ::Debug  p  
         
-        global APPL_Env APPL_Config
+		 global APPL_Env APPL_Config
 
 
         if {[winfo exists $w]} {
