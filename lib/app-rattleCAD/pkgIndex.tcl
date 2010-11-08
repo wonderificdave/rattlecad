@@ -9,7 +9,6 @@
 # full path name of this file's directory.
 
 package ifneeded   rattleCAD  3.2 "\
-        package require    AppUtil     0.8; \
         [list source  [file join $dir rattleCAD.tcl]]; \
         [list source  [file join $dir lib_file.tcl]]; \
         [list source  [file join $dir lib_gui.tcl]]; \

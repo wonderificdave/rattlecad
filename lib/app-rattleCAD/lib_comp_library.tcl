@@ -156,7 +156,7 @@
 				-side top
 
 
-		set compCanvas 	[ canvasCAD::newCanvas	cv_Component $canvasFrame.cv  550 550 A3 1  -bd 2   -bg lightgray  -relief sunken ]
+		set compCanvas 	[ canvasCAD::newCanvas	cv_Component $canvasFrame.cv  "Components" 550 550 A3 1  -bd 2   -bg lightgray  -relief sunken ]
 		set tabID		[string map {/ . } [file dirname [file dirname [string map {. /} $w] ] ] ]
 		lib_gui::register_external_canvasCAD $tabID $compCanvas
 		
@@ -295,6 +295,7 @@
 			set cl_yc	[expr 0.5*$formatHeight]
 			set cl_y1	[expr $formatHeight -10]
 
+			#$compCanvas create rectangle	[list 0 0 100 100]  -fill red  -tags __CenterLine__
 			$compCanvas create centerline [list $cl_x0 $cl_yc $cl_x1 $cl_yc ]  -fill red  -tags __CenterLine__
 			$compCanvas create centerline [list $cl_xc $cl_y0 $cl_xc $cl_y1 ]  -fill red  -tags __CenterLine__
 	}

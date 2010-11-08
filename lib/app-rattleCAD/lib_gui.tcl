@@ -72,7 +72,8 @@
 						{separator}
 						{command "&Rendering"             {Rendering}     		"Component Rendering"   {Ctrl r} -command { lib_gui::set_RenderingSettings }		}
 						{separator}
-						{command "&Print"                 {File_Print}    		"Print current Graphic" {Ctrl p} -command { lib_gui::notebook_printCanvas $APPL_Env(USER_Dir) }	}
+						{command "&Print"                 {File_Print}    		"Print current Graphic" {Ctrl p} -command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }	}
+						{command "&Export SVG"            {Export_SVG}    		"Export to SVG" 		{Ctrl e} -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }	}
 						{separator}
 						{command "&Intro-Image"           {File_Intro}    		"Show Intro Window"     {Ctrl i} -command { create_intro .intro}          	}
 						{separator}
@@ -96,7 +97,7 @@
 	
 		Button	$tb_frame.open     -image  $iconArray(open)		-helptext "open ..."		-command { lib_file::openProject_xml }  
 		Button	$tb_frame.save     -image  $iconArray(save)		-helptext "save ..."		-command { lib_file::saveProject_xml } 
-		Button	$tb_frame.print    -image  $iconArray(print)	-helptext "print ..."		-command { lib_gui::notebook_printCanvas $APPL_Env(USER_Dir) }  		
+		Button	$tb_frame.print    -image  $iconArray(print)	-helptext "print ..."		-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
 													 
 		Button	$tb_frame.set_rd   -image  $iconArray(reset_r)	-helptext "template road"	-command { lib_gui::load_Template  Road }  
 		Button	$tb_frame.set_mb   -image  $iconArray(reset_o)	-helptext "template mtb"	-command { lib_gui::load_Template  MTB  }  
@@ -104,8 +105,8 @@
 		Button	$tb_frame.clear    -image  $iconArray(clear)	-helptext "clear ..."    	-command { lib_gui::notebook_cleanCanvas} 
 		Button	$tb_frame.render   -image  $iconArray(design)	-helptext "update ..."		-command { lib_gui::notebook_updateCanvas force}  
 
-		Button	$tb_frame.scale_p  -image  $iconArray(scale_p)	-helptext "scale plus"		-command { lib_gui::notebook_scaleCanvas  1.50 }  
-		Button	$tb_frame.scale_m  -image  $iconArray(scale_m)	-helptext "scale minus"		-command { lib_gui::notebook_scaleCanvas  0.67 }  
+		Button	$tb_frame.scale_p  -image  $iconArray(scale_p)	-helptext "scale plus"		-command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
+		Button	$tb_frame.scale_m  -image  $iconArray(scale_m)	-helptext "scale minus"		-command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
 		Button	$tb_frame.resize   -image  $iconArray(resize)	-helptext "resize"			-command { lib_gui::notebook_refitCanvas }  
 		
 		Button	$tb_frame.exit     -image  $iconArray(exit)     -command { exit }
@@ -202,8 +203,8 @@
 			# --- 	add canvasCAD to frame and select notebook tab before to update 
 			#          the tabs geometry
 		$notebook select $notebook.$varname  
-		eval canvasCAD::newCanvas $varname  $notebookCanvas($varname) $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $args
-		# set ::$varname	[eval canvasCAD::newCanvas $varname  $notebookCanvas($varname)  $args ]
+			# puts "  canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $args"
+		eval canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $args
 	}
 
 	
@@ -320,7 +321,7 @@
 				return
 		}
 		set curScale  [ eval $varName getNodeAttr Canvas scale ]
-		set newScale  [ format "%.2f" [ expr $value * $curScale * 1.0 ] ]
+		set newScale  [ format "%.4f" [ expr $value * $curScale * 1.0 ] ]
 		  # puts "   $curScale"
 		  # tk_messageBox -message "curScale: $curScale  /  newScale  $newScale "
 		$varName scaleToCenter $newScale
@@ -391,6 +392,11 @@
 				return
 		}
 
+			# --- set printFile
+		set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
+		set fileName 	[winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ]]
+		set printFile	[file join $printDir $fileName]
+		
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		set scaleFactor	[ expr round([ expr 1 / $stageScale ]) ]
@@ -399,13 +405,68 @@
 		set timeString 	[ format "printed: %s" [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ] ]
 		set textPos		[ vectormath::scalePointList {0 0} {10 7} $scaleFactor ]
 		set timeStamp	[ $cv_Name create draftText $textPos  -text $timeString -size 2.5 -anchor sw ]
-			# --- print
-		$cv_Name print $printDir
+			
+			# --- print content to File
+		puts "    ------------------------------------------------"
+		puts "      print  $printFile \n"
+		puts "      notebook_exportSVG   $currentTab "
+		puts "             currentTabp-Parent  [winfo parent $currentTab]  "
+		puts "             currentTabp-Parent  [winfo name   $currentTab]  "
+		puts "             canvasCAD Object    $cv_Name  "
+		
+			# $cv_Name print $printFile
+		set printFile [$cv_Name print $printFile]
+			
 			# --- delete timeStamp
 		catch [ $cv_Name delete $timeStamp ]
-			# --- keep for any reason
-				# puts " \$cv_Name $cv_Name"
-				# puts " \$_tmpInfo_ $_tmpInfo_"
+							
+		
+		puts "    ------------------------------------------------"
+		puts "      ... open $printFile "
+		
+		lib_file::openFile_byExtension $printFile				
+				
+	}
+
+
+	#-------------------------------------------------------------------------
+       #  export canvasCAD from current notebook-Tab as SVG Graphic
+       #
+	proc notebook_exportSVG {printDir} {
+		variable noteBook_top
+		
+			## -- read from domConfig
+		set domConfig $::APPL_Project
+
+			# --- get currentTab
+		set currentTab 	[ $noteBook_top select ]
+		set cv_Name    	[ notebook_getVarName $currentTab]
+		if { $cv_Name == {} } {
+				puts "   notebook_printCanvas::cv_Name: $cv_Name"
+				return
+		}
+		
+			# --- set exportFile
+		set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
+		set fileName 	[winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ]]
+		set exportFile	[file join $printDir ${fileName}.svg]
+			# set exportFile [ file join $printDir [winfo name   $currentTab].svg ]
+
+			# --- export content to File
+		puts "    ------------------------------------------------"
+		puts "      export SVG - Content to    $exportFile \n"
+		puts "      notebook_exportSVG   $currentTab "
+		puts "             currentTabp-Parent  [winfo parent $currentTab]  "
+		puts "             currentTabp-Parent  [winfo name   $currentTab]  "
+		puts "             canvasCAD Object    $cv_Name  "
+		
+		set exportFile [$cv_Name exportSVG $exportFile]
+		
+		puts "    ------------------------------------------------"
+		puts "      ... open $exportFile "
+		
+		lib_file::openFile_byExtension $exportFile
+
 	}
 
 
@@ -464,7 +525,7 @@
 
 
 	#-------------------------------------------------------------------------
-       #  update Personal Geometry with parameters of Reference Geometry 
+       #  create menue to change scale and size of Stage 
        #
 	proc change_FormatScale {cv}  {
 	

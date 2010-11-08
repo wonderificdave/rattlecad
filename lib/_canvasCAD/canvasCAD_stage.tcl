@@ -251,7 +251,7 @@
 					set contentIDs	[$w find withtag $tagID]
 									# puts "  contentIDs  -> $contentIDs"
 					foreach id $contentIDs {
-							foreach	{x1 y1 x2 y2} [$w coords $id] {
+							foreach	{x1 y1 x2 y2} [$w bbox $id] {
 									# puts "    ... $id   [$w gettags $id]"
 									# puts "              $x1 $y1 $x2 $y2"					
 								if {$x1 < $bb_x1} {set bb_x1 $x1}
@@ -283,6 +283,8 @@
 				# -- move Vector
 				#
 			set xy				[ vectormath::subVector $centerStage $centerContent ]
+				# puts  " --> recenter Vector:  $xy "
+				# puts  " --> offSet Vector:    $offSet "
 
 			foreach tagID $tagList {
 					$w move $tagID [lindex $xy 0] 		[lindex $xy 1]
