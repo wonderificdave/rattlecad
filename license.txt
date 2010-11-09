@@ -73,14 +73,7 @@
                     vector algorythms:
                             kvetter@DELETETHIS.alltel.net
                             http://wiki.tcl.tk/8447
-
-                            
-       AppUtil
-      ------------------------------------------
-            ... based on Code from 
-                    Gerhard REITHOFER   [www.tech-edv.co.at]
- 
- 
+                          
        vectorfont
       ------------------------------------------
             ... based on Code from 

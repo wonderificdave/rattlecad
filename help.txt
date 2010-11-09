@@ -6,31 +6,55 @@ What is the aim of this program?
     The program should guide you through the different process steps 
     during definition of a bicycle frame represented in tabs:
 
-    Personal:
-            ... define riders parameter
-                You can edit parameters by doubleclicking the measured value
-                on the coloured dimensions. 
+    Base Geometry:
+        ... define riders parameter
+        ... define the main geometry parameters
+            You can edit parameters by doubleclicking the measured value
+            on the coloured dimensions. 
+ 
                 
-    Detail:
-            ... define the main geometry parameters
-                Editing like in Personal Tab
+    Frame Tubing:
+        ... detail your geometry to define all tube parameters
+            Editing like in Personal Tab
                 
-    Frame:
-            ... detail your geometry to define all tube parameters
-                Editing like in Personal Tab
-                
+    Dimension Summary / Frame Drafting / Drafting - Jig:
+        ... summaries for the workshop
+            There are no editable dimensions here.
+
     Assembly:
-            ... take your frame and assemble it with components
-                There are no dimensions to edit but you can exchange components
-                if still defined for rattleCAD. The library should be filled
-                with more components.
+        ... take your frame and assemble it with components
+            There are no dimensions to edit but you can exchange 
+            components if still defined for rattleCAD. The library 
+            should be filled with more components.
+            rattleCAD supports to use a personal component library.
+            This library has to have the same structure es in the
+            applications etc directory.
 
-    Dimensions / Drafting - Frame / Drafting - Jig:
-            ... summaries for the workshop
-                There are of course no dimensions to edit
-
+    Tube Mitter:
+        ... mittering of main tubes and seat stays
+        ... seat stay mittering is an approximate mittering as 
+            tangential to seat tube.
+                
     
 
+Directory Structure of rattleCAD
+-----------------------------------------------------------------
+        .../rattleCAD/
+                    ./3.2.06a           
+                    ./3.2.14
+                    ./3.2.15
+                    ./...                  ... Version Directories 
+                    ./rattleCAD.tcl
+                    ./rattleCAD.bat        ... batch files to start
+                    ./user/
+                         ./components      ... users components Library
+                         ./__file__.xml    ... project Files
+                    ./export/     
+                           ./__file__.ps   ... print postscript
+                           ./__file__.svg  ... export SVG
+    
+    
+    
 How to edit parameters
 -----------------------------------------------------------------
 
@@ -63,35 +87,57 @@ How to move the zoomed area
     Press the left mouse button on the graphic area, drag the mouse 
     over the screen and release it. During dragging a red line appears
     and shows you the direction of dragging.
- 
+    
 
   
-Why Reference and Personal Tabs
+How to print  .ps / .svg
 -----------------------------------------------------------------
 
-    Personal Tab:
-	    The position of handlebar is locked by horizontal and
-		vertical position in reference to bottom bracket. These are
-		to most important values to fit a bicycle to customer.
-		
-	Reference Tab:
-		If you have an existing dimension sheet of a bicycle you
-		can use these values in this tab and get the base geometry
-		for rattleCAD. After capture these values you can copy them
-        to personal via "Reference Geometry" Button in the button bar. 		
-   
-
-  
-How to print
------------------------------------------------------------------
-
-    rattleCAD uses postscript does not directly send the content
-    to a printer and uses a postscript viewer to print from there. 
+    rattleCAD is able to export canvas content as 
+        .ps     Postscript
+        .svg    StandardVectorGraphic.
+    
+    rattleCAD prints via postscript and does not directly send content
+    to a printer. Postscript requires a postscript viewer to print 
+    from there. 
     You have to install a postsript viewer like
         gsview:  http://pages.cs.wisc.edu/~ghost/gsview/index.htm
     
-    gsview is not part of rattleCAD
+        ... gsview is not part of rattleCAD.
     
-    You can also use any other programs to view .ps-files and print 
-    the content there.
+        Note: 
+        ----------------
+        gsview.exe    Version 4.9   2007-11-18
+        ... i could not point out who to prevend gsview to fit the 
+            content as whole into pagesize
+        ... so you can not print in 1:1 scale
+    
+    But there will be other solutions:
+    
+    a) http://www.lerup.com/printfile/
+        on Microsoft Windows to print .ps-Files
+        
+    b) export .svg-Files
+           -> File -> export SVG
+        on Microsoft Windows a linked application is ordered to 
+        open this file.
+        Try to print from there.
+        
+    c) any other programs to view .ps-files and print 
+        content from there.
+    
+    .ps and .svg-Files are exporte to the "export" directory which 
+        resides:
+        .../rattleCAD/
+                    ./3.2.06a
+                    ./3.2.14
+                    ./3.2.15
+                    ./rattleCAD.tcl
+                    ./rattleCAD.bat
+                    ./user
+                    ./export/     <---
+                           ./__file__.ps
+                           ./__file__.svg
+    
+
     
