@@ -135,34 +135,63 @@
 					return					
 			}
 
-			set openApplication [get_Application $fileExtension]
-			if {$openApplication == {}} {
+			set fileApplication 	[get_Application $fileExtension]
+			if {$fileApplication == {}} {
 					set fileExtension	$altExtension
-					set openApplication [get_Application $fileExtension]			
+					set fileApplication [get_Application $fileExtension]			
 			}
-			if {$openApplication == {}} {
+			if {$fileApplication == {}} {
 					puts  "         --<E>----------------------------------------------------" 
 					puts  "           <E> File : $fileName" 
 					puts  "           <E>      ... could not ge any Application! " 
 					puts  "         --<E>----------------------------------------------------"
+					return
 			}
-			puts  "               Filetype $fileExtension opens with $openApplication"
+			puts  "               Filetype $fileExtension opens with:"
+			puts  "                        >$fileApplication<\n"
 			
-					   
-				# Just the command!
-			set Application [lindex [split $openApplication \"] 1]
+			
+				# -- handle on file extension
+				# 
 			if {$fileExtension == {.htm}} {
 				set fileName "file:///$fileName"
 			}
-			 
-				# Run the command!
-			puts  ""
-			puts  "               $Application"
-			puts  "                      $fileName"
 			
-			exec $Application $fileName &
-			 
-				# finish!
+				# ---------------------
+				# replace %1 by fileName
+			proc percSubst { cmdString pattern substString } {
+					# puts " --------------"
+					# puts "        \$cmdString    >$cmdString<"
+					# puts "        \$pattern      >$pattern<"
+					# puts "        \$substString  >$substString<"
+					# puts " --------------"
+					# puts " [ string map [ list $pattern $substString ] $cmdString ]"
+				set cmdString	[ string map [ list $pattern $substString ] $cmdString ]
+				return $cmdString
+			}
+			
+				# ---------------------
+				# Substitute the HTML filename into the
+				# command for %1
+			set commandString [ percSubst $fileApplication %1 $fileName ]
+			if {$commandString == $fileApplication} {
+				set commandString "$fileApplication  $fileName"
+			}
+			
+				# ---------------------
+				# Double up the backslashes for eval (below)
+			puts "               ... $commandString "
+			
+				# ---------------------
+				# Double up the backslashes for eval (below)
+			regsub -all {\\} $commandString  {\\\\} commandString
+			  
+				# ---------------------
+				# Invoke the command
+			eval exec $commandString &
+				
+				# ---------------------
+				# done ...
 			puts  ""
 			puts  "                    ... done"  
 			return			
@@ -170,8 +199,9 @@
 
 	
 	#-------------------------------------------------------------------------
-       #  get File Extension
-       #
+       #  get Application of File Extension
+       #	http://wiki.tcl.tk/557
+	   #
 	proc get_Application {fileExtension} {
 			puts "\n"
  			puts  "         get_Application: $fileExtension"
@@ -183,70 +213,30 @@
 				"windows" {
 						package require registry 1.1
 
-						set reg_fileext [registry keys  {HKEY_CLASSES_ROOT} $fileExtension]
-						puts  "               ... $reg_fileext  ... reg_fileext" 
-					 
-							# there the file-extension is not defined
-						if {$reg_fileext == {} } {
-									# 		set 	error_message "File Type: $reg_fileext"
-									#		append 	error_message "\n  could not find a OPEN command for filetype"
-									# tk_messageBox -message "$error_message"
-								puts  "         --<E>----------------------------------------------------" 
-								puts  "           <E> File Type: $reg_fileext" 
-								puts  "           <E> could not find a REGISTRY for filetype" 
-								puts  "         --<E>----------------------------------------------------" 
-								return
-						}
+						set root HKEY_CLASSES_ROOT
 
-							# get the filetype 
-						if { [catch { set reg_filetype [registry get HKEY_CLASSES_ROOT\\$reg_fileext {}] } errMsg] } {
-								#		set 	error_message "File Type: $reg_fileext\n"
-								#		append 	error_message "could not find a registerd File Type"
-								# tk_messageBox -message "$error_message"
-								puts  "         --<E>----------------------------------------------------" 
-								puts  "           <E> File Type: $reg_fileext" 
-								puts  "           <E> could not find a registerd File Type " 
-								puts  "           <E> $errMsg" 
-								puts  "         --<E>----------------------------------------------------" 
-								return 
-						}
-								# set reg_filetype [registry get HKEY_CLASSES_ROOT\\$reg_fileext {}]
-						puts  "               reg_filetype  $reg_filetype" 
-				   
-							# Work out where to look for the command
-						if { [catch { set path HKEY_CLASSES_ROOT\\$reg_filetype\\Shell\\Open\\command } errMsg] } {
-								#		set 	error_message "File Type: $reg_fileext\n"
-								#		append 	error_message "could not find a registerd APPLICATION for $reg_filetype"
-								# tk_messageBox -message "$error_message"
-								puts  "         --<E>----------------------------------------------------" 
-								puts  "           <E> File Type: $reg_fileext" 
-								puts  "           <E> could not find a registerd APPLICATION for $reg_filetype" 
-								puts  "           <E> $errMsg" 
-								puts  "         --<E>----------------------------------------------------" 
-								return 
-						}
-							# set path HKEY_CLASSES_ROOT\\$reg_filetype\\Shell\\Open\\command
-						puts  "               path          $path" 
+							# Get the application key for HTML files
+						set appKey [registry get $root\\$fileExtension ""]
+						puts  "               appKey  $appKey" 
 
-							# Read the command!
-						if { [catch { set extApplication [registry get $path {}] } errMsg] } {
-								#		set 	error_message "File Type: $reg_fileext\n"
-								#		append 	error_message "could not find a registerd APPLICATION for $reg_filetype"
-								# tk_messageBox -message "$error_message"
-								puts  "         --<E>----------------------------------------------------" 
-								puts  "           <E> File Type: $reg_fileext" 
-								puts  "           <E> could not find a registerd APPLICATION for $reg_filetype" 
-								puts  "           <E> $errMsg" 
-								puts  "         --<E>----------------------------------------------------" 
-								return 
+							# Get the command for opening HTML files
+						if { [catch {     set appCmd [registry get $root\\$appKey\\shell\\open\\command ""]      } errMsg] } {
+									puts  "         --<E>----------------------------------------------------" 
+									puts  "           <E> File Type: $fileExtension" 
+									puts  "           <E> could not find a registered COMMAND for this appKey" 
+									puts  "         --<E>----------------------------------------------------"
+									return 
 						}
+						puts  "               appCmd  $appCmd" 
+						
 				}
 			}
 			
-			puts  "               extApplication:"
-			puts "                         $extApplication"
+				# puts  "               appCmd:"
+				# puts "                         $appCmd"
 			
-			return $extApplication					
+			return $appCmd	
+				
 	}
 
 	
