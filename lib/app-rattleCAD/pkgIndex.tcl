@@ -13,6 +13,7 @@ package ifneeded   rattleCAD  3.2 "\
         [list source  [file join $dir lib_file.tcl]]; \
         [list source  [file join $dir lib_gui.tcl]]; \
         [list source  [file join $dir lib_cfg_report.tcl]]; \
+        [list source  [file join $dir lib_config.tcl]]; \
         [list source  [file join $dir lib_comp_library.tcl]]; \
         [list source  [file join $dir lib_frame_geometry.tcl]]; \
         [list source  [file join $dir lib_frame_geometry_custom.tcl]]; \

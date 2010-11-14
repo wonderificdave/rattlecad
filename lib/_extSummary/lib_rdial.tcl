@@ -42,6 +42,7 @@
  # History:
  #  20100526: -scale option added 
  #  20100629: incorrect "rotation direction" in vertical mode repaired
+ #  20101112: drag: set opt(value,$w) depending to scale, modify callback
  #
  
  namespace eval rdial {
@@ -210,12 +211,13 @@
          } elseif {$mode>0} {
              set diff [expr {$diff*$opt(fast,$w)}]
          }
-         set opt(value,$w) [expr {$opt(value,$w)+$diff}]
+         set opt(value,$w) [expr {$opt(value,$w)+$diff*$opt(scale,$w)}]
              
          # call callback if defined...
          if {$opt(callback,$w) ne ""} {
-             {*}$opt(callback,$w) [expr {$opt(value,$w)*$opt(scale,$w)}]
+             {*}$opt(callback,$w) $opt(value,$w)
          }
+             # {*}$opt(callback,$w) [expr {$opt(value,$w)*$opt(scale,$w)}]
  
          # draw knob with new angle
          draw $w $opt(value,$w)

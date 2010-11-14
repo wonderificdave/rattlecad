@@ -40,7 +40,7 @@ exec wish "$0" "$@"
 
   ###########################################################################
   #
-  #                 I  -  N  -  I  -  T 
+  #                 I  -  N  -  I  -  T                        -  Application
   #
   ###########################################################################
 
@@ -54,6 +54,7 @@ exec wish "$0" "$@"
 	set		  APPL_ForkTypes	{}
 	set		  APPL_BrakeTypes	{}
 	set		  APPL_RimList		{}
+	array set APPL_CompLocation {}
 	
 	
 	variable  APPL_Env
@@ -61,8 +62,8 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{15}  
-						RELEASE_Date		{08. Nov. 2010}
+						RELEASE_Revision	{18}  
+						RELEASE_Date		{14. Nov. 2010}
 						BASE_Dir			{}
 						ROOT_Dir			{}
 						CONFIG_Dir			{}
@@ -119,7 +120,7 @@ exec wish "$0" "$@"
 
   ###########################################################################
   #
-  #                 M  -  A  -  I  -  N 
+  #                 I  -  N  -  I  -  T                       - Configuration
   #
   ###########################################################################
 
@@ -134,7 +135,7 @@ exec wish "$0" "$@"
 	
 	puts ""
 	puts "  Template Road        -> $APPL_Env(TemplateRoad)"
-	puts "  Template Road        -> $APPL_Env(TemplateMTB)"
+	puts "  Template MTB         -> $APPL_Env(TemplateMTB)"
 
 	puts "\n  APPL_ForkTypes"
 	foreach entry $APPL_ForkTypes {
@@ -151,6 +152,10 @@ exec wish "$0" "$@"
 		puts "        -> $entry"
 	}
 	
+	puts "\n  APPL_CompLocation"
+	foreach index [array names APPL_CompLocation] {
+		puts [format "        -> %-25s %s" $index    $APPL_CompLocation($index)]
+	} 
 	
 	array set APPL_Config { 
 						GUI_Font               {Arial 8}
@@ -165,6 +170,17 @@ exec wish "$0" "$@"
 
   ###########################################################################
   #
+  #                 S  -  T  -  Y  -  L  -  E 
+  #
+  ###########################################################################
+
+	# ttk::style configure TCombobox -padding 0
+	# ttk::style theme use default
+	ttk::style configure TCombobox -padding 0
+	
+  
+  ###########################################################################
+  #
   #                 M  -  A  -  I  -  N 
   #
   ###########################################################################
@@ -177,7 +193,7 @@ exec wish "$0" "$@"
   set APPL_Env(USER_Dir) 	[lib_file::check_user_dir user]
   set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir export]
 
-  
+ 
     # -- set standard font ------------
   option add *font $APPL_Config(GUI_Font)
   
@@ -238,10 +254,12 @@ exec wish "$0" "$@"
 	update 
 	wm minsize . [winfo width  .]   [winfo height  .]
  
-		# -- window title -------------
+		# -- open config panel -----------------------
+	# lib_config::create . .cfg	
+
+		# -- window title ----------------------------
 	set_window_title 				template
 
-	
 	
   ###########################################################################
   #
@@ -253,6 +271,8 @@ exec wish "$0" "$@"
 		
 		
 		# -- destroy intro - image ----
-	after  300 destroy .intro
+	after  200 destroy .intro
 
+		# -- keep on top --------------
+	wm deiconify .
 	

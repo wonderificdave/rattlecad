@@ -3,7 +3,7 @@
     <rattleCAD>
         <Version>3.2.00</Version>
         <Name>rattleCAD_init</Name>
-        <modified>2010.10.24/00:00</modified>
+        <modified>2010.11.14/00:00</modified>
     </rattleCAD>
 	
 	<!-- Startup Settings -->
@@ -16,6 +16,8 @@
 			<image name="recent"	src="open_recent.gif" />
 			<image name="save"		src="save.gif" />
 			<image name="print"		src="print.gif" />
+			<image name="print_ps"	src="print_ps.gif" />
+			<image name="print_svg"	src="print_svg.gif" />
 			<image name="clear"		src="clean.gif" />
 			<image name="design"	src="design.gif" />
 			<image name="drawing"	src="drawing.gif" />
@@ -27,6 +29,7 @@
 			<image name="exit"     	src="exit.gif" />
 			<image name="iconClose" src="iconClose.gif" />
 			<image name="confirm" 	src="confirm.gif" />
+			<image name="cfg_panel"	src="cfg_panel.gif" />
 		</images>
 	</lib_gui>	
 	
@@ -42,12 +45,20 @@
 
 	<Options>
 	
+		<ComponentLocation>
+			<component xpath="Component/Fork/Crown/File"   dir="components/fork/crown"      />
+			<component xpath="Component/Fork/DropOut/File" dir="components/fork/dropout"    />
+			<component xpath="Component/RearDropOut/File"  dir="components/dropout"			/>
+			<component xpath="Component/Brake/Front/File"  dir="components/brake/front"     />
+			<component xpath="Component/Brake/Rear/File"   dir="components/brake/rear"      />
+			<component xpath="Component/HandleBar/File"    dir="components/handlebar"       />
+			<component xpath="Component/Saddle/File"       dir="components/saddle"          />
+			<component xpath="Component/CrankSet/File"     dir="components/crankset"        />
+			<component xpath="Component/Derailleur/File"   dir="components/rear_derailleur" />
+		</ComponentLocation>
+		
 		<Fork>
 			<SteelLugged>
-				<!--Geometry>
-					<Height>365.00</Height>
-					<Rake>45.00</Rake>
-				</Geometry-->
 				<Visualization>
 					<Crown>
 						<File>fork/crown/longshen_max_36_5.svg</File>
@@ -74,11 +85,8 @@
 					</DropOut>
 				</Visualization>
 			</SteelLugged>
+			
 			<Composite>    
-				<!--Geometry>
-					<Height>365.00</Height>
-					<Rake>45.00</Rake>
-				</Geometry-->
 				<Visualization>
 					<Crown>
 						<File>fork/_composite/fork_crown.svg</File>
@@ -102,6 +110,7 @@
 					</DropOut>
 				</Visualization>
 			</Composite>
+			
 			<Suspension>   
 				<Geometry>
 					<Rake>40.00</Rake>

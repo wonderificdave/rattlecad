@@ -47,9 +47,10 @@
 	variable	rdials_list	{}
 	
 	variable 	compFile  {}
-	variable 	compAngle 		0.0
-	variable 	compOffset_X	0.0
-	variable 	compOffset_y	0.0
+
+	variable 	configValue
+	  array set configValue {
+	}
 
 
 	#-------------------------------------------------------------------------
@@ -143,9 +144,9 @@
 				-side top
 
 			# -- Scale
-		create_config_line $menueFrame.bf.scale.off_x	"Offset x"	[namespace current]::compOffset_X  -180  180	 1	  [list [namespace current]::updateCanvas]
-		create_config_line $menueFrame.bf.scale.off_y	"Offset y"	[namespace current]::compOffset_y  -180  180	 1	  [list [namespace current]::updateCanvas]
-		create_config_line $menueFrame.bf.scale.angle	"Angle"	 	[namespace current]::compAngle     -180  180	 1	  [list [namespace current]::updateCanvas]
+		create_config_line $menueFrame.bf.scale.off_x	"Offset x"	[namespace current]::configValue(compOffset_X)  -180 0.0 180	 1	  [list [namespace current]::updateCanvas]
+		create_config_line $menueFrame.bf.scale.off_y	"Offset y"	[namespace current]::configValue(compOffset_y)  -180 0.0 180	 1	  [list [namespace current]::updateCanvas]
+		create_config_line $menueFrame.bf.scale.angle	"Angle"	 	[namespace current]::configValue(compAngle)     -180 0.0 180	 1	  [list [namespace current]::updateCanvas]
 		pack 	$menueFrame.bf.scale.off_x \
 		        $menueFrame.bf.scale.off_y \
 				$menueFrame.bf.scale.angle \
@@ -203,12 +204,10 @@
        #
 	proc reset_Positioning {} {		
 			variable rdials_list
-			variable compAngle	    0.0
-			variable compOffset_X	0.0
-			variable compOffset_y	0.0			
-				#set angle       0
-				#set offset_x    0
-				#set offset_y    0
+			variable configValue
+			set  configValue(compAngle)	    0.0
+			set  configValue(compOffset_X)	0.0
+			set  configValue(compOffset_y)	0.0			
 			foreach rd $rdials_list {
 				rdial::configure $rd -value 0
 			}
@@ -227,23 +226,20 @@
 	#-------------------------------------------------------------------------
        #  update Canvas
        #
-	proc updateCanvas {{entry_var ""} {value {0}}} {
+	proc updateCanvas {{entryVar ""} {value {0}}} {
 			variable compCanvas
 			variable compFile
-			variable compAngle
-			variable compOffset_X
-			variable compOffset_y
+			variable configValue
 
-			if {$entry_var ne ""} {
-			  global $entry_var
-                          set $entry_var $value
-                        }
+			if {$entryVar ne ""} {
+				set $entryVar $value
+            }
 				# puts "\n ... $compCanvas\n    ... $compFile"
 			$compCanvas clean_StageContent
 			[namespace current]::create_Centerline
 			if {$compFile != {}} {
-			    set compPosition [list $compOffset_X [expr 1.0*$compOffset_y]]
-				set __my_Component__		[ $compCanvas readSVG $compFile $compPosition $compAngle  __Decoration__ ]
+			    set compPosition [list $configValue(compOffset_X) [expr 1.0*$configValue(compOffset_y)]]
+				set __my_Component__		[ $compCanvas readSVG $compFile $compPosition $configValue(compAngle)  __Decoration__ ]
 				[namespace current]::moveto_StageCenter $__my_Component__
 			}
 
@@ -303,25 +299,27 @@
 	#-------------------------------------------------------------------------
        #  create config_line
        #
-	proc create_config_line {w lb_text entry_var start end resolution command} {		
+	proc create_config_line {w lb_text entryVar start current end resolution command} {		
 			variable	rdials_list
+			set 		$entryVar $current
+			#puts "   ... \$entryVar [list [format "$%s" $entryVar]]"
+
 			frame   $w
 			pack    $w
-	 
-			global $entry_var
-
 			label   $w.lb	-text $lb_text            -width 10  -bd 1  -anchor w 
-			entry   $w.cfg	-textvariable $entry_var  -width  4  -bd 1  -justify right -bg white 
+			entry   $w.cfg	-textvariable $entryVar  -width  4  -bd 1  -justify right -bg white 
 			frame	$w.f	-relief sunken -bd 2 -padx 3
 
-			rdial::create   $w.f.scl	-height        10 \
-							-width       84 \
-							-orient       horizontal \
-							-callback    [list $command $entry_var]
+			rdial::create   $w.f.scl	\
+							-value		$current \
+							-height		10 \
+							-width		84 \
+							-orient		horizontal \
+							-callback	[list $command $entryVar]
 			lappend rdials_list $w.f.scl
 			
-				bind $w.cfg <Leave> 		[list $command]
-				bind $w.cfg <Return> 		[list $command]
+				bind $w.cfg <Leave> 		[list $command ]
+				bind $w.cfg <Return> 		[list $command ]
 			pack      $w.lb  $w.cfg  $w.f  $w.f.scl    -side left  -fill x	
 	}	
 	

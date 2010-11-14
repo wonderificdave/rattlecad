@@ -137,12 +137,13 @@
 			# --- fill ICON - Array
 			#
 		foreach child [ [$root selectNodes /root/lib_gui/images] childNodes] {			
-			  # puts [ $child asXML ]
+				# puts [ $child asXML ]
 			set name	[ $child getAttribute {name} ]
 			set source	[ $child getAttribute {src} ]
-			  # puts "   $name  $source"
+				# puts "   $name  $source"
 			set lib_gui::iconArray($name) [ image create photo -file $::APPL_Env(IMAGE_Dir)/$source ]
 		}
+			set ::cfg_panel [image create photo -file $::APPL_Env(IMAGE_Dir)/cfg_panel.gif]
 
 		
 			# --- fill CANVAS - Array
@@ -205,8 +206,20 @@
 				set ::APPL_BrakeTypes [lappend ::APPL_BrakeTypes  [$childNode nodeName]]
 			}
 		}
-
-			
+		
+			# --- fill ListBox Values   APPL_CompLocation
+			#
+		array unset ::APPL_CompLocation 
+		set node_Locations [ $root selectNodes /root/Options/ComponentLocation ]
+		foreach childNode [ $node_Locations childNodes ] {
+			if {[$childNode nodeType] == {ELEMENT_NODE}} {
+					set xpath [$childNode getAttribute xpath {}]
+					set dir   [$childNode getAttribute dir   {}]
+				# puts "  childNode ->   [$childNode nodeName]   $xpath  $dir "
+				set ::APPL_CompLocation($xpath) $dir
+			}
+		}
+		
 	}
 
 	
