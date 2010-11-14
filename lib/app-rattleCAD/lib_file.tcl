@@ -378,6 +378,7 @@
 					set ::APPL_Project	[lib_file::openFile_xml $fileName show]
 						#
 					check_FileVersion {3.1}
+					check_FileVersion {3.2.20}
 						#
 					frame_geometry_custom::set_base_Parameters $::APPL_Project
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -420,8 +421,8 @@
 	proc check_FileVersion {Version} {
 			puts " ... check_FileVersion:  $Version"
 			case $Version {
-				{3.1} {	set node {}
-
+			
+				{3.1} {		set node {}
 								# --- /root/Personal/SeatTube_Length
 							set node [$::APPL_Project selectNode /root/Personal/SeatTube_Length]
 							if {$node == {}} {
@@ -474,6 +475,13 @@
 							}	
 							
 						}
+						
+				{3.2.20} {	set node {}								
+								# --- /root/Result/HeadTube
+							set node [$::APPL_Project selectNode /root/Result/HeadTube]
+							$node appendXML "<TopTubeAngle>0.00</TopTubeAngle>"
+						}
+						
 				{ab-xy} {	set node {}
 							set node [$::APPL_Project selectNode /root/Project/rattleCADVersion/text()]
 							puts " ... [$node nodeValue] .."

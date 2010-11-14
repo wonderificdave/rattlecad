@@ -111,6 +111,7 @@
 																			$updateCommand { 	file://Component/HandleBar/File	\
 																							} 	{HandleBar Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$HandleBar(object)
 								}
 						}
 			RearDerailleur {
@@ -123,6 +124,7 @@
 																			$updateCommand { 	file://Component/Derailleur/File	\
 																							} 	{RearDerailleur Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$Derailleur(object)
 								}
 						}
 			RearDerailleur_ctr {
@@ -143,6 +145,7 @@
 																			$updateCommand { 	file://Component/CrankSet/File \
 																							} 	{CrankSet Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$CrankSet(object)
 								}
 						}
 			SeatPost {
@@ -158,6 +161,7 @@
 																								Component/Saddle/SeatPost/Diameter	\
 																							} 	{SeatPost Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$SeatPost(object)
 								}
 						}
 			
@@ -176,6 +180,7 @@
 																												Component/Brake/Rear/LeverLength	\
 																											} 	{RearBrake Parameter} \
 																				]
+																	  lib_gui::object_CursorBinding 	$cv_Name	$RearBrake(object)
 												}
 										}
 								default {}
@@ -199,6 +204,7 @@
 																												Component/Brake/Front/LeverLength	\
 																											} 	{FrontBrake Parameter} \
 																				]
+																	  lib_gui::object_CursorBinding 	$cv_Name	$FrontBrake(object)
 												}
 										}																																			
 								default {}
@@ -214,6 +220,7 @@
 																			$updateCommand { 	file://Component/Saddle/File	\
 																							} 	{Saddle Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$Saddle(object)
 								}
 						}																																			
 			HeadSet {
@@ -226,6 +233,7 @@
 																								Component/HeadSet/Diameter		\
 																							} 	{HeadSet Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$HeadSet(object)
 								}
 						set HeadSet(polygon) 		[ frame_geometry_custom::tube_values HeadSet polygon_tp $BB_Position ]
 						set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
@@ -235,6 +243,7 @@
 																								Component/HeadSet/Diameter		\
 																							} 	{HeadSet Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$HeadSet(object)
 								}
 						}
 			Stem {
@@ -259,6 +268,7 @@
 																			$updateCommand { 	Component/Wheel/Rear/RimHeight		\
 																							} 	{RearWheel Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$my_Wheel
 								}
 						}
 			FrontWheel {
@@ -278,6 +288,7 @@
 																			$updateCommand { 	Component/Wheel/Front/RimHeight		\
 																							} 	{FrontWheel Parameter} \
 																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$my_Wheel
 								}
 						}
 			RearWheel_Rep	{
@@ -365,6 +376,7 @@
 																					Component/RearDropOut/Derailleur/y   		\
 																	} 	{RearDropout Parameter} \
 														]
+									  lib_gui::object_CursorBinding 	$cv_Name	$RearDropout(object)
 				}
 
 			# --- create Fork Representation ----------------
@@ -416,6 +428,7 @@
 																					Component/Fork/Blade/Offset			\
 																				} 	{ForkBlade Parameter} \
 													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$ForkBlade(object)
 				}
 
 			# --- create ForkCrowh -------------------
@@ -434,6 +447,7 @@
 																					Component/Fork/Crown/Blade/OffsetPerp \
 																				} 	{ForkCrown Parameter} \
 													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$ForkCrown(object)
 				}
 								
 			# --- create Fork Dropout ---------------
@@ -445,6 +459,7 @@
 																					Component/Fork/DropOut/OffsetPerp \
 																				} 	{ForkDropout Parameter} \
 													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$ForkDropout(object)
 				}
 		
 			# --- create HeadTube --------------------
@@ -454,7 +469,8 @@
 													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																$updateCommand  {	FrameTubes/HeadTube/Diameter	\
 																				}	{HeadTube Parameter}
-													] \
+													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$HeadTube(object)
 				}
 				
 			# --- create DownTube --------------------
@@ -466,7 +482,8 @@
 																					FrameTubes/DownTube/DiameterBB  \
 																					FrameTubes/DownTube/TaperLength \
 																				}	{DownTube Parameter}
-													] \
+													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$DownTube(object)
 				}
 				
 			# --- create SeatTube --------------------
@@ -478,7 +495,8 @@
 																					FrameTubes/SeatTube/DiameterBB   \
 																					FrameTubes/SeatTube/TaperLength  \
 																				}	{SeatTube Parameter}
-													] \
+													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$SeatTube(object)
 				}
 
 			# --- create TopTube ---------------------
@@ -492,6 +510,7 @@
 																					Custom/TopTube/Angle		\
 																				} 	{TopTube Parameter}
 													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$TopTube(object)
 				}
 
 			# --- create ChainStay -------------------
@@ -504,6 +523,7 @@
 																					FrameTubes/ChainStay/TaperLength	\
 																				} 	{Chainstay Parameter}
 													]
+									lib_gui::object_CursorBinding 	$cv_Name	$ChainStay(object)
 				}
 
 			# --- create SeatStay --------------------
@@ -517,6 +537,7 @@
 																					Custom/SeatStay/OffsetTT     \
 																				} 	{SeatStay Parameter}
 													]
+									lib_gui::object_CursorBinding 	$cv_Name	$SeatStay(object)
 				}
 
 			# --- create BottomBracket ---------------

@@ -119,7 +119,10 @@
 					createDimensionType							$cv_Name $xy 	HeadSet_Bottom		$updateCommand
 					createDimensionType							$cv_Name $xy 	ForkHeight			$updateCommand				
 					createDimensionType							$cv_Name $xy 	Brake_Bridge		$updateCommand		
-					createDimensionType							$cv_Name $xy 	Brake_Fork			$updateCommand					
+					createDimensionType							$cv_Name $xy 	Brake_Fork			$updateCommand		
+					createDimensionType							$cv_Name $xy 	TopHeadTube_Angle	$updateCommand		
+
+					
 				}
 			lib_gui::cv_Custom02 {
 						#
@@ -598,11 +601,26 @@
 															150   0  \
 															$colour(primary) ]
 															
-						
-
 															
-
 						if {$active == {on}} {
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_HB_XPosition	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_HB_YPosition	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_Length		
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Length		
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_LC_Position_x	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_LC_Position_y	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_Angle  		
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Depth   		
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_CS_Length   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_Distance  	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_Stem_Length   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_Stem_Angle   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_Fork_Rake   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_Fork_Height   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_RW_Radius   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_Radius   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_CR_Length   	
+
 								$cv_Name bind $_dim_HB_XPosition	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/HandleBar_Distance]
 								$cv_Name bind $_dim_HB_YPosition	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/HandleBar_Height]
 								$cv_Name bind $_dim_ST_Length		<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/SeatTube_Length]
@@ -620,8 +638,11 @@
 								$cv_Name bind $_dim_RW_Radius   	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  {list://Component/Wheel/Rear/RimDiameter@APPL_RimList Component/Wheel/Rear/TyreHeight} {Rear Wheel Parameter}]
 								$cv_Name bind $_dim_FW_Radius   	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  {list://Component/Wheel/Front/RimDiameter@APPL_RimList Component/Wheel/Front/TyreHeight} {Front Wheel Parameter}]
 								$cv_Name bind $_dim_CR_Length   	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/CrankSet/Length]
-								 
-								 # $cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  combinedValue://Saddle_OffsetX]
+								
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_XPosition   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_DistanceX   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Angle   	
+
 								$cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Result/Saddle/Offset_BB/horizontal]
 								$cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Result/WheelPosition/front/horizontal]
 								$cv_Name bind $_dim_HT_Angle		<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  [namespace current]::update  Result/HeadTube/Angle]
@@ -644,6 +665,36 @@
 						set _dim_HT_Stack_Y		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$HeadTube_Stem	$BottomBracket ] \
 															vertical    [expr  110 * $stageScale]    [expr  120 * $stageScale]  \
 															gray50 ] 
+															
+															
+						#set _dim_Head_Top_Angle		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $TopTube_Steerer $Steerer_Stem $TopTube_SeatTube] ] \
+															150   0 \
+															darkred ]
+						set _dim_Head_Down_Angle	[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $DownTube_Steerer $DownTube_BB $Steerer_Ground] ] \
+															170 -10 \
+															gray50 ]
+						set _dim_Seat_Top_Angle		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $TopTube_SeatTube $BottomBracket $TopTube_Steerer] ] \
+															110  10 \
+															gray50 ]
+						set _dim_Down_Seat_Angle	[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $BottomBracket $DownTube_Steerer $TopTube_SeatTube ] ] \
+															110   0 \
+															gray50 ]
+						set _dim_Seat_CS_Angle		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $BottomBracket $TopTube_SeatTube $ChainSt_SeatSt_IS] ] \
+															110   0 \
+															gray50 ]
+							set pt_01				[ vectormath::addVector	$BottomBracket {-1 0} ]
+						set _dim_SeatTube_Angle		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $BottomBracket $SeatTube_TopTube $pt_01] ] \
+															150   0 \
+															gray50 ]
+							set pt_01				[ vectormath::intersectPoint	$Steerer_Stem  $Steerer_Fork		$FrontWheel [vectormath::addVector	$FrontWheel {-10 0}] ]
+							set pt_02				[ vectormath::addVector	$pt_01 {-1 0} ]
+						set _dim_HeadTube_Angle		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $pt_02 $Steerer_Stem [vectormath::addVector	$pt_02 {-10 0}]] ] \
+															110   0 \
+															gray50 ]
+															
+															
+															
+															
 					}
 				# -----------------------
 			summary_bg {
@@ -1099,11 +1150,12 @@
 						set pt_02					[ frame_geometry_custom::coords_get_xy $HeadTube(polygon) 1 ]
 						set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_01 $pt_02] ] \
 																				aligned    [expr 50 * $stageScale]   0 \
-																				darkblue ]																				
+																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1> \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand  {	FrameTubes/HeadTube/Length		\
 																						}	{HeadTube Length}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}
 						}
 			HeadTube_OffsetTT {
@@ -1113,11 +1165,12 @@
 						set pt_02					[ frame_geometry_custom::coords_get_xy $TopTube(polygon) 8 ]
 						set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_01 $pt_02] ] \
 																				aligned    [expr 70 * $stageScale] [expr 50 * $stageScale] \
-																				darkblue ]																				
+																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand 	{	Custom/TopTube/OffsetHT		\
 																						}	{HeadTube TopTube Offset}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}						
 						}
 			HeadTube_OffsetDT {
@@ -1127,11 +1180,12 @@
 						set pt_02					[ frame_geometry_custom::coords_get_xy $DownTube(polygon) 3 ]
 						set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_01 $pt_02] ] \
 																				aligned    [expr -70 * $stageScale] [expr 50 * $stageScale] \
-																				darkblue ]																				
+																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand 	{	Custom/DownTube/OffsetHT \
 																						}	{HeadTube DownTube Offset}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}						
 						}
 			SeatTube_Extension {
@@ -1141,11 +1195,12 @@
 						set pt_02					[ frame_geometry_custom::coords_get_xy $SeatTube(polygon) 3 ]
 						set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_01 $pt_02] ] \
 																				aligned    [expr 50 * $stageScale] [expr -50 * $stageScale] \
-																				darkblue ]																				
+																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand 	{	Custom/SeatTube/Extension \
 																						}	{SeatTube Extension}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}
 						}
 			SeatStay_Offset {
@@ -1158,11 +1213,12 @@
 						}
 						set dimension 		[ $cv_Name dimension  length  	$dim_coords  \
 																				aligned    [expr 70 * $stageScale]   [expr 50 * $stageScale] \
-																				darkblue ]																				
+																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand 	{	Custom/SeatStay/OffsetTT \
 																						}	{SeatStay Offset TopTube}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}
 						}
 			DownTube_Offset {
@@ -1178,11 +1234,12 @@
 						}
 						set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_01 $pt_02 $pt_03] ] \
 																				{perpendicular}    $dim_distance $dim_offset \
-																				darkblue ]																				
+																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand 	{	Custom/DownTube/OffsetBB \
 																						}	{DownTube Offset BottomBracket}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}
 						}
 			TopTube_Angle {
@@ -1190,13 +1247,37 @@
 						set pt_hlp 					[ frame_geometry_custom::tube_values 		TopTube SeatTube $BB_Position  ]
 						set pt_cnt 					[ vectormath::center 	$pt_01  $pt_hlp]
 						set pt_02 					[ list [expr [lindex $pt_cnt 0] + 2] [lindex $pt_cnt 1]  ]
-						set dimension 		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $pt_cnt $pt_02 $pt_01] ] \
+							# puts "   $pt_01"
+							# puts "   $pt_hlp"
+							# puts "   [expr [lindex $pt_01 1] - [lindex $pt_hlp 1]]"
+						if {[lindex $pt_01 1] > [lindex $pt_hlp 1]} {
+								set dimension 		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $pt_cnt $pt_02 $pt_01] ] \
 																				100   -30 \
-																				darkblue ]																				
+																				darkred ]
+						} else {
+								set dimension 		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $pt_cnt $pt_01 $pt_02] ] \
+																				100   -30 \
+																				darkred ]
+						}
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand 	{	Custom/TopTube/Angle \
 																						}	{TopTube Angle}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
+								}
+					}
+			TopHeadTube_Angle {
+						set Steerer_Stem			[ frame_geometry_custom::point_position Steerer_Stem		$BB_Position  ]
+						set TopTube_Steerer			[ frame_geometry_custom::tube_values  	 TopTube HeadTube	$BB_Position  ]
+						set TopTube_SeatTube		[ frame_geometry_custom::tube_values     TopTube SeatTube		$BB_Position ]
+						set dimension				[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $TopTube_Steerer $Steerer_Stem $TopTube_SeatTube] ] \
+																				150   0 \
+																				darkblue ]
+						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
+																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																		$updateCommand 	{	Result/HeadTube/TopTubeAngle \
+																						}	{HeadTube TopTube Angle}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}
 					}
 			ForkHeight {
@@ -1209,16 +1290,17 @@
 						if {$ForkRake != 0} {
 							set dimension	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$help_fk $FrontWheel $Steerer_Fork  ] \
 																				perpendicular [expr  (110 - $ForkRake) * $stageScale]    [expr  -80 * $stageScale] \
-																				darkblue ] 
+																				darkred ] 
 						} else {
 							set dimension	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$FrontWheel $Steerer_Fork  ] \
 																				aligned 	[expr  110  * $stageScale]    [expr  -80 * $stageScale] \
-																				darkblue ] 
+																				darkred ] 
 						}
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand 	{	Component/Fork/Height \
 																						}	{Fork Height}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}
 					}
 			HeadSet_Bottom {
@@ -1226,11 +1308,12 @@
 						set pt_02 					[ frame_geometry_custom::point_position 	Steerer_Fork	$BB_Position  ]
 						set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_01 $pt_02] ] \
 																				aligned    [expr -110 * $stageScale]   [expr 50 * $stageScale] \
-																				darkblue ]																				
+																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																		$updateCommand 	{	Component/HeadSet/Height/Bottom \
 																						}	{HeadSet Bottom Height}]
+													lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}
 					}
 			Brake_Bridge {
@@ -1249,11 +1332,12 @@
 																								gray50 ]
 										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_03  $pt_04 ] \
 																								aligned  	[expr   -50 * $stageScale]	0 \
-																								darkblue ]
+																								darkred ]
 										if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																						[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																						$updateCommand 	{	Component/Brake/Rear/LeverLength \
 																										}	{Rear Brake LeverLength}]
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
 												}
 									}
 						}
@@ -1267,11 +1351,12 @@
 											# $cv_Name create circle  $pt_02 	-radius 20  -outline blue
 										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_03  $pt_04 ] \
 																								aligned  	[expr   20 * $stageScale]	[expr  50 * $stageScale] \
-																								darkblue ]
+																								darkred ]
 										if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																						[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 																						$updateCommand 	{	Component/Brake/Front/LeverLength \
 																										}	{Front Brake LeverLength}]
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
 												}
 									}
 						}
@@ -1303,7 +1388,6 @@
 																				aligned    [expr -30 * $stageScale]  [expr 50 * $stageScale] \
 																				gray50 ]																				
 					}
-
 			check_this {
 						set TopTube(polygon) 		[ frame_geometry_custom::tube_values TopTube polygon $BB_Position  ]
 						set pt_01					[ frame_geometry_custom::coords_get_xy $TopTube(polygon) 11 ]
@@ -1315,10 +1399,12 @@
 						set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_01 $pt_02] ] \
 																				aligned    [expr 50 * $stageScale]   [expr 50 * $stageScale] \
 																				darkblue ]																				
-						if {$updateCommand != {}} {		$cv_Name bind 				$dimension  \
+						if {$updateCommand != {}} {		
+									$cv_Name bind 				$dimension  \
 											<Double-ButtonPress-1>  [list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
 											$updateCommand {	Custom/SeatStay/OffsetTT		\
 																		}	{SeatStay OffsetTopTube}]
+									lib_gui::object_CursorBinding 	$cv_Name	$dimension
 								}
 					}
 			default {}
@@ -1474,6 +1560,6 @@
 		puts "  stageHeight    $stageHeight" 
 		puts "  stageScale     $stageScale" 
 	}
-
+	
 	
 }

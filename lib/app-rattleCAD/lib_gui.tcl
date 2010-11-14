@@ -697,6 +697,13 @@
 			}
 	}
 	
+	#-------------------------------------------------------------------------
+       #  cursor binding on objects
+       #
+	proc object_CursorBinding {cv_Name tag {cursor {hand2}} } {
+			$cv_Name bind $tag	<Enter> [list $cv_Name configure -cursor $cursor]
+			$cv_Name bind $tag	<Leave> [list $cv_Name configure -cursor {}]
+	}
 	
 	
 }
