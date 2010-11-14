@@ -776,6 +776,21 @@
 					$node nodeValue		$value
 					
 					
+						# --- HeadTube/TopTubeAngle
+						#
+					set xpath Result/HeadTube/TopTubeAngle
+						# puts "           ... $xpath"
+						# puts "                   ... $frameCoords::Steerer_Stem" 
+						# puts "                   ... $frameCoords::Steerer_Ground"
+						set HeadTubeAngle 	[[ $domProject selectNodes /root/Result/HeadTube/Angle/text() ] asText]
+						set TopTubeAngle 	[[ $domProject selectNodes /root/Custom/TopTube/Angle/text()  ] asText]
+						puts "     $HeadTubeAngle  $TopTubeAngle"
+					set value			[ format "%.2f" [ expr  $HeadTubeAngle + $TopTubeAngle] ]
+						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
+						# puts "                  ... $value"
+					$node nodeValue		$value
+					
+					
 						# --- SeatTube
 						#
 					set position	[ frame_geometry_custom::tube_values		SeatTube TopTube	{0 0} ]
@@ -1586,14 +1601,14 @@
 			
 			
 			puts "\n  ... set_spec_Parameters: $xpath"
-			switch -glob $xpath {				
+			switch -glob $xpath {
+			
 				{Result/HeadTube/Angle}	{			
 							puts "               ... $xpath"
 							
 							set HeadTube(Angle)			[set_projectValue $xpath  $value format]
-							#set HeadTube(Angle)			[set_projectValue $xpath  $_updateValue($xpath) format]
 							set _updateValue($xpath) 	$HeadTube(Angle)
-								puts "          \$HeadTube(Angle)  = $HeadTube(Angle)"
+									# puts "          \$HeadTube(Angle)  = $HeadTube(Angle)"
 								
 								# --- get HandleBar(position)
 								# 
@@ -1619,7 +1634,7 @@
 								# 
 							set xpath 		Personal/HandleBar_Distance					
 							set newValue 	[lindex $HandleBar(position) 0] 
-								puts "          $HandleBar(position)  -> $newValue"
+									# puts "          $HandleBar(position)  -> $newValue"
 							set_projectValue $xpath  $newValue
 		
 								# --- update value 
@@ -1627,30 +1642,45 @@
 							set xpath 		Personal/HandleBar_Height					
 							set newValue 	[lindex $HandleBar(position) 1] 
 							
-								puts "            old:  $HandleBar(Height)  "
-								puts "          $HandleBar(position)  -> $newValue"
+									# puts "            old:  $HandleBar(Height)  "
+									# puts "          $HandleBar(position)  -> $newValue"
 							set_projectValue $xpath  $newValue
 		
-								# --- update Project
-								# 
-							#updateConfig $cv_Name $updateCommand _update_ $cvEntry						
 						}	
-						
+				
+				{Result/HeadTube/TopTubeAngle} {
+									# puts "               ... $xpath"
+							
+							set HeadTopTube_Angle	[ set_projectValue $xpath  $value format]
+							set _updateValue($xpath) 	$HeadTopTube_Angle
+								puts "          \$HeadTopTube_Angle  = $HeadTopTube_Angle"
+
+
+
+								# --- update value 
+								# 
+							set HeadTube_Angle		[ [ $domProject selectNodes /root/Result/HeadTube/Angle		]  asText ]
+							set value				[ expr $HeadTopTube_Angle - $HeadTube_Angle]
+							set xpath		Custom/TopTube/Angle
+							
+							set_projectValue $xpath  $value	
+							
+						}
+				
 				{Result/WheelPosition/front/horizontal}	{			
 							puts "               ... $xpath"
 							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
 							set newValue				[set_projectValue $xpath  $value format]
-							#set newValue				[set_projectValue $xpath  $_updateValue($xpath) format]
 							set _updateValue($xpath) 	$newValue
 							set delta		[expr $newValue - $oldValue]
-								puts "          $newValue - $oldValue = $delta"
+									# puts "          $newValue - $oldValue = $delta"
 								 
 								# --- get FrontWheel(Distance)
 								# 
 							set FrontWheel(position) 	[ point_position FrontWheel {0 0}]
 							set FrontWheel(y) 			[lindex $FrontWheel(position) 1] 
 							set FrontWheel(Distance) 	[ expr hypot($newValue,$FrontWheel(y)) ] 
-								puts "          hypot($newValue,$FrontWheel(y)) = $FrontWheel(Distance)"
+									# puts "          hypot($newValue,$FrontWheel(y)) = $FrontWheel(Distance)"
 							
 								# --- update value 
 								# 
@@ -1662,31 +1692,26 @@
 							set xpath 					Personal/HandleBar_Distance					
 							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
 							set HandleBar(Reach)		[expr $oldValue + $delta]
-								puts "          $oldValue + $delta = $HandleBar(Reach)"
+									# puts "          $oldValue + $delta = $HandleBar(Reach)"
+								
 								# --- update value
 								# 
 							set_projectValue $xpath  $HandleBar(Reach)
 							
-								# --- update Project
-								# 
-							#updateConfig $cv_Name $updateCommand _update_ $cvEntry						
 						}
 						
 				{Result/Saddle/Offset_BB/horizontal}	{			
 							puts "               ... $xpath"
 							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
-							# set Saddle(X)				[set_projectValue $xpath  $_updateValue($xpath) format]
 							set Saddle(X)				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$Saddle(X)
 							
 							set SeatTube(Length)		[ [ $domProject selectNodes /root/Personal/SeatTube_Length  ]	asText ]
 							set Saddle(Height)			[expr sqrt(pow($SeatTube(Length),2) - pow($oldValue,2)) ]
 							
-							
-
-								 puts "          old Value:         $oldValue"
-								 puts "          current Value:     $Saddle(X)"
-								 puts "          SeatTube(Length):  $SeatTube(Length)"
+									# puts "          old Value:         $oldValue"
+									# puts "          current Value:     $Saddle(X)"
+									# puts "          SeatTube(Length):  $SeatTube(Length)"
 								 
 								# --- get SeatTube Length
 								# 
@@ -1701,17 +1726,15 @@
 								# --- get SeatTube Angle
 								# 
 							set SeatTube((angle)	[ expr atan( $Saddle(Height) / $Saddle(X) ) *180 / $vectormath::CONST_PI ]
-								 puts "                 ...  $SeatTube((angle)"								
+									# puts "                 ...  $SeatTube((angle)"								
 								
 								# --- update value: 
 								#
 							set xpath 				Personal/SeatTube_Angle	
 							set_projectValue $xpath  $SeatTube((angle)
 							
-								# --- update Project
-								# 
-							#updateConfig $cv_Name $updateCommand _update_ $cvEntry
 						}
+						
 				default {
 							puts "\n"
 							puts "     WARNING!"

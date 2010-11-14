@@ -183,6 +183,7 @@
 			<ReachLength>0.00</ReachLength>
 			<StackHeight>0.00</StackHeight>
 			<Angle>0.00</Angle>
+			<TopTubeAngle>0.00</TopTubeAngle>
 		</HeadTube>
 		<SeatTube>
 			<TubeLength>0.00</TubeLength>

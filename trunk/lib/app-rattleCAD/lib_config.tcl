@@ -277,11 +277,12 @@
 					create_config_cDial $menueFrame.sf.lf_04		{Custom/TopTube/PivotPosition} 		{Custom/}		0.20 [namespace current]::registerUpdate
 				
 				# -----------------
-				#   Result
+				#   Alternative
 			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Alternative" 
 				pack $menueFrame.sf.lf_05 				-side top  -fill x -pady 2 
 					create_config_cDial $menueFrame.sf.lf_05		{Result/WheelPosition/front/horizontal} {Result/}	0.20 [namespace current]::registerUpdate darkred
 					create_config_cDial $menueFrame.sf.lf_05		{Result/HeadTube/Angle} 				{Result/}	0.02 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_05		{Result/HeadTube/TopTubeAngle} 			{Result/}	0.02 [namespace current]::registerUpdate darkred
 					create_config_cDial $menueFrame.sf.lf_05		{Result/Saddle/Offset_BB/horizontal} 	{Result/}	0.20 [namespace current]::registerUpdate darkred
 				
 				# -----------------
