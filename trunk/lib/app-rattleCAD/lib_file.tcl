@@ -281,7 +281,7 @@
 				#
 			lib_gui::notebook_updateCanvas
 				#
-			lib_gui::open_configPanel  reopen
+			lib_gui::open_configPanel  refresh
 	
 	}
 	
