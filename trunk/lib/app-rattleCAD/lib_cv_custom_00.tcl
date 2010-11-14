@@ -46,6 +46,7 @@
 
 	proc update {cv_Name} {
 		
+		puts "     ... cv_custom_00:.update  $cv_Name"
 		variable 	bottomCanvasBorder
 	
 			# --- get updateCommand

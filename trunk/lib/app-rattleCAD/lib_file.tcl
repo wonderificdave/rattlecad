@@ -118,12 +118,12 @@
 	#-------------------------------------------------------------------------
        #  open File by Extension
        #
-	proc openFile_byExtension {fileName {altExtension {.htm}}} {
+	proc openFile_byExtension {fileName {altExtension {}}} {
               
 			set fileExtension   [file extension $fileName]
 	  
 			puts "\n"
- 			puts  "         openFile_byExtension:  $fileExtension"
+ 			puts  "         openFile_byExtension:  $fileExtension ($altExtension)"
  			puts  "       ---------------------------------------------"
 			puts  "               fileName      $fileName" 
 			
@@ -135,11 +135,17 @@
 					return					
 			}
 
-			set fileApplication 	[get_Application $fileExtension]
-			if {$fileApplication == {}} {
-					set fileExtension	$altExtension
-					set fileApplication [get_Application $fileExtension]			
+				# -- handle on file extension
+				# 
+			switch $altExtension {
+				{.htm} -
+				{.html} {	set fileExtension 	$altExtension
+							set fileName 		"file:///$fileName" 
+						}
+				default {}
 			}
+			
+			set fileApplication 	[get_Application $fileExtension]
 			if {$fileApplication == {}} {
 					puts  "         --<E>----------------------------------------------------" 
 					puts  "           <E> File : $fileName" 
@@ -150,12 +156,6 @@
 			puts  "               Filetype $fileExtension opens with:"
 			puts  "                        >$fileApplication<\n"
 			
-			
-				# -- handle on file extension
-				# 
-			if {$fileExtension == {.htm}} {
-				set fileName "file:///$fileName"
-			}
 			
 				# ---------------------
 				# replace %1 by fileName
@@ -239,6 +239,52 @@
 				
 	}
 
+
+	#-------------------------------------------------------------------------
+		#  save File Type: xml
+		#
+	proc newProject_xml {} {	
+				# --- select File
+			set types {
+					{{Project Files 3.x }       {.xml}  }
+				}
+				
+			set userDir		[check_user_dir user]
+			set fileName 	[tk_getSaveFile -initialdir $userDir -initialfile {new_Project.xml} -filetypes $types]
+			
+			if {$fileName == {}} return
+			if {! [string equal [file extension $fileName] {.xml}]} {
+				set fileName [format "%s.%s" $fileName xml]
+			}
+				
+				# -- read from domConfig
+			set domConfig  [ lib_file::openFile_xml 	[file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad) ] ]
+					
+				# --- set xml-File Attributes
+			[ $domConfig selectNodes /root/Project/Name/text()  			] 	nodeValue 	[ file tail $fileName ]
+			[ $domConfig selectNodes /root/Project/modified/text() 			] 	nodeValue 	[ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+			[ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ] 	nodeValue 	"$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+
+				# -- open File for writing
+			set fp [open $fileName w]
+			puts $fp [$domConfig  asXML]
+			close $fp
+				puts "           ... write $fileName "
+				puts "		           ... done"
+				
+				# -- read new File
+			set ::APPL_Project	[lib_file::openFile_xml $fileName show]
+				#
+			frame_geometry_custom::set_base_Parameters $::APPL_Project
+				# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
+			set_window_title $fileName
+				#
+			lib_gui::notebook_updateCanvas
+				#
+			lib_gui::open_configPanel  reopen
+	
+	}
+	
 	
 	#-------------------------------------------------------------------------
 		#  save File Type: xml
@@ -255,25 +301,37 @@
 				puts "   saveProject_xml - userDir:    		$userDir"
 				puts "   saveProject_xml - APPL_Config:		$::APPL_Config(PROJECT_Name)"			
 				puts "   saveProject_xml - initialFile:		$initialFile"			
-			set fileName 	[tk_getSaveFile -initialdir $userDir -initialfile $initialFile -filetypes $types]
-				puts "   saveProject_xml - fileName:   		$fileName"
-				# -- $fileName is not empty
-			if {$fileName == {} } return
-				# -- $fileName has extension xml
-					# puts " [file extension $fileName] "
-			if {! [string equal [file extension $fileName] {.xml}]} {
-				set fileName [format "%s.%s" $fileName xml]
-				puts "   new $fileName"
-			}
 			
+			switch -exact $initialFile {
+				{Template Road} -
+				{Template MTB}  -
+				{template} 		{ 	set mode 		saveAs 
+									set initialFile	{new_Project.xml}
+								}
+				default			{}
+			}
+
+				# -- read from domConfig
+			set domConfig $::APPL_Project
 			
 			switch $mode {
-				{save}		{}
+				{save}		{
+								set fileName 	[file join $userDir $initialFile]
+							}
 				{saveAs}	{
-								if {[file exists $fileName]} {
-									tk_messageBox -message "File: $fileName  allready exists" -icon error
-									return
+								set fileName 	[tk_getSaveFile -initialdir $userDir -initialfile $initialFile -filetypes $types]
+									puts "   saveProject_xml - fileName:   		$fileName"
+									# -- $fileName is not empty
+								if {$fileName == {} } return
+									# -- $fileName has extension xml
+										# puts " [file extension $fileName] "
+								if {! [string equal [file extension $fileName] {.xml}]} {
+									set fileName [format "%s.%s" $fileName xml]
+									puts "   new $fileName"
 								}
+								
+									# --- set xml-File Attributes
+								[ $domConfig selectNodes /root/Project/Name/text()  			] 	nodeValue 	[ file tail $fileName ]
 							}
 				default 	{	return}
 			}
@@ -282,17 +340,19 @@
 			set domConfig $::APPL_Project
 
 				# --- set xml-File Attributes
-			[ $domConfig selectNodes /root/Project/Name/text()  			] 	nodeValue 	[ file tail $fileName ]
 			[ $domConfig selectNodes /root/Project/modified/text() 			] 	nodeValue 	[ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
 			[ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ] 	nodeValue 	"$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
 
 				# -- open File for writing
 			set fp [open $fileName w]
-			puts $fp [$::APPL_Project  asXML]
+			puts $fp [$domConfig  asXML]
 			close $fp
 				puts "           ... write $fileName "
 				puts "		           ... done"
 				
+			
+				#
+			set ::APPL_Project $domConfig
 				#
 			frame_geometry_custom::set_base_Parameters $::APPL_Project
 				# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -325,7 +385,10 @@
 						#
 					lib_gui::notebook_updateCanvas
 			}
-				puts "   openProject_xml - APPL_Config:		$::APPL_Config(PROJECT_Name)"			
+				#
+			puts "   openProject_xml - APPL_Config:		$::APPL_Config(PROJECT_Name)"			
+				#
+			lib_gui::open_configPanel  refresh
 	}
 
 
@@ -345,6 +408,9 @@
 			} else {
 				tk_messageBox -message "... could not load template: $window_title"
 			}
+			
+				#
+			lib_gui::open_configPanel  refresh
 	}
 
 
@@ -517,8 +583,46 @@
 			}
 			return $fileList
 	}	
+
 	
+	#-------------------------------------------------------------------------
+		# component alternatives
+		# 
+	proc get_componentAlternatives {xPath} {
 	
+			set directory	[lindex [array get ::APPL_CompLocation $xPath ] 1 ]
+						# puts "     ... directory  $directory"
+			if {$directory == {}} {
+						# tk_messageBox -message "no directory"
+				puts "    -- <E> -------------------------------"
+				puts "         ... no directory configured for"
+				puts "               $xPath"
+				puts "    -- <E> -------------------------------"
+				return {}
+			}
+			
+			set userDir 	[ file join $::APPL_Env(USER_Dir)   $directory ]
+			set etcDir 		[ file join $::APPL_Env(CONFIG_Dir) $directory ]
+						# puts "            user: $userDir"
+						# puts "            etc:  $etcDir"
+			
+			catch {
+				foreach file [ glob -directory $userDir  *.svg ] {
+						# puts "     ... fileList: $file"
+					set fileString [ string map [list $::APPL_Env(USER_Dir)/components/ {user:} ] $file ]
+					set listAlternative   [ lappend listAlternative $fileString]
+				}
+			}
+			foreach file [ glob -directory $etcDir  *.svg ] {
+						# puts "  ... fileList: $file"
+				set fileString [ string map [list $::APPL_Env(CONFIG_Dir)/components/ {etc:} ] $file ]
+				set listAlternative   [ lappend listAlternative $fileString]
+			}
+			
+			return $listAlternative
+	
+	}
+
 	
 }
 

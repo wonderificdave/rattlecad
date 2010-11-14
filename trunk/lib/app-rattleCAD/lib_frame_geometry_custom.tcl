@@ -734,10 +734,10 @@
 				# --- fill Result Values ------------------
 			proc fill_resultValues {domProject} {
 					
-						puts ""
-						puts "       ... fill_resultValues"
-						puts "      -------------------------------" 
-						puts "           "
+							# puts ""
+							# puts "       ... fill_resultValues"
+							# puts "      -------------------------------" 
+							# puts "           "
 
 						# --- HeadTube
 						#
@@ -746,33 +746,33 @@
 							# --- HeadTube/ReachLength
 							#
 						set xpath Result/HeadTube/ReachLength
-							puts "           ... $xpath"
+							# puts "           ... $xpath"
 							# puts "                ... [ frame_geometry_custom::tube_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 0] ]	
 						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-							puts "                  ... $value"
+							# puts "                  ... $value"
 						$node nodeValue		$value
 
 							# --- HeadTube/StackHeight
 							#
 						set xpath Result/HeadTube/StackHeight
-							puts "           ... $xpath"
+							# puts "           ... $xpath"
 							# puts "                ... [ frame_geometry_custom::tube_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 1] ]	
 						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-							puts "                  ... $value"
+							# puts "                  ... $value"
 						$node nodeValue		$value
 
 						
 						# --- HeadTube/Angle
 						#
 					set xpath Result/HeadTube/Angle
-						puts "           ... $xpath"
+						# puts "           ... $xpath"
 						# puts "                   ... $frameCoords::Steerer_Stem" 
 						# puts "                   ... $frameCoords::Steerer_Ground" 
 					set value			[ format "%.2f" [ expr -1 * [ vectormath::dirAngle $frameCoords::Steerer_Stem $frameCoords::Steerer_Ground ] ] ]
 						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						puts "                  ... $value"
+						# puts "                  ... $value"
 					$node nodeValue		$value
 					
 					
@@ -783,21 +783,21 @@
 							# --- SeatTube/TubeLength
 							#
 						set xpath Result/SeatTube/TubeLength
-							puts "           ... $xpath"
+							# puts "           ... $xpath"
 							# puts "                   ... [ frame_geometry_custom::tube_values		SeatTube TopTube	{0 0} ]" 
 						set value		[ format "%.2f" [ expr hypot([lindex $position 0],[lindex $position 1]) ] ]
 						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-							puts "                  ... $value"
+							# puts "                  ... $value"
 						$node nodeValue		$value
 						
 							# --- SeatTube/TubeHeight
 							#
 						set xpath Result/SeatTube/TubeHeight
-							puts "           ... $xpath"
+							# puts "           ... $xpath"
 							# puts "                   ... [ frame_geometry_custom::tube_values		SeatTube TopTube	{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 1] ]
 						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-							puts "                  ... $value"
+							# puts "                  ... $value"
 						$node nodeValue		$value
 
 						
@@ -805,11 +805,11 @@
 						#
 					set position	$frameCoords::Saddle					
 					set xpath Result/Saddle/Offset_BB/horizontal
-						puts "           ... $xpath"
+						# puts "           ... $xpath"
 						# puts "                ... $frameCoords::Saddle" 
 					set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
 					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						puts "                  ... $value"
+						# puts "                  ... $value"
 					$node nodeValue		$value
 
 					
@@ -817,11 +817,11 @@
 						#
 					set position	$frameCoords::FrontWheel					
 					set xpath Result/WheelPosition/front/horizontal
-						puts "           ... $xpath"
+						# puts "           ... $xpath"
 						# puts "                ... $frameCoords::FrontWheel" 
 					set value		[ format "%.2f" [lindex $position 0] ]	
 					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						puts "                  ... $value"
+						# puts "                  ... $value"
 					$node nodeValue		$value
 
 					
@@ -829,11 +829,11 @@
 						#
 					set position	$frameCoords::RearWheel
 					set xpath Result/WheelPosition/rear/horizontal
-						puts "           ... $xpath"
+						# puts "           ... $xpath"
 						# puts "                ... $frameCoords::RearWheel" 
 					set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
 					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						puts "                  ... $value"
+						# puts "                  ... $value"
 					$node nodeValue		$value
 					
 						# puts "[[ $domProject selectNodes /root/Result ] asXML]"
@@ -942,151 +942,6 @@
 		#set HeadSet(Height) 		[ [	$domProject selectNodes /root/Component/HeadSet/Bottom_Heigth	]  asText ]
 
 
-	}
-
-
- 	#-------------------------------------------------------------------------
-		#  handle modification on /root/Result/... values
-	proc set_spec_Parameters {domProject cv_Name updateCommand xpath cvEntry} {
-
-			variable _updateValue
-	
-			puts "\n  ... set_spec_Parameters: $xpath"
-			switch -glob $xpath {				
-				{Result/HeadTube/Angle}	{			
-							puts "               ... $xpath"
-							
-							set HeadTube(Angle)			[set_projectValue $xpath  $_updateValue($xpath)]
-							set _updateValue($xpath) 	$HeadTube(Angle)
-								puts "          \$HeadTube(Angle)  = $HeadTube(Angle)"
-								
-								# --- get HandleBar(position)
-								# 
-							set FrontWheel(position) 	[ point_position FrontWheel {0 0}]
-							set Fork(Height)			[ [ $domProject selectNodes /root/Component/Fork/Height		]  asText ]
-							set Fork(Rake)				[ [ $domProject selectNodes /root/Component/Fork/Rake		]  asText ]
-							set HandleBar(Height)		[ [ $domProject selectNodes /root/Personal/HandleBar_Height	]  asText ]
-							set Stem(Angle)				[ [ $domProject selectNodes /root/Component/Stem/Angle		]  asText ]
-							set Stem(Length)			[ [ $domProject selectNodes /root/Component/Stem/Length		]  asText ]
-							
-								set help_03	 [ vectormath::rotateLine $frameCoords::FrontWheel  [expr $Fork(Height) + 300]	[ expr 180 - $HeadTube(Angle) ] ]
-							set vect_HT  [ vectormath::parallel   $frameCoords::FrontWheel	$help_03	$Fork(Rake) left ]
-								set help_04	 [ lindex $vect_HT 0]
-								set help_05	 [ lindex $vect_HT 1]
-							
-								set st_perp	 [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]						
-								set st_horz  [ expr $st_perp / cos((90 - $HeadTube(Angle)) * $vectormath::CONST_PI / 180) ]
-								set vect_02	 [ vectormath::parallel  $help_04   $help_05	$st_perp ]
-								set vect_03	 [ vectormath::parallel  {0 0}	{800 0}	$HandleBar(Height) left]
-							set HandleBar(position)	 [ vectormath::intersectPoint  [lindex $vect_02 0] [lindex $vect_02 1]  [lindex $vect_03 0] [lindex $vect_03 1] ]
-								
-								# --- update value 
-								# 
-							set xpath 		Personal/HandleBar_Distance					
-							set newValue 	[lindex $HandleBar(position) 0] 
-								puts "          $HandleBar(position)  -> $newValue"
-							set_projectValue $xpath  $newValue
-		
-								# --- update value 
-								# 
-							set xpath 		Personal/HandleBar_Height					
-							set newValue 	[lindex $HandleBar(position) 1] 
-							
-								puts "            old:  $HandleBar(Height)  "
-								puts "          $HandleBar(position)  -> $newValue"
-							#set_projectValue $xpath  $newValue
-		
-								# --- update Project
-								# 
-							updateConfig $cv_Name $updateCommand _update_ $cvEntry						
-						}	
-						
-				{Result/WheelPosition/front/horizontal}	{			
-							puts "               ... $xpath"
-							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
-							set newValue				[set_projectValue $xpath  $_updateValue($xpath)]
-							set _updateValue($xpath) 	$newValue
-							set delta		[expr $newValue - $oldValue]
-								puts "          $newValue - $oldValue = $delta"
-								 
-								# --- get FrontWheel(Distance)
-								# 
-							set FrontWheel(position) 	[ point_position FrontWheel {0 0}]
-							set FrontWheel(y) 			[lindex $FrontWheel(position) 1] 
-							set FrontWheel(Distance) 	[ expr hypot($newValue,$FrontWheel(y)) ] 
-								puts "          hypot($newValue,$FrontWheel(y)) = $FrontWheel(Distance)"
-							
-								# --- update value 
-								# 
-							set xpath 		Custom/WheelPosition/Front					
-							set_projectValue $xpath  $FrontWheel(Distance)
-
-								# --- get HandleBar(Reach)
-								# 
-							set xpath 					Personal/HandleBar_Distance					
-							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
-							set HandleBar(Reach)		[expr $oldValue + $delta]
-								puts "          $oldValue + $delta = $HandleBar(Reach)"
-								# --- update value
-								# 
-							set_projectValue $xpath  $HandleBar(Reach)
-							
-								# --- update Project
-								# 
-							updateConfig $cv_Name $updateCommand _update_ $cvEntry						
-						}
-						
-				{Result/Saddle/Offset_BB/horizontal}	{			
-							puts "               ... $xpath"
-							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
-							set Saddle(X)				[set_projectValue $xpath  $_updateValue($xpath)]
-							set _updateValue($xpath) 	$Saddle(X)
-							
-							set SeatTube(Length)		[ [ $domProject selectNodes /root/Personal/SeatTube_Length  ]	asText ]
-							set Saddle(Height)			[expr sqrt(pow($SeatTube(Length),2) - pow($oldValue,2)) ]
-							
-							
-
-								 puts "          old Value:         $oldValue"
-								 puts "          current Value:     $Saddle(X)"
-								 puts "          SeatTube(Length):  $SeatTube(Length)"
-								 
-								# --- get SeatTube Length
-								# 
-							set  SeatTube(Length) 		[ format "%.2f" [ expr hypot($Saddle(Height), $Saddle(X)) ] ]
-
-								# --- update value: 
-								#
-							set xpath 				Personal/SeatTube_Length	
-							set_projectValue $xpath  $SeatTube(Length)
-							
-
-								# --- get SeatTube Angle
-								# 
-							set SeatTube((angle)	[ expr atan( $Saddle(Height) / $Saddle(X) ) *180 / $vectormath::CONST_PI ]
-								 puts "                 ...  $SeatTube((angle)"								
-								
-								# --- update value: 
-								#
-							set xpath 				Personal/SeatTube_Angle	
-							set_projectValue $xpath  $SeatTube((angle)
-							
-								# --- update Project
-								# 
-							updateConfig $cv_Name $updateCommand _update_ $cvEntry
-						}
-				default {
-							puts "\n"
-							puts "     WARNING!"
-							puts "\n"
-							puts "        ... set_spec_Parameters:  "
-							puts "                 $xpath"
-							puts "            ... is not registered!"
-							puts "\n"
-							return
-						}
-			}		
-			
 	}
 
 
@@ -1385,46 +1240,6 @@
 							
 				proc create_ListEdit {type cv cv_Name cvEdit cvContentFrame index labelText textVar updateCommand xpath} {					
 
-							proc createSelectBox {parent  values  target_var  cv_Name  updateCommand  xpath  cvEntry} {
-						  
-									variable _listBoxValues
-									# puts "   ... createSelectBox  $cv_Name $updateCommand $xpath $cvEntry"
-									# updateConfig {cv_Name updateCommand xpath cvEntry}
-						  
-									set _listBoxValues $values
-									# puts " create_ListEdit:  _listBoxValues $_listBoxValues"
-									set toplevel_widget  .__select_box							  
-									if {[winfo exists $toplevel_widget]} {
-										destroy $toplevel_widget
-									}
-							  
-									toplevel  $toplevel_widget
-									frame     $toplevel_widget.f
-									listbox   $toplevel_widget.f.lbox \
-												  -listvariable   [namespace current]::_listBoxValues \
-												  -selectmode     single \
-												  -relief         sunken \
-												  -width		  35 \
-												  -yscrollcommand "$toplevel_widget.f.scb_y  set" \
-												  -xscrollcommand "$toplevel_widget.f.scb_x  set" 							  
-									scrollbar $toplevel_widget.f.scb_y \
-												  -orient         v \
-												  -command        "$toplevel_widget.f.lbox yview"
-									scrollbar $toplevel_widget.f.scb_x \
-												  -orient         h \
-												  -command        "$toplevel_widget.f.lbox xview"
-							  							  
-									grid	$toplevel_widget.f.lbox $toplevel_widget.f.scb_y	-sticky news
-									grid							$toplevel_widget.f.scb_x	-sticky news
-									grid 	$toplevel_widget.f  -sticky news -padx 1 
-							  
-									bind .                        <Configure>		[list [namespace current]::::bind_parent_move  $toplevel_widget  $parent]
-									bind $toplevel_widget.f.lbox <<ListboxSelect>>	[list [namespace current]::::closeSelectBox    %W  $target_var $cv_Name $updateCommand $xpath $cvEntry]
-
-									wm  overrideredirect  $toplevel_widget  1
-									bind_parent_move      $toplevel_widget  $parent  
-							   }
-
 						#
 						# --- create listBox content ---
 						set listBoxContent {}
@@ -1433,28 +1248,9 @@
 										eval set currentFile $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 											# puts "createEdit::create_ListEdit::fileList:"
-										puts "     currentFile: $currentFile"
-										switch -glob $currentFile {
-												user:* 	-
-												etc:* 	{ 	set currentFile [lindex [split $currentFile :] 1]}
-										}
-										set userDir 	[ file join $::APPL_Env(USER_Dir)/components   [file dirname $currentFile ] ]
-										set etcDir 		[ file join $::APPL_Env(CONFIG_Dir)/components [file dirname $currentFile ] ]
-										puts "            user: $userDir"
-										puts "            etc:  $etcDir"
-										catch {
-											foreach file [ glob -directory $userDir  *.svg ] {
-													# puts "     ... fileList: $file"
-												set fileString [ string map [list $::APPL_Env(USER_Dir)/components/ {user:} ] $file ]
-												set listBoxContent   [ lappend listBoxContent $fileString]
-											}
-										}
-										foreach file [ glob -directory $etcDir  *.svg ] {
-												# puts "  ... fileList: $file"
-											set fileString [ string map [list $::APPL_Env(CONFIG_Dir)/components/ {etc:} ] $file ]
-											set listBoxContent   [ lappend listBoxContent $fileString]
-										}
-										
+											# puts "     currentFile: $currentFile"
+											# puts "           xpath: $xpath"										
+										set listBoxContent [lib_file::get_componentAlternatives  $xpath]
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
 										}
@@ -1492,30 +1288,35 @@
 						# --- create cvLabel, cvEntry, Select ---
 							set cvFrame		[ frame 		$cvContentFrame.frame_${index} ]
 							set	  cvLabel	[ label  		$cvFrame.label   -text "${labelText} : "]
-							set   cvEntry 	[ entry  		$cvFrame.value   -justify left -textvariable [namespace current]::_updateValue($xpath)  -disabledbackground white  -disabledforeground black  -justify right  -relief sunken -bd 1  -width 10]
-							set   cvSelect	[ ArrowButton	$cvFrame.select  -dir bottom  -height 17 -width 20  -fg SlateGray  \
-															-armcommand  "[namespace current]::createSelectBox $cvEntry  [list $listBoxContent]  [namespace current]::_updateValue($xpath) $cv_Name  $updateCommand  $xpath  $cvEntry" ]
-							
-								 $cvEntry configure -state disabled
-							
+							set	  cvCBox	[ ttk::combobox $cvFrame.cb \
+													-textvariable [namespace current]::_updateValue($xpath) \
+													-values $listBoxContent	\
+													-width 13 \
+													-height 10 \
+													-justify right ]
+													
+									set postCommand [list set [namespace current]::oldValue [namespace current]::_updateValue($xpath)]
+									$cvCBox configure -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::_updateValue($xpath)]
+
 							if {$index == {oneLine}} {
 								set	cvUpdat [button $cvContentFrame.update -image $lib_gui::iconArray(confirm)]
 								$cvUpdat configure -command \
-									"[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry"
+									"[namespace current]::updateConfig $cv_Name $updateCommand $xpath"
+									# "[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry"
 								set	cvClose [ button 		$cvFrame.close   -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
-								grid	$cvLabel $cvEntry $cvSelect $cvClose -sticky news
-								grid 	$cvFrame  -sticky news -padx 1 
+								grid	$cvLabel $cvCBox $cvClose 	-sticky news
+								grid 	$cvFrame  					-sticky news 	-padx 1 
 							} else {																
-								grid	$cvLabel $cvEntry $cvSelect 		 -sticky news
-								grid 	configure $cvLabel   -padx 2 -sticky nws
+								grid	$cvLabel $cvCBox  		 	-sticky news
+								grid 	configure $cvLabel   		-sticky nws		-padx 2 
 								grid	columnconfigure 	$cvFrame 1 	-weight 1 
 								grid 	$cvFrame  -sticky news -padx 1 -columnspan 3
 							}
 						#
 						# --- define bindings ---
+							bind $cvCBox 	<<ComboboxSelected>> 		[list [namespace current]::check_Value	%W $cv_Name $updateCommand $xpath]
 							bind $cvLabel	<ButtonPress-1> 			[list [namespace current]::dragStart 	%X %Y]
 							bind $cvLabel	<B1-Motion> 				[list [namespace current]::drag 		%X %Y $cv $cvEdit]			
-							bind $cvEntry	<Return> 					[list [namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry]			
 				}
 				
 						
@@ -1670,9 +1471,41 @@
 	} 
 
 
+
+	proc check_Value { w cv_Name updateCommand xPath args} {
+		
+			variable _updateValue
+			variable oldValue
+			
+			switch $xPath {
+					{Component/Wheel/Rear/RimDiameter} -
+					{Component/Wheel/Front/RimDiameter} {
+							if {[string range $_updateValue($xPath) 0 3] == "----"} {
+									puts "   ... reset value .. $oldValue"
+								set _updateValue($xPath) $oldValue
+							} else {
+									# puts "   ... $_updateValue($xPath)"
+									# puts "      >[split $_updateValue($xPath) ;]<"
+									# puts "      >[lindex [split $_updateValue($xPath) ;] 0]<"
+								set value [string trim [lindex [split $_updateValue($xPath) ;] 0]]
+								set value [format "%.2f" $value]
+								set _updateValue($xPath) $value
+									# puts "   ... $_updateValue($xPath)"
+									
+								[namespace current]::updateConfig $cv_Name $updateCommand $xPath
+							}
+						}
+					default {
+								[namespace current]::updateConfig $cv_Name $updateCommand $xPath
+						}
+			}
+	}
+
+
+
  	#-------------------------------------------------------------------------
-		#  format Value 
-	proc set_projectValue {xpath value} {
+		#  sets and format Value 
+	proc set_projectValue {xpath value {mode {update}}} {
 	
 			variable 		_updateValue
 			
@@ -1681,27 +1514,45 @@
 			set node 		[$domProject selectNodes /root/$xpath/text()]
 			
 			
+			# --- handle xpath values --- 
+					# puts "  ... mode: $mode"
+			if {$mode == {update}} {
+					# puts "  ... set_projectValue: $xpath"
+				switch -glob $xpath {
+					{Result/*} {
+								# puts "\n  ... set_projectValue: ... Result/..."
+							set_spec_Parameters $xpath $value
+							return
+						}	
+					default {}			
+				}
+			}
+
+
+			
 				# --- set new Value
 			set newValue [ string map {, .} $value]
 				# --- check Value --- ";" ... like in APPL_RimList
 			set newValue [lindex [split $newValue ;] 0]
 				# --- check Value --- update 
-			set _updateValue($xpath) $newValue
+			if {$mode == {update}} {
+				set _updateValue($xpath) $newValue
+			}
 			
 				# --- puts message
-			puts "        ... set_projectValue: $xpath  $newValue "
+			# puts "        ... set_projectValue: $xpath  $newValue "
 			
 				# --- update or return on errorID		
 			set checkValue {mathValue}
 			if {[file dirname $xpath] == {Rendering}} { 
-					puts "               ... [file dirname $xpath] "
+						# puts "               ... [file dirname $xpath] "
 					set checkValue {}
 			}
 			if {[file tail $xpath]    == {File}     } { 
-					puts "               ... [file tail    $xpath] "
+						# puts "               ... [file tail    $xpath] "
 					set checkValue {}
 			}
-			puts "               ... checkValue: $checkValue "
+				# puts "               ... checkValue: $checkValue "
 			
 				# --- update or return on errorID		
 			if {$checkValue == {mathValue} } {
@@ -1712,16 +1563,175 @@
 					set newValue [format "%.2f" $newValue]
 				}
 			}
-			$node nodeValue $newValue
+			
+			if {$mode == {update}} {
+				$node nodeValue $newValue
+			}
 			
 			return $newValue
 	
 	}
+	
+	
+ 	#-------------------------------------------------------------------------
+		#  handle modification on /root/Result/... values
+	# proc set_spec_Parameters {domProject cv_Name updateCommand xpath cvEntry} 
+	proc set_spec_Parameters {xpath value} {
+
+			variable 		_updateValue
+			
+				# --- get current Node
+			set domProject 	$::APPL_Project			
+			set node 		[$domProject selectNodes /root/$xpath/text()]
+			
+			
+			puts "\n  ... set_spec_Parameters: $xpath"
+			switch -glob $xpath {				
+				{Result/HeadTube/Angle}	{			
+							puts "               ... $xpath"
+							
+							set HeadTube(Angle)			[set_projectValue $xpath  $value format]
+							#set HeadTube(Angle)			[set_projectValue $xpath  $_updateValue($xpath) format]
+							set _updateValue($xpath) 	$HeadTube(Angle)
+								puts "          \$HeadTube(Angle)  = $HeadTube(Angle)"
+								
+								# --- get HandleBar(position)
+								# 
+							set FrontWheel(position) 	[ point_position FrontWheel {0 0}]
+							set Fork(Height)			[ [ $domProject selectNodes /root/Component/Fork/Height		]  asText ]
+							set Fork(Rake)				[ [ $domProject selectNodes /root/Component/Fork/Rake		]  asText ]
+							set HandleBar(Height)		[ [ $domProject selectNodes /root/Personal/HandleBar_Height	]  asText ]
+							set Stem(Angle)				[ [ $domProject selectNodes /root/Component/Stem/Angle		]  asText ]
+							set Stem(Length)			[ [ $domProject selectNodes /root/Component/Stem/Length		]  asText ]
+							
+								set help_03	 [ vectormath::rotateLine $frameCoords::FrontWheel  [expr $Fork(Height) + 300]	[ expr 180 - $HeadTube(Angle) ] ]
+							set vect_HT  [ vectormath::parallel   $frameCoords::FrontWheel	$help_03	$Fork(Rake) left ]
+								set help_04	 [ lindex $vect_HT 0]
+								set help_05	 [ lindex $vect_HT 1]
+							
+								set st_perp	 [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]						
+								set st_horz  [ expr $st_perp / cos((90 - $HeadTube(Angle)) * $vectormath::CONST_PI / 180) ]
+								set vect_02	 [ vectormath::parallel  $help_04   $help_05	$st_perp ]
+								set vect_03	 [ vectormath::parallel  {0 0}	{800 0}	$HandleBar(Height) left]
+							set HandleBar(position)	 [ vectormath::intersectPoint  [lindex $vect_02 0] [lindex $vect_02 1]  [lindex $vect_03 0] [lindex $vect_03 1] ]
+								
+								# --- update value 
+								# 
+							set xpath 		Personal/HandleBar_Distance					
+							set newValue 	[lindex $HandleBar(position) 0] 
+								puts "          $HandleBar(position)  -> $newValue"
+							set_projectValue $xpath  $newValue
+		
+								# --- update value 
+								# 
+							set xpath 		Personal/HandleBar_Height					
+							set newValue 	[lindex $HandleBar(position) 1] 
+							
+								puts "            old:  $HandleBar(Height)  "
+								puts "          $HandleBar(position)  -> $newValue"
+							set_projectValue $xpath  $newValue
+		
+								# --- update Project
+								# 
+							#updateConfig $cv_Name $updateCommand _update_ $cvEntry						
+						}	
+						
+				{Result/WheelPosition/front/horizontal}	{			
+							puts "               ... $xpath"
+							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+							set newValue				[set_projectValue $xpath  $value format]
+							#set newValue				[set_projectValue $xpath  $_updateValue($xpath) format]
+							set _updateValue($xpath) 	$newValue
+							set delta		[expr $newValue - $oldValue]
+								puts "          $newValue - $oldValue = $delta"
+								 
+								# --- get FrontWheel(Distance)
+								# 
+							set FrontWheel(position) 	[ point_position FrontWheel {0 0}]
+							set FrontWheel(y) 			[lindex $FrontWheel(position) 1] 
+							set FrontWheel(Distance) 	[ expr hypot($newValue,$FrontWheel(y)) ] 
+								puts "          hypot($newValue,$FrontWheel(y)) = $FrontWheel(Distance)"
+							
+								# --- update value 
+								# 
+							set xpath 		Custom/WheelPosition/Front					
+							set_projectValue $xpath  $FrontWheel(Distance)
+
+								# --- get HandleBar(Reach)
+								# 
+							set xpath 					Personal/HandleBar_Distance					
+							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+							set HandleBar(Reach)		[expr $oldValue + $delta]
+								puts "          $oldValue + $delta = $HandleBar(Reach)"
+								# --- update value
+								# 
+							set_projectValue $xpath  $HandleBar(Reach)
+							
+								# --- update Project
+								# 
+							#updateConfig $cv_Name $updateCommand _update_ $cvEntry						
+						}
+						
+				{Result/Saddle/Offset_BB/horizontal}	{			
+							puts "               ... $xpath"
+							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+							# set Saddle(X)				[set_projectValue $xpath  $_updateValue($xpath) format]
+							set Saddle(X)				[set_projectValue $xpath  $value format]
+							set _updateValue($xpath) 	$Saddle(X)
+							
+							set SeatTube(Length)		[ [ $domProject selectNodes /root/Personal/SeatTube_Length  ]	asText ]
+							set Saddle(Height)			[expr sqrt(pow($SeatTube(Length),2) - pow($oldValue,2)) ]
+							
+							
+
+								 puts "          old Value:         $oldValue"
+								 puts "          current Value:     $Saddle(X)"
+								 puts "          SeatTube(Length):  $SeatTube(Length)"
+								 
+								# --- get SeatTube Length
+								# 
+							set  SeatTube(Length) 		[ format "%.2f" [ expr hypot($Saddle(Height), $Saddle(X)) ] ]
+
+								# --- update value: 
+								#
+							set xpath 				Personal/SeatTube_Length	
+							set_projectValue $xpath  $SeatTube(Length)
+							
+
+								# --- get SeatTube Angle
+								# 
+							set SeatTube((angle)	[ expr atan( $Saddle(Height) / $Saddle(X) ) *180 / $vectormath::CONST_PI ]
+								 puts "                 ...  $SeatTube((angle)"								
+								
+								# --- update value: 
+								#
+							set xpath 				Personal/SeatTube_Angle	
+							set_projectValue $xpath  $SeatTube((angle)
+							
+								# --- update Project
+								# 
+							#updateConfig $cv_Name $updateCommand _update_ $cvEntry
+						}
+				default {
+							puts "\n"
+							puts "     WARNING!"
+							puts "\n"
+							puts "        ... set_spec_Parameters:  "
+							puts "                 $xpath"
+							puts "            ... is not registered!"
+							puts "\n"
+							return
+						}
+			}		
+			
+	}
+
+
 
 	
  	#-------------------------------------------------------------------------
 		#  update Project 
-	proc updateConfig {cv_Name updateCommand xpath cvEntry} {
+	proc updateConfig {cv_Name updateCommand xpath {cvEntry {}}} {
 
 			variable _updateValue
 			
@@ -1729,11 +1739,6 @@
 			
 			# --- habdele xpath values --- 
 			switch -glob $xpath {
-				{Result/*} {
-						puts "\n  ... updateConfig: Result/... $xpath"
-						set_spec_Parameters $domProject $cv_Name $updateCommand $xpath $cvEntry
-						return
-					}	
 				{_update_} {}
 				default {
 						puts "  ... updateConfig -> $_updateValue($xpath)"
@@ -1746,46 +1751,10 @@
 			frame_geometry_custom::set_base_Parameters $domProject
 			update
 			$updateCommand $cv_Name
-			focus $cvEntry
-			$cvEntry selection range 0 end
+			catch {focus $cvEntry}
+			catch {$cvEntry selection range 0 end}
 
 	} 
-
-
- 	#-------------------------------------------------------------------------
-		#  close SelectBox 
-    proc closeSelectBox {source_window  target_var  cv_Name  updateCommand  xpath  cvEntry} {
-            
-            variable CURRENT_Config
-
-            puts "   source_window $source_window"
-            puts "       index: [$source_window curselection]"
-            set  widget_value     [$source_window get [$source_window curselection]]
-            puts "       value: $widget_value"
-            
-            if {[string range $widget_value 0 3] == {----} } {
-                    # tk_messageBox -message " seperator:   $widget_value"
-				destroy  [winfo toplevel $source_window]
-				return
-            }
-
-            if {[string is wordchar $widget_value]} {
-                    # tk_messageBox -message " alpha   $widget_value"
-				set $target_var $widget_value
-            } else {
-                    # tk_messageBox -message " integer   $widget_value"
-				set $target_var $widget_value
-            }
-            
-				# puts "   control::update_parameter   $target_var"
-			$cvEntry configure -state normal
-				# focus $cvEntry
-			$cvEntry icursor  end
-			[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry
-              # control::update_graph    
-            destroy  [winfo toplevel $source_window]
-       }
-
  
  }  
 

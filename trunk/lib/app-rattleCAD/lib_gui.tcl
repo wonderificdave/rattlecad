@@ -67,21 +67,26 @@
 			
 			set mainframe_Menue {
 				"&File"   all file 0 {
-						{command "&Open Project XML"      {File_Open_Project}  	"Open Project-XML File" {Ctrl o} -command { lib_file::openProject_xml } 	}
-						{command "&Save"                  {File_Save}     		"Save Configuration"    {Ctrl s} -command { lib_file::saveProject_xml }		}
+						{command "&New"				{}  	"New Project File" 		{Ctrl n}	-command { lib_file::newProject_xml } 	}
+						{command "&Open"			{}  	"0pen Project File" 	{Ctrl o}	-command { lib_file::openProject_xml } 	}
+						{command "&Save"			{}     	"Save Project File"		{Ctrl s}	-command { lib_file::saveProject_xml }	}
+						{command "Save &As ..."		{}   	"Save Project File As"	{Ctrl a}	-command { lib_file::saveProject_xml saveAs} }
 						{separator}
-						{command "&Rendering"             {Rendering}     		"Component Rendering"   {Ctrl r} -command { lib_gui::set_RenderingSettings }		}
+						{command "&Config Panel"	{}     	"open Config Panel"		{Ctrl m} 	-command { lib_gui::open_configPanel }	}
+						{command "&Update"			{}     	"update Configuration"	{Ctrl u} 	-command { lib_gui::notebook_updateCanvas force } }
 						{separator}
-						{command "&Print"                 {File_Print}    		"Print current Graphic" {Ctrl p} -command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }	}
-						{command "&Export SVG"            {Export_SVG}    		"Export to SVG" 		{Ctrl e} -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }	}
+						{command "&Rendering"		{}     	"Rendering Settings"	{}			-command { lib_gui::set_RenderingSettings } }
 						{separator}
-						{command "&Intro-Image"           {File_Intro}    		"Show Intro Window"     {Ctrl i} -command { create_intro .intro}          	}
+						{command "&Print"			{}    	"Print current Graphic" {Ctrl p}	-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) } }
+						{command "&Export SVG"		{}    	"Export to SVG" 		{Ctrl f}	-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) } }
 						{separator}
-						{command "E&xit"                  {File_Exit}     		"Exit rattle_CAD"       {Ctrl x} -command { exit }                        	}
+						{command "&Intro-Image"		{}    	"Show Intro Window"     {}			-command { create_intro .intro } }
+						{separator}
+						{command "E&xit"			{}     	"Exit rattle_CAD"       {Ctrl x}	-command { exit } }
 				}
 				"Info"   all info 0 {
-						{command "Info"              {}              		"Version-Information"      {}    -command { version_info::create  .v_info 0} }
-						{command "Help"              {}              		"Version-Information"      {}    -command { version_info::create  .v_info 1} }
+						{command "Info"				{}		"Information"      		{Ctrl i}	-command { version_info::create  .v_info 0} }
+						{command "Help"				{}		"Help"      			{Ctrl h}	-command { version_info::create  .v_info 1} }
 				}
 			}
 		
@@ -95,26 +100,31 @@
 	proc create_ButtonBar {tb_frame } {	
 		variable iconArray
 	
-		Button	$tb_frame.open     -image  $iconArray(open)		-helptext "open ..."		-command { lib_file::openProject_xml }  
-		Button	$tb_frame.save     -image  $iconArray(save)		-helptext "save ..."		-command { lib_file::saveProject_xml } 
-		Button	$tb_frame.print    -image  $iconArray(print)	-helptext "print ..."		-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
+		Button	$tb_frame.open		-image  $iconArray(open)		-helptext "open ..."		-command { lib_file::openProject_xml }  
+		Button	$tb_frame.save		-image  $iconArray(save)		-helptext "save ..."		-command { lib_file::saveProject_xml } 
+		Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	-helptext "print .ps"		-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
+		Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	-helptext "print .svg"		-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
 													 
-		Button	$tb_frame.set_rd   -image  $iconArray(reset_r)	-helptext "template road"	-command { lib_gui::load_Template  Road }  
-		Button	$tb_frame.set_mb   -image  $iconArray(reset_o)	-helptext "template mtb"	-command { lib_gui::load_Template  MTB  }  
+		Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		-helptext "template road"	-command { lib_gui::load_Template  Road }  
+		Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		-helptext "template mtb"	-command { lib_gui::load_Template  MTB  }  
 		  
-		Button	$tb_frame.clear    -image  $iconArray(clear)	-helptext "clear ..."    	-command { lib_gui::notebook_cleanCanvas} 
-		Button	$tb_frame.render   -image  $iconArray(design)	-helptext "update ..."		-command { lib_gui::notebook_updateCanvas force}  
-
-		Button	$tb_frame.scale_p  -image  $iconArray(scale_p)	-helptext "scale plus"		-command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
-		Button	$tb_frame.scale_m  -image  $iconArray(scale_m)	-helptext "scale minus"		-command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
-		Button	$tb_frame.resize   -image  $iconArray(resize)	-helptext "resize"			-command { lib_gui::notebook_refitCanvas }  
+		Button	$tb_frame.clear		-image  $iconArray(clear)		-helptext "clear ..."    	-command { lib_gui::notebook_cleanCanvas} 
+		Button	$tb_frame.render	-image  $iconArray(design)		-helptext "update ..."		-command { lib_gui::notebook_updateCanvas force}  
+		  
+		Button	$tb_frame.cfg		-image   $iconArray(cfg_panel)	-helptext "config Panel"   	-command { lib_gui::open_configPanel } 
 		
-		Button	$tb_frame.exit     -image  $iconArray(exit)     -command { exit }
+		
+
+		Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		-helptext "scale plus"		-command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
+		Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		-helptext "scale minus"		-command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
+		Button	$tb_frame.resize	-image  $iconArray(resize)		-helptext "resize"			-command { lib_gui::notebook_refitCanvas }  
+		
+		Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
 		  
 		label   $tb_frame.sp0      -text   " "
 		label   $tb_frame.sp1      -text   " "
 		label   $tb_frame.sp2      -text   " "
-		label   $tb_frame.sp3      -text   " "
+		label   $tb_frame.sp3      -text   "      "
 		label   $tb_frame.sp4      -text   " "
 		label   $tb_frame.sp5      -text   " "
 		label   $tb_frame.sp6      -text   " "
@@ -124,13 +134,14 @@
 			#		$tb_frame.set_rd   $tb_frame.set_mb   $tb_frame.sp2  \
 			#		$tb_frame.render   $tb_frame.sp3  \
 			#
-		pack    $tb_frame.open     $tb_frame.save    $tb_frame.print     $tb_frame.sp0  \
-				$tb_frame.set_rd   $tb_frame.set_mb   $tb_frame.sp2  \
-				$tb_frame.clear    $tb_frame.render   $tb_frame.sp3  \
+		pack    $tb_frame.open       $tb_frame.save          $tb_frame.sp0  \
+				$tb_frame.print_ps   $tb_frame.print_svg     $tb_frame.sp1  \
+				$tb_frame.set_rd     $tb_frame.set_mb   $tb_frame.sp2  \
+				$tb_frame.clear      $tb_frame.render   $tb_frame.sp3  $tb_frame.cfg\
 			-side left -fill y
 				   
 		pack    $tb_frame.exit   $tb_frame.sp6  \
-				$tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m  $tb_frame.sp5  \
+				$tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
 			-side right 
 	}
 
@@ -253,6 +264,8 @@
        #  get notebook window    
        #
 	proc notebook_getVarName {tabID} {
+			# tabID:  	[$noteBook_top select]
+			#			.mainframe.frame.f2.nb.cv_Custom02
 		variable notebookCanvas
 		variable external_canvasCAD
 
@@ -465,7 +478,7 @@
 		puts "    ------------------------------------------------"
 		puts "      ... open $exportFile "
 		
-		lib_file::openFile_byExtension $exportFile
+		lib_file::openFile_byExtension $exportFile .htm
 
 	}
 
@@ -667,6 +680,22 @@
 		lib_file::openTemplate_xml "Template $type" $template_File
 	}
 
+	#-------------------------------------------------------------------------
+       #  load Template from File
+       #
+	proc open_configPanel {{mode {}}} {
+			switch $mode {
+				{refresh} {
+							if {[winfo exists .cfg]} {
+								catch {lib_config::create . .cfg refresh}
+							}
+						}
+				default {
+							puts "  .. her i am"
+							lib_config::create . .cfg
+						}
+			}
+	}
 	
 	
 	
