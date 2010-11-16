@@ -23,7 +23,7 @@
         <TopTube>
             <PivotPosition>80.00</PivotPosition>
             <OffsetHT>8.50</OffsetHT>
-            <Angle>7.0</Angle>
+            <Angle>10.0</Angle>
         </TopTube>
         <SeatTube>
             <Extension>20.00</Extension>
@@ -40,7 +40,7 @@
             <Rear>420.00</Rear>
         </WheelPosition>
         <BottomBracket>
-            <Depth>25.0</Depth>
+            <Depth>10.0</Depth>
         </BottomBracket>
     </Custom>
 	
@@ -172,7 +172,7 @@
             <Length>175</Length>
         </CrankSet>
         <Derailleur>
-            <File>rear_derailleur/campagnolo_2006_short.svg</File>
+            <File>rear_derailleur/custom_00.svg</File>
         </Derailleur>
     </Component>
 	
@@ -183,6 +183,7 @@
 			<ReachLength>0.00</ReachLength>
 			<StackHeight>0.00</StackHeight>
 			<Angle>0.00</Angle>
+			<TopTubeAngle>0.00</TopTubeAngle>
 		</HeadTube>
 		<SeatTube>
 			<TubeLength>0.00</TubeLength>
