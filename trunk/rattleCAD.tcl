@@ -53,6 +53,7 @@ exec wish "$0" "$@"
 	set		  APPL_Init			{}
 	set		  APPL_ForkTypes	{}
 	set		  APPL_BrakeTypes	{}
+	set		  APPL_Binary_OnOff	{}
 	set		  APPL_RimList		{}
 	array set APPL_CompLocation {}
 	
@@ -62,8 +63,8 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{21}  
-						RELEASE_Date		{16. Nov. 2010}
+						RELEASE_Revision	{24}  
+						RELEASE_Date		{19. Nov. 2010}
 						BASE_Dir			{}
 						ROOT_Dir			{}
 						CONFIG_Dir			{}
@@ -146,6 +147,13 @@ exec wish "$0" "$@"
 	foreach entry $APPL_BrakeTypes {
 		puts "        -> $entry"
 	}
+	
+	puts "\n  APPL_BottleCage"
+	foreach entry $APPL_BottleCage {
+		puts "        -> $entry"
+	}
+	
+	
 
 	puts "\n  APPL_RimList"
 	foreach entry $APPL_RimList {

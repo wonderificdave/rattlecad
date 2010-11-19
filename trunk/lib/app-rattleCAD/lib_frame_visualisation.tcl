@@ -81,7 +81,14 @@
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		
 			# --- get Rendering Style
-		set Rendering(Brakes)	[[ $domProject selectNodes /root/Rendering/Brakes ]  asText ]
+		set Rendering(BrakeFront)		[[ $domProject selectNodes /root/Rendering/Brake/Front					]  asText ]
+		set Rendering(BrakeRear)		[[ $domProject selectNodes /root/Rendering/Brake/Rear					]  asText ]
+		set Rendering(BottleCage_ST)	[[ $domProject selectNodes /root/Rendering/BottleCage/SeatTube			]  asText ]
+		set Rendering(BottleCage_DT)	[[ $domProject selectNodes /root/Rendering/BottleCage/DownTube			]  asText ]
+		set Rendering(BottleCage_DT_L)	[[ $domProject selectNodes /root/Rendering/BottleCage/DownTube_Lower	]  asText ]
+		
+		
+
 
 		# --- check existance of File --- regarding on user/etc
 		proc checkFileString {fileString} {
@@ -165,10 +172,12 @@
 								}
 						}
 			
-			RearBrake {
+			Brake {
 							# --- create RearBrake -----------------
-							switch $Rendering(Brakes) {
-								Road {
+							if {$Rendering(BrakeRear) != {off}} {
+								puts "   ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
+								switch $Rendering(BrakeRear) {
+									Road {
 										set ss_direction	[ frame_geometry_custom::tube_values SeatStay direction ]
 										set ss_angle		[ expr - [ vectormath::angle {0 1} {0 0} $ss_direction ] ]
 										set RearBrake(position)		[ frame_geometry_custom::point_position  RearBrakeMount  $BB_Position]
@@ -176,21 +185,23 @@
 										set RearBrake(object)		[ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$RearBrake(object)	<Double-ButtonPress-1> \
 																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
-																							$updateCommand { 	file://Component/Brake/Rear/File	\
+																							$updateCommand { 	list://Rendering/Brake/Rear@APPL_BrakeTypes \
+																												file://Component/Brake/Rear/File	\
 																												Component/Brake/Rear/LeverLength	\
 																											} 	{RearBrake Parameter} \
 																				]
 																	  lib_gui::object_CursorBinding 	$cv_Name	$RearBrake(object)
 												}
-										}
-								default {}
+											}
+									default {}
+								}
 							}
-						}
-						
-			FrontBrake {
+
 							# --- create FrontBrake ----------------
-							switch $Rendering(Brakes) {
-								Road {
+							if {$Rendering(BrakeFront) != {off}} {
+								puts "   ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
+								switch $Rendering(BrakeFront) {
+									Road {
 										set ht_direction	[ frame_geometry_custom::tube_values HeadTube direction ]
 										set ht_angle		[ expr [ vectormath::angle {0 1} {0 0} $ht_direction ] ]
 										set fb_angle		[ [ $domProject selectNodes /root/Component/Fork/Crown/Brake/Angle  ]  asText ]
@@ -200,15 +211,88 @@
 										set FrontBrake(object)		[ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$FrontBrake(object)	<Double-ButtonPress-1> \
 																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
-																							$updateCommand { 	file://Component/Brake/Front/File	\
+																							$updateCommand { 	list://Rendering/Brake/Front@APPL_BrakeTypes \
+																												file://Component/Brake/Front/File	\
 																												Component/Brake/Front/LeverLength	\
 																											} 	{FrontBrake Parameter} \
 																				]
 																	  lib_gui::object_CursorBinding 	$cv_Name	$FrontBrake(object)
 												}
 										}																																			
-								default {}
+									default {}
+								}
 							}
+						}
+						
+			BottleCage {
+							# --- create FrontBrake ----------------
+							if {$Rendering(BottleCage_ST) != {off}} {	
+											# puts "   ... \$Rendering(BottleCage_ST) $Rendering(BottleCage_ST)"
+										switch $Rendering(BottleCage_ST) {
+											BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg  	 ] }
+											Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg	 ] }
+											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
+										}
+											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
+								
+										set st_direction	[ frame_geometry_custom::tube_values SeatTube direction ]
+										set st_angle		[ expr -90 + [ vectormath::angle {0 1} {0 0} $st_direction ] ]
+										set BottleCage(position)	[ frame_geometry_custom::point_position  BottleCageSeatTube  $BB_Position]
+											# set BottleCage(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/BottleCage/SeatTube/File ]  asText ] ]
+										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $BottleCage(position) $st_angle  __Decoration__ ]		
+										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
+																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																							$updateCommand { 	list://Rendering/BottleCage/SeatTube@APPL_BottleCage \
+																											} 	{BottleCage SeatTube Parameter} \
+																				]
+																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
+										}
+							}
+
+							if {$Rendering(BottleCage_DT) != {off}} {	
+											# puts "   ... \$Rendering(BottleCage_DT) $Rendering(BottleCage_DT)"
+										switch $Rendering(BottleCage_DT) {
+											BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/brazeOn.svg  	 ] }
+											Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottleCage.svg	 ] }
+											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottle_Large.svg ] }
+										}
+											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
+										set dt_direction	[ frame_geometry_custom::tube_values DownTube direction ]										
+										set dt_angle		[ expr 90 - [ vectormath::angle {0 1} {0 0} $dt_direction ] ]
+										set BottleCage(position)	[ frame_geometry_custom::point_position  BottleCageDownTube  $BB_Position]
+											# set BottleCage(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/BottleCage/DownTube/File ]  asText ] ]
+										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $BottleCage(position) $dt_angle  __Decoration__ ]		
+										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
+																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																							$updateCommand { 	list://Rendering/BottleCage/DownTube@APPL_BottleCage \
+																											} 	{BottleCage DownTube-Upper Parameter} \
+																				]
+																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
+										}
+							}
+
+							if {$Rendering(BottleCage_DT_L) != {off}} {	
+											# puts "   ... \$Rendering(BottleCage_DT_L) $Rendering(BottleCage_DT_L)"
+										switch $Rendering(BottleCage_DT_L) {
+											BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg  	 ] }
+											Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg	 ] }
+											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
+										}
+											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
+										set dt_direction	[ frame_geometry_custom::tube_values DownTube direction ]
+										set dt_angle		[ expr 270 - [ vectormath::angle {0 1} {0 0} $dt_direction ] ]
+										set BottleCage(position)	[ frame_geometry_custom::point_position  BottleCageDownTube_Lower  $BB_Position]
+											# set BottleCage(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/BottleCage/DownTube_Lower/File ]  asText ] ]
+										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $BottleCage(position) $dt_angle  __Decoration__ ]		
+										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
+																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																							$updateCommand { 	list://Rendering/BottleCage/DownTube_Lower@APPL_BottleCage \
+																											} 	{BottleCage DownTube-Lower Parameter} \
+																				]
+																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
+										}						
+							}
+
 						}
 			Saddle {
 							# --- create Saddle --------------------
@@ -609,10 +693,10 @@
 		set SeatStay_SeatTube	[ frame_geometry_custom::tube_values     SeatStay SeatTube		$BB_Position ]
 		set SeatStay_RearWheel	[ frame_geometry_custom::tube_values     SeatStay RearWheel		$BB_Position ]
 		set TopTube_SeatTube	[ frame_geometry_custom::tube_values     TopTube SeatTube		$BB_Position ]
-		set TopTube_Steerer		[ frame_geometry_custom::tube_values  	  TopTube HeadTube		$BB_Position ]
+		set TopTube_Steerer		[ frame_geometry_custom::tube_values  	 TopTube HeadTube		$BB_Position ]
 		set Steerer_Stem		[ frame_geometry_custom::point_position  Steerer_Stem			$BB_Position ]
 		set Steerer_Fork		[ frame_geometry_custom::point_position  Steerer_Fork			$BB_Position ]
-		set DownTube_Steerer	[ frame_geometry_custom::tube_values  	  DownTube HeadTube 	$BB_Position ]
+		set DownTube_Steerer	[ frame_geometry_custom::tube_values  	 DownTube HeadTube 	$BB_Position ]
 		set HandleBar			[ frame_geometry_custom::point_position  HandleBar 				$BB_Position ]
 		set BaseCenter			[ frame_geometry_custom::point_position  BB_Ground				$BB_Position ]
 		set Steerer_Ground		[ frame_geometry_custom::point_position  Steerer_Ground			$BB_Position ]		

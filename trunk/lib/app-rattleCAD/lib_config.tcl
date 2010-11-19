@@ -343,6 +343,7 @@
 					set fileFrame [frame $menueFrame.sf.lf_01.f_$i]
 					label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"		
 					set alternatives [lib_file::get_componentAlternatives  $xPath]
+					
 					ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
 												-values $alternatives	-width 30
 						pack $fileFrame 	-fill x -expand yes  -pady 2
@@ -364,19 +365,55 @@
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
 						
-						# -- Brake Types
+						# -- Brake Type Front
 					set optionFrame [frame $menueFrame.sf.lf_02.f_02]
 					label $optionFrame.lb -text "  Brake Types"		
-					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Brakes) \
+					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Brake/Front) \
 													-values $::APPL_BrakeTypes	-width 30
+						pack $optionFrame -fill x -expand yes  -pady 2
+						pack $optionFrame.cb -side right
+						pack $optionFrame.lb -side left
+						
+						# -- Brake Type Rear
+					set optionFrame [frame $menueFrame.sf.lf_02.f_03]
+					label $optionFrame.lb -text "  Brake Types"		
+					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Brake/Rear) \
+													-values $::APPL_BrakeTypes	-width 30
+						pack $optionFrame -fill x -expand yes  -pady 2
+						pack $optionFrame.cb -side right
+						pack $optionFrame.lb -side left
+						
+						# -- Bottle Cage SeatTube
+					set optionFrame [frame $menueFrame.sf.lf_02.f_04]
+					label $optionFrame.lb -text "  BottleCage ST"		
+					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/BottleCage/SeatTube) \
+													-values $::APPL_BottleCage	-width 30
+						pack $optionFrame -fill x -expand yes  -pady 2
+						pack $optionFrame.cb -side right
+						pack $optionFrame.lb -side left
+						
+						# -- Bottle Cage DownTube
+					set optionFrame [frame $menueFrame.sf.lf_02.f_05]
+					label $optionFrame.lb -text "  BottleCage DT"		
+					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/BottleCage/DownTube) \
+													-values $::APPL_BottleCage	-width 30
+						pack $optionFrame -fill x -expand yes  -pady 2
+						pack $optionFrame.cb -side right
+						pack $optionFrame.lb -side left
+						
+						# -- Bottle Cage DownTube Lower
+					set optionFrame [frame $menueFrame.sf.lf_02.f_06]
+					label $optionFrame.lb -text "  BottleCage DT L"		
+					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/BottleCage/DownTube_Lower) \
+													-values $::APPL_BottleCage	-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
 				
 				# -----------------
 				#   Frame Parts
-			ttk::labelframe	$menueFrame.sf.lf_03    	-text "Frame Parts" 
-				pack $menueFrame.sf.lf_03 				-side top  -fill x -pady 2 
+			ttk::labelframe	$menueFrame.sf.lf_04    	-text "Frame Parts" 
+				pack $menueFrame.sf.lf_04 				-side top  -fill x -pady 2 
 				
 				set compList {	Component/Fork/Crown/File \
 								Component/Fork/DropOut/File \
@@ -386,7 +423,7 @@
 					incr i 1
 					puts "    ... $xPath  $configValue($xPath)"
 					
-					set fileFrame [frame $menueFrame.sf.lf_03.f_$i]
+					set fileFrame [frame $menueFrame.sf.lf_04.f_$i]
 					label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"		
 					set alternatives [lib_file::get_componentAlternatives  $xPath]
 					ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
@@ -647,7 +684,7 @@
 				
 					# -----------------------------
 					#   update Geometry
-				frame_geometry_custom::updateConfig   	$varName   cv_custom_00::update	_update_ 	 
+				frame_geometry_custom::updateConfig   	$varName   cv_custom::update	_update_ 	 
 				
 					# -----------------------------
 					#   focus entry
@@ -667,15 +704,28 @@
 			frame_geometry_custom::set_projectValue $xPath $configValue($xPath)								
 		}
 		
-		foreach xPath {Rendering/Fork Rendering/Brakes} {
+		foreach xPath {	Rendering/Fork 
+						Rendering/Brake/Front
+						Rendering/Brake/Rear
+						Rendering/BottleCage/SeatTube 
+						Rendering/BottleCage/DownTube 
+						Rendering/BottleCage/DownTube_Lower
+		} {
 			frame_geometry_custom::set_projectValue $xPath $configValue($xPath)								
 		}
+		
+	
+		
+		
+		
+		
+		
 				
 		set cv			[ $lib_gui::noteBook_top select ]	
 		set varName		[ lib_gui::notebook_getVarName $cv ]
 		if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 		
-		frame_geometry_custom::updateConfig   	$varName   cv_custom_00::update	_update_ 	 
+		frame_geometry_custom::updateConfig   	$varName   cv_custom::update	_update_ 	 
 				
 	}
 
