@@ -187,8 +187,8 @@
 			# --- fill ListBox Values   APPL_ForkTypes
 			#
 		set ::APPL_ForkTypes {}
-		set node_Forks [ $root selectNodes /root/Options/Fork ]
-		foreach childNode [ $node_Forks childNodes ] {
+		set node_ForkTypes [ $root selectNodes /root/Options/Fork ]
+		foreach childNode [ $node_ForkTypes childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
 					# puts "  childNode ->   [$childNode nodeName]  "
 				set ::APPL_ForkTypes [lappend ::APPL_ForkTypes  [$childNode nodeName]]
@@ -199,11 +199,33 @@
 			# --- fill ListBox Values   APPL_BrakeTypes
 			#
 		set ::APPL_BrakeTypes {}
-		set node_Forks [ $root selectNodes /root/Options/Brake ]
-		foreach childNode [ $node_Forks childNodes ] {
+		set node_BrakeTypes [ $root selectNodes /root/Options/Brake ]
+		foreach childNode [ $node_BrakeTypes childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
 					# puts "  childNode ->   [$childNode nodeName]  "
 				set ::APPL_BrakeTypes [lappend ::APPL_BrakeTypes  [$childNode nodeName]]
+			}
+		}
+		
+			# --- fill ListBox Values   APPL_BottleCage
+			#
+		set ::APPL_BottleCage {}
+		set node_BottleCage [ $root selectNodes /root/Options/BottleCage ]
+		foreach childNode [ $node_BottleCage childNodes ] {
+			if {[$childNode nodeType] == {ELEMENT_NODE}} {
+					# puts "  childNode ->   [$childNode nodeName]  "
+				set ::APPL_BottleCage [lappend ::APPL_BottleCage  [$childNode nodeName]]
+			}
+		}
+		
+			# --- fill ListBox Values   APPL_Binary_OnOff
+			#
+		set ::APPL_Binary_OnOff {}
+		set node_Binary_OnOff [ $root selectNodes /root/Options/Binary_OnOff ]
+		foreach childNode [ $node_Binary_OnOff childNodes ] {
+			if {[$childNode nodeType] == {ELEMENT_NODE}} {
+					# puts "  childNode ->   [$childNode nodeName]  "
+				set ::APPL_Binary_OnOff [lappend ::APPL_Binary_OnOff  [$childNode nodeName]]
 			}
 		}
 		

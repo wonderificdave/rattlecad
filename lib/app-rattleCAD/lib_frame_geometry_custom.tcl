@@ -131,6 +131,7 @@
 			variable Stem
 			variable RearBrake
 			variable FrontBrake
+			variable BottleCage
 			
 			variable Project
 			
@@ -267,7 +268,7 @@
 
 				#
 				# --- get HeadSet --------------------------
-			set HeadSet(Diameter)		[ [ $domProject selectNodes /root/Component/HeadSet/Diameter			]  asText ]
+			set HeadSet(Diameter)		[ [ $domProject selectNodes /root/Component/HeadSet/Diameter		]  asText ]
 			set HeadSet(Height_Top) 	[ [	$domProject selectNodes /root/Component/HeadSet/Height/Top		]  asText ]
 			set HeadSet(Height_Bottom) 	[ [	$domProject selectNodes /root/Component/HeadSet/Height/Bottom	]  asText ]
 			set HeadSet(ShimDiameter)	36
@@ -276,6 +277,12 @@
 				# --- get Front/Rear Brake PadLever --------------
 			set RearBrake(LeverLength)	[ [ $domProject selectNodes /root/Component/Brake/Rear/LeverLength	]  asText ]
 			set FrontBrake(LeverLength)	[ [ $domProject selectNodes /root/Component/Brake/Front/LeverLength	]  asText ]
+				
+				#
+				# --- get BottleCage Offset ----------------------
+			set BottleCage(SeatTube)		[ [ $domProject selectNodes /root/Component/BottleCage/SeatTube/OffsetBB		]  asText ]
+			set BottleCage(DownTube)		[ [ $domProject selectNodes /root/Component/BottleCage/DownTube/OffsetBB		]  asText ]
+			set BottleCage(DownTube_Lower)	[ [ $domProject selectNodes /root/Component/BottleCage/DownTube_Lower/OffsetBB	]  asText ]
 				
 				#
 				#
@@ -884,6 +891,27 @@
 			get_RearBrakeMount
 			
 				#
+				# --- set BottleCageMount ------------------
+			proc get_BottleCageMount {} {
+					variable BottleCage
+					variable SeatTube
+					variable DownTube
+					
+					set pt_BottleCage 	[ vectormath::unifyVector {0 0} $frameCoords::SeatTube(direction) $BottleCage(SeatTube)		]
+					set vct_01			[ vectormath::parallel	{0 0}	$pt_BottleCage [expr  0.5 * $SeatTube(DiameterBB)] ]
+					set frameCoords::BottleCageSeatTube			[ lindex $vct_01 1 ]
+					
+					set pt_BottleCage 	[ vectormath::unifyVector {0 0} $frameCoords::DownTube(direction) $BottleCage(DownTube)		]
+					set vct_01			[ vectormath::parallel	{0 0}	$pt_BottleCage [expr -0.5 * $DownTube(DiameterBB)] ]
+					set frameCoords::BottleCageDownTube			[ lindex $vct_01 1 ]
+					
+					set pt_BottleCage 	[ vectormath::unifyVector {0 0} $frameCoords::DownTube(direction) $BottleCage(DownTube_Lower)		]
+					set vct_01			[ vectormath::parallel	{0 0}	$pt_BottleCage [expr  0.5 * $DownTube(DiameterBB)] ]
+					set frameCoords::BottleCageDownTube_Lower	[ lindex $vct_01 1 ]					
+			}
+			get_BottleCageMount
+			
+				#
 				# --- set FrontBrakeMount -----------------
 			proc get_FrontBrakeMount {} {
 					variable Fork
@@ -928,8 +956,8 @@
 					variable DownTube
 
 							set dir 		[ vectormath::addVector {0 0} $frameCoords::HeadTube(direction) -1] 
-					set frameCoords::TopTube_Head(mitter) 		[ tube_mitter	$TopTube(DiameterHT) $frameCoords::TopTube(direction)	$HeadTube(Diameter)		$frameCoords::HeadTube(direction)  $frameCoords::TopTube(HeadTube)  ]	
-					set frameCoords::TopTube_Seat(mitter) 		[ tube_mitter	$TopTube(DiameterST) $frameCoords::TopTube(direction)	$SeatTube(DiameterTT)	$dir  							   $frameCoords::TopTube(SeatTube)  ]	
+					set frameCoords::TopTube_Head(mitter) 		[ tube_mitter	$TopTube(DiameterHT)  $frameCoords::TopTube(direction)	$HeadTube(Diameter)		$frameCoords::HeadTube(direction)  $frameCoords::TopTube(HeadTube)  ]	
+					set frameCoords::TopTube_Seat(mitter) 		[ tube_mitter	$TopTube(DiameterST)  $frameCoords::TopTube(direction)	$SeatTube(DiameterTT)	$dir  							   $frameCoords::TopTube(SeatTube)  ]	
 					set frameCoords::DownTube_Head(mitter) 		[ tube_mitter	$DownTube(DiameterHT) $frameCoords::DownTube(direction)	$HeadTube(Diameter)		$frameCoords::HeadTube(direction)  $frameCoords::DownTube(HeadTube) ]				
 							set offset		[ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
 							set dir 		[ vectormath::addVector {0 0} $frameCoords::SeatStay(direction) -1] 
@@ -1297,7 +1325,26 @@
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
 										}
-									}	
+									}
+								{APPL_Binary_OnOff} {
+										eval set currentValue $[namespace current]::_updateValue($xpath)
+										set listBoxContent {}
+										puts "     currentValue: $currentValue"
+										set listBoxContent $::APPL_Binary_OnOff
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+									}
+								{APPL_BottleCage} {
+										eval set currentValue $[namespace current]::_updateValue($xpath)
+										set listBoxContent {}
+										puts "     currentValue: $currentValue"
+										set listBoxContent $::APPL_BottleCage
+										foreach entry $listBoxContent {
+											puts "         ... $entry"
+										}
+									}
+									
 						}
 						#
 						# --- create cvLabel, cvEntry, Select ---
@@ -1389,6 +1436,9 @@
 									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
 										#
 										# --- create widgets per xpath list element ---
+									puts "  ... 	 $listName \
+												$cv $cv_Name $cvEdit $cvContentFrame \
+												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath"
 									create_ListEdit $listName \
 												$cv $cv_Name $cvEdit $cvContentFrame \
 												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
@@ -1560,14 +1610,21 @@
 				# --- update or return on errorID		
 			set checkValue {mathValue}
 			if {[file dirname $xpath] == {Rendering}} { 
-						# puts "               ... [file dirname $xpath] "
-					set checkValue {}
+							# puts "               ... [file dirname $xpath] "
+						set checkValue {}
 			}
 			if {[file tail $xpath]    == {File}     } { 
-						# puts "               ... [file tail    $xpath] "
-					set checkValue {}
+							# puts "               ... [file tail    $xpath] "
+						set checkValue {}
 			}
-				# puts "               ... checkValue: $checkValue "
+
+			if {[lindex [split $xpath /] 0] == {Rendering}} {
+						set checkValue {}
+						puts "   ... Rendering: $xpath "
+						puts "        ... $value [file tail $xpath]"
+			}	
+				
+				 puts "               ... checkValue: $checkValue "
 			
 				# --- update or return on errorID		
 			if {$checkValue == {mathValue} } {

@@ -233,7 +233,7 @@
 			cv_Custom05 -
 			cv_Custom06 {
 					$noteBook_top select $noteBook_top.$varName
-					cv_custom_00::update 	lib_gui::$varName 
+					cv_custom::update 	lib_gui::$varName 
 				}
 			cv_Component {
 					::update
@@ -626,11 +626,17 @@
 	
 		switch $type {
 				Fork	{ set listDefinition list://Rendering/Fork@APPL_ForkTypes }
-				Brake	{ set listDefinition list://Rendering/Brakes@APPL_BrakeTypes }
-				default { set listDefinition {list://Rendering/Fork@APPL_ForkTypes list://Rendering/Brakes@APPL_BrakeTypes} }
+				Brake	{ set listDefinition list://Rendering/Brake/Front@APPL_BrakeTypes }
+				default { set listDefinition {	list://Rendering/Fork@APPL_ForkTypes
+												list://Rendering/Brake/Front@APPL_BrakeTypes
+												list://Rendering/Brake/Rear@APPL_BrakeTypes
+												list://Rendering/BottleCage/SeatTube@APPL_BottleCage
+												list://Rendering/BottleCage/DownTube@APPL_BottleCage
+												list://Rendering/BottleCage/DownTube_Lower@APPL_BottleCage}
+						}
 		}
 		
-		frame_geometry_custom::createEdit  10 50  $varName  cv_custom_00::update  $listDefinition  {Rendering Settings}
+		frame_geometry_custom::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}
 				
 	}
 	

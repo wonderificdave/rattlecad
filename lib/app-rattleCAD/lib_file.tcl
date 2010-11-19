@@ -379,6 +379,8 @@
 						#
 					check_FileVersion {3.1}
 					check_FileVersion {3.2.20}
+					check_FileVersion {3.2.22}
+					check_FileVersion {3.2.23}
 						#
 					frame_geometry_custom::set_base_Parameters $::APPL_Project
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -435,7 +437,7 @@
 								# --- /root/Result
 							set node [$::APPL_Project selectNode /root/Result]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Temporary"
+								puts "        ...  $Version   ... update File ... /root/Result"
 								set node [$::APPL_Project selectNode /root]
 								$node appendXML "<Result>
 													<HeadTube>
@@ -470,17 +472,82 @@
 								set node [$::APPL_Project selectNode /root]
 								$node appendXML "<Rendering>
 													<Fork>SteelLugged</Fork>
-													<Brakes>Road</Brakes>
 												</Rendering>"
 							}	
 							
 						}
 						
 				{3.2.20} {	set node {}								
-								# --- /root/Result/HeadTube
-							set node [$::APPL_Project selectNode /root/Result/HeadTube]
-							$node appendXML "<TopTubeAngle>0.00</TopTubeAngle>"
+								# --- /root/Result/HeadTube/TopTubeAngle
+							set node [$::APPL_Project selectNode /root/Result/HeadTube/TopTubeAngle]
+							if {$node == {}} {
+								puts "        ...  $Version   ... update File ... /root/Result/HeadTube/TopTubeAngle"
+								set node [$::APPL_Project selectNode /root/Result/HeadTube]
+								$node appendXML "<TopTubeAngle>0.00</TopTubeAngle>"
+							}
 						}
+						
+				{3.2.22} {	set node {}								
+								# --- /root/Component/BottleCage
+							set node [$::APPL_Project selectNode /root/Component/BottleCage]
+							if {$node == {}} {
+								puts "        ...  $Version   ... update File ... /root/Component/BottleCage"
+								set node [$::APPL_Project selectNode /root/Component]
+								puts "  [$node asXML]"
+								$node appendXML "<BottleCage>
+													<SeatTube>
+														<File>etc:bottle_cage/left/bottleCage.svg</File>
+														<OffsetBB>150.00</OffsetBB>
+													</SeatTube>
+													<DownTube>
+														<File>etc:bottle_cage/right/bottleCage.svg</File>
+														<OffsetBB>210.00</OffsetBB>
+													</DownTube>
+													<DownTube_Lower>
+														<File>etc:bottle_cage/left/bottleCage.svg</File>
+														<OffsetBB>150.00</OffsetBB>
+													</DownTube_Lower>
+												</BottleCage>"
+								set node [$::APPL_Project selectNode /root/Component/BottleCage]
+								puts "  [$node asXML]"
+							}
+							
+								# --- /root/Rendering/BottleCage ...
+							set node [$::APPL_Project selectNode /root/Rendering/BottleCage]
+							if {$node == {}} {
+								puts "        ...  $Version   ... update File ... /root/Rendering/BottleCage"
+								set node [$::APPL_Project selectNode /root/Rendering]
+								$node appendXML "<BottleCage>
+													<SeatTube>Cage</SeatTube>
+													<DownTube>Cage</DownTube>
+													<DownTube_Lower>off</DownTube_Lower>
+												</BottleCage>"
+							}  
+						}
+										
+				{3.2.23} {	set node {}								
+								# --- /root/Rendering/Brake ...
+							set node [$::APPL_Project selectNode /root/Rendering/Brakes]
+							if {$node != {}} {
+								puts "        ...  $Version   ... update File ... /root/Rendering/Brakes"
+								set parentNode [$node parentNode]
+								$parentNode removeChild $node
+							}
+							
+								# --- /root/Rendering/Brake ...
+							set node [$::APPL_Project selectNode /root/Rendering/Brake]
+							if {$node == {}} {
+								puts "        ...  $Version   ... update File ... /root/Rendering/Brake"
+								set node [$::APPL_Project selectNode /root/Rendering]
+								$node appendXML "<Brake>
+													<Front>Road</Front>
+													<Rear>Road</Rear>
+												</Brake>"
+							}  
+						}
+ 						
+						
+						
 						
 				{ab-xy} {	set node {}
 							set node [$::APPL_Project selectNode /root/Project/rattleCADVersion/text()]
@@ -614,6 +681,7 @@
 						# puts "            user: $userDir"
 						# puts "            etc:  $etcDir"
 			
+
 			catch {
 				foreach file [ glob -directory $userDir  *.svg ] {
 						# puts "     ... fileList: $file"
@@ -626,6 +694,15 @@
 				set fileString [ string map [list $::APPL_Env(CONFIG_Dir)/components/ {etc:} ] $file ]
 				set listAlternative   [ lappend listAlternative $fileString]
 			}
+			
+				# ------------------------
+				#	 some components are not neccessary at all
+			switch -exact $xPath {
+					Component/Derailleur/File  {
+							set listAlternative [lappend listAlternative {etc:default_blank.svg} ]
+					}
+			}
+
 			
 			return $listAlternative
 	

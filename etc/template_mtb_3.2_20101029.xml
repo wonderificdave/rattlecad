@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.2.00</rattleCADVersion>
-        <Name>template_mtb_3.2_20101024.xml</Name>
-        <modified>2010.10.24 23:08</modified>
+        <rattleCADVersion>3.2.22</rattleCADVersion>
+        <Name>Template MTB 03</Name>
+        <modified>2010.11.19/12:00</modified>
     </Project>
 		
     <!-- personal geometry based on cyclist body profile -->
@@ -92,7 +92,7 @@
             <BladeWidth>29.00</BladeWidth>
             <CrownDiameter>43.00</CrownDiameter>
             <Crown>
-                <File>fork/crown/longshen_max_36_5.svg</File>
+                <File>etc:fork/crown/longshen_max_36_5.svg</File>
                 <Brake>
                     <Offset>20.00</Offset>
                     <OffsetPerp>8.00</OffsetPerp>
@@ -110,7 +110,7 @@
                 <Offset>6.00</Offset>
             </Blade>
             <DropOut>
-                <File>fork/dropout/dropout_14.svg</File>
+                <File>etc:fork/dropout/dropout_14.svg</File>
                 <Offset>20.00</Offset>
                 <OffsetPerp>0.00</OffsetPerp>
             </DropOut>
@@ -121,16 +121,16 @@
         </Stem>
         <Brake>
             <Front>
-                <File>brake/front/campagnolo_frontbrake.svg</File>
+                <File>etc:brake/front/campagnolo_frontbrake.svg</File>
                 <LeverLength>45.00</LeverLength>
             </Front>
             <Rear>
-                <File>brake/rear/campagnolo_rearbrake.svg</File>
+                <File>etc:brake/rear/campagnolo_rearbrake.svg</File>
                 <LeverLength>45.00</LeverLength>
             </Rear>
         </Brake>
         <RearDropOut>
-            <File>dropout/rear_dropout_01.svg</File>
+            <File>etc:dropout/rear_dropout_01.svg</File>
             <ChainStay>
                 <Offset>33.00</Offset>
                 <OffsetPerp>-4.0</OffsetPerp>
@@ -160,7 +160,7 @@
             <File>etc:handlebar/flatbar_sti.svg</File>
         </HandleBar>
         <Saddle>
-            <File>saddle/saddle_c.svg</File>
+            <File>etc:saddle/saddle_c.svg</File>
             <SeatPost>
                 <x>-5.00</x>
                 <y>-45.00</y>
@@ -168,12 +168,26 @@
             </SeatPost>
         </Saddle>
         <CrankSet>
-            <File>crankset/campagnolo_ultra_torque.svg</File>
+            <File>etc:crankset/campagnolo_ultra_torque.svg</File>
             <Length>175</Length>
         </CrankSet>
         <Derailleur>
-            <File>rear_derailleur/custom_00.svg</File>
+            <File>etc:rear_derailleur/custom_00.svg</File>
         </Derailleur>
+		<BottleCage>
+			<SeatTube>
+				<File>etc:bottle_cage/left/bottleCage.svg</File>
+				<OffsetBB>130.00</OffsetBB>
+			</SeatTube>
+			<DownTube>
+				<File>etc:bottle_cage/right/bottleCage.svg</File>
+				<OffsetBB>210.00</OffsetBB>
+			</DownTube>
+			<DownTube_Lower>
+				<File>etc:bottle_cage/left/bottleCage.svg</File>
+				<OffsetBB>140.00</OffsetBB>
+			</DownTube_Lower>
+		</BottleCage>
     </Component>
 	
 	
@@ -207,7 +221,15 @@
 	<!-- rendering information -->
     <Rendering>
         <Fork>Suspension</Fork>
-        <Brakes>Disc</Brakes>
+		<Brake>
+			<Front>V-Brake</Front>
+			<Rear>V-Brake</Rear>
+		</Brake>		
+		<BottleCage>
+			<SeatTube>Cage</SeatTube>
+			<DownTube>Cage</DownTube>
+			<DownTube_Lower>off</DownTube_Lower>
+		</BottleCage>
     </Rendering>
 		
 </root>

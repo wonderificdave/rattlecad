@@ -1,6 +1,6 @@
  ##+##########################################################################
  #
- # package: rattleCAD	->	lib_cv_custom_00.tcl
+ # package: rattleCAD	->	lib_cv_custom.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their 
@@ -32,255 +32,17 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
  #
  # ---------------------------------------------------------------------------
- #	namespace:  rattleCAD::cv_custom_00
+ #	namespace:  rattleCAD::cv_custom
  # ---------------------------------------------------------------------------
  #
  # 
 
- namespace eval cv_custom_00 {
+ namespace eval cv_custom {
 
 	variable    bottomCanvasBorder	30
 	
 	variable 	baseLine
 	array	set	baseLine	{}
-
-	proc update {cv_Name} {
-		
-		puts "     ... cv_custom_00:.update  $cv_Name"
-		variable 	bottomCanvasBorder
-	
-			# --- get updateCommand
-		set updateCommand		[namespace current]::update 
-
-			# puts " ->  $cv_Name"
-			
-		switch $cv_Name {
-			lib_gui::cv_Custom00 {
-						#
-						# -- base geometry
-						#
-					set stageScale	[$cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						# set factor 		[ get_FormatFactor $stageFormat ]
-						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
-					$cv_Name 		clean_StageContent					
-						#
-					frame_visualisation::createBaseline 		$cv_Name $xy	
-						#
-					createDimension								$cv_Name $xy	point_seat	
-					createDimension								$cv_Name $xy	point_frame					
-					createDimension								$cv_Name $xy	geometry_bg		
-						#
-					frame_visualisation::createFrame_Centerline	$cv_Name $xy 	{saddle seattube steerer chainstay fork}
-						#
-					createDimension								$cv_Name $xy	point_personal	
-					createDimension								$cv_Name $xy	point_crank								
-					createDimension								$cv_Name $xy	geometry_fg								
-						#
-				}
-			lib_gui::cv_Custom01 {
-						#
-						# -- frame - tubing
-						#
-					set stageScale	[$cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						# set factor 		[ get_FormatFactor $stageFormat ]
-						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame ]					
-					$cv_Name 		clean_StageContent	
-						#
-					frame_visualisation::createDecoration		$cv_Name $xy	SeatPost			$updateCommand	
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearWheel_Rep		
-					frame_visualisation::createDecoration		$cv_Name $xy 	FrontWheel_Rep		
-						#
-					frame_visualisation::createFrame_Tubes		$cv_Name $xy 	$updateCommand 					
-						#
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearDerailleur_ctr 	$updateCommand	
-					frame_visualisation::createDecoration		$cv_Name $xy 	Saddle				$updateCommand	
-					frame_visualisation::createDecoration		$cv_Name $xy 	HeadSet				$updateCommand	
-					frame_visualisation::createDecoration		$cv_Name $xy 	Stem				
-					frame_visualisation::createDecoration		$cv_Name $xy 	LegClearance_Rep	
-						#
-					createCenterline							$cv_Name $xy	Saddle
-						#
-					createDimension								$cv_Name $xy	cline_brake	
-					createDimension								$cv_Name $xy	frameTubing_bg	
-						#
-					createDimensionType							$cv_Name $xy 	RearWheel_Clearance 	
-					createDimensionType							$cv_Name $xy 	LegClearance			
-					createDimensionType							$cv_Name $xy 	HeadTube_Length 	$updateCommand	
-					createDimensionType							$cv_Name $xy 	SeatTube_Extension	$updateCommand	
-					createDimensionType							$cv_Name $xy 	SeatStay_Offset		$updateCommand	
-					createDimensionType							$cv_Name $xy 	HeadTube_OffsetTT	$updateCommand	
-					createDimensionType							$cv_Name $xy 	HeadTube_OffsetDT	$updateCommand	
-					createDimensionType							$cv_Name $xy 	DownTube_Offset		$updateCommand	
-					createDimensionType							$cv_Name $xy 	TopTube_Angle		$updateCommand						
-					createDimensionType							$cv_Name $xy 	HeadSet_Bottom		$updateCommand
-					createDimensionType							$cv_Name $xy 	ForkHeight			$updateCommand				
-					createDimensionType							$cv_Name $xy 	Brake_Bridge		$updateCommand		
-					createDimensionType							$cv_Name $xy 	Brake_Fork			$updateCommand		
-					createDimensionType							$cv_Name $xy 	TopHeadTube_Angle	$updateCommand		
-
-					
-				}
-			lib_gui::cv_Custom02 {
-						#
-						# -- dimension summary
-						#
-					set stageScale	[$cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						# set factor 		[ get_FormatFactor $stageFormat ]
-						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
-					$cv_Name 		clean_StageContent
-						#
-					createDimension							$cv_Name $xy 	point_seat
-					createDimension							$cv_Name $xy 	point_center
-						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			
-					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			
-					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost		
-						#
-					frame_visualisation::createFrame_Tubes	$cv_Name $xy					 
-						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle				
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearBrake			
-					frame_visualisation::createDecoration	$cv_Name $xy 	FrontBrake			
-					frame_visualisation::createDecoration	$cv_Name $xy 	HeadSet			
-					frame_visualisation::createDecoration	$cv_Name $xy 	Stem			
-					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearDerailleur		
-					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			
-						#
-					createDimension							$cv_Name $xy 	cline_angle
-						#
-					createDimension							$cv_Name $xy	summary_bg		
-						#
-					createDimension							$cv_Name $xy	summary_fg	
-						#
-					frame_visualisation::createBaseline 	$cv_Name $xy	black
-						#
-				}				
-			lib_gui::cv_Custom03 {
-						#
-						# -- frame - drafting 
-						#
-					set stageScale	[$cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						# set factor 		[ get_FormatFactor $stageFormat ]
-						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
-						#
-					$cv_Name 		clean_StageContent	
-						#
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearWheel_Rep		
-					frame_visualisation::createDecoration		$cv_Name $xy 	FrontWheel_Rep		
-						#
-					frame_visualisation::createFrame_Tubes		$cv_Name $xy 						
-						#
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearDerailleur_ctr 		
-					frame_visualisation::createDecoration		$cv_Name $xy 	LegClearance_Rep	
-						#
-					createCenterline							$cv_Name $xy
-						#
-					createDimension								$cv_Name $xy	cline_brake	
-					createDimension								$cv_Name $xy 	frameDrafting_bg
-						#
-					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
-						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
-						#
-					$cv_Name 		centerContent				{ 0  25}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__  }
-						#
-					lib_gui::notebook_createButton				$cv_Name 		changeFormatScale
-						#
-				}
-			lib_gui::cv_Custom04 {
-						#
-						# -- drafting - framejig
-						#
-					set stageScale	[$cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						# set factor 		[ get_FormatFactor $stageFormat ]
-						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
-						#
-					$cv_Name 		clean_StageContent	
-						#
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearWheel_Rep		
-					frame_visualisation::createDecoration		$cv_Name $xy 	FrontWheel_Rep		
-						#
-					frame_visualisation::createFrame_Tubes		$cv_Name $xy 						
-						#
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearDerailleur_ctr 		
-						#
-					createCenterline							$cv_Name $xy
-						#
-					createDimension								$cv_Name $xy	cline_brake	
-					createDimension								$cv_Name $xy	cline_framejig	
-					createDimension								$cv_Name $xy 	frameJig_bg
-						#
-					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
-						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
-						#
-					$cv_Name 		centerContent				{0  15}		{__Frame__  __Decoration__  __CenterLine__  __Dimension__}
-						#
-					lib_gui::notebook_createButton				$cv_Name 		changeFormatScale
-						#
-				}
-			lib_gui::cv_Custom05 {
-						#
-						# -- tubemitter
-						#
-						# set stageScale	1
-					set stageScale	[eval $cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						#
-					$cv_Name 		clean_StageContent	
-						#
-					frame_visualisation::createTubemitter		$cv_Name { 80 190}	TopTube_Seat		
-					frame_visualisation::createTubemitter		$cv_Name {200 190}	TopTube_Head	
-					frame_visualisation::createTubemitter		$cv_Name { 80 105}	DownTube_Head	
-					frame_visualisation::createTubemitter		$cv_Name {180 105}	SeatStay_01	
-					frame_visualisation::createTubemitter		$cv_Name {250 105}	SeatStay_02	
-					frame_visualisation::createTubemitter		$cv_Name {220  15}	Reference	
-						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
-						#
-				}
-			lib_gui::cv_Custom06 {
-						#
-						# -- assembly
-						#
-					set stageScale	[$cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						# set factor 		[ get_FormatFactor $stageFormat ]
-						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
-					$cv_Name 		clean_StageContent				
-					frame_visualisation::createBaseline 	$cv_Name $xy	
-						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost			
-						#
-					frame_visualisation::createFrame_Tubes	$cv_Name $xy 
-						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle				$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearBrake			$updateCommand
-					frame_visualisation::createDecoration	$cv_Name $xy 	FrontBrake			$updateCommand
-					frame_visualisation::createDecoration	$cv_Name $xy 	HeadSet				
-					frame_visualisation::createDecoration	$cv_Name $xy 	Stem				
-					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearDerailleur		$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand
-						# 
-				}
-				
-		}
-		
-		::update	; #for sure otherwise confuse location of canvasCad Stage
-
-	}
 
 	
 	proc get_FormatFactor {stageFormat} {
@@ -304,7 +66,11 @@
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		
 			# --- get Rendering Style
-		set Rendering(Brakes)	[[ $domProject selectNodes /root/Rendering/Brakes ]  asText ]		
+		set Rendering(BrakeFront)	[[ $domProject selectNodes /root/Rendering/Brake/Front ]  asText ]		
+		set Rendering(BrakeRear)	[[ $domProject selectNodes /root/Rendering/Brake/Rear  ]  asText ]		
+		set Rendering(BottleCage_ST)	[[ $domProject selectNodes /root/Rendering/BottleCage/SeatTube  		]  asText ]		
+		set Rendering(BottleCage_DT)	[[ $domProject selectNodes /root/Rendering/BottleCage/DownTube  		]  asText ]		
+		set Rendering(BottleCage_DT_L)	[[ $domProject selectNodes /root/Rendering/BottleCage/DownTube_Lower 	]  asText ]		
 
 		
 			# --- get defining Values ----------
@@ -399,18 +165,25 @@
 																			-fill gray50 		-width 0.25			-tags __CenterLine__		
 					}
 			cline_brake {
-						switch $Rendering(Brakes) {
+						if {$Rendering(BrakeRear) != {off}} {
+							switch $Rendering(BrakeRear) {
 								Road { 
 									$cv_Name create circle 	$RearBrakeShoe		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__
 									$cv_Name create circle 	$RearBrakeMount		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__	
 									$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $RearBrakeShoe $RearBrakeHelp $RearBrakeMount] \
 																						-fill gray50 		-width 0.25			-tags __CenterLine__			
-
+								}
+							}
+						}
+						if {$Rendering(BrakeFront) != {off}} {
+							switch $Rendering(BrakeFront) {
+								Road { 
 									$cv_Name create circle 	$FrontBrakeShoe		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__
 									$cv_Name create circle 	$FrontBrakeMount	-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__	
 									$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $FrontBrakeShoe $FrontBrakeHelp $FrontBrakeMount] \
 																						-fill gray50 		-width 0.25			-tags __CenterLine__
 									}
+							}
 						}
 					}
 			cline_framejig {
@@ -657,7 +430,7 @@
 															aligned  	[expr  115 * $stageScale]	0 \
 															gray50 ]
 						set _dim_ST_Length_02	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BottomBracket  $TopTube_SeatTube ] \
-															aligned  	[expr   75 * $stageScale]	[expr   50 * $stageScale] \
+															aligned  	[expr   75 * $stageScale]	[expr  -100 * $stageScale] \
 															gray50 ]
 						set _dim_HT_Reach_X		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$HeadTube_Stem	$BottomBracket ] \
 															horizontal  [expr -110 * $stageScale]    0 \
@@ -667,9 +440,6 @@
 															gray50 ] 
 															
 															
-						#set _dim_Head_Top_Angle		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $TopTube_Steerer $Steerer_Stem $TopTube_SeatTube] ] \
-															150   0 \
-															darkred ]
 						set _dim_Head_Down_Angle	[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $DownTube_Steerer $DownTube_BB $Steerer_Ground] ] \
 															170 -10 \
 															gray50 ]
@@ -787,7 +557,7 @@
 															horizontal  [expr   40 * $stageScale]   0  \
 															darkblue ] 
 						set _dim_LC_Position_y	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  $LegClearance  $BaseCenter ] \
-															vertical    [expr -130 * $stageScale]   [expr   160 * $stageScale]  \
+															vertical    [expr -130 * $stageScale]   [expr   250 * $stageScale]  \
 															darkblue ] 
 
 						proc dim_LegClearance {cv_Name BB_Position stageScale} {
@@ -810,7 +580,7 @@
 									set pt_is					[ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
 									set pt_rw					[ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]	
 									set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_rw $pt_is] ] \
-																							aligned    [expr -50 * $stageScale]  [expr -75 * $stageScale] \
+																							aligned    [expr -70 * $stageScale]  [expr 115 * $stageScale] \
 																							gray50 ]																				
 								}
 						dim_RearWheel_Clearance  $cv_Name $BottomBracket $RearWheel_Radius $stageScale						
@@ -844,10 +614,10 @@
 																					horizontal  [expr  (150 + $BottomBracket_Depth) * $stageScale]	0 \
 																					gray30 ]
 						set _dim_ST_Length_01		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BottomBracket  $SeatTube_TopTube ] \
-																					aligned  	[expr  -140 * $stageScale]	0 \
+																					aligned  	[expr  -160 * $stageScale]	0 \
 																					darkblue ]
 						set _dim_ST_Length_02		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$BottomBracket  $TopTube_SeatTube ] \
-																					aligned  	[expr  -100 * $stageScale]	0 \
+																					aligned  	[expr  -120 * $stageScale]	0 \
 																					gray30 ]
 						set _dim_TT_Length			[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$TopTube_SeatTube $TopTube_Steerer ] \
 																					aligned  	[expr  -180 * $stageScale]	0 \
@@ -933,9 +703,12 @@
 						set _dim_HeadTube_Angle		[ $cv_Name dimension  angle  	[ canvasCAD::flatten_nestedList [list $pt_02 $Steerer_Stem [vectormath::addVector	$pt_02 {-10 0}]] ] \
 																					 90   0 \
 																					darkred ]
-																				
+
+
+																					
 							# -- Rear Brake Mount ------------------
-						switch $Rendering(Brakes) {
+						if {$Rendering(BrakeRear) != {off}} {
+							switch $Rendering(BrakeRear) {
 								Road {	
 											set SeatStay(polygon) 		[ frame_geometry_custom::tube_values 		SeatStay polygon $BB_Position  ]
 											set pt_01					[ frame_geometry_custom::coords_get_xy 	$SeatStay(polygon)  8 ]
@@ -956,7 +729,62 @@
 																									0	[expr   30 * $stageScale] \
 																									gray30 ] 
 									}
+							}
 						}
+
+						
+						
+							# -- Bottle Cage Mount ------------------
+						if {$Rendering(BottleCage_ST) != {off}} {
+										set st_direction			[ frame_geometry_custom::tube_values SeatTube direction ]
+										set pt_01 					[ frame_geometry_custom::point_position 	Saddle  			$BB_Position]
+										set pt_03 					[ frame_geometry_custom::point_position 	BottleCageSeatTube	$BB_Position  ]
+										set pt_02					[ vectormath::intersectPerp $BB_Position $pt_01 $pt_03 ]
+										set pt_04					[ vectormath::intersectPerp $pt_02 $pt_03 $BB_Position ]
+										set pt_05					[ vectormath::addVector 	$pt_03 $st_direction 64.0 ]	
+										
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_05  $pt_03 ] \
+																								aligned  	  [expr   90 * $stageScale]	[expr    0 * $stageScale] \
+																								gray50 ]
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_02  $pt_03 $BB_Position ] \
+																								perpendicular [expr  90 * $stageScale]	[expr  -95 * $stageScale] \
+																								gray50 ] 																
+						}
+						if {$Rendering(BottleCage_DT) != {off}} {
+										set dt_direction			[ frame_geometry_custom::tube_values DownTube direction ]
+										set pt_00 					[ frame_geometry_custom::tube_values 		DownTube 	BottomBracket	$BB_Position]
+										set pt_01 					[ frame_geometry_custom::tube_values 		DownTube 	HeadTube		$BB_Position]
+										set pt_03 					[ frame_geometry_custom::point_position 	BottleCageDownTube			$BB_Position]
+										set pt_02					[ vectormath::intersectPerp $pt_00 $pt_01 $pt_03 ]
+										set pt_04					[ vectormath::intersectPerp $pt_02 $pt_03 $pt_00 ]
+										set pt_05					[ vectormath::addVector 	$pt_03 $dt_direction 64.0 ]	
+										
+										if { $Rendering(BottleCage_DT_L) != {off}} { set addDist 40 } else { set addDist 0}										
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_05  $pt_03 ] \
+																								aligned  	  [expr -1.0 * (180 + $addDist) * $stageScale]	0 \
+																								gray50 ]
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_02  $pt_03 $BB_Position ] \
+																								perpendicular [expr -1.0 * (180 + $addDist) * $stageScale]	[expr  15 * $stageScale] \
+																								gray50 ] 																
+						}
+						if {$Rendering(BottleCage_DT_L) != {off}} {
+										set dt_direction			[ frame_geometry_custom::tube_values DownTube direction ]
+										set pt_00 					[ frame_geometry_custom::tube_values 		DownTube 	BottomBracket	$BB_Position]
+										set pt_01 					[ frame_geometry_custom::tube_values 		DownTube 	HeadTube		$BB_Position]
+										set pt_03 					[ frame_geometry_custom::point_position 	BottleCageDownTube_Lower		$BB_Position]
+										set pt_02					[ vectormath::intersectPerp $pt_00 $pt_01 $pt_03 ]
+										set pt_04					[ vectormath::intersectPerp $pt_02 $pt_03 $pt_00 ]
+										set pt_05					[ vectormath::addVector 	$pt_03 $dt_direction 64.0 ]	
+										
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_05  $pt_03 ] \
+																								aligned  	  [expr -145 * $stageScale]	0 \
+																								gray50 ]
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_02  $pt_03 $BB_Position ] \
+																								perpendicular [expr -145 * $stageScale]	[expr  15 * $stageScale] \
+																								gray50 ] 																
+						}
+
+
 
 							# -- Cutting Length --------------------
 							#
@@ -969,12 +797,12 @@
 																					darkviolet ]
 							set DownTube(polygon) 	[ frame_geometry_custom::tube_values DownTube polygon $BB_Position  ]
 							set pt_01				[ frame_geometry_custom::coords_get_xy $DownTube(polygon)  3 ]
-						set _dim_TopTube_CutLength 	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $BB_Position $pt_01] ] \
+						set _dim_DownTube_CutLength [ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $BB_Position $pt_01] ] \
 																					aligned    [expr  70 * $stageScale] [expr 10 * $stageScale] \
 																					darkviolet ]
-							
-							
-							
+
+																					
+																					
 							# -- Tubing Details --------------------
 							#
 							set HeadTube(polygon) 	[ frame_geometry_custom::tube_values HeadTube polygon $BB_Position  ]
@@ -1059,7 +887,7 @@
 							set pt_is				[ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
 							set pt_rw				[ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]	
 						set _dim_RearWheel_Clear 	[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_rw $pt_is] ] \
-																					aligned    0  [expr 50 * $stageScale] \
+																					aligned    [expr -100 * $stageScale]  [expr -80 * $stageScale] \
 																					gray50 ]	
 																				
 
@@ -1140,7 +968,12 @@
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		
 			# --- get Rendering Style
-		set Rendering(Brakes)	[[ $domProject selectNodes /root/Rendering/Brakes ]  asText ]		
+		set Rendering(BrakeFront)		[[ $domProject selectNodes /root/Rendering/Brake/Front 					]  asText ]		
+		set Rendering(BrakeRear)		[[ $domProject selectNodes /root/Rendering/Brake/Rear  					]  asText ]
+
+		set Rendering(BottleCage_ST)	[[ $domProject selectNodes /root/Rendering/BottleCage/SeatTube  		]  asText ]
+		set Rendering(BottleCage_DT)	[[ $domProject selectNodes /root/Rendering/BottleCage/DownTube  		]  asText ]
+		set Rendering(BottleCage_DT_L)	[[ $domProject selectNodes /root/Rendering/BottleCage/DownTube_Lower  	]  asText ]	
 
 		
 		switch $type {
@@ -1317,7 +1150,8 @@
 								}
 					}
 			Brake_Bridge {
-						switch $Rendering(Brakes) {
+						if {$Rendering(BrakeRear) != {off}} {
+							switch $Rendering(BrakeRear) {
 								Road { 
 											set SeatStay(polygon) 		[ frame_geometry_custom::tube_values 		SeatStay polygon $BB_Position  ]
 											set pt_01					[ frame_geometry_custom::coords_get_xy 	$SeatStay(polygon)  8 ]
@@ -1340,10 +1174,12 @@
 																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
 												}
 									}
+							}
 						}
 					}
 			Brake_Fork {
-						switch $Rendering(Brakes) {
+						if {$Rendering(BrakeFront) != {off}} {
+							switch $Rendering(BrakeFront) {
 								Road { 
 											set pt_03 					[ frame_geometry_custom::point_position 	FrontBrakeShoe	$BB_Position  ]
 											set pt_04 					[ frame_geometry_custom::point_position 	FrontBrakeHelp	$BB_Position  ]
@@ -1359,8 +1195,80 @@
 																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
 												}
 									}
+							}
 						}
 					}
+			BottleCage {
+							set dt_direction	[ frame_geometry_custom::tube_values DownTube direction ]
+							set st_direction	[ frame_geometry_custom::tube_values SeatTube direction ]
+						
+						if {$Rendering(BottleCage_ST) != {off}} {
+										set pt_01 					[ frame_geometry_custom::point_position 	Saddle  			$BB_Position]
+										set pt_03 					[ frame_geometry_custom::point_position 	BottleCageSeatTube	$BB_Position  ]
+										set pt_02					[ vectormath::intersectPerp $BB_Position $pt_01 $pt_03 ]
+										set pt_04					[ vectormath::intersectPerp $pt_02 $pt_03 $BB_Position ]
+										set pt_05					[ vectormath::addVector 	$pt_03 $st_direction 64.0 ]	
+										
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_05  $pt_03 ] \
+																								aligned  	  [expr   70 * $stageScale]	[expr    0 * $stageScale] \
+																								gray50 ]
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_02  $pt_03 $BB_Position ] \
+																								perpendicular [expr  70 * $stageScale]	[expr  -15 * $stageScale] \
+																								darkblue ] 																
+										if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
+																						[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																						$updateCommand 	{	Component/BottleCage/SeatTube/OffsetBB\
+																										}	{BottleCage SeatTube Offset}]
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
+												}														
+						}
+						if {$Rendering(BottleCage_DT) != {off}} {
+										set pt_00 					[ frame_geometry_custom::tube_values 		DownTube 	BottomBracket	$BB_Position]
+										set pt_01 					[ frame_geometry_custom::tube_values 		DownTube 	HeadTube		$BB_Position]
+										set pt_03 					[ frame_geometry_custom::point_position 	BottleCageDownTube			$BB_Position]
+										set pt_02					[ vectormath::intersectPerp $pt_00 $pt_01 $pt_03 ]
+										set pt_04					[ vectormath::intersectPerp $pt_02 $pt_03 $pt_00 ]
+										set pt_05					[ vectormath::addVector 	$pt_03 $dt_direction 64.0 ]	
+										
+										if { $Rendering(BottleCage_DT_L) != {off}} { set addDist 50 } else { set addDist 0}
+										
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_05  $pt_03 ] \
+																								aligned  	  [expr -1.0 * (90 + $addDist) * $stageScale]	0 \
+																								gray50 ]
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_02  $pt_03 $BB_Position ] \
+																								perpendicular [expr -1.0 * (90 + $addDist) * $stageScale]	[expr  15 * $stageScale] \
+																								darkblue ] 																
+										if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
+																						[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																						$updateCommand 	{	Component/BottleCage/DownTube/OffsetBB\
+																										}	{BottleCage DownTube Offset}]
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
+												}														
+						}
+						if {$Rendering(BottleCage_DT_L) != {off}} {
+										set pt_00 					[ frame_geometry_custom::tube_values 		DownTube 	BottomBracket	$BB_Position]
+										set pt_01 					[ frame_geometry_custom::tube_values 		DownTube 	HeadTube		$BB_Position]
+										set pt_03 					[ frame_geometry_custom::point_position 	BottleCageDownTube_Lower		$BB_Position]
+										set pt_02					[ vectormath::intersectPerp $pt_00 $pt_01 $pt_03 ]
+										set pt_04					[ vectormath::intersectPerp $pt_02 $pt_03 $pt_00 ]
+										set pt_05					[ vectormath::addVector 	$pt_03 $dt_direction 64.0 ]	
+										
+										#if { $Rendering(BottleCage_DT) != {off}} { set addDist 50 } else { set addDist 0}
+										
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_05  $pt_03 ] \
+																								aligned  	  [expr -60 * $stageScale]	0 \
+																								gray50 ]
+										set dimension		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList  	$pt_02  $pt_03 $BB_Position ] \
+																								perpendicular [expr -60 * $stageScale]	[expr  15 * $stageScale] \
+																								darkblue ] 																
+										if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
+																						[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																						$updateCommand 	{	Component/BottleCage/DownTube_Lower/OffsetBB\
+																										}	{BottleCage DownTube Lower Offset}]
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
+												}														
+						}
+					}					
 			RearWheel_Clearance {
 						set RimDiameter				[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter ]  asText ]
 						set TyreHeight				[ [ $domProject selectNodes /root/Component/Wheel/Rear/TyreHeight  ]  asText ]
@@ -1372,7 +1280,7 @@
 						set pt_is					[ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
 						set pt_rw					[ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]	
 						set dimension 		[ $cv_Name dimension  length  	[ canvasCAD::flatten_nestedList [list $pt_rw $pt_is] ] \
-																				aligned    0  [expr 50 * $stageScale] \
+																				aligned    [expr -70 * $stageScale]  [expr 50 * $stageScale] \
 																				gray50 ]																				
 							#set dimension 		[ $cv_Name dimension  radius  	[ canvasCAD::flatten_nestedList [list $pt_03 $pt_rw ] ] \
 							#														[expr -50 * $stageScale]  [expr 50 * $stageScale] \

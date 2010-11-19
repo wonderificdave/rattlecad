@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <rattleCAD>
-        <Version>3.2.00</Version>
+        <Version>3.2.22</Version>
         <Name>rattleCAD_init</Name>
-        <modified>2010.11.14/00:00</modified>
+        <modified>2010.11.18/00:00</modified>
     </rattleCAD>
 	
 	<!-- Startup Settings -->
@@ -46,17 +46,40 @@
 	<Options>
 	
 		<ComponentLocation>
-			<component xpath="Component/Fork/Crown/File"   dir="components/fork/crown"      />
-			<component xpath="Component/Fork/DropOut/File" dir="components/fork/dropout"    />
-			<component xpath="Component/RearDropOut/File"  dir="components/dropout"			/>
-			<component xpath="Component/Brake/Front/File"  dir="components/brake/front"     />
-			<component xpath="Component/Brake/Rear/File"   dir="components/brake/rear"      />
-			<component xpath="Component/HandleBar/File"    dir="components/handlebar"       />
-			<component xpath="Component/Saddle/File"       dir="components/saddle"          />
-			<component xpath="Component/CrankSet/File"     dir="components/crankset"        />
-			<component xpath="Component/Derailleur/File"   dir="components/rear_derailleur" />
+			<component xpath="Component/Fork/Crown/File"				dir="components/fork/crown"      />
+			<component xpath="Component/Fork/DropOut/File"				dir="components/fork/dropout"    />
+			<component xpath="Component/RearDropOut/File"				dir="components/dropout"		 />
+			<component xpath="Component/Brake/Front/File"				dir="components/brake/front"     />
+			<component xpath="Component/Brake/Rear/File"				dir="components/brake/rear"      />
+			<component xpath="Component/HandleBar/File"					dir="components/handlebar"       />
+			<component xpath="Component/Saddle/File"  					dir="components/saddle"          />
+			<component xpath="Component/CrankSet/File"					dir="components/crankset"        />
+			<component xpath="Component/Derailleur/File"				dir="components/rear_derailleur" />
+			<component xpath="Component/BottleCage/SeatTube/File"		dir="components/bottle_cage/left" 	 />
+			<component xpath="Component/BottleCage/DownTube/File" 		dir="components/bottle_cage/right" 	 />
+			<component xpath="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
 		</ComponentLocation>
 		
+
+		<Brake>
+			<Road/>
+			<V-Brake/>
+			<Disc/>
+			<off/>
+		</Brake>
+
+		<BottleCage>
+			<BrazeOn/>
+			<Cage/>
+			<Bottle/>
+			<off/>
+		</BottleCage>
+
+		<Binary_OnOff>
+			<on/>
+			<off/>
+		</Binary_OnOff>
+
 		<Fork>
 			<SteelLugged>
 				<Visualization>
@@ -151,12 +174,6 @@
 			<rim inch="16&#8221;" metric="340" standard="french" />
 			<rim inch="14&#8221;" metric="298" standard="french" />
 		</Rim>
-
-		<Brake>
-			<Road/>
-			<V-Brake/>
-			<Disc/>
-		</Brake>
 
 		<TubeSet>
 			<Vintage>

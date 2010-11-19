@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <Project>
-        <rattleCADVersion>3.1.02</rattleCADVersion>
-        <Name>Template 02</Name>
-        <modified>2010.09.25/12:00</modified>
+        <rattleCADVersion>3.2.22</rattleCADVersion>
+        <Name>Template Road 03</Name>
+        <modified>2010.11.19/12:00</modified>
     </Project>
 	
 	<!-- personal geometry based on cyclist body profile -->
@@ -93,7 +93,7 @@
 			<BladeWidth>29.00</BladeWidth>
 			<CrownDiameter>43.00</CrownDiameter>
 			<Crown>
-				<File>fork/crown/longshen_max_36_5.svg</File>
+				<File>etc:fork/crown/longshen_max_36_5.svg</File>
 				<Brake>
 					<Offset>20.00</Offset>
 					<OffsetPerp>8.00</OffsetPerp>
@@ -111,7 +111,7 @@
 				<Offset>6.00</Offset>
 			</Blade>
 			<DropOut>
-				<File>fork/dropout/dropout_14.svg</File>
+				<File>etc:fork/dropout/dropout_14.svg</File>
 				<Offset>20.00</Offset>
 				<OffsetPerp>0.00</OffsetPerp>
 			</DropOut>
@@ -122,16 +122,16 @@
 		</Stem>
 		<Brake>
 			<Front>
-				<File>brake/front/campagnolo_frontbrake.svg</File>
+				<File>etc:brake/front/campagnolo_frontbrake.svg</File>
 				<LeverLength>45.00</LeverLength>
 			</Front>
 			<Rear>
-				<File>brake/rear/campagnolo_rearbrake.svg</File>
+				<File>etc:brake/rear/campagnolo_rearbrake.svg</File>
 				<LeverLength>45.00</LeverLength>
 			</Rear>
 		</Brake>
 		<RearDropOut>
-			<File>dropout/rear_dropout_01.svg</File>
+			<File>etc:dropout/rear_dropout_01.svg</File>
 			<ChainStay>
 				<Offset>33.00</Offset>
 				<OffsetPerp>-1.00</OffsetPerp>
@@ -158,10 +158,10 @@
 			</Rear>
 		</Wheel>
 		<HandleBar>
-			<File>handlebar/campagnolo_ergopower_11_a.svg</File>
+			<File>etc:handlebar/campagnolo_ergopower_11_a.svg</File>
 		</HandleBar>
 		<Saddle>
-			<File>saddle/saddle_c.svg</File>
+			<File>etc:saddle/saddle_c.svg</File>
 			<SeatPost>
 				<x>-5.00</x>
 				<y>-45.00</y>
@@ -169,12 +169,26 @@
 			</SeatPost>
 		</Saddle>
 		<CrankSet>
-			<File>crankset/campagnolo_ultra_torque.svg</File>
+			<File>etc:crankset/campagnolo_ultra_torque.svg</File>
 			<Length>172.50</Length>
 		</CrankSet>
 		<Derailleur>
-			<File>rear_derailleur/campagnolo_2006_short.svg</File>
+			<File>etc:rear_derailleur/campagnolo_2006_short.svg</File>
 		</Derailleur>
+		<BottleCage>
+			<SeatTube>
+				<File>etc:bottle_cage/left/bottleCage.svg</File>
+				<OffsetBB>155.00</OffsetBB>
+			</SeatTube>
+			<DownTube>
+				<File>etc:bottle_cage/right/bottleCage.svg</File>
+				<OffsetBB>210.00</OffsetBB>
+			</DownTube>
+			<DownTube_Lower>
+				<File>etc:bottle_cage/left/bottleCage.svg</File>
+				<OffsetBB>170.00</OffsetBB>
+			</DownTube_Lower>
+		</BottleCage>
 	</Component>
 	
 	<!-- resulting values -->
@@ -207,7 +221,15 @@
 	<!-- rendering information -->
 	<Rendering>
 		<Fork>SteelLugged</Fork>
-		<Brakes>Road</Brakes>
+		<Brake>
+			<Front>Road</Front>
+			<Rear>Road</Rear>
+		</Brake>		
+		<BottleCage>
+			<SeatTube>Cage</SeatTube>
+			<DownTube>Cage</DownTube>
+			<DownTube_Lower>off</DownTube_Lower>
+		</BottleCage>
 	</Rendering>
 
 </root>
