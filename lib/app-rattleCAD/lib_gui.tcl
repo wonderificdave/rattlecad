@@ -170,17 +170,22 @@
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "Tube Mitter"		A4  1.0 -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "Assembly"   		A4  0.2 -bd 2  -bg white  -relief sunken
 		
-		$noteBook_top add [frame $noteBook_top.report] 	-text "... info" 
+		$noteBook_top add [frame $noteBook_top.components] 	-text "... Components" 
+		$noteBook_top add [frame $noteBook_top.report] 		-text "... info" 
 		
-		set noteBook_report	[ ttk::notebook $noteBook_top.report.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
-			pack $noteBook_report -expand yes  -fill both  
-		$noteBook_report add [frame $noteBook_report.complib] 	-text "Components Library" 
-		$noteBook_report add [frame $noteBook_report.report] 	-text "... current Settings" 
+		#set noteBook_report	[ ttk::notebook $noteBook_top.report.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
+			#pack $noteBook_report -expand yes  -fill both  
+		#set noteBook_report	[ ttk::notebook $noteBook_top.report.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
+			#pack $noteBook_report -expand yes  -fill both  
+		#set noteBook_report	[ ttk::notebook $noteBook_top.report.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
+			#pack $noteBook_report -expand yes  -fill both  
+		#$noteBook_report add [frame $noteBook_report.complib] 	-text "Components Library" 
+		#$noteBook_report add [frame $noteBook_report.report] 	-text "... current Settings" 
 
 			# --- 	fill with Report Widgets
-		lib_cfg_report::createReport 	$noteBook_report.report
+		lib_cfg_report::createReport 	$noteBook_top.report
 			# --- 	fill with Library Widgets
-		lib_comp_library::createLibrary $noteBook_report.complib
+		lib_comp_library::createLibrary $noteBook_top.components
 		lib_comp_library::update_compList
 	
 		
@@ -279,7 +284,8 @@
 		}
 			# -- lib_gui::external_canvasCAD
 		foreach varName [array names external_canvasCAD] {
-			    # puts "          -> $varName $external_canvasCAD($varName) equal? $tabID"
+			     puts "          -> equal?: $varName  -> $external_canvasCAD($varName) "
+				 puts "                 vs. $tabID   "
 			if {$varName == $tabID} {
 				return $external_canvasCAD($varName)
 			}
@@ -295,8 +301,8 @@
 	 proc register_external_canvasCAD {tabID cvID} {
 		variable external_canvasCAD
 		set external_canvasCAD($tabID) $cvID	
-		puts " \n   		register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
-		puts "               [$cvID getNodeAttr Canvas path]"
+		puts "\n            register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
+		puts   "                                         [$cvID getNodeAttr Canvas path]"
 	 }
 	   
 	   
@@ -310,7 +316,7 @@
 
 		set currentTab [$noteBook_top select]
 		set varName    [notebook_getVarName $currentTab]
-			# puts "  notebook_refitCanvas: varName: $varName"
+			 puts "  notebook_refitCanvas: varName: $varName"
 		if { $varName == {} } {
 				puts "     notebook_refitCanvas::varName: $varName ... undefined"
 				return
@@ -356,7 +362,10 @@
 		if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
 			set canvasUpdate($varName) [ expr $::APPL_Update -1 ]
 		}
-			# puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Update\n"
+		
+		set timeStart 	[clock milliseconds]
+
+		# puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Update\n"
 		if { $mode == {} } {
 				if { $canvasUpdate($varName) < $::APPL_Update } {
 					puts "\n       ... notebook_updateCanvas ... update $varName\n"
@@ -369,6 +378,14 @@
 					puts "\n       ... notebook_updateCanvas ... update $varName .. force\n"
 					fill_canvasCAD $varName
 		}
+		
+		set timeEnd 	[clock milliseconds]
+		set timeDiff	[expr $timeEnd - $timeStart]
+		
+		puts "\n     ... time to update:"
+		puts   "          ... [format "%9.3f" $timeDiff] milliseconds"
+		puts   "          ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
+
 	}
 
 	
@@ -636,7 +653,7 @@
 						}
 		}
 		
-		frame_geometry_custom::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}
+		frame_geometry::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}
 				
 	}
 	

@@ -60,12 +60,12 @@
 		pack configure $treeFrame	-expand yes
 
         button 	$menueFrame.open	-text {Open xml-File}					-width 30	-command { lib_file::openFile_xml {}	visualize}
-        button 	$menueFrame.bt01	-text {rattleCAD_init.xml}				-width 30	-command { lib_cfg_report::fillTree_Variable $::APPL_Init 				}
-        button 	$menueFrame.bt02	-text {Template Road}					-width 30	-command { lib_file::openFile_xml [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad)] 	visualize}
-        button 	$menueFrame.bt03	-text {Template OffRoad}				-width 30	-command { lib_file::openFile_xml [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB) ] 	visualize}
-        button 	$menueFrame.bt04	-text {current Project}					-width 30	-command { lib_cfg_report::fillTree_Variable $::APPL_Project			}
-        button 	$menueFrame.bt05	-text {current Values}					-width 30	-command { lib_cfg_report::fillTree_Variable $frame_geometry_custom::domFrame	}
-        button 	$menueFrame.bt06	-text {canvasCAD}					    -width 30	-command { lib_cfg_report::fillTree_Variable $canvasCAD::__packageRoot	}
+        button 	$menueFrame.bt01	-text {canvasCAD}					    -width 30	-command { lib_cfg_report::fillTree_Variable $canvasCAD::__packageRoot	}
+        button 	$menueFrame.bt02	-text {rattleCAD_init.xml}				-width 30	-command { lib_cfg_report::fillTree_Variable $::APPL_Init 				}
+        button 	$menueFrame.bt03	-text {Template Road}					-width 30	-command { lib_file::openFile_xml [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad)] 	visualize}
+        button 	$menueFrame.bt04	-text {Template OffRoad}				-width 30	-command { lib_file::openFile_xml [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB) ] 	visualize}
+        button 	$menueFrame.bt05	-text {current Values}					-width 30	-command { lib_cfg_report::fillTree_Variable $frame_geometry::domFrame	}
+        button 	$menueFrame.bt06	-text {current Project}					-width 30	-command { lib_cfg_report::fillTree_Variable $::APPL_Project			}
         button 	$menueFrame.clear	-text {clear Tree} 						-width 30	-command { lib_cfg_report::cleanupTree }
 		pack 	$menueFrame.open \
 				$menueFrame.bt01 \

@@ -280,10 +280,10 @@
 				#   Alternative
 			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Alternative" 
 				pack $menueFrame.sf.lf_05 				-side top  -fill x -pady 2 
-					create_config_cDial $menueFrame.sf.lf_05		{Result/WheelPosition/front/horizontal} {Result/}	0.20 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_05		{Result/HeadTube/Angle} 				{Result/}	0.02 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_05		{Result/HeadTube/TopTubeAngle} 			{Result/}	0.02 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_05		{Result/Saddle/Offset_BB/horizontal} 	{Result/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/WheelPosition/front/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/HeadTube/Angle} 					{Temporary/}	0.02 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/HeadTube/TopTubeAngle} 			{Temporary/}	0.02 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/Saddle/Offset_BB/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkred
 				
 				# -----------------
 				#   Geometry
@@ -478,7 +478,7 @@
 													# puts "     ... $value "
 													# puts "     $xPathString  $value"
 												#set [namespace current]::configValue($xPathString) $value
-												set [namespace current]::configValue($xPathString) [ frame_geometry_custom::set_projectValue $xPathString $value format]
+												set [namespace current]::configValue($xPathString) [ frame_geometry::set_projectValue $xPathString $value format]
 												
 												if {[file tail $xPath] == {File}} { 
 														# puts "   [file tail $xPath]   $xPath"
@@ -646,7 +646,7 @@
 			
 			if {$entryVar ne ""} {
 					# reformat value
-				set $entryVar [ frame_geometry_custom::set_projectValue _any_ $value format]
+				set $entryVar [ frame_geometry::set_projectValue _any_ $value format]
 			}
 			
  	}
@@ -672,7 +672,7 @@
 				if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 				
 				set refValue			[ [ $::APPL_Project selectNodes /root/$xPath ]  asText ]
-				set configValue($xPath) [ frame_geometry_custom::set_projectValue $xPath $configValue($xPath) format]				
+				set configValue($xPath) [ frame_geometry::set_projectValue $xPath $configValue($xPath) format]				
 
 					# -----------------------------
 					#   check if there is a change
@@ -680,11 +680,11 @@
 						# puts "    ... no update necessary!"
 					return
 				}
-				frame_geometry_custom::set_projectValue $xPath $configValue($xPath)			
+				frame_geometry::set_projectValue $xPath $configValue($xPath)			
 				
 					# -----------------------------
 					#   update Geometry
-				frame_geometry_custom::updateConfig   	$varName   cv_custom::update	_update_ 	 
+				frame_geometry::updateConfig   	$varName   cv_custom::update	_update_ 	 
 				
 					# -----------------------------
 					#   focus entry
@@ -701,7 +701,7 @@
 		variable configValue
 		
 		foreach xPath $componentList {
-			frame_geometry_custom::set_projectValue $xPath $configValue($xPath)								
+			frame_geometry::set_projectValue $xPath $configValue($xPath)								
 		}
 		
 		foreach xPath {	Rendering/Fork 
@@ -711,7 +711,7 @@
 						Rendering/BottleCage/DownTube 
 						Rendering/BottleCage/DownTube_Lower
 		} {
-			frame_geometry_custom::set_projectValue $xPath $configValue($xPath)								
+			frame_geometry::set_projectValue $xPath $configValue($xPath)								
 		}
 		
 	
@@ -725,7 +725,7 @@
 		set varName		[ lib_gui::notebook_getVarName $cv ]
 		if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 		
-		frame_geometry_custom::updateConfig   	$varName   cv_custom::update	_update_ 	 
+		frame_geometry::updateConfig   	$varName   cv_custom::update	_update_ 	 
 				
 	}
 

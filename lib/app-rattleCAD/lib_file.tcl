@@ -209,6 +209,8 @@
 			puts  "               tcl_version   [info tclversion]" 
 			puts  "               tcl_platform  $::tcl_platform(platform)" 
 			
+			set appCmd {}	;# set as default
+			
 			switch $::tcl_platform(platform) {
 				"windows" {
 						package require registry 1.1
@@ -275,7 +277,7 @@
 				# -- read new File
 			set ::APPL_Project	[lib_file::openFile_xml $fileName show]
 				#
-			frame_geometry_custom::set_base_Parameters $::APPL_Project
+			frame_geometry::set_base_Parameters $::APPL_Project
 				# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 			set_window_title $fileName
 				#
@@ -354,7 +356,7 @@
 				#
 			set ::APPL_Project $domConfig
 				#
-			frame_geometry_custom::set_base_Parameters $::APPL_Project
+			frame_geometry::set_base_Parameters $::APPL_Project
 				# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 			set_window_title $fileName
 				#
@@ -377,12 +379,13 @@
 			if { [file readable $fileName ] } {
 					set ::APPL_Project	[lib_file::openFile_xml $fileName show]
 						#
-					check_FileVersion {3.1}
-					check_FileVersion {3.2.20}
-					check_FileVersion {3.2.22}
-					check_FileVersion {3.2.23}
+					lib_project::check_ProjectVersion {3.1}
+					lib_project::check_ProjectVersion {3.2.20}
+					lib_project::check_ProjectVersion {3.2.22}
+					lib_project::check_ProjectVersion {3.2.23}
+					lib_project::check_ProjectVersion {3.2.28}
 						#
-					frame_geometry_custom::set_base_Parameters $::APPL_Project
+					frame_geometry::set_base_Parameters $::APPL_Project
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 					set_window_title $fileName
 						#
@@ -403,7 +406,7 @@
 			if { [file readable $template_file ] } {
 					set ::APPL_Project	[lib_file::openFile_xml $template_file show]
 						#
-					frame_geometry_custom::set_base_Parameters $::APPL_Project
+					frame_geometry::set_base_Parameters $::APPL_Project
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 					set_window_title $window_title
 						#
@@ -414,151 +417,6 @@
 			
 				#
 			lib_gui::open_configPanel  refresh
-	}
-
-
-	#-------------------------------------------------------------------------
-		#  check File Version 3.1 -> 3.2
-		#	
-	proc check_FileVersion {Version} {
-			puts " ... check_FileVersion:  $Version"
-			case $Version {
-			
-				{3.1} {		set node {}
-								# --- /root/Personal/SeatTube_Length
-							set node [$::APPL_Project selectNode /root/Personal/SeatTube_Length]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Personal/SeatTube_Length"
-								set LegLength [expr 0.88 * [[$::APPL_Project selectNode /root/Personal/InnerLeg_Length] asText ] ]
-								set node [$::APPL_Project selectNode /root/Personal]
-								$node appendXML "<SeatTube_Length>$LegLength</SeatTube_Length>"
-							}
-							
-								# --- /root/Result
-							set node [$::APPL_Project selectNode /root/Result]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Result"
-								set node [$::APPL_Project selectNode /root]
-								$node appendXML "<Result>
-													<HeadTube>
-														<ReachLength>0.00</ReachLength>
-														<StackHeight>0.00</StackHeight>
-														<Angle>0.00</Angle>
-													</HeadTube>
-													<SeatTube>
-														<TubeLength>0.00</TubeLength>
-														<TubeHeight>0.00</TubeHeight>
-													</SeatTube>
-													<Saddle>
-														<Offset_BB>
-															<horizontal>0.00</horizontal>
-														</Offset_BB>
-													</Saddle>
-													<WheelPosition>
-														<front>
-															<horizontal>0.00</horizontal>
-														</front>
-														<rear>
-															<horizontal>0.00</horizontal>
-														</rear>
-													</WheelPosition>
-												</Result>"
-							}
-							
-								# --- /root/Rendering
-							set node [$::APPL_Project selectNode /root/Rendering]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Rendering"
-								set node [$::APPL_Project selectNode /root]
-								$node appendXML "<Rendering>
-													<Fork>SteelLugged</Fork>
-												</Rendering>"
-							}	
-							
-						}
-						
-				{3.2.20} {	set node {}								
-								# --- /root/Result/HeadTube/TopTubeAngle
-							set node [$::APPL_Project selectNode /root/Result/HeadTube/TopTubeAngle]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Result/HeadTube/TopTubeAngle"
-								set node [$::APPL_Project selectNode /root/Result/HeadTube]
-								$node appendXML "<TopTubeAngle>0.00</TopTubeAngle>"
-							}
-						}
-						
-				{3.2.22} {	set node {}								
-								# --- /root/Component/BottleCage
-							set node [$::APPL_Project selectNode /root/Component/BottleCage]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Component/BottleCage"
-								set node [$::APPL_Project selectNode /root/Component]
-								puts "  [$node asXML]"
-								$node appendXML "<BottleCage>
-													<SeatTube>
-														<File>etc:bottle_cage/left/bottleCage.svg</File>
-														<OffsetBB>150.00</OffsetBB>
-													</SeatTube>
-													<DownTube>
-														<File>etc:bottle_cage/right/bottleCage.svg</File>
-														<OffsetBB>210.00</OffsetBB>
-													</DownTube>
-													<DownTube_Lower>
-														<File>etc:bottle_cage/left/bottleCage.svg</File>
-														<OffsetBB>150.00</OffsetBB>
-													</DownTube_Lower>
-												</BottleCage>"
-								set node [$::APPL_Project selectNode /root/Component/BottleCage]
-								puts "  [$node asXML]"
-							}
-							
-								# --- /root/Rendering/BottleCage ...
-							set node [$::APPL_Project selectNode /root/Rendering/BottleCage]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Rendering/BottleCage"
-								set node [$::APPL_Project selectNode /root/Rendering]
-								$node appendXML "<BottleCage>
-													<SeatTube>Cage</SeatTube>
-													<DownTube>Cage</DownTube>
-													<DownTube_Lower>off</DownTube_Lower>
-												</BottleCage>"
-							}  
-						}
-										
-				{3.2.23} {	set node {}								
-								# --- /root/Rendering/Brake ...
-							set node [$::APPL_Project selectNode /root/Rendering/Brakes]
-							if {$node != {}} {
-								puts "        ...  $Version   ... update File ... /root/Rendering/Brakes"
-								set parentNode [$node parentNode]
-								$parentNode removeChild $node
-							}
-							
-								# --- /root/Rendering/Brake ...
-							set node [$::APPL_Project selectNode /root/Rendering/Brake]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Rendering/Brake"
-								set node [$::APPL_Project selectNode /root/Rendering]
-								$node appendXML "<Brake>
-													<Front>Road</Front>
-													<Rear>Road</Rear>
-												</Brake>"
-							}  
-						}
- 						
-						
-						
-						
-				{ab-xy} {	set node {}
-							set node [$::APPL_Project selectNode /root/Project/rattleCADVersion/text()]
-							puts " ... [$node nodeValue] .."
-							puts " ... [$node asText] .."
-							$node nodeValue [format "%s.%s" $::APPL_Env(RELEASE_Version) $::APPL_Env(RELEASE_Revision)] 
-							return
-						}
-
-				default {}
-			}
 	}
 
 

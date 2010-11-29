@@ -158,7 +158,8 @@
 
 
 		set compCanvas 	[ canvasCAD::newCanvas	cv_Component $canvasFrame.cv  "Components" 550 550 A3 1  -bd 2   -bg lightgray  -relief sunken ]
-		set tabID		[string map {/ . } [file dirname [file dirname [string map {. /} $w] ] ] ]
+		set tabID		[string map {/ . } [string map {. /} $w] ] 
+			# puts "\n  ... register:  $tabID $compCanvas"
 		lib_gui::register_external_canvasCAD $tabID $compCanvas
 		
 	}

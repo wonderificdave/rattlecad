@@ -79,5 +79,11 @@
             ... based on Code from 
                     Gerhard REITHOFER   [www.tech-edv.co.at]  
                     Johann  OBERDORFER
+                          
+       rdial
+      ------------------------------------------
+            ... based on Code from 
+                    Gerhard REITHOFER   [www.tech-edv.co.at]  
+            ... see http://wiki.tcl.tk/26357
             
 

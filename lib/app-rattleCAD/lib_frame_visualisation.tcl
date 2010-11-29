@@ -51,11 +51,15 @@
 		set domProject $::APPL_Project
 		
 			# --- get distance to Ground
-		set BB_Ground(position)		[ frame_geometry_custom::point_position  	BB_Ground  	$BB_Position] 
-		set RimDiameter_Front		[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter ]  asText ]
-		set RimDiameter_Rear		[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter  ]  asText ]
-		set FrontWheel(position)	[ frame_geometry_custom::point_position  FrontWheel  	$BB_Position]
-		set RearWheel(position)		[ frame_geometry_custom::point_position  RearWheel  	$BB_Position]
+		set BB_Ground(position)	[ vectormath::addVector $frame_geometry::BottomBracket(Ground)  $BB_Position ]
+						
+		set RimDiameter_Front		$frame_geometry::FrontWheel(RimDiameter)
+		set RimDiameter_Rear		$frame_geometry::RearWheel(RimDiameter)
+		
+		set FrontWheel(position)	[ frame_geometry::object_values		FrontWheel	position	$BB_Position]
+		set RearWheel(position)		[ frame_geometry::object_values		RearWheel	position	$BB_Position  ]
+			# puts "   ... \$RearWheel(position)  $RearWheel(position)"
+		
 						
 			# --- get RearWheel
 		foreach {x y} $RearWheel(position) break
@@ -110,11 +114,11 @@
 		switch $type {
 			HandleBar {
 							# --- create Handlebar -------------
-						set HandleBar(position)		[ frame_geometry_custom::point_position  HandleBar  $BB_Position]
+						set HandleBar(position)		[ frame_geometry::object_values  HandleBar  position	$BB_Position]
 						set HandleBar(file)			[ checkFileString [ [ $domProject selectNodes /root/Component/HandleBar/File ]  asText ]]
 						set HandleBar(object)		[ $cv_Name readSVG $HandleBar(file) $HandleBar(position) -5  __Decoration__ ]		
 						if {$updateCommand != {}} 	{ $cv_Name bind	$HandleBar(object)	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/HandleBar/File	\
 																							} 	{HandleBar Parameter} \
 																]
@@ -123,11 +127,11 @@
 						}
 			RearDerailleur {
 							# --- create RearDerailleur --------
-						set Derailleur(position)	[ frame_geometry_custom::point_position  Derailleur  $BB_Position]
+						set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		$BB_Position]
 						set Derailleur(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/Derailleur/File ]  asText ] ]
 						set Derailleur(object)		[ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  0  __Decoration__ ]		
 						if {$updateCommand != {}} 	{ $cv_Name bind	$Derailleur(object)	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/Derailleur/File	\
 																							} 	{RearDerailleur Parameter} \
 																]
@@ -136,7 +140,7 @@
 						}
 			RearDerailleur_ctr {
 							# --- create RearDerailleur --------
-						set Derailleur(position)	[ frame_geometry_custom::point_position  Derailleur  $BB_Position]
+						set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		  $BB_Position]
 						foreach {x y} $Derailleur(position) break
 						set x1	[expr $x + 15];		set x2	[expr $x - 15]; 	set y1	[expr $y + 15]; 	set y2	[expr $y - 15]
 						$cv_Name create line  [list $x1 $y $x2 $y]   -fill gray60  -tags __Decoration__
@@ -148,7 +152,7 @@
 						set CrankSet(file)			[ checkFileString [ [ $domProject selectNodes /root/Component/CrankSet/File ]  asText ] ]	
 						set CrankSet(object)		[ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __Decoration__ ]
 						if {$updateCommand != {}} 	{ $cv_Name bind	$CrankSet(object)	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/CrankSet/File \
 																							} 	{CrankSet Parameter} \
 																]
@@ -157,12 +161,10 @@
 						}
 			SeatPost {
 							# --- create SeatPost ------------------
-						set SeatPost(polygon) 		[ frame_geometry_custom::tube_values SeatPost polygon $BB_Position  ]
+						set SeatPost(polygon) 		[ frame_geometry::object_values SeatPost polygon $BB_Position  ]						
 						set SeatPost(object)		[ $cv_Name create polygon $SeatPost(polygon) -fill white  -outline black  -tags __Decoration__ ]
-							# set SeatPost(debug)		[ frame_geometry_custom::tube_values SeatPost debug $BB_Position  ]
-							# set SeatPost(object)		[ $cv_Name create line $SeatPost(debug) -fill red]
 						if {$updateCommand != {}} 	{ $cv_Name bind	$SeatPost(object)	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	Component/Saddle/SeatPost/x	\
 																								Component/Saddle/SeatPost/y	\
 																								Component/Saddle/SeatPost/Diameter	\
@@ -175,16 +177,16 @@
 			Brake {
 							# --- create RearBrake -----------------
 							if {$Rendering(BrakeRear) != {off}} {
-								puts "   ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
+								puts "          ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
 								switch $Rendering(BrakeRear) {
 									Road {
-										set ss_direction	[ frame_geometry_custom::tube_values SeatStay direction ]
+										set ss_direction	[ frame_geometry::object_values SeatStay direction ]
 										set ss_angle		[ expr - [ vectormath::angle {0 1} {0 0} $ss_direction ] ]
-										set RearBrake(position)		[ frame_geometry_custom::point_position  RearBrakeMount  $BB_Position]
+										set RearBrake(position)	[ frame_geometry::object_values  BrakeMountRear  position	$BB_Position]
 										set RearBrake(file)			[ checkFileString [ [ $domProject selectNodes /root/Component/Brake/Rear/File ]  asText ] ]
 										set RearBrake(object)		[ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$RearBrake(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																							$updateCommand { 	list://Rendering/Brake/Rear@APPL_BrakeTypes \
 																												file://Component/Brake/Rear/File	\
 																												Component/Brake/Rear/LeverLength	\
@@ -199,18 +201,18 @@
 
 							# --- create FrontBrake ----------------
 							if {$Rendering(BrakeFront) != {off}} {
-								puts "   ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
+								puts "          ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
 								switch $Rendering(BrakeFront) {
 									Road {
-										set ht_direction	[ frame_geometry_custom::tube_values HeadTube direction ]
+										set ht_direction	[ frame_geometry::object_values HeadTube direction ]
 										set ht_angle		[ expr [ vectormath::angle {0 1} {0 0} $ht_direction ] ]
 										set fb_angle		[ [ $domProject selectNodes /root/Component/Fork/Crown/Brake/Angle  ]  asText ]
 										set fb_angle		[ expr $ht_angle + $fb_angle ]
-										set FrontBrake(position)	[ frame_geometry_custom::point_position  FrontBrakeMount  $BB_Position]
+										set FrontBrake(position)	[ frame_geometry::object_values  BrakeMountFront  position	$BB_Position]
 										set FrontBrake(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/Brake/Front/File ]  asText ] ]
 										set FrontBrake(object)		[ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$FrontBrake(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																							$updateCommand { 	list://Rendering/Brake/Front@APPL_BrakeTypes \
 																												file://Component/Brake/Front/File	\
 																												Component/Brake/Front/LeverLength	\
@@ -233,15 +235,15 @@
 											Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg	 ] }
 											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
 										}
-											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
-								
-										set st_direction	[ frame_geometry_custom::tube_values SeatTube direction ]
-										set st_angle		[ expr -90 + [ vectormath::angle {0 1} {0 0} $st_direction ] ]
-										set BottleCage(position)	[ frame_geometry_custom::point_position  BottleCageSeatTube  $BB_Position]
+											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"								
+										set st_direction	[ frame_geometry::object_values SeatTube direction ]
+										set st_angle		[ expr 180 + [ vectormath::dirAngle {0 0} $st_direction ] ]
+										set bc_position		[ frame_geometry::object_values	SeatTube/BottleCage/Base	position	$BB_Position]
+										
 											# set BottleCage(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/BottleCage/SeatTube/File ]  asText ] ]
-										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $BottleCage(position) $st_angle  __Decoration__ ]		
+										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $st_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																							$updateCommand { 	list://Rendering/BottleCage/SeatTube@APPL_BottleCage \
 																											} 	{BottleCage SeatTube Parameter} \
 																				]
@@ -257,13 +259,13 @@
 											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottle_Large.svg ] }
 										}
 											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
-										set dt_direction	[ frame_geometry_custom::tube_values DownTube direction ]										
-										set dt_angle		[ expr 90 - [ vectormath::angle {0 1} {0 0} $dt_direction ] ]
-										set BottleCage(position)	[ frame_geometry_custom::point_position  BottleCageDownTube  $BB_Position]
-											# set BottleCage(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/BottleCage/DownTube/File ]  asText ] ]
-										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $BottleCage(position) $dt_angle  __Decoration__ ]		
+										set dt_direction	[ frame_geometry::object_values DownTube direction ]
+										set dt_angle		[ vectormath::dirAngle {0 0} $dt_direction ]
+										set bc_position		[ frame_geometry::object_values	DownTube/BottleCage/Base	position	$BB_Position]
+
+										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																							$updateCommand { 	list://Rendering/BottleCage/DownTube@APPL_BottleCage \
 																											} 	{BottleCage DownTube-Upper Parameter} \
 																				]
@@ -279,13 +281,13 @@
 											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
 										}
 											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
-										set dt_direction	[ frame_geometry_custom::tube_values DownTube direction ]
-										set dt_angle		[ expr 270 - [ vectormath::angle {0 1} {0 0} $dt_direction ] ]
-										set BottleCage(position)	[ frame_geometry_custom::point_position  BottleCageDownTube_Lower  $BB_Position]
-											# set BottleCage(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/BottleCage/DownTube_Lower/File ]  asText ] ]
-										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $BottleCage(position) $dt_angle  __Decoration__ ]		
+										set dt_direction	[ frame_geometry::object_values DownTube direction ]
+										set dt_angle		[ expr 180 + [ vectormath::dirAngle {0 0} $dt_direction ] ]
+										set bc_position		[ frame_geometry::object_values	DownTube/BottleCage_Lower/Base	position	$BB_Position]
+
+										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																							$updateCommand { 	list://Rendering/BottleCage/DownTube_Lower@APPL_BottleCage \
 																											} 	{BottleCage DownTube-Lower Parameter} \
 																				]
@@ -296,11 +298,11 @@
 						}
 			Saddle {
 							# --- create Saddle --------------------
-						set Saddle(position)		[ frame_geometry_custom::point_position  Saddle  $BB_Position]
+						set Saddle(position)		[ frame_geometry::object_values		Saddle  position		$BB_Position ]
 						set Saddle(file)			[ checkFileString [ [ $domProject selectNodes /root/Component/Saddle/File ]  asText ] ]
 						set Saddle(object)			[ $cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Decoration__ ]	
 						if {$updateCommand != {}} 	{ $cv_Name bind	$Saddle(object)	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	file://Component/Saddle/File	\
 																							} 	{Saddle Parameter} \
 																]
@@ -309,20 +311,20 @@
 						}																																			
 			HeadSet {
 							# --- create HeadSet --------------------
-						set HeadSet(polygon) 		[ frame_geometry_custom::tube_values HeadSet polygon_bt $BB_Position  ]
+						set HeadSet(polygon) 		[ frame_geometry::object_values HeadSet/Top polygon $BB_Position  ]
 						set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
 						if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	Component/HeadSet/Height/Bottom	\
 																								Component/HeadSet/Diameter		\
 																							} 	{HeadSet Parameter} \
 																]
 													  lib_gui::object_CursorBinding 	$cv_Name	$HeadSet(object)
 								}
-						set HeadSet(polygon) 		[ frame_geometry_custom::tube_values HeadSet polygon_tp $BB_Position ]
+						set HeadSet(polygon) 		[ frame_geometry::object_values HeadSet/Bottom polygon $BB_Position ]
 						set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
 						if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	Component/HeadSet/Height/Top	\
 																								Component/HeadSet/Diameter		\
 																							} 	{HeadSet Parameter} \
@@ -332,15 +334,14 @@
 						}
 			Stem {
 							# --- create SeatPost ------------------
-						set Stem(polygon) 			[ frame_geometry_custom::tube_values Stem polygon $BB_Position  ]
+						set Stem(polygon) 			[ frame_geometry::object_values Stem polygon $BB_Position  ]
 						set Stem(object)			[ $cv_Name create polygon $Stem(polygon) -fill white  -outline black  -tags __Decoration__ ]
 						}									
-			RearWheel {
-							# --- create RearWheel -----------------
-						set Hub(position)			[ frame_geometry_custom::point_position  RearWheel  $BB_Position]
-						set RimDiameter				[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter ]  asText ]
-						set RimHeight				[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimHeight   ]  asText ]
-						set TyreHeight				[ [ $domProject selectNodes /root/Component/Wheel/Rear/TyreHeight  ]  asText ]
+			RearWheel {		# --- create RearWheel -----------------
+						set Hub(position)		[ frame_geometry::object_values		RearWheel  position		$BB_Position ]
+						set RimDiameter				$frame_geometry::RearWheel(RimDiameter)
+						set RimHeight				$frame_geometry::RearWheel(RimHeight)
+						set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
 						set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white -tags __Decoration__ ]
 														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5] 				-tags __Decoration__ 
 														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5] 				-tags __Decoration__ 
@@ -348,19 +349,18 @@
 														$cv_Name create circle 	$Hub(position)  -radius 45											-tags __Decoration__ 	
 														$cv_Name create circle 	$Hub(position)  -radius 23											-tags __Decoration__ 
 						if {$updateCommand != {}} 	{ $cv_Name bind	$my_Wheel	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	Component/Wheel/Rear/RimHeight		\
 																							} 	{RearWheel Parameter} \
 																]
 													  lib_gui::object_CursorBinding 	$cv_Name	$my_Wheel
 								}
 						}
-			FrontWheel {
-							# --- create FrontWheel ----------------
-						set Hub(position)			[ frame_geometry_custom::point_position  FrontWheel  $BB_Position]
-						set RimDiameter				[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter ]  asText ]
-						set RimHeight				[ [ $domProject selectNodes /root/Component/Wheel/Front/RimHeight   ]  asText ]
-						set TyreHeight				[ [ $domProject selectNodes /root/Component/Wheel/Front/TyreHeight  ]  asText ]
+			FrontWheel {	# --- create FrontWheel ----------------
+						set Hub(position)		[ frame_geometry::object_values		FrontWheel  position	$BB_Position ] 
+						set RimDiameter				$frame_geometry::FrontWheel(RimDiameter)
+						set RimHeight				$frame_geometry::FrontWheel(RimHeight)
+						set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
 						set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white  -tags __Decoration__]
 														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]					-tags __Decoration__
 														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5]                   -tags __Decoration__
@@ -368,7 +368,7 @@
 														$cv_Name create circle 	$Hub(position)  -radius 20                                              -tags __Decoration__
 														$cv_Name create circle 	$Hub(position)  -radius 4.5                                             -tags __Decoration__
 						if {$updateCommand != {}} 	{ $cv_Name bind	$my_Wheel	<Double-ButtonPress-1> \
-																[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																			$updateCommand { 	Component/Wheel/Front/RimHeight		\
 																							} 	{FrontWheel Parameter} \
 																]
@@ -376,30 +376,30 @@
 								}
 						}
 			RearWheel_Rep	{
-						set Hub(position)	[ frame_geometry_custom::point_position  RearWheel  $BB_Position]
-						set RimDiameter		[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter ]  asText ]
-						set RimHeight		[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimHeight   ]  asText ]
-						set TyreHeight		[ [ $domProject selectNodes /root/Component/Wheel/Rear/TyreHeight  ]  asText ]
-						set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start -20  -extent 105 -style arc -outline gray60  -tags __Decoration__]
-						set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start -25  -extent 100 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
-							# set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  30  -extent  45 -style arc -outline gray60 -width 0.35]
+						set Hub(position)		[ frame_geometry::object_values		RearWheel  position		$BB_Position ] 
+						set RimDiameter				$frame_geometry::RearWheel(RimDiameter)
+						set RimHeight				$frame_geometry::RearWheel(RimHeight)
+						set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
+						set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start -20  -extent 105 -style arc -outline gray60  -tags __Decoration__]
+						set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start -25  -extent 100 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
+							# set my_Wheel				[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  30  -extent  45 -style arc -outline gray60 -width 0.35]
 						}									
 			FrontWheel_Rep	{
-						set Hub(position)	[ frame_geometry_custom::point_position  FrontWheel  $BB_Position]
-						set RimDiameter		[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter ]  asText ]
-						set RimHeight		[ [ $domProject selectNodes /root/Component/Wheel/Front/RimHeight   ]  asText ]
-						set TyreHeight		[ [ $domProject selectNodes /root/Component/Wheel/Front/TyreHeight  ]  asText ]
-						set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start  95  -extent  85 -style arc -outline gray60 -tags __Decoration__]
-						set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start  90  -extent  80 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
+						set Hub(position)		[ frame_geometry::object_values		FrontWheel  position	$BB_Position ] 
+						set RimDiameter				$frame_geometry::FrontWheel(RimDiameter)
+						set RimHeight				$frame_geometry::FrontWheel(RimHeight)
+						set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
+						set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start  95  -extent  85 -style arc -outline gray60 -tags __Decoration__]
+						set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start  90  -extent  80 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
 							# set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  95  -extent  45 -style arc -outline gray60 -width 0.35]
 						}	
 			LegClearance_Rep {
-						set LegClearance(position)	[ frame_geometry_custom::point_position  LegClearance  $BB_Position]
+						set LegClearance(position)	[ vectormath::addVector $frame_geometry::LegClearance(Position)  $BB_Position ]
 						$cv_Name create circle 	$LegClearance(position)  -radius 5  -outline grey60 -tags __Decoration__
 						}
 											
 			default	{
-						#set Stem(debug)		[ frame_geometry_custom::tube_values Stem debug $BB_Position  ]
+						#set Stem(debug)		[ frame_geometry::object_values Stem debug $BB_Position  ]
 						#set Stem(object)		[ $cv_Name create line $Stem(debug) -fill red]
 						#$cv_Name create circle 	$RearWheel(coords)  -radius 30  -outline red	-width 1.0		
 						#$cv_Name create circle 	[ list  $FrontWheel(x) $FrontWheel(y) ]  -radius 30  -outline red	-width 1.0	
@@ -442,15 +442,15 @@
 
 		
 			# --- create Steerer ---------------------
-		set Steerer(polygon) 		[ frame_geometry_custom::tube_values Steerer polygon $BB_Position  ]
+		set Steerer(polygon) 		[ frame_geometry::object_values 	Steerer 	polygon		$BB_Position  ]
 		#set Steerer(object)			[ $cv_Name create polygon $Steerer(polygon) -fill white -outline black -tags __Frame__ ]
 
 			# --- create Rear Dropout ----------------
-		set RearWheel(position)		[ frame_geometry_custom::point_position  RearWheel  $BB_Position]
+		set RearWheel(position)		[ frame_geometry::object_values		RearWheel	position	$BB_Position]
 		set RearDropout(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/RearDropOut/File ]  asText ] ]
 		set RearDropout(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  0  __Frame__]
 		if {$updateCommand != {}} 	{ $cv_Name bind 	$RearDropout(object)	<Double-ButtonPress-1> \
-														[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+														[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  { 	file://Component/RearDropOut/File			\
 																                    Component/RearDropOut/ChainStay/Offset 		\
 																					Component/RearDropOut/ChainStay/OffsetPerp	\
@@ -466,20 +466,20 @@
 			# --- create Fork Representation ----------------
 		switch $Rendering(Fork) {
 			SteelLugged {
-						set ForkBlade(polygon) 		[ frame_geometry_custom::tube_values ForkBlade polygon $BB_Position  ]
-						set ForkCrown(file)			[ checkFileString [ [ $domProject selectNodes /root/Component/Fork/Crown/File ] asText ] ]
-						set ForkDropout(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/Fork/DropOut/File ]  asText ] ]
-						set ForkDropout(position)	[ frame_geometry_custom::point_position  FrontWheel  $BB_Position]
-						set do_direction			[ frame_geometry_custom::tube_values ForkDropout direction ]
+						set ForkBlade(polygon) 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
+						set ForkCrown(file)			[ checkFileString [ [ $domProject 	selectNodes /root/Component/Fork/Crown/File ] asText ] ]
+						set ForkDropout(file)		[ checkFileString [ [ $domProject 	selectNodes /root/Component/Fork/DropOut/File ]  asText ] ]
+						set ForkDropout(position)	[ frame_geometry::object_values  	FrontWheel  position	$BB_Position ]
+						set do_direction			[ frame_geometry::object_values 	Lugs/Dropout/Front 	direction ]
 						set do_angle				[ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
 						}
 			Composite 	{
-						set ForkBlade(polygon)		[ frame_geometry_custom::set_compositeFork $::APPL_Init $BB_Position ]
-						set ForkCrown(file)			[ checkFileString [ [ $domInit    selectNodes /root/Options/Fork/Composite/Visualization/Crown/File ] asText ] ]
-						set ForkDropout(file)		[ checkFileString [ [ $domInit    selectNodes /root/Options/Fork/Composite/Visualization/DropOut/File ]  asText ] ]
-						set ForkDropout(position)	[ frame_geometry_custom::point_position  FrontWheel    $BB_Position]
-						set Steerer_Fork(position)	[ frame_geometry_custom::point_position  Steerer_Fork  $BB_Position]
-						set ht_direction			[ frame_geometry_custom::tube_values HeadTube direction ]
+						set ForkBlade(polygon)		[ frame_geometry::set_compositeFork $::APPL_Init $BB_Position ]
+						set ForkCrown(file)			[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Composite/Visualization/Crown/File ] asText ] ]
+						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Composite/Visualization/DropOut/File ]  asText ] ]
+						set ForkDropout(position)	[ frame_geometry::object_values		FrontWheel  position	$BB_Position ]
+						set Steerer_Fork(position)	[ frame_geometry::object_values  	Lugs/ForkCrown		position	$BB_Position]
+						set ht_direction			[ frame_geometry::object_values 	HeadTube direction ]
 						set ht_angle				[ vectormath::angle {0 1} {0 0} $ht_direction ]
 						set vct_01					[ vectormath::rotatePoint {0 0} {4 70} $ht_angle ]
 						set help_01					[ vectormath::subVector $Steerer_Fork(position) $vct_01 ]
@@ -488,15 +488,15 @@
 						}
 			Suspension 	{
 						set ForkBlade(polygon) 		{}
-						set ForkCrown(file)			[ checkFileString [ [ $domInit    selectNodes /root/Options/Fork/Suspension/Visualization/Crown/File ] asText ] ]
-						set ForkDropout(file)		[ checkFileString [ [ $domInit    selectNodes /root/Options/Fork/Suspension/Visualization/DropOut/File ]  asText ] ]
-						set Suspension_ForkRake		[[ $domInit    selectNodes /root/Options/Fork/Suspension/Geometry/Rake ]  asText ]
-						set Project_ForkRake		[[ $domProject selectNodes /root/Component/Fork/Rake ]  asText ]
-						set do_direction			[ frame_geometry_custom::tube_values HeadTube direction ]
+						set ForkCrown(file)			[ checkFileString [ [ $domInit   	selectNodes /root/Options/Fork/Suspension/Visualization/Crown/File ] asText ] ]
+						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Suspension/Visualization/DropOut/File ]  asText ] ]
+						set Suspension_ForkRake		[[ $domInit    	selectNodes /root/Options/Fork/Suspension/Geometry/Rake ]  asText ]
+						set Project_ForkRake		[[ $domProject 	selectNodes /root/Component/Fork/Rake ]  asText ]
+						set do_direction			[ frame_geometry::object_values 	HeadTube	direction ]
 						set do_angle				[ vectormath::angle {0 1} {0 0} $do_direction ]
 						set offset					[ expr $Project_ForkRake-$Suspension_ForkRake]
 						set vct_move				[ vectormath::rotatePoint {0 0} [list 0 $offset] [expr 90 + $do_angle] ]
-						set ForkDropout(position)	[ vectormath::addVector [ frame_geometry_custom::point_position  FrontWheel  $BB_Position] $vct_move]
+						set ForkDropout(position)	[ vectormath::addVector [ frame_geometry::object_values		FrontWheel  position	$BB_Position ] $vct_move]
 						}
 			default {}
 		}
@@ -504,7 +504,7 @@
 			# --- create Fork Blade -----------------
 		set ForkBlade(object)		[ $cv_Name create polygon $ForkBlade(polygon) -fill white  -outline black -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$ForkBlade(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  { 	list://Rendering/Fork@APPL_ForkTypes \
 																					Component/Fork/Blade/Width			\
 																					Component/Fork/Blade/DiameterDO		\
@@ -516,12 +516,12 @@
 				}
 
 			# --- create ForkCrowh -------------------
-				set ht_direction	[ frame_geometry_custom::tube_values HeadTube direction ]
-				set ht_angle		[ vectormath::angle {0 1} {0 0} $ht_direction ]
-		set ForkCrown(position)		[ frame_geometry_custom::point_position  Steerer_Fork  $BB_Position]
-		set ForkCrown(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __Frame__]
+				set ht_direction	[ frame_geometry::object_values 	Lugs/ForkCrown direction ]
+				set ht_angle		[expr [ vectormath::dirAngle 		{0 0} 	$ht_direction ] -90 ]
+		set ForkCrown(position)		[ frame_geometry::object_values		Lugs/ForkCrown		position	$BB_Position ]
+		set ForkCrown(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __Frame__ ]
 		if {$updateCommand != {}}	{ $cv_Name bind 	$ForkCrown(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  { 	list://Rendering/Fork@APPL_ForkTypes \
 																					file://Component/Fork/Crown/File	\
 																					Component/Fork/Crown/Brake/Angle 	\
@@ -537,7 +537,7 @@
 			# --- create Fork Dropout ---------------
 		set ForkDropout(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __Frame__] 
 		if {$updateCommand != {}}	{ $cv_Name bind 	$ForkDropout(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  { 	file://Component/Fork/DropOut/File	\
 																					Component/Fork/DropOut/Offset 	\
 																					Component/Fork/DropOut/OffsetPerp \
@@ -547,10 +547,10 @@
 				}
 		
 			# --- create HeadTube --------------------
-		set HeadTube(polygon) 		[ frame_geometry_custom::tube_values HeadTube polygon $BB_Position  ]
+		set HeadTube(polygon) 		[ frame_geometry::object_values HeadTube polygon $BB_Position  ]
 		set HeadTube(object)		[ $cv_Name create polygon $HeadTube(polygon) -fill white -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$HeadTube(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  {	FrameTubes/HeadTube/Diameter	\
 																				}	{HeadTube Parameter}
 													]
@@ -558,10 +558,10 @@
 				}
 				
 			# --- create DownTube --------------------
-		set DownTube(polygon) 		[ frame_geometry_custom::tube_values DownTube polygon $BB_Position  ]
+		set DownTube(polygon) 		[ frame_geometry::object_values DownTube polygon $BB_Position  ]
 		set DownTube(object) 		[ $cv_Name create polygon $DownTube(polygon) -fill white -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$DownTube(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  { 	FrameTubes/DownTube/DiameterHT  \
 																					FrameTubes/DownTube/DiameterBB  \
 																					FrameTubes/DownTube/TaperLength \
@@ -571,10 +571,10 @@
 				}
 				
 			# --- create SeatTube --------------------
-		set SeatTube(polygon) 		[ frame_geometry_custom::tube_values SeatTube polygon $BB_Position  ]
+		set SeatTube(polygon) 		[ frame_geometry::object_values SeatTube polygon $BB_Position  ]
 		set SeatTube(object)		[ $cv_Name create polygon $SeatTube(polygon) -fill white -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$SeatTube(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  { 	FrameTubes/SeatTube/DiameterTT   \
 																					FrameTubes/SeatTube/DiameterBB   \
 																					FrameTubes/SeatTube/TaperLength  \
@@ -584,10 +584,10 @@
 				}
 
 			# --- create TopTube ---------------------
-		set TopTube(polygon) 		[ frame_geometry_custom::tube_values TopTube polygon $BB_Position  ]
+		set TopTube(polygon) 		[ frame_geometry::object_values TopTube polygon $BB_Position  ]
 		set TopTube(object)			[ $cv_Name create polygon $TopTube(polygon) -fill white -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$TopTube(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  { 	FrameTubes/TopTube/DiameterHT   \
 																					FrameTubes/TopTube/DiameterST   \
 																					FrameTubes/TopTube/TaperLength  \
@@ -598,10 +598,10 @@
 				}
 
 			# --- create ChainStay -------------------
-		set ChainStay(polygon) 		[ frame_geometry_custom::tube_values ChainStay polygon $BB_Position  ]
+		set ChainStay(polygon) 		[ frame_geometry::object_values ChainStay polygon $BB_Position  ]
 		set ChainStay(object)		[ $cv_Name create polygon $ChainStay(polygon) -fill white -outline black  -tags __Frame__]		
 		if {$updateCommand != {}}	{ $cv_Name bind	$ChainStay(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  {	FrameTubes/ChainStay/DiameterSS		\
 																					FrameTubes/ChainStay/DiameterBB		\
 																					FrameTubes/ChainStay/TaperLength	\
@@ -611,10 +611,10 @@
 				}
 
 			# --- create SeatStay --------------------
-		set SeatStay(polygon) 		[ frame_geometry_custom::tube_values SeatStay polygon $BB_Position  ]
+		set SeatStay(polygon) 		[ frame_geometry::object_values SeatStay polygon $BB_Position  ]
 		set SeatStay(object)		[ $cv_Name create polygon $SeatStay(polygon) -fill white -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$SeatStay(object)	<Double-ButtonPress-1> \
-													[list frame_geometry_custom::createEdit  %x %y  $cv_Name  \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																$updateCommand  { 	FrameTubes/SeatStay/DiameterST   \
 																					FrameTubes/SeatStay/DiameterCS   \
 																					FrameTubes/SeatStay/TaperLength  \
@@ -648,19 +648,19 @@
 			#					#$cv_Name create line    [list $help_01 $ForkDropout(position)] -fill purple -width 1 
 			#				}
 			#	Suspension 	{
-			#					set Steerer_Fork(position)	[ frame_geometry_custom::point_position  Steerer_Fork  $BB_Position]
+			#					set Steerer_Fork(position)	[ frame_geometry::point_position  Steerer_Fork  $BB_Position]
 			#					$cv_Name create circle  $ForkDropout(position)  -radius 10  -outline darkred
 			#					$cv_Name create line    [list $Steerer_Fork(position) $ForkDropout(position)] -fill purple -width 1 
 			#				}
 			#
-			#set debug_01				[ frame_geometry_custom::tube_values ForkBlade debug $BB_Position  ]
+			#set debug_01				[ frame_geometry::object_values ForkBlade debug $BB_Position  ]
 			#$cv_Name create line    $debug_01 -fill purple -width 1 
 			#$cv_Name delete 	$ForkDropout(object)
 			
-			#set debug_02				[ frame_geometry_custom::point_position  Debug02  $BB_Position]
-			#set debug_03				[ frame_geometry_custom::point_position  Debug03  $BB_Position]
-			#set debug_04				[ frame_geometry_custom::point_position  Debug04  $BB_Position]
-			#set debug_05				[ frame_geometry_custom::point_position  Debug05  $BB_Position]
+			#set debug_02				[ frame_geometry::point_position  Debug02  $BB_Position]
+			#set debug_03				[ frame_geometry::point_position  Debug03  $BB_Position]
+			#set debug_04				[ frame_geometry::point_position  Debug04  $BB_Position]
+			#set debug_05				[ frame_geometry::point_position  Debug05  $BB_Position]
 			#$cv_Name create circle  $debug_01 -radius 20  -outline red
 			#$cv_Name create circle  $debug_02 -radius 20  -outline red
 			#$cv_Name create circle  $debug_03 -radius 20  -outline blue
@@ -686,21 +686,22 @@
 		set CrankSetLength			[ [ $domProject selectNodes /root/Component/CrankSet/Length		 ]  asText ]
 			# --- get defining Point coords ----------
 		set BottomBracket		$BB_Position	
-		set RearWheel			[ frame_geometry_custom::point_position  RearWheel				$BB_Position ]
-		set FrontWheel			[ frame_geometry_custom::point_position  FrontWheel				$BB_Position ]
-		set Saddle				[ frame_geometry_custom::point_position  Saddle					$BB_Position ]
-		set SeatTube_Ground		[ frame_geometry_custom::point_position  SeatTube_Ground		$BB_Position ]
-		set SeatStay_SeatTube	[ frame_geometry_custom::tube_values     SeatStay SeatTube		$BB_Position ]
-		set SeatStay_RearWheel	[ frame_geometry_custom::tube_values     SeatStay RearWheel		$BB_Position ]
-		set TopTube_SeatTube	[ frame_geometry_custom::tube_values     TopTube SeatTube		$BB_Position ]
-		set TopTube_Steerer		[ frame_geometry_custom::tube_values  	 TopTube HeadTube		$BB_Position ]
-		set Steerer_Stem		[ frame_geometry_custom::point_position  Steerer_Stem			$BB_Position ]
-		set Steerer_Fork		[ frame_geometry_custom::point_position  Steerer_Fork			$BB_Position ]
-		set DownTube_Steerer	[ frame_geometry_custom::tube_values  	 DownTube HeadTube 	$BB_Position ]
-		set HandleBar			[ frame_geometry_custom::point_position  HandleBar 				$BB_Position ]
-		set BaseCenter			[ frame_geometry_custom::point_position  BB_Ground				$BB_Position ]
-		set Steerer_Ground		[ frame_geometry_custom::point_position  Steerer_Ground			$BB_Position ]		
-		set LegClearance		[ frame_geometry_custom::point_position  LegClearance 			$BB_Position ]
+		set RearWheel			[ frame_geometry::object_values		RearWheel			position	$BB_Position ]
+		set FrontWheel			[ frame_geometry::object_values  	FrontWheel			position	$BB_Position ]
+		set Saddle				[ frame_geometry::object_values  	Saddle				position	$BB_Position ]
+		set SeatTube_Ground		[ frame_geometry::object_values  	SeatTubeGround		position	$BB_Position ]
+		set SeatStay_SeatTube	[ frame_geometry::object_values     SeatStay/End		position	$BB_Position ]
+		set SeatStay_RearWheel	[ frame_geometry::object_values     SeatStay/Start		position	$BB_Position ]
+		set TopTube_SeatTube	[ frame_geometry::object_values     TopTube/Start		position	$BB_Position ]
+		set TopTube_Steerer		[ frame_geometry::object_values		TopTube/End			position	$BB_Position ]
+		set Steerer_Stem		[ frame_geometry::object_values  	Steerer/End			position	$BB_Position ]
+		set Steerer_Fork		[ frame_geometry::object_values  	Steerer/Start		position	$BB_Position ]
+		set DownTube_Steerer	[ frame_geometry::object_values		DownTube/End		position 	$BB_Position ]
+		set HandleBar			[ frame_geometry::object_values  	HandleBar 			position	$BB_Position ]
+		set BaseCenter			[ frame_geometry::object_values  	BottomBracketGround	position	$BB_Position ]
+		set Steerer_Ground		[ frame_geometry::object_values  	SteererGround		position	$BB_Position ]		
+		set LegClearance		[ vectormath::addVector $frame_geometry::LegClearance(Position)  	$BB_Position ]
+						
 		set RimDiameter_Front	[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter ]  asText ]
 		set TyreHeight_Front	[ [ $domProject selectNodes /root/Component/Wheel/Front/TyreHeight  ]  asText ]
 		set RimDiameter_Rear	[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter  ]  asText ]
@@ -715,24 +716,24 @@
 		$cv_Name create circle 	$FrontWheel  -radius 15  -outline gray60  -tags {__CenterLine__}
 
 			# ------ headtube extension to ground
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]  	-fill gray60 				-tags __CenterLine__
+		$cv_Name create centerline [ lib_project::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]  	-fill gray60 				-tags __CenterLine__
 			# ------ seattube extension to ground
-		$cv_Name create centerline [ canvasCAD::flatten_nestedList  $BottomBracket  $SeatTube_Ground  ]  	-fill gray60 				-tags {__CenterLine__	seattube_center}
+		$cv_Name create centerline [ lib_project::flatten_nestedList  $BottomBracket  $SeatTube_Ground  ]  	-fill gray60 				-tags {__CenterLine__	seattube_center}
 
 		# ------ chainstay
-		$cv_Name create line 	[ canvasCAD::flatten_nestedList  $RearWheel 		$BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	chainstay}			
+		$cv_Name create line 	[ lib_project::flatten_nestedList  $RearWheel 		$BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	chainstay}			
 			# ------ seattube                                                                                                               
-		$cv_Name create line 	[ canvasCAD::flatten_nestedList  $Saddle 			$BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	seattube}			
+		$cv_Name create line 	[ lib_project::flatten_nestedList  $Saddle 			$BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	seattube}			
 			# ------ seatstay                                                                                                               
-		$cv_Name create line 	[ canvasCAD::flatten_nestedList  $SeatStay_SeatTube $RearWheel		 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__ 	seatstay}			
+		$cv_Name create line 	[ lib_project::flatten_nestedList  $SeatStay_SeatTube $RearWheel		 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__ 	seatstay}			
 			# ------ toptube                                                                                                                
-		$cv_Name create line 	[ canvasCAD::flatten_nestedList  $TopTube_SeatTube	$TopTube_Steerer ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	toptube}				
+		$cv_Name create line 	[ lib_project::flatten_nestedList  $TopTube_SeatTube	$TopTube_Steerer ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	toptube}				
 			# ------ steerer / stem                                                                                                         
-		$cv_Name create line 	[ canvasCAD::flatten_nestedList  $HandleBar  $Steerer_Stem  $Steerer_Fork]	-fill gray60  -width 1.0  	-tags {__CenterLine__	steerer}				
+		$cv_Name create line 	[ lib_project::flatten_nestedList  $HandleBar  $Steerer_Stem  $Steerer_Fork]	-fill gray60  -width 1.0  	-tags {__CenterLine__	steerer}				
 			# ------ downtube                                                                                                               
-		$cv_Name create line 	[ canvasCAD::flatten_nestedList  $DownTube_Steerer 	$BB_Position	]  		-fill gray60  -width 1.0  	-tags {__CenterLine__	downtube}			
+		$cv_Name create line 	[ lib_project::flatten_nestedList  $DownTube_Steerer 	$BB_Position	]  		-fill gray60  -width 1.0  	-tags {__CenterLine__	downtube}			
 			# ------ fork                                                                                                                   
-		$cv_Name create line 	[ canvasCAD::flatten_nestedList  $Steerer_Fork 		$FrontWheel		]  		-fill gray60  -width 1.0  	-tags {__CenterLine__	fork}				
+		$cv_Name create line 	[ lib_project::flatten_nestedList  $Steerer_Fork 		$FrontWheel		]  		-fill gray60  -width 1.0  	-tags {__CenterLine__	fork}				
 			                                                                                                                                
 			# ------ crankset representation	                                                                                            
 		$cv_Name create arc  	$BottomBracket  -radius $CrankSetLength  -start -50  -extent 120  -style arc \
@@ -783,55 +784,55 @@
 					
 		switch $type {
 			TopTube_Seat {
-					set Mitter(polygon)		[ frame_geometry_custom::tube_values TopTube_Seat mitter $xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/TopTube_Seat		polygon	$xy ]
 					set Mitter(header)		"TopTube / SeatTube"
 					set 	minorDiameter		[ [ $domProject selectNodes /root/FrameTubes/TopTube/DiameterST		]  asText ]
-					set 	minorDirection		[ frame_geometry_custom::tube_values TopTube 	direction ]
+					set 	minorDirection		[ frame_geometry::object_values TopTube 	direction ]
 					set 	majorDiameter		[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterTT		]  asText ]
-					set 	majorDirection		[ frame_geometry_custom::tube_values SeatTube 	direction ]
+					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	offSet				0
 				}
 			TopTube_Head {
-					set Mitter(polygon)		[ frame_geometry_custom::tube_values TopTube_Head mitter $xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/TopTube_Head		polygon	$xy  ]
 					set Mitter(header)		"TopTube / HeadTube"
 					set 	minorDiameter		[ [ $domProject selectNodes /root/FrameTubes/TopTube/DiameterHT		]  asText ]
-					set 	minorDirection		[ frame_geometry_custom::tube_values TopTube 	direction ]
+					set 	minorDirection		[ frame_geometry::object_values TopTube 	direction ]
 					set 	majorDiameter		[ [ $domProject selectNodes /root/FrameTubes/HeadTube/Diameter		]  asText ]
-					set 	majorDirection		[ frame_geometry_custom::tube_values HeadTube 	direction ]
+					set 	majorDirection		[ frame_geometry::object_values HeadTube 	direction ]
 					set 	offSet				0
 				}
 			DownTube_Head {
-					set Mitter(polygon)		[ frame_geometry_custom::tube_values DownTube_Head mitter $xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/DownTube_Head	polygon		$xy  ]
 					set Mitter(header)		"DownTube / HeadTube"
 					set 	minorDiameter		[ [ $domProject selectNodes /root/FrameTubes/DownTube/DiameterHT		]  asText ]
-					set 	minorDirection		[ frame_geometry_custom::tube_values DownTube 	direction ]
+					set 	minorDirection		[ frame_geometry::object_values DownTube 	direction ]
 					set 	majorDiameter		[ [ $domProject selectNodes /root/FrameTubes/HeadTube/Diameter		]  asText ]
-					set 	majorDirection		[ frame_geometry_custom::tube_values HeadTube 	direction ]
+					set 	majorDirection		[ frame_geometry::object_values HeadTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				0
 				}
 			SeatStay_01 {
-					set Mitter(polygon)		[ frame_geometry_custom::tube_values SeatStay_01 mitter $xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/SeatStay_01		polygon		$xy  ]
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		[ [ $domProject selectNodes /root/FrameTubes/SeatStay/DiameterST		]  asText ]
-					set 	minorDirection		[ frame_geometry_custom::tube_values SeatStay 	direction ]
+					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
 					set 	majorDiameter		[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterTT		]  asText ]
-					set 	majorDirection		[ frame_geometry_custom::tube_values SeatTube 	direction ]
+					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
 				}
 			SeatStay_02 {
-					set Mitter(polygon)		[ frame_geometry_custom::tube_values SeatStay_02 mitter $xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/SeatStay_02		polygon		$xy  ]
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		[ [ $domProject selectNodes /root/FrameTubes/SeatStay/DiameterST		]  asText ]
-					set 	minorDirection		[ frame_geometry_custom::tube_values SeatStay 	direction ]
+					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
 					set 	majorDiameter		[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterTT		]  asText ]
-					set 	majorDirection		[ frame_geometry_custom::tube_values SeatTube 	direction ]
+					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
 				}
 			Reference {
-					set Mitter(polygon)		[ frame_geometry_custom::tube_values Reference mitter $xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/Reference		polygon		$xy  ]
 					set Mitter(header)		"Reference"
 				}
 			default {return}
@@ -855,15 +856,15 @@
 			default {
 						set pt_01	[ vectormath::addVector $xy {0   5} ]
 						set pt_02	[ vectormath::addVector $xy {0 -75} ]
-					$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25	
-						set pt_03	[ frame_geometry_custom::coords_get_xy $Mitter(polygon) 0 ]
+					$cv_Name create centerline 	[ lib_project::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25	
+						set pt_03	[ frame_geometry::coords_get_xy $Mitter(polygon) 0 ]
 						set pt_03	[ vectormath::addVector $pt_03 {+5  20} ]
-						set pt_04	[frame_geometry_custom::coords_get_xy $Mitter(polygon) end]
+						set pt_04	[frame_geometry::coords_get_xy $Mitter(polygon) end]
 						set pt_04	[ vectormath::addVector $pt_04 {-5  20} ]
-					$cv_Name create line 		[ canvasCAD::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25	
+					$cv_Name create line 		[ lib_project::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25	
 						set pt_05	[ vectormath::addVector $pt_03 { 0  50} ]
 						set pt_06	[ vectormath::addVector $pt_04 { 0  50} ]
-					$cv_Name create centerline 	[ canvasCAD::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25	
+					$cv_Name create centerline 	[ lib_project::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25	
 					
 							# --- defining values
 							#

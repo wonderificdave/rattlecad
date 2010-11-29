@@ -58,7 +58,7 @@
 					set stageFormat	[$cv_Name getNodeAttr Stage format]
 						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
 					$cv_Name 		clean_StageContent					
 						#
 					frame_visualisation::createBaseline 		$cv_Name $xy	
@@ -78,11 +78,11 @@
 						#
 						# -- frame - tubing
 						#
-					set stageScale	[$cv_Name getNodeAttr Stage scale]
-					set stageFormat	[$cv_Name getNodeAttr Stage format]
+					set stageScale	[ $cv_Name getNodeAttr Stage scale  ]
+					set stageFormat	[ $cv_Name getNodeAttr Stage format ]
 						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame ]					
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame ]					
 					$cv_Name 		clean_StageContent	
 						#
 					frame_visualisation::createDecoration		$cv_Name $xy	SeatPost			$updateCommand	
@@ -128,7 +128,7 @@
 					set stageFormat	[$cv_Name getNodeAttr Stage format]
 						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
 					$cv_Name 		clean_StageContent
 						#
 					createDimension							$cv_Name $xy 	point_seat
@@ -166,11 +166,11 @@
 					set stageFormat	[$cv_Name getNodeAttr Stage format]
 						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
 						#
 					$cv_Name 		clean_StageContent	
 						#
-					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
+					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
 						#
 					frame_visualisation::createDecoration		$cv_Name $xy 	RearWheel_Rep		
@@ -200,11 +200,11 @@
 					set stageFormat	[$cv_Name getNodeAttr Stage format]
 						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
 						#
 					$cv_Name 		clean_StageContent	
 						#
-					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry_custom::project_attribute modified]
+					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#
 					frame_visualisation::createDecoration		$cv_Name $xy 	RearWheel_Rep		
 					frame_visualisation::createDecoration		$cv_Name $xy 	FrontWheel_Rep		
@@ -252,7 +252,7 @@
 					set stageFormat	[$cv_Name getNodeAttr Stage format]
 						# set factor 		[ get_FormatFactor $stageFormat ]
 						#
-					set xy			[ frame_geometry_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
 					$cv_Name 		clean_StageContent				
 					frame_visualisation::createBaseline 	$cv_Name $xy	
 						#
