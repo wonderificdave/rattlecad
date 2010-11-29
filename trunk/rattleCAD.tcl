@@ -63,8 +63,8 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{24}  
-						RELEASE_Date		{19. Nov. 2010}
+						RELEASE_Revision	{30}  
+						RELEASE_Date		{28. Nov. 2010}
 						BASE_Dir			{}
 						ROOT_Dir			{}
 						CONFIG_Dir			{}
@@ -250,7 +250,7 @@ exec wish "$0" "$@"
 	
 		# --------------------------------------------
 		#	create custom base Parameters
-	frame_geometry_custom::set_base_Parameters $APPL_Project
+	frame_geometry::set_base_Parameters $APPL_Project
 		# --------------------------------------------
 		#	set APPL_Config(PROJECT_Name)		
 	set APPL_Config(PROJECT_Name)	template

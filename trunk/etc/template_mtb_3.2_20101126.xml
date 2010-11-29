@@ -1,21 +1,21 @@
 <root>
     <Project>
-        <rattleCADVersion>3.2.22</rattleCADVersion>
+        <rattleCADVersion>3.2.30</rattleCADVersion>
         <Name>Template MTB 03</Name>
-        <modified>2010.11.19/12:00</modified>
+        <modified>2010.11.26/12:00</modified>
     </Project>
-		
-    <!-- personal geometry based on cyclist body profile -->
+
     <Personal>
+		<!-- personal geometry based on cyclist body profile -->
         <InnerLeg_Length>850.00</InnerLeg_Length>
         <HandleBar_Distance>474</HandleBar_Distance>
         <HandleBar_Height>642.0</HandleBar_Height>
         <SeatTube_Angle>72.00</SeatTube_Angle>
 		<SeatTube_Length>750.00</SeatTube_Length>
     </Personal>
-	
-    <!-- custom details of bicycle frame -->
+
     <Custom>
+		<!-- custom details of bicycle frame -->
         <HeadTube>
             <PositonTT>8.50</PositonTT>
             <PositonDT>8.50</PositonDT>
@@ -43,9 +43,9 @@
             <Depth>10.0</Depth>
         </BottomBracket>
     </Custom>
-	
-    <!-- frame tubes -->
+
     <FrameTubes>
+		<!-- frame tubes -->
         <TopTube>
             <DiameterHT>28.60</DiameterHT>
             <DiameterST>28.60</DiameterST>
@@ -76,10 +76,10 @@
             <TaperLength>300.00</TaperLength>
         </ChainStay>
     </FrameTubes>
-	
-    <!-- bicycle components for visulization -->
+
     <Component>
-        <HeadSet>
+		<!-- bicycle components for visulization -->
+       <HeadSet>
             <Height>
                 <Bottom>13.50</Bottom>
                 <Top>15.50</Top>
@@ -189,10 +189,9 @@
 			</DownTube_Lower>
 		</BottleCage>
     </Component>
-	
-	
-	<!-- resulting values -->
-	<Result>
+
+	<Temporary>
+		<!-- temporary values -->
 		<HeadTube>
 			<ReachLength>0.00</ReachLength>
 			<StackHeight>0.00</StackHeight>
@@ -216,11 +215,195 @@
 				<horizontal>0.00</horizontal>
 			</rear>
 		</WheelPosition>
+	</Temporary>
+
+	<Result>
+		<!-- resulting values -->
+		<Position>
+			<BottomBracket>0.00,0.00</BottomBracket>
+			<FrontWheel>0.00,0.00</FrontWheel>
+			<RearWheel>0.00,0.00</RearWheel>
+			<Saddle>0.00,0.00</Saddle>
+			<SaddleProposal>0.00,0.00</SaddleProposal>
+			<HandleBar>0.00,0.00</HandleBar>
+			<LegClearance>0.00,0.00</LegClearance>
+			<BottomBracketGround>0.00,0.00</BottomBracketGround>
+			<SteererGround>0.00,0.00</SteererGround>
+			<SeatTubeGround>0.00,0.00</SeatTubeGround>
+			<BrakeMountFront>0.00,0.00</BrakeMountFront>
+			<BrakeMountRear>0.00,0.00</BrakeMountRear>
+			<SummarySize>0.00,0.00</SummarySize>
+		</Position>
+
+		<Lugs>
+			<Dropout>
+				<Rear>
+					<Position>0.00,0.00</Position>
+					<Direction>
+						<polar>0.00,0.00</polar>
+						<degree>0.00</degree>
+						<radiant>0.00</radiant>
+					</Direction>			
+					<Derailleur>0.00,0.00</Derailleur>
+				</Rear>
+				<Front>
+					<Position>0.00,0.00</Position>
+					<Direction>
+						<polar>0.00,0.00</polar>
+						<degree>0.00</degree>
+						<radiant>0.00</radiant>
+					</Direction>			
+				</Front>
+			</Dropout>
+			<ForkCrown>
+				<Position>0.00,0.00</Position>
+					<Direction>
+						<polar>0.00,0.00</polar>
+						<degree>0.00</degree>
+						<radiant>0.00</radiant>
+					</Direction>			
+			</ForkCrown>
+		</Lugs>
+
+		<Tubes>
+			<TopTube>				
+				<Direction>
+					<polar>0.00,0.00</polar>
+					<degree>0.00</degree>
+					<radiant>0.00</radiant>
+				</Direction>			
+				<Start>0.00,0.00</Start>
+				<End>0.00,0.00</End>
+				<Polygon>0.00,0.00</Polygon>
+			</TopTube>		
+			<HeadTube>
+				<Direction>
+					<polar>0.00,0.00</polar>
+					<degree>0.00</degree>
+					<radiant>0.00</radiant>
+				</Direction>			
+				<Start>0.00,0.00</Start>
+				<End>0.00,0.00</End>
+				<Polygon>0.00,0.00</Polygon>
+			</HeadTube>		
+			<SeatTube>
+				<Direction>
+					<polar>0.00,0.00</polar>
+					<degree>0.00</degree>
+					<radiant>0.00</radiant>
+				</Direction>			
+				<Start>0.00,0.00</Start>
+				<End>0.00,0.00</End>
+				<Polygon>0.00,0.00</Polygon>
+				<BottleCage>
+					<Base>0.00,0.00</Base>
+					<Offset>0.00,0.00</Offset>
+				</BottleCage>
+			</SeatTube>
+			<DownTube>
+				<Direction>
+					<polar>0.00,0.00</polar>
+					<degree>0.00</degree>
+					<radiant>0.00</radiant>
+				</Direction>			
+				<Start>0.00,0.00</Start>
+				<End>0.00,0.00</End>
+				<Polygon>0.00,0.00</Polygon>
+				<BottleCage>
+					<Base>0.00,0.00</Base>
+					<Offset>0.00,0.00</Offset>
+				</BottleCage>
+				<BottleCage_Lower>
+					<Base>0.00,0.00</Base>
+					<Offset>0.00,0.00</Offset>
+				</BottleCage_Lower>
+			</DownTube>
+			<SeatStay>
+				<Direction>
+					<polar>0.00,0.00</polar>
+					<degree>0.00</degree>
+					<radiant>0.00</radiant>
+				</Direction>			
+				<Start>0.00,0.00</Start>
+				<End>0.00,0.00</End>
+				<Polygon>0.00,0.00</Polygon>
+			</SeatStay>
+			<ChainStay>
+				<Direction>
+					<polar>0.00,0.00</polar>
+					<degree>0.00</degree>
+					<radiant>0.00</radiant>
+				</Direction>			
+				<Start>0.00,0.00</Start>
+				<End>0.00,0.00</End>
+				<SeatStay_IS>0.00,0.00</SeatStay_IS>
+				<Polygon>0.00,0.00</Polygon>
+			</ChainStay>
+			<ForkBlade>
+				<Direction>
+					<polar>0.00,0.00</polar>
+					<degree>0.00</degree>
+					<radiant>0.00</radiant>
+				</Direction>			
+				<Start>0.00,0.00</Start>
+				<End>0.00,0.00</End>
+				<Polygon>0.00,0.00</Polygon>
+			</ForkBlade>
+			<Steerer>
+				<Direction>
+					<polar>0.00,0.00</polar>
+					<degree>0.00</degree>
+					<radiant>0.00</radiant>
+				</Direction>			
+				<Start>0.00,0.00</Start>
+				<End>0.00,0.00</End>
+				<Polygon>0.00,0.00</Polygon>
+			</Steerer>
+		</Tubes>
+
+		<Components>
+			<SeatPost>
+				<Polygon>0.00,0.00</Polygon>
+			</SeatPost>
+			<Stem>
+				<Polygon>0.00,0.00</Polygon>
+			</Stem>
+			<HeadSet>
+				<Bottom>
+					<Polygon>0.00,0.00</Polygon>
+				</Bottom>
+				<Top>
+					<Polygon>0.00,0.00</Polygon>
+				</Top>
+			</HeadSet>
+		</Components>
+
+		<TubeMitter>
+			<TopTube_Head>
+				<Polygon>0.00,0.00</Polygon>
+			</TopTube_Head> 
+			<TopTube_Seat>
+				<Polygon>0.00,0.00</Polygon>
+			</TopTube_Seat> 
+			<DownTube_Head>
+				<Polygon>0.00,0.00</Polygon>
+			</DownTube_Head>			
+			<SeatStay_01>
+				<Polygon>0.00,0.00</Polygon>
+			</SeatStay_01> 	
+			<SeatStay_02>
+				<Polygon>0.00,0.00</Polygon>
+			</SeatStay_02> 	
+			<Reference>
+				<Polygon>0.00,0.00</Polygon>
+			</Reference> 	
+		</TubeMitter>
+	
 	</Result>
 
-	<!-- rendering information -->
     <Rendering>
-        <Fork>Suspension</Fork>
+		<!-- rendering information -->
+       <Fork>Suspension</Fork>
 		<Brake>
 			<Front>V-Brake</Front>
 			<Rear>V-Brake</Rear>
@@ -231,5 +414,5 @@
 			<DownTube_Lower>off</DownTube_Lower>
 		</BottleCage>
     </Rendering>
-		
+
 </root>
