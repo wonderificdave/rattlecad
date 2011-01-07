@@ -345,9 +345,17 @@
 							}
 
 						}
- 						
-						
-						
+				{3.2.32} {		# --- /root/Result ...
+							set node [$domProject selectNode /root/Temporary/BottomBracket]
+							if {$node == {}} {
+								puts "        ...  $Version   ... update File ... /root/Temporary/BottomBracket"
+								set node [$domProject selectNode /root/Temporary]
+								$node appendXML "<BottomBracket>
+														<Height>0.00</Height>
+												</BottomBracket>"
+							}
+ 						}
+								
 						
 				{ab-xy} {	set node {}
 							set node [$domProject selectNode /root/Project/rattleCADVersion/text()]

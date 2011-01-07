@@ -694,13 +694,24 @@
 		variable canvasUpdate
 		variable noteBook_top
 
-		switch $type {
-				Road { set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad) ] }
-				MTB  { set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB) ] }
-				default { return }
-		}
+		lib_file::openTemplate_xml $type
+		return
 		
+		set userTemplateFile	[format "%s%s.xml" $::APPL_Env(USER_InitString) $type]
+		set userTemplateFile	[file join $::APPL_Env(USER_Dir)	$userTemplateFile]
+		if {[file exists $userTemplateFile ]} {
+			lib_file::openProject_xml "Template $type" $userTemplateFile
+		}
+		return
+		
+		switch $type {
+				Road {	set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad) ] }
+				MTB  {	set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB) ] }
+				
+				default { return }
+		}		
 		lib_file::openTemplate_xml "Template $type" $template_File
+		return
 	}
 
 	#-------------------------------------------------------------------------

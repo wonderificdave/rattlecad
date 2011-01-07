@@ -63,15 +63,15 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{30}  
-						RELEASE_Date		{28. Nov. 2010}
+						RELEASE_Revision	{32}  
+						RELEASE_Date		{06. Jan. 2011}
 						BASE_Dir			{}
 						ROOT_Dir			{}
 						CONFIG_Dir			{}
 						IMAGE_Dir			{}
 						USER_Dir			{}
 						EXPORT_Dir			{}
-						USER_Init			{}
+						USER_InitString		{_init_Template}
                      }	
 					 
 					 
@@ -102,7 +102,6 @@ exec wish "$0" "$@"
 		puts "  \$APPL_Env(IMAGE_Dir)     $APPL_Env(IMAGE_Dir)"
 		puts ""
 
-
 		# -- Libraries  ---------------
 	lappend auto_path           [file join $APPL_Env(BASE_Dir) lib]
 	
@@ -126,18 +125,29 @@ exec wish "$0" "$@"
   ###########################################################################
 
 
+		# -- APPL_Env(USER_Dir)  ------
+	set APPL_Env(USER_Dir)      [lib_file::check_user_dir user]	
+
+		puts "  \$APPL_Env(USER_Dir)      $APPL_Env(USER_Dir)"
+		puts ""
+
+
 		# -- default Parameters  ----
 	set APPL_Init  [ lib_file::openFile_xml 	[file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml ] ]
 		puts "     ... APPL_Init         [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml]"
+	
 	initValues
-		puts "     ... APPL_Project      [file join $APPL_Env(CONFIG_Dir) $APPL_Env(TemplateFile) ]"
-	set APPL_Project  [ lib_file::openFile_xml 	[file join $APPL_Env(CONFIG_Dir) $APPL_Env(TemplateFile) ] ]
+		
+		
+		# -- load template ----------
+		puts ""
+		puts "     ... APPL_Env(TemplateType)      $APPL_Env(TemplateType)"
+		puts "     ... APPL_Env(TemplateInit)      $APPL_Env(TemplateInit)"
+		
+	set APPL_Project  [ lib_file::openFile_xml 	$APPL_Env(TemplateInit) ]
 
 	
-	puts ""
-	puts "  Template Road        -> $APPL_Env(TemplateRoad)"
-	puts "  Template MTB         -> $APPL_Env(TemplateMTB)"
-
+		# -- status messages --------
 	puts "\n  APPL_ForkTypes"
 	foreach entry $APPL_ForkTypes {
 		puts "        -> $entry"
@@ -166,12 +176,12 @@ exec wish "$0" "$@"
 	} 
 	
 	array set APPL_Config { 
-						GUI_Font               {Arial 8}
-						VECTOR_Font            {}
-						Language               {english}
-						WINDOW_Title           "rattleCAD  $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision) - template"
-						PROJECT_Name           "template"
-						FILE_List              {}
+						GUI_Font			{Arial 8}
+						VECTOR_Font			{}
+						Language			{english}
+						PROJECT_Name		{}
+						WINDOW_Title		{}
+						FILE_List			{}
                      }
 
 
@@ -251,9 +261,10 @@ exec wish "$0" "$@"
 		# --------------------------------------------
 		#	create custom base Parameters
 	frame_geometry::set_base_Parameters $APPL_Project
+	
 		# --------------------------------------------
 		#	set APPL_Config(PROJECT_Name)		
-	set APPL_Config(PROJECT_Name)	template
+	set APPL_Config(PROJECT_Name)           "Template $APPL_Env(TemplateType)"
 
 
  		# --------------------------------------------
@@ -266,7 +277,7 @@ exec wish "$0" "$@"
 	# lib_config::create . .cfg	
 
 		# -- window title ----------------------------
-	set_window_title 				template
+	set_window_title 				$APPL_Config(PROJECT_Name)
 
 	
   ###########################################################################

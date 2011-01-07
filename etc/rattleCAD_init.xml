@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <rattleCAD>
-        <Version>3.2.22</Version>
+        <Version>3.2.32</Version>
         <Name>rattleCAD_init</Name>
-        <modified>2010.11.18/00:00</modified>
+        <modified>2011.01.05/00:00</modified>
     </rattleCAD>
 	
 	<!-- Startup Settings -->
