@@ -216,6 +216,9 @@
 				<horizontal>0.00</horizontal>
 			</rear>
 		</WheelPosition>
+		<BottomBracket>
+			<Height>0.00</Height>
+		</BottomBracket>
 	</Temporary>
 
 	<Result>

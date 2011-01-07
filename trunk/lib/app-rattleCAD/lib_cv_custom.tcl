@@ -226,7 +226,7 @@
 															gray50 ] 
 						
 
-						set _dim_BB_Height 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)	$BaseCenter] \
+						# set _dim_BB_Height 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)	$BaseCenter] \
 															vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
 															gray50 ]
 						set _dim_CS_LengthX 	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  	$RearWheel_Ground  $BaseCenter ] \
@@ -298,6 +298,9 @@
 															$colour(result) ] 
 						set _dim_HT_Angle  		[ $cv_Name dimension  angle   	[ lib_project::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $BaseCenter ] \
 															150   0  \
+															$colour(result) ]
+						set _dim_BB_Height 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)	$BaseCenter] \
+															vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
 															$colour(result) ]
 
 
@@ -418,11 +421,16 @@
 								
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_XPosition   	
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_DistanceX   	
-								lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Angle   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Angle   
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Height								
 
 								$cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/Saddle/Offset_BB/horizontal]
 								$cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/horizontal]
 								$cv_Name bind $_dim_HT_Angle		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/HeadTube/Angle]
+								$cv_Name bind $_dim_BB_Height		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/BottomBracket/Height]
+									#
+									# ... proc fill_resultValues ...
+									# ... proc set_spec_Parameters ...
 						}
 			}
 				# -----------------------

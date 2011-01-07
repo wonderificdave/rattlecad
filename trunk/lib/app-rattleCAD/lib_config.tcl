@@ -284,6 +284,7 @@
 					create_config_cDial $menueFrame.sf.lf_05		{Temporary/HeadTube/Angle} 					{Temporary/}	0.02 [namespace current]::registerUpdate darkred
 					create_config_cDial $menueFrame.sf.lf_05		{Temporary/HeadTube/TopTubeAngle} 			{Temporary/}	0.02 [namespace current]::registerUpdate darkred
 					create_config_cDial $menueFrame.sf.lf_05		{Temporary/Saddle/Offset_BB/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/BottomBracket/Height} 			{Temporary/}	0.20 [namespace current]::registerUpdate darkred
 				
 				# -----------------
 				#   Geometry

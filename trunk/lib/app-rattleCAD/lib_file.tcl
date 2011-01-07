@@ -291,27 +291,71 @@
 	#-------------------------------------------------------------------------
 		#  save File Type: xml
 		#
-	proc saveProject_xml {{mode {save}}} {
+	proc saveProject_xml { {mode {save}} {type {Road}} } {
       
 				# --- select File
 			set types {
 					{{Project Files 3.x }       {.xml}  }
 				}
 				
-			set userDir		[check_user_dir user]
+
+			puts "\n"
+			puts "  ====== s a v e  F I L E ========================="
+
+
+				set userDir		[check_user_dir user]
 			set initialFile	[file tail $::APPL_Config(PROJECT_Name)]
-				puts "   saveProject_xml - userDir:    		$userDir"
-				puts "   saveProject_xml - APPL_Config:		$::APPL_Config(PROJECT_Name)"			
-				puts "   saveProject_xml - initialFile:		$initialFile"			
+				puts "       ... saveProject_xml - mode:            \"$mode\""
+				puts "       ... saveProject_xml - userDir:         \"$userDir\""
+				puts "       ... saveProject_xml - APPL_Config:     \"$::APPL_Config(PROJECT_Name)\""			
+				puts "       ... saveProject_xml - initialFile:     \"$initialFile\""			
 			
-			switch -exact $initialFile {
-				{Template Road} -
-				{Template MTB}  -
-				{template} 		{ 	set mode 		saveAs 
-									set initialFile	{new_Project.xml}
+				# default - values	
+
+			switch -exact $mode {
+				{save} 			{ 	set windowTitle		$initialFile
+									set requestTemplate	{no}
+									switch -exact $initialFile {
+										{Template Road} { 	set requestTemplate	{yes} 
+															set initialFile		[format "%s%s.xml" $::APPL_Env(USER_InitString) Road]
+														}
+										{Template MTB}  { 	set requestTemplate	{yes} 
+															set initialFile		[format "%s%s.xml" $::APPL_Env(USER_InitString) MTB ]
+														}
+										default			{}
+									}
+									if {$requestTemplate == "yes"} {
+										set retValue [tk_messageBox -title   "Save Project" -icon question \
+																	-message "Save Project as Template?" \
+																	-default cancel \
+																	-type    yesnocancel]
+										puts "\n  $retValue\n"
+										
+										switch $retValue {
+											yes 	{}
+											no		{	set mode 		saveAs 
+														set initialFile	{new_Project.xml}															
+													}
+											cancel	{	return }
+										}
+
+									}
 								}
-				default			{}
+								
+								
+				default			{
+									switch -exact $initialFile {
+										{Template Road} -
+										{Template MTB}  {	set mode 		saveAs 
+															set initialFile	{new_Project.xml}															
+														}
+										default			{}
+									}
+								}
 			}
+				puts ""			
+				puts "       ... saveProject_xml - mode:            \"$mode\""
+				puts "       ... saveProject_xml - initialFile:     \"$initialFile\""			
 
 				# -- read from domConfig
 			set domConfig $::APPL_Project
@@ -334,6 +378,9 @@
 								
 									# --- set xml-File Attributes
 								[ $domConfig selectNodes /root/Project/Name/text()  			] 	nodeValue 	[ file tail $fileName ]
+								
+									# --- set window Title
+								set windowTitle	$fileName								
 							}
 				default 	{	return}
 			}
@@ -358,41 +405,59 @@
 				#
 			frame_geometry::set_base_Parameters $::APPL_Project
 				# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-			set_window_title $fileName
+			set_window_title $windowTitle
 				#
 			lib_gui::notebook_updateCanvas
+			
+			puts "  ====== s a v e  F I L E ========================="
 	}
 
 
 	#-------------------------------------------------------------------------
 		#  open File Type: xml
 		#	
-	proc openProject_xml {} {		
+	proc openProject_xml { {windowTitle {}} {fileName {}} } {		
+			puts "\n"
+			puts "  ====== o p e n   F I L E ========================"
+			puts "         ... fileName:        $fileName"	
+			puts "         ... windowTitle:     $windowTitle"
+			puts ""
+			
 			set types {
 					{{Project Files 3.x }       {.xml}  }
 				}
-			set userDir		[check_user_dir user]
+			set userDir		$::APPL_Env(USER_Dir)
+				# set userDir		[check_user_dir user]
 				# puts "   openProject_xml - userDir    $userDir"
 				# puts "   openProject_xml - types      $types"
-			set fileName 	[tk_getOpenFile -initialdir $userDir -filetypes $types]		  
+			if {$fileName == {}} {
+				set fileName 	[tk_getOpenFile -initialdir $userDir -filetypes $types]
+			}
+			
 				# puts "   openProject_xml - fileName:   $fileName"
 			if { [file readable $fileName ] } {
 					set ::APPL_Project	[lib_file::openFile_xml $fileName show]
 						#
 					lib_project::check_ProjectVersion {3.1}
-					lib_project::check_ProjectVersion {3.2.20}
+						# lib_project::check_ProjectVersion {3.2.20}
 					lib_project::check_ProjectVersion {3.2.22}
 					lib_project::check_ProjectVersion {3.2.23}
 					lib_project::check_ProjectVersion {3.2.28}
+					lib_project::check_ProjectVersion {3.2.32}
 						#
 					frame_geometry::set_base_Parameters $::APPL_Project
+					
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-					set_window_title $fileName
+					if {$windowTitle == {}} {
+						set_window_title $fileName
+					} else {
+						set_window_title $windowTitle
+					}
 						#
 					lib_gui::notebook_updateCanvas
 			}
 				#
-			puts "   openProject_xml - APPL_Config:		$::APPL_Config(PROJECT_Name)"			
+			puts "         ... openProject_xml - APPL_Config:		$::APPL_Config(PROJECT_Name)"			
 				#
 			lib_gui::open_configPanel  refresh
 	}
@@ -401,14 +466,19 @@
 	#-------------------------------------------------------------------------
 		#  open Template File Type: xml
 		#	
-	proc openTemplate_xml {window_title template_file } {		
-			puts "   openTemplate_xml:	window_title   $template_file"	
+	proc openTemplate_xml {type} {		
+			puts "\n"
+			puts "  ====== o p e n   T E M P L A T E ================"
+			puts "         ... type:    $type"	
+			puts ""			
+			set template_file	[ getTemplateFile $type ]
+			puts "         ... template_file:   $template_file"
 			if { [file readable $template_file ] } {
 					set ::APPL_Project	[lib_file::openFile_xml $template_file show]
 						#
 					frame_geometry::set_base_Parameters $::APPL_Project
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-					set_window_title $window_title
+					set_window_title "Template $type"
 						#
 					lib_gui::notebook_updateCanvas
 			} else {
@@ -438,7 +508,7 @@
 			if {[file exists $check_Dir]} {
 				if {[file isdirectory $check_Dir]} {
 					set check_Dir $check_Dir
-					puts  "         check_user_dir:  $check_Dir" 
+						# puts  "         check_user_dir:  $check_Dir" 
 				} else {
 					tk_messageBox -title   "Config ERROR" \
 								  -icon    error \
@@ -488,7 +558,35 @@
 			return $root		
 	}
 	
+
+	#-------------------------------------------------------------------------
+		#  ... 
+		#	
+	proc getTemplateFile {type} {
+						
+			set TemplateRoad 	[file join $::APPL_Env(USER_Dir) [format "%s%s.xml" $::APPL_Env(USER_InitString) Road] ]
+			set TemplateMTB 	[file join $::APPL_Env(USER_Dir) [format "%s%s.xml" $::APPL_Env(USER_InitString) MTB ] ]
 	
+			switch -exact $type {
+					{Road} {	if {[file exists $TemplateRoad ]} {
+									return $TemplateRoad
+								} else {
+									return $::APPL_Env(TemplateRoad_default)	
+								}
+							}
+					{MTB} {		if {[file exists $TemplateMTB ]} {
+									return $TemplateMTB
+								} else {
+									return $::APPL_Env(TemplateMTB_default)	
+								}
+							}
+					default	{	return {} 
+							}
+				}
+			
+	}
+
+
 	#-------------------------------------------------------------------------
 		# http://stackoverflow.com/questions/429386/tcl-recursively-search-subdirectories-to-source-all-tcl-files
 		# 2010.10.15

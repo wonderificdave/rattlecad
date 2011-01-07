@@ -153,18 +153,26 @@
 			set lib_gui::canvasGeometry(height)	[ $node getAttribute {height} ]	
 
 			
-			# --- get TemplateFile
+			# --- get TemplateFile - Names
 			#
 		set node	[ $root selectNodes /root/Template/Road ]
-			set ::APPL_Env(TemplateRoad) [$node asText]
+			set ::APPL_Env(TemplateRoad_default)  [file join $::APPL_Env(CONFIG_Dir) [$node asText] ]
 		set node	[ $root selectNodes /root/Template/MTB ]
-			set ::APPL_Env(TemplateMTB)  [$node asText]
+			set ::APPL_Env(TemplateMTB_default)   [file join $::APPL_Env(CONFIG_Dir) [$node asText] ]
+				
+				
+			# --- get Template - Type to load
+			#
 		set node    [ $root selectNodes /root/Startup/TemplateFile ]
-			set type  [$node asText]
-		set node	[ $root selectNodes /root/Template/$type ]
-			set ::APPL_Env(TemplateFile)  [$node asText]
+			set ::APPL_Env(TemplateType) [$node asText]
 			
 			
+			# --- get Template - File to load
+			#
+		set ::APPL_Env(TemplateInit) [lib_file::getTemplateFile	$::APPL_Env(TemplateType)]
+			
+			
+		
 			# --- fill ListBox Values   APPL_RimList
 			#
 		set ::APPL_RimList {}

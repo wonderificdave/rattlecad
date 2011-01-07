@@ -824,6 +824,7 @@
 				#
 				# --- fill Result Values ------------------
 			proc fill_resultValues {domProject} {					
+					variable BottomBracket
 					variable HeadTube
 					variable Steerer
 					variable RearWheel
@@ -835,6 +836,21 @@
 							# puts "      -------------------------------" 
 							# puts "           "
 
+							
+						# --- BottomBracket
+						#
+					set position	$BottomBracket(height)
+
+							# --- BottomBracket/Height
+							#
+						set xpath Temporary/BottomBracket/Height
+							# puts "           ... $xpath"
+						set value		[ format "%.2f" [lindex $position 0] ]	
+						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
+							# puts "                  ... $value"
+						$node nodeValue		$value
+						
+						
 						# --- HeadTube
 						#
 					set position	$HeadTube(Stem)
@@ -1857,6 +1873,7 @@
 
 			variable 		_updateValue
 			
+				variable BottomBracket	
 				variable HandleBar	
 				variable Saddle
 				variable SeatTube
@@ -1872,6 +1889,25 @@
 			puts "\n  ... set_spec_Parameters: $xpath"
 			switch -glob $xpath {
 			
+				{Temporary/BottomBracket/Height}	{			
+							puts "               ... $xpath"
+							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+							set newValue				[set_projectValue $xpath  $value format]
+							set _updateValue($xpath) 	$newValue
+							set delta		[expr $newValue - $oldValue]
+									# puts "   ... oldValue:   $oldValue"
+									# puts "   ... newValue:   $newValue"
+									# puts "   ...... delta:   $delta"
+							
+								# --- update value 
+								# 
+							set xpath 		Custom/BottomBracket/Depth
+							set oldValue				$BottomBracket(depth)
+							set BottomBracket(depth)	[ expr $oldValue - $delta ]
+							set_projectValue $xpath  $BottomBracket(depth)
+							
+						}	
+							
 				{Temporary/HeadTube/Angle}	{			
 							puts "               ... $xpath"
 							
@@ -1918,7 +1954,7 @@
 						}	
 				
 				{Temporary/HeadTube/TopTubeAngle} {
-									# puts "               ... $xpath"
+							puts "               ... $xpath"
 							
 							set HeadTopTube_Angle	[ set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$HeadTopTube_Angle
