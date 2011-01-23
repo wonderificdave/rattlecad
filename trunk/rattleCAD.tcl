@@ -63,8 +63,8 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{32}  
-						RELEASE_Date		{06. Jan. 2011}
+						RELEASE_Revision	{34}  
+						RELEASE_Date		{24. Jan. 2011}
 						BASE_Dir			{}
 						ROOT_Dir			{}
 						CONFIG_Dir			{}
