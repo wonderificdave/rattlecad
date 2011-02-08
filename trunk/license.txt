@@ -73,6 +73,11 @@
                     vector algorythms:
                             kvetter@DELETETHIS.alltel.net
                             http://wiki.tcl.tk/8447
+					svg-path:
+							Greg Blair 2003-09-29
+							Keith Vetter 2003-03-07
+							Cubic Tension Splines: TensionSpline.tcl
+							http://wiki.tcl.tk/10530
                           
        vectorfont
       ------------------------------------------
