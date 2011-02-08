@@ -134,7 +134,7 @@
 				</Visualization>
 			</Composite>
 			
-			<Suspension>   
+			<Suspension_26>
 				<Geometry>
 					<Rake>40.00</Rake>
 				</Geometry>
@@ -143,10 +143,38 @@
 						<File>fork/_suspension/fork_crown.svg</File>
 					</Crown>
 					<DropOut>
-						<File>fork/_suspension/suspension_bridge.svg</File>
+						<File>fork/_suspension/suspension_bridge_26.svg</File>
 					</DropOut>
 				</Visualization>
-			</Suspension>
+			</Suspension_26>
+			
+			<Suspension_28>   
+				<Geometry>
+					<Rake>40.00</Rake>
+				</Geometry>
+				<Visualization>
+					<Crown>
+						<File>fork/_suspension/fork_crown.svg</File>
+					</Crown>
+					<DropOut>
+						<File>fork/_suspension/suspension_bridge_28.svg</File>
+					</DropOut>
+				</Visualization>
+			</Suspension_28>
+			
+			<Suspension_29>   
+				<Geometry>
+					<Rake>45.00</Rake>
+				</Geometry>
+				<Visualization>
+					<Crown>
+						<File>fork/_suspension/fork_crown.svg</File>
+					</Crown>
+					<DropOut>
+						<File>fork/_suspension/suspension_bridge_29.svg</File>
+					</DropOut>
+				</Visualization>
+			</Suspension_29>
 		</Fork>
 		
 		<Rim>
