@@ -63,6 +63,7 @@ file_delete [file join $vfsDir help.txt]
 file_delete [file join $vfsDir license.txt]
 file_delete [file join $vfsDir exclusion.txt]
 file_delete [file join $vfsDir rattleCAD.tcl]
+file_delete [file join $vfsDir simplify_SVG.tcl]
 
 file_delete [file join $vfsDir etc]
 file_delete [file join $vfsDir image]
@@ -80,10 +81,11 @@ foreach _dir [glob -directory [file join $dir_compile   _lib] *] {
 	file_update $_dir [file join $vfsDir lib]
 }
 
-file_update [file join $dir_trunk help.txt]       $vfsDir
-file_update [file join $dir_trunk license.txt]    $vfsDir
-file_update [file join $dir_trunk exclusion.txt]  $vfsDir
-file_update [file join $dir_trunk rattleCAD.tcl]  $vfsDir
+file_update [file join $dir_trunk help.txt]       	$vfsDir
+file_update [file join $dir_trunk license.txt]    	$vfsDir
+file_update [file join $dir_trunk exclusion.txt]  	$vfsDir
+file_update [file join $dir_trunk rattleCAD.tcl]  	$vfsDir
+file_update [file join $dir_trunk simplify_SVG.tcl] $vfsDir
 
 	# -- remove unused files
 	#
@@ -130,11 +132,12 @@ file_delete	$dir_version
 file mkdir  $dir_version
 file mkdir  [file join $dir_version lib]
 
-file_update [file join $vfsDir  help.txt]       $dir_version
-file_update [file join $vfsDir  license.txt]    $dir_version
-file_update [file join $vfsDir  exclusion.txt]  $dir_version
-file_update [file join $vfsDir  main.tcl]  		$dir_version
-file_update [file join $vfsDir  rattleCAD.tcl]  $dir_version
+file_update [file join $vfsDir  help.txt]			$dir_version
+file_update [file join $vfsDir  license.txt]    	$dir_version
+file_update [file join $vfsDir  exclusion.txt]  	$dir_version
+file_update [file join $vfsDir  main.tcl]  			$dir_version
+file_update [file join $vfsDir  rattleCAD.tcl]  	$dir_version
+file_update [file join $vfsDir  simplify_SVG.tcl]	$dir_version
 
 file_update [file join $vfsDir  etc      ]                          $dir_version
 file_update [file join $vfsDir  image    ]                          $dir_version
