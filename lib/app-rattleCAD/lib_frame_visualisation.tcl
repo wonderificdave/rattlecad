@@ -464,7 +464,8 @@
 				}
 
 			# --- create Fork Representation ----------------
-		switch $Rendering(Fork) {
+		puts "          ... \$Rendering(Fork) $Rendering(Fork)"
+		switch -glob $Rendering(Fork) {
 			SteelLugged {
 						set ForkBlade(polygon) 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
 						set ForkCrown(file)			[ checkFileString [ [ $domProject 	selectNodes /root/Component/Fork/Crown/File ] asText ] ]
@@ -486,11 +487,15 @@
 						set help_02					[ list 0 [lindex  $ForkDropout(position) 1] ]
 						set do_angle				[ expr 90 - [ vectormath::angle $help_01 $ForkDropout(position) $help_02  ] ]
 						}
-			Suspension 	{
+			Suspension* {
+							#puts "\n------------------\n                now Rendering   ... $Rendering(Fork)\n------------------\n"
+							set forkSize [lindex [split $Rendering(Fork) {_}] 1 ]
+							if {$forkSize == {} } { set forkSize "26" }
+							puts "             ... \$forkSize  $forkSize"
 						set ForkBlade(polygon) 		{}
-						set ForkCrown(file)			[ checkFileString [ [ $domInit   	selectNodes /root/Options/Fork/Suspension/Visualization/Crown/File ] asText ] ]
-						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Suspension/Visualization/DropOut/File ]  asText ] ]
-						set Suspension_ForkRake		[[ $domInit    	selectNodes /root/Options/Fork/Suspension/Geometry/Rake ]  asText ]
+						set ForkCrown(file)			[ checkFileString [ [ $domInit   	selectNodes /root/Options/Fork/Suspension_$forkSize/Visualization/Crown/File ] asText ] ]
+						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Suspension_$forkSize/Visualization/DropOut/File ]  asText ] ]
+						set Suspension_ForkRake		[[ $domInit    	selectNodes /root/Options/Fork/Suspension_$forkSize/Geometry/Rake ]  asText ]
 						set Project_ForkRake		[[ $domProject 	selectNodes /root/Component/Fork/Rake ]  asText ]
 						set do_direction			[ frame_geometry::object_values 	HeadTube	direction ]
 						set do_angle				[ vectormath::angle {0 1} {0 0} $do_direction ]
@@ -630,9 +635,12 @@
 
 			# --- check bindings and remove ----------
 		switch $Rendering(Fork) {
-			Composite 	-
-			Suspension 	{}
-			default {}
+			Composite 		-
+			Suspension 		-
+			Suspension_26	-
+			Suspension_28	-
+			Suspension_29 	{}
+			default 		{}
 		}
 		
 			#switch $Rendering(Fork) 

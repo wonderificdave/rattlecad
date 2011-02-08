@@ -504,54 +504,53 @@ exec wish "$0" "$@"
 		# --- window ----------
 		#
 	pack [ frame .f -bg yellow] 
-	set domFrame	[ ttk::labelframe .f.f_dom	-text "SVG - XML" ]
-	set resultFrame [ ttk::labelframe .f.f_result 	-text "Result" ]
-		pack 	$domFrame \
-				$resultFrame\
-			-side left -fill none
-		pack configure $domFrame 	-expand no	-fill y
-		pack configure $resultFrame -expand yes	-fill both 
- 
-	ttk::treeview $domFrame.t -yscrollcommand "$domFrame.y set" -xscrollcommand "$domFrame.x set" -height 40
-	scrollbar $domFrame.x -ori hori -command  "$domFrame.t xview"
-	scrollbar $domFrame.y -ori vert -command  "$domFrame.t yview"
-	grid $domFrame.t $domFrame.y    -sticky news
-	grid $domFrame.x     		    -sticky news
-	grid rowconfig    $domFrame 0 -weight 1
-	grid columnconfig $domFrame 0 -weight 1
-	
-	
-	set nb_result	[ ttk::notebook $resultFrame.nb ]
+		
+	set nb_result	[ ttk::notebook .f.nb ]
 		pack $nb_result  	-expand yes -fill both   
-	$nb_result add [frame $nb_result.nb_canvas]	-text "... Canvas" 		
-	$nb_result add [frame $nb_result.nb_tree]	-text "... formated SVG - DOM" 
-	$nb_result add [frame $nb_result.nb_text]	-text "... formated SVG - Text" 
+	$nb_result add [frame $nb_result.nb_canvas]		-text "... Canvas" 		
+	$nb_result add [frame $nb_result.nb_original]	-text "... original SVG" 
+	$nb_result add [frame $nb_result.nb_tree]		-text "... simplified SVG" 
+	$nb_result add [frame $nb_result.nb_text]		-text "... XML as Text" 
 
 	
-	set canvasFrame [ frame	$nb_result.nb_canvas.f  -relief sunken ]
+	set canvasFrame [ frame	$nb_result.nb_canvas.f  	-relief sunken ]
 		pack $canvasFrame  -expand yes -fill both
-	set treeFrame 	[ frame	$nb_result.nb_tree.f    -relief sunken ]
+	set origFrame 	[ frame	$nb_result.nb_original.f    -relief sunken ]
+		pack $origFrame    -expand yes -fill both
+	set treeFrame 	[ frame	$nb_result.nb_tree.f    	-relief sunken ]
 		pack $treeFrame    -expand yes -fill both
-	set textFrame 	[ frame	$nb_result.nb_text.f    -relief sunken ]
+	set textFrame 	[ frame	$nb_result.nb_text.f    	-relief sunken ]
 		pack $textFrame    -expand yes -fill both
 
+		
 		# --- result canvas ---
 		#
 	set resultCanvas [ canvas $canvasFrame.cv -width 900 -height 800 -relief sunken]
 		pack   $resultCanvas -fill both -expand yes -padx 5 -pady 5
-	$nb_result select 0
  
+ 
+		# --- result canvas ---
+		#
+	set originalTree [ ttk::treeview $origFrame.t 	-yscrollcommand "$origFrame.y set" \
+													-xscrollcommand "$origFrame.x set" -height 40 ]
+	scrollbar $origFrame.x -ori hori -command  "$origFrame.t xview"
+	scrollbar $origFrame.y -ori vert -command  "$origFrame.t yview"
+		grid $origFrame.t $origFrame.y    -sticky news
+		grid $origFrame.x     		    -sticky news
+		grid rowconfig    $origFrame 0 -weight 1
+		grid columnconfig $origFrame 0 -weight 1
+
+		
 		# --- result treeview ---
 		#
-	set resultTree [ ttk::treeview $treeFrame.t -xscrollcommand "$treeFrame.x set" \
-												-yscrollcommand "$treeFrame.y set" -height 40 ]
+	set resultTree [ ttk::treeview $treeFrame.t 	-xscrollcommand "$treeFrame.x set" \
+													-yscrollcommand "$treeFrame.y set" -height 40 ]
 	scrollbar $treeFrame.x -ori hori -command  "$treeFrame.t xview"
 	scrollbar $treeFrame.y -ori vert -command  "$treeFrame.t yview"
 		grid $treeFrame.t 	$treeFrame.y  -sticky news
 		grid 				$treeFrame.x  -sticky news
 		grid rowconfig    	$treeFrame 0  -weight 1
 		grid columnconfig 	$treeFrame 0  -weight 1
-	$nb_result select 1
 
 		
 		# --- result textview ---
@@ -559,20 +558,13 @@ exec wish "$0" "$@"
 													-yscroll "$textFrame.v set" -height 50 -width 160 ]
 	scrollbar $textFrame.v -orient vertical   -command "$textFrame.txt yview"
 	scrollbar $textFrame.h -orient horizontal -command "$textFrame.txt xview"
-
 		# Lay them out
 		grid $textFrame.txt $textFrame.v -sticky nsew
 		grid $textFrame.h        -sticky nsew
-
 		# Tell the text widget to take all the extra room
 		grid rowconfigure    $textFrame.txt 0 -weight 1
 		grid columnconfigure $textFrame.txt 0 -weight 1 
-	$nb_result select 2
 
- 
- 
- 
- 	# pack configure $canvasFrame -expand yes	-fill both 
 
 
 
@@ -593,11 +585,10 @@ exec wish "$0" "$@"
 	dom parse  $xml doc
 	$doc documentElement root
 
-
-	after 5 {recurseInsert $domFrame.t $root {}}
-	
 	set flatSVG [simplifySVG $root]
-	
-	recurseInsert $resultTree $flatSVG {}
+
+
 	drawSVG $flatSVG $resultCanvas
+	recurseInsert $originalTree	$root 		{}
+	recurseInsert $resultTree 	$flatSVG 	{}
 	$resultText insert end [$flatSVG asXML]
