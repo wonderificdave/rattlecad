@@ -62,6 +62,7 @@ puts "         cleanup complete\n"
 file_delete [file join $vfsDir help.txt]
 file_delete [file join $vfsDir license.txt]
 file_delete [file join $vfsDir exclusion.txt]
+file_delete [file join $vfsDir main.tcl]
 file_delete [file join $vfsDir rattleCAD.tcl]
 file_delete [file join $vfsDir simplify_SVG.tcl]
 file_delete [file join $vfsDir Tcl.svg]
@@ -85,6 +86,7 @@ foreach _dir [glob -directory [file join $dir_compile   _lib] *] {
 file_update [file join $dir_trunk help.txt]       	$vfsDir
 file_update [file join $dir_trunk license.txt]    	$vfsDir
 file_update [file join $dir_trunk exclusion.txt]  	$vfsDir
+file_update [file join $dir_trunk main.tcl]  		$vfsDir
 file_update [file join $dir_trunk rattleCAD.tcl]  	$vfsDir
 file_update [file join $dir_trunk simplify_SVG.tcl] $vfsDir
 file_update [file join $dir_trunk Tcl.svg] 			$vfsDir
@@ -140,6 +142,7 @@ file_update [file join $vfsDir  exclusion.txt]  	$dir_version
 file_update [file join $vfsDir  main.tcl]  			$dir_version
 file_update [file join $vfsDir  rattleCAD.tcl]  	$dir_version
 file_update [file join $vfsDir  simplify_SVG.tcl]	$dir_version
+file_update [file join $vfsDir  Tcl.svg]			$dir_version
 
 file_update [file join $vfsDir  etc      ]                          $dir_version
 file_update [file join $vfsDir  image    ]                          $dir_version
