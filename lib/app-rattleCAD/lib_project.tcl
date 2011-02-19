@@ -47,6 +47,7 @@
 	
 			set domProject $::APPL_Project
 			puts " ... check_ProjectVersion:  $Version"
+			
 			switch -exact $Version {
 			
 				{3.1} {		set node {}
@@ -345,7 +346,7 @@
 							}
 
 						}
-				{3.2.32} {		# --- /root/Result ...
+				{3.2.32} {		# --- /root/Temporary/BottomBracket ...
 							set node [$domProject selectNode /root/Temporary/BottomBracket]
 							if {$node == {}} {
 								puts "        ...  $Version   ... update File ... /root/Temporary/BottomBracket"
@@ -354,6 +355,57 @@
 														<Height>0.00</Height>
 												</BottomBracket>"
 							}
+
+ 						}
+								
+				{3.2.40} {		# --- /root/Custom/HeadTube/Angle ...
+							set node [$domProject selectNode /root/Temporary/WheelPosition/front/diagonal]
+							if {$node == {}} {
+								puts "        ...  $Version   ... update File ... /root/Temporary/WheelPosition/front/diagonal"
+								set node [$domProject selectNode /root/Temporary/WheelPosition/front]
+								$node appendXML "<diagonal>0.00</diagonal>"
+							}
+							
+							set node [$domProject selectNode /root/Custom/HeadTube/Angle]
+							if {$node == {}} {
+									# ... node does not exist
+								puts "        ...  $Version   ... update File ... /root/Custom/HeadTube/Angle"
+								set nodeTA [$domProject selectNode /root/Temporary/HeadTube/Angle/text()]
+								if {$nodeTA == {}} {
+										# ... no temporary informtion, take a default
+										set HeadTubeAngle	"73.50"
+										$nodeTA nodeValue	$HeadTubeAngle
+										tk_messageBox -icon warning -message "... you try to open a file of an older Version\n\n... please check HeadTube-Angle! \n\n  default: $HeadTubeAngle\n  WheelPositionFront: $WheelPositionFront"
+								} else {
+										# ... temporary informtion, take this
+										set HeadTubeAngle [$nodeTA nodeValue]
+										set nodeHT [$domProject selectNode /root/Temporary/HeadTube/Angle/text()]
+										set HeadTubeAngle [$nodeTA nodeValue]
+										set node [$domProject selectNode /root/Custom/HeadTube]
+										if { $HeadTubeAngle > 20 } {
+											# ... $HeadTubeAngle in a valid range
+											$node appendXML "<Angle>$HeadTubeAngle</Angle>"
+										} else {
+											# ... $HeadTubeAngle in an invalid range
+											$node appendXML "<Angle>73.50</Angle>"
+											set nodeWP [$domProject selectNode /root/Custom/WheelPosition]
+											set nodeWP [$domProject selectNode /root/Custom/WheelPosition/Front/text()]
+											if { $nodeWP != {} } {
+												set WheelPositionFront [$nodeWP nodeValue]
+												$nodeTA nodeValue $HeadTubeAngle
+												puts "  ... correction WheelPosition/Front: $WheelPositionFront"
+												frame_geometry::set_base_Parameters $domProject
+												frame_geometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
+												puts "  ... correction WheelPosition/Front: $WheelPositionFront"
+											}
+										}
+											
+											
+								}
+							}
+							# set node [$domProject selectNode /root/Custom/HeadTube]
+							# puts "   <D> 9999 \n[$node asXML]"
+								
  						}
 								
 						

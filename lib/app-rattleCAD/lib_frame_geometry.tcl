@@ -166,10 +166,10 @@
 			set FrontWheel(RimHeight)	[ [ $domProject selectNodes /root/Component/Wheel/Front/RimHeight	]  asText ]
 			set FrontWheel(TyreHeight)	[ [ $domProject selectNodes /root/Component/Wheel/Front/TyreHeight	]  asText ]
 			set FrontWheel(Radius)		[ expr 0.5*$FrontWheel(RimDiameter) + $FrontWheel(TyreHeight) ]
-			set FrontWheel(DistanceBB)	[ [ $domProject selectNodes /root/Custom/WheelPosition/Front		]  asText ]
-			set FrontWheel(Distance_X)	[ expr sqrt(pow($FrontWheel(DistanceBB),2) - pow(($FrontWheel(Radius) - $BottomBracket(height)),2)) ]
+			#set FrontWheel(DistanceBB)	[ [ $domProject selectNodes /root/Temporary/WheelPosition/front/diagonal		]  asText ]
+			#set FrontWheel(Distance_X)	[ expr sqrt(pow($FrontWheel(DistanceBB),2) - pow(($FrontWheel(Radius) - $BottomBracket(height)),2)) ]
 			set FrontWheel(Distance_Y)	[ expr $BottomBracket(depth) - $RearWheel(Radius) + $FrontWheel(Radius) ]
-			set FrontWheel(Position)	[ list $FrontWheel(Distance_X) $FrontWheel(Distance_Y) ]
+			#set FrontWheel(Position)	[ list $FrontWheel(Distance_X) $FrontWheel(Distance_Y) ]
 
 				#
 				# --- get HandleBar - Position
@@ -204,6 +204,7 @@
 			set HeadTube(ForkHeight)	$Fork(Height)
 			set HeadTube(Diameter)		[ [ $domProject selectNodes /root/FrameTubes/HeadTube/Diameter		]  asText ]
 			set HeadTube(Length)		[ [	$domProject selectNodes /root/FrameTubes/HeadTube/Length		]  asText ]
+			set HeadTube(Angle)			[ [ $domProject selectNodes /root/Custom/HeadTube/Angle				]  asText ]
 
 				#
 				# --- get SeatTube -------------------------
@@ -291,14 +292,14 @@
 				#
 			
 			lib_project::setValue /root/Result/Position/RearWheel			position	$RearWheel(Position)
-			lib_project::setValue /root/Result/Position/FrontWheel			position	$FrontWheel(Position)
+			# lib_project::setValue /root/Result/Position/FrontWheel		position	$FrontWheel(Position)
 			lib_project::setValue /root/Result/Position/HandleBar 			position	$HandleBar(Position)
 			lib_project::setValue /root/Result/Position/Saddle 				position	$Saddle(Position)
 			lib_project::setValue /root/Result/Position/SaddleProposal		position	$Saddle(Proposal)
 			lib_project::setValue /root/Result/Position/LegClearance		position	$TopTube(PivotPosition) 	[expr $LegClearance(Length) - ($RearWheel(Radius) - $BottomBracket(depth)) ]
 			lib_project::setValue /root/Result/Position/BottomBracketGround	position	0 	[expr - $RearWheel(Radius) + $BottomBracket(depth) ] ;# Point on the Ground perp. to BB
 
-			lib_project::setValue /root/Result/Lugs/Dropout/Front/Position	position 	$FrontWheel(Distance_X)	[expr $BottomBracket(depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
+			# lib_project::setValue /root/Result/Lugs/Dropout/Front/Position	position 	$FrontWheel(Distance_X)	[expr $BottomBracket(depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
 			lib_project::setValue /root/Result/Lugs/Dropout/Rear/Position	position 	[expr -1*$RearWheel(Distance_X)]	$BottomBracket(depth)
 			lib_project::setValue /root/Result/Lugs/Dropout/Rear/Derailleur	position 	[ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
 
@@ -307,7 +308,7 @@
 				#
 				# --- set basePoints Attributes
 				#
-			proc get_basePoints {} {
+			proc get_basePoints__ {} {
 					variable HandleBar
 					variable Saddle
 					variable Steerer
@@ -346,7 +347,64 @@
 					lib_project::setValue /root/Result/Position/SummarySize		position	$summaryLength	$summaryHeight
 												
 			}
+			proc get_basePoints {} {
+					variable Saddle
+					variable HandleBar
+					variable HeadTube
+					variable Steerer
+					variable Stem
+					variable Fork
+					variable RearWheel
+					variable FrontWheel
+					variable BottomBracket
+										
+								# puts "   .. 	\$HeadTube(Angle)	$HeadTube(Angle)"	
+										
+							set vect_01	 [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]
+							set vect_03  [ expr $vect_01 / sin($HeadTube(Angle) * $vectormath::CONST_PI / 180) ]
+
+							set Steerer(Handlebar)		[ list	[expr [lindex $HandleBar(Position) 0] - $vect_03]  [lindex $HandleBar(Position) 1] ]
+
+							set help_04	 [ vectormath::rotateLine		$Steerer(Handlebar)		100	[expr 180 - $HeadTube(Angle)]	]
+							set help_03  [ vectormath::rotateLine		$HandleBar(Position)	100	[expr  90 - $HeadTube(Angle) + $Stem(Angle)]	]
+							
+							set Steerer(Stem)			[ vectormath::intersectPoint	$HandleBar(Position)  $help_03 $Steerer(Handlebar) $help_04 ]
+						
+							set vect_04	 [ vectormath::parallel  		$Steerer(Stem)  	$help_04	$Fork(Rake) ]
+							set help_05  [ lindex $vect_04 0 ]
+							set help_06  [ lindex $vect_04 1 ]
+							
+							set FrontWheel(Position)	[ vectormath::intersectPoint	$help_05  $help_06 [list 0 $FrontWheel(Distance_Y)] [list 200 $FrontWheel(Distance_Y)] ]
+							set FrontWheel(Distance_X)	[ lindex $FrontWheel(Position) 0]
+							set FrontWheel(DistanceBB)	[ expr hypot($FrontWheel(Distance_X),$FrontWheel(Distance_X)) ]
+
+							set Steerer(FrontWheel) 	[ vectormath::rotateLine	$FrontWheel(Position)	$Fork(Rake)	[expr 270 - $HeadTube(Angle)] ]			
+							set Steerer(Fork) 			[ vectormath::addVector			$Steerer(FrontWheel) 	[ vectormath::unifyVector  $Steerer(FrontWheel)  $Steerer(Stem)  $Fork(Height) ] ]
+														
+					lib_project::setValue /root/Result/Tubes/Steerer/Start		position	$Steerer(Fork) 
+					lib_project::setValue /root/Result/Tubes/Steerer/End		position	$Steerer(Stem)
+					lib_project::setValue /root/Result/Lugs/ForkCrown/Position	position	$Steerer(Fork) 
+					lib_project::setValue /root/Result/Tubes/Steerer/Direction	direction	$Steerer(Fork)	$Steerer(Stem)
+					lib_project::setValue /root/Result/Tubes/Steerer/Direction	direction	$Steerer(Fork)	$Steerer(Stem)
+					
+						set help_08  [ vectormath::addVector	$BottomBracket(Ground) {200 0}] 
+						
+						set Steerer(Ground)		[ vectormath::intersectPoint 		$Steerer(Stem) $Steerer(Fork)  	$BottomBracket(Ground)  $help_08 ] 
+						set SeatTube(Ground)	[ vectormath::intersectPoint 		$Saddle(Position) {0 0}  	$BottomBracket(Ground)  $help_08 ] 
+					lib_project::setValue /root/Result/Position/SteererGround	position	$Steerer(Ground)		;# Point on the Ground in direction of Steerer
+					lib_project::setValue /root/Result/Position/SeatTubeGround	position	$SeatTube(Ground)		;# Point on the Ground in direction of SeatTube
+					lib_project::setValue /root/Result/Tubes/SeatTube/Direction	direction	$SeatTube(Ground)  $Saddle(Position)
+						
+						#
+						# --- set summary Length of Frame, Saddle and Stem
+						set summaryLength [ expr $RearWheel(Distance_X) + $FrontWheel(Distance_X)]
+						set summaryHeight [ expr $BottomBracket(depth) + 40 + [lindex $Saddle(Position) 1] ]
+					lib_project::setValue /root/Result/Position/SummarySize		position	$summaryLength	$summaryHeight
+												
+			}
 			get_basePoints
+			lib_project::setValue /root/Result/Position/FrontWheel			position	$FrontWheel(Position)
+			lib_project::setValue /root/Result/Lugs/Dropout/Front/Position	position 	$FrontWheel(Distance_X)	[expr $BottomBracket(depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
 
 			
 			#
@@ -876,33 +934,6 @@
 						$node nodeValue		$value
 
 						
-						# --- HeadTube/Angle
-						#
-					set xpath Temporary/HeadTube/Angle
-						# puts "           ... $xpath"
-						# puts "                   ... $frameCoords::Steerer_Stem" 
-						# puts "                   ... $frameCoords::Steerer_Ground" 
-					set value			[ format "%.2f" [ expr -1 * [ vectormath::dirAngle $Steerer(Stem) $Steerer(Ground) ] ] ]
-						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						# puts "                  ... $value"
-					$node nodeValue		$value
-					
-					
-						# --- HeadTube/TopTubeAngle
-						#
-					set xpath Temporary/HeadTube/TopTubeAngle
-						# puts "           ... $xpath"
-						# puts "                   ... $frameCoords::Steerer_Stem" 
-						# puts "                   ... $frameCoords::Steerer_Ground"
-						set HeadTubeAngle 	[[ $domProject selectNodes /root/Temporary/HeadTube/Angle/text() ] asText]
-						set TopTubeAngle 	[[ $domProject selectNodes /root/Custom/TopTube/Angle/text()  ] asText]
-						# puts "     $HeadTubeAngle  $TopTubeAngle"
-					set value			[ format "%.2f" [ expr  $HeadTubeAngle + $TopTubeAngle] ]
-						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						# puts "                  ... $value"
-					$node nodeValue		$value
-					
-					
 						# --- SeatTube
 						#
 					set position	[ frame_geometry::object_values		SeatTube/End	position	{0 0} ]
@@ -935,6 +966,18 @@
 						# puts "           ... $xpath"
 						# puts "                ... $frameCoords::Saddle" 
 					set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
+					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
+						# puts "                  ... $value"
+					$node nodeValue		$value
+
+					
+						# --- WheelPosition/front/diagonal
+						#
+					set position	$FrontWheel(Position)					
+					set xpath Temporary/WheelPosition/front/diagonal
+						# puts "           ... $xpath"
+						# puts "                ... $frameCoords::FrontWheel" 						
+					set value		[ format "%.2f" [expr { hypot( [lindex $position 0], [lindex $position 1] ) }] ]	
 					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
 						# puts "                  ... $value"
 					$node nodeValue		$value
@@ -1908,51 +1951,6 @@
 							
 						}	
 							
-				{Temporary/HeadTube/Angle}	{			
-							puts "               ... $xpath"
-							
-							set HeadTube(Angle)			[set_projectValue $xpath  $value format]
-							set _updateValue($xpath) 	$HeadTube(Angle)
-									# puts "          \$HeadTube(Angle)  = $HeadTube(Angle)"
-								
-								# --- get HandleBar(position)
-								# 
-								# puts "   ... \$FrontWheel(Position)  $FrontWheel(Position)"
-							#set Fork(Height)			[ [ $domProject selectNodes /root/Component/Fork/Height		]  asText ]
-							#set Fork(Rake)				[ [ $domProject selectNodes /root/Component/Fork/Rake		]  asText ]
-							#set HandleBar(Height)		[ [ $domProject selectNodes /root/Personal/HandleBar_Height	]  asText ]
-							#set Stem(Angle)				[ [ $domProject selectNodes /root/Component/Stem/Angle		]  asText ]
-							#set Stem(Length)			[ [ $domProject selectNodes /root/Component/Stem/Length		]  asText ]
-							
-								set help_03	 [ vectormath::rotateLine 	$FrontWheel(Position) [expr $Fork(Height) + 300]	[ expr 180 - $HeadTube(Angle) ] ]
-							set vect_HT		 [ vectormath::parallel   	$FrontWheel(Position)	$help_03	$Fork(Rake) left ]
-								set help_04	 [ lindex $vect_HT 0]
-								set help_05	 [ lindex $vect_HT 1]
-							
-								set st_perp	 [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]						
-								set st_horz  [ expr $st_perp / cos((90 - $HeadTube(Angle)) * $vectormath::CONST_PI / 180) ]
-								set vect_02	 [ vectormath::parallel  $help_04   $help_05	$st_perp ]
-								set vect_03	 [ vectormath::parallel  {0 0}	{800 0}	$HandleBar(Height) left]
-							set HandleBar(Position)	 [ vectormath::intersectPoint  [lindex $vect_02 0] [lindex $vect_02 1]  [lindex $vect_03 0] [lindex $vect_03 1] ]
-								
-								# --- update value 
-								# 
-							set xpath 		Personal/HandleBar_Distance					
-							set newValue 	[lindex $HandleBar(Position) 0] 
-									# puts "          $HandleBar(position)  -> $newValue"
-							set_projectValue $xpath  $newValue
-		
-								# --- update value 
-								# 
-							set xpath 		Personal/HandleBar_Height					
-							set newValue 	[lindex $HandleBar(Position) 1] 
-							
-									# puts "            old:  $HandleBar(Height)  "
-									# puts "          $HandleBar(position)  -> $newValue"
-							set_projectValue $xpath  $newValue
-		
-						}	
-				
 				{Temporary/HeadTube/TopTubeAngle} {
 							puts "               ... $xpath"
 							
@@ -1980,31 +1978,39 @@
 							set delta		[expr $newValue - $oldValue]
 									# puts "          $newValue - $oldValue = $delta"
 								 
-								# --- get FrontWheel(Distance)
+								# --- set HandleBar(Distance)
 								#
-							# set FrontWheel(position) 	[ point_position FrontWheel {0 0}]
-								# set FrontWheel(_y) 			[ lindex $FrontWheel(Position) 1] 
-								# set FrontWheel(_Distance) 	[ expr hypot($newValue,$FrontWheel(y)) ] 
-								# set FrontWheel(Distance_Y) 		[ lindex $FrontWheel(Position) 1] 
-							set FrontWheel(Distance_Y_tmp) 	[ expr hypot($newValue,$FrontWheel(Distance_Y)) ] 
-									# puts "          hypot($newValue,$FrontWheel(y)) = $FrontWheel(Distance)"
-							
-								# --- update value 
-								# 
-							set xpath 		Custom/WheelPosition/Front					
-							set_projectValue $xpath  $FrontWheel(Distance_Y_tmp)
-
-								# --- get HandleBar(Reach)
-								# 
-							set xpath 					Personal/HandleBar_Distance					
+							set newValue				[ expr $HandleBar(Distance)	+ $delta ]
+							set xpath 					Personal/HandleBar_Distance
+							set_projectValue $xpath  	$newValue
+						}
+						
+				{Temporary/WheelPosition/front/diagonal}	{			
+							puts "               ... $xpath"
 							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
-							set HandleBar(Reach_tmp)		[expr $oldValue + $delta]
-									# puts "          $oldValue + $delta = $HandleBar(Reach)"
-								
-								# --- update value
-								# 
-							set_projectValue $xpath  $HandleBar(Reach_tmp)
+							set newValue				[set_projectValue $xpath  $value format]
+							set _updateValue($xpath) 	$newValue
+							puts "                 <D> ... $oldValue $newValue"
 							
+								# --- set HandleBar(Angle)
+								#
+							set vect_01	 [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]
+							set vect_02	 [ expr $vect_01 - $Fork(Rake) ]
+							
+							set FrontWheel(Distance_X_tmp)	[ expr { sqrt( $newValue * $newValue - $FrontWheel(Distance_Y) * $FrontWheel(Distance_Y) ) } ]
+							set FrontWheel(Position_tmp)	[ list $FrontWheel(Distance_X_tmp) $FrontWheel(Distance_Y)]
+							
+							set help_03	 [ vectormath::cathetusPoint	$HandleBar(Position)	$FrontWheel(Position_tmp)	$vect_02  close ]
+							set vect_HT 	 [ vectormath::parallel  	$help_03  				$FrontWheel(Position_tmp)	$Fork(Rake) ]
+								# puts "                 <D> ... $vect_HT"
+							
+							set help_01	 [ lindex $vect_HT 0]
+							set help_02	 [ lindex $vect_HT 1]
+							set help_03	 [list -200 [ lindex $help_02 1] ]
+							
+							set newValue				[ vectormath::angle	$help_01 $help_02 $help_03 ]
+							set xpath 					Custom/HeadTube/Angle
+							set_projectValue $xpath  	$newValue
 						}
 						
 				{Temporary/Saddle/Offset_BB/horizontal}	{			
