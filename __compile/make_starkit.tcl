@@ -64,6 +64,7 @@ file_delete [file join $vfsDir license.txt]
 file_delete [file join $vfsDir exclusion.txt]
 file_delete [file join $vfsDir rattleCAD.tcl]
 file_delete [file join $vfsDir simplify_SVG.tcl]
+file_delete [file join $vfsDir Tcl.svg]
 
 file_delete [file join $vfsDir etc]
 file_delete [file join $vfsDir image]
@@ -86,6 +87,7 @@ file_update [file join $dir_trunk license.txt]    	$vfsDir
 file_update [file join $dir_trunk exclusion.txt]  	$vfsDir
 file_update [file join $dir_trunk rattleCAD.tcl]  	$vfsDir
 file_update [file join $dir_trunk simplify_SVG.tcl] $vfsDir
+file_update [file join $dir_trunk Tcl.svg] 			$vfsDir
 
 	# -- remove unused files
 	#
