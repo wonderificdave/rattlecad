@@ -201,11 +201,6 @@
 																			-fill gray50 		-width 0.25			-tags __CenterLine__		
 					}
 					
-			__points_05 {
-						$cv_Name create centerline 	[ lib_project::flatten_nestedList $Saddle(Position) $SeatTube(TopTube) ] \
-																			-fill gray50 		-width 0.25			-tags __CenterLine__		
-					}
-					
 			geometry_bg {
 						set help_01				[ list [lindex $BottomBracket(Position) 0] [lindex $LegClearance(Position) 1] ]
 
@@ -293,12 +288,12 @@
 						set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $Saddle(Position) $BottomBracket(Position) ] \
 															horizontal	[expr  -80 * $stageScale]    0 \
 															$colour(result) ] 
+						set _dim_FW_Distance	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)  $FrontWheel(Position)] \
+															aligned     [expr   100 * $stageScale]   [expr  -30 * $stageScale] \
+															$colour(result) ] 
 						set _dim_FW_DistanceX	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BaseCenter  $FrontWheel(Position) ] \
 															horizontal  [expr   70 * $stageScale]   0 \
 															$colour(result) ] 
-						set _dim_HT_Angle  		[ $cv_Name dimension  angle   	[ lib_project::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $BaseCenter ] \
-															150   0  \
-															$colour(result) ]
 						set _dim_BB_Height 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)	$BaseCenter] \
 															vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
 															$colour(result) ]
@@ -325,9 +320,9 @@
 						set _dim_CS_Length 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $RearWheel(Position)  $BottomBracket(Position)] \
 															aligned     [expr   100 * $stageScale]   0 \
 															$colour(secondary) ] 
-						set _dim_FW_Distance	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)  $FrontWheel(Position)] \
-															aligned     [expr   100 * $stageScale]   [expr  -30 * $stageScale] \
-															$colour(secondary) ] 
+						set _dim_HT_Angle  		[ $cv_Name dimension  angle   	[ lib_project::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $BaseCenter ] \
+															150   0  \
+															$colour(secondary) ]
 						set _dim_RW_Radius 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $RearWheel(Position)  $RearWheel_Ground ] \
 															vertical    [expr   130 * $stageScale]    0 \
 															$colour(secondary) ] 
@@ -392,7 +387,7 @@
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_Angle  		
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Depth   		
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_CS_Length   	
-								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_Distance  	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Angle   
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_Stem_Length   	
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_Stem_Angle   	
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_Fork_Rake   	
@@ -410,7 +405,7 @@
 								$cv_Name bind $_dim_ST_Angle  		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Personal/SeatTube_Angle]
 								$cv_Name bind $_dim_BB_Depth   		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Custom/BottomBracket/Depth]
 								$cv_Name bind $_dim_CS_Length   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Custom/WheelPosition/Rear]
-								$cv_Name bind $_dim_FW_Distance  	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Custom/WheelPosition/Front]
+								$cv_Name bind $_dim_HT_Angle		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Custom/HeadTube/Angle]
 								$cv_Name bind $_dim_Stem_Length   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/Stem/Length]
 								$cv_Name bind $_dim_Stem_Angle   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/Stem/Angle]		
 								$cv_Name bind $_dim_Fork_Rake   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/Fork/Rake]
@@ -420,13 +415,13 @@
 								$cv_Name bind $_dim_CR_Length   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/CrankSet/Length]
 								
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_XPosition   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_Distance  	
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_DistanceX   	
-								lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Angle   
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Height								
 
 								$cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/Saddle/Offset_BB/horizontal]
+								$cv_Name bind $_dim_FW_Distance  	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/diagonal]
 								$cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/horizontal]
-								$cv_Name bind $_dim_HT_Angle		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/HeadTube/Angle]
 								$cv_Name bind $_dim_BB_Height		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/BottomBracket/Height]
 									#
 									# ... proc fill_resultValues ...

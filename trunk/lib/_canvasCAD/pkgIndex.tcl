@@ -15,6 +15,7 @@ package ifneeded canvasCAD  0.8 "\
  			[list source [file join $dir canvasCAD_binding.tcl]]; \			
  			[list source [file join $dir canvasCAD_utility.tcl]]; \
  			[list source [file join $dir canvasCAD_svg.tcl]]; \
+ 			[list source [file join $dir canvasCAD_svg_path.tcl]]; \
  			[list source [file join $dir canvasCAD_print.tcl]]; \
 			[list source [file join $dir vectormath.tcl]]; \
 			[list source [file join $dir vectorfont.tcl]]; \

@@ -185,6 +185,27 @@
 									set y2 [expr $cy + $r]
 									set objectPoints [list $x1 $y1 $x2 $y2]
 								}
+							path { # the complex all inclusive object in svg
+									set valueList  [ $node getAttribute d ]
+									set partialPath	[split [string trim $valueList] "zZ"]
+										# [string map {Z {_Z}} {z {_z}} $valueList]
+									foreach path $partialPath {		
+										set objectPoints [ path2Line $valueList [list $svgPosition(x) $svgPosition(y)] ]										
+											# puts "\n path-valueList:  $objectPoints"											
+										if {$angle != 0} { 
+											set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
+										}
+										set pos_objectPoints {}
+										foreach {x y} $objectPoints {
+											set pos_objectPoints [lappend pos_objectPoints [expr $x + $pos_x]]
+											set pos_objectPoints [lappend pos_objectPoints [expr $y + $pos_y]]
+										}									
+										$w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]
+									}
+									set nodeName {}
+								}							
+								
+								
 							default { }
 					}
 					
@@ -507,4 +528,9 @@
 			foreach {r g b} [winfo rgb . $rgb] break
 			return [format "#%02x%02x%02x" [expr {$r/256}] [expr {$g/256}] [expr {$b/256}] ]
 	}
+	
+ 	
+	
+	
+	
 				

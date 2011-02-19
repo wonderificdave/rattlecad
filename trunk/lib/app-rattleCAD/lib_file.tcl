@@ -444,6 +444,7 @@
 					lib_project::check_ProjectVersion {3.2.23}
 					lib_project::check_ProjectVersion {3.2.28}
 					lib_project::check_ProjectVersion {3.2.32}
+					lib_project::check_ProjectVersion {3.2.40}
 						#
 					frame_geometry::set_base_Parameters $::APPL_Project
 					
