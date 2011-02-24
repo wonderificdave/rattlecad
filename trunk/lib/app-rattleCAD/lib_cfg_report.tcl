@@ -50,7 +50,13 @@
 		variable treeWidget
 		variable menueFrame
 		
-		
+			# --- ttk::style - treeview ---
+			#
+		ttk::style map Treeview.Row  -background [ list selected gainsboro ]
+
+			
+			# --- create GUI ---
+			#
 		pack [ frame $w.f ] -fill both -expand yes
 		set menueFrame	[ frame $w.f.f_bt	-relief groove -bd 1]
 		set treeFrame 	[ frame $w.f.f_tree ]
@@ -83,8 +89,17 @@
 
 			#	[lib_file::getTemplateFile	$::APPL_Env(TemplateType)]
 				
-		set treeWidget 	[ Tree	$treeFrame.tree -xscrollcommand "$treeFrame.tree_x set" \
-													-yscrollcommand "$treeFrame.tree_y set" ]
+		set treeWidget 	[ ttk::treeview	$treeFrame.tree \
+		                                            -columns "value" \
+													-xscrollcommand "$treeFrame.tree_x set" \
+													-yscrollcommand "$treeFrame.tree_y set" ]													
+			$treeWidget heading "#0"   -anchor w  -text "XML" -anchor w
+			$treeWidget column  "#0"   -width  160
+			$treeWidget heading value  -anchor w  -text "Value" 
+			$treeWidget column  value  -width  900 
+													
+													
+													
 		scrollbar 	$treeFrame.tree_x 	-ori hori 	-command "$treeFrame.tree xview"
 		scrollbar 	$treeFrame.tree_y 	-ori vert 	-command "$treeFrame.tree yview" 
 			grid 	$treeFrame.tree 	$treeFrame.tree_y  -sticky news
@@ -100,10 +115,12 @@
        #
 	proc cleanupTree {} {
 		variable treeWidget
-		foreach child [$treeWidget nodes root] {
-			# puts "  to delete [$child nodeName]"
-			$treeWidget delete $child
-		}
+			# puts "  ... $treeWidget "
+		foreach childNode [$treeWidget children {} ] {
+				# puts "   .... $childNode"
+			$treeWidget detach     $childNode
+			$treeWidget delete     $childNode
+		}  
 	}
 
 
@@ -124,8 +141,9 @@
 	proc fillTree {node parent} {
 		variable treeWidget	
 		cleanupTree						
-		recurseInsert $treeWidget "$node" $parent
-		$treeWidget toggle $node
+		# recurseInsert $treeWidget "$node" $parent
+		recurseInsert $treeWidget "$node" {}
+		# $treeWidget toggle $node
 	}	
 	   
 	   
@@ -133,7 +151,62 @@
 	#-------------------------------------------------------------------------
        #  fill Tree - help function
        #
-	proc recurseInsert {w node parent} {
+    proc recurseInsert {w node parent} {
+            
+			proc getAttributes node {
+					if {![catch {$node attributes} res]} {set res}
+			} 
+				
+			set domDepth [llength [split [$node toXPath] /]]			
+			set nodeName [$node nodeName]
+            set done 0
+            if {$nodeName eq "#text" || $nodeName eq "#cdata"} {
+                set text [string map {\n " "} [$node nodeValue]]
+            } else {
+                set text {}
+                foreach att [getAttributes $node] {
+                    catch {append text " $att=\"[$node getAttribute $att]\""}
+                }
+                set children [$node childNodes]
+                if {[llength $children]==1 && [$children nodeName] eq "#text"} {
+                    append text [$children nodeValue]
+                    set done 1
+                }
+            }
+            $w insert $parent end -id $node -text $nodeName -tags $node -values [list "$text" ] 
+			
+			case [expr $domDepth-1] {
+				 0 	{	set r [format %x  0];	set g [format %x  0];	set b [format %x 15]}
+				 1 	{	set r [format %x  3];	set g [format %x  0];	set b [format %x 12]}
+				 2 	{	set r [format %x  6];	set g [format %x  0];	set b [format %x  9]}
+				 3 	{	set r [format %x  9];	set g [format %x  0];	set b [format %x  6]}
+				 4 	{	set r [format %x 12];	set g [format %x  0];	set b [format %x  3]}
+				 5 	{	set r [format %x 15];	set g [format %x  0];	set b [format %x  0]}
+				 6 	{	set r [format %x 12];	set g [format %x  3];	set b [format %x  0]}
+				 7 	{	set r [format %x  9];	set g [format %x  6];	set b [format %x  0]}
+				 8 	{	set r [format %x  6];	set g [format %x  9];	set b [format %x  0]}
+				 9 	{	set r [format %x  3];	set g [format %x 12];	set b [format %x  0]}
+ 				10 	{	set r [format %x  0];	set g [format %x 15];	set b [format %x  0]}
+				11 	{	set r [format %x  0];	set g [format %x 12];	set b [format %x  3]}
+				12 	{	set r [format %x  0];	set g [format %x  9];	set b [format %x  6]}
+				13 	{	set r [format %x  0];	set g [format %x  6];	set b [format %x  9]}
+				14 	{	set r [format %x  0];	set g [format %x  3];	set b [format %x 12]}
+				15 	{	set r [format %x  0];	set g [format %x  0];	set b [format %x 15]}
+				default 
+					{	set r [format %x 12];	set g [format %x 12];	set b [format %x 12]}
+			}
+			set fill [format "#%s%s%s%s%s%s" $r $r $g $g $b $b] 
+			
+			$w tag configure $node -foreground $fill
+            if {$parent eq {}} {$w item $node -open 1}
+            if !$done {
+                foreach child [$node childNodes] {
+                    recurseInsert $w $child $node
+                }
+            }
+    }
+
+	proc recurseInsert_ {w node parent} {
  		
 		set domDepth [llength [split [$node toXPath] /]]
 		
