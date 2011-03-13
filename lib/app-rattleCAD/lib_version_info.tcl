@@ -188,7 +188,7 @@
         $env_text  insert end "     APPL_Env(IMAGE_Dir):     $APPL_Env(IMAGE_Dir)\n"
         $env_text  insert end "     APPL_Env(USER_Dir):      $APPL_Env(USER_Dir)\n"
         $env_text  insert end "\n"
-        $env_text  insert end "     APPL_Env(USER_Init):     $APPL_Env(USER_Init)\n"
+        # $env_text  insert end "     APPL_Env(USER_Init):     $APPL_Env(USER_Init)\n"
         $env_text  insert end "\n\n"
         $env_text  insert end "   Packages:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
