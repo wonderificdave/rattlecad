@@ -308,45 +308,6 @@
 				#
 				# --- set basePoints Attributes
 				#
-			proc get_basePoints__ {} {
-					variable HandleBar
-					variable Saddle
-					variable Steerer
-					variable Stem
-					variable Fork
-					variable RearWheel
-					variable FrontWheel
-					variable BottomBracket
-										
-						set vect_01	 [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]
-						set vect_02	 [ expr $vect_01 - $Fork(Rake) ]
-						set help_03	 [ vectormath::cathetusPoint	$HandleBar(Position)	$FrontWheel(Position)	$vect_02  close ]
-					set vect_HT 	 [ vectormath::parallel  		$help_03  				$FrontWheel(Position)	$Fork(Rake) ]
-						set help_04  [ lindex $vect_HT 0 ]
-						set help_05  [ lindex $vect_HT 1 ]
-						set help_07  [ vectormath::rotatePoint		$HandleBar(Position)	$help_04	$Stem(Angle)	]			
-
-						set Steerer(Stem)		[ vectormath::intersectPoint	$HandleBar(Position)  $help_07 $help_04 $help_05 ]
-						set Steerer(Fork) 		[ vectormath::addVector			$help_05 	[ vectormath::unifyVector  $help_04  $help_05   -$Fork(Height) ] ]
-					lib_project::setValue /root/Result/Tubes/Steerer/Start		position	$Steerer(Fork) 
-					lib_project::setValue /root/Result/Tubes/Steerer/End		position	$Steerer(Stem)
-					lib_project::setValue /root/Result/Lugs/ForkCrown/Position	position	$Steerer(Fork) 
-					lib_project::setValue /root/Result/Tubes/Steerer/Direction	direction	$Steerer(Fork)	$Steerer(Stem)
-				
-						set help_08  [ vectormath::addVector	$BottomBracket(Ground) {200 0}] 
-						
-						set Steerer(Ground)		[ vectormath::intersectPoint 		$Steerer(Stem) $Steerer(Fork)  	$BottomBracket(Ground)  $help_08 ] 
-						set SeatTube(Ground)	[ vectormath::intersectPoint 		$Saddle(Position) {0 0}  	$BottomBracket(Ground)  $help_08 ] 
-					lib_project::setValue /root/Result/Position/SteererGround	position	$Steerer(Ground)		;# Point on the Ground in direction of Steerer
-					lib_project::setValue /root/Result/Position/SeatTubeGround	position	$SeatTube(Ground)		;# Point on the Ground in direction of SeatTube
-					lib_project::setValue /root/Result/Tubes/SeatTube/Direction	direction	$SeatTube(Ground)  $Saddle(Position)
-						#
-						# --- set summary Length of Frame, Saddle and Stem
-						set summaryLength [ expr $RearWheel(Distance_X) + $FrontWheel(Distance_X)]
-						set summaryHeight [ expr $BottomBracket(depth) + 40 + [lindex $Saddle(Position) 1] ]
-					lib_project::setValue /root/Result/Position/SummarySize		position	$summaryLength	$summaryHeight
-												
-			}
 			proc get_basePoints {} {
 					variable Saddle
 					variable HandleBar
@@ -934,6 +895,23 @@
 						$node nodeValue		$value
 
 						
+						# --- HeadTube / TopTubeAngle
+						#
+					set angle_ht	[ [ $domProject selectNodes /root/Custom/HeadTube/Angle/text() ] asText]
+					set angle_tt	[ [ $domProject selectNodes /root/Custom/TopTube/Angle/text()  ] asText]					
+							# puts "           ... $angle_ht $angle_tt"
+
+							# --- HeadTube/TopTubeAngle
+							#
+						set xpath Temporary/HeadTube/TopTubeAngle
+							# puts "           ... $xpath"
+							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
+						set value		[ format "%.2f" [expr $angle_ht + $angle_tt] ]	
+						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
+							# puts "                  ... $value"
+						$node nodeValue		$value
+
+
 						# --- SeatTube
 						#
 					set position	[ frame_geometry::object_values		SeatTube/End	position	{0 0} ]
@@ -1962,7 +1940,7 @@
 
 								# --- update value 
 								# 
-							set HeadTube_Angle		[ [ $domProject selectNodes /root/Temporary/HeadTube/Angle		]  asText ]
+							set HeadTube_Angle		[ [ $domProject selectNodes /root/Custom/HeadTube/Angle		]  asText ]
 							set value				[ expr $HeadTopTube_Angle - $HeadTube_Angle]
 							set xpath		Custom/TopTube/Angle
 							

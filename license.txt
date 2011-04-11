@@ -2,11 +2,11 @@
     The rattleCAD package is open Source written by 
         Manfred ROSENBERGER.
 
-    If you have any questions, please take a look on 	
+    If you have any questions, please take a look on     
     
             http://sourceforge.net/projects/rattlecad/
-	
-	or send me an email:
+    
+    or send me an email:
 
             manfred.rosenberger@gmx.net
 
@@ -37,28 +37,28 @@
 
        BWidget
       ------------------------------------------
-		    Version: 1.9 
-		    http://tcllib.sourceforge.net/BWman/ 
+            Version: 1.9 
+            http://tcllib.sourceforge.net/BWman/ 
               ... see License of BWidgets
 
             
        struct
       ------------------------------------------
-		    Version: 1.12   
-		    http://npg.dl.ac.uk/MIDAS/manual/ActiveTcl8.4.4.0-html/tcllib/struct/struct_tree.html 
-		      ... see License of struct
- 			  
+            Version: 1.12   
+            http://npg.dl.ac.uk/MIDAS/manual/ActiveTcl8.4.4.0-html/tcllib/struct/struct_tree.html 
+              ... see License of struct
+               
                     tree-operations:
-							http://wiki.tcl.tk/ ...
+                            http://wiki.tcl.tk/ ...
             
        tdom
       ------------------------------------------
             Version: 0.8.3  
-			http://www.tdom.org/   ... owner and content of url changed
+            http://www.tdom.org/   ... owner and content of url changed
               ... see License of tdom
-			  
+              
                     xml-operations:
-							http://wiki.tcl.tk/ ...
+                            http://wiki.tcl.tk/ ...
             
        canvasCAD
       ------------------------------------------
@@ -73,11 +73,11 @@
                     vector algorythms:
                             kvetter@DELETETHIS.alltel.net
                             http://wiki.tcl.tk/8447
-					svg-path:
-							Greg Blair 2003-09-29
-							Keith Vetter 2003-03-07
-							Cubic Tension Splines: TensionSpline.tcl
-							http://wiki.tcl.tk/10530
+                    svg-path:
+                            Greg Blair 2003-09-29
+                            Keith Vetter 2003-03-07
+                            Cubic Tension Splines: TensionSpline.tcl
+                            http://wiki.tcl.tk/10530
                           
        vectorfont
       ------------------------------------------
