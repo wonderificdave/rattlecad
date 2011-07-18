@@ -746,11 +746,11 @@ exec wish "$0" "$@"
                                         $canvas create line $objectPoints -fill black
                                 }
                             line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
-                                        set objectPoints [list     [expr [$node getAttribute x1] + $transform_x ] [expr -([$node getAttribute y1] + $transform_y )] \
-                                                                [expr [$node getAttribute x2] + $transform_x ] [expr -([$node getAttribute y2] + $transform_y )] ]
+										set objectPoints [list	[expr [$node getAttribute x1] + $transform_x ] [expr [$node getAttribute y1] + $transform_y ] \
+                                                                [expr [$node getAttribute x2] + $transform_x ] [expr [$node getAttribute y2] + $transform_y ] ]
                                             # -- create line
                                                 # puts "$canvas create line $objectPoints -fill black"
-                                        $canvas create line $objectPoints -fill black
+										$canvas create line $objectPoints -fill black
                                     }
                             circle { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
                                         # --- dont display the center_object with id="center_00"

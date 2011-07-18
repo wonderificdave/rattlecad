@@ -315,7 +315,7 @@
 						set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
 						if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
 																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																			$updateCommand { 	Component/HeadSet/Height/Bottom	\
+																			$updateCommand { 	Component/HeadSet/Height/Top	\
 																								Component/HeadSet/Diameter		\
 																							} 	{HeadSet Parameter} \
 																]
@@ -325,7 +325,7 @@
 						set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
 						if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
 																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																			$updateCommand { 	Component/HeadSet/Height/Top	\
+																			$updateCommand { 	Component/HeadSet/Height/Bottom	\
 																								Component/HeadSet/Diameter		\
 																							} 	{HeadSet Parameter} \
 																]
