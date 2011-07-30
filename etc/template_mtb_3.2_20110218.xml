@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.2.34</rattleCADVersion>
+        <rattleCADVersion>3.2.49</rattleCADVersion>
         <Name>Template MTB</Name>
-        <modified>2011.01.24/12:00</modified>
+        <modified>2011.07.28/12:00</modified>
     </Project>
 
     <Personal>
@@ -198,6 +198,9 @@
 			<StackHeight>0.00</StackHeight>
 			<TopTubeAngle>0.00</TopTubeAngle>
 		</HeadTube>
+		<TopTube>
+			<VirtualLength>0.00</VirtualLength>
+		</TopTube>
 		<SeatTube>
 			<TubeLength>0.00</TubeLength>
 			<TubeHeight>0.00</TubeHeight>

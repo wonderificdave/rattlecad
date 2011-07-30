@@ -129,6 +129,10 @@
 		set help_92				[ vectormath::addVector		$FrontWheel(Position) 	[ vectormath::unifyVector {0 0} $vect_90 [ expr - ( 0.5 * $FrontWheel(RimDiameter) + $FrontWheel(TyreHeight)) ] ] ]
 		set RearWheel_Ground	[ list [lindex $RearWheel(Position)  0] [lindex $Steerer(Ground) 1] ]
 		set FrontWheel_Ground	[ list [lindex $FrontWheel(Position) 0] [lindex $Steerer(Ground) 1] ]
+		
+			# --- help points for virtual horizontal HesdTube -----
+		set TopTube_Seat_virtual	[ vectormath::intersectPoint [list -500 [lindex $TopTube(Steerer) 1]] $TopTube(Steerer)  $BottomBracket(Position) $Saddle(Position) ]
+
 
 			# --- set values -------------------------
 		set RearWheel_Radius	[ expr [lindex $RearWheel(Position)  1] - [lindex $BaseCenter 1] ]
@@ -150,18 +154,26 @@
 						$cv_Name create circle 	$help_91				-radius  6  -outline gray50 	-width 1.0			-tags __CenterLine__
 					}
 			point_seat {
-						$cv_Name create circle 	$LegClearance(Position)	-radius  5  -outline darkred 	-width 1.0			-tags __CenterLine__		
-						$cv_Name create circle 	$Saddle(Proposal)		-radius 10  -outline gray 		-width 1.0			-tags __CenterLine__
+						$cv_Name create circle 	$LegClearance(Position)	-radius  6  -outline darkred 	-width 1.0			-tags __CenterLine__		
+						$cv_Name create circle 	$Saddle(Proposal)		-radius  6  -outline gray 		-width 1.0			-tags __CenterLine__
 					}
 			point_frame {
-						$cv_Name create circle 	$Steerer(Fork)			-radius 10  -outline gray 	-width 1.0			-tags __CenterLine__
-						$cv_Name create circle 	$HeadTube(Stem)			-radius 10  -outline gray 	-width 1.0			-tags __CenterLine__
-						$cv_Name create circle 	$SeatTube(TopTube)		-radius 10  -outline gray 	-width 1.0			-tags __CenterLine__
+						$cv_Name create circle 	$Steerer(Fork)			-radius 10  -outline gray 		-width 1.0			-tags __CenterLine__
+						$cv_Name create circle 	$HeadTube(Stem)			-radius 10  -outline gray 		-width 1.0			-tags __CenterLine__
+						$cv_Name create circle 	$TopTube(Steerer)		-radius  6  -outline gray 		-width 1.0			-tags __CenterLine__
+						$cv_Name create circle 	$TopTube_Seat_virtual	-radius  6  -outline gray 		-width 1.0			-tags __CenterLine__
+					}
+			point_frame_dimension {
+						$cv_Name create circle 	$HeadTube(Stem)			-radius  6  -outline gray 		-width 1.0			-tags __CenterLine__
+					}			
+			cline_frame {
+						$cv_Name create centerline 	[ lib_project::flatten_nestedList $TopTube(Steerer) $TopTube_Seat_virtual ] \
+																			-fill gray50 		-width 0.25			-tags __CenterLine__	
 					}
 			cline_angle {
-						$cv_Name create circle 	$HeadTube(Stem)			-radius  5  -outline blue 		-width 1.0			-tags __CenterLine__		
-						$cv_Name create circle 	$HandleBar(Position)	-radius  5  -outline darkblue	-width 1.0			-tags __CenterLine__		
-						$cv_Name create circle 	$Saddle(Position)		-radius  5  -outline gray50		-width 1.0			-tags __CenterLine__					
+						$cv_Name create circle 	$HeadTube(Stem)			-radius  6  -outline blue 		-width 1.0			-tags __CenterLine__		
+						$cv_Name create circle 	$HandleBar(Position)	-radius  6  -outline darkblue	-width 1.0			-tags __CenterLine__		
+						$cv_Name create circle 	$Saddle(Position)		-radius  6  -outline gray50		-width 1.0			-tags __CenterLine__					
 						
 						$cv_Name create centerline 	[ lib_project::flatten_nestedList $Steerer(Stem) $Steerer(Ground) ] \
 																			-fill gray50 		-width 0.25			-tags __CenterLine__	
@@ -172,8 +184,8 @@
 						if {$Rendering(BrakeRear) != {off}} {
 							switch $Rendering(BrakeRear) {
 								Road { 
-									$cv_Name create circle 	$RearBrake(Shoe)		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__
-									$cv_Name create circle 	$RearBrake(Mount)		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__	
+									$cv_Name create circle 	$RearBrake(Shoe)	-radius  6  -outline gray50		-width 0.35		-tags __CenterLine__
+									$cv_Name create circle 	$RearBrake(Mount)	-radius  6  -outline gray50		-width 0.35		-tags __CenterLine__	
 									$cv_Name create centerline 	[ lib_project::flatten_nestedList $RearBrake(Shoe) $RearBrake(Help) $RearBrake(Mount)] \
 																						-fill gray50 		-width 0.25			-tags __CenterLine__			
 								}
@@ -182,8 +194,8 @@
 						if {$Rendering(BrakeFront) != {off}} {
 							switch $Rendering(BrakeFront) {
 								Road { 
-									$cv_Name create circle 	$FrontBrake(Shoe)		-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__
-									$cv_Name create circle 	$FrontBrake(Mount)	-radius  5  -outline gray50		-width 0.35		-tags __CenterLine__	
+									$cv_Name create circle 	$FrontBrake(Shoe)	-radius  6  -outline gray50		-width 0.35		-tags __CenterLine__
+									$cv_Name create circle 	$FrontBrake(Mount)	-radius  6  -outline gray50		-width 0.35		-tags __CenterLine__	
 									$cv_Name create centerline 	[ lib_project::flatten_nestedList $FrontBrake(Shoe) $FrontBrake(Help) $FrontBrake(Mount)] \
 																						-fill gray50 		-width 0.25			-tags __CenterLine__
 									}
@@ -221,10 +233,10 @@
 															gray50 ] 
 						
 
-						# set _dim_BB_Height 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)	$BaseCenter] \
-															vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
-															gray50 ]
 						set _dim_CS_LengthX 	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  	$RearWheel_Ground  $BaseCenter ] \
+															horizontal  [expr   70 * $stageScale]   0 \
+															gray50 ] 
+						set _dim_FW_DistanceX	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BaseCenter  $FrontWheel(Position) ] \
 															horizontal  [expr   70 * $stageScale]   0 \
 															gray50 ] 
 						set _dim_Wh_Distance	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  	$RearWheel_Ground  $FrontWheel_Ground ] \
@@ -234,8 +246,8 @@
 															horizontal  [expr   70 * $stageScale]   [expr  -70 * $stageScale] \
 															gray20 ] 
 															
-						set _dim_ST_Length 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position) $SeatTube(TopTube) ] \
-															aligned		[expr -100 * $stageScale]   [expr   80 * $stageScale]  \
+						set _dim_ST_Virtual		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position) $TopTube_Seat_virtual ] \
+															aligned     [expr -100 * $stageScale]   [expr  -80 * $stageScale] \
 															gray50 ] 
 
 						set _dim_BT_Clearance	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $help_91  $help_92 ] \
@@ -291,12 +303,14 @@
 						set _dim_FW_Distance	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)  $FrontWheel(Position)] \
 															aligned     [expr   100 * $stageScale]   [expr  -30 * $stageScale] \
 															$colour(result) ] 
-						set _dim_FW_DistanceX	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BaseCenter  $FrontWheel(Position) ] \
-															horizontal  [expr   70 * $stageScale]   0 \
-															$colour(result) ] 
 						set _dim_BB_Height 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)	$BaseCenter] \
 															vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
 															$colour(result) ]
+						set _dim_TT_Virtual		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $TopTube_Seat_virtual  $TopTube(Steerer)] \
+															aligned     [expr    80 * $stageScale]   [expr  -80 * $stageScale] \
+															$colour(result) ] 
+															
+															
 
 
 							# --- third - level - dimensions
@@ -416,13 +430,15 @@
 								
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_XPosition   	
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_Distance  	
-								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_DistanceX   	
+								# lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_DistanceX   	
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Height								
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_TT_Virtual								
 
 								$cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/Saddle/Offset_BB/horizontal]
 								$cv_Name bind $_dim_FW_Distance  	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/diagonal]
-								$cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/horizontal]
+								# $cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/horizontal]
 								$cv_Name bind $_dim_BB_Height		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/BottomBracket/Height]
+								$cv_Name bind $_dim_TT_Virtual		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/TopTube/VirtualLength]
 									#
 									# ... proc fill_resultValues ...
 									# ... proc set_spec_Parameters ...

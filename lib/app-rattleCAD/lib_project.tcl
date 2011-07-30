@@ -343,10 +343,12 @@
 														</rear>
 													</WheelPosition>
 												</Temporary>"
+								puts "[$node asXML]"				
 							}
 
-						}
-				{3.2.32} {		# --- /root/Temporary/BottomBracket ...
+						}			
+				{3.2.32} {	set node {}	
+								# --- /root/Temporary/BottomBracket ...
 							set node [$domProject selectNode /root/Temporary/BottomBracket]
 							if {$node == {}} {
 								puts "        ...  $Version   ... update File ... /root/Temporary/BottomBracket"
@@ -356,9 +358,11 @@
 												</BottomBracket>"
 							}
 
- 						}
-								
-				{3.2.40} {		# --- /root/Custom/HeadTube/Angle ...
+ 						}	
+				{3.2.40} {	set node {}	
+								# --- /root/Custom/HeadTube/Angle ...
+							$domProject selectNode /root/Temporary/WheelPosition/front/diagonal
+							
 							set node [$domProject selectNode /root/Temporary/WheelPosition/front/diagonal]
 							if {$node == {}} {
 								puts "        ...  $Version   ... update File ... /root/Temporary/WheelPosition/front/diagonal"
@@ -366,7 +370,15 @@
 								$node appendXML "<diagonal>0.00</diagonal>"
 							}
 							
-							set node [$domProject selectNode /root/Custom/HeadTube/Angle]
+							set node [$domProject selectNode /root/Temporary/TopTube/VirtualLength]
+							if {$node == {}} {
+								puts "        ...  $Version   ... update File ... /root/Temporary/TopTube/VirtualLength"
+								set node [$domProject selectNode /root/Temporary]
+								$node appendXML "<TopTube>
+													<VirtualLength>0.00</VirtualLength>
+												</TopTube>"
+							}
+													set node [$domProject selectNode /root/Custom/HeadTube/Angle]
 							if {$node == {}} {
 									# ... node does not exist
 								puts "        ...  $Version   ... update File ... /root/Custom/HeadTube/Angle"
@@ -407,7 +419,7 @@
 							# puts "   <D> 9999 \n[$node asXML]"
 								
  						}
-								
+
 						
 				{ab-xy} {	set node {}
 							set node [$domProject selectNode /root/Project/rattleCADVersion/text()]

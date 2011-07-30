@@ -64,6 +64,7 @@
 					frame_visualisation::createBaseline 		$cv_Name $xy	
 						#
 					createDimension								$cv_Name $xy	point_seat	
+					createDimension								$cv_Name $xy	cline_frame
 					createDimension								$cv_Name $xy	point_frame					
 					createDimension								$cv_Name $xy	geometry_bg		
 						#
@@ -101,6 +102,7 @@
 					createCenterline							$cv_Name $xy	Saddle
 						#
 					createDimension								$cv_Name $xy	cline_brake	
+					createDimension								$cv_Name $xy	point_frame_dimension
 					createDimension								$cv_Name $xy	frameTubing_bg	
 						#
 					createDimensionType							$cv_Name $xy 	RearWheel_Clearance 	

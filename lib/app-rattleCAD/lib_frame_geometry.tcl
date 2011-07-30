@@ -386,7 +386,18 @@
 					lib_project::setValue /root/Result/Tubes/ChainStay/Direction	direction	$pt_00
 					
 							set pt_00		[ vectormath::addVector 		$pt_00  $ChainStay(Direction)  -$RearDrop(OffsetCS) ]
-							set pt_01		[ vectormath::addVector 		$pt_00  $ChainStay(Direction)  -$ChainStay(TaperLength) ]
+
+								# -- exception if Tube is shorter than taper length
+								set tube_length			[ vectormath::length {0 0} $pt_00 ]
+									if { [expr $tube_length - $ChainStay(TaperLength) -10] < 0 } {
+										puts "         ... exception:  ChainStay TaperLength ... $tube_length / $ChainStay(TaperLength)"
+										set taper_length	[ expr $tube_length -10 ]
+										puts "                         -> $taper_length"
+									} else {
+										set taper_length	$ChainStay(TaperLength) 
+									} 								
+
+							set pt_01		[ vectormath::addVector 		$pt_00  $ChainStay(Direction)  -$taper_length ]
 					
 							set ChainStay(RearWheel)			$pt_00
 							set ChainStay(BottomBracket)		{0 0}
@@ -577,7 +588,18 @@
 					lib_project::setValue /root/Result/Tubes/SeatStay/Direction	direction	$SeatStay(Direction)	;# direction vector of SeatStay	
 					
 							set pt_10		[ vectormath::addVector		$pt_01  $SeatStay(Direction)  $RearDrop(OffsetSS) ]
-							set pt_11		[ vectormath::addVector		$pt_10  $SeatStay(Direction)  $SeatStay(TaperLength) ]
+
+								# -- exception if Tube is shorter than taper length
+								set tube_length			[ vectormath::length $pt_10 $pt_00 ]
+									if { [expr $tube_length - $SeatStay(TaperLength) -50] < 0 } {
+										puts "         ... exception:  SeatStay  TaperLength ... $tube_length / $SeatStay(TaperLength)"
+										set taper_length	[ expr $tube_length -50 ]
+										puts "                         -> $taper_length"
+									} else {
+										set taper_length	$SeatStay(TaperLength) 
+									} 								
+								
+							set pt_11		[ vectormath::addVector		$pt_10  $SeatStay(Direction)  $taper_length ]
 							set pt_12		$pt_00
 							set vct_10 		[ vectormath::parallel $pt_10 $pt_11 [expr 0.5*$SeatStay(DiameterCS)] ]
 							set vct_11 		[ vectormath::parallel $pt_11 $pt_12 [expr 0.5*$SeatStay(DiameterST)] ]
@@ -621,13 +643,24 @@
 							set pt_99		$FrontWheel(Position)
 							set pt_01		[ vectormath::addVector $pt_00 $HeadTube(Direction) -$Fork(BladeOffsetCrown) ]
 							set pt_02		[ lindex [ vectormath::parallel  $pt_00  $pt_01  $Fork(BladeOffsetCrownPerp) left ] 1] ;# centerpoint of Blade in ForkCrown
+								
+								# -- exception if Blade is shorter than taper length
+								set forkblade_length			[ vectormath::length $pt_02 $pt_99 ]
+									if { [expr $forkblade_length - $Fork(BladeTaperLength) -50] < 0 } {
+										puts "         ... exception:  Forkblade TaperLength ... $forkblade_length / $Fork(BladeTaperLength)"
+										set taper_length	[ expr $forkblade_length -50 ]
+										puts "                         -> $taper_length"
+									} else {
+										set taper_length	$Fork(BladeTaperLength) 
+									} 
+								
 								set hlp_00		{0 0}													;# point where Taper begins
-								set hlp_01		[ list $Fork(BladeTaperLength)	$Fork(BladeOffset) ]	;# point where Taper ends
+								set hlp_01		[ list $taper_length	$Fork(BladeOffset) ]	;# point where Taper ends
 								set vct_taper	[ vectormath::unifyVector 	$hlp_00 $hlp_01 ]	;# direction caused by taper offset
 								set hlp_02		[ vectormath::addVector 	$hlp_01 [vectormath::scalePointList {0 0} $vct_taper $Fork(BladeOffsetDO) ] ]
 								set vct_dropout	[ vectormath::parallel 		$hlp_00	$hlp_02 	$Fork(BladeOffsetDOPerp) left]
 								set hlp_03		[ lindex $vct_dropout 1 ]								;# location of Dropout in reference to point where Taper begins
-							set offsetDO		[ expr [ lindex $hlp_03 0] - $Fork(BladeTaperLength) ]
+							set offsetDO		[ expr [ lindex $hlp_03 0] - $taper_length ]
 							set offsetDO_Perp	[ lindex $hlp_03 1]
 							set pt_03			[ vectormath::cathetusPoint	$pt_02  $pt_99  $offsetDO_Perp  opposite ]	;# point on direction of untapered area of ForkBlade perp through FrontWheel
 
@@ -638,7 +671,7 @@
 								set vct_offset	[ vectormath::parallel		$pt_02  $pt_04  $Fork(BladeOffset) left]	;
 							set pt_10		$pt_99						;# Dropout
 							set pt_11		[ lindex $vct_offset 1 ]	;# Fork Blade Tip
-							set pt_12		[ vectormath::addVector		$pt_04	[vectormath::scalePointList {0 0} $ForkBlade(Direction) $Fork(BladeTaperLength) ] ] ;# point on direction of untapered area where tapering starts
+							set pt_12		[ vectormath::addVector		$pt_04	[vectormath::scalePointList {0 0} $ForkBlade(Direction) $taper_length ] ] ;# point on direction of untapered area where tapering starts
 																		;# Fork Blade taper start
 							set pt_13		$pt_02						;# Crown Fork Blade center
 					lib_project::setValue /root/Result/Tubes/ForkBlade/Start		position 	$pt_13				
@@ -845,6 +878,7 @@
 			proc fill_resultValues {domProject} {					
 					variable BottomBracket
 					variable HeadTube
+					variable TopTube
 					variable Steerer
 					variable RearWheel
 					variable FrontWheel
@@ -911,10 +945,16 @@
 							# puts "                  ... $value"
 						$node nodeValue		$value
 
-
+			puts "  ... no net 4!"
+			
 						# --- SeatTube
 						#
 					set position	[ frame_geometry::object_values		SeatTube/End	position	{0 0} ]
+					
+								# set xpath 	Temporary
+								# puts "..01"
+								# set node	[ $domProject selectNodes /root/$xpath ]
+								# puts "[$node asXML]"
 					
 							# --- SeatTube/TubeLength
 							#
@@ -937,14 +977,25 @@
 						$node nodeValue		$value
 
 						
-						# --- Saddle/Offset_BB/horizontal
+						# --- TopTube/VirtualLength
+						#
+					set position	[ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]   $TopTube(HeadTube)  {0 0} $Saddle(Position) ]
+					set xpath Temporary/TopTube/VirtualLength
+						# puts "           ... $xpath"
+					set value		[ format "%.2f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $position 0] ] ]
+					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
+						# puts "                  ... $value"
+					$node nodeValue		$value	
+
+
+					# --- Saddle/Offset_BB/horizontal
 						#
 					set position	$Saddle(Position)					
 					set xpath Temporary/Saddle/Offset_BB/horizontal
-						# puts "           ... $xpath"
-						# puts "                ... $frameCoords::Saddle" 
+						 puts "           ... $xpath"
 					set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
 					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
+						 puts "                  ... $value"
 						# puts "                  ... $value"
 					$node nodeValue		$value
 
@@ -1787,6 +1838,8 @@
 			switch $xPath {
 					{Component/Wheel/Rear/RimDiameter} -
 					{Component/Wheel/Front/RimDiameter} {
+								# -- exception for selection of Combobox
+									# list is splitted by: "----"
 							if {[string range $_updateValue($xPath) 0 3] == "----"} {
 									puts "   ... reset value .. $oldValue"
 								set _updateValue($xPath) $oldValue
@@ -1948,6 +2001,7 @@
 							
 						}
 				
+				{Temporary/TopTube/VirtualLength}			-			
 				{Temporary/WheelPosition/front/horizontal}	{			
 							puts "               ... $xpath"
 							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
