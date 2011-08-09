@@ -280,11 +280,12 @@
 				#   Alternative
 			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Alternative" 
 				pack $menueFrame.sf.lf_05 				-side top  -fill x -pady 2 
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/WheelPosition/front/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_05		{Custom/HeadTube/Angle} 					{Custom/}		0.02 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/HeadTube/TopTubeAngle} 			{Temporary/}	0.02 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/Saddle/Offset_BB/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/BottomBracket/Height} 			{Temporary/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/WheelPosition/front/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/TopTube/VirtualLength} 			{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_05		{Custom/HeadTube/Angle} 					{Custom/}		0.02 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/HeadTube/TopTubeAngle} 			{Temporary/}	0.02 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/Saddle/Offset_BB/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_05		{Temporary/BottomBracket/Height} 			{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
 				
 				# -----------------
 				#   Geometry
@@ -335,7 +336,8 @@
 								Component/CrankSet/File \
 								Component/Brake/Front/File \
 								Component/Brake/Rear/File \
-								Component/Derailleur/File }
+								Component/Derailleur/Front/File \
+								Component/Derailleur/Rear/File }
 					set i 0
 				foreach xPath $compList {
 					incr i 1

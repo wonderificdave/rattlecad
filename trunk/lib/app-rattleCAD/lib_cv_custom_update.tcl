@@ -147,8 +147,9 @@
 					frame_visualisation::createDecoration	$cv_Name $xy 	HeadSet			
 					frame_visualisation::createDecoration	$cv_Name $xy 	Stem			
 					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 		$updateCommand		
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearDerailleur	$updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	BottleCage		$updateCommand		
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear	$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront	$updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 		$updateCommand	
 						#
 					createDimension							$cv_Name $xy 	cline_angle
@@ -270,7 +271,8 @@
 					frame_visualisation::createDecoration	$cv_Name $xy 	HeadSet				
 					frame_visualisation::createDecoration	$cv_Name $xy 	Stem				
 					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearDerailleur		$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear	$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront	$updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand
 						# 
 				}

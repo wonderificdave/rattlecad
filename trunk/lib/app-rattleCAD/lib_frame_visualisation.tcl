@@ -125,26 +125,42 @@
 													  lib_gui::object_CursorBinding 	$cv_Name	$HandleBar(object)
 								}
 						}
-			RearDerailleur {
+			DerailleurRear {
 							# --- create RearDerailleur --------
 						set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		$BB_Position]
-						set Derailleur(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/Derailleur/File ]  asText ] ]
+						set Derailleur(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/Derailleur/Rear/File ]  asText ] ]
 						set Derailleur(object)		[ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  0  __Decoration__ ]		
 						if {$updateCommand != {}} 	{ $cv_Name bind	$Derailleur(object)	<Double-ButtonPress-1> \
 																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																			$updateCommand { 	file://Component/Derailleur/File	\
-																							} 	{RearDerailleur Parameter} \
+																			$updateCommand { 	file://Component/Derailleur/Rear/File	\
+																							} 	{DerailleurRear Parameter} \
 																]
 													  lib_gui::object_CursorBinding 	$cv_Name	$Derailleur(object)
 								}
 						}
-			RearDerailleur_ctr {
+			DerailleurRear_ctr {
 							# --- create RearDerailleur --------
 						set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		  $BB_Position]
 						foreach {x y} $Derailleur(position) break
 						set x1	[expr $x + 15];		set x2	[expr $x - 15]; 	set y1	[expr $y + 15]; 	set y2	[expr $y - 15]
 						$cv_Name create line  [list $x1 $y $x2 $y]   -fill gray60  -tags __Decoration__
 						$cv_Name create line  [list $x $y1 $x $y2]   -fill gray60  -tags __Decoration__			
+						}
+			DerailleurFront {
+							# --- create FrontDerailleur --------
+						set Derailleur(position)	[ frame_geometry::object_values  DerailleurMountFront  position	$BB_Position]
+						set angle					[ vectormath::angle {0 1} {0 0} [ frame_geometry::object_values SeatTube direction ] ]
+						set Derailleur(file)		[ checkFileString [ [ $domProject selectNodes /root/Component/Derailleur/Front/File ]  asText ] ]
+						set Derailleur(object)		[ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  $angle  __Decoration__ ]		
+						if {$updateCommand != {}} 	{ $cv_Name bind	$Derailleur(object)	<Double-ButtonPress-1> \
+																[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																			$updateCommand { 	file://Component/Derailleur/Front/File	\
+																								Component/Derailleur/Front/Distance \
+																								Component/Derailleur/Front/Offset \
+																							} 	{DerailleurFront Parameter} \
+																]
+													  lib_gui::object_CursorBinding 	$cv_Name	$Derailleur(object)
+								}
 						}
 			CrankSet {
 							# --- create Crankset --------------

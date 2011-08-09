@@ -236,9 +236,6 @@
 						set _dim_CS_LengthX 	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  	$RearWheel_Ground  $BaseCenter ] \
 															horizontal  [expr   70 * $stageScale]   0 \
 															gray50 ] 
-						set _dim_FW_DistanceX	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BaseCenter  $FrontWheel(Position) ] \
-															horizontal  [expr   70 * $stageScale]   0 \
-															gray50 ] 
 						set _dim_Wh_Distance	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  	$RearWheel_Ground  $FrontWheel_Ground ] \
 															horizontal  [expr  130 * $stageScale]	0 \
 															gray50 ] 
@@ -302,6 +299,9 @@
 															$colour(result) ] 
 						set _dim_FW_Distance	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)  $FrontWheel(Position)] \
 															aligned     [expr   100 * $stageScale]   [expr  -30 * $stageScale] \
+															$colour(result) ] 
+						set _dim_FW_DistanceX	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BaseCenter  $FrontWheel(Position) ] \
+															horizontal  [expr   70 * $stageScale]   0 \
 															$colour(result) ] 
 						set _dim_BB_Height 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)	$BaseCenter] \
 															vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
@@ -430,13 +430,13 @@
 								
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_XPosition   	
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_Distance  	
-								# lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_DistanceX   	
+								lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_DistanceX   	
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Height								
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_TT_Virtual								
 
 								$cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/Saddle/Offset_BB/horizontal]
 								$cv_Name bind $_dim_FW_Distance  	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/diagonal]
-								# $cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/horizontal]
+								$cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/WheelPosition/front/horizontal]
 								$cv_Name bind $_dim_BB_Height		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/BottomBracket/Height]
 								$cv_Name bind $_dim_TT_Virtual		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Temporary/TopTube/VirtualLength]
 									#
