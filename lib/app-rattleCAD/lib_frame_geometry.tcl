@@ -124,6 +124,7 @@
 			
 			variable RearBrake
 			variable FrontBrake
+			variable FrontDerailleur
 
 			variable BottleCage
 			variable FrameJig
@@ -284,6 +285,11 @@
 			set BottleCage(SeatTube)		[ [ $domProject selectNodes /root/Component/BottleCage/SeatTube/OffsetBB		]  asText ]
 			set BottleCage(DownTube)		[ [ $domProject selectNodes /root/Component/BottleCage/DownTube/OffsetBB		]  asText ]
 			set BottleCage(DownTube_Lower)	[ [ $domProject selectNodes /root/Component/BottleCage/DownTube_Lower/OffsetBB	]  asText ]
+								
+				#
+				# --- get FrontDerailleur  ----------------------
+			set FrontDerailleur(Distance)	[ [ $domProject selectNodes /root/Component/Derailleur/Front/Distance	]  asText ]
+			set FrontDerailleur(Offset)		[ [ $domProject selectNodes /root/Component/Derailleur/Front/Offset		]  asText ]
 								
 				
 				#
@@ -945,7 +951,6 @@
 							# puts "                  ... $value"
 						$node nodeValue		$value
 
-			puts "  ... no net 4!"
 			
 						# --- SeatTube
 						#
@@ -1044,8 +1049,22 @@
 
 
 				#
+				# --- set FrontDerailleurMount ------------
+			proc get_DerailleurMountFront {} {
+					variable SeatTube
+					variable FrontDerailleur
+
+						set FrontDerailleur(Mount)	[ vectormath::rotatePoint	{0 0} [ list $FrontDerailleur(Distance) [expr -1.0*$FrontDerailleur(Offset)] ] [expr 180 - $SeatTube(Angle)] ]
+					
+					lib_project::setValue /root/Result/Position/DerailleurMountFront	position	$FrontDerailleur(Mount)
+					# puts "    ... \$FrontDerailleur(Mount) $FrontDerailleur(Mount)"
+			}
+			get_DerailleurMountFront
+			
+			
+				#
 				# --- set RearBrakeMount ------------------
-			proc get_RearBrakeMount {} {
+			proc get_BrakeMountRear {} {
 					variable HeadTube
 					variable RearBrake
 					variable RearWheel
@@ -1068,7 +1087,7 @@
 							set RearBrake(Mount)	[ vectormath::addVector	$pt_03 [ vectormath::unifyVector {0 0} $SeatStay(Direction) [expr $RearBrake(LeverLength) + $dist_00_Ortho] ] ]
 					lib_project::setValue /root/Result/Position/BrakeMountRear	position	$RearBrake(Mount)
 			}
-			get_RearBrakeMount
+			get_BrakeMountRear
 
 
 				#
@@ -1104,7 +1123,7 @@
 			
 				#
 				# --- set FrontBrakeMount -----------------
-			proc get_FrontBrakeMount {} {
+			proc get_BrakeMountFront {} {
 					variable Fork
 					variable FrontBrake
 					variable HeadTube
@@ -1125,7 +1144,7 @@
 							set FrontBrake(Mount)				$pt_10		
 					lib_project::setValue /root/Result/Position/BrakeMountFront	position	$FrontBrake(Mount)
 			}
-			get_FrontBrakeMount
+			get_BrakeMountFront
 
 
 				#
@@ -1317,6 +1336,7 @@
 								SeatTubeGround -
 								BrakeMountFront -
 								BrakeMountRear -
+								DerailleurMountFront -
 								SummarySize {	
 											set branch "Position/$object"		
 										}
@@ -1330,6 +1350,7 @@
 										}
 										
 								default {	
+											# puts "   ... \$object $object"
 											set branch "Tubes/$object"	
 										}
 							}
@@ -1708,7 +1729,7 @@
 										# puts "   ... \$xpath $xpath"							
 									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
 									set _updateValue($xpath) $value
-										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
+										 puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
 									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
 										#
 										# --- create widgets per xpath list element ---

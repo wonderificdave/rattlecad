@@ -149,6 +149,33 @@
 													<DownTube_Lower>off</DownTube_Lower>
 												</BottleCage>"
 							}  
+							
+								# --- /root/Component/Derailleur
+							set node [$domProject selectNode /root/Component/Derailleur/Front]
+							if {$node == {}} {
+								puts "        ...  $Version   ... update File ... /root/Component/Derailleur"
+								set oldNode [$domProject selectNode /root/Component/Derailleur/File/text()]
+								# puts " ... asXML     [$oldNode asXML]"				
+								# puts " ... nodeValue [$oldNode nodeValue]"				
+								set value [file tail [$oldNode nodeValue]]
+								set oldNode [$domProject selectNode /root/Component/Derailleur]
+								set node 	[$domProject selectNode /root/Component]
+								$node removeChild $oldNode 
+								$oldNode delete 
+								$node appendXML "<Derailleur>
+													<Front>
+														<File>etc:derailleur/front/campagnolo_qs.svg</File>
+														<Distance>155.00</Distance>
+														<Offset>12.00</Offset>
+													</Front>
+													<Rear>
+														<File>etc:derailleur/rear/$value</File>
+													</Rear>
+												</Derailleur>"
+								return
+							}
+							
+							
 						}
 										
 				{3.2.23} {	set node {}								
@@ -284,6 +311,7 @@
 													<BottomBracketGround>0.00,0.00</BottomBracketGround>
 													<SteererGround>0.00,0.00</SteererGround>
 													<SeatTubeGround>0.00,0.00</SeatTubeGround>
+													<DerailleurMountFront>0.00,0.00</DerailleurMountFront>
 													<BrakeMountFront>0.00,0.00</BrakeMountFront>
 													<BrakeMountRear>0.00,0.00</BrakeMountRear>
 													<SummarySize>0.00,0.00</SummarySize>
