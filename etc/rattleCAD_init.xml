@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <rattleCAD>
-        <Version>3.2.40</Version>
+        <Version>3.2.52</Version>
         <Name>rattleCAD_init</Name>
-        <modified>2011.02.19/00:00</modified>
+        <modified>2011.08.10/00:00</modified>
     </rattleCAD>
 	
 	<!-- Startup Settings -->
@@ -39,8 +39,8 @@
 	</Startup>
 	
 	<Template>
-		<Road>template_road_3.2_20110218.xml</Road>
-		<MTB>template_mtb_3.2_20110218.xml</MTB>
+		<Road>template_road_3.2.xml</Road>
+		<MTB>template_mtb_3.2.xml</MTB>
 	</Template>
 
 	<Options>
@@ -54,7 +54,8 @@
 			<component xpath="Component/HandleBar/File"					dir="components/handlebar"       />
 			<component xpath="Component/Saddle/File"  					dir="components/saddle"          />
 			<component xpath="Component/CrankSet/File"					dir="components/crankset"        />
-			<component xpath="Component/Derailleur/File"				dir="components/rear_derailleur" />
+			<component xpath="Component/Derailleur/Front/File"			dir="components/derailleur/front"/>
+			<component xpath="Component/Derailleur/Rear/File"			dir="components/derailleur/rear" />
 			<component xpath="Component/BottleCage/SeatTube/File"		dir="components/bottle_cage/left" 	 />
 			<component xpath="Component/BottleCage/DownTube/File" 		dir="components/bottle_cage/right" 	 />
 			<component xpath="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
