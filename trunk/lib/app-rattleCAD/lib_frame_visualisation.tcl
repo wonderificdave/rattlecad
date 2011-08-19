@@ -231,6 +231,8 @@
 																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																							$updateCommand { 	list://Rendering/Brake/Front@APPL_BrakeTypes \
 																												file://Component/Brake/Front/File	\
+																												Component/Fork/Crown/Brake/Offset	\
+																												Component/Fork/Crown/Brake/OffsetPerp	\
 																												Component/Brake/Front/LeverLength	\
 																											} 	{FrontBrake Parameter} \
 																				]

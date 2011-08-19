@@ -1045,6 +1045,10 @@ exec wish "$0" "$@"
 
         # --- compute ----------
         #
+	$nb_result select  3
+	update	
+	$nb_result select  0	
+		
     puts " ... $argv"
     openSVG $argv
     
