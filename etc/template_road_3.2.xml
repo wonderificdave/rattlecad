@@ -97,7 +97,7 @@
 				<File>etc:fork/crown/longshen_max_36_5.svg</File>
 				<Brake>
 					<Offset>20.00</Offset>
-					<OffsetPerp>8.00</OffsetPerp>
+					<OffsetPerp>9.00</OffsetPerp>
 					<Angle>0.00</Angle>
 				</Brake>
 				<Blade>
@@ -176,8 +176,8 @@
 		<Derailleur>
 			<Front>
 				<File>etc:derailleur/front/campagnolo_qs.svg</File>
-				<Distance>155.00</Distance>
-				<Offset>12.00</Offset>
+				<Distance>150.00</Distance>
+				<Offset>9.20</Offset>
 			</Front>
 			<Rear>
 				<File>etc:derailleur/rear/campagnolo_2006_short.svg</File>
