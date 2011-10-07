@@ -697,6 +697,14 @@
 																					gray30 ] 
 						}
 						
+							# -- Steerer Details ----------------------
+							set pt_01 				[ frame_geometry::object_values 		Steerer/Start	position	$BB_Position  ]
+							set pt_02 				[ frame_geometry::object_values 		Steerer/End		position	$BB_Position  ]
+						set _dim_STR_Length			[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  	$pt_01  $pt_02 ] \
+																					aligned  	[expr    190 * $stageScale]	[expr   5 * $stageScale] \
+																					gray30 ]
+
+
 							# -- Centerline Angles -----------------
 							#
 						set _dim_Head_Top_Angle		[ $cv_Name dimension  angle  	[ lib_project::flatten_nestedList [list $TopTube(Steerer) $Steerer(Stem) $TopTube(SeatTube)] ] \
@@ -1493,5 +1501,31 @@
 		puts "  stageScale     $stageScale" 
 	}
 	
+	proc createWaterMark {cv_Name projectFile date} {
+			
+			## -- read from domProject
+		set domProject $::APPL_Project
+
+			# --- get stageScale
+		set stageWidth		[ $cv_Name	getNodeAttr  Stage  width  ]
+		set stageHeight		[ $cv_Name	getNodeAttr  Stage  height ]
+		set stageScale 		[ $cv_Name  getNodeAttr  Stage	scale  ]
+		
+		set scaleFactor		[ expr 1 / $stageScale ]
+			if {[expr round($scaleFactor)] == $scaleFactor} {
+				set formatScaleFactor		[ expr round($scaleFactor) ]
+			} else {
+				set formatScaleFactor		[ format "%.1f" $scaleFactor ]
+			}
+
+		proc scale_toStage	{ptList factor} {
+			return [ vectormath::scalePointList {0 0} $ptList $factor ]
+		}
+					# --- create Text: Software & Version
+			# set textPos				[scale_toStage [list [expr $df_Border + $df_Width      -   2 ] [ expr $df_Border +  3.0 ] ]	$scaleFactor]
+		set textPos				[scale_toStage {7 4}	$scaleFactor]
+		set textText			[format "%s  /  %s  /  rattleCAD  V%s.%s" $projectFile $date $::APPL_Env(RELEASE_Version) $::APPL_Env(RELEASE_Revision) ]
+		$cv_Name create draftText $textPos  -text $textText -size 2.5 -anchor sw -fill gray60
+	}
 	
 }

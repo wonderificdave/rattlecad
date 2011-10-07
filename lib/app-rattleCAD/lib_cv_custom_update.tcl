@@ -74,6 +74,8 @@
 					createDimension								$cv_Name $xy	point_crank								
 					createDimension								$cv_Name $xy	geometry_fg								
 						#
+					createWaterMark								$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+						#
 				}
 			lib_gui::cv_Custom01 {
 						#
@@ -119,8 +121,10 @@
 					createDimensionType							$cv_Name $xy 	Brake_Bridge		$updateCommand		
 					createDimensionType							$cv_Name $xy 	Brake_Fork			$updateCommand		
 					createDimensionType							$cv_Name $xy 	TopHeadTube_Angle	$updateCommand		
-					createDimensionType							$cv_Name $xy 	BottleCage			$updateCommand		
-					
+					createDimensionType							$cv_Name $xy 	BottleCage			$updateCommand	
+						#
+					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+						#			
 				}
 			lib_gui::cv_Custom02 {
 						#
@@ -159,6 +163,8 @@
 					createDimension							$cv_Name $xy	summary_fg	
 						#
 					frame_visualisation::createBaseline 	$cv_Name $xy	black
+						#
+					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#
 				}				
 			lib_gui::cv_Custom03 {
@@ -246,6 +252,8 @@
 					frame_visualisation::createTubemitter		$cv_Name {220  15}	Reference	
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
 						#
+					createWaterMark								$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+						#
 				}
 			lib_gui::cv_Custom06 {
 						#
@@ -275,6 +283,8 @@
 					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront	$updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand
 						# 
+					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+						#
 				}
 				
 		}
