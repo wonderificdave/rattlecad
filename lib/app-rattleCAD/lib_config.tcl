@@ -48,6 +48,7 @@
 	  array set configValue 	{}
 
 	variable 	componentList	{}
+	variable    compCanvas      {}
 
 				
 	#-------------------------------------------------------------------------
@@ -133,13 +134,15 @@
 				#
 			set nb_Config	[ ttk::notebook $w.f.nb ]
 				pack $nb_Config  	-expand no -fill both   
-			$nb_Config add [frame $nb_Config.basic] 	-text "Geometry" 		
-			$nb_Config add [frame $nb_Config.detail] 	-text "Components" 
+			$nb_Config add [frame $nb_Config.geometry] 	-text "Geometry" 		
+			$nb_Config add [frame $nb_Config.mockup] 	-text "Mockup" 
 		
 				# -----------------
 				# add content
-			add_Basic 	$nb_Config.basic
-			add_Detail 	$nb_Config.detail
+			add_Basic 	$nb_Config.geometry
+			$nb_Config select $nb_Config.mockup
+			add_Detail 	$nb_Config.mockup
+			$nb_Config select $nb_Config.geometry
 			
 				# -----------------
 				#
@@ -312,6 +315,7 @@
 	
 			variable componentList
 			variable configValue
+			variable compCanvas
 				#
 				# add content
 				#
@@ -352,7 +356,49 @@
 						pack $fileFrame 	-fill x -expand yes  -pady 2
 						pack $fileFrame.cb 	-side right
 						pack $fileFrame.lb 	-side left
+						
+						bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W]
+						bind $fileFrame.cb <ButtonPress> 		[list [namespace current]::::ListboxEvent %W]			
 				}
+
+				# -----------------
+				#   Frame Parts
+			ttk::labelframe	$menueFrame.sf.lf_04    	-text "Frame Parts" 
+				pack $menueFrame.sf.lf_04 				-side top  -fill x -pady 2 
+				
+				set compList {	Component/Fork/Crown/File \
+								Component/Fork/DropOut/File \
+								Component/RearDropOut/File }
+					set i 0
+				foreach xPath $compList {
+					incr i 1
+					puts "    ... $xPath  $configValue($xPath)"
+					
+					set fileFrame [frame $menueFrame.sf.lf_04.f_$i]
+					label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"		
+					set alternatives [lib_file::get_componentAlternatives  $xPath]
+					ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
+												-values $alternatives	-width 30
+						pack $fileFrame 	-fill x -expand yes  -pady 2
+						pack $fileFrame.cb 	-side right
+						pack $fileFrame.lb 	-side left
+						
+						bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W]
+						bind $fileFrame.cb <ButtonPress> 		[list [namespace current]::::ListboxEvent %W]
+				}
+
+				# -----------------
+				#   Visualization
+			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Preview" -height 210
+				pack $menueFrame.sf.lf_05 				-side top  -fill x -pady 2
+				#update
+				set compCanvas [canvasCAD::newCanvas cv_Library $menueFrame.sf.lf_05.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
+				# lib_gui::register_external_canvasCAD 99 $compCanvas
+				#puts "  -> $canvasDOMNode"
+				#puts "  -> [$compCanvas  getNodeAttr   Canvas iborder]"  
+				#$compCanvas  setNodeAttr   Canvas scale 1.0  
+				#$compCanvas  refitToCanvas
+				
 
 				# -----------------
 				#   Options
@@ -414,29 +460,6 @@
 						pack $optionFrame.lb -side left
 				
 				# -----------------
-				#   Frame Parts
-			ttk::labelframe	$menueFrame.sf.lf_04    	-text "Frame Parts" 
-				pack $menueFrame.sf.lf_04 				-side top  -fill x -pady 2 
-				
-				set compList {	Component/Fork/Crown/File \
-								Component/Fork/DropOut/File \
-								Component/RearDropOut/File }
-					set i 0
-				foreach xPath $compList {
-					incr i 1
-					puts "    ... $xPath  $configValue($xPath)"
-					
-					set fileFrame [frame $menueFrame.sf.lf_04.f_$i]
-					label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"		
-					set alternatives [lib_file::get_componentAlternatives  $xPath]
-					ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
-												-values $alternatives	-width 30
-						pack $fileFrame 	-fill x -expand yes  -pady 2
-						pack $fileFrame.cb 	-side right
-						pack $fileFrame.lb 	-side left
-				}
-
-				# -----------------
 				#   Update Values
 			ttk::labelframe	$menueFrame.sf.updateValues    					-text "update Values" 
 				pack $menueFrame.sf.updateValues 							-side top  -fill x  -pady 2
@@ -444,8 +467,48 @@
 					button 	$menueFrame.sf.updateValues.f_upd.bt_update		-text {update}			-width 10	-command [namespace current]::update_Rendering
 						pack $menueFrame.sf.updateValues.f_upd.bt_update 	-side right
 						
-								
 	}	
+
+
+
+	#-------------------------------------------------------------------------
+       #  ListboxEvent Event
+       #
+	proc ListboxEvent {w} {
+				# http://www.tek-tips.com/viewthread.cfm?qid=822756&page=42
+				# 2010.10.15
+			variable compFile
+			#puts [$w get]
+			set compFile [$w get]
+			puts "         -> lib_config: $compFile"
+			[namespace current]::::updateCanvas
+	}
+
+
+	#-------------------------------------------------------------------------
+       #  create config_line
+       #
+	proc updateCanvas {} {
+			variable compCanvas
+			variable compFile
+
+			puts "   ... lib_config::update Canvas   -> $compFile"	
+
+			puts "\n ... $compCanvas\n    ... $compFile"
+			
+			switch -glob $compFile {
+				etc:*  {  set compFile  [file join $::APPL_Env(CONFIG_Dir) components [lindex [split $compFile {:}] 1] ] }
+				user:* {  set compFile  [file join $::APPL_Env(USER_Dir)   components [lindex [split $compFile {:}] 1] ] }
+				default {}
+			}	
+			puts "\n ... $compCanvas\n    ... $compFile"
+
+			$compCanvas clean_StageContent
+			if {$compFile != {}} {
+				set __my_Component__		[ $compCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
+				$compCanvas fit2Stage $__my_Component__
+			}
+	}
 
 
 	#-------------------------------------------------------------------------
@@ -635,10 +698,10 @@
        #
 	proc registerUpdate {{entryVar ""}  {value {0}} } {
 			
-					# puts "\n"
-					# puts "  -------------------------------------------"
-					# puts "   ... entryVar $entryVar"
-					# puts "   ... value    $value"
+					puts "\n"
+					puts "  -------------------------------------------"
+					puts "   ... entryVar $entryVar"
+					puts "   ... value    $value"
 				
 			if {$value == 0} {
 				set textVar 	$entryVar
@@ -653,7 +716,7 @@
 			}
 			
  	}
-	
+
 
 	#-------------------------------------------------------------------------
        #  update configured frame

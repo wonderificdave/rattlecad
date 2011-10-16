@@ -244,7 +244,7 @@
 															gray20 ] 
 															
 						set _dim_ST_Virtual		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position) $TopTube_Seat_virtual ] \
-															aligned     [expr -100 * $stageScale]   [expr  -80 * $stageScale] \
+															aligned     [expr   80 * $stageScale]   [expr   90 * $stageScale] \
 															gray50 ] 
 
 						set _dim_BT_Clearance	[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $help_91  $help_92 ] \
@@ -255,7 +255,7 @@
 															horizontal  [expr   50 * $stageScale]    0 \
 															gray50 ] 
 						set _dim_HT_Stack_Y		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  	$HeadTube(Stem)	$BottomBracket(Position) ] \
-															vertical    [expr  110 * $stageScale]    [expr  120 * $stageScale]  \
+															vertical    [expr   80 * $stageScale]    [expr  120 * $stageScale]  \
 															gray50 ] 
 															
 			}
@@ -384,7 +384,7 @@
 															vertical    [expr -310 * $stageScale]    [expr  180 * $stageScale]  \
 															$colour(primary) ] 
 						set _dim_ST_Length 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
-															aligned		[expr  100 * $stageScale]   [expr -210 * $stageScale]  \
+															aligned		[expr -130 * $stageScale]    [expr -170 * $stageScale]  \
 															$colour(primary) ] 
 						set _dim_ST_Angle  		[ $cv_Name dimension  angle   	[ lib_project::flatten_nestedList  $SeatTube(Ground)	$Saddle(Position) $help_00 ] \
 															150   0  \
@@ -520,7 +520,7 @@
 															horizontal	[expr  -80 * $stageScale]    0 \
 															darkblue ] 
 						set _dim_ST_Length 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
-															aligned		[expr  100 * $stageScale]   [expr -210 * $stageScale]  \
+															aligned		[expr -150 * $stageScale]   [expr -210 * $stageScale]  \
 															darkblue ] 
 						set _dim_BB_Height 		[ $cv_Name dimension  length  	[ lib_project::flatten_nestedList  $BottomBracket(Position)	$BaseCenter] \
 															vertical    [expr  200 * $stageScale]   [expr    30 * $stageScale]  \
@@ -1510,6 +1510,7 @@
 		set stageWidth		[ $cv_Name	getNodeAttr  Stage  width  ]
 		set stageHeight		[ $cv_Name	getNodeAttr  Stage  height ]
 		set stageScale 		[ $cv_Name  getNodeAttr  Stage	scale  ]
+		set stageFormat		[ $cv_Name  getNodeAttr  Stage  format ]
 		
 		set scaleFactor		[ expr 1 / $stageScale ]
 			if {[expr round($scaleFactor)] == $scaleFactor} {
@@ -1524,8 +1525,8 @@
 					# --- create Text: Software & Version
 			# set textPos				[scale_toStage [list [expr $df_Border + $df_Width      -   2 ] [ expr $df_Border +  3.0 ] ]	$scaleFactor]
 		set textPos				[scale_toStage {7 4}	$scaleFactor]
-		set textText			[format "%s  /  %s  /  rattleCAD  V%s.%s" $projectFile $date $::APPL_Env(RELEASE_Version) $::APPL_Env(RELEASE_Revision) ]
-		$cv_Name create draftText $textPos  -text $textText -size 2.5 -anchor sw -fill gray60
+		set textText			[format "%s  /  %s  / \[DIN %s\] /  rattleCAD  V%s.%s " $projectFile $date $stageFormat $::APPL_Env(RELEASE_Version) $::APPL_Env(RELEASE_Revision) ]
+		$cv_Name create draftText $textPos  -text $textText -size 2.5 -anchor sw -fill gray80
 	}
 	
 }

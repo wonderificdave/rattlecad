@@ -39,7 +39,7 @@
 			pack  configure   $f1_config    -fill y
 			
 			# set myCanvas [canvasCAD::newCanvas cv01  $cv_path 	"MyCanvas"  $cv_width $cv_height 	A3 0.5 $args]
-			set cv01 [canvasCAD::newCanvas cv01  $f1_canvas.cv01 	"MyCanvas_01"  880  610 	A3 0.5 -bd 2  -bg white  -relief sunken ]
+			set cv01 [canvasCAD::newCanvas cv01  $f1_canvas.cv01 	"MyCanvas_01"  880  610 	A3 0.5 40 -bd 2  -bg white  -relief sunken ]
 			# set cv01 [canvasCAD::newCanvas cv01  $f1_canvas.cv01  880  610   180  140 m  0.5 -bd 2  -bg white  -relief sunken ]
 				
 				$cv01  create   line  		{0 0 20 0 20 20 0 20 0 0} 		-tags {Line_01}  -fill blue   -width 2 
@@ -65,7 +65,7 @@
 			pack  configure   $f2_config    -fill y
 
 			.f.nb select .f.nb.f2
-			set cv02 [canvasCAD::newCanvas cv02  $f2_canvas.cv02 	"MyCanvas_02"  880  610 	A4 0.5 -bd 2  -bg white  -relief sunken ]
+			set cv02 [canvasCAD::newCanvas cv02  $f2_canvas.cv02 	"MyCanvas_02"  880  610 	A4 0.5 40 -bd 2  -bg white  -relief sunken ]
 			# set cv02 [canvasCAD::newCanvas cv02  $f2_canvas.cv02  880  610 6.5  6.9 i 0.5 -bd 2  -bg white  -relief sunken ]
 				
 				$cv02  create   rectangle  	{4.5 3.1 6.2 5.0 } 	-tags {Line_01}  -fill violet   -width 2 
@@ -95,7 +95,7 @@
 			
 			
 			.f.nb select .f.nb.f3
-			set cv03 [canvasCAD::newCanvas cv03  $f3_canvas.cv03 	"MyCanvas_03"  880  610 	A3 0.5 -bd 2  -bg white  -relief sunken ]
+			set cv03 [canvasCAD::newCanvas cv03  $f3_canvas.cv03 	"MyCanvas_03"  880  610 	A3 0.5 40 -bd 2  -bg white  -relief sunken ]
 			# set cv03 [canvasCAD::newCanvas cv03  $f3_canvas.cv03  880  610 500  450 m 0.5 -bd 2  -bg white  -relief sunken ]
 				
 				$cv03  create   rectangle  	{4.5 3.1 6.2 5.0 } 	-tags {Line_01}  -fill violet   -width 2 

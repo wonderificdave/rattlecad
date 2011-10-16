@@ -4,14 +4,14 @@
 		<Author prename="Manfred" surname="ROSENBERGER" />
 		<UnitScale  m="99"  c="99"  i="99"  p="99"  std="99" />
 		<DIN_Format>
-			<A0 width="1189"   height="841"  unit="m"	f1="10.0"  f2="7.5"  f3="5.0" />
-			<A1 width="841"    height="595"  unit="m"	f1="7.0"   f2="5.0"  f3="3.5" />
-			<A2 width="595"    height="420"  unit="m"	f1="7.0"   f2="5.0"  f3="3.5" />
-			<A3 width="420"    height="297"  unit="m"	f1="5.0"   f2="3.5"  f3="2.5" />
-			<A4 width="297"    height="210"  unit="m"	f1="5.0"   f2="3.5"  f3="2.5" />
+			<A0  width="1189"   height="841"  unit="m"	f1="10.0"  f2="7.5"  f3="5.0" />
+			<A1  width="841"    height="595"  unit="m"	f1="7.0"   f2="5.0"  f3="3.5" />
+			<A2  width="595"    height="420"  unit="m"	f1="7.0"   f2="5.0"  f3="3.5" />
+			<A3  width="420"    height="297"  unit="m"	f1="5.0"   f2="3.5"  f3="2.5" />
+			<A4  width="297"    height="210"  unit="m"	f1="5.0"   f2="3.5"  f3="2.5" />
 		</DIN_Format>
 		<Object_Template>
-			<Canvas path="" iborder="40" scale=""/>
+			<Canvas path="" iborder="0" scale=""/>
 			<Stage 	format="" unit="" scale="" width="" height="" title=""/>
 			<Style  linewidth="0.35" linecolour="black" fontstyle="vector" fontsize="3.5" fontdist="1" font="Arial" fontcolour="black" />
 		</Object_Template>
