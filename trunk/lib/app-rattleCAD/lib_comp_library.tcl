@@ -157,7 +157,7 @@
 				-side top
 
 
-		set compCanvas 	[ canvasCAD::newCanvas	cv_Component $canvasFrame.cv  "Components" 550 550 A3 1  -bd 2   -bg lightgray  -relief sunken ]
+		set compCanvas 	[ canvasCAD::newCanvas	cv_Component $canvasFrame.cv  "Components" 550 550 A3 1  40  -bd 2   -bg lightgray  -relief sunken ]
 		set tabID		[string map {/ . } [string map {. /} $w] ] 
 			# puts "\n  ... register:  $tabID $compCanvas"
 		lib_gui::register_external_canvasCAD $tabID $compCanvas
@@ -220,7 +220,7 @@
        #
 	proc refitCanvas {} {
 			variable compCanvas
-			$compCanvas refitToCanvas
+			$compCanvas refitStage
 	}
 
 	
@@ -235,7 +235,7 @@
 			if {$entryVar ne ""} {
 				set $entryVar $value
             }
-				# puts "\n ... $compCanvas\n    ... $compFile"
+				puts "\n ... $compCanvas\n    ... $compFile"
 			$compCanvas clean_StageContent
 			[namespace current]::create_Centerline
 			if {$compFile != {}} {

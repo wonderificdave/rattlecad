@@ -162,25 +162,17 @@
 			pack $noteBook_top -expand yes  -fill both  
 		
 			# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "Base Geometry "   	A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "Frame Tubing"		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "Frame Drafting"		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "Drafting - Jig"		A4  0.2 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "Tube Mitter"		A4  1.0 -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "Assembly"   		A4  0.2 -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Concept   "   	A4  0.2  40  -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Detail    "		A4  0.2  40  -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Mitter  "	A4  1.0  40  -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  40  -bd 2  -bg white  -relief sunken
 		
 		$noteBook_top add [frame $noteBook_top.components] 	-text "... Components" 
 		$noteBook_top add [frame $noteBook_top.report] 		-text "... info" 
 		
-		#set noteBook_report	[ ttk::notebook $noteBook_top.report.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
-			#pack $noteBook_report -expand yes  -fill both  
-		#set noteBook_report	[ ttk::notebook $noteBook_top.report.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
-			#pack $noteBook_report -expand yes  -fill both  
-		#set noteBook_report	[ ttk::notebook $noteBook_top.report.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]
-			#pack $noteBook_report -expand yes  -fill both  
-		#$noteBook_report add [frame $noteBook_report.complib] 	-text "Components Library" 
-		#$noteBook_report add [frame $noteBook_report.report] 	-text "... current Settings" 
 
 			# --- 	fill with Report Widgets
 		lib_cfg_report::createReport 	$noteBook_top.report
@@ -207,7 +199,8 @@
 	#-------------------------------------------------------------------------
 		#  register notebookCanvas in notebook - Tabs   
 		#
-	proc create_canvasCAD {notebook varname title stageFormat stageScale args} {
+	proc create_canvasCAD {notebook varname title stageFormat stageScale stageBorder args} {
+		    # lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
 		variable canvasGeometry
 		variable notebookCanvas
 		
@@ -219,9 +212,9 @@
 			# --- 	add canvasCAD to frame and select notebook tab before to update 
 			#          the tabs geometry
 		$notebook select $notebook.$varname  
-			# puts "  canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $args"
-		eval canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $args
-		puts "canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $args"
+			# puts "  canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $stageBorder $args"
+		eval canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $stageBorder $args
+			# puts "canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $stageBorder $args"
 	}
 
 	
@@ -245,6 +238,11 @@
 					::update
 					lib_gui::notebook_refitCanvas
 					lib_comp_library::updateCanvas
+				}
+			cv_Library {
+					::update
+					lib_gui::notebook_refitCanvas
+					lib_config::updateCanvas
 				}
 			
 		}
@@ -323,7 +321,7 @@
 				return
 		}
 		  # tk_messageBox -message "currentTab: $currentTab   /  varName  $varName"
-		$varName refitToCanvas
+		$varName refitStage
 	}
 
 	
@@ -504,7 +502,7 @@
 	#-------------------------------------------------------------------------
        #  create a Button inside a canvas of notebookCanvas
        #
-	proc notebook_createButton {nb_Canvas cv_Button} {
+	proc notebook_createButton {nb_Canvas cv_Button	{type {default}}} {
 			
 		# puts " createButton_Reference2Custom:  $cv_Name"
 		set cv_Name 	[lindex [split $nb_Canvas :] end]
@@ -513,7 +511,8 @@
 		case $cv_Button {
 				Reference2Custom {
 							# -- create a Button to execute geometry_reference2personal
-							catch {	button $cv.button_R2C \
+							catch { destroy $cv.button_R2C }
+							catch {	button  $cv.button_R2C \
 											-text "copy settings to Base Geometry" \
 											-command lib_gui::geometry_reference2personal								
 									$cv create window 7 19 \
@@ -523,10 +522,16 @@
 							}
 						}
 				changeFormatScale {
+							if {$type != {default}} {
+								set buttonText "Format"
+							} else {
+								set buttonText "Format & Scale"
+							}
 							# -- create a Button to change Format and Scale of Stage
-							catch {	button $cv.button_FormatScale \
-											-text "Format & Scale" \
-											-command [format {lib_gui::change_FormatScale %s} $cv]								
+							catch { destroy $cv.button_FormatScale }
+							catch {	button  $cv.button_FormatScale \
+											-text $buttonText \
+											-command [format {lib_gui::change_FormatScale %s %s} $cv $type]								
 									$cv create window 7 19 \
 											-window $cv.button_FormatScale \
 											-anchor w \
@@ -558,7 +563,7 @@
 	#-------------------------------------------------------------------------
        #  create menue to change scale and size of Stage 
        #
-	proc change_FormatScale {cv}  {
+	proc change_FormatScale {cv {type {default}}}  {
 	
 		set cv_Name [lindex [split $cv .] end-1]
 		
@@ -598,10 +603,12 @@
 				 $f_DIN_Format.a2 \
 				 $f_DIN_Format.a1 \
 				 $f_DIN_Format.a0
-				 
+		
 		set f_Scale		[frame $baseFrame.select.scale]
+		if {$type == {default}} {
 				radiobutton $f_Scale.s020 -text "1:5  " 	-value 0.20 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
 				radiobutton $f_Scale.s025 -text "1:4  " 	-value 0.25 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+				radiobutton $f_Scale.s033 -text "1:3  " 	-value 0.33 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
 				radiobutton $f_Scale.s040 -text "1:2,5" 	-value 0.40 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
 				radiobutton $f_Scale.s050 -text "1:2  " 	-value 0.50 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
 				radiobutton $f_Scale.s100 -text "1:1  " 	-value 1.00 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
@@ -610,7 +617,7 @@
 				 $f_Scale.s040 \
 				 $f_Scale.s050 \
 				 $f_Scale.s100
-
+		}
 		pack $f_DIN_Format $f_Scale -side left
 		
 		button 	$baseFrame.update \

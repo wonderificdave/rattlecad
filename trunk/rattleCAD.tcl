@@ -63,8 +63,8 @@ exec wish "$0" "$@"
 
 	array set APPL_Env { 
 						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{56}
-						RELEASE_Date		{07.Oct. 2011}
+						RELEASE_Revision	{58}
+						RELEASE_Date		{16.Oct. 2011}
 						BASE_Dir			{}
 						ROOT_Dir			{}
 						CONFIG_Dir			{}
@@ -94,13 +94,9 @@ exec wish "$0" "$@"
 	}
 
 	
+
 		# -- APPL_Env(ROOT_Dir)  ------
 	set APPL_Env(ROOT_Dir)      [file dirname $APPL_Env(BASE_Dir)       ]
-
-		puts "  \$APPL_Env(BASE_Dir)      $APPL_Env(BASE_Dir)"
-		puts "  \$APPL_Env(CONFIG_Dir)    $APPL_Env(CONFIG_Dir)"
-		puts "  \$APPL_Env(IMAGE_Dir)     $APPL_Env(IMAGE_Dir)"
-		puts ""
 
 		# -- Libraries  ---------------
 	lappend auto_path           [file join $APPL_Env(BASE_Dir) lib]
@@ -108,10 +104,28 @@ exec wish "$0" "$@"
 	package require   Tk		 8.5
 	package require   BWidget 	    
 	package require   rattleCAD  3.2 
-	package require   canvasCAD	 0.8
+	package require   canvasCAD	 0.9
 	package require	  extSummary 0.1
 
-    	
+		# -- Tcl/Tk Runtime  ----------
+		puts "  Tcl/Tk:    [info patchlevel]"
+		puts "  Exec:      [info nameofexecutable]"
+		puts ""
+		puts "    Tk:          [package require Tk]"
+		puts "    BWidget:     [package require BWidget]"
+		puts "    rattleCAD:   [package require rattleCAD]"
+		puts "    canvasCAD:   [package require canvasCAD]"
+		puts "    extSummary:  [package require extSummary]"
+	    puts ""
+	    puts " ----------------------------------"
+	    puts ""
+ 		puts "  \$APPL_Env(BASE_Dir)      $APPL_Env(BASE_Dir)"
+		puts "  \$APPL_Env(CONFIG_Dir)    $APPL_Env(CONFIG_Dir)"
+		puts "  \$APPL_Env(IMAGE_Dir)     $APPL_Env(IMAGE_Dir)"
+		puts ""
+
+
+ 
 		# -- default Parameters  ------
 		set XML "<root> empty </root>"
 		set emptyDOM  [dom parse $XML]

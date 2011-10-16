@@ -132,9 +132,21 @@
 						#
 					set stageScale	[$cv_Name getNodeAttr Stage scale]
 					set stageFormat	[$cv_Name getNodeAttr Stage format]
-						# set factor 		[ get_FormatFactor $stageFormat ]
+					set factor 		[ get_FormatFactor $stageFormat ]
 						#
-					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
+						# puts "\n\n"
+						# puts "   \$stageScale:  $stageScale"
+						# puts "   \$stageFormat: $stageFormat"
+						# puts "   \$factor:      $factor"
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]	
+						# puts "   \$xy:          $xy"
+					foreach {x y} $xy break
+						# puts "  x: $x"
+						# puts "  y: $y"
+					set y  [expr $y + (1/$factor)*120]
+					set xy [list $x $y]					
+						# puts "   \$xy:          $xy"
+						# puts "\n\n"
 					$cv_Name 		clean_StageContent
 						#
 					createDimension							$cv_Name $xy 	point_seat
@@ -165,6 +177,8 @@
 					frame_visualisation::createBaseline 	$cv_Name $xy	black
 						#
 					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+						#
+					lib_gui::notebook_createButton			$cv_Name 		changeFormatScale	format
 						#
 				}				
 			lib_gui::cv_Custom03 {
@@ -258,6 +272,37 @@
 			lib_gui::cv_Custom06 {
 						#
 						# -- assembly
+						#
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						# set factor 		[ get_FormatFactor $stageFormat ]
+						#
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]					
+					$cv_Name 		clean_StageContent				
+					frame_visualisation::createBaseline 	$cv_Name $xy	
+						#
+					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost			
+						#
+					frame_visualisation::createFrame_Tubes	$cv_Name $xy 
+					frame_visualisation::createDecoration	$cv_Name $xy 	BottleCage			$updateCommand						
+						#
+					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle				$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	Brake				$updateCommand
+					frame_visualisation::createDecoration	$cv_Name $xy 	HeadSet				
+					frame_visualisation::createDecoration	$cv_Name $xy 	Stem				
+					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear	$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront	$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand
+						# 
+					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+						#
+				}
+			lib_gui::cv_Custom99 {
+						#
+						# -- component in ConfigPanel
 						#
 					set stageScale	[$cv_Name getNodeAttr Stage scale]
 					set stageFormat	[$cv_Name getNodeAttr Stage format]

@@ -762,7 +762,7 @@
 		$cv_Name create line 	[ lib_project::flatten_nestedList  $Steerer_Fork 		$FrontWheel		]  		-fill gray60  -width 1.0  	-tags {__CenterLine__	fork}				
 			                                                                                                                                
 			# ------ crankset representation	                                                                                            
-		$cv_Name create arc  	$BottomBracket  -radius $CrankSetLength  -start -50  -extent 120  -style arc \
+		$cv_Name create arc  	$BottomBracket  -radius $CrankSetLength  -start -50  -extent 130  -style arc \
 																											-outline gray -width 1.0  	-tags {__CenterLine__	crankset} 			
 			# ------ saddle representation	                                                                                                
 				set saddle_polygon {}                                                                                                       

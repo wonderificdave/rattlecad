@@ -132,7 +132,8 @@
 	#-------------------------------------------------------------------------
 		#  refit content to Center
 		#
-	proc canvasCAD::refitToCanvas  {cv_ObjectName} {
+	proc canvasCAD::refitStage  {cv_ObjectName} {
+				# renamed from refitToCanvas; 20111014
 			set canvasDOMNode	[ getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_ObjectName] ]							 
 			set w				[ getNodeAttribute	$canvasDOMNode	Canvas	path ]			
 			set wScale			[ getNodeAttribute	$canvasDOMNode	Canvas	scale ]			
@@ -144,7 +145,7 @@
 			set w_height [winfo height $w]
 			
 				
-			puts "  refitToCanvas:    wScale $wScale" 	
+			puts "  refitStage:    wScale $wScale" 	
 				# -- get values from config variable
 				#
 			set x  		[ getNodeAttribute	$canvasDOMNode	Stage	width  ]
@@ -302,6 +303,94 @@
 			#$w move {__Frame__} 		[lindex $xy 0] [lindex $xy 1]
 			#$w move {__CenterLine__} 	[lindex $xy 0] [lindex $xy 1]
 	 			
+	}	
+		#-------------------------------------------------------------------------
+		#  item BoundingBox
+		#
+	proc canvasCAD::fit2Stage    {cv_ObjectName tagList} {
+			set canvasDOMNode	[ getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_ObjectName] ]							 
+			set w				[ getNodeAttribute	$canvasDOMNode	Canvas	path ]			
+
+					puts "  -> \$tagList: $tagList"
+			foreach {cb_x1 cb_y1  cb_x2 cb_y2} [$w bbox [lindex $tagList 0]] break
+			if {![info exists cb_x1]} {
+				puts "      -> no content!"
+				return
+			}
+			puts "  -> $cb_x1 $cb_y1  $cb_x2 $cb_y2"
+						
+			
+				# -- check BoundingBox
+				#
+			foreach tagID $tagList {
+					puts "  -> [$w bbox $tagID]"
+					foreach {x1 y1 x2 y2} [$w bbox $tagID] {
+							if {$x1 < $cb_x1} {set cb_x1 $x1}
+							if {$y1 < $cb_y1} {set cb_y1 $y1}
+							if {$x2 > $cb_x2} {set cb_x2 $x2}
+							if {$y2 > $cb_y2} {set cb_y2 $y2}
+					}
+			}
+			set content_bb [ list $cb_x1 $cb_y1  $cb_x2 $cb_y2 ]
+			puts "  -> $cb_x1 $cb_y1  $cb_x2 $cb_y2"
+			set content_width	[expr $cb_x2 - $cb_x1]
+			set content_height	[expr $cb_y2 - $cb_y1]
+			
+			foreach {sb_x1 sb_y1  sb_x2 sb_y2} [ $w coords {__Stage__} ] break
+			set stage_bb   [ list $sb_x1 $sb_y1  $sb_x2 $sb_y2 ]
+			puts "  -> $sb_x1 $sb_y1  $sb_x2 $sb_y2"
+			set stage_width		[expr $sb_x2 - $sb_x1]
+			set stage_height	[expr $sb_y2 - $sb_y1]
+			
+			set scale_x			[expr 0.9 * $stage_width / $content_width]
+			set scale_y			[expr 0.9 * $stage_height / $content_height]
+			if {$scale_x < $scale_y} {
+				set scale $scale_x
+			} else {
+				set scale $scale_y
+			}
+
+			foreach tagID $tagList {
+				$w scale $tagID 0 0 $scale $scale
+			}
+			
+			centerContent $cv_ObjectName {0 0} $tagList
+				 
+	}
+		#-------------------------------------------------------------------------
+		#  item BoundingBox
+		#
+	proc canvasCAD::__boundingBox    {cv_ObjectName tagList} {
+			set canvasDOMNode	[ getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_ObjectName] ]							 
+			set w				[ getNodeAttribute	$canvasDOMNode	Canvas	path ]			
+
+				# -- check BoundingBox
+				#
+			foreach tagID $tagList {
+					set tagID_coords [$w coords $tagID]
+					puts "   -> [llength $tagID_coords]"
+					puts "------"
+					if {[llength $tagID_coords] > 4} {
+						puts "\n\$tagID_coords"
+						puts "$tagID_coords"
+						foreach {x y} $tagID_coords break
+									set bb_x1 $x
+									set bb_x2 $x
+									set bb_y1 $y
+									set bb_y2 $y								
+						foreach {x y} $tagID_coords {
+									if {$x < $bb_x1} {set bb_x1 $x}
+									if {$y < $bb_y1} {set bb_y1 $y}
+									if {$x > $bb_x2} {set bb_x2 $x}
+									if {$y > $bb_y2} {set bb_y2 $y}
+						}
+						puts "  -> $bb_x1 $bb_y1  $bb_x2 $bb_y2"
+						return [list $bb_x1 $bb_y1  $bb_x2 $bb_y2] 
+					} else {
+						return $tagID_coords
+					}
+			}
+			 
 	}
 	#-------------------------------------------------------------------------
 		#  format Canvas DIN_Format, Stage Scale

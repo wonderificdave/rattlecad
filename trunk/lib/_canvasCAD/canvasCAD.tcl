@@ -50,7 +50,7 @@
  #															
 
 
-package provide canvasCAD 0.8
+package provide canvasCAD 0.9
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -81,8 +81,10 @@ package require tdom
 			# -------------------------------------------- 
 				# initial exported creation procedure
 				#   cv_width cv_height st_width st_height
-		proc newCanvas {name w title cv_width cv_height stageFormat stageScale args} {
-
+		proc newCanvas {name w title cv_width cv_height stageFormat stageScale stageBorder args} {
+					# stageFormat:
+					#     A0, A1, A2, ...   
+					#     passive
 				variable __packageRoot
 
 					# puts "        ... $name"
@@ -118,8 +120,12 @@ package require tdom
 				}				
 
 					# -- get stage width/height
-				foreach {st_width st_height st_unit } 	[canvasCAD::getFormatSize $stageFormat] break
-						#puts "   -> $st_width $st_height $unit"
+				switch -glob $stageFormat {
+					passive	{set DINFormat A4}
+					default	{set DINFormat $stageFormat}
+				}
+				foreach {st_width st_height st_unit } 	[canvasCAD::getFormatSize $DINFormat] break
+						puts "   -> $st_width $st_height $st_unit"
 									
 					# -- insert base values
 				set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
@@ -144,34 +150,52 @@ package require tdom
 				} $name]
 				
 			# ------- Create the canvas ----------------------------------
-				set   cv   [ eval canvas $w [flatten_nestedList $args] -width $cv_width -height $cv_height  -bg gray] 
-				update
+			    set   cv   [ eval canvas $w [flatten_nestedList $args]  -width $cv_width -height $cv_height  -bg gray] 
 				pack  $cv   -expand yes  -fill both  		
+
+					# -- exception for canvas that are not DIN Formats
+				if {$stageFormat == {passive}} {
+					setNodeAttribute  $canvasDOMNode  Stage  width  [$cv cget -width]
+					setNodeAttribute  $canvasDOMNode  Stage  height	[$cv cget -height]
+				}
+
+
+
 					# -- register canvas path
-				setNodeAttribute  $canvasDOMNode  Canvas  path	$cv			
-					# -- reportXML 001
-					# reportXML $__packageRoot 001
+				setNodeAttribute  $canvasDOMNode  Canvas  path		$cv			
+				setNodeAttribute  $canvasDOMNode  Canvas  iborder	$stageBorder			
+
 
 				update	
 				
-				__create_Stage  $canvasDOMNode						
-				bind $cv <Motion> 		[ list canvasCAD::reportPointerPostion $name %x %y ]
-				bind $cv <Configure> 	[ namespace code [list resizeCanvas $w] ]
-					# Set up event bindings for move canvas:
-				bind $cv <1>						"canvasCAD::setMark		$cv %x %y  move"
-				bind $cv <B1-Motion>				"canvasCAD::setStroke	$cv %x %y"
-				bind $cv <ButtonRelease-1>			"canvasCAD::moveContent	$cv %x %y  $name; $cv configure -cursor arrow"
-				bind $cv <3>						"canvasCAD::setMark		$cv %x %y  zoom"
-				bind $cv <B3-Motion>				"canvasCAD::setStroke	$cv %x %y"
-				bind $cv <ButtonRelease-3>			"canvasCAD::zoomArea	$cv %x %y  $name; $cv configure -cursor arrow"
+				switch -glob $stageFormat {
+					passive	{ 	__create_Stage  $canvasDOMNode	passive 
+								# update
+							}					
+					default	{
+								__create_Stage  $canvasDOMNode	sheet					
+								# update
+								bind $cv <Motion> 		[ list canvasCAD::reportPointerPostion $name %x %y ]
+								bind $cv <Configure> 	[ namespace code [list resizeCanvas $w] ]
+									# Set up event bindings for move canvas:
+								bind $cv <1>						"canvasCAD::setMark		$cv %x %y  move"
+								bind $cv <B1-Motion>				"canvasCAD::setStroke	$cv %x %y"
+								bind $cv <ButtonRelease-1>			"canvasCAD::moveContent	$cv %x %y  $name; $cv configure -cursor arrow"
+								bind $cv <3>						"canvasCAD::setMark		$cv %x %y  zoom"
+								bind $cv <B3-Motion>				"canvasCAD::setStroke	$cv %x %y"
+								bind $cv <ButtonRelease-3>			"canvasCAD::zoomArea	$cv %x %y  $name; $cv configure -cursor arrow"
+							}
+				}
 				
-					# bind . <F3> 				"canvasCAD::refitToCanvas_F3   $cv"
+					# bind . <F5> 				"canvasCAD::refitToCanvas_F3   $cv"
 					# bind $cv.scrolled 	<Configure> [namespace code [list resize $w]]
 					# reportDictionary			
 				
 			# ------- return the namspaces name -------------------------- 
 				return $name
 		}
+		
+
 
 		# --------------------------------------------
 			# 	operation handler
@@ -196,16 +220,22 @@ package require tdom
 								}
 					# ------------------------			
 				scaleToCenter {		set scale 			[lindex $argList 0]
-									return [ scaleToCenter 	$name $scale ] }
+									return [ scaleToCenter 	$name $scale ] 
+								}
 					# ------------------------			
-				refitToCanvas {		return [ refitToCanvas 	$name ] }
+				refitStage {		return [ refitStage 	$name ]
+								}
+				fit2Stage {			set tagList		[lindex $argList 0]
+									return [ fit2Stage 		$name $tagList] 
+								}
 					# ------------------------			
 				centerContent {		set offSet		[lindex $argList 0]
 									set tagList		[lindex $argList 1]
 									return [ centerContent 	$name $offSet $tagList] 
-								}			
+								}		
 					# ------------------------			
-				repositionToCanvasCenter { return [ repositionToCanvasCenter $name ] }
+				repositionToCanvasCenter { return [ repositionToCanvasCenter $name ] 
+								}
 					# ------------------------		
 						__rotateItem { 		# has to be fixed with for relativ position
 											set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
@@ -237,8 +267,10 @@ package require tdom
 									return [ formatCanvas 	$name $format $scale ] 
 								}							
 					# ------------------------		
-				reportXML { 		eval "$method" $name $argList}
-				reportXMLRoot { 	eval "$method" }
+				reportXML { 		eval "$method" $name $argList
+								}
+				reportXMLRoot { 	eval "$method" 
+								}
 					# ------------------------			
 				readSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									switch [llength $argList] {
@@ -261,7 +293,8 @@ package require tdom
 				default { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
 									eval $cv $method $argList
-									# return -code error  "\"$name $method\" is not defined" }
+									# return -code error  "\"$name $method\" is not defined" 
+								}
 			}
 		}
 
@@ -280,8 +313,10 @@ package require tdom
 		#-------------------------------------------------------------------------
 			#  create SketchStage
 			#
-		proc __create_Stage { canvasDOMNode } {
-			
+		proc __create_Stage { canvasDOMNode {type {sheet}}} {
+					# stageFormat:
+					#     sheet 	(A0. A1, A2, ... )
+					#     passive		
 						
 				# -- get the Objects tdom attributes
 				#	
@@ -304,6 +339,7 @@ package require tdom
 			set x  		[ getNodeAttribute  $canvasDOMNode  	Stage	width  ]
 			set y  		[ getNodeAttribute  $canvasDOMNode  	Stage	height ]
 				
+			
 				# -- create reference squares in the canvas center
 				#		100m
 				#		4i
@@ -342,66 +378,118 @@ package require tdom
 					setNodeAttributeRoot /root/_package_/UnitScale std $scale
 				catch [ $w delete {__StageReference_std__} ] 
 						# puts "       -> std : 0  0  10  10  / $coords"
-				
+						
 
-				# -- create Stage
-				#		
-			$w create rectangle   0  0  $x$Unit  $y$Unit    \
-								  -tags    {__StageShadow__}  \
-								  -fill    gray10   \
-								  -outline gray10    \
-								  -width   0
-			$w create rectangle   0  0  $x$Unit  $y$Unit    \
-								  -tags    {__Stage__}  \
-								  -fill    white    \
-								  -outline white    \
-								  -width   0
-								  
-				
-				# -- compute Canvas Scale
-				#		
-			set cvBorder	[getNodeAttribute	$canvasDOMNode  Canvas iborder ]
-			set stageCoords	[ $w coords  {__Stage__} ]
-			foreach {x1 y1 x2 y2} $stageCoords break
+			switch $type {
 			
-			set stage_x		[ expr $x2 - $x1]
-			set stage_y		[ expr $y2 - $y1]
-			set w_width_st	[ expr $w_width  - 2*$cvBorder ]
-			set w_height_st	[ expr $w_height - 2*$cvBorder ]
-			set scale_x		[ format "%.4f" [ expr $w_width_st  / $stage_x ] ]
-			set scale_y		[ format "%.4f" [ expr $w_height_st / $stage_y ] ]
-			if { $scale_x < $scale_y } { 
-					set cvScale $scale_x 
-			} else {
-					set cvScale $scale_y 
+				sheet {
+							# -- create Stage
+							#		
+						$w create rectangle   0  0  $x$Unit  $y$Unit    \
+											  -tags    {__StageShadow__}  \
+											  -fill    gray10   \
+											  -outline gray10    \
+											  -width   0
+						$w create rectangle   0  0  $x$Unit  $y$Unit    \
+											  -tags    {__Stage__}  \
+											  -fill    white    \
+											  -outline white    \
+											  -width   0
+
+							# -- compute Canvas Scale
+							#		
+						set cvBorder	[getNodeAttribute	$canvasDOMNode  Canvas iborder ]
+						set stageCoords	[ $w coords  {__Stage__} ]
+						foreach {x1 y1 x2 y2} $stageCoords break
+						
+						set stage_x		[ expr $x2 - $x1]
+						set stage_y		[ expr $y2 - $y1]
+						set w_width_st	[ expr $w_width  - 2*$cvBorder ]
+						set w_height_st	[ expr $w_height - 2*$cvBorder ]
+						set scale_x		[ format "%.4f" [ expr $w_width_st  / $stage_x ] ]
+						set scale_y		[ format "%.4f" [ expr $w_height_st / $stage_y ] ]
+						if { $scale_x < $scale_y } { 
+								set cvScale $scale_x 
+						} else {
+								set cvScale $scale_y 
+						}
+						
+							# -- debug
+							#
+						puts "         $w:  $scale_x  - $scale_y :  $cvScale"
+						
+							# -- set Scale Attribute
+							#
+						setNodeAttribute	$canvasDOMNode  Canvas scale $cvScale
+							
+							# -- scale stage
+							#
+						$w scale {__StageShadow__} 	0 0 $cvScale $cvScale
+						$w scale {__Stage__} 		0 0 $cvScale $cvScale
+						
+							# -- move stage to center
+							#
+						set stageCoords	[ $w coords  {__Stage__} ]
+						foreach {x1 y1 x2 y2} $stageCoords break
+						set move_x [expr ($w_width  - $x2) / 2 ]
+						set move_y [expr ($w_height - $y2) / 2 ]
+
+						$w move  {__Stage__}       			$move_x  $move_y
+						$w move  {__StageShadow__} 			$move_x  $move_y
+
+						$w move  {__StageShadow__}  6 5
+						$w raise {__StageShadow__}  all
+						$w raise {__Stage__}        all
+
+					}
+					
+				passive {
+						$w create rectangle   0  0  $x$Unit  $y$Unit    \
+											  -tags    {__Stage__}  \
+											  -fill    white    \
+											  -outline white    \
+											  -width   0
+											  
+							# -- compute Canvas Scale
+							#		
+						set stageCoords	[ $w coords  {__Stage__} ]
+						foreach {x1 y1 x2 y2} $stageCoords break
+						
+						set stage_x		[ expr $x2 - $x1]
+						set stage_y		[ expr $y2 - $y1]
+						set scale_x		[ format "%.4f" [ expr $w_width  / $stage_x ] ]
+						set scale_y		[ format "%.4f" [ expr $w_height / $stage_y ] ]
+						if { $scale_x < $scale_y } { 
+								set cvScale $scale_x 
+						} else {
+								set cvScale $scale_y 
+						}
+						
+							# -- debug
+							#
+						puts "         $w:  $scale_x  - $scale_y :  $cvScale"
+						
+							# -- set Scale Attribute
+							#
+						setNodeAttribute	$canvasDOMNode  Canvas scale $cvScale
+							
+							# -- scale stage
+							#
+						$w scale {__Stage__} 		0 0 $cvScale $cvScale
+						
+							# -- move stage to center
+							#
+						set stageCoords	[ $w coords  {__Stage__} ]
+						foreach {x1 y1 x2 y2} $stageCoords break
+						set move_x [expr ($w_width  - $x2) / 2 ]
+						set move_y [expr ($w_height - $y2) / 2 ]
+
+						$w move  {__Stage__}       			$move_x  $move_y
+					}
+					
+				default {}
 			}
-			
-				# -- debug
-				#
-			puts "         $w:  $scale_x  - $scale_y :  $cvScale"
-			
-				# -- set Scale Attribute
-				#
-			setNodeAttribute	$canvasDOMNode  Canvas scale $cvScale
 				
-				# -- scale stage
-				#
-			$w scale {__StageShadow__} 	0 0 $cvScale $cvScale
-			$w scale {__Stage__} 		0 0 $cvScale $cvScale
-			
-				# -- move stage to center
-				#
-			set stageCoords	[ $w coords  {__Stage__} ]
-			foreach {x1 y1 x2 y2} $stageCoords break
-			set move_x [expr ($w_width  - $x2) / 2 ]
-			set move_y [expr ($w_height - $y2) / 2 ]
-
-			$w move  {__Stage__}       			$move_x  $move_y
-			$w move  {__StageShadow__} 			$move_x  $move_y
-
-			$w move  {__StageShadow__}  6 5
-			$w raise {__StageShadow__}  all
-			$w raise {__Stage__}        all
 												
 		}
 		
