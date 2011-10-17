@@ -204,6 +204,19 @@ package require tdom
 				# puts " ObjectMethods  $name  $method  $argList"
 			switch -exact -- $method {
 					# ------------------------			
+				exists { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									puts "     ... $canvasDOMNode still existing!"
+									return 0
+								}
+				destroy { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
+										# puts "      .... $name"
+										# puts "      .... $cv"
+									$canvasDOMNode delete
+									rename $name ""
+									return 0
+								}
+					# ------------------------			
 				create { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									set type 			[lindex $argList 0]
 									set CoordList		[lindex $argList 1]
@@ -298,9 +311,8 @@ package require tdom
 			}
 		}
 
-			
-		
 
+		
 		#-------------------------------------------------------------------------
 			#  get canvasCAD Instances
 			#

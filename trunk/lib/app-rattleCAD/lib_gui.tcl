@@ -728,12 +728,13 @@
 	proc open_configPanel {{mode {}}} {
 			switch $mode {
 				{refresh} {
+							puts "    .. open_configPanel $mode"
 							if {[winfo exists .cfg]} {
 								catch {lib_config::create . .cfg refresh}
 							}
 						}
 				default {
-							puts "  .. her i am"
+							puts "    .. open_configPanel $mode"
 							lib_config::create . .cfg
 						}
 			}

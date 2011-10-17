@@ -311,19 +311,19 @@
 			set canvasDOMNode	[ getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_ObjectName] ]							 
 			set w				[ getNodeAttribute	$canvasDOMNode	Canvas	path ]			
 
-					puts "  -> \$tagList: $tagList"
+				# puts "  -> \$tagList: $tagList"
 			foreach {cb_x1 cb_y1  cb_x2 cb_y2} [$w bbox [lindex $tagList 0]] break
 			if {![info exists cb_x1]} {
 				puts "      -> no content!"
 				return
 			}
-			puts "  -> $cb_x1 $cb_y1  $cb_x2 $cb_y2"
+				# puts "  -> $cb_x1 $cb_y1  $cb_x2 $cb_y2"
 						
 			
 				# -- check BoundingBox
 				#
 			foreach tagID $tagList {
-					puts "  -> [$w bbox $tagID]"
+					# puts "  -> [$w bbox $tagID]"
 					foreach {x1 y1 x2 y2} [$w bbox $tagID] {
 							if {$x1 < $cb_x1} {set cb_x1 $x1}
 							if {$y1 < $cb_y1} {set cb_y1 $y1}
@@ -332,13 +332,13 @@
 					}
 			}
 			set content_bb [ list $cb_x1 $cb_y1  $cb_x2 $cb_y2 ]
-			puts "  -> $cb_x1 $cb_y1  $cb_x2 $cb_y2"
+				# puts "  -> $cb_x1 $cb_y1  $cb_x2 $cb_y2"
 			set content_width	[expr $cb_x2 - $cb_x1]
 			set content_height	[expr $cb_y2 - $cb_y1]
 			
 			foreach {sb_x1 sb_y1  sb_x2 sb_y2} [ $w coords {__Stage__} ] break
 			set stage_bb   [ list $sb_x1 $sb_y1  $sb_x2 $sb_y2 ]
-			puts "  -> $sb_x1 $sb_y1  $sb_x2 $sb_y2"
+				# puts "  -> $sb_x1 $sb_y1  $sb_x2 $sb_y2"
 			set stage_width		[expr $sb_x2 - $sb_x1]
 			set stage_height	[expr $sb_y2 - $sb_y1]
 			

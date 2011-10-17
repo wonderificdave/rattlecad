@@ -392,12 +392,25 @@
 			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Preview" -height 210
 				pack $menueFrame.sf.lf_05 				-side top  -fill x -pady 2
 				#update
+				#puts "  [info commands]\n --------------" 
+				#puts "  [info commands  ::lib_config]\n --------" 
+				#puts "  [info commands  ::lib_config::cv_Library]\n -------" 
+				#puts "  [info commands  cv_Library]\n -------" 
+				
+				if {$compCanvas != {}} {
+					# puts "   ... 0 $compCanvas  exists"
+					# $compCanvas exists
+					$compCanvas destroy
+					
+					#return
+				} else {
+					# puts "   ... 1 $compCanvas"			
+				}
+				
+				
 				set compCanvas [canvasCAD::newCanvas cv_Library $menueFrame.sf.lf_05.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
-				# lib_gui::register_external_canvasCAD 99 $compCanvas
-				#puts "  -> $canvasDOMNode"
-				#puts "  -> [$compCanvas  getNodeAttr   Canvas iborder]"  
-				#$compCanvas  setNodeAttr   Canvas scale 1.0  
-				#$compCanvas  refitToCanvas
+					# puts " ---- created $compCanvas"
+				lib_gui::register_external_canvasCAD 99 $compCanvas
 				
 
 				# -----------------
@@ -543,9 +556,11 @@
 													# puts "   ... $node "
 													# puts "     ... $value "
 													# puts "     $xPathString  $value"
-												#set [namespace current]::configValue($xPathString) $value
-												set [namespace current]::configValue($xPathString) [ frame_geometry::set_projectValue $xPathString $value format]
-												
+												if {[llength $value] == 1} {
+													if {[llength [split $value ',']] == 1} {
+														set [namespace current]::configValue($xPathString) [ frame_geometry::set_projectValue $xPathString $value format]
+													}
+												}
 												if {[file tail $xPath] == {File}} { 
 														# puts "   [file tail $xPath]   $xPath"
 														# puts "        ... [llength $componentList]"
@@ -690,9 +705,9 @@
 			pack      $cfgFrame.lb	-side left  	
 			pack      $cfgFrame.bt	-side right  	
 			pack      $cfgFrame.cb	-side right  -fill x	
-	}	
+	}
 
-	
+
 	#-------------------------------------------------------------------------
        #  update Config
        #
