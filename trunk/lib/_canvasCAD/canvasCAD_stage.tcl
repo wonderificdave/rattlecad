@@ -145,7 +145,7 @@
 			set w_height [winfo height $w]
 			
 				
-			puts "  refitStage:    wScale $wScale" 	
+			puts "     refitStage:    wScale $wScale" 	
 				# -- get values from config variable
 				#
 			set x  		[ getNodeAttribute	$canvasDOMNode	Stage	width  ]
@@ -169,9 +169,9 @@
 			foreach {x1 y1 x2 y2} $stageCoords break
 			set stageLength	[ expr $x2 -$x1 ]
 			set refitScale 	[ expr 1.0 * $checkLength / $stageLength ]
-			puts "   checkLength  $checkLength"
-			puts "   stageLength  $stageLength"
-			puts "   refitScale   $refitScale"
+			# puts "        checkLength  $checkLength"
+			# puts "        stageLength  $stageLength"
+			# puts "        refitScale   $refitScale"
 			
 				# -- compute Canvas Scale
 				#		
@@ -189,7 +189,7 @@
 					set cvScale $scale_y 
 			}
 			
-			puts "   $scale_x  - $scale_y :  $cvScale"
+			puts "        $scale_x  - $scale_y :  $cvScale"
 			
 			
 				# -- update object dictionary
