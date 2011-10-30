@@ -105,7 +105,7 @@
 				# -----------------
 				#
 			wm deiconify	$main
-
+			
 			#$nb_Config select 1
 			
 	}
@@ -116,6 +116,7 @@
        #
 	proc create_Content {main w} {
 
+			variable compCanvas
 			
 				# -----------------
 				#   clean berfoe create
@@ -148,73 +149,10 @@
 				#
 			wm resizable	$w  0 0
 				#	wm  withdraw   $w			
+			# update
+			# $compCanvas refitStage
 			
 			return
-	}
-
-	
-	#-------------------------------------------------------------------------
-       #  postion config panel to main window
-       #
-	proc reposition_to_main {main w} {
-		
-			variable cfg_Position
-			
-			if {![winfo exists $w]} return
-			
-			# wm deiconify   $w
-			
-			set root_xy [split  [wm geometry $main] +]
-			set root_w 	[winfo width $main]
-			set root_x	[lindex $root_xy 1]
-			set root_y	[lindex $root_xy 2]
-			
-			set update no
-			set update no
-			
-			if {$root_x != [lindex $cfg_Position 0]} {set update yes}
-			if {$root_y != [lindex $cfg_Position 1]} {set update yes}
-			if {$root_w != [lindex $cfg_Position 2]} {set update resize}
-			
-			switch $update {
-				yes {	
-						set dx [lindex $cfg_Position 3]
-						set dy [lindex $cfg_Position 4]
-						catch {wm geometry	$w +[expr $root_x+$dx]+[expr $root_y+$dy]}	
-					}
-				resize {
-						set d_root [expr $root_w - [lindex $cfg_Position 2]]
-						set dx [ expr [lindex $cfg_Position 3] + $d_root ]
-						set dy [lindex $cfg_Position 4]
-						catch {wm geometry	$w +[expr $root_x+$dx]+[expr $root_y+$dy]}
-				}
-			}
-	}
-	
-	#-------------------------------------------------------------------------
-       #  register_relative_position
-       #
-	proc register_relative_position {main w} {
-		
-			variable cfg_Position
-			
-			set root_xy [split  [wm geometry $main] +]
-			set root_w 	[winfo width $main]
-			set root_x	[lindex $root_xy 1]
-			set root_y	[lindex $root_xy 2]		
-				# puts "    main: $main: $root_x  $root_y"
-			
-			set w_xy [split  [wm geometry $w] +]
-				# puts "    w   .... $w_xy"
-			set w_x	[lindex $w_xy 1]
-			set w_y	[lindex $w_xy 2]
-				# puts "    w   ..... $w: $w_x  $w_y"
-			set d_x 	[ expr $w_x-$root_x]
-			set d_y 	[ expr $w_y-$root_y]
-				# puts "    w   ..... $w: $d_x  $d_y"
-				# puts "    w   ..... $root_x $root_y $d_x $d_y"			
-			set cfg_Position [list $root_x $root_y $root_w $d_x $d_y ]
-				# puts "     ... register_relative_position $cfg_Position"
 	}
 
 
@@ -389,7 +327,7 @@
 
 				# -----------------
 				#   Visualization
-			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Preview" -height 210
+			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Preview" -height 210 
 				pack $menueFrame.sf.lf_05 				-side top  -fill x -pady 2
 				#update
 				#puts "  [info commands]\n --------------" 
@@ -410,7 +348,6 @@
 				
 				set compCanvas [canvasCAD::newCanvas cv_Library $menueFrame.sf.lf_05.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
 					# puts " ---- created $compCanvas"
-				lib_gui::register_external_canvasCAD 99 $compCanvas
 				
 
 				# -----------------
@@ -420,7 +357,7 @@
 						
 						# -- Fork Types
 					set optionFrame [frame $menueFrame.sf.lf_02.f_01]
-					label $optionFrame.lb -text "  Fork Types"		
+					label $optionFrame.lb -text "  Fork Type"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Fork) \
 													-values $::APPL_ForkTypes		-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
@@ -429,7 +366,7 @@
 						
 						# -- Brake Type Front
 					set optionFrame [frame $menueFrame.sf.lf_02.f_02]
-					label $optionFrame.lb -text "  Brake Types"		
+					label $optionFrame.lb -text "  Brake Type Front"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Brake/Front) \
 													-values $::APPL_BrakeTypes	-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
@@ -438,7 +375,7 @@
 						
 						# -- Brake Type Rear
 					set optionFrame [frame $menueFrame.sf.lf_02.f_03]
-					label $optionFrame.lb -text "  Brake Types"		
+					label $optionFrame.lb -text "  Brake Type Rear"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Brake/Rear) \
 													-values $::APPL_BrakeTypes	-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
@@ -483,6 +420,7 @@
 	}	
 
 
+	
 
 	#-------------------------------------------------------------------------
        #  ListboxEvent Event
@@ -496,7 +434,6 @@
 			puts "         -> lib_config: $compFile"
 			[namespace current]::::updateCanvas
 	}
-
 
 	#-------------------------------------------------------------------------
        #  create config_line
@@ -520,10 +457,75 @@
 			if {$compFile != {}} {
 				set __my_Component__		[ $compCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
 				$compCanvas fit2Stage $__my_Component__
+				$compCanvas refitStage
 			}
 	}
 
 
+
+	#-------------------------------------------------------------------------
+       #  postion config panel to main window
+       #
+	proc reposition_to_main {main w} {
+		
+			variable cfg_Position
+			
+			if {![winfo exists $w]} return
+			
+			# wm deiconify   $w
+			
+			set root_xy [split  [wm geometry $main] +]
+			set root_w 	[winfo width $main]
+			set root_x	[lindex $root_xy 1]
+			set root_y	[lindex $root_xy 2]
+			
+			set update no
+			set update no
+			
+			if {$root_x != [lindex $cfg_Position 0]} {set update yes}
+			if {$root_y != [lindex $cfg_Position 1]} {set update yes}
+			if {$root_w != [lindex $cfg_Position 2]} {set update resize}
+			
+			switch $update {
+				yes {	
+						set dx [lindex $cfg_Position 3]
+						set dy [lindex $cfg_Position 4]
+						catch {wm geometry	$w +[expr $root_x+$dx]+[expr $root_y+$dy]}	
+					}
+				resize {
+						set d_root [expr $root_w - [lindex $cfg_Position 2]]
+						set dx [ expr [lindex $cfg_Position 3] + $d_root ]
+						set dy [lindex $cfg_Position 4]
+						catch {wm geometry	$w +[expr $root_x+$dx]+[expr $root_y+$dy]}
+				}
+			}
+	}
+	
+	#-------------------------------------------------------------------------
+       #  register_relative_position
+       #
+	proc register_relative_position {main w} {
+		
+			variable cfg_Position
+			
+			set root_xy [split  [wm geometry $main] +]
+			set root_w 	[winfo width $main]
+			set root_x	[lindex $root_xy 1]
+			set root_y	[lindex $root_xy 2]		
+				# puts "    main: $main: $root_x  $root_y"
+			
+			set w_xy [split  [wm geometry $w] +]
+				# puts "    w   .... $w_xy"
+			set w_x	[lindex $w_xy 1]
+			set w_y	[lindex $w_xy 2]
+				# puts "    w   ..... $w: $w_x  $w_y"
+			set d_x 	[ expr $w_x-$root_x]
+			set d_y 	[ expr $w_y-$root_y]
+				# puts "    w   ..... $w: $d_x  $d_y"
+				# puts "    w   ..... $root_x $root_y $d_x $d_y"			
+			set cfg_Position [list $root_x $root_y $root_w $d_x $d_y ]
+				# puts "     ... register_relative_position $cfg_Position"
+	}
 	#-------------------------------------------------------------------------
        #  create config_line
        #
@@ -794,14 +796,7 @@
 		} {
 			frame_geometry::set_projectValue $xPath $configValue($xPath)								
 		}
-		
-	
-		
-		
-		
-		
-		
-				
+						
 		set cv			[ $lib_gui::noteBook_top select ]	
 		set varName		[ lib_gui::notebook_getVarName $cv ]
 		if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }

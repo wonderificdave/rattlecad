@@ -78,9 +78,9 @@ package require tdom
 
 
 		
-			# -------------------------------------------- 
-				# initial exported creation procedure
-				#   cv_width cv_height st_width st_height
+		# -------------------------------------------- 
+			# initial exported creation procedure
+			#   cv_width cv_height st_width st_height
 		proc newCanvas {name w title cv_width cv_height stageFormat stageScale stageBorder args} {
 					# stageFormat:
 					#     A0, A1, A2, ...   
@@ -170,6 +170,10 @@ package require tdom
 				
 				switch -glob $stageFormat {
 					passive	{ 	__create_Stage  $canvasDOMNode	passive 
+								set w_cv [ getNodeAttribute  $canvasDOMNode  Canvas  path ]														
+								puts "  -> [winfo parent $w_cv]  [winfo width $w_cv]  [winfo height $w_cv]"
+								$cv configure -bg white
+								# $cv configure -bg blue
 								# update
 							}					
 					default	{
@@ -197,131 +201,8 @@ package require tdom
 		
 
 
-		# --------------------------------------------
-			# 	operation handler
-			# 	each operation has to be registered
-		proc ObjectMethods {name method argList} {
-				# puts " ObjectMethods  $name  $method  $argList"
-			switch -exact -- $method {
-					# ------------------------			
-				exists { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									puts "     ... $canvasDOMNode still existing!"
-									return 0
-								}
-				destroy { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
-										# puts "      .... $name"
-										# puts "      .... $cv"
-									$canvasDOMNode delete
-									rename $name ""
-									return 0
-								}
-					# ------------------------			
-				create { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									set type 			[lindex $argList 0]
-									set CoordList		[lindex $argList 1]
-									set argList			[lrange $argList 2 end]
-									return [ create 	$type $canvasDOMNode $CoordList $argList ]
-									# return [ create 	$type $cv_Object $CoordList $argList ]
-								}
-					# ------------------------			
-				dimension { 		set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									set type 			[lindex $argList 0]
-									set CoordList		[lindex $argList 1]
-									set argList			[lrange $argList 2 end]
-									return [ dimension 	$type $canvasDOMNode $CoordList $argList ]
-								}
-					# ------------------------			
-				scaleToCenter {		set scale 			[lindex $argList 0]
-									return [ scaleToCenter 	$name $scale ] 
-								}
-					# ------------------------			
-				refitStage {		return [ refitStage 	$name ]
-								}
-				fit2Stage {			set tagList		[lindex $argList 0]
-									return [ fit2Stage 		$name $tagList] 
-								}
-					# ------------------------			
-				centerContent {		set offSet		[lindex $argList 0]
-									set tagList		[lindex $argList 1]
-									return [ centerContent 	$name $offSet $tagList] 
-								}		
-					# ------------------------			
-				repositionToCanvasCenter { return [ repositionToCanvasCenter $name ] 
-								}
-					# ------------------------		
-						__rotateItem { 		# has to be fixed with for relativ position
-											set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-											set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
-											set objectTag 		[lindex $argList 0]
-											set rotationPoint	[lindex $argList 1]
-											set rotationAngle	[lindex $argList 2]
-											puts "rotateItem $cv  $objectTag  [lindex $rotationPoint 0] [lindex $rotationPoint 1]  $rotationAngle" 
-											puts "[$cv gettags $objectTag]"
-											rotateItem $cv  $objectTag  [lindex $rotationPoint 0] [lindex $rotationPoint 1]  $rotationAngle
-										}
-					# ------------------------		
-				setNodeAttr {		set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									return [ setNodeAttribute $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ]
-								}
-				getNodeAttr { 		set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-										# puts "[$canvasDOMNode asXML]"
-									return [ getNodeAttribute $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ]
-								}
-				getNode { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									return [ getNode $canvasDOMNode [lindex $argList 0] ]
-								}
-					# ------------------------		
-				getFormatSize {		set formatKey 		[lindex $argList 0]
-									return [getFormatSize $formatKey]									
-								}
-				formatCanvas {		set format 			[lindex $argList 0]
-									set scale 			[lindex $argList 1]
-									return [ formatCanvas 	$name $format $scale ] 
-								}							
-					# ------------------------		
-				reportXML { 		eval "$method" $name $argList
-								}
-				reportXMLRoot { 	eval "$method" 
-								}
-					# ------------------------			
-				readSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									switch [llength $argList] {
-										2 {	return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ] }
-										3 {	return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
-										4 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
-									}
-								}
-				exportSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									exportSVG $canvasDOMNode [lindex $argList 0]
-								}
-					# ------------------------			
-				print {				set printFile 		[lindex $argList 0]
-									printPostScript $name $printFile }
-					# ------------------------			
-				clean_StageContent {set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
-									clean_StageContent $cv }
-					# ------------------------			
-				default { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
-									eval $cv $method $argList
-									# return -code error  "\"$name $method\" is not defined" 
-								}
-			}
-		}
 
 
-		
-		#-------------------------------------------------------------------------
-			#  get canvasCAD Instances
-			#
-		proc get_cvList {{searchString {}}} {
-			reportXML $__packageRoot
-			puts "[reportXML $__packageRoot]"
-		}
-		
-			#
 		#-------------------------------------------------------------------------
 			#  create SketchStage
 			#
@@ -461,7 +342,7 @@ package require tdom
 											  -fill    white    \
 											  -outline white    \
 											  -width   0
-											  
+						
 							# -- compute Canvas Scale
 							#		
 						set stageCoords	[ $w coords  {__Stage__} ]
@@ -496,16 +377,148 @@ package require tdom
 						set move_x [expr ($w_width  - $x2) / 2 ]
 						set move_y [expr ($w_height - $y2) / 2 ]
 
+						
+						update
 						$w move  {__Stage__}       			$move_x  $move_y
 					}
 					
 				default {}
 			}
-				
+			
+			return 				
 												
 		}
 		
 		
+		#-------------------------------------------------------------------------
+
+
+
+		# --------------------------------------------
+			# 	operation handler
+			# 	each operation has to be registered
+		proc ObjectMethods {name method argList} {
+				# puts " ObjectMethods  $name  $method  $argList"
+			switch -exact -- $method {
+					# ------------------------			
+				exists { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									puts "     ... $canvasDOMNode still existing!"
+									return 0
+								}
+				destroy { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
+										# puts "      .... $name"
+										# puts "      .... $cv"
+									$canvasDOMNode delete
+									rename $name ""
+									return 0
+								}
+					# ------------------------			
+				create { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									set type 			[lindex $argList 0]
+									set CoordList		[lindex $argList 1]
+									set argList			[lrange $argList 2 end]
+									return [ create 	$type $canvasDOMNode $CoordList $argList ]
+									# return [ create 	$type $cv_Object $CoordList $argList ]
+								}
+					# ------------------------			
+				dimension { 		set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									set type 			[lindex $argList 0]
+									set CoordList		[lindex $argList 1]
+									set argList			[lrange $argList 2 end]
+									return [ dimension 	$type $canvasDOMNode $CoordList $argList ]
+								}
+					# ------------------------			
+				scaleToCenter {		set scale 			[lindex $argList 0]
+									return [ scaleToCenter 	$name $scale ] 
+								}
+					# ------------------------			
+				refitStage {		return [ refitStage 	$name ]
+								}
+				fit2Stage {			set tagList		[lindex $argList 0]
+									return [ fit2Stage 		$name $tagList] 
+								}
+					# ------------------------			
+				centerContent {		set offSet		[lindex $argList 0]
+									set tagList		[lindex $argList 1]
+									return [ centerContent 	$name $offSet $tagList] 
+								}		
+					# ------------------------			
+				repositionToCanvasCenter { return [ repositionToCanvasCenter $name ] 
+								}
+					# ------------------------		
+						__rotateItem { 		# has to be fixed with for relativ position
+											set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+											set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
+											set objectTag 		[lindex $argList 0]
+											set rotationPoint	[lindex $argList 1]
+											set rotationAngle	[lindex $argList 2]
+											puts "rotateItem $cv  $objectTag  [lindex $rotationPoint 0] [lindex $rotationPoint 1]  $rotationAngle" 
+											puts "[$cv gettags $objectTag]"
+											rotateItem $cv  $objectTag  [lindex $rotationPoint 0] [lindex $rotationPoint 1]  $rotationAngle
+										}
+					# ------------------------		
+				setNodeAttr {		set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									return [ setNodeAttribute $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ]
+								}
+				getNodeAttr { 		set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+										# puts "[$canvasDOMNode asXML]"
+									return [ getNodeAttribute $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ]
+								}
+				getNode { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									return [ getNode $canvasDOMNode [lindex $argList 0] ]
+								}
+					# ------------------------		
+				getFormatSize {		set formatKey 		[lindex $argList 0]
+									return [getFormatSize $formatKey]									
+								}
+				formatCanvas {		set format 			[lindex $argList 0]
+									set scale 			[lindex $argList 1]
+									return [ formatCanvas 	$name $format $scale ] 
+								}							
+					# ------------------------		
+				reportXML { 		eval "$method" $name $argList
+								}
+				reportXMLRoot { 	eval "$method" 
+								}
+					# ------------------------			
+				readSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									switch [llength $argList] {
+										2 {	return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ] }
+										3 {	return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
+										4 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
+									}
+								}
+				exportSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									exportSVG $canvasDOMNode [lindex $argList 0]
+								}
+					# ------------------------			
+				print {				set printFile 		[lindex $argList 0]
+									printPostScript $name $printFile }
+					# ------------------------			
+				clean_StageContent {set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
+									clean_StageContent $cv }
+					# ------------------------			
+				default { 			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									set cv 				[getNodeAttribute $canvasDOMNode Canvas path]
+									eval $cv $method $argList
+									# return -code error  "\"$name $method\" is not defined" 
+								}
+			}
+		}
+
+
+		
+		#-------------------------------------------------------------------------
+			#  get canvasCAD Instances
+			#
+		proc get_cvList {{searchString {}}} {
+			reportXML $__packageRoot
+			puts "[reportXML $__packageRoot]"
+		}
+		
+
 		#-------------------------------------------------------------------------
 			#  create line, polygon, rectangle, oval, arc, circle
 			#
@@ -686,8 +699,7 @@ package require tdom
 			$w move  $myItem [ lindex $moveVector 0 ] [ lindex $moveVector 1 ]	
 			$w addtag {__Content__} withtag $myItem
 			return $myItem
-		}
-		
+		} 
 		
 		#-------------------------------------------------------------------------
 			#  create Dimension   length, angle
