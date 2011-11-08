@@ -60,7 +60,7 @@
 	proc createDimension {cv_Name BB_Position type {active {on}}} {
 			
 			## -- read from domProject
-		set domProject $::APPL_Project
+		set domProject $::APPL_Env(root_ProjectDOM)
 
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
@@ -424,8 +424,8 @@
 								$cv_Name bind $_dim_Stem_Angle   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/Stem/Angle]		
 								$cv_Name bind $_dim_Fork_Rake   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/Fork/Rake]
 								$cv_Name bind $_dim_Fork_Height   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/Fork/Height]
-								$cv_Name bind $_dim_RW_Radius   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  {list://Component/Wheel/Rear/RimDiameter@APPL_RimList Component/Wheel/Rear/TyreHeight} {Rear Wheel Parameter}]
-								$cv_Name bind $_dim_FW_Radius   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  {list://Component/Wheel/Front/RimDiameter@APPL_RimList Component/Wheel/Front/TyreHeight} {Front Wheel Parameter}]
+								$cv_Name bind $_dim_RW_Radius   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  {list://Component/Wheel/Rear/RimDiameter@render_list_Rims Component/Wheel/Rear/TyreHeight} {Rear Wheel Parameter}]
+								$cv_Name bind $_dim_FW_Radius   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  {list://Component/Wheel/Front/RimDiameter@render_list_Rims Component/Wheel/Front/TyreHeight} {Front Wheel Parameter}]
 								$cv_Name bind $_dim_CR_Length   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  [namespace current]::update  Component/CrankSet/Length]
 								
 								lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_XPosition   	
@@ -1002,7 +1002,7 @@
 
 
 			## -- read from domProject
-		set domProject $::APPL_Project
+		set domProject $::APPL_Env(root_ProjectDOM)
 
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
@@ -1356,7 +1356,7 @@
 	proc createCenterline {cv_Name BB_Position {extend_Saddle {}}} {
 			
 			## -- read from domProject
-		set domProject $::APPL_Project
+		set domProject $::APPL_Env(root_ProjectDOM)
 
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
@@ -1408,7 +1408,7 @@
 	proc createDraftingFrame {cv_Name DIN_Format scale projectFile date} {
 			
 			## -- read from domProject
-		set domProject $::APPL_Project
+		set domProject $::APPL_Env(root_ProjectDOM)
 
 			# --- get stageScale
 		set stageWidth		[ $cv_Name	getNodeAttr  Stage  width  ]
@@ -1504,7 +1504,7 @@
 	proc createWaterMark {cv_Name projectFile date} {
 			
 			## -- read from domProject
-		set domProject $::APPL_Project
+		set domProject $::APPL_Env(root_ProjectDOM)
 
 			# --- get stageScale
 		set stageWidth		[ $cv_Name	getNodeAttr  Stage  width  ]

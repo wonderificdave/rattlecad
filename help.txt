@@ -6,7 +6,7 @@ What is the aim of this program?
     The program should guide you through the different process steps 
     during definition of a bicycle frame represented in tabs:
 
-    Concept (Base Geometry):
+    Base Concept (Base Geometry):
 	-----------------------------------
         ... define riders parameter
         ... define the main geometry parameters
@@ -14,7 +14,7 @@ What is the aim of this program?
             on the coloured dimensions. 
  
                 
-    Detail (Frame Tubing):
+    Tube Details (Frame Tubing):
 	-----------------------------------
         ... detail your geometry to define all tube parameters
             Editing like in Personal Tab

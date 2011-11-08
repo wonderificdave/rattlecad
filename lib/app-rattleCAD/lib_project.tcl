@@ -45,7 +45,7 @@
 		#	
 	proc check_ProjectVersion {Version} {
 	
-			set domProject $::APPL_Project
+			set domProject $::APPL_Env(root_ProjectDOM)
 			puts " ... check_ProjectVersion:  $Version"
 			
 			switch -exact $Version {
@@ -447,8 +447,15 @@
 							# puts "   <D> 9999 \n[$node asXML]"
 								
  						}
-
-						
+				{3.2.63} {	set node {}			
+							set oldNode [$domProject selectNode /root/Custom/WheelPosition/Front]
+							if {$oldNode != {}} {
+								set node 	[$domProject selectNode /root/Custom/WheelPosition]
+								$node removeChild $oldNode 
+								$oldNode delete
+							}
+						}
+								
 				{ab-xy} {	set node {}
 							set node [$domProject selectNode /root/Project/rattleCADVersion/text()]
 							puts " ... [$node nodeValue] .."
@@ -467,7 +474,7 @@
 		#
 	proc setValue {xPath type args} {
 	
-			set domProject $::APPL_Project
+			set domProject $::APPL_Env(root_ProjectDOM)
 			
 				# puts " ... setValue:  $xPath"
 				# puts "                $type"
@@ -562,7 +569,7 @@
 		#
 	proc getValue {xPath type args} {
 	
-			set domProject $::APPL_Project
+			set domProject $::APPL_Env(root_ProjectDOM)
 			
 				# puts " ... getValue:  $xPath"
 				# puts "                $type"
@@ -617,7 +624,7 @@
 			return $value
 			
 			
-			#set node [$::APPL_Project selectNode /root/Result/HeadTube/TopTubeAngle]
+			#set node [$::APPL_Env(root_ProjectDOM) selectNode /root/Result/HeadTube/TopTubeAngle]
 
 	}
 	

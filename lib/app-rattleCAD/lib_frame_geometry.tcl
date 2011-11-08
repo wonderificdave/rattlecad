@@ -133,7 +133,7 @@
 	
 				#
 				# --- increase global update timestamp
-			set ::APPL_Update			[ clock milliseconds ]
+			set ::APPL_Env(canvasCAD_Update)	[ clock milliseconds ]
 			
 	
 				#
@@ -1601,10 +1601,10 @@
 						# --- create listBox content ---
 						set listBoxContent {}
 						case $type {
-								{fileList} {
+								{SELECT_File} {
 										eval set currentFile $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
-											# puts "createEdit::create_ListEdit::fileList:"
+											puts "createEdit::create_ListEdit::SELECT_File:"
 											# puts "     currentFile: $currentFile"
 											# puts "           xpath: $xpath"										
 										set listBoxContent [lib_file::get_componentAlternatives  $xpath]
@@ -1613,47 +1613,47 @@
 										}
 										
 									}
-								{APPL_RimList} {
+								{SELECT_Rims} {
 										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
-										set listBoxContent $::APPL_RimList
+										set listBoxContent $::APPL_Env(list_Rims)
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
 										}
 									}
-								{APPL_ForkTypes} {
+								{SELECT_ForkTypes} {
 										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
-										set listBoxContent $::APPL_ForkTypes
+										set listBoxContent $::APPL_Env(list_ForkTypes)
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
 										}
 									}	
-								{APPL_BrakeTypes} {
+								{SELECT_BrakeTypes} {
 										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
-										set listBoxContent $::APPL_BrakeTypes
+										set listBoxContent $::APPL_Env(list_BrakeTypes)
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
 										}
 									}
-								{APPL_Binary_OnOff} {
+								{SELECT_BottleCage} {
 										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
-										set listBoxContent $::APPL_Binary_OnOff
+										set listBoxContent $::APPL_Env(list_BottleCage)
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
 										}
 									}
-								{APPL_BottleCage} {
+								{SELECT_Binary_OnOff} {
 										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
-										set listBoxContent $::APPL_BottleCage
+										set listBoxContent $::APPL_Env(list_Binary_OnOff)
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
 										}
@@ -1697,7 +1697,7 @@
 				
 						
 			set x_offset 20
-			set domDoc $::APPL_Project	
+			set domDoc $::APPL_Env(root_ProjectDOM)	
 			set cv 		[ $cv_Name getNodeAttr Canvas path]
 			
 			if { [catch { set cvEdit [frame $cv.f_edit -bd 2 -relief raised] } errorID ] } {
@@ -1724,7 +1724,7 @@
 					
 					switch -glob $xpath {
 							{file://*} {
-									set updateMode fileList
+									set updateMode SELECT_File
 									set xpath	[string range $xpath 7 end]
 										# puts "   ... \$xpath $xpath"							
 									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
@@ -1733,7 +1733,7 @@
 									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
 										#
 										# --- create widgets per xpath list element ---
-									create_ListEdit fileList \
+									create_ListEdit SELECT_File \
 												$cv $cv_Name $cvEdit $cvContentFrame \
 												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
 							}
@@ -1787,7 +1787,7 @@
 						switch -glob $xpath {
 							{file://*} { 
 										# puts "   ... \$xpath $xpath"
-									set updateMode fileList
+									set updateMode SELECT_File
 									set xpath	[string range $xpath 7 end]
 										# puts "   ... \$xpath $xpath"									
 									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
@@ -1796,7 +1796,7 @@
 									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
 										#
 										# --- create widgets per xpath list element ---
-									create_ListEdit fileList \
+									create_ListEdit SELECT_File \
 												$cv $cv_Name $cvEdit $cvContentFrame \
 												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath
 								}
@@ -1891,7 +1891,7 @@
 			variable 		_updateValue
 			
 				# --- get current Node
-			set domProject 	$::APPL_Project			
+			set domProject 	$::APPL_Env(root_ProjectDOM)			
 			set node 		[$domProject selectNodes /root/$xpath/text()]
 			
 			
@@ -1977,7 +1977,7 @@
 				variable Stem	
 			
 				# --- get current Node
-			set domProject 	$::APPL_Project			
+			set domProject 	$::APPL_Env(root_ProjectDOM)			
 			set node 		[$domProject selectNodes /root/$xpath/text()]
 			
 			
@@ -2124,7 +2124,7 @@
 
 			variable _updateValue
 			
-			set domProject $::APPL_Project
+			set domProject $::APPL_Env(root_ProjectDOM)
 			
 			# --- habdele xpath values --- 
 			switch -glob $xpath {

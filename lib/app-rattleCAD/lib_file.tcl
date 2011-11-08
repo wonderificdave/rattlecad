@@ -275,9 +275,9 @@
 				puts "		           ... done"
 				
 				# -- read new File
-			set ::APPL_Project	[lib_file::openFile_xml $fileName show]
+			set ::APPL_Env(root_ProjectDOM)	[lib_file::openFile_xml $fileName show]
 				#
-			frame_geometry::set_base_Parameters $::APPL_Project
+			frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
 				# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 			set_window_title $fileName
 				#
@@ -358,7 +358,7 @@
 				puts "       ... saveProject_xml - initialFile:     \"$initialFile\""			
 
 				# -- read from domConfig
-			set domConfig $::APPL_Project
+			set domConfig $::APPL_Env(root_ProjectDOM)
 			
 			switch $mode {
 				{save}		{
@@ -386,7 +386,7 @@
 			}
 			
 				# -- read from domConfig
-			set domConfig $::APPL_Project
+			set domConfig $::APPL_Env(root_ProjectDOM)
 
 				# --- set xml-File Attributes
 			[ $domConfig selectNodes /root/Project/modified/text() 			] 	nodeValue 	[ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
@@ -401,9 +401,9 @@
 				
 			
 				#
-			set ::APPL_Project $domConfig
+			set ::APPL_Env(root_ProjectDOM) $domConfig
 				#
-			frame_geometry::set_base_Parameters $::APPL_Project
+			frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
 				# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 			set_window_title $windowTitle
 				#
@@ -436,7 +436,7 @@
 			
 				# puts "   openProject_xml - fileName:   $fileName"
 			if { [file readable $fileName ] } {
-					set ::APPL_Project	[lib_file::openFile_xml $fileName show]
+					set ::APPL_Env(root_ProjectDOM)	[lib_file::openFile_xml $fileName show]
 						#
 					lib_project::check_ProjectVersion {3.1}
 						# lib_project::check_ProjectVersion {3.2.20}
@@ -445,10 +445,10 @@
 					lib_project::check_ProjectVersion {3.2.28}
 					lib_project::check_ProjectVersion {3.2.32}
 					lib_project::check_ProjectVersion {3.2.40}
-					lib_project::check_ProjectVersion {3.2.49}
+					lib_project::check_ProjectVersion {3.2.63}
 					
 						#
-					frame_geometry::set_base_Parameters $::APPL_Project
+					frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
 					
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 					if {$windowTitle == {}} {
@@ -477,9 +477,9 @@
 			set template_file	[ getTemplateFile $type ]
 			puts "         ... template_file:   $template_file"
 			if { [file readable $template_file ] } {
-					set ::APPL_Project	[lib_file::openFile_xml $template_file show]
+					set ::APPL_Env(root_ProjectDOM)	[lib_file::openFile_xml $template_file show]
 						#
-					frame_geometry::set_base_Parameters $::APPL_Project
+					frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 					set_window_title "Template $type"
 						#
