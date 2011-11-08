@@ -176,65 +176,62 @@
 
 				
 				# -----------------
-				#   Geometry
-			ttk::labelframe	$menueFrame.sf.lf_01    	-text "Geometry" 
+				#   Concept - Primary
+			ttk::labelframe	$menueFrame.sf.lf_01    	-text "Base Concept - Primary Values" 
 				pack $menueFrame.sf.lf_01 				-side top  -fill x  -pady 2
-					create_config_cDial $menueFrame.sf.lf_01		{Custom/WheelPosition/Rear} 		{Custom/}		0.20 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_01		{Custom/WheelPosition/Front} 		{Custom/}		0.20 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_01		{Custom/BottomBracket/Depth} 		{Custom/}		0.20 [namespace current]::registerUpdate darkred
-				
+					create_config_cDial $menueFrame.sf.lf_01		{Personal/HandleBar_Distance}		{Personal/}  	0.20 [namespace current]::registerUpdate orangered
+					create_config_cDial $menueFrame.sf.lf_01		{Personal/HandleBar_Height}			{Personal/}  	0.20 [namespace current]::registerUpdate orangered
+					create_config_cDial $menueFrame.sf.lf_01		{Personal/SeatTube_Length} 			{Personal/}  	0.20 [namespace current]::registerUpdate orangered
+					create_config_cDial $menueFrame.sf.lf_01		{Personal/SeatTube_Angle} 			{Personal/}  	0.02 [namespace current]::registerUpdate orangered
+					create_config_cDial $menueFrame.sf.lf_01		{Personal/InnerLeg_Length} 			{Personal/}		0.20 [namespace current]::registerUpdate darkviolet
+					create_config_cDial $menueFrame.sf.lf_01		{Custom/TopTube/PivotPosition} 		{Custom/}		0.20 [namespace current]::registerUpdate darkviolet
+
+				# -----------------
+				#   Concept
+			ttk::labelframe	$menueFrame.sf.lf_02    	-text "Base Concept - Secondary Values" 
+				pack $menueFrame.sf.lf_02 				-side top  -fill x  -pady 2
+					create_config_cDial $menueFrame.sf.lf_02		{Component/Fork/Rake} 				{Component/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_02		{Component/Fork/Height} 			{Component/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_02		{Custom/HeadTube/Angle} 			{Custom/}		0.02 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_02		{Component/Stem/Angle} 				{Component/}	0.10 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_02		{Component/Stem/Length} 			{Component/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_02		{Custom/WheelPosition/Rear} 		{Custom/}		0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_02		{Custom/BottomBracket/Depth} 		{Custom/}		0.20 [namespace current]::registerUpdate darkred
+
+				# -----------------
+				#   Alternatives
+			ttk::labelframe	$menueFrame.sf.lf_03    	-text "Base Concept - Alternative Values" 
+				pack $menueFrame.sf.lf_03 				-side top  -fill x  -pady 2
+					create_config_cDial $menueFrame.sf.lf_03		{Temporary/TopTube/VirtualLength} 			{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_03		{Temporary/WheelPosition/front/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_03		{Temporary/WheelPosition/front/diagonal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_03		{Temporary/Saddle/Offset_BB/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_03		{Temporary/BottomBracket/Height} 			{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
+
 				# -----------------
 				#   Wheels
-			ttk::labelframe	$menueFrame.sf.lf_02    	-text "Wheels" 
-				pack $menueFrame.sf.lf_02 				-side top  -fill x  -pady 2
-					
-					create_config_cBox	$menueFrame.sf.lf_02 		{Component/Wheel/Rear/RimDiameter} 	{Component/} 		 [namespace current]::registerUpdate $::APPL_RimList		
-					create_config_cDial $menueFrame.sf.lf_02		{Component/Wheel/Rear/TyreHeight} 	{Component/}	0.20 [namespace current]::registerUpdate
-					create_config_cBox	$menueFrame.sf.lf_02 		{Component/Wheel/Front/RimDiameter} {Component/} 		 [namespace current]::registerUpdate $::APPL_RimList		
-					create_config_cDial $menueFrame.sf.lf_02		{Component/Wheel/Front/TyreHeight} 	{Component/}	0.20 [namespace current]::registerUpdate
-		
-				# -----------------
-				#   Front
-			ttk::labelframe	$menueFrame.sf.lf_03    	-text "Front" 
-				pack $menueFrame.sf.lf_03 				-side top  -fill x  -pady 2
-					create_config_cDial $menueFrame.sf.lf_03		{Personal/HandleBar_Height}			{Personal/}  	0.20 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_03		{Personal/HandleBar_Distance}		{Personal/}  	0.20 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_03		{Component/Fork/Height} 			{Component/}	0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_03		{Component/Fork/Rake} 				{Component/}	0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_03		{FrameTubes/HeadTube/Length} 		{FrameTubes/}	0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_03		{Component/HeadSet/Height/Bottom} 	{Component/}	0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_03		{Component/Stem/Angle} 				{Component/}	0.10 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_03		{Component/Stem/Length} 			{Component/}	0.20 [namespace current]::registerUpdate
-		
-				# -----------------
-				#   Saddle
-			ttk::labelframe	$menueFrame.sf.lf_04    	-text "Saddle" 
+			ttk::labelframe	$menueFrame.sf.lf_04    	-text "Wheels" 
 				pack $menueFrame.sf.lf_04 				-side top  -fill x  -pady 2
-					create_config_cDial $menueFrame.sf.lf_04		{Personal/SeatTube_Angle} 			{Personal/}  	0.02 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_04		{Personal/SeatTube_Length} 			{Personal/}  	0.20 [namespace current]::registerUpdate darkred
-					create_config_cDial $menueFrame.sf.lf_04		{Custom/SeatTube/Extension} 		{Custom/}		0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_04		{Custom/SeatStay/OffsetTT} 			{Custom/}		0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_04		{Custom/TopTube/Angle} 				{Custom/}		0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_04		{Custom/TopTube/PivotPosition} 		{Custom/}		0.20 [namespace current]::registerUpdate
-				
+					
+					create_config_cBox	$menueFrame.sf.lf_04 		{Component/Wheel/Rear/RimDiameter} 	{Component/} 		 [namespace current]::registerUpdate $::APPL_Env(list_Rims)	
+					create_config_cDial $menueFrame.sf.lf_04		{Component/Wheel/Rear/TyreHeight} 	{Component/}	0.20 [namespace current]::registerUpdate
+					create_config_cBox	$menueFrame.sf.lf_04 		{Component/Wheel/Front/RimDiameter} {Component/} 		 [namespace current]::registerUpdate $::APPL_Env(list_Rims)		
+					create_config_cDial $menueFrame.sf.lf_04		{Component/Wheel/Front/TyreHeight} 	{Component/}	0.20 [namespace current]::registerUpdate
+					
+		
 				# -----------------
-				#   Alternative
-			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Alternative" 
-				pack $menueFrame.sf.lf_05 				-side top  -fill x -pady 2 
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/WheelPosition/front/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/TopTube/VirtualLength} 			{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
-					create_config_cDial $menueFrame.sf.lf_05		{Custom/HeadTube/Angle} 					{Custom/}		0.02 [namespace current]::registerUpdate darkblue
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/HeadTube/TopTubeAngle} 			{Temporary/}	0.02 [namespace current]::registerUpdate darkblue
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/Saddle/Offset_BB/horizontal} 	{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
-					create_config_cDial $menueFrame.sf.lf_05		{Temporary/BottomBracket/Height} 			{Temporary/}	0.20 [namespace current]::registerUpdate darkblue
-				
-				# -----------------
-				#   Geometry
-			ttk::labelframe	$menueFrame.sf.lf_06    	-text "Tubes" 
-				pack $menueFrame.sf.lf_06 				-side top  -fill x -pady 2
-					create_config_cDial $menueFrame.sf.lf_06		{Custom/DownTube/OffsetHT} 				{Custom/}	0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_06		{Custom/DownTube/OffsetBB} 				{Custom/}	0.20 [namespace current]::registerUpdate
-					create_config_cDial $menueFrame.sf.lf_06		{Custom/TopTube/OffsetHT} 				{Custom/}	0.20 [namespace current]::registerUpdate
+				#   Tube Details
+			ttk::labelframe	$menueFrame.sf.lf_06    	-text "Tube Details" 
+				pack $menueFrame.sf.lf_06 				-side top  -fill x  -pady 2
+					create_config_cDial $menueFrame.sf.lf_06		{FrameTubes/HeadTube/Length} 		{FrameTubes/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_06		{Component/HeadSet/Height/Bottom} 	{Component/}	0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_06		{Custom/SeatTube/Extension} 		{Custom/}		0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_06		{Custom/SeatStay/OffsetTT} 			{Custom/}		0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_06		{Custom/TopTube/Angle} 				{Custom/}		0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_06		{Temporary/HeadTube/TopTubeAngle} 	{Temporary/}	0.02 [namespace current]::registerUpdate darkblue
+					create_config_cDial $menueFrame.sf.lf_06		{Custom/TopTube/OffsetHT} 			{Custom/}		0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_06		{Custom/DownTube/OffsetHT} 			{Custom/}		0.20 [namespace current]::registerUpdate darkred
+					create_config_cDial $menueFrame.sf.lf_06		{Custom/DownTube/OffsetBB} 			{Custom/}		0.20 [namespace current]::registerUpdate darkred
 
 				# -----------------
 				#   refresh Values
@@ -251,6 +248,7 @@
        #
 	proc add_Detail {w} {
 	
+			variable APPL_Env
 			variable componentList
 			variable configValue
 			variable compCanvas
@@ -359,7 +357,7 @@
 					set optionFrame [frame $menueFrame.sf.lf_02.f_01]
 					label $optionFrame.lb -text "  Fork Type"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Fork) \
-													-values $::APPL_ForkTypes		-width 30
+													-values $::APPL_Env(list_ForkTypes)		-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
@@ -368,7 +366,7 @@
 					set optionFrame [frame $menueFrame.sf.lf_02.f_02]
 					label $optionFrame.lb -text "  Brake Type Front"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Brake/Front) \
-													-values $::APPL_BrakeTypes	-width 30
+													-values $::APPL_Env(list_BrakeTypes)	-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
@@ -377,7 +375,7 @@
 					set optionFrame [frame $menueFrame.sf.lf_02.f_03]
 					label $optionFrame.lb -text "  Brake Type Rear"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/Brake/Rear) \
-													-values $::APPL_BrakeTypes	-width 30
+													-values $::APPL_Env(list_BrakeTypes)	-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
@@ -386,7 +384,7 @@
 					set optionFrame [frame $menueFrame.sf.lf_02.f_04]
 					label $optionFrame.lb -text "  BottleCage ST"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/BottleCage/SeatTube) \
-													-values $::APPL_BottleCage	-width 30
+													-values $::APPL_Env(list_BottleCage)	-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
@@ -395,7 +393,7 @@
 					set optionFrame [frame $menueFrame.sf.lf_02.f_05]
 					label $optionFrame.lb -text "  BottleCage DT"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/BottleCage/DownTube) \
-													-values $::APPL_BottleCage	-width 30
+													-values $::APPL_Env(list_BottleCage)	-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
@@ -404,7 +402,7 @@
 					set optionFrame [frame $menueFrame.sf.lf_02.f_06]
 					label $optionFrame.lb -text "  BottleCage DT L"		
 					ttk::combobox $optionFrame.cb 	-textvariable [namespace current]::configValue(Rendering/BottleCage/DownTube_Lower) \
-													-values $::APPL_BottleCage	-width 30
+													-values $::APPL_Env(list_BottleCage)	-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
@@ -580,7 +578,7 @@
 					}
 				}
 			}
-			recurseInsert [$::APPL_Project selectNodes /root]  {/}
+			recurseInsert [$::APPL_Env(root_ProjectDOM) selectNodes /root]  {/}
 
 			# parray [namespace current]::configValue
 			#foreach file $componentList {
@@ -598,7 +596,7 @@
 			variable	rdials_list
 			variable	configValue
 
-			set node		[$::APPL_Project selectNodes $xPath]
+			set node		[$::APPL_Env(root_ProjectDOM) selectNodes $xPath]
 			set childNode	[$node childNodes]
 			set value 		[$childNode asText]
 			set labelString	[string map "{/} { / }" [string map "$labelCut {}" $xPath] ]	
@@ -666,7 +664,7 @@
 			variable	cboxList
 			variable	configValue
 
-			set node		[$::APPL_Project selectNodes $xPath]
+			set node		[$::APPL_Env(root_ProjectDOM) selectNodes $xPath]
 			set childNode	[$node childNodes]
 			set value 		[$childNode asText]
 			set labelString	[string map "{/} { / }" [string map "$labelCut {}" $xPath] ]	
@@ -675,11 +673,12 @@
 					# puts "    .. check ..     $xPath    "
 					# puts "    .. check ..     [namespace current]::configValue($xPath)    "
 			set cboxCount [llength $cboxList]
+					# puts "      ... \$cboxCount $cboxCount"
 					# puts "      ... $rdialCount"
 					# set 		$entryVar $current
 					# puts "   ... \$entryVar [list [format "$%s" $entryVar]]"
 
-			set cfgFrame	[frame   [format "%s.fscl_%s" $w $cboxCount]]
+			set cfgFrame	[frame   [format "%s.fcbx_%s" $w $cboxCount]]
 			pack    $cfgFrame -fill x
 			
 			if {[string length $labelString] > 29} {
@@ -754,7 +753,7 @@
 				set varName		[ lib_gui::notebook_getVarName $cv ]
 				if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 				
-				set refValue			[ [ $::APPL_Project selectNodes /root/$xPath ]  asText ]
+				set refValue			[ [ $::APPL_Env(root_ProjectDOM) selectNodes /root/$xPath ]  asText ]
 				set configValue($xPath) [ frame_geometry::set_projectValue $xPath $configValue($xPath) format]				
 
 					# -----------------------------

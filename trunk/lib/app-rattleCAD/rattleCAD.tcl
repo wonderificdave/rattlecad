@@ -44,7 +44,50 @@
     # -- default Parameters  ----
 	# source  [file join $APPL_Env(CONFIG_Dir) init_parameters.tcl]   
   
+  ###########################################################################
+  #
+  #         V  -  A  -  R  -  I  -  A  -  B  -  L  -  E  -  S 
+  #
+  ###########################################################################
     
+	array set APPL_Env { 
+						RELEASE_Version		{3.2}  
+						RELEASE_Revision	{tbd}
+						RELEASE_Date		{01. Jan. 2010}
+    
+						BASE_Dir			{}
+						ROOT_Dir			{}
+						CONFIG_Dir			{}
+						IMAGE_Dir			{}
+						USER_Dir			{}
+						EXPORT_Dir			{}
+						
+						root_InitDOM		{}
+						root_ProjectDOM		{}
+						
+ 						canvasCAD_Update	{0}
+						
+						list_ForkTypes		{}
+						list_BrakeTypes		{}
+						list_Binary_OnOff	{}
+						list_Rims			{}
+						
+						USER_InitString		{_init_Template}		
+                    }	
+
+	array set APPL_Config { 
+						GUI_Font			{Arial 8}
+						VECTOR_Font			{}
+						Language			{english}
+						PROJECT_Name		{}
+						WINDOW_Title		{}
+						FILE_List			{}
+                     }   
+
+	array set APPL_CompLocation {}
+
+  
+
     
   ###########################################################################
   #
@@ -63,7 +106,8 @@
        #
 	proc create_intro {w {type toplevel} {cv_border 0} } {
 
-		global APPL_Env
+		variable APPL_Env
+		#global APPL_Env
 		
 		puts "\n"
 		puts "  create_intro: \$APPL_Env(IMAGE_Dir)  $APPL_Env(IMAGE_Dir)"
@@ -73,7 +117,7 @@
       
 			global APPL_Env
 
-			set start_image     [image create  photo  -file $::APPL_Env(IMAGE_Dir)/start_image.gif ]
+			set start_image     [image create  photo  -file $APPL_Env(IMAGE_Dir)/start_image.gif ]
 			set  start_image_w  [image width   $start_image]
 			set  start_image_h  [image height  $start_image]
       
@@ -93,8 +137,8 @@
 			set x [expr 0.5*$start_image_w]
 			set y [expr 0.5*$start_image_h]
       
-			$w.cv create text  [expr $x+ 85]  [expr $y+155]  -font "Swiss 18"  -text "Version"			      -fill white
-			$w.cv create text  [expr $x+155]  [expr $y+155]  -font "Swiss 18"  -text "$APPL_Env(RELEASE_Version)."  -fill white 
+			$w.cv create text  [expr $x+ 75]  [expr $y+155]  -font "Swiss 18"  -text "Version"			      -fill white
+			$w.cv create text  [expr $x+165]  [expr $y+155]  -font "Swiss 18"  -text "$APPL_Env(RELEASE_Version)."  -fill white 
 			$w.cv create text  [expr $x+210]  [expr $y+156]  -font "Swiss 14"  -text "$APPL_Env(RELEASE_Revision)"  -fill white 
       
 				;# --- beautify --- but i dont know the reason, why to center manually
@@ -132,51 +176,53 @@
        #
 	proc initValues {} {
 		
-		set root 	$::APPL_Init
+		variable APPL_Env
+		set root_InitDOM 	$APPL_Env(root_InitDOM)
+		
 		
 			# --- fill ICON - Array
 			#
-		foreach child [ [$root selectNodes /root/lib_gui/images] childNodes] {			
+		foreach child [ [$root_InitDOM selectNodes /root/lib_gui/images] childNodes] {			
 				# puts [ $child asXML ]
 			set name	[ $child getAttribute {name} ]
 			set source	[ $child getAttribute {src} ]
 				# puts "   $name  $source"
-			set lib_gui::iconArray($name) [ image create photo -file $::APPL_Env(IMAGE_Dir)/$source ]
+			set lib_gui::iconArray($name) [ image create photo -file $APPL_Env(IMAGE_Dir)/$source ]
 		}
-			set ::cfg_panel [image create photo -file $::APPL_Env(IMAGE_Dir)/cfg_panel.gif]
+			set ::cfg_panel [image create photo -file $APPL_Env(IMAGE_Dir)/cfg_panel.gif]
 
 		
 			# --- fill CANVAS - Array
 			#
-		set node	[ $root selectNodes /root/lib_gui/geometry/canvas ]
+		set node	[ $root_InitDOM selectNodes /root/lib_gui/geometry/canvas ]
 			set lib_gui::canvasGeometry(width) 	[ $node getAttribute {width} ]
 			set lib_gui::canvasGeometry(height)	[ $node getAttribute {height} ]	
 
 			
 			# --- get TemplateFile - Names
 			#
-		set node	[ $root selectNodes /root/Template/Road ]
-			set ::APPL_Env(TemplateRoad_default)  [file join $::APPL_Env(CONFIG_Dir) [$node asText] ]
-		set node	[ $root selectNodes /root/Template/MTB ]
-			set ::APPL_Env(TemplateMTB_default)   [file join $::APPL_Env(CONFIG_Dir) [$node asText] ]
+		set node	[ $root_InitDOM selectNodes /root/Template/Road ]
+			set APPL_Env(TemplateRoad_default)  [file join $APPL_Env(CONFIG_Dir) [$node asText] ]
+		set node	[ $root_InitDOM selectNodes /root/Template/MTB ]
+			set APPL_Env(TemplateMTB_default)   [file join $APPL_Env(CONFIG_Dir) [$node asText] ]
 				
 				
 			# --- get Template - Type to load
 			#
-		set node    [ $root selectNodes /root/Startup/TemplateFile ]
-			set ::APPL_Env(TemplateType) [$node asText]
+		set node    [ $root_InitDOM selectNodes /root/Startup/TemplateFile ]
+			set APPL_Env(TemplateType) [$node asText]
 			
 			
 			# --- get Template - File to load
 			#
-		set ::APPL_Env(TemplateInit) [lib_file::getTemplateFile	$::APPL_Env(TemplateType)]
+		set APPL_Env(TemplateInit) [lib_file::getTemplateFile	$APPL_Env(TemplateType)]
 			
 			
 		
 			# --- fill ListBox Values   APPL_RimList
 			#
-		set ::APPL_RimList {}
-		set node_Rims [ $root selectNodes /root/Options/Rim ]
+		set APPL_Env(list_Rims) {}
+		set node_Rims [ $root_InitDOM selectNodes /root/Options/Rim ]
 		foreach childNode [ $node_Rims childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
 					set value_01 [$childNode getAttribute inch     {}]
@@ -187,60 +233,60 @@
 					} else {
 						set value [format "%s ; %s %s" $value_02 $value_01 $value_03]
 					}
-				set ::APPL_RimList [lappend ::APPL_RimList  $value]
+				set APPL_Env(list_Rims) [lappend APPL_Env(list_Rims)  $value]
 			}
 		}
 
 		
 			# --- fill ListBox Values   APPL_ForkTypes
 			#
-		set ::APPL_ForkTypes {}
-		set node_ForkTypes [ $root selectNodes /root/Options/Fork ]
+		set APPL_Env(list_ForkTypes) {}
+		set node_ForkTypes [ $root_InitDOM selectNodes /root/Options/Fork ]
 		foreach childNode [ $node_ForkTypes childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
 					# puts "  childNode ->   [$childNode nodeName]  "
-				set ::APPL_ForkTypes [lappend ::APPL_ForkTypes  [$childNode nodeName]]
+				set APPL_Env(list_ForkTypes) [lappend APPL_Env(list_ForkTypes)  [$childNode nodeName]]
 			}
 		}
 
 			
 			# --- fill ListBox Values   APPL_BrakeTypes
 			#
-		set ::APPL_BrakeTypes {}
-		set node_BrakeTypes [ $root selectNodes /root/Options/Brake ]
+		set APPL_Env(list_BrakeTypes) {}
+		set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/Brake ]
 		foreach childNode [ $node_BrakeTypes childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
 					# puts "  childNode ->   [$childNode nodeName]  "
-				set ::APPL_BrakeTypes [lappend ::APPL_BrakeTypes  [$childNode nodeName]]
+				set APPL_Env(list_BrakeTypes) [lappend APPL_Env(list_BrakeTypes)  [$childNode nodeName]]
 			}
 		}
 		
 			# --- fill ListBox Values   APPL_BottleCage
 			#
-		set ::APPL_BottleCage {}
-		set node_BottleCage [ $root selectNodes /root/Options/BottleCage ]
+		set APPL_Env(list_BottleCage) {}
+		set node_BottleCage [ $root_InitDOM selectNodes /root/Options/BottleCage ]
 		foreach childNode [ $node_BottleCage childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
 					# puts "  childNode ->   [$childNode nodeName]  "
-				set ::APPL_BottleCage [lappend ::APPL_BottleCage  [$childNode nodeName]]
+				set APPL_Env(list_BottleCage) [lappend APPL_Env(list_BottleCage)  [$childNode nodeName]]
 			}
 		}
 		
 			# --- fill ListBox Values   APPL_Binary_OnOff
 			#
-		set ::APPL_Binary_OnOff {}
-		set node_Binary_OnOff [ $root selectNodes /root/Options/Binary_OnOff ]
+		set APPL_Env(list_Binary_OnOff) {}
+		set node_Binary_OnOff [ $root_InitDOM selectNodes /root/Options/Binary_OnOff ]
 		foreach childNode [ $node_Binary_OnOff childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
 					# puts "  childNode ->   [$childNode nodeName]  "
-				set ::APPL_Binary_OnOff [lappend ::APPL_Binary_OnOff  [$childNode nodeName]]
+				set APPL_Env(list_Binary_OnOff) [lappend APPL_Env(list_Binary_OnOff)  [$childNode nodeName]]
 			}
 		}
 		
 			# --- fill ListBox Values   APPL_CompLocation
 			#
 		array unset ::APPL_CompLocation 
-		set node_Locations [ $root selectNodes /root/Options/ComponentLocation ]
+		set node_Locations [ $root_InitDOM selectNodes /root/Options/ComponentLocation ]
 		foreach childNode [ $node_Locations childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
 					set xpath [$childNode getAttribute xpath {}]

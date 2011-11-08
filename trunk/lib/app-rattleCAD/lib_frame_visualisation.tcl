@@ -39,16 +39,21 @@
 
  namespace eval frame_visualisation {
 
-	variable    bottomCanvasBorder	30
+	#  global 		APPL_Env
+	# parray      APPL_Env
+	#upvar #0 	APPL_Env	root_APPL_Env
 	
-	variable 	baseLine
-	array	set	baseLine	{}
+#	variable    bottomCanvasBorder	30
+
+#	variable 	baseLine
+#	array	set	baseLine	{}
 
 
 	proc createBaseline {cv_Name BB_Position {colour {gray}}} {
 	
+
 			## -- read from domProject
-		set domProject $::APPL_Project
+		set domProject $::APPL_Env(root_ProjectDOM)
 		
 			# --- get distance to Ground
 		set BB_Ground(position)	[ vectormath::addVector $frame_geometry::BottomBracket(Ground)  $BB_Position ]
@@ -78,8 +83,9 @@
 
 	proc createDecoration {cv_Name BB_Position type {updateCommand {}}} {
 			
+
 			## -- read from domProject
-		set domProject 	$::APPL_Project
+		set domProject 	$::APPL_Env(root_ProjectDOM)
 
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
@@ -203,7 +209,7 @@
 										set RearBrake(object)		[ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$RearBrake(object)	<Double-ButtonPress-1> \
 																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																							$updateCommand { 	list://Rendering/Brake/Rear@APPL_BrakeTypes \
+																							$updateCommand { 	list://Rendering/Brake/Rear@SELECT_BrakeTypes \
 																												file://Component/Brake/Rear/File	\
 																												Component/Brake/Rear/LeverLength	\
 																											} 	{RearBrake Parameter} \
@@ -229,7 +235,7 @@
 										set FrontBrake(object)		[ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$FrontBrake(object)	<Double-ButtonPress-1> \
 																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																							$updateCommand { 	list://Rendering/Brake/Front@APPL_BrakeTypes \
+																							$updateCommand { 	list://Rendering/Brake/Front@SELECT_BrakeTypes \
 																												file://Component/Brake/Front/File	\
 																												Component/Fork/Crown/Brake/Offset	\
 																												Component/Fork/Crown/Brake/OffsetPerp	\
@@ -262,7 +268,7 @@
 										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $st_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
 																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																							$updateCommand { 	list://Rendering/BottleCage/SeatTube@APPL_BottleCage \
+																							$updateCommand { 	list://Rendering/BottleCage/SeatTube@SELECT_BottleCage \
 																											} 	{BottleCage SeatTube Parameter} \
 																				]
 																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
@@ -284,7 +290,7 @@
 										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
 																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																							$updateCommand { 	list://Rendering/BottleCage/DownTube@APPL_BottleCage \
+																							$updateCommand { 	list://Rendering/BottleCage/DownTube@SELECT_BottleCage \
 																											} 	{BottleCage DownTube-Upper Parameter} \
 																				]
 																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
@@ -306,7 +312,7 @@
 										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
 																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																							$updateCommand { 	list://Rendering/BottleCage/DownTube_Lower@APPL_BottleCage \
+																							$updateCommand { 	list://Rendering/BottleCage/DownTube_Lower@SELECT_BottleCage \
 																											} 	{BottleCage DownTube-Lower Parameter} \
 																				]
 																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
@@ -432,9 +438,10 @@
 	
 	proc createFrame_Tubes {cv_Name BB_Position {updateCommand {}}} {
 			
+	
 			## -- read from domProject
-		set domProject 	$::APPL_Project
-		set domInit 	$::APPL_Init
+		set domProject 	$::APPL_Env(root_ProjectDOM)
+		set domInit 	$::APPL_Env(root_InitDOM)
 
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
@@ -493,7 +500,7 @@
 						set do_angle				[ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
 						}
 			Composite 	{
-						set ForkBlade(polygon)		[ frame_geometry::set_compositeFork $::APPL_Init $BB_Position ]
+						set ForkBlade(polygon)		[ frame_geometry::set_compositeFork $::APPL_Env(root_InitDOM) $BB_Position ]
 						set ForkCrown(file)			[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Composite/Visualization/Crown/File ] asText ] ]
 						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Composite/Visualization/DropOut/File ]  asText ] ]
 						set ForkDropout(position)	[ frame_geometry::object_values		FrontWheel  position	$BB_Position ]
@@ -528,7 +535,7 @@
 		set ForkBlade(object)		[ $cv_Name create polygon $ForkBlade(polygon) -fill white  -outline black -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$ForkBlade(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																$updateCommand  { 	list://Rendering/Fork@APPL_ForkTypes \
+																$updateCommand  { 	list://Rendering/Fork@SELECT_ForkTypes \
 																					Component/Fork/Blade/Width			\
 																					Component/Fork/Blade/DiameterDO		\
 																					Component/Fork/Blade/TaperLength	\
@@ -545,7 +552,7 @@
 		set ForkCrown(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __Frame__ ]
 		if {$updateCommand != {}}	{ $cv_Name bind 	$ForkCrown(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																$updateCommand  { 	list://Rendering/Fork@APPL_ForkTypes \
+																$updateCommand  { 	list://Rendering/Fork@SELECT_ForkTypes \
 																					file://Component/Fork/Crown/File	\
 																					Component/Fork/Crown/Brake/Angle 	\
 																					Component/Fork/Crown/Brake/Offset 	\
@@ -701,8 +708,9 @@
 	
 	proc createFrame_Centerline {cv_Name BB_Position {highlightList {}} {excludeList {}} } {
 			
+
 			## -- read from domProject
-		set domProject $::APPL_Project
+		set domProject $::APPL_Env(root_ProjectDOM)
 
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
@@ -802,8 +810,9 @@
 	
 	proc createTubemitter {cv_Name xy type} {
 	
+
 			## -- read from domProject
-		set domProject $::APPL_Project
+		set domProject $::APPL_Env(root_ProjectDOM)
 		
 					set		minorAngle			2
 					set		majorAngle			50

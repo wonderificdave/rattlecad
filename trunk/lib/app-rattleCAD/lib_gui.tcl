@@ -162,8 +162,8 @@
 			pack $noteBook_top -expand yes  -fill both  
 		
 			# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Concept   "   	A4  0.2  40  -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Detail    "		A4  0.2  40  -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  40  -bd 2  -bg white  -relief sunken
+		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Tube Details    "	A4  0.2  40  -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
 		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
@@ -359,14 +359,14 @@
 
 		
 		if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
-			set canvasUpdate($varName) [ expr $::APPL_Update -1 ]
+			set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
 		}
 		
 		set timeStart 	[clock milliseconds]
 
-		# puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Update\n"
+		# puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Env(canvasCAD_Update)\n"
 		if { $mode == {} } {
-				if { $canvasUpdate($varName) < $::APPL_Update } {
+				if { $canvasUpdate($varName) < $::APPL_Env(canvasCAD_Update) } {
 					puts "\n       ... notebook_updateCanvas ... update $varName\n"
 					fill_canvasCAD $varName
 					set canvasUpdate($varName) [ clock milliseconds ]
@@ -411,7 +411,7 @@
 		variable noteBook_top
 		
 			## -- read from domConfig
-		set domConfig $::APPL_Project
+		set domConfig $::APPL_Env(root_ProjectDOM)
 
 			# --- get currentTab
 		set currentTab 	[ $noteBook_top select ]
@@ -465,7 +465,7 @@
 		variable noteBook_top
 		
 			## -- read from domConfig
-		set domConfig $::APPL_Project
+		set domConfig $::APPL_Env(root_ProjectDOM)
 
 			# --- get currentTab
 		set currentTab 	[ $noteBook_top select ]
@@ -553,7 +553,7 @@
 			
 		switch $answer {
 			cancel	return				
-			ok		{	frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Project
+			ok		{	frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Env(root_ProjectDOM)
 						lib_gui::fill_canvasCAD cv_Custom00 
 					}
 		}
@@ -650,14 +650,14 @@
 			# puts "   ... $cv_Name"
 	
 		switch $type {
-				Fork	{ set listDefinition list://Rendering/Fork@APPL_ForkTypes }
-				Brake	{ set listDefinition list://Rendering/Brake/Front@APPL_BrakeTypes }
-				default { set listDefinition {	list://Rendering/Fork@APPL_ForkTypes
-												list://Rendering/Brake/Front@APPL_BrakeTypes
-												list://Rendering/Brake/Rear@APPL_BrakeTypes
-												list://Rendering/BottleCage/SeatTube@APPL_BottleCage
-												list://Rendering/BottleCage/DownTube@APPL_BottleCage
-												list://Rendering/BottleCage/DownTube_Lower@APPL_BottleCage}
+				Fork	{ set listDefinition list://Rendering/Fork@render_list_ForkTypes }
+				Brake	{ set listDefinition list://Rendering/Brake/Front@render_list_BrakeTypes }
+				default { set listDefinition {	list://Rendering/Fork@render_list_ForkTypes
+												list://Rendering/Brake/Front@render_list_BrakeTypes
+												list://Rendering/Brake/Rear@render_list_BrakeTypes
+												list://Rendering/BottleCage/SeatTube@render_list_BottleCage
+												list://Rendering/BottleCage/DownTube@render_list_BottleCage
+												list://Rendering/BottleCage/DownTube_Lower@render_list_BottleCage}
 						}
 		}
 		
@@ -687,7 +687,7 @@
 		}
 						
 		$varName formatCanvas $stageFormat $stageScale
-		set canvasUpdate($varName) [ expr $::APPL_Update -1 ]
+		set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
 		notebook_updateCanvas force
 		notebook_refitCanvas
 		notebook_updateCanvas force

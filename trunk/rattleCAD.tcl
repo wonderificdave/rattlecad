@@ -46,60 +46,19 @@ exec wish "$0" "$@"
 
 		puts "\n\n ====== I N I T ============================ \n\n"
 		
-		
-		# -- Varirables  --------------
-	set 	  APPL_Update		0 
-	set		  APPL_Project		{}
-	set		  APPL_Init			{}
-	set		  APPL_ForkTypes	{}
-	set		  APPL_BrakeTypes	{}
-	set		  APPL_Binary_OnOff	{}
-	set		  APPL_RimList		{}
-	array set APPL_CompLocation {}
-	
-	
-	variable  APPL_Env
-	variable  APPL_Config
-
-	array set APPL_Env { 
-						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{62}
-						RELEASE_Date		{30. Oct. 2011}
-						BASE_Dir			{}
-						ROOT_Dir			{}
-						CONFIG_Dir			{}
-						IMAGE_Dir			{}
-						USER_Dir			{}
-						EXPORT_Dir			{}
-						USER_InitString		{_init_Template}
-                     }	
-					 
-					 
 		# -- APPL_Env(BASE_Dir)  ------
-	set APPL_Env(BASE_Dir)  [file dirname [file normalize $::argv0] ]
- 
+	set BASE_Dir  [file dirname [file normalize $::argv0] ]
  
 		# -- redefine on Starkit  -----
 		# 		exception for starkit compilation
 		#   	 .../rattleCAD.exe
-	set APPL_Type           [file tail $APPL_Env(BASE_Dir)]
-	switch $APPL_Type {
-		rattleCAD.exe	{	set APPL_Env(CONFIG_Dir)    [file join    $APPL_Env(BASE_Dir) etc   ]
-							set APPL_Env(IMAGE_Dir)     [file join    $APPL_Env(BASE_Dir) image ]
-							set APPL_Env(BASE_Dir)      [file dirname $APPL_Env(BASE_Dir)       ] 
+	set APPL_Type       [file tail $BASE_Dir]	
+	if {$APPL_Type == {rattleCAD.exe}}	{	
+		set BASE_Dir	[file dirname $BASE_Dir]
 						}
-		default			{ 	set APPL_Env(CONFIG_Dir)    [file join    $APPL_Env(BASE_Dir) etc   ]
-							set APPL_Env(IMAGE_Dir)     [file join    $APPL_Env(BASE_Dir) image ]
-						}
-	}
-
-	
-
-		# -- APPL_Env(ROOT_Dir)  ------
-	set APPL_Env(ROOT_Dir)      [file dirname $APPL_Env(BASE_Dir)       ]
 
 		# -- Libraries  ---------------
-	lappend auto_path           [file join $APPL_Env(BASE_Dir) lib]
+	lappend auto_path           [file join $BASE_Dir lib]
 	
 	package require   Tk		 8.5
 	package require   BWidget 	    
@@ -107,31 +66,50 @@ exec wish "$0" "$@"
 	package require   canvasCAD	 0.9
 	package require	  extSummary 0.1
 
-		# -- Tcl/Tk Runtime  ----------
+
+		# -- Version Info  ----------------------
+	set APPL_Env(RELEASE_Revision)	{64}
+	set APPL_Env(RELEASE_Date)		{07. Nov. 2011}
+					 
+
+ 		puts "  ----------------------------------------------"
+		puts "  rattleCAD      $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)"
+		puts "                             $APPL_Env(RELEASE_Date)"
+ 		puts "  ----------------------------------------------"
+
+
+		# -- Tcl/Tk Runtime  --------------------
 		puts "  Tcl/Tk:    [info patchlevel]"
 		puts "  Exec:      [info nameofexecutable]"
-		puts ""
+ 		puts "  ----------------------------------------------"
 		puts "    Tk:          [package require Tk]"
 		puts "    BWidget:     [package require BWidget]"
 		puts "    rattleCAD:   [package require rattleCAD]"
 		puts "    canvasCAD:   [package require canvasCAD]"
 		puts "    extSummary:  [package require extSummary]"
-	    puts ""
-	    puts " ----------------------------------"
-	    puts ""
- 		puts "  \$APPL_Env(BASE_Dir)      $APPL_Env(BASE_Dir)"
-		puts "  \$APPL_Env(CONFIG_Dir)    $APPL_Env(CONFIG_Dir)"
-		puts "  \$APPL_Env(IMAGE_Dir)     $APPL_Env(IMAGE_Dir)"
-		puts ""
+ 		puts "  ----------------------------------------------"
 
+		# -- Application Directories  -----------
+	set APPL_Env(BASE_Dir)    	$BASE_Dir
+	set APPL_Env(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
+	set APPL_Env(IMAGE_Dir)     [file join    $BASE_Dir image ]
+	set APPL_Env(ROOT_Dir)      [file dirname $BASE_Dir]
+	set APPL_Env(USER_Dir)      [lib_file::check_user_dir user]	
+	set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir export]
 
  
-		# -- default Parameters  ------
-		set XML "<root> empty </root>"
-		set emptyDOM  [dom parse $XML]
-	set APPL_Project [$emptyDOM documentElement]
+ 		puts "    APPL_Env(ROOT_Dir)   $APPL_Env(ROOT_Dir)"
+ 		puts "    APPL_Env(BASE_Dir)   $APPL_Env(BASE_Dir)"
+		puts "    APPL_Env(CONFIG_Dir) $APPL_Env(CONFIG_Dir)"
+		puts "    APPL_Env(IMAGE_Dir)  $APPL_Env(IMAGE_Dir)"
+		puts "    APPL_Env(USER_Dir)   $APPL_Env(USER_Dir)"
+		puts "    APPL_Env(EXPORT_Dir) $APPL_Env(EXPORT_Dir)"
+ 		puts "  ----------------------------------------------"
+		puts ""
   
 
+	
+	
   ###########################################################################
   #
   #                 I  -  N  -  I  -  T                       - Configuration
@@ -139,64 +117,47 @@ exec wish "$0" "$@"
   ###########################################################################
 
 
-		# -- APPL_Env(USER_Dir)  ------
-	set APPL_Env(USER_Dir)      [lib_file::check_user_dir user]	
-
-		puts "  \$APPL_Env(USER_Dir)      $APPL_Env(USER_Dir)"
-		puts ""
+		# -- init Parameters  ----
+	set APPL_Env(root_InitDOM)  [ lib_file::openFile_xml 	[file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml ] ]
+		puts "     ... root_InitDOM      [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml]"
 
 
-		# -- default Parameters  ----
-	set APPL_Init  [ lib_file::openFile_xml 	[file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml ] ]
-		puts "     ... APPL_Init         [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml]"
-	
 	initValues
 		
 		
 		# -- load template ----------
-		puts ""
-		puts "     ... APPL_Env(TemplateType)      $APPL_Env(TemplateType)"
-		puts "     ... APPL_Env(TemplateInit)      $APPL_Env(TemplateInit)"
+		puts "     ... TemplateType      $APPL_Env(TemplateType)"
+		puts "     ... TemplateInit      $APPL_Env(TemplateInit)"
 		
-	set APPL_Project  [ lib_file::openFile_xml 	$APPL_Env(TemplateInit) ]
+	set APPL_Env(root_ProjectDOM)	[ lib_file::openFile_xml 	$APPL_Env(TemplateInit) ]
 
 	
 		# -- status messages --------
-	puts "\n  APPL_ForkTypes"
-	foreach entry $APPL_ForkTypes {
+	puts "\n     APPL_Env(list_ForkTypes)"
+	foreach entry $APPL_Env(list_ForkTypes) {
 		puts "        -> $entry"
 	}
 
-	puts "\n  APPL_BrakeTypes"
-	foreach entry $APPL_BrakeTypes {
+	puts "\n     APPL_Env(list_BrakeTypes)"
+	foreach entry $APPL_Env(list_BrakeTypes) {
 		puts "        -> $entry"
 	}
 	
-	puts "\n  APPL_BottleCage"
-	foreach entry $APPL_BottleCage {
+	puts "\n     APPL_Env(list_BottleCage)"
+	foreach entry $APPL_Env(list_BottleCage) {
 		puts "        -> $entry"
 	}
 	
-	
-
-	puts "\n  APPL_RimList"
-	foreach entry $APPL_RimList {
+	puts "\n     APPL_Env(list_Rims)"
+	foreach entry $APPL_Env(list_Rims) {
 		puts "        -> $entry"
 	}
 	
 	puts "\n  APPL_CompLocation"
 	foreach index [array names APPL_CompLocation] {
-		puts [format "        -> %-25s %s" $index    $APPL_CompLocation($index)]
+		puts [format "        -> %-42s %s" $index    $APPL_CompLocation($index)]
 	} 
 	
-	array set APPL_Config { 
-						GUI_Font			{Arial 8}
-						VECTOR_Font			{}
-						Language			{english}
-						PROJECT_Name		{}
-						WINDOW_Title		{}
-						FILE_List			{}
-                     }
 
 
 
@@ -221,9 +182,6 @@ exec wish "$0" "$@"
 
 
 
-    # -- initialize user - settings 
-  set APPL_Env(USER_Dir) 	[lib_file::check_user_dir user]
-  set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir export]
 
  
     # -- set standard font ------------
@@ -274,7 +232,7 @@ exec wish "$0" "$@"
 	
 		# --------------------------------------------
 		#	create custom base Parameters
-	frame_geometry::set_base_Parameters $APPL_Project
+	frame_geometry::set_base_Parameters $APPL_Env(root_ProjectDOM)
 	
 		# --------------------------------------------
 		#	set APPL_Config(PROJECT_Name)		
