@@ -37,8 +37,11 @@
  #
  # 
 
- 
-  package provide rattleCAD  3.2
+  package require   Tk			8.5
+  package require   BWidget 	    
+  package require   tdom 	
+  
+  package provide 	rattleCAD	3.2
 
                    
     # -- default Parameters  ----
