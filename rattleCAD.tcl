@@ -60,16 +60,14 @@ exec wish "$0" "$@"
 		# -- Libraries  ---------------
 	lappend auto_path           [file join $BASE_Dir lib]
 	
-	package require   Tk		 8.5
-	package require   BWidget 	    
 	package require   rattleCAD  3.2 
 	package require   canvasCAD	 0.9
 	package require	  extSummary 0.1
 
 
 		# -- Version Info  ----------------------
-	set APPL_Env(RELEASE_Revision)	{64}
-	set APPL_Env(RELEASE_Date)		{07. Nov. 2011}
+	set APPL_Env(RELEASE_Revision)	{65}
+	set APPL_Env(RELEASE_Date)		{11. Nov. 2011}
 					 
 
  		puts "  ----------------------------------------------"
@@ -84,6 +82,7 @@ exec wish "$0" "$@"
  		puts "  ----------------------------------------------"
 		puts "    Tk:          [package require Tk]"
 		puts "    BWidget:     [package require BWidget]"
+		puts "    tdom:        [package require tdom]"
 		puts "    rattleCAD:   [package require rattleCAD]"
 		puts "    canvasCAD:   [package require canvasCAD]"
 		puts "    extSummary:  [package require extSummary]"
@@ -129,6 +128,7 @@ exec wish "$0" "$@"
 		puts "     ... TemplateType      $APPL_Env(TemplateType)"
 		puts "     ... TemplateInit      $APPL_Env(TemplateInit)"
 		
+	
 	set APPL_Env(root_ProjectDOM)	[ lib_file::openFile_xml 	$APPL_Env(TemplateInit) ]
 
 	
@@ -170,6 +170,8 @@ exec wish "$0" "$@"
 	# ttk::style configure TCombobox -padding 0
 	# ttk::style theme use default
 	ttk::style configure TCombobox -padding 0
+    # -- set standard font ------------
+	option add *font $APPL_Config(GUI_Font)
 	
   
   ###########################################################################
@@ -183,11 +185,6 @@ exec wish "$0" "$@"
 
 
 
- 
-    # -- set standard font ------------
-  option add *font $APPL_Config(GUI_Font)
-  
-
   ###########################################################################
   #
   #                 I  -  N  -  T  -  R  -  O
@@ -196,10 +193,10 @@ exec wish "$0" "$@"
 
 
 	create_intro  .intro  
-  
-  
-  
-    
+
+
+
+
   ###########################################################################
   #
   #                 W  -  I  -  N  -  D  -  O  -  W
@@ -233,10 +230,23 @@ exec wish "$0" "$@"
 		# --------------------------------------------
 		#	create custom base Parameters
 	frame_geometry::set_base_Parameters $APPL_Env(root_ProjectDOM)
-	
+
+
 		# --------------------------------------------
 		#	set APPL_Config(PROJECT_Name)		
 	set APPL_Config(PROJECT_Name)           "Template $APPL_Env(TemplateType)"
+
+
+		# --------------------------------------------
+		#    check startup parameters
+	if {$argc == 1} {
+		set startupProject  [lindex $argv 0]
+		puts "\n"
+		puts " ====== startup   F I L E ========================"
+		puts "        ... [file normalize $startupProject]\n"
+		lib_file::openProject_xml [file tail $startupProject] $startupProject	
+	}
+	
 
 
  		# --------------------------------------------

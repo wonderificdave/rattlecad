@@ -39,7 +39,7 @@
 
  
  namespace eval frame_geometry_extend {
-		package require tdom
+		# package require tdom
 		
 			#-------------------------------------------------------------------------
 				#  current Project Values
