@@ -63,9 +63,12 @@ file_delete [file join $vfsDir help.txt]
 file_delete [file join $vfsDir license.txt]
 file_delete [file join $vfsDir exclusion.txt]
 file_delete [file join $vfsDir main.tcl]
+file_delete [file join $vfsDir tclkit.inf] 
+file_delete [file join $vfsDir tclkit.ico] 
 file_delete [file join $vfsDir rattleCAD.tcl]
 file_delete [file join $vfsDir simplify_SVG.tcl]
 file_delete [file join $vfsDir Tcl.svg]
+file_delete [file join $vfsDir tclTk.svg]
 
 file_delete [file join $vfsDir etc]
 file_delete [file join $vfsDir image]
@@ -87,9 +90,12 @@ file_update [file join $dir_trunk help.txt]       	$vfsDir
 file_update [file join $dir_trunk license.txt]    	$vfsDir
 file_update [file join $dir_trunk exclusion.txt]  	$vfsDir
 file_update [file join $dir_trunk main.tcl]  		$vfsDir
+file_update [file join $dir_trunk tclkit.inf]  		$vfsDir
+file_update [file join $dir_trunk tclkit.ico]  		$vfsDir
 file_update [file join $dir_trunk rattleCAD.tcl]  	$vfsDir
 file_update [file join $dir_trunk simplify_SVG.tcl] $vfsDir
 file_update [file join $dir_trunk Tcl.svg] 			$vfsDir
+file_update [file join $dir_trunk tclTk.svg] 		$vfsDir
 
 	# -- remove unused files
 	#
@@ -119,13 +125,13 @@ exec tclkit-8.5.8-win32.upx.exe rattleCAD.vfs/main.tcl
    
 	# -- update 
 	#
-file copy  -force tclkit-8.5.8-win32.upx.exe example.rt
+file copy  -force tclkit-8.5.8-win32.upx.exe runtime.exe
    
 	# -- compile 
 	#
 puts "\n ========================\n"
 puts "         compile Starkit\n"
-exec tclkit-8.5.8-win32.upx.exe sdx.kit wrap rattleCAD.exe -runtime example.rt
+exec tclkit-8.5.8-win32.upx.exe sdx-20110317.kit wrap rattleCAD.exe -runtime runtime.exe
 
 
 	# -- copy to ../___version 
@@ -140,9 +146,11 @@ file_update [file join $vfsDir  help.txt]			$dir_version
 file_update [file join $vfsDir  license.txt]    	$dir_version
 file_update [file join $vfsDir  exclusion.txt]  	$dir_version
 file_update [file join $vfsDir  main.tcl]  			$dir_version
+file_update [file join $vfsDir  tclkit.ico]  		$dir_version
 file_update [file join $vfsDir  rattleCAD.tcl]  	$dir_version
 file_update [file join $vfsDir  simplify_SVG.tcl]	$dir_version
 file_update [file join $vfsDir  Tcl.svg]			$dir_version
+file_update [file join $vfsDir  tclTk.svg]			$dir_version
 
 file_update [file join $vfsDir  etc      ]                          $dir_version
 file_update [file join $vfsDir  image    ]                          $dir_version
