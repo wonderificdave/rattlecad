@@ -57,6 +57,8 @@ exec wish "$0" "$@"
 		set BASE_Dir	[file dirname $BASE_Dir]
 						}
 
+
+
 		# -- Libraries  ---------------
 	lappend auto_path           [file join $BASE_Dir lib]
 	
@@ -65,11 +67,36 @@ exec wish "$0" "$@"
 	package require	  extSummary 0.1
 
 
-		# -- Version Info  ----------------------
-	set APPL_Env(RELEASE_Revision)	{65}
-	set APPL_Env(RELEASE_Date)		{11. Nov. 2011}
-					 
+	# -- Version Info  ----------------------
+    if {[file exists [file join $APPL_Env(ROOT_Dir) tclkit.inf]]} {
+		# puts " customizing strings in executable"
+		set fd [open [file join $APPL_Env(ROOT_Dir) tclkit.inf]]
+		array set strinfo [read $fd]
+		close $fd
+	} else {
+		array set strinfo {
+				ProductVersion	{3.2}
+				FileVersion  	{??}
+				FileDate		{??. ???. 201?}
+		}
+	}
+	# parray strinfo
+	
+ 	set APPL_Env(RELEASE_Version)	$strinfo(ProductVersion) 	;#{3.2}
+	set APPL_Env(RELEASE_Revision)	$strinfo(FileVersion) 		;#{66}
+	set APPL_Env(RELEASE_Date)		$strinfo(FileDate)			;#{18. Dec. 2011}
+	
+ 		# -- Application Directories  -----------
+	set APPL_Env(BASE_Dir)    	$BASE_Dir
+	set APPL_Env(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
+	set APPL_Env(IMAGE_Dir)     [file join    $BASE_Dir image ]
+	set APPL_Env(ROOT_Dir)      [file dirname $BASE_Dir]
+	set APPL_Env(USER_Dir)      [lib_file::check_user_dir user]	
+	set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir export]
 
+
+		# -- Version Info Summary  ---------------
+  
  		puts "  ----------------------------------------------"
 		puts "  rattleCAD      $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)"
 		puts "                             $APPL_Env(RELEASE_Date)"
@@ -87,16 +114,6 @@ exec wish "$0" "$@"
 		puts "    canvasCAD:   [package require canvasCAD]"
 		puts "    extSummary:  [package require extSummary]"
  		puts "  ----------------------------------------------"
-
-		# -- Application Directories  -----------
-	set APPL_Env(BASE_Dir)    	$BASE_Dir
-	set APPL_Env(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
-	set APPL_Env(IMAGE_Dir)     [file join    $BASE_Dir image ]
-	set APPL_Env(ROOT_Dir)      [file dirname $BASE_Dir]
-	set APPL_Env(USER_Dir)      [lib_file::check_user_dir user]	
-	set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir export]
-
- 
  		puts "    APPL_Env(ROOT_Dir)   $APPL_Env(ROOT_Dir)"
  		puts "    APPL_Env(BASE_Dir)   $APPL_Env(BASE_Dir)"
 		puts "    APPL_Env(CONFIG_Dir) $APPL_Env(CONFIG_Dir)"
@@ -105,10 +122,8 @@ exec wish "$0" "$@"
 		puts "    APPL_Env(EXPORT_Dir) $APPL_Env(EXPORT_Dir)"
  		puts "  ----------------------------------------------"
 		puts ""
-  
 
-	
-	
+  
   ###########################################################################
   #
   #                 I  -  N  -  I  -  T                       - Configuration
@@ -204,6 +219,11 @@ exec wish "$0" "$@"
   ###########################################################################
 
 
+	
+		# --- 	create iconBitmap  -----
+	wm iconbitmap . [file join $APPL_Env(BASE_Dir) tclkit.ico]  
+  
+  
  		# --- 	create Mainframe  -----
 	set	mainframe	[ lib_gui::create_MainFrame ]
 		pack $mainframe  -fill both  -expand yes  -side top 
@@ -276,4 +296,5 @@ exec wish "$0" "$@"
 
 		# -- keep on top --------------
 	wm deiconify .
+
 	
