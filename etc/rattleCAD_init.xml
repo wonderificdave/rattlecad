@@ -46,19 +46,19 @@
 	<Options>
 	
 		<ComponentLocation>
-			<component xpath="Component/Fork/Crown/File"				dir="components/fork/crown"      />
-			<component xpath="Component/Fork/DropOut/File"				dir="components/fork/dropout"    />
-			<component xpath="Component/RearDropOut/File"				dir="components/dropout"		 />
-			<component xpath="Component/Brake/Front/File"				dir="components/brake/front"     />
-			<component xpath="Component/Brake/Rear/File"				dir="components/brake/rear"      />
-			<component xpath="Component/HandleBar/File"					dir="components/handlebar"       />
-			<component xpath="Component/Saddle/File"  					dir="components/saddle"          />
-			<component xpath="Component/CrankSet/File"					dir="components/crankset"        />
-			<component xpath="Component/Derailleur/Front/File"			dir="components/derailleur/front"/>
-			<component xpath="Component/Derailleur/Rear/File"			dir="components/derailleur/rear" />
-			<component xpath="Component/BottleCage/SeatTube/File"		dir="components/bottle_cage/left" 	 />
-			<component xpath="Component/BottleCage/DownTube/File" 		dir="components/bottle_cage/right" 	 />
-			<component xpath="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
+			<component key="Component/Fork/Crown/File"					dir="components/fork/crown"      />
+			<component key="Component/Fork/DropOut/File"				dir="components/fork/dropout"    />
+			<component key="Component/RearDropOut/File"					dir="components/dropout"		 />
+			<component key="Component/Brake/Front/File"					dir="components/brake/front"     />
+			<component key="Component/Brake/Rear/File"					dir="components/brake/rear"      />
+			<component key="Component/HandleBar/File"					dir="components/handlebar"       />
+			<component key="Component/Saddle/File"  					dir="components/saddle"          />
+			<component key="Component/CrankSet/File"					dir="components/crankset"        />
+			<component key="Component/Derailleur/Front/File"			dir="components/derailleur/front"/>
+			<component key="Component/Derailleur/Rear/File"				dir="components/derailleur/rear" />
+			<component key="Component/BottleCage/SeatTube/File"			dir="components/bottle_cage/left" 	 />
+			<component key="Component/BottleCage/DownTube/File" 		dir="components/bottle_cage/right" 	 />
+			<component key="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
 		</ComponentLocation>
 		
 

@@ -95,9 +95,12 @@
 		namespace import ::frame_geometry_extend::coords_get_xy		;#  get xy in a flat list of coordinates, start with    0, 1, 2, 3, ... 
 
 		
- 	#-------------------------------------------------------------------------
+ 	
+	
+	
+	#-------------------------------------------------------------------------
 		#  base: fill current Project Values and namespace frameCoords::
-	proc set_base_Parameters {domProject} {
+	proc set_base_Parameters {{domProject {}}} {
 			# variable Reference
 			variable Project
 			
@@ -128,8 +131,17 @@
 
 			variable BottleCage
 			variable FrameJig
-			variable TubeMitter			
-			
+			variable TubeMitter	
+
+
+				#
+				# --- convert domProject to runtime variables 
+			if {$domProject != {}} {
+					project::dom_2_runTime $domProject
+						# parray project::Project
+						# parray project::Result
+						# exit
+			}
 	
 				#
 				# --- increase global update timestamp
@@ -138,176 +150,183 @@
 	
 				#
 				# --- set Project attributes
-			set Project(Project)		[ [ $domProject selectNodes /root/Project/Name 						]  asText ]
-			set Project(modified)		[ [ $domProject selectNodes /root/Project/modified 					]  asText ]
+			set Project(Project)		$project::Project(Name)
+			set Project(modified)		$project::Project(modified)
 			
 				#
 				# --- get BottomBracket (1)
-			set BottomBracket(depth)	[ [ $domProject selectNodes /root/Custom/BottomBracket/Depth  		]  asText ]
+			set BottomBracket(depth)	$project::Custom(BottomBracket/Depth)
+			# --> replace $BottomBracket(depth) by $project::Custom(BottomBracket/Depth)
+			# set BottomBracket(depth)		$project::Custom(BottomBracket/Depth  		]  asText ]
+			# set BottomBracket(depth)		[ $project::Custom(BottomBracket/Depth) ]
+			
+			# set RearWheel(RimDiameter)	[ [ $project::Component(Wheel/Rear/RimDiameter	]  asText ]
+			# set RearWheel(RimDiameter)	[ $project::Component(Wheel/Rear/RimDiameter)]
 
 				#
 				# --- get RearWheel
-			set RearWheel(RimDiameter)	[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimDiameter	]  asText ]
-			set RearWheel(RimHeight)	[ [ $domProject selectNodes /root/Component/Wheel/Rear/RimHeight	]  asText ]
-			set RearWheel(TyreHeight)	[ [ $domProject selectNodes /root/Component/Wheel/Rear/TyreHeight	]  asText ]
+			set RearWheel(RimDiameter)	$project::Component(Wheel/Rear/RimDiameter)
+			set RearWheel(RimHeight)	$project::Component(Wheel/Rear/RimHeight)
+			set RearWheel(TyreHeight)	$project::Component(Wheel/Rear/TyreHeight)
 			set RearWheel(Radius)		[ expr 0.5*$RearWheel(RimDiameter) + $RearWheel(TyreHeight) ]
-			set RearWheel(DistanceBB)	[ [ $domProject selectNodes /root/Custom/WheelPosition/Rear			]  asText ]
-			set RearWheel(Distance_X)	[ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($BottomBracket(depth),2)) ]
-			set RearWheel(Position)		[ list [expr -1.0 * $RearWheel(Distance_X)] $BottomBracket(depth) ]
+			set RearWheel(DistanceBB)	$project::Custom(WheelPosition/Rear)
+			#set RearWheel(Distance_X)	[ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
+			set RearWheel(Distance_X)	[ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
+			set RearWheel(Position)		[ list [expr -1.0 * $RearWheel(Distance_X)] $project::Custom(BottomBracket/Depth) ]
 				# set RearWheel(Distance_X)	450
 				
 				#
 				# --- get BottomBracket (2)
-			set BottomBracket(height)	[ expr $RearWheel(Radius) - $BottomBracket(depth) ]
-			set BottomBracket(Ground)	[ list 0 	[expr - $RearWheel(Radius) + $BottomBracket(depth) ] ]
+			set BottomBracket(height)	[ expr $RearWheel(Radius) - $project::Custom(BottomBracket/Depth) ]
+			set BottomBracket(Ground)	[ list 0 	[expr - $RearWheel(Radius) + $project::Custom(BottomBracket/Depth) ] ]
 		
 				#
 				# --- get FrontWheel 
-			set FrontWheel(RimDiameter)	[ [ $domProject selectNodes /root/Component/Wheel/Front/RimDiameter	]  asText ]
-			set FrontWheel(RimHeight)	[ [ $domProject selectNodes /root/Component/Wheel/Front/RimHeight	]  asText ]
-			set FrontWheel(TyreHeight)	[ [ $domProject selectNodes /root/Component/Wheel/Front/TyreHeight	]  asText ]
+			set FrontWheel(RimDiameter)	$project::Component(Wheel/Front/RimDiameter)
+			set FrontWheel(RimHeight)	$project::Component(Wheel/Front/RimHeight)
+			set FrontWheel(TyreHeight)	$project::Component(Wheel/Front/TyreHeight)
 			set FrontWheel(Radius)		[ expr 0.5*$FrontWheel(RimDiameter) + $FrontWheel(TyreHeight) ]
 			#set FrontWheel(DistanceBB)	[ [ $domProject selectNodes /root/Temporary/WheelPosition/front/diagonal		]  asText ]
 			#set FrontWheel(Distance_X)	[ expr sqrt(pow($FrontWheel(DistanceBB),2) - pow(($FrontWheel(Radius) - $BottomBracket(height)),2)) ]
-			set FrontWheel(Distance_Y)	[ expr $BottomBracket(depth) - $RearWheel(Radius) + $FrontWheel(Radius) ]
+			set FrontWheel(Distance_Y)	[ expr $project::Custom(BottomBracket/Depth) - $RearWheel(Radius) + $FrontWheel(Radius) ]
 			#set FrontWheel(Position)	[ list $FrontWheel(Distance_X) $FrontWheel(Distance_Y) ]
 
 				#
 				# --- get HandleBar - Position
-			set HandleBar(Distance)		[ [ $domProject selectNodes /root/Personal/HandleBar_Distance		]  asText ]
-			set HandleBar(Height)		[ [ $domProject selectNodes /root/Personal/HandleBar_Height			]  asText ]
+			set HandleBar(Distance)		$project::Personal(HandleBar_Distance)
+			set HandleBar(Height)		$project::Personal(HandleBar_Height)
 			set HandleBar(Position)		[ list $HandleBar(Distance) $HandleBar(Height) ]
 			
 				#
 				# --- get Fork -----------------------------
-			set Fork(Height)				[ [ $domProject selectNodes /root/Component/Fork/Height					]  asText ]
-			set Fork(Rake)					[ [ $domProject selectNodes /root/Component/Fork/Rake					]  asText ]
-			set Fork(BladeWith)				[ [ $domProject selectNodes /root/Component/Fork/Blade/Width			]  asText ]
-			set Fork(BladeDiameterDO)		[ [ $domProject selectNodes /root/Component/Fork/Blade/DiameterDO		]  asText ]
-			set Fork(BladeTaperLength)		[ [ $domProject selectNodes /root/Component/Fork/Blade/TaperLength		]  asText ]
-			set Fork(BladeOffset)			[ [ $domProject selectNodes /root/Component/Fork/Blade/Offset			]  asText ]
-			set Fork(BladeOffsetCrown)		[ [ $domProject selectNodes /root/Component/Fork/Crown/Blade/Offset		]  asText ]
-			set Fork(BladeOffsetCrownPerp)	[ [ $domProject selectNodes /root/Component/Fork/Crown/Blade/OffsetPerp	]  asText ]
-			set Fork(BladeOffsetDO)			[ [ $domProject selectNodes /root/Component/Fork/DropOut/Offset			]  asText ]
-			set Fork(BladeOffsetDOPerp)		[ [ $domProject selectNodes /root/Component/Fork/DropOut/OffsetPerp		]  asText ]
-			set Fork(BrakeAngle)			[ [ $domProject selectNodes /root/Component/Fork/Crown/Brake/Angle		]  asText ]
-			set Fork(BrakeOffset)			[ [ $domProject selectNodes /root/Component/Fork/Crown/Brake/Offset		]  asText ]
-			set Fork(BrakeOffsetPerp)		[ [ $domProject selectNodes /root/Component/Fork/Crown/Brake/OffsetPerp	]  asText ]
+			set Fork(Height)				$project::Component(Fork/Height)
+			set Fork(Rake)					$project::Component(Fork/Rake)
+			set Fork(BladeWith)				$project::Component(Fork/Blade/Width)
+			set Fork(BladeDiameterDO)		$project::Component(Fork/Blade/DiameterDO)
+			set Fork(BladeTaperLength)		$project::Component(Fork/Blade/TaperLength)
+			set Fork(BladeOffset)			$project::Component(Fork/Blade/Offset)
+			set Fork(BladeOffsetCrown)		$project::Component(Fork/Crown/Blade/Offset)
+			set Fork(BladeOffsetCrownPerp)	$project::Component(Fork/Crown/Blade/OffsetPerp)
+			set Fork(BladeOffsetDO)			$project::Component(Fork/DropOut/Offset)
+			set Fork(BladeOffsetDOPerp)		$project::Component(Fork/DropOut/OffsetPerp)
+			set Fork(BrakeAngle)			$project::Component(Fork/Crown/Brake/Angle)
+			set Fork(BrakeOffset)			$project::Component(Fork/Crown/Brake/Offset) 
+			set Fork(BrakeOffsetPerp)		$project::Component(Fork/Crown/Brake/OffsetPerp)
 			
 				#
 				# --- get Stem -----------------------------
-			set Stem(Angle)				[ [ $domProject selectNodes /root/Component/Stem/Angle				]  asText ]
-			set Stem(Length)			[ [ $domProject selectNodes /root/Component/Stem/Length				]  asText ]
+			set Stem(Angle)					$project::Component(Stem/Angle)
+			set Stem(Length)				$project::Component(Stem/Length)
 
 				#
 				# --- get HeadTube -------------------------
 			set HeadTube(ForkRake)		$Fork(Rake)
 			set HeadTube(ForkHeight)	$Fork(Height)
-			set HeadTube(Diameter)		[ [ $domProject selectNodes /root/FrameTubes/HeadTube/Diameter		]  asText ]
-			set HeadTube(Length)		[ [	$domProject selectNodes /root/FrameTubes/HeadTube/Length		]  asText ]
-			set HeadTube(Angle)			[ [ $domProject selectNodes /root/Custom/HeadTube/Angle				]  asText ]
+			set HeadTube(Diameter)		$project::FrameTubes(HeadTube/Diameter)
+			set HeadTube(Length)		$project::FrameTubes(HeadTube/Length)
+			set HeadTube(Angle)			$project::Custom(HeadTube/Angle)
 
 				#
 				# --- get SeatTube -------------------------
-			set SeatTube(Angle)			[ [ $domProject selectNodes /root/Personal/SeatTube_Angle  			]  asText ]
-			set SeatTube(Length)		[ [ $domProject selectNodes /root/Personal/SeatTube_Length			]  asText ]
-			set SeatTube(DiameterBB)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterBB	]  asText ]
-			set SeatTube(DiameterTT)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/DiameterTT	]  asText ]
-			set SeatTube(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/SeatTube/TaperLength	]  asText ]
-			set SeatTube(Extension)		[ [ $domProject selectNodes /root/Custom/SeatTube/Extension			]  asText ]
+			set SeatTube(Angle)			$project::Personal(SeatTube_Angle)
+			set SeatTube(Length)		$project::Personal(SeatTube_Length)
+			set SeatTube(DiameterBB)	$project::FrameTubes(SeatTube/DiameterBB)
+			set SeatTube(DiameterTT)	$project::FrameTubes(SeatTube/DiameterTT)
+			set SeatTube(TaperLength)	$project::FrameTubes(SeatTube/TaperLength)
+			set SeatTube(Extension)		$project::Custom(SeatTube/Extension)
 
 				#
 				# --- get DownTube -------------------------
-			set DownTube(DiameterBB)	[ [ $domProject selectNodes /root/FrameTubes/DownTube/DiameterBB	]  asText ]
-			set DownTube(DiameterHT)	[ [ $domProject selectNodes /root/FrameTubes/DownTube/DiameterHT	]  asText ]
-			set DownTube(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/DownTube/TaperLength	]  asText ]
-			set DownTube(OffsetHT)		[ [ $domProject selectNodes /root/Custom/DownTube/OffsetHT			]  asText ]
-			set DownTube(OffsetBB)		[ [ $domProject selectNodes /root/Custom/DownTube/OffsetBB			]  asText ]				
+			set DownTube(DiameterBB)	$project::FrameTubes(DownTube/DiameterBB)
+			set DownTube(DiameterHT)	$project::FrameTubes(DownTube/DiameterHT)
+			set DownTube(TaperLength)	$project::FrameTubes(DownTube/TaperLength)
+			set DownTube(OffsetHT)		$project::Custom(DownTube/OffsetHT)
+			set DownTube(OffsetBB)		$project::Custom(DownTube/OffsetBB)				
 
 				#
 				# --- get TopTube --------------------------
-			set TopTube(DiameterHT)		[ [ $domProject selectNodes /root/FrameTubes/TopTube/DiameterHT		]  asText ]
-			set TopTube(DiameterST)		[ [ $domProject selectNodes /root/FrameTubes/TopTube/DiameterST		]  asText ]
-			set TopTube(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/TopTube/TaperLength	]  asText ]
-			set TopTube(PivotPosition)	[ [ $domProject selectNodes /root/Custom/TopTube/PivotPosition		]  asText ]
-			set TopTube(OffsetHT)		[ [ $domProject selectNodes /root/Custom/TopTube/OffsetHT			]  asText ]
-			set TopTube(Angle)			[ [ $domProject selectNodes /root/Custom/TopTube/Angle				]  asText ]
+			set TopTube(DiameterHT)		$project::FrameTubes(TopTube/DiameterHT)
+			set TopTube(DiameterST)		$project::FrameTubes(TopTube/DiameterST)
+			set TopTube(TaperLength)	$project::FrameTubes(TopTube/TaperLength)
+			set TopTube(PivotPosition)	$project::Custom(TopTube/PivotPosition)
+			set TopTube(OffsetHT)		$project::Custom(TopTube/OffsetHT)
+			set TopTube(Angle)			$project::Custom(TopTube/Angle)
 				
 				#
 				# --- get ChainStay ------------------------
-			set ChainStay(DiameterBB)	[ [ $domProject selectNodes /root/FrameTubes/ChainStay/DiameterBB	]  asText ]
-			set ChainStay(DiameterSS)	[ [ $domProject selectNodes /root/FrameTubes/ChainStay/DiameterSS	]  asText ]
-			set ChainStay(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/ChainStay/TaperLength	]  asText ]
+			set ChainStay(DiameterBB)	$project::FrameTubes(ChainStay/DiameterBB)
+			set ChainStay(DiameterSS)	$project::FrameTubes(ChainStay/DiameterSS)
+			set ChainStay(TaperLength)	$project::FrameTubes(ChainStay/TaperLength)
 				
 				#
 				# --- get SeatStay -------------------------
-			set SeatStay(DiameterST)	[ [ $domProject selectNodes /root/FrameTubes/SeatStay/DiameterST	]  asText ]
-			set SeatStay(DiameterCS)	[ [ $domProject selectNodes /root/FrameTubes/SeatStay/DiameterCS	]  asText ]
-			set SeatStay(TaperLength)	[ [ $domProject selectNodes /root/FrameTubes/SeatStay/TaperLength	]  asText ]
-			set SeatStay(OffsetTT)		[ [ $domProject selectNodes /root/Custom/SeatStay/OffsetTT			]  asText ]
+			set SeatStay(DiameterST)	$project::FrameTubes(SeatStay/DiameterST)
+			set SeatStay(DiameterCS)	$project::FrameTubes(SeatStay/DiameterCS)
+			set SeatStay(TaperLength)	$project::FrameTubes(SeatStay/TaperLength)
+			set SeatStay(OffsetTT)		$project::Custom(SeatStay/OffsetTT)
 
 				#
 				# --- get RearDropOut ----------------------
-			set RearDrop(OffsetCS)		[ [ $domProject selectNodes /root/Component/RearDropOut/ChainStay/Offset	]  asText ]
-			set RearDrop(OffsetCSPerp)	[ [ $domProject selectNodes /root/Component/RearDropOut/ChainStay/OffsetPerp ]  asText ]
-			set RearDrop(OffsetSS)		[ [ $domProject selectNodes /root/Component/RearDropOut/SeatStay/Offset		]  asText ]
-			set RearDrop(OffsetSSPerp)	[ [ $domProject selectNodes /root/Component/RearDropOut/SeatStay/OffsetPerp	]  asText ]
-			set RearDrop(Derailleur_x)	[ [ $domProject selectNodes /root/Component/RearDropOut/Derailleur/x		]  asText ]
-			set RearDrop(Derailleur_y)	[ [ $domProject selectNodes /root/Component/RearDropOut/Derailleur/y		]  asText ]
+			set RearDrop(OffsetCS)		$project::Component(RearDropOut/ChainStay/Offset)
+			set RearDrop(OffsetCSPerp)	$project::Component(RearDropOut/ChainStay/OffsetPerp)
+			set RearDrop(OffsetSS)		$project::Component(RearDropOut/SeatStay/Offset)
+			set RearDrop(OffsetSSPerp)	$project::Component(RearDropOut/SeatStay/OffsetPerp)
+			set RearDrop(Derailleur_x)	$project::Component(RearDropOut/Derailleur/x)
+			set RearDrop(Derailleur_y)	$project::Component(RearDropOut/Derailleur/y)
 			
 				#
 				# --- get LegClearance - Position
-			set LegClearance(Length)	[ [ $domProject selectNodes /root/Personal/InnerLeg_Length			]  asText ]
-			set LegClearance(Position)	[ list $TopTube(PivotPosition) 	[expr $LegClearance(Length) - ($RearWheel(Radius) - $BottomBracket(depth)) ] ]
+			set LegClearance(Length)	$project::Personal(InnerLeg_Length)
+			set LegClearance(Position)	[ list $TopTube(PivotPosition) 	[expr $LegClearance(Length) - ($RearWheel(Radius) - $project::Custom(BottomBracket/Depth)) ] ]
 
 				#
 				# --- get Saddle ---------------------------
-			set Saddle(SeatPost_x)		[ [ $domProject selectNodes /root/Component/Saddle/SeatPost/x			]  asText ]
-			set Saddle(SeatPost_y)		[ [ $domProject selectNodes /root/Component/Saddle/SeatPost/y			]  asText ]
-			set Saddle(SeatPost_DM)		[ [ $domProject selectNodes /root/Component/Saddle/SeatPost/Diameter	]  asText ]
+			set Saddle(SeatPost_x)		$project::Component(Saddle/SeatPost/x)
+			set Saddle(SeatPost_y)		$project::Component(Saddle/SeatPost/y)
+			set Saddle(SeatPost_DM)		$project::Component(Saddle/SeatPost/Diameter)
 			set Saddle(Position)		[ vectormath::rotateLine {0 0}  $SeatTube(Length)  [ expr 180 - $SeatTube(Angle) ] ]
 			set Saddle(Proposal)		[ vectormath::rotateLine {0 0}  [ expr 0.88*$LegClearance(Length) ]  [ expr 180 - $SeatTube(Angle) ] ]
 
 				#
 				# --- get HeadSet --------------------------
-			set HeadSet(Diameter)		[ [ $domProject selectNodes /root/Component/HeadSet/Diameter		]  asText ]
-			set HeadSet(Height_Top) 	[ [	$domProject selectNodes /root/Component/HeadSet/Height/Top		]  asText ]
-			set HeadSet(Height_Bottom) 	[ [	$domProject selectNodes /root/Component/HeadSet/Height/Bottom	]  asText ]
+			set HeadSet(Diameter)		$project::Component(HeadSet/Diameter)
+			set HeadSet(Height_Top) 	$project::Component(HeadSet/Height/Top)
+			set HeadSet(Height_Bottom) 	$project::Component(HeadSet/Height/Bottom)
 			set HeadSet(ShimDiameter)	36
 				
 				#
 				# --- get Front/Rear Brake PadLever --------------
-			set RearBrake(LeverLength)	[ [ $domProject selectNodes /root/Component/Brake/Rear/LeverLength	]  asText ]
-			set FrontBrake(LeverLength)	[ [ $domProject selectNodes /root/Component/Brake/Front/LeverLength	]  asText ]
+			set RearBrake(LeverLength)	$project::Component(Brake/Rear/LeverLength)
+			set FrontBrake(LeverLength)	$project::Component(Brake/Front/LeverLength)
 				
 				#
 				# --- get BottleCage Offset ----------------------
-			set BottleCage(SeatTube)		[ [ $domProject selectNodes /root/Component/BottleCage/SeatTube/OffsetBB		]  asText ]
-			set BottleCage(DownTube)		[ [ $domProject selectNodes /root/Component/BottleCage/DownTube/OffsetBB		]  asText ]
-			set BottleCage(DownTube_Lower)	[ [ $domProject selectNodes /root/Component/BottleCage/DownTube_Lower/OffsetBB	]  asText ]
+			set BottleCage(SeatTube)		$project::Component(BottleCage/SeatTube/OffsetBB)
+			set BottleCage(DownTube)		$project::Component(BottleCage/DownTube/OffsetBB)
+			set BottleCage(DownTube_Lower)	$project::Component(BottleCage/DownTube_Lower/OffsetBB)
 								
 				#
 				# --- get FrontDerailleur  ----------------------
-			set FrontDerailleur(Distance)	[ [ $domProject selectNodes /root/Component/Derailleur/Front/Distance	]  asText ]
-			set FrontDerailleur(Offset)		[ [ $domProject selectNodes /root/Component/Derailleur/Front/Offset		]  asText ]
+			set FrontDerailleur(Distance)	$project::Component(Derailleur/Front/Distance)
+			set FrontDerailleur(Offset)		$project::Component(Derailleur/Front/Offset)
 								
 				
 				#
 				#
 				# --- set basePoints Attributes
 				#
-			
-			lib_project::setValue /root/Result/Position/RearWheel			position	$RearWheel(Position)
-			# lib_project::setValue /root/Result/Position/FrontWheel		position	$FrontWheel(Position)
-			lib_project::setValue /root/Result/Position/HandleBar 			position	$HandleBar(Position)
-			lib_project::setValue /root/Result/Position/Saddle 				position	$Saddle(Position)
-			lib_project::setValue /root/Result/Position/SaddleProposal		position	$Saddle(Proposal)
-			lib_project::setValue /root/Result/Position/LegClearance		position	$TopTube(PivotPosition) 	[expr $LegClearance(Length) - ($RearWheel(Radius) - $BottomBracket(depth)) ]
-			lib_project::setValue /root/Result/Position/BottomBracketGround	position	0 	[expr - $RearWheel(Radius) + $BottomBracket(depth) ] ;# Point on the Ground perp. to BB
+			project::setValue Result(Position/RearWheel)			position	$RearWheel(Position)
+			# project::setValue /root/Result/Position/RearWheel			position	$RearWheel(Position)
+				# project::setValue /root/Result/Position/FrontWheel		position	$FrontWheel(Position)
+			project::setValue Result(Position/HandleBar)			position	$HandleBar(Position)
+			project::setValue Result(Position/Saddle) 				position	$Saddle(Position)
+			project::setValue Result(Position/SaddleProposal)		position	$Saddle(Proposal)
+			project::setValue Result(Position/LegClearance)			position	$TopTube(PivotPosition) 	[expr $LegClearance(Length) - ($RearWheel(Radius) - $project::Custom(BottomBracket/Depth)) ]
+			project::setValue Result(Position/BottomBracketGround)	position	0 	[expr - $RearWheel(Radius) + $project::Custom(BottomBracket/Depth) ] ;# Point on the Ground perp. to BB
 
-			# lib_project::setValue /root/Result/Lugs/Dropout/Front/Position	position 	$FrontWheel(Distance_X)	[expr $BottomBracket(depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
-			lib_project::setValue /root/Result/Lugs/Dropout/Rear/Position	position 	[expr -1*$RearWheel(Distance_X)]	$BottomBracket(depth)
-			lib_project::setValue /root/Result/Lugs/Dropout/Rear/Derailleur	position 	[ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
+			# project::setValue /root/Result/Lugs/Dropout/Front/Position	position 	$FrontWheel(Distance_X)	[expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
+			project::setValue Result(Lugs/Dropout/Rear/Position)	position 	[expr -1*$RearWheel(Distance_X)]	$project::Custom(BottomBracket/Depth)
+			project::setValue Result(Lugs/Dropout/Rear/Derailleur)	position 	[ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
 
 			
 				#
@@ -348,30 +367,30 @@
 							set Steerer(FrontWheel) 	[ vectormath::rotateLine	$FrontWheel(Position)	$Fork(Rake)	[expr 270 - $HeadTube(Angle)] ]			
 							set Steerer(Fork) 			[ vectormath::addVector			$Steerer(FrontWheel) 	[ vectormath::unifyVector  $Steerer(FrontWheel)  $Steerer(Stem)  $Fork(Height) ] ]
 														
-					lib_project::setValue /root/Result/Tubes/Steerer/Start		position	$Steerer(Fork) 
-					lib_project::setValue /root/Result/Tubes/Steerer/End		position	$Steerer(Stem)
-					lib_project::setValue /root/Result/Lugs/ForkCrown/Position	position	$Steerer(Fork) 
-					lib_project::setValue /root/Result/Tubes/Steerer/Direction	direction	$Steerer(Fork)	$Steerer(Stem)
-					lib_project::setValue /root/Result/Tubes/Steerer/Direction	direction	$Steerer(Fork)	$Steerer(Stem)
+					project::setValue Result(Tubes/Steerer/Start)		position	$Steerer(Fork) 
+					project::setValue Result(Tubes/Steerer/End)			position	$Steerer(Stem)
+					project::setValue Result(Lugs/ForkCrown/Position)	position	$Steerer(Fork) 
+					project::setValue Result(Tubes/Steerer/Direction)	direction	$Steerer(Fork)	$Steerer(Stem)
+					project::setValue Result(Tubes/Steerer/Direction)	direction	$Steerer(Fork)	$Steerer(Stem)
 					
 						set help_08  [ vectormath::addVector	$BottomBracket(Ground) {200 0}] 
 						
 						set Steerer(Ground)		[ vectormath::intersectPoint 		$Steerer(Stem) $Steerer(Fork)  	$BottomBracket(Ground)  $help_08 ] 
 						set SeatTube(Ground)	[ vectormath::intersectPoint 		$Saddle(Position) {0 0}  	$BottomBracket(Ground)  $help_08 ] 
-					lib_project::setValue /root/Result/Position/SteererGround	position	$Steerer(Ground)		;# Point on the Ground in direction of Steerer
-					lib_project::setValue /root/Result/Position/SeatTubeGround	position	$SeatTube(Ground)		;# Point on the Ground in direction of SeatTube
-					lib_project::setValue /root/Result/Tubes/SeatTube/Direction	direction	$SeatTube(Ground)  $Saddle(Position)
+					project::setValue Result(Position/SteererGround)	position	$Steerer(Ground)		;# Point on the Ground in direction of Steerer
+					project::setValue Result(Position/SeatTubeGround)	position	$SeatTube(Ground)		;# Point on the Ground in direction of SeatTube
+					project::setValue Result(Tubes/SeatTube/Direction)	direction	$SeatTube(Ground)  $Saddle(Position)
 						
 						#
 						# --- set summary Length of Frame, Saddle and Stem
 						set summaryLength [ expr $RearWheel(Distance_X) + $FrontWheel(Distance_X)]
-						set summaryHeight [ expr $BottomBracket(depth) + 40 + [lindex $Saddle(Position) 1] ]
-					lib_project::setValue /root/Result/Position/SummarySize		position	$summaryLength	$summaryHeight
+						set summaryHeight [ expr $project::Custom(BottomBracket/Depth) + 40 + [lindex $Saddle(Position) 1] ]
+					project::setValue Result(Position/SummarySize)		position	$summaryLength	$summaryHeight
 												
 			}
 			get_basePoints
-			lib_project::setValue /root/Result/Position/FrontWheel			position	$FrontWheel(Position)
-			lib_project::setValue /root/Result/Lugs/Dropout/Front/Position	position 	$FrontWheel(Distance_X)	[expr $BottomBracket(depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
+			project::setValue Result(Position/FrontWheel)			position	$FrontWheel(Position)
+			project::setValue Result(Lugs/Dropout/Front/Position)	position 	$FrontWheel(Distance_X)	[expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
 
 			
 			#
@@ -389,7 +408,7 @@
 							set pt_00		[ lindex $vct_00 0 ]			
 					
 							set ChainStay(Direction)			[ vectormath::unifyVector {0 0} $pt_00 ]
-					lib_project::setValue /root/Result/Tubes/ChainStay/Direction	direction	$pt_00
+					project::setValue Result(Tubes/ChainStay/Direction)	direction	$pt_00
 					
 							set pt_00		[ vectormath::addVector 		$pt_00  $ChainStay(Direction)  -$RearDrop(OffsetCS) ]
 
@@ -407,8 +426,8 @@
 					
 							set ChainStay(RearWheel)			$pt_00
 							set ChainStay(BottomBracket)		{0 0}
-					lib_project::setValue /root/Result/Tubes/ChainStay/Start		position	{0 0}
-					lib_project::setValue /root/Result/Tubes/ChainStay/End			position	$ChainStay(RearWheel)
+					project::setValue Result(Tubes/ChainStay/Start)		position	{0 0}
+					project::setValue Result(Tubes/ChainStay/End)			position	$ChainStay(RearWheel)
 				
 							set vct_01 		[ vectormath::parallel 			$pt_00 $pt_01 [expr 0.5*$ChainStay(DiameterSS)] ]
 							set vct_02 		[ vectormath::parallel 			$pt_01 $ChainStay(BottomBracket) [expr 0.5*$ChainStay(DiameterBB)] ]
@@ -418,7 +437,7 @@
 							set polygon		[format "%s %s %s %s %s %s" \
 													[lindex $vct_01 0] [lindex $vct_02 0] [lindex $vct_02 1] \
 													[lindex $vct_03 1] [lindex $vct_03 0] [lindex $vct_04 0] ]												
-					lib_project::setValue /root/Result/Tubes/ChainStay	polygon 	$polygon
+					project::setValue Result(Tubes/ChainStay)	polygon 	$polygon
 			}
 			get_ChainStay
 			
@@ -433,13 +452,13 @@
 							set HeadTube(Direction) 		[ vectormath::unifyVector 	$Steerer(Fork)		$Steerer(Stem) ]
 							set Steerer(Direction) 			$HeadTube(Direction)
 
-					lib_project::setValue /root/Result/Tubes/Steerer/Direction	direction	$HeadTube(Direction)
-					lib_project::setValue /root/Result/Tubes/HeadTube/Direction	direction	$HeadTube(Direction)
+					project::setValue Result(Tubes/Steerer/Direction)	direction	$HeadTube(Direction)
+					project::setValue Result(Tubes/HeadTube/Direction)	direction	$HeadTube(Direction)
 							
 							set HeadTube(Fork)				[ vectormath::addVector 	$Steerer(Fork)	$HeadTube(Direction)	$HeadSet(Height_Bottom) ]
 							set HeadTube(Stem)				[ vectormath::addVector 	$HeadTube(Fork)	$HeadTube(Direction)	$HeadTube(Length) ]
-					lib_project::setValue /root/Result/Tubes/HeadTube/Start		position	$HeadTube(Fork)
-					lib_project::setValue /root/Result/Tubes/HeadTube/End		position	$HeadTube(Stem)
+					project::setValue Result(Tubes/HeadTube/Start)		position	$HeadTube(Fork)
+					project::setValue Result(Tubes/HeadTube/End)		position	$HeadTube(Stem)
 							
 							set vct_01 		[ vectormath::parallel 			$HeadTube(Fork) $HeadTube(Stem) [expr 0.5*$HeadTube(Diameter)] ]
 							set vct_ht 		[ vectormath::parallel 			$HeadTube(Stem) $HeadTube(Fork) [expr 0.5*$HeadTube(Diameter)] ]
@@ -447,7 +466,7 @@
 							set polygon 	[format "%s %s %s %s" \
 													[lindex $vct_01 0] [lindex $vct_01 1] \
 													[lindex $vct_ht 0] [lindex $vct_ht 1] ]
-					lib_project::setValue /root/Result/Tubes/HeadTube	polygon 	$polygon
+					project::setValue Result(Tubes/HeadTube)			polygon 	$polygon
 			}
 			get_HeadTube
 			
@@ -461,13 +480,13 @@
 					variable Steerer 
 			
 							set vct_ht 		[ vectormath::parallel 			$HeadTube(Stem) $HeadTube(Fork) [expr 0.5*$HeadTube(Diameter)] ]
-							set pt_00		[split [ lib_project::getValue /root/Result/Tubes/HeadTube/Polygon	polygon 3 ] , ]
-								# puts "   ... $pt_00  ... [ lib_project::getValue /root/Result/Tubes/HeadTube/Polygon	polygon ]"
+							set pt_00		[split [ project::getValue 		Result(Tubes/HeadTube/Polygon)	polygon 3 ] , ]
+								# puts "   ... $pt_00  ... [ project::getValue Result(Tubes/HeadTube/Polygon	polygon ]"
 							set pt_01		[ vectormath::addVector 		$pt_00 $HeadTube(Direction) $DownTube(OffsetHT) ]	;# bottom intersection DownTube/HeadTube
 							set pt_02		[ vectormath::cathetusPoint 	{0 0}  $pt_01 [expr 0.5 * $DownTube(DiameterHT) - $DownTube(OffsetBB) ]]
 							set vct_01      [ vectormath::parallel 			$pt_02 $pt_01 [expr 0.5 * $DownTube(DiameterHT)] left]	;# DownTube centerline Vector
 							set DownTube(Direction)		[ vectormath::unifyVector [lindex $vct_01 0] [lindex $vct_01 1] ]
-					lib_project::setValue /root/Result/Tubes/DownTube/Direction	direction	$DownTube(Direction)
+					project::setValue Result(Tubes/DownTube/Direction)	direction	$DownTube(Direction)
 
 							set vct_02      [ vectormath::parallel 			$pt_02 $pt_01 $DownTube(DiameterHT) left]				;# DownTube upper Vector
 							set pt_04       [ vectormath::intersectPoint 	[lindex $vct_02 0] [lindex $vct_02 1] \
@@ -475,8 +494,8 @@
 							
 							set DownTube(BottomBracket)	[ vectormath::intersectPoint [lindex $vct_01 0] [lindex $vct_01 1]  {0 0}	$Saddle(Position) ]
 							set DownTube(HeadTube)		[ vectormath::intersectPoint [lindex $vct_01 0] [lindex $vct_01 1]  $Steerer(Fork)	 $Steerer(Stem) ]			
-					lib_project::setValue /root/Result/Tubes/DownTube/Start		position	$DownTube(BottomBracket)
-					lib_project::setValue /root/Result/Tubes/DownTube/End		position	$DownTube(HeadTube)
+					project::setValue Result(Tubes/DownTube/Start)		position	$DownTube(BottomBracket)
+					project::setValue Result(Tubes/DownTube/End)		position	$DownTube(HeadTube)
 							
 							set length		[ vectormath::length	  		[lindex $vct_02 0] $pt_04 ]
 							set pt_10		[ lindex $vct_01 0]
@@ -492,9 +511,9 @@
 							set is_dt_ht	[ tube_intersection	$DownTube(DiameterHT) $dir  $HeadTube(Diameter)  $HeadTube(Direction)  $DownTube(HeadTube) ]				
 
 							set polygon		[ list            [lindex $vct_10 0] [lindex $vct_10 1] [lindex $vct_21 0]]
-							set polygon		[ lappend polygon [lib_project::flatten_nestedList $is_dt_ht]]
+							set polygon		[ lappend polygon [project::flatten_nestedList $is_dt_ht]]
 							set polygon		[ lappend polygon [lindex $vct_22 0] [lindex $vct_11 1] [lindex $vct_11 0]]					
-					lib_project::setValue /root/Result/Tubes/DownTube	polygon 	[lib_project::flatten_nestedList $polygon]				
+					project::setValue Result(Tubes/DownTube)			polygon 	[project::flatten_nestedList $polygon]				
 			}
 			get_DownTube
 
@@ -512,14 +531,14 @@
 							set vct_st		[ vectormath::parallel 			{0 0} $Saddle(Position) [expr 0.5*$SeatTube(DiameterTT)] ]			
 					
 							set SeatTube(Direction)		[ vectormath::unifyVector {0 0} $Saddle(Position) ]
-					lib_project::setValue /root/Result/Tubes/SeatTube/Direction	direction 	$Saddle(Position) 	;# direction vector of SeatTube			
+					project::setValue Result(Tubes/SeatTube/Direction)	direction 	$Saddle(Position) 	;# direction vector of SeatTube			
 							
 							set vct_ht 		[ vectormath::parallel 			$HeadTube(Stem) $HeadTube(Fork) [expr 0.5*$HeadTube(Diameter)] ]
 							set pt_00		[lindex $vct_ht 0]
 							set pt_01		[ vectormath::addVector 		$pt_00 $HeadTube(Direction) -$TopTube(OffsetHT) ]	;# top intersection TopTube/HeadTube
 					
 							set TopTube(Direction)			[ vectormath::rotatePoint {0 0} {-1 0} $TopTube(Angle) ]	;# direction vector of TopTube
-					lib_project::setValue /root/Result/Tubes/TopTube/Direction	direction 	[ vectormath::rotatePoint {0 0} {-1 0} $TopTube(Angle) ]	;# direction vector of TopTube			
+					project::setValue Result(Tubes/TopTube/Direction)	direction 	[ vectormath::rotatePoint {0 0} {-1 0} $TopTube(Angle) ]	;# direction vector of TopTube			
 							
 							set pt_02		[ vectormath::intersectPoint 	$pt_01 [vectormath::addVector $pt_01  $TopTube(Direction)]  {0 0} $Saddle(Position) ]	;# top intersection TopTube/HeadTube
 							set vct_00      [ vectormath::parallel 			$pt_01 $pt_02 [expr 0.5 * $TopTube(DiameterHT)] left]	;# TopTube centerline Vector
@@ -538,17 +557,17 @@
 						
 						set TopTube(HeadTube)			$pt_10
 						set TopTube(SeatTube)			[ vectormath::intersectPoint [lindex $vct_00 0] [lindex $vct_00 1] {0 0} $Saddle(Position) ]
-					lib_project::setValue /root/Result/Tubes/TopTube/Start		position 	$TopTube(SeatTube)				
-					lib_project::setValue /root/Result/Tubes/TopTube/End		position 	$TopTube(HeadTube)				
+					project::setValue Result(Tubes/TopTube/Start)		position 	$TopTube(SeatTube)				
+					project::setValue Result(Tubes/TopTube/End)			position 	$TopTube(HeadTube)				
 					
 							set is_tt_ht	[ tube_intersection	$TopTube(DiameterHT) $TopTube(Direction)  $HeadTube(Diameter)	  $HeadTube(Direction)  $TopTube(HeadTube) right]	
 							set is_tt_st	[ tube_intersection	$TopTube(DiameterST) $TopTube(Direction)  $SeatTube(DiameterTT)  $SeatTube(Direction)  $TopTube(SeatTube) left ]				
 
-							set polygon		[ lib_project::flatten_nestedList $is_tt_ht]
+							set polygon		[ project::flatten_nestedList $is_tt_ht]
 							set polygon		[ lappend polygon [lindex $vct_10 1] [lindex $vct_21 0]]
-							set polygon		[ lappend polygon [lib_project::flatten_nestedList $is_tt_st]]
+							set polygon		[ lappend polygon [project::flatten_nestedList $is_tt_st]]
 							set polygon		[ lappend polygon [lindex $vct_22 0] [lindex $vct_11 1]]												
-					lib_project::setValue /root/Result/Tubes/TopTube	polygon 	[lib_project::flatten_nestedList $polygon]
+					project::setValue Result(Tubes/TopTube)				polygon 	[project::flatten_nestedList $polygon]
 
 							set pt_00		[ vectormath::intersectPerp 	{0 0} $Saddle(Position)   $pt_st ] 
 							set pt_01		[ vectormath::addVector			$pt_00   $SeatTube(Direction)  $SeatTube(Extension) ]
@@ -564,15 +583,15 @@
 					
 							set SeatTube(TopTube)		$pt_01					
 							set SeatTube(BottomBracket)	{0 0}
-					lib_project::setValue /root/Result/Tubes/SeatTube/Start		position 	$SeatTube(BottomBracket)			
-					lib_project::setValue /root/Result/Tubes/SeatTube/End		position 	$SeatTube(TopTube)				
+					project::setValue Result(Tubes/SeatTube/Start)		position 	$SeatTube(BottomBracket)			
+					project::setValue Result(Tubes/SeatTube/End)		position 	$SeatTube(TopTube)				
 					
 							set polygon	[format "%s %s %s %s %s %s %s %s" \
 											[lindex $vct_10 0]  [lindex $vct_10 1] \
 											[lindex $vct_21 0]  [lindex $vct_21 1] \
 											[lindex $vct_22 1]  [lindex $vct_22 0] \
 											[lindex $vct_11 1]  [lindex $vct_11 0] ]
-					lib_project::setValue /root/Result/Tubes/SeatTube	polygon 	$polygon									
+					project::setValue Result(Tubes/SeatTube)			polygon 	$polygon									
 			}
 			get_TopTube_SeatTube
 			
@@ -591,7 +610,7 @@
 							set pt_01		[ lindex [ vectormath::parallel  	$RearWheel(Position)  $pt_00   $RearDrop(OffsetSSPerp) ] 0 ]
 					
 							set SeatStay(Direction)     [ vectormath::unifyVector $pt_01 $pt_00 ]
-					lib_project::setValue /root/Result/Tubes/SeatStay/Direction	direction	$SeatStay(Direction)	;# direction vector of SeatStay	
+					project::setValue Result(Tubes/SeatStay/Direction)	direction	$SeatStay(Direction)	;# direction vector of SeatStay	
 					
 							set pt_10		[ vectormath::addVector		$pt_01  $SeatStay(Direction)  $RearDrop(OffsetSS) ]
 
@@ -614,8 +633,8 @@
 					
 						set SeatStay(SeatTube)		$pt_00		
 						set SeatStay(RearWheel)		$pt_10
-					lib_project::setValue /root/Result/Tubes/SeatStay/Start		position 	$SeatStay(RearWheel)				
-					lib_project::setValue /root/Result/Tubes/SeatStay/End		position 	$SeatStay(SeatTube)				
+					project::setValue Result(Tubes/SeatStay/Start)		position 	$SeatStay(RearWheel)				
+					project::setValue Result(Tubes/SeatStay/End)		position 	$SeatStay(SeatTube)				
 							
 							set dir 		[ vectormath::addVector {0 0} $SeatStay(Direction) -1] 
 							set offset		[ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
@@ -623,15 +642,15 @@
 						
 						set SeatStay(debug) 			$is_ss_st
 							
-							set polygon		[ lib_project::flatten_nestedList  $is_ss_st ]
+							set polygon		[ project::flatten_nestedList  $is_ss_st ]
 							set polygon		[ lappend polygon 	[lindex $vct_12 0] [lindex $vct_13 0] \
 																[lindex $vct_10 0] [lindex $vct_11 0] ]										
-					lib_project::setValue /root/Result/Tubes/SeatStay	polygon 	[lib_project::flatten_nestedList $polygon]					
+					project::setValue Result(Tubes/SeatStay)			polygon 	[project::flatten_nestedList $polygon]					
 						
 						#
 						# --- set SeatStay / ChainStay - Intersection
 							set ChainStay(SeatStay_IS)		[ vectormath::intersectPoint $SeatStay(SeatTube) $SeatStay(RearWheel) $ChainStay(BottomBracket) $ChainStay(RearWheel) ];# intersection of ChainStay and SeatStay centerlines	
-					lib_project::setValue /root/Result/Tubes/ChainStay/SeatStay_IS	position	$ChainStay(SeatStay_IS) ;# Point on the Ground perp. to BB
+					project::setValue Result(Tubes/ChainStay/SeatStay_IS)	position	$ChainStay(SeatStay_IS) ;# Point on the Ground perp. to BB
 			}
 			get_SeatStay
 
@@ -671,7 +690,7 @@
 							set pt_03			[ vectormath::cathetusPoint	$pt_02  $pt_99  $offsetDO_Perp  opposite ]	;# point on direction of untapered area of ForkBlade perp through FrontWheel
 
 							set ForkBlade(Direction)	[ vectormath::unifyVector $pt_03 $pt_02 ]
-					lib_project::setValue /root/Result/Tubes/ForkBlade/Direction	direction	$ForkBlade(Direction)	;# direction vector of ForkBlade
+					project::setValue Result(Tubes/ForkBlade/Direction)	direction	$ForkBlade(Direction)	;# direction vector of ForkBlade
 									
 							set pt_04			[ vectormath::addVector		$pt_03  [vectormath::scalePointList {0 0} $ForkBlade(Direction) $offsetDO ] ]	;# point on direction of untapered area of ForkBlade perp through Blade Tip
 								set vct_offset	[ vectormath::parallel		$pt_02  $pt_04  $Fork(BladeOffset) left]	;
@@ -680,8 +699,8 @@
 							set pt_12		[ vectormath::addVector		$pt_04	[vectormath::scalePointList {0 0} $ForkBlade(Direction) $taper_length ] ] ;# point on direction of untapered area where tapering starts
 																		;# Fork Blade taper start
 							set pt_13		$pt_02						;# Crown Fork Blade center
-					lib_project::setValue /root/Result/Tubes/ForkBlade/Start		position 	$pt_13				
-					lib_project::setValue /root/Result/Tubes/ForkBlade/End			position 	$pt_11				
+					project::setValue Result(Tubes/ForkBlade/Start)		position 	$pt_13				
+					project::setValue Result(Tubes/ForkBlade/End)		position 	$pt_11				
 						
 							set vct_10 		[ vectormath::parallel $pt_11 $pt_12 [expr 0.5*$Fork(BladeDiameterDO)] ]
 							set vct_11 		[ vectormath::parallel $pt_12 $pt_13 [expr 0.5*$Fork(BladeWith)] ]
@@ -691,17 +710,17 @@
 							set polygon	[format "%s %s %s %s %s %s" \
 											[lindex $vct_10 0]  [lindex $vct_11 0] [lindex $vct_11 1]  \
 											[lindex $vct_12 1]  [lindex $vct_12 0] [lindex $vct_13 0] ]					
-					lib_project::setValue /root/Result/Tubes/ForkBlade		polygon 	$polygon			
+					project::setValue Result(Tubes/ForkBlade)		polygon 	$polygon			
 							
 						#
 						# --- set Fork Dropout --------------------
 							set Fork(DropoutDirection)	[ vectormath::unifyVector $pt_12 $pt_11 ]					
-					lib_project::setValue /root/Result/Lugs/Dropout/Front/Direction	direction	$Fork(DropoutDirection)				
+					project::setValue Result(Lugs/Dropout/Front/Direction)	direction	$Fork(DropoutDirection)				
 
 						#
 						# --- set Fork Crown ----------------------
 							set Fork(CrownDirection)	$Steerer(Direction)					
-					lib_project::setValue /root/Result/Lugs/ForkCrown/Direction		direction	$Fork(CrownDirection)				
+					project::setValue Result(Lugs/ForkCrown/Direction)		direction	$Fork(CrownDirection)				
 			}
 			get_Fork			
 
@@ -712,14 +731,14 @@
 					variable HeadTube
 					variable Steerer
 
-					lib_project::setValue /root/Result/Tubes/Steerer/End		position 	$Steerer(Stem)
+					project::setValue Result(Tubes/Steerer/End)		position 	$Steerer(Stem)
 							
 							set vct_01 		[ vectormath::parallel 			$Steerer(Fork)  $Steerer(Stem) [expr 0.5 * ($HeadTube(Diameter)-7)] ]
 							set vct_ht 		[ vectormath::parallel 			$Steerer(Stem)	$Steerer(Fork)  [expr 0.5 * ($HeadTube(Diameter)-7)] ]
 							set polygon		[format "%s %s %s %s" \
 													[lindex $vct_01 0] [lindex $vct_01 1] \
 													[lindex $vct_ht 0] [lindex $vct_ht 1] ]					
-					lib_project::setValue /root/Result/Tubes/Steerer	polygon 	$polygon
+					project::setValue Result(Tubes/Steerer)			polygon 	$polygon
 			}
 			get_Steerer
 
@@ -755,7 +774,7 @@
 							set polygon		[ lappend polygon [lindex $vct_10 0]  [lindex $vct_10 1]]
 							set polygon		[ lappend polygon [lindex $vct_11 1]  [lindex $vct_11 0]]
 							set polygon		[ lappend polygon $pt_20 ]
-					lib_project::setValue /root/Result/Components/SeatPost	polygon 	[lib_project::flatten_nestedList $polygon]
+					project::setValue Result(Components/SeatPost)	polygon 	[project::flatten_nestedList $polygon]
 			}
 			get_SeatPost
 
@@ -791,7 +810,7 @@
 							}
 						}
 					
-					lib_project::setValue /root/Result/Components/HeadSet/Bottom	polygon 	[lib_project::flatten_nestedList $polygon]
+					project::setValue Result(Components/HeadSet/Bottom)	polygon 	[project::flatten_nestedList $polygon]
 
 							if {$HeadSet(Height_Top) < 2} {	set HeadSet(Height_Top) 2}
 							if {$HeadSet(Height_Top) > 8} {	
@@ -820,7 +839,7 @@
 													[lindex $vct_11 1] \
 													[lindex $vct_12 1]  [lindex $vct_12 0] [lindex $vct_13 0] ]
 													
-					lib_project::setValue /root/Result/Components/HeadSet/Top	polygon 	[lib_project::flatten_nestedList $polygon]
+					project::setValue Result(Components/HeadSet/Top)	polygon 	[project::flatten_nestedList $polygon]
 			}			
 			get_HeadSet
 
@@ -874,14 +893,14 @@
 																	[lindex  $vct_021 1] [lindex  $vct_020 1] [lindex  $vct_021 1] \
 																	[lindex  $vct_040 0] [lindex  $vct_040 1] [lindex  $vct_020 1] \
 																	$pt_095 ]													
-					lib_project::setValue /root/Result/Components/Stem	polygon 	[lib_project::flatten_nestedList $polygon]
+					project::setValue Result(Components/Stem)	polygon 	[project::flatten_nestedList $polygon]
 			}
 			get_Stem
 
 						
 				#
 				# --- fill Result Values ------------------
-			proc fill_resultValues {domProject} {					
+			proc fill_resultValues {} {					
 					variable BottomBracket
 					variable HeadTube
 					variable TopTube
@@ -902,150 +921,108 @@
 
 							# --- BottomBracket/Height
 							#
-						set xpath Temporary/BottomBracket/Height
-							# puts "           ... $xpath"
 						set value		[ format "%.2f" [lindex $position 0] ]	
-						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
 							# puts "                  ... $value"
-						$node nodeValue		$value
-						
-						
+						project::setValue Temporary(BottomBracket/Height) value $value
+
+
 						# --- HeadTube
 						#
 					set position	$HeadTube(Stem)
 
 							# --- HeadTube/ReachLength
 							#
-						set xpath Temporary/HeadTube/ReachLength
-							# puts "           ... $xpath"
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 0] ]	
-						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
 							# puts "                  ... $value"
-						$node nodeValue		$value
+						project::setValue Temporary(HeadTube/ReachLength) value $value
 
 							# --- HeadTube/StackHeight
 							#
-						set xpath Temporary/HeadTube/StackHeight
-							# puts "           ... $xpath"
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 1] ]	
-						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
 							# puts "                  ... $value"
-						$node nodeValue		$value
+						project::setValue Temporary(HeadTube/StackHeight) value $value
 
-						
+
 						# --- HeadTube / TopTubeAngle
 						#
-					set angle_ht	[ [ $domProject selectNodes /root/Custom/HeadTube/Angle/text() ] asText]
-					set angle_tt	[ [ $domProject selectNodes /root/Custom/TopTube/Angle/text()  ] asText]					
+					set angle_ht	$project::Custom(HeadTube/Angle)
+					set angle_tt	$project::Custom(TopTube/Angle)					
 							# puts "           ... $angle_ht $angle_tt"
 
 							# --- HeadTube/TopTubeAngle
 							#
-						set xpath Temporary/HeadTube/TopTubeAngle
-							# puts "           ... $xpath"
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [expr $angle_ht + $angle_tt] ]	
-						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
 							# puts "                  ... $value"
-						$node nodeValue		$value
+						project::setValue Temporary(HeadTube/TopTubeAngle) value $value
 
 			
 						# --- SeatTube
 						#
 					set position	[ frame_geometry::object_values		SeatTube/End	position	{0 0} ]
 					
-								# set xpath 	Temporary
-								# puts "..01"
-								# set node	[ $domProject selectNodes /root/$xpath ]
-								# puts "[$node asXML]"
 					
 							# --- SeatTube/TubeLength
 							#
-						set xpath Temporary/SeatTube/TubeLength
-							# puts "           ... $xpath"
 							# puts "                   ... [ frame_geometry::object_values		SeatTube TopTube	{0 0} ]" 
 						set value		[ format "%.2f" [ expr hypot([lindex $position 0],[lindex $position 1]) ] ]
-						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
 							# puts "                  ... $value"
-						$node nodeValue		$value
+						project::setValue Temporary(SeatTube/TubeLength) value $value
 						
 							# --- SeatTube/TubeHeight
 							#
-						set xpath Temporary/SeatTube/TubeHeight
-							# puts "           ... $xpath"
 							# puts "                   ... [ frame_geometry::object_values		SeatTube TopTube	{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 1] ]
-						set node	 	[ $domProject selectNodes /root/$xpath/text() ]
 							# puts "                  ... $value"
-						$node nodeValue		$value
+						project::setValue Temporary(SeatTube/TubeHeight) value $value
 
 						
 						# --- TopTube/VirtualLength
 						#
 					set position	[ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]   $TopTube(HeadTube)  {0 0} $Saddle(Position) ]
-					set xpath Temporary/TopTube/VirtualLength
-						# puts "           ... $xpath"
-					set value		[ format "%.2f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $position 0] ] ]
-					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						# puts "                  ... $value"
-					$node nodeValue		$value	
+						set value		[ format "%.2f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $position 0] ] ]
+							# puts "                  ... $value"
+						project::setValue Temporary(TopTube/VirtualLength) value $value
 
 
 					# --- Saddle/Offset_BB/horizontal
 						#
 					set position	$Saddle(Position)					
-					set xpath Temporary/Saddle/Offset_BB/horizontal
-						 puts "           ... $xpath"
-					set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
-					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						 puts "                  ... $value"
-						# puts "                  ... $value"
-					$node nodeValue		$value
+						set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
+							# puts "                  ... $value"
+						project::setValue Temporary(Saddle/Offset_BB/horizontal) value $value
 
 					
 						# --- WheelPosition/front/diagonal
 						#
 					set position	$FrontWheel(Position)					
-					set xpath Temporary/WheelPosition/front/diagonal
-						# puts "           ... $xpath"
-						# puts "                ... $frameCoords::FrontWheel" 						
-					set value		[ format "%.2f" [expr { hypot( [lindex $position 0], [lindex $position 1] ) }] ]	
-					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						# puts "                  ... $value"
-					$node nodeValue		$value
+							# puts "                ... $frameCoords::FrontWheel" 						
+						set value		[ format "%.2f" [expr { hypot( [lindex $position 0], [lindex $position 1] ) }] ]	
+							# puts "                  ... $value"
+						project::setValue Temporary(WheelPosition/front/diagonal) value $value
 
 					
 						# --- WheelPosition/front/horizontal
 						#
 					set position	$FrontWheel(Position)					
-					set xpath Temporary/WheelPosition/front/horizontal
-						# puts "           ... $xpath"
-						# puts "                ... $frameCoords::FrontWheel" 
-					set value		[ format "%.2f" [lindex $position 0] ]	
-					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						# puts "                  ... $value"
-					$node nodeValue		$value
+							# puts "                ... $frameCoords::FrontWheel" 
+						set value		[ format "%.2f" [lindex $position 0] ]	
+							# puts "                  ... $value"
+						project::setValue Temporary(WheelPosition/front/horizontal) value $value
 
 					
 						# --- WheelPosition/rear/horizontal
 						#
 					set position	$RearWheel(Position)
-					set xpath Temporary/WheelPosition/rear/horizontal
-						# puts "           ... $xpath"
-						# puts "                ... $frameCoords::RearWheel" 
-					set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
-					set node	 	[ $domProject selectNodes /root/$xpath/text() ]
-						# puts "                  ... $value"
-					$node nodeValue		$value
-					
-						# puts "[[ $domProject selectNodes /root/Result ] asXML]"
-						# puts "[ $node asText ]"
-						# puts "        ... position  $position"
-						# puts "        ... value       $value"
+							# puts "                ... $frameCoords::RearWheel" 
+						set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
+							# puts "                  ... $value"
+						project::setValue Temporary(WheelPosition/rear/horizontal) value $value
 			}
-			fill_resultValues $domProject
+			fill_resultValues
+			# fill_resultValues $domProject
 
 
 				#
@@ -1056,7 +1033,7 @@
 
 						set FrontDerailleur(Mount)	[ vectormath::rotatePoint	{0 0} [ list $FrontDerailleur(Distance) [expr -1.0*$FrontDerailleur(Offset)] ] [expr 180 - $SeatTube(Angle)] ]
 					
-					lib_project::setValue /root/Result/Position/DerailleurMountFront	position	$FrontDerailleur(Mount)
+					project::setValue Result(Position/DerailleurMountFront)	position	$FrontDerailleur(Mount)
 					# puts "    ... \$FrontDerailleur(Mount) $FrontDerailleur(Mount)"
 			}
 			get_DerailleurMountFront
@@ -1072,8 +1049,8 @@
 
 							set brakeShoeDist	30
 							set pt_00			$RearWheel(Position)
-							set pt_01					[split [ lib_project::getValue /root/Result/Tubes/SeatStay/Polygon	polygon 8 ] , ]
-							set pt_02					[split [ lib_project::getValue /root/Result/Tubes/SeatStay/Polygon	polygon 9 ] , ]
+							set pt_01					[split [ project::getValue Result(Tubes/SeatStay/Polygon)	polygon 8 ] , ]
+							set pt_02					[split [ project::getValue Result(Tubes/SeatStay/Polygon)	polygon 9 ] , ]
 							set RimBrakeRadius	[ expr 0.5 * $RearWheel(RimDiameter) ]
 							set pt_03			[ vectormath::intersectPerp	$pt_02 $pt_01 $pt_00 ]	;# point on SeatStay through RearWheel
 							set vct_01			[ vectormath::parallel $pt_01 $pt_03 $brakeShoeDist ]
@@ -1085,7 +1062,7 @@
 							set RearBrake(Help)		[ vectormath::addVector	$pt_04 [ vectormath::unifyVector {0 0} $SeatStay(Direction) [expr $RearBrake(LeverLength) + $dist_00_Ortho] ] ]
 							
 							set RearBrake(Mount)	[ vectormath::addVector	$pt_03 [ vectormath::unifyVector {0 0} $SeatStay(Direction) [expr $RearBrake(LeverLength) + $dist_00_Ortho] ] ]
-					lib_project::setValue /root/Result/Position/BrakeMountRear	position	$RearBrake(Mount)
+					project::setValue Result(Position/BrakeMountRear)	position	$RearBrake(Mount)
 			}
 			get_BrakeMountRear
 
@@ -1101,22 +1078,22 @@
 							set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr  0.5 * $SeatTube(DiameterBB)] ]
 							set SeatTube(BottleCage_Base) 			[ lindex $vct_01 1 ]
 							set SeatTube(BottleCage_Offset)			[ vectormath::addVector		$SeatTube(BottleCage_Base)			$SeatTube(Direction) 64.0 ]
-					lib_project::setValue /root/Result/Tubes/SeatTube/BottleCage/Base			position	$SeatTube(BottleCage_Base) 				
-					lib_project::setValue /root/Result/Tubes/SeatTube/BottleCage/Offset			position	$SeatTube(BottleCage_Offset)				
+					project::setValue Result(Tubes/SeatTube/BottleCage/Base)			position	$SeatTube(BottleCage_Base) 				
+					project::setValue Result(Tubes/SeatTube/BottleCage/Offset)			position	$SeatTube(BottleCage_Offset)				
 														
 							set pt_00 	[ vectormath::addVector {0 0}	$DownTube(Direction) 	$BottleCage(DownTube)				]
 							set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr -0.5 * $DownTube(DiameterBB)] ]
 							set DownTube(BottleCage_Base) 			[ lindex $vct_01 1 ]
 							set DownTube(BottleCage_Offset)			[ vectormath::addVector		$DownTube(BottleCage_Base)			$DownTube(Direction) 64.0 ]
-					lib_project::setValue /root/Result/Tubes/DownTube/BottleCage/Base			position	$DownTube(BottleCage_Base)
-					lib_project::setValue /root/Result/Tubes/DownTube/BottleCage/Offset			position	$DownTube(BottleCage_Offset)				
+					project::setValue Result(Tubes/DownTube/BottleCage/Base)			position	$DownTube(BottleCage_Base)
+					project::setValue Result(Tubes/DownTube/BottleCage/Offset)			position	$DownTube(BottleCage_Offset)				
 					
 							set pt_00 	[ vectormath::addVector {0 0}	$DownTube(Direction) 	$BottleCage(DownTube_Lower)			]
 							set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr  0.5 * $DownTube(DiameterBB)] ]
 							set DownTube(BottleCage_Lower_Base) 	[ lindex $vct_01 1 ]
 							set DownTube(BottleCage_Lower_Offset)	[ vectormath::addVector		$DownTube(BottleCage_Lower_Base)	$DownTube(Direction) 64.0 ]
-					lib_project::setValue /root/Result/Tubes/DownTube/BottleCage_Lower/Base		position	$DownTube(BottleCage_Lower_Base)
-					lib_project::setValue /root/Result/Tubes/DownTube/BottleCage_Lower/Offset	position	$DownTube(BottleCage_Lower_Offset)									
+					project::setValue Result(Tubes/DownTube/BottleCage_Lower/Base)		position	$DownTube(BottleCage_Lower_Base)
+					project::setValue Result(Tubes/DownTube/BottleCage_Lower/Offset)	position	$DownTube(BottleCage_Lower_Offset)									
 			}
 			get_BottleCageMount
 
@@ -1142,7 +1119,7 @@
 							set FrontBrake(Shoe)	[ lindex $vct_02 1]
 							
 							set FrontBrake(Mount)				$pt_10		
-					lib_project::setValue /root/Result/Position/BrakeMountFront	position	$FrontBrake(Mount)
+					project::setValue Result(Position/BrakeMountFront)		position	$FrontBrake(Mount)
 			}
 			get_BrakeMountFront
 
@@ -1190,12 +1167,12 @@
 					set TubeMitter(SeatStay_02) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]	
 					set TubeMitter(Reference) 			{ -50 0  50 0  50 10  -50 10 }
 					
-					lib_project::setValue /root/Result/TubeMitter/TopTube_Head		polygon		[ lib_project::flatten_nestedList $TubeMitter(TopTube_Head) 	]
-					lib_project::setValue /root/Result/TubeMitter/TopTube_Seat		polygon		[ lib_project::flatten_nestedList $TubeMitter(TopTube_Seat)		]
-					lib_project::setValue /root/Result/TubeMitter/DownTube_Head		polygon		[ lib_project::flatten_nestedList $TubeMitter(DownTube_Head)	]
-					lib_project::setValue /root/Result/TubeMitter/SeatStay_01		polygon		[ lib_project::flatten_nestedList $TubeMitter(SeatStay_01)		]
-					lib_project::setValue /root/Result/TubeMitter/SeatStay_02		polygon		[ lib_project::flatten_nestedList $TubeMitter(SeatStay_02)		]
-					lib_project::setValue /root/Result/TubeMitter/Reference			polygon		[ lib_project::flatten_nestedList $TubeMitter(Reference) 		]						
+					project::setValue Result(TubeMitter/TopTube_Head)		polygon		[ project::flatten_nestedList $TubeMitter(TopTube_Head) 	]
+					project::setValue Result(TubeMitter/TopTube_Seat)		polygon		[ project::flatten_nestedList $TubeMitter(TopTube_Seat)		]
+					project::setValue Result(TubeMitter/DownTube_Head)		polygon		[ project::flatten_nestedList $TubeMitter(DownTube_Head)	]
+					project::setValue Result(TubeMitter/SeatStay_01)		polygon		[ project::flatten_nestedList $TubeMitter(SeatStay_01)		]
+					project::setValue Result(TubeMitter/SeatStay_02)		polygon		[ project::flatten_nestedList $TubeMitter(SeatStay_02)		]
+					project::setValue Result(TubeMitter/Reference)			polygon		[ project::flatten_nestedList $TubeMitter(Reference) 		]						
 			}
 			get_TubeMitter
 			
@@ -1212,7 +1189,7 @@
 			
 			array set Stage {}		
 		
-			set FrameSize	[ split [ lib_project::getValue /root/Result/Position/SummarySize			position  ] , ]
+			set FrameSize	[ split [ project::getValue Result(Position/SummarySize)			position  ] , ]
 			set SummaryLength		[ lindex $FrameSize 0 ]
 			if {$option == {bicycle}} {
 				set SummaryLength	[ expr $SummaryLength + 2 * $RearWheel(Radius) ]
@@ -1266,8 +1243,8 @@
 				# ---  get baseLine Coordinates  					
 			if {$option == {bicycle}} {
 				set BtmBracket_x		[ expr $border + $RearWheel(Radius) + $RearWheel(Distance_X) ] 
-				set BtmBracket_y		[ expr $cvBorder + $RearWheel(Radius) - $BottomBracket(depth) ] 
-					# puts "\n -> get_BottomBracket_Position:  $cvBorder + $RearWheel(Radius) - $BottomBracket(depth) " 
+				set BtmBracket_y		[ expr $cvBorder + $RearWheel(Radius) - $project::Custom(BottomBracket/Depth) ] 
+					# puts "\n -> get_BottomBracket_Position:  $cvBorder + $RearWheel(Radius) - $project::Custom(BottomBracket/Depth) " 
 					# puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n" 
 			} else {
 				# puts "        \$option                $option"
@@ -1313,7 +1290,7 @@
 											}
 							}
 								# puts "    ... $branch"
-							set svgList	[ lib_project::getValue /root/Result/$branch	polygon ]
+							set svgList	[ project::getValue Result($branch)	polygon ]
 							foreach xy $svgList {
 								foreach {x y} [split $xy ,] break
 								lappend returnValue $x $y
@@ -1355,7 +1332,7 @@
 										}
 							}
 							
-							set pointValue	[ lib_project::getValue /root/Result/$branch	position ]	; # puts "    ... $pointValue"
+							set pointValue	[ project::getValue Result($branch)	position ]	; # puts "    ... $pointValue"
 							foreach xy $pointValue {
 								foreach {x y} [split $xy ,] break
 								lappend returnValue $x $y	; # puts "    ... $returnValue"
@@ -1376,7 +1353,7 @@
 										}
 							}
 							
-							set directionValue	[ lib_project::getValue /root/Result/$branch	direction ]	; # puts "    ... $directionValue"
+							set directionValue	[ project::getValue Result($branch)	direction ]	; # puts "    ... $directionValue"
 							foreach xy $directionValue {
 								foreach {x y} [split $xy ,] break
 								lappend returnValue $x $y	; # puts "    ... $returnValue"
@@ -1548,9 +1525,22 @@
 	
  	#-------------------------------------------------------------------------
 		#  create ProjectEdit Widget
- 	proc createEdit { x y cv_Name updateCommand xpathList {title {Edit:}}} {
+		# proc createEdit { x y cv_Name updateCommand _arrayNameList {title {Edit:}}}
+ 	proc createEdit { x y cv_Name _arrayNameList {title {Edit:}}} {
 			variable _update
 			variable _updateValue
+			
+			# _arrayNameList:  				e.g.: {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)}
+			#   previous 3.2.70  xpathList: e.g.: {FrameTubes/HeadTube/Length Component/HeadSet/Height/Bottom}
+			
+				puts ""
+				puts "   -------------------------------"
+				puts "    createEdit"
+				puts "       x / y:           $x / $y"
+				puts "       cv_Name:         $cv_Name"
+				puts "       _arrayNameList:  $_arrayNameList"
+				puts "       title:           $title"
+			
 			
 			# --- local procedures ---
 				proc change_ValueEdit {textVar direction} {
@@ -1563,17 +1553,19 @@
 							}
 				}
 				
-				proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText textVar updateCommand xpath} {					
+				proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {					
+
+						eval set currentValue $[namespace current]::_updateValue($key)
 						#
 						# --- create cvLabel, cvEntry ---
 							set	cvLabel [label  $cvContentFrame.label_${index} -text "${labelText} : "]
 								# set cvEntry [entry  $cvContentFrame.value_${index} -textvariable $textVar  -justify right  -relief sunken -bd 1  -width 10]
-							set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable $textVar -justify right -relief sunken -width 10 -bd 1]
+							set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key) -justify right -relief sunken -width 10 -bd 1]
 							$cvEntry configure -command \
-								"[namespace current]::change_ValueEdit $textVar %d"
+								"[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
 							set	cvUpdate 	[button $cvContentFrame.update_${index} -image $lib_gui::iconArray(confirm)]
 							$cvUpdate configure -command \
-								"[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry"
+								"[namespace current]::updateConfig $cv_Name $key $cvEntry"
 							if {$index == {oneLine}} {
 								set	cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
 								grid	$cvLabel $cvEntry $cvUpdate $cvClose -sticky news
@@ -1592,29 +1584,28 @@
 						# --- define bindings ---
 							bind $cvLabel	<ButtonPress-1> 	[list [namespace current]::dragStart 	%X %Y]
 							bind $cvLabel	<B1-Motion> 		[list [namespace current]::drag 		%X %Y $cv $cvEdit]			
-							bind $cvEntry	<Return> 			[list [namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry]			
+							bind $cvEntry	<Return> 			[list [namespace current]::updateConfig $cv_Name $key $cvEntry]			
 				}
 							
-				proc create_ListEdit {type cv cv_Name cvEdit cvContentFrame index labelText textVar updateCommand xpath} {					
+				proc create_ListEdit {type cv cv_Name cvEdit cvContentFrame index labelText key} {					
 
+						
+						eval set currentValue $[namespace current]::_updateValue($key)
 						#
 						# --- create listBox content ---
 						set listBoxContent {}
 						case $type {
 								{SELECT_File} {
-										eval set currentFile $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 											puts "createEdit::create_ListEdit::SELECT_File:"
 											# puts "     currentFile: $currentFile"
-											# puts "           xpath: $xpath"										
-										set listBoxContent [lib_file::get_componentAlternatives  $xpath]
+											# puts "           key: $key"										
+										set listBoxContent [lib_file::get_componentAlternatives  $key]
 										foreach entry $listBoxContent {
 											puts "         ... $entry"
-										}
-										
+										}				
 									}
 								{SELECT_Rims} {
-										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
 										set listBoxContent $::APPL_Env(list_Rims)
@@ -1623,7 +1614,6 @@
 										}
 									}
 								{SELECT_ForkTypes} {
-										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
 										set listBoxContent $::APPL_Env(list_ForkTypes)
@@ -1632,7 +1622,6 @@
 										}
 									}	
 								{SELECT_BrakeTypes} {
-										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
 										set listBoxContent $::APPL_Env(list_BrakeTypes)
@@ -1641,7 +1630,6 @@
 										}
 									}
 								{SELECT_BottleCage} {
-										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
 										set listBoxContent $::APPL_Env(list_BottleCage)
@@ -1650,7 +1638,6 @@
 										}
 									}
 								{SELECT_Binary_OnOff} {
-										eval set currentValue $[namespace current]::_updateValue($xpath)
 										set listBoxContent {}
 										puts "     currentValue: $currentValue"
 										set listBoxContent $::APPL_Env(list_Binary_OnOff)
@@ -1665,39 +1652,39 @@
 							set cvFrame		[ frame 		$cvContentFrame.frame_${index} ]
 							set	  cvLabel	[ label  		$cvFrame.label   -text "${labelText} : "]
 							set	  cvCBox	[ ttk::combobox $cvFrame.cb \
-													-textvariable [namespace current]::_updateValue($xpath) \
+													-textvariable [namespace current]::_updateValue($key) \
 													-values $listBoxContent	\
 													-width 13 \
 													-height 10 \
 													-justify right ]
 													
-									set postCommand [list set [namespace current]::oldValue [namespace current]::_updateValue($xpath)]
-									$cvCBox configure -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::_updateValue($xpath)]
+									set postCommand [list set [namespace current]::oldValue [namespace current]::_updateValue($key)]
+									$cvCBox configure -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::_updateValue($key)]
 
 							if {$index == {oneLine}} {
-								set	cvUpdat [button $cvContentFrame.update -image $lib_gui::iconArray(confirm)]
-								$cvUpdat configure -command \
-									"[namespace current]::updateConfig $cv_Name $updateCommand $xpath"
-									# "[namespace current]::updateConfig $cv_Name $updateCommand $xpath $cvEntry"
-								set	cvClose [ button 		$cvFrame.close   -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
-								grid	$cvLabel $cvCBox $cvClose 	-sticky news
-								grid 	$cvFrame  					-sticky news 	-padx 1 
+									set	cvUpdat [button $cvContentFrame.update -image $lib_gui::iconArray(confirm)]
+									$cvUpdat configure -command \
+										"[namespace current]::updateConfig $cv_Name $key"										
+									set	cvClose [ button 		$cvFrame.close   -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+									grid	$cvLabel $cvCBox $cvClose 	-sticky news
+									grid 	$cvFrame  					-sticky news 	-padx 1 
 							} else {																
-								grid	$cvLabel $cvCBox  		 	-sticky news
-								grid 	configure $cvLabel   		-sticky nws		-padx 2 
-								grid	columnconfigure 	$cvFrame 1 	-weight 1 
-								grid 	$cvFrame  -sticky news -padx 1 -columnspan 3
+									grid	$cvLabel $cvCBox  		 	-sticky news
+									grid 	configure $cvLabel   		-sticky nws		-padx 2 
+									grid	columnconfigure 	$cvFrame 1 	-weight 1 
+									grid 	$cvFrame  -sticky news -padx 1 -columnspan 3
 							}
 						#
 						# --- define bindings ---
-							bind $cvCBox 	<<ComboboxSelected>> 		[list [namespace current]::check_Value	%W $cv_Name $updateCommand $xpath]
+							bind $cvCBox 	<<ComboboxSelected>> 		[list [namespace current]::check_listBoxValue	%W $cv_Name $key]
 							bind $cvLabel	<ButtonPress-1> 			[list [namespace current]::dragStart 	%X %Y]
 							bind $cvLabel	<B1-Motion> 				[list [namespace current]::drag 		%X %Y $cv $cvEdit]			
 				}
 				
-						
+
+			
 			set x_offset 20
-			set domDoc $::APPL_Env(root_ProjectDOM)	
+			set domProject $::APPL_Env(root_ProjectDOM)	
 			set cv 		[ $cv_Name getNodeAttr Canvas path]
 			
 			if { [catch { set cvEdit [frame $cv.f_edit -bd 2 -relief raised] } errorID ] } {
@@ -1716,58 +1703,56 @@
 					pack configure $cvContentFrame 	  -fill both
 					
 			# --- cvContentFrame ---
-			if {[llength $xpathList] == 1 } {
+			if {[llength $_arrayNameList] == 1 } {
 					pack forget $cvTitleFrame
 					set updateMode 	value
-					set xpath [lindex $xpathList 0]
+					set _arrayName 	[lindex $_arrayNameList 0]
+					set _array 		[lindex [split $_arrayName (] 0]
+					set _name 		[lindex [split $_arrayName ()] 1]
+					set xpath 		[format "%s/%s" $_array $_name]
 					set index oneLine
 					
 					switch -glob $xpath {
 							{file://*} {
 									set updateMode SELECT_File
-									set xpath	[string range $xpath 7 end]
-										# puts "   ... \$xpath $xpath"							
-									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
-									set _updateValue($xpath) $value
-										 puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
-										#
+																		set updateMode SELECT_File
+									set _array		[string range $_array 7 end]
+									eval set value 	[format "$%s::%s(%s)" project $_array $_name]
+									set labelText	[format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+									set key			[format "%s/%s" $_array $_name]
+									set _updateValue($key) $value
+									
 										# --- create widgets per xpath list element ---
 									create_ListEdit SELECT_File \
 												$cv $cv_Name $cvEdit $cvContentFrame \
-												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
-							}
+												$index $labelText $key															
+								}
 							{list://*} {
-										# puts "   ... \$xpath $xpath"
-									set xpath		[string range $xpath 7 end]
-									set xpathList	[split $xpath {@} ]
-										# puts "   ... \$xpathList $xpathList"
-									set xpath		[lindex $xpathList 0]										 
-									set listName	[lindex $xpathList 1]										 
-									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
-									set _updateValue($xpath) $value
-										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
-										#
-										# --- create widgets per xpath list element ---
-									puts "  ... 	 $listName \
-												$cv $cv_Name $cvEdit $cvContentFrame \
-												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath"
+									set _array		[string range $_array 7 end]
+									set _nameInfo	[split $_name {@} ]
+									set _name		[lindex $_nameInfo 0]										 
+									set listName	[lindex $_nameInfo 1]
+									
+									eval set value 	[format "$%s::%s(%s)" project $_array $_name]
+									set labelText	[format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+									set key			[format "%s/%s" $_array $_name]
+									set _updateValue($key) $value
+									
 									create_ListEdit $listName \
 												$cv $cv_Name $cvEdit $cvContentFrame \
-												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
-							}
+												$index $labelText $key								
+								}
 							default {
-										# puts "   ... \$xpath $xpath"
-									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
+									eval set value 	[format "$%s::%s(%s)" project $_array $_name]
 									set _updateValue($xpath) $value
-										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
-										#
+									set labelText	[format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+									set key	[format "%s/%s" $_array $_name]
+									set _updateValue($key) $value
+									
 										# --- create widgets per xpath list element ---
 									create_ValueEdit $cv $cv_Name $cvEdit $cvContentFrame \
-														$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath
-							}
+														$index $labelText $key
+								}
 						
 					}
 			} else {
@@ -1781,52 +1766,69 @@
 				# --- parameter to edit ---
 					set updateMode value
 					set index 0				
-					foreach xpath $xpathList {						
+					foreach _arrayName 	$_arrayNameList {						
+						set _array 		[lindex [split $_arrayName (] 0]
+						set _name 		[lindex [split $_arrayName ()] 1]
+						set xpath 		[format "%s/%s" $_array $_name]
 						set index [expr $index +1]
 						
 						switch -glob $xpath {
 							{file://*} { 
 										# puts "   ... \$xpath $xpath"
-									set updateMode SELECT_File
-									set xpath	[string range $xpath 7 end]
-										# puts "   ... \$xpath $xpath"									
-									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
-									set _updateValue($xpath) $value
+									set _array		[string range $_array 7 end]
+										# puts "   ... \$xpath $xpath"							
+									eval set value 	[format "$%s::%s(%s)" project $_array $_name]
+										# replaced by 3.2.70;# set value	[ [ $domProject selectNodes /root/$xpath  ]	asText ]
+										# set xpath	[string range $xpath 7 end]
+										# set _updateValue($xpath) $value
 										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
+									set labelText	[format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+										# replaced by 3.2.70;# set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
 										#
+									set key	[format "%s/%s" $_array $_name]
+									set _updateValue($key) $value
+									
 										# --- create widgets per xpath list element ---
 									create_ListEdit SELECT_File \
 												$cv $cv_Name $cvEdit $cvContentFrame \
-												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath
+												$index $labelText $key															
 								}
 							{list://*} {
 										# puts "   ... \$xpath $xpath"
-									set xpath		[string range $xpath 7 end]
-									set xpathList	[split $xpath {@} ]
-										# puts "   ... \$xpathList $xpathList"
-									set xpath		[lindex $xpathList 0]										 
-									set listName	[lindex $xpathList 1]										 
-									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
-									set _updateValue($xpath) $value
+									set _array		[string range $_array 7 end]
+									set _nameInfo	[split $_name {@} ]
+										 puts "   ... $_array $_nameInfo"
+									set _name		[lindex $_nameInfo 0]										 
+									set listName	[lindex $_nameInfo 1]										 
+									eval set value 	[format "$%s::%s(%s)" project $_array $_name]
+										# replaced by 3.2.70;# set value	[ [ $domProject selectNodes /root/$xpath  ]	asText ]
+									    # set _updateValue($xpath) $value
 										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
+									set labelText	[format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+										# replaced by 3.2.70;# set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
 										#
+									set key	[format "%s/%s" $_array $_name]
+									set _updateValue($key) $value
+									
 										# --- create widgets per xpath list element ---
 									create_ListEdit $listName \
 												$cv $cv_Name $cvEdit $cvContentFrame \
-												$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath								
-							}
+												$index $labelText $key								
+								}
 							default {
 										# puts "   ... \$xpath $xpath"
-									set value	[ [ $domDoc selectNodes /root/$xpath  ]	asText ]
+									eval set value [format "$%s::%s(%s)" project $_array $_name]
 									set _updateValue($xpath) $value
 										# puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-									set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
+									set labelText		[format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+										# removed by 3.2.70;# set labelText		[ string trim [ string map {{/} { / }} $xpath] " " ]
 										#
+									set key	[format "%s/%s" $_array $_name]
+									set _updateValue($key) $value
+									
 										# --- select entries content ---
 									create_ValueEdit $cv $cv_Name $cvEdit $cvContentFrame \
-														$index $labelText [namespace current]::_updateValue($xpath) $updateCommand $xpath
+														$index $labelText $key
 								}
 						}
 					}
@@ -1848,13 +1850,41 @@
 			$cv move $cvEdit $dx $dy
 			  # puts "  -> reposition $dx $dy"
 	} 
+ 	#-------------------------------------------------------------------------
+		#  update Project 
+	proc updateConfig {cv_Name xpath {cvEntry {}}} {
 
-
-
-	proc check_Value { w cv_Name updateCommand xPath args} {
+			variable _updateValue
+			
+			#set domProject $::APPL_Env(root_ProjectDOM)
+			
+			# --- habdele xpath values --- 
+			switch -glob $xpath {
+				{_update_} {}
+				default {
+						puts ""
+						puts "   -------------------------------"
+						puts "    updateConfig"
+						puts "       updateConfig:    $_updateValue($xpath)"
+						set_projectValue $xpath $_updateValue($xpath)				
+					}			
+			}
+					
+			#
+			# --- finaly update
+			frame_geometry::set_base_Parameters ;#$domProject
+			update
+			catch {focus $cvEntry}
+			catch {$cvEntry selection range 0 end}
+	}
+ 	#-------------------------------------------------------------------------
+		#  check comments in lsitbox
+	proc check_listBoxValue { w cv_Name xPath args} {
 		
 			variable _updateValue
 			variable oldValue
+			
+			puts "  .. check_listBoxValue $xPath $args"
 			
 			switch $xPath {
 					{Component/Wheel/Rear/RimDiameter} -
@@ -1873,42 +1903,48 @@
 								set _updateValue($xPath) $value
 									# puts "   ... $_updateValue($xPath)"
 									
-								[namespace current]::updateConfig $cv_Name $updateCommand $xPath
+								[namespace current]::updateConfig $cv_Name $xPath
 							}
 						}
 					default {
-								[namespace current]::updateConfig $cv_Name $updateCommand $xPath
+								[namespace current]::updateConfig $cv_Name $xPath
 						}
 			}
 	}
 
-
-
  	#-------------------------------------------------------------------------
 		#  sets and format Value 
 	proc set_projectValue {xpath value {mode {update}}} {
-	
+			
+			# xpath: e.g.:Custom/BottomBracket/Depth
 			variable 		_updateValue
 			
-				# --- get current Node
-			set domProject 	$::APPL_Env(root_ProjectDOM)			
-			set node 		[$domProject selectNodes /root/$xpath/text()]
+			puts ""
+			puts "   -------------------------------"
+			puts "    set_projectValue"
+			puts "       xpath:           $xpath"
+			puts "       value:           $value"
+			puts "       mode:            $mode"
 			
+			set _array 	[lindex [split $xpath /] 0]
+			set _name 	[string range $xpath [string length $_array/] end]
+				# puts "     ... $_array  $_name"
+
 			
 			# --- handle xpath values --- 
 					# puts "  ... mode: $mode"
 			if {$mode == {update}} {
 					# puts "  ... set_projectValue: $xpath"
-				switch -glob $xpath {
-					{Temporary/*} {
+				switch -glob $_array {
+					{Temporary} {
 								# puts "\n  ... set_projectValue: ... Result/..."
-							set_spec_Parameters $xpath $value
+							set_temp_Parameters $_array $_name $value
+							# set_spec_Parameters $xpath $value
 							return
 						}	
 					default {}			
 				}
 			}
-
 
 			
 				# --- set new Value
@@ -1920,8 +1956,6 @@
 				set _updateValue($xpath) $newValue
 			}
 			
-				# --- puts message
-			# puts "        ... set_projectValue: $xpath  $newValue "
 			
 				# --- update or return on errorID		
 			set checkValue {mathValue}
@@ -1953,9 +1987,10 @@
 			}
 			
 			if {$mode == {update}} {
-				$node nodeValue $newValue
+				project::setValue [format "%s(%s)" $_array $_name] value $newValue
 			}
 			
+			# puts "set_projectValue: $newValue"
 			return $newValue
 	
 	}
@@ -1964,9 +1999,16 @@
  	#-------------------------------------------------------------------------
 		#  handle modification on /root/Result/... values
 	# proc set_spec_Parameters {domProject cv_Name updateCommand xpath cvEntry} 
-	proc set_spec_Parameters {xpath value} {
+	proc set_temp_Parameters {_array _name value} {
 
 			variable 		_updateValue
+			
+			puts ""
+			puts "   -------------------------------"
+			puts "    set_temp_Parameters"
+			puts "       _array:          $_array"
+			puts "       _name:           $_name"
+			puts "       value:           $value"
 			
 				variable BottomBracket	
 				variable HandleBar	
@@ -1976,17 +2018,15 @@
 				variable Fork	
 				variable Stem	
 			
-				# --- get current Node
-			set domProject 	$::APPL_Env(root_ProjectDOM)			
-			set node 		[$domProject selectNodes /root/$xpath/text()]
 			
+			set xpath "$_array/$_name"
+			puts "       xpath:           $xpath"
 			
-			puts "\n  ... set_spec_Parameters: $xpath"
-			switch -glob $xpath {
+			switch -glob $_name {
 			
-				{Temporary/BottomBracket/Height}	{			
-							puts "               ... $xpath"
-							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+				{BottomBracket/Height}	{			
+							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							set oldValue				$project::Temporary(BottomBracket/Height)
 							set newValue				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$newValue
 							set delta		[expr $newValue - $oldValue]
@@ -1996,17 +2036,16 @@
 							
 								# --- update value 
 								# 
-							set xpath 		Custom/BottomBracket/Depth
-							set oldValue				$BottomBracket(depth)
-							set BottomBracket(depth)	[ expr $oldValue - $delta ]
-							set_projectValue $xpath  $BottomBracket(depth)
+							set xpath 					Custom/BottomBracket/Depth
+							set oldValue				$project::Custom(BottomBracket/Depth)
+							set newValue				[ expr $oldValue - $delta ]
+							set_projectValue $xpath  	$newValue
 							
 						}	
 							
-				{Temporary/HeadTube/TopTubeAngle} {
-							puts "               ... $xpath"
-							
-							set HeadTopTube_Angle	[ set_projectValue $xpath  $value format]
+				{HeadTube/TopTubeAngle} {
+							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"						
+							set HeadTopTube_Angle		[ set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$HeadTopTube_Angle
 								puts "          \$HeadTopTube_Angle  = $HeadTopTube_Angle"
 
@@ -2014,21 +2053,22 @@
 
 								# --- update value 
 								# 
-							set HeadTube_Angle		[ [ $domProject selectNodes /root/Custom/HeadTube/Angle		]  asText ]
-							set value				[ expr $HeadTopTube_Angle - $HeadTube_Angle]
-							set xpath		Custom/TopTube/Angle
+							set HeadTube_Angle			$project::Custom(HeadTube/Angle)
+							set value					[ expr $HeadTopTube_Angle - $HeadTube_Angle]
+							set xpath					Custom/TopTube/Angle
 							
-							set_projectValue $xpath  $value	
+							set_projectValue $xpath  	$value	
 							
 						}
 				
-				{Temporary/TopTube/VirtualLength}			-			
-				{Temporary/WheelPosition/front/horizontal}	{			
-							puts "               ... $xpath"
-							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+				{TopTube/VirtualLength}			-			
+				{WheelPosition/front/horizontal}	{			
+							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
+							# set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
 							set newValue				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$newValue
-							set delta		[expr $newValue - $oldValue]
+							set delta					[expr $newValue - $oldValue]
 									# puts "          $newValue - $oldValue = $delta"
 								 
 								# --- set HandleBar(Distance)
@@ -2038,9 +2078,10 @@
 							set_projectValue $xpath  	$newValue
 						}
 						
-				{Temporary/WheelPosition/front/diagonal}	{			
-							puts "               ... $xpath"
-							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+				{WheelPosition/front/diagonal}	{			
+							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value]
+							# set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
 							set newValue				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$newValue
 							puts "                 <D> ... $oldValue $newValue"
@@ -2066,13 +2107,14 @@
 							set_projectValue $xpath  	$newValue
 						}
 						
-				{Temporary/Saddle/Offset_BB/horizontal}	{			
-							puts "               ... $xpath"
-							set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+				{Saddle/Offset_BB/horizontal}	{			
+							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value]
+							# set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
 							set Saddle(Distance_X_tmp)				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$Saddle(Distance_X_tmp)
 							
-							# set SeatTube(Length)		[ [ $domProject selectNodes /root/Personal/SeatTube_Length  ]	asText ]
+							# set SeatTube(Length)		$project::Personal(SeatTube_Length)
 							set Saddle(Height)			[expr sqrt(pow($SeatTube(Length),2) - pow($oldValue,2)) ]
 							
 									# puts "          old Value:         $oldValue"
@@ -2105,7 +2147,7 @@
 							puts "\n"
 							puts "     WARNING!"
 							puts "\n"
-							puts "        ... set_spec_Parameters:  "
+							puts "        ... set_temp_Parameters:  "
 							puts "                 $xpath"
 							puts "            ... is not registered!"
 							puts "\n"
@@ -2115,35 +2157,17 @@
 			
 	}
 
-
-
-	
  	#-------------------------------------------------------------------------
-		#  update Project 
-	proc updateConfig {cv_Name updateCommand xpath {cvEntry {}}} {
-
-			variable _updateValue
-			
-			set domProject $::APPL_Env(root_ProjectDOM)
-			
-			# --- habdele xpath values --- 
-			switch -glob $xpath {
-				{_update_} {}
-				default {
-						puts "  ... updateConfig -> $_updateValue($xpath)"
-						set_projectValue $xpath $_updateValue($xpath)				
-					}			
-			}
-					
-			#
-			# --- finaly update
-			frame_geometry::set_base_Parameters $domProject
-			update
-			$updateCommand $cv_Name
-			catch {focus $cvEntry}
-			catch {$cvEntry selection range 0 end}
-
-	} 
+		#  trace/update Project 
+	proc trace_Project {varname key operation} {
+			if {$key != ""} {
+					set varname ${varname}($key)
+					}
+			upvar $varname var
+			# value is 889 (operation w)
+			# value is 889 (operation r)
+			puts "trace_Prototype: (operation: $operation) $varname is $var "
+	}
  
  }  
 

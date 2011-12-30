@@ -98,51 +98,51 @@
 		#  create MainFrame with Menue  
 		#
 	proc create_ButtonBar {tb_frame } {	
-		variable iconArray
-	
-		Button	$tb_frame.open		-image  $iconArray(open)		-helptext "open ..."		-command { lib_file::openProject_xml }  
-		Button	$tb_frame.save		-image  $iconArray(save)		-helptext "save ..."		-command { lib_file::saveProject_xml } 
-		Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	-helptext "print .ps"		-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
-		Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	-helptext "print .svg"		-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
-													 
-		Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		-helptext "template road"	-command { lib_gui::load_Template  Road }  
-		Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		-helptext "template mtb"	-command { lib_gui::load_Template  MTB  }  
-		  
-		Button	$tb_frame.clear		-image  $iconArray(clear)		-helptext "clear ..."    	-command { lib_gui::notebook_cleanCanvas} 
-		Button	$tb_frame.render	-image  $iconArray(design)		-helptext "update ..."		-command { lib_gui::notebook_updateCanvas force}  
-		  
-		Button	$tb_frame.cfg		-image   $iconArray(cfg_panel)	-helptext "config Panel"   	-command { lib_gui::open_configPanel } 
+			variable iconArray
 		
-		
+			Button	$tb_frame.open		-image  $iconArray(open)		-helptext "open ..."		-command { lib_file::openProject_xml }  
+			Button	$tb_frame.save		-image  $iconArray(save)		-helptext "save ..."		-command { lib_file::saveProject_xml } 
+			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	-helptext "print .ps"		-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	-helptext "print .svg"		-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
+														 
+			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		-helptext "template road"	-command { lib_gui::load_Template  Road }  
+			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		-helptext "template mtb"	-command { lib_gui::load_Template  MTB  }  
+			  
+			Button	$tb_frame.clear		-image  $iconArray(clear)		-helptext "clear ..."    	-command { lib_gui::notebook_cleanCanvas} 
+			Button	$tb_frame.render	-image  $iconArray(design)		-helptext "update ..."		-command { lib_gui::notebook_updateCanvas force}  
+			  
+			Button	$tb_frame.cfg		-image   $iconArray(cfg_panel)	-helptext "config Panel"   	-command { lib_gui::open_configPanel } 
+			
+			
 
-		Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		-helptext "scale plus"		-command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
-		Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		-helptext "scale minus"		-command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
-		Button	$tb_frame.resize	-image  $iconArray(resize)		-helptext "resize"			-command { lib_gui::notebook_refitCanvas }  
-		
-		Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
-		  
-		label   $tb_frame.sp0      -text   " "
-		label   $tb_frame.sp1      -text   " "
-		label   $tb_frame.sp2      -text   " "
-		label   $tb_frame.sp3      -text   "      "
-		label   $tb_frame.sp4      -text   " "
-		label   $tb_frame.sp5      -text   " "
-		label   $tb_frame.sp6      -text   " "
-		  
-		  
-			# pack    $tb_frame.open     $tb_frame.save     $tb_frame.clear    $tb_frame.print    $tb_frame.sp0  \
-			#		$tb_frame.set_rd   $tb_frame.set_mb   $tb_frame.sp2  \
-			#		$tb_frame.render   $tb_frame.sp3  \
-			#
-		pack    $tb_frame.open       $tb_frame.save          $tb_frame.sp0  \
-				$tb_frame.print_ps   $tb_frame.print_svg     $tb_frame.sp1  \
-				$tb_frame.set_rd     $tb_frame.set_mb   $tb_frame.sp2  \
-				$tb_frame.clear      $tb_frame.render   $tb_frame.sp3  $tb_frame.cfg\
-			-side left -fill y
-				   
-		pack    $tb_frame.exit   $tb_frame.sp6  \
-				$tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
-			-side right 
+			Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		-helptext "scale plus"		-command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
+			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		-helptext "scale minus"		-command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
+			Button	$tb_frame.resize	-image  $iconArray(resize)		-helptext "resize"			-command { lib_gui::notebook_refitCanvas }  
+			
+			Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
+			  
+			label   $tb_frame.sp0      -text   " "
+			label   $tb_frame.sp1      -text   " "
+			label   $tb_frame.sp2      -text   " "
+			label   $tb_frame.sp3      -text   "      "
+			label   $tb_frame.sp4      -text   " "
+			label   $tb_frame.sp5      -text   " "
+			label   $tb_frame.sp6      -text   " "
+			  
+			  
+				# pack    $tb_frame.open     $tb_frame.save     $tb_frame.clear    $tb_frame.print    $tb_frame.sp0  \
+				#		$tb_frame.set_rd   $tb_frame.set_mb   $tb_frame.sp2  \
+				#		$tb_frame.render   $tb_frame.sp3  \
+				#
+			pack    $tb_frame.open       $tb_frame.save          $tb_frame.sp0  \
+					$tb_frame.print_ps   $tb_frame.print_svg     $tb_frame.sp1  \
+					$tb_frame.set_rd     $tb_frame.set_mb   $tb_frame.sp2  \
+					$tb_frame.clear      $tb_frame.render   $tb_frame.sp3  $tb_frame.cfg\
+				-side left -fill y
+					   
+			pack    $tb_frame.exit   $tb_frame.sp6  \
+					$tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
+				-side right 
 	}
 
 
@@ -150,49 +150,48 @@
 		#  register notebookCanvas in notebook - Tabs   
 		#
 	proc create_Notebook {frame} {
-		variable canvasGeometry
-		variable canvasUpdate
-		variable noteBook_top
-		
-			# --- 	initialize canvasUpdate
-		set canvasUpdate(recompute)	0
-		
-			# --- 	create ttk::notebook
-		set noteBook_top 	[ ttk::notebook $frame.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]				
-			pack $noteBook_top -expand yes  -fill both  
-		
-			# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  40  -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Tube Details    "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Mitter  "	A4  1.0  40  -bd 2  -bg white  -relief sunken
-		lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  40  -bd 2  -bg white  -relief sunken
-		
-		$noteBook_top add [frame $noteBook_top.components] 	-text "... Components" 
-		$noteBook_top add [frame $noteBook_top.report] 		-text "... info" 
-		
+			variable canvasGeometry
+			variable canvasUpdate
+			variable noteBook_top
+			
+				# --- 	initialize canvasUpdate
+			set canvasUpdate(recompute)	0
+			
+				# --- 	create ttk::notebook
+			set noteBook_top 	[ ttk::notebook $frame.nb -width $canvasGeometry(width)	-height $canvasGeometry(height) ]				
+				pack $noteBook_top -expand yes  -fill both  
+			
+				# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Tube Details    "	A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Mitter  "	A4  1.0  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  40  -bd 2  -bg white  -relief sunken
+			
+			$noteBook_top add [frame $noteBook_top.components] 	-text "... Components" 
+			$noteBook_top add [frame $noteBook_top.report] 		-text "... info" 
+			
 
-			# --- 	fill with Report Widgets
-		lib_cfg_report::createReport 	$noteBook_top.report
-			# --- 	fill with Library Widgets
-		lib_comp_library::createLibrary $noteBook_top.components
-		lib_comp_library::update_compList
-	
+				# --- 	fill with Report Widgets
+			lib_cfg_report::createReport 	$noteBook_top.report
+				# --- 	fill with Library Widgets
+			lib_comp_library::createLibrary $noteBook_top.components
+			lib_comp_library::update_compList
 		
-			# --- 	bind event to update Tab on selection
-		bind $noteBook_top <<NotebookTabChanged>> {lib_gui::notebook_updateCanvas}
+			
+				# --- 	bind event to update Tab on selection
+			bind $noteBook_top <<NotebookTabChanged>> {lib_gui::notebook_updateCanvas}
 
-			# --- 	bind event Control-Tab and Shift-Control-Tab
-		ttk::notebook::enableTraversal $noteBook_top
-		
-			# --- 	select and update following Tab
-		$noteBook_top select $noteBook_top.cv_Custom02
-				
-			# --- 	return
-		return $noteBook_top
-	
+				# --- 	bind event Control-Tab and Shift-Control-Tab
+			ttk::notebook::enableTraversal $noteBook_top
+			
+				# --- 	select and update following Tab
+			$noteBook_top select $noteBook_top.cv_Custom02
+					
+				# --- 	return
+			return $noteBook_top
 	}
 
 
@@ -218,34 +217,55 @@
 	}
 
 	
+	
 	#-------------------------------------------------------------------------
 		#  fill cv_Custom01   
 		#
-	proc fill_canvasCAD {varName} {
-		variable noteBook_top
-		switch -exact -- $varName {
-			cv_Custom00 -
-			cv_Custom01 -
-			cv_Custom02 -
-			cv_Custom03 -
-			cv_Custom04 -
-			cv_Custom05 -
-			cv_Custom06 {
-					$noteBook_top select $noteBook_top.$varName
-					cv_custom::update 	lib_gui::$varName 
-				}
-			cv_Component {
-					::update
-					lib_gui::notebook_refitCanvas
-					lib_comp_library::updateCanvas
-				}
-			cv_Library {
-					::update
-					lib_gui::notebook_refitCanvas
-					lib_config::updateCanvas
-				}
+	proc current_canvasCAD {} {
+			variable noteBook_top		
+			set current_cv [$noteBook_top select]
+				# puts "        current canvasCAD: $current_cv"
+			set varName "lib_gui::[lindex [split $current_cv .] end]"
+				# puts "        -> $varName"
+			return $varName
+	}
+	#-------------------------------------------------------------------------
+		#  fill cv_Custom01   
+		#
+	proc fill_canvasCAD {{varName {}}} {
+			variable noteBook_top
 			
-		}
+			if {$varName == {}} {
+				set current_cv [$noteBook_top select]
+				puts "        current canvasCAD: $current_cv"
+				set varName [lindex [split $current_cv .] end]
+				puts "        -> $varName"
+				# return
+			}
+			
+			switch -exact -- $varName {
+				cv_Custom00 -
+				cv_Custom01 -
+				cv_Custom02 -
+				cv_Custom03 -
+				cv_Custom04 -
+				cv_Custom05 -
+				cv_Custom06 {
+						$noteBook_top select $noteBook_top.$varName
+						cv_custom::update 	lib_gui::$varName 
+					}
+				cv_Component {
+						::update
+						lib_gui::notebook_refitCanvas
+						lib_comp_library::updateCanvas
+					}
+				cv_Library {
+						::update
+						lib_gui::notebook_refitCanvas
+						lib_config::updateCanvas
+					}
+				
+			}
 	}
 
 	
@@ -253,14 +273,14 @@
        #  get notebook window    
        #
 	proc notebook_getWidget {varName} {
-		variable notebookCanvas
-		
-		foreach index [array names notebookCanvas] {
-			if {$index == $varName} {
-				  # puts "$index $notebookCanvas($index) "
-				return $notebookCanvas($index)
+			variable notebookCanvas
+			
+			foreach index [array names notebookCanvas] {
+				if {$index == $varName} {
+					  # puts "$index $notebookCanvas($index) "
+					return $notebookCanvas($index)
+				}
 			}
-		}
 	}
 
 	
@@ -268,29 +288,27 @@
        #  get notebook window    
        #
 	proc notebook_getVarName {tabID} {
-			# tabID:  	[$noteBook_top select]
-			#			.mainframe.frame.f2.nb.cv_Custom02
-		variable notebookCanvas
-		variable external_canvasCAD
+				# tabID:  	[$noteBook_top select]
+				#			.mainframe.frame.f2.nb.cv_Custom02
+			variable notebookCanvas
+			variable external_canvasCAD
 
-			# -- lib_gui::notebookCanvas
-		set cvID $tabID.cvCAD
-		foreach varName [array names notebookCanvas] {
-				# puts "          -> $varName $notebookCanvas($varName) "
-			if {$notebookCanvas($varName) == $cvID} {
-				return [namespace current]::$varName
+				# -- lib_gui::notebookCanvas
+			set cvID $tabID.cvCAD
+			foreach varName [array names notebookCanvas] {
+					# puts "          -> $varName $notebookCanvas($varName) "
+				if {$notebookCanvas($varName) == $cvID} {
+					return [namespace current]::$varName
+				}
 			}
-		}
-			# -- lib_gui::external_canvasCAD
-		foreach varName [array names external_canvasCAD] {
-			     puts "          -> equal?: $varName  -> $external_canvasCAD($varName) "
-				 puts "                 vs. $tabID   "
-			if {$varName == $tabID} {
-				return $external_canvasCAD($varName)
+				# -- lib_gui::external_canvasCAD
+			foreach varName [array names external_canvasCAD] {
+					 puts "          -> equal?: $varName  -> $external_canvasCAD($varName) "
+					 puts "                 vs. $tabID   "
+				if {$varName == $tabID} {
+					return $external_canvasCAD($varName)
+				}
 			}
-		}
-		
-		
 	}
 
 	
@@ -298,10 +316,10 @@
        #  register external canvasCAD-Widgets
        #
 	 proc register_external_canvasCAD {tabID cvID} {
-		variable external_canvasCAD
-		set external_canvasCAD($tabID) $cvID	
-		puts "\n            register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
-		puts   "                                         [$cvID getNodeAttr Canvas path]"
+			variable external_canvasCAD
+			set external_canvasCAD($tabID) $cvID	
+			puts "\n            register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
+			puts   "                                         [$cvID getNodeAttr Canvas path]"
 	 }
 	   
 	   
@@ -311,17 +329,17 @@
        #  refit notebookCanvas in current notebook-Tab  
        #
 	proc notebook_refitCanvas {} {
-		variable noteBook_top
+			variable noteBook_top
 
-		set currentTab [$noteBook_top select]
-		set varName    [notebook_getVarName $currentTab]
-			 puts "  notebook_refitCanvas: varName: $varName"
-		if { $varName == {} } {
-				puts "     notebook_refitCanvas::varName: $varName ... undefined"
-				return
-		}
-		  # tk_messageBox -message "currentTab: $currentTab   /  varName  $varName"
-		$varName refitStage
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
+				 puts "  notebook_refitCanvas: varName: $varName"
+			if { $varName == {} } {
+					puts "     notebook_refitCanvas::varName: $varName ... undefined"
+					return
+			}
+			  # tk_messageBox -message "currentTab: $currentTab   /  varName  $varName"
+			$varName refitStage
 	}
 
 	
@@ -329,20 +347,20 @@
        #  scale canvasCAD in current notebook-Tab  
        #
 	proc notebook_scaleCanvas {value} {
-		variable noteBook_top
+			variable noteBook_top
 
-		set currentTab [$noteBook_top select]
-		set varName    [notebook_getVarName $currentTab]
-			# puts "   varName: $varName"
-		if { $varName == {} } {
-				puts "   notebook_scaleCanvas::varName: $varName"
-				return
-		}
-		set curScale  [ eval $varName getNodeAttr Canvas scale ]
-		set newScale  [ format "%.4f" [ expr $value * $curScale * 1.0 ] ]
-		  # puts "   $curScale"
-		  # tk_messageBox -message "curScale: $curScale  /  newScale  $newScale "
-		$varName scaleToCenter $newScale
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
+				# puts "   varName: $varName"
+			if { $varName == {} } {
+					puts "   notebook_scaleCanvas::varName: $varName"
+					return
+			}
+			set curScale  [ eval $varName getNodeAttr Canvas scale ]
+			set newScale  [ format "%.4f" [ expr $value * $curScale * 1.0 ] ]
+			  # puts "   $curScale"
+			  # tk_messageBox -message "curScale: $curScale  /  newScale  $newScale "
+			$varName scaleToCenter $newScale
 	}
 
 	
@@ -350,41 +368,40 @@
        #  update canvasCAD in current notebook-Tab  
        #
 	proc notebook_updateCanvas {{mode {}}} {
-		variable noteBook_top
-		variable canvasUpdate
-				
-		set currentTab 				[$noteBook_top select]
-		set varName    				[notebook_getVarName $currentTab]
-		set varName    				[lindex [split $varName {::}] end]
+			variable noteBook_top
+			variable canvasUpdate
+					
+			set currentTab 				[$noteBook_top select]
+			set varName    				[notebook_getVarName $currentTab]
+			set varName    				[lindex [split $varName {::}] end]
 
-		
-		if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
-			set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
-		}
-		
-		set timeStart 	[clock milliseconds]
+			
+			if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
+				set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
+			}
+			
+			set timeStart 	[clock milliseconds]
 
-		# puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Env(canvasCAD_Update)\n"
-		if { $mode == {} } {
-				if { $canvasUpdate($varName) < $::APPL_Env(canvasCAD_Update) } {
-					puts "\n       ... notebook_updateCanvas ... update $varName\n"
-					fill_canvasCAD $varName
-					set canvasUpdate($varName) [ clock milliseconds ]
-				} else {
-					puts "\n       ... notebook_updateCanvas ... update $varName not required\n"
-				}
-		} else {
-					puts "\n       ... notebook_updateCanvas ... update $varName .. force\n"
-					fill_canvasCAD $varName
-		}
-		
-		set timeEnd 	[clock milliseconds]
-		set timeDiff	[expr $timeEnd - $timeStart]
-		
-		puts "\n     ... time to update:"
-		puts   "          ... [format "%9.3f" $timeDiff] milliseconds"
-		puts   "          ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
-
+			# puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Env(canvasCAD_Update)\n"
+			if { $mode == {} } {
+					if { $canvasUpdate($varName) < $::APPL_Env(canvasCAD_Update) } {
+						puts "\n       ... notebook_updateCanvas ... update $varName\n"
+						fill_canvasCAD $varName
+						set canvasUpdate($varName) [ clock milliseconds ]
+					} else {
+						puts "\n       ... notebook_updateCanvas ... update $varName not required\n"
+					}
+			} else {
+						puts "\n       ... notebook_updateCanvas ... update $varName .. force\n"
+						fill_canvasCAD $varName
+			}
+			
+			set timeEnd 	[clock milliseconds]
+			set timeDiff	[expr $timeEnd - $timeStart]
+			
+			puts "\n     ... time to update:"
+			puts   "          ... [format "%9.3f" $timeDiff] milliseconds"
+			puts   "          ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
 	}
 
 	
@@ -392,15 +409,15 @@
        #  clean canvasCAD in current notebook-Tab  
        #
 	proc notebook_cleanCanvas {} {
-		variable noteBook_top
+			variable noteBook_top
 
-		set currentTab [$noteBook_top select]
-		set varName    [notebook_getVarName $currentTab]
-		if { $varName == {} } {
-				puts "   notebook_cleanCanvas::varName: $varName"
-				return
-		}
-		$varName clean_StageContent
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
+			if { $varName == {} } {
+					puts "   notebook_cleanCanvas::varName: $varName"
+					return
+			}
+			$varName clean_StageContent
 	}
 
 	
@@ -408,53 +425,52 @@
        #  print canvasCAD from current notebook-Tab  
        #
 	proc notebook_printCanvas {printDir} {
-		variable noteBook_top
-		
-			## -- read from domConfig
-		set domConfig $::APPL_Env(root_ProjectDOM)
-
-			# --- get currentTab
-		set currentTab 	[ $noteBook_top select ]
-		set cv_Name    	[ notebook_getVarName $currentTab]
-		if { $cv_Name == {} } {
-				puts "   notebook_printCanvas::cv_Name: $cv_Name"
-				return
-		}
-
-			# --- set printFile
-		set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
-		set fileName 	[winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ]]
-		set printFile	[file join $printDir $fileName]
-		
-			# --- get stageScale
-		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
-		set scaleFactor	[ expr round([ expr 1 / $stageScale ]) ]
-
-			# --- set timeStamp
-		set timeString 	[ format "printed: %s" [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ] ]
-		set textPos		[ vectormath::scalePointList {0 0} {10 7} $scaleFactor ]
-		set timeStamp	[ $cv_Name create draftText $textPos  -text $timeString -size 2.5 -anchor sw ]
+			variable noteBook_top
 			
-			# --- print content to File
-		puts "    ------------------------------------------------"
-		puts "      print  $printFile \n"
-		puts "      notebook_exportSVG   $currentTab "
-		puts "             currentTabp-Parent  [winfo parent $currentTab]  "
-		puts "             currentTabp-Parent  [winfo name   $currentTab]  "
-		puts "             canvasCAD Object    $cv_Name  "
-		
-			# $cv_Name print $printFile
-		set printFile [$cv_Name print $printFile]
+				## -- read from domConfig
+			# remove 3.2.70 ;# set domConfig $::APPL_Env(root_ProjectDOM)
+
+				# --- get currentTab
+			set currentTab 	[ $noteBook_top select ]
+			set cv_Name    	[ notebook_getVarName $currentTab]
+			if { $cv_Name == {} } {
+					puts "   notebook_printCanvas::cv_Name: $cv_Name"
+					return
+			}
+
+				# --- set printFile
+			set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
+			set fileName 	[winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ]]
+			set printFile	[file join $printDir $fileName]
 			
-			# --- delete timeStamp
-		catch [ $cv_Name delete $timeStamp ]
-							
-		
-		puts "    ------------------------------------------------"
-		puts "      ... open $printFile "
-		
-		lib_file::openFile_byExtension $printFile				
+				# --- get stageScale
+			set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
+			set scaleFactor	[ expr round([ expr 1 / $stageScale ]) ]
+
+				# --- set timeStamp
+			set timeString 	[ format "printed: %s" [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ] ]
+			set textPos		[ vectormath::scalePointList {0 0} {10 7} $scaleFactor ]
+			set timeStamp	[ $cv_Name create draftText $textPos  -text $timeString -size 2.5 -anchor sw ]
 				
+				# --- print content to File
+			puts "    ------------------------------------------------"
+			puts "      print  $printFile \n"
+			puts "      notebook_exportSVG   $currentTab "
+			puts "             currentTabp-Parent  [winfo parent $currentTab]  "
+			puts "             currentTabp-Parent  [winfo name   $currentTab]  "
+			puts "             canvasCAD Object    $cv_Name  "
+			
+				# $cv_Name print $printFile
+			set printFile [$cv_Name print $printFile]
+				
+				# --- delete timeStamp
+			catch [ $cv_Name delete $timeStamp ]
+								
+			
+			puts "    ------------------------------------------------"
+			puts "      ... open $printFile "
+			
+			lib_file::openFile_byExtension $printFile							
 	}
 
 
@@ -462,40 +478,39 @@
        #  export canvasCAD from current notebook-Tab as SVG Graphic
        #
 	proc notebook_exportSVG {printDir} {
-		variable noteBook_top
-		
-			## -- read from domConfig
-		set domConfig $::APPL_Env(root_ProjectDOM)
+			variable noteBook_top
+			
+				## -- read from domConfig
+			# remove 3.2.70 ;# set domConfig $::APPL_Env(root_ProjectDOM)
 
-			# --- get currentTab
-		set currentTab 	[ $noteBook_top select ]
-		set cv_Name    	[ notebook_getVarName $currentTab]
-		if { $cv_Name == {} } {
-				puts "   notebook_printCanvas::cv_Name: $cv_Name"
-				return
-		}
-		
-			# --- set exportFile
-		set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
-		set fileName 	[winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ]]
-		set exportFile	[file join $printDir ${fileName}.svg]
-			# set exportFile [ file join $printDir [winfo name   $currentTab].svg ]
+				# --- get currentTab
+			set currentTab 	[ $noteBook_top select ]
+			set cv_Name    	[ notebook_getVarName $currentTab]
+			if { $cv_Name == {} } {
+					puts "   notebook_printCanvas::cv_Name: $cv_Name"
+					return
+			}
+			
+				# --- set exportFile
+			set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
+			set fileName 	[winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ]]
+			set exportFile	[file join $printDir ${fileName}.svg]
+				# set exportFile [ file join $printDir [winfo name   $currentTab].svg ]
 
-			# --- export content to File
-		puts "    ------------------------------------------------"
-		puts "      export SVG - Content to    $exportFile \n"
-		puts "      notebook_exportSVG   $currentTab "
-		puts "             currentTabp-Parent  [winfo parent $currentTab]  "
-		puts "             currentTabp-Parent  [winfo name   $currentTab]  "
-		puts "             canvasCAD Object    $cv_Name  "
-		
-		set exportFile [$cv_Name exportSVG $exportFile]
-		
-		puts "    ------------------------------------------------"
-		puts "      ... open $exportFile "
-		
-		lib_file::openFile_byExtension $exportFile .htm
-
+				# --- export content to File
+			puts "    ------------------------------------------------"
+			puts "      export SVG - Content to    $exportFile \n"
+			puts "      notebook_exportSVG   $currentTab "
+			puts "             currentTabp-Parent  [winfo parent $currentTab]  "
+			puts "             currentTabp-Parent  [winfo name   $currentTab]  "
+			puts "             canvasCAD Object    $cv_Name  "
+			
+			set exportFile [$cv_Name exportSVG $exportFile]
+			
+			puts "    ------------------------------------------------"
+			puts "      ... open $exportFile "
+			
+			lib_file::openFile_byExtension $exportFile .htm
 	}
 
 
@@ -504,41 +519,41 @@
        #
 	proc notebook_createButton {nb_Canvas cv_Button	{type {default}}} {
 			
-		# puts " createButton_Reference2Custom:  $cv_Name"
-		set cv_Name 	[lindex [split $nb_Canvas :] end]
-		set cv  	[lib_gui::notebook_getWidget  $cv_Name]
-			
-		case $cv_Button {
-				Reference2Custom {
-							# -- create a Button to execute geometry_reference2personal
-							catch { destroy $cv.button_R2C }
-							catch {	button  $cv.button_R2C \
-											-text "copy settings to Base Geometry" \
-											-command lib_gui::geometry_reference2personal								
-									$cv create window 7 19 \
-											-window $cv.button_R2C \
-											-anchor w \
-											-tags __Button__R2C__
+			# puts " createButton_Reference2Custom:  $cv_Name"
+			set cv_Name 	[lindex [split $nb_Canvas :] end]
+			set cv  	[lib_gui::notebook_getWidget  $cv_Name]
+				
+			case $cv_Button {
+					Reference2Custom {
+								# -- create a Button to execute geometry_reference2personal
+								catch { destroy $cv.button_R2C }
+								catch {	button  $cv.button_R2C \
+												-text "copy settings to Base Geometry" \
+												-command lib_gui::geometry_reference2personal								
+										$cv create window 7 19 \
+												-window $cv.button_R2C \
+												-anchor w \
+												-tags __Button__R2C__
+								}
 							}
-						}
-				changeFormatScale {
-							if {$type != {default}} {
-								set buttonText "Format"
-							} else {
-								set buttonText "Format & Scale"
+					changeFormatScale {
+								if {$type != {default}} {
+									set buttonText "Format"
+								} else {
+									set buttonText "Format & Scale"
+								}
+								# -- create a Button to change Format and Scale of Stage
+								catch { destroy $cv.button_FormatScale }
+								catch {	button  $cv.button_FormatScale \
+												-text $buttonText \
+												-command [format {lib_gui::change_FormatScale %s %s} $cv $type]								
+										$cv create window 7 19 \
+												-window $cv.button_FormatScale \
+												-anchor w \
+												-tags __Button__Format_Scale__
+								}
 							}
-							# -- create a Button to change Format and Scale of Stage
-							catch { destroy $cv.button_FormatScale }
-							catch {	button  $cv.button_FormatScale \
-											-text $buttonText \
-											-command [format {lib_gui::change_FormatScale %s %s} $cv $type]								
-									$cv create window 7 19 \
-											-window $cv.button_FormatScale \
-											-anchor w \
-											-tags __Button__Format_Scale__
-							}
-						}
-		}
+			}
 	}
 
 
@@ -547,16 +562,16 @@
        #
 	proc geometry_reference2personal {} {
 		
-		set answer	[tk_messageBox -icon question -type okcancel -title "Reference to Personal" -default cancel\
-									-message "Do you really wants to overwrite your \"Personal\" parameter \n with \"Reference\" settings" ]
-			#tk_messageBox -message "$answer"	
-			
-		switch $answer {
-			cancel	return				
-			ok		{	frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Env(root_ProjectDOM)
-						lib_gui::fill_canvasCAD cv_Custom00 
-					}
-		}
+			set answer	[tk_messageBox -icon question -type okcancel -title "Reference to Personal" -default cancel\
+										-message "Do you really wants to overwrite your \"Personal\" parameter \n with \"Reference\" settings" ]
+				#tk_messageBox -message "$answer"	
+				
+			switch $answer {
+				cancel	return				
+				ok		{	frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Env(root_ProjectDOM)
+							lib_gui::fill_canvasCAD cv_Custom00 
+						}
+			}
 	}
 
 
@@ -565,66 +580,65 @@
        #
 	proc change_FormatScale {cv {type {default}}}  {
 	
-		set cv_Name [lindex [split $cv .] end-1]
-		
-			# puts "  change_FormatScale:  cv: $cv"
-			# puts "  change_FormatScale:  cv_Name: $cv_Name"
-		
-		set 	lib_gui::stageFormat	A4
-		set 	lib_gui::stageScale		0.20		
-		
-		if {[ $cv find withtag __Select__Format_Scale__ ] == {} } {
-				catch 	{	set baseFrame [frame .f_format_$cv_Name  -relief raised -border 1]
-							$cv create window 27 35 \
-									-window $baseFrame \
-									-anchor nw \
-									-tags __Select__Format_Scale__
-							frame $baseFrame.select
-							pack  $baseFrame.select
-									
-						}
-		} else {
-				$cv delete 	__Select__Format_Scale__
-				$cv dtag 	__Select__Format_Scale__
-				destroy		.f_format_$cv_Name
-				#$cv.f_format destroy
-				return
-		}
-		
-		
-		set f_DIN_Format	[frame $baseFrame.select.din_Format]
-				radiobutton $f_DIN_Format.a4 -text A4 -value A4	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-				radiobutton $f_DIN_Format.a3 -text A3 -value A3 -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-				radiobutton $f_DIN_Format.a2 -text A2 -value A2	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-				radiobutton $f_DIN_Format.a1 -text A1 -value A1	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-				radiobutton $f_DIN_Format.a0 -text A0 -value A0	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-			pack $f_DIN_Format.a4 \
-				 $f_DIN_Format.a3 \
-				 $f_DIN_Format.a2 \
-				 $f_DIN_Format.a1 \
-				 $f_DIN_Format.a0
-		
-		set f_Scale		[frame $baseFrame.select.scale]
-		if {$type == {default}} {
-				radiobutton $f_Scale.s020 -text "1:5  " 	-value 0.20 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-				radiobutton $f_Scale.s025 -text "1:4  " 	-value 0.25 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-				radiobutton $f_Scale.s033 -text "1:3  " 	-value 0.33 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-				radiobutton $f_Scale.s040 -text "1:2,5" 	-value 0.40 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-				radiobutton $f_Scale.s050 -text "1:2  " 	-value 0.50 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-				radiobutton $f_Scale.s100 -text "1:1  " 	-value 1.00 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-			pack $f_Scale.s020 \
-				 $f_Scale.s025 \
-				 $f_Scale.s040 \
-				 $f_Scale.s050 \
-				 $f_Scale.s100
-		}
-		pack $f_DIN_Format $f_Scale -side left
-		
-		button 	$baseFrame.update \
-					-text "update" \
-					-command {lib_gui::notebook_formatCanvas  $lib_gui::stageFormat  $lib_gui::stageScale}
-		pack $baseFrame.update -expand yes -fill x
+			set cv_Name [lindex [split $cv .] end-1]
 			
+				# puts "  change_FormatScale:  cv: $cv"
+				# puts "  change_FormatScale:  cv_Name: $cv_Name"
+			
+			set 	lib_gui::stageFormat	A4
+			set 	lib_gui::stageScale		0.20		
+			
+			if {[ $cv find withtag __Select__Format_Scale__ ] == {} } {
+					catch 	{	set baseFrame [frame .f_format_$cv_Name  -relief raised -border 1]
+								$cv create window 27 35 \
+										-window $baseFrame \
+										-anchor nw \
+										-tags __Select__Format_Scale__
+								frame $baseFrame.select
+								pack  $baseFrame.select
+										
+							}
+			} else {
+					$cv delete 	__Select__Format_Scale__
+					$cv dtag 	__Select__Format_Scale__
+					destroy		.f_format_$cv_Name
+					#$cv.f_format destroy
+					return
+			}
+			
+			
+			set f_DIN_Format	[frame $baseFrame.select.din_Format]
+					radiobutton $f_DIN_Format.a4 -text A4 -value A4	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+					radiobutton $f_DIN_Format.a3 -text A3 -value A3 -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+					radiobutton $f_DIN_Format.a2 -text A2 -value A2	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+					radiobutton $f_DIN_Format.a1 -text A1 -value A1	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+					radiobutton $f_DIN_Format.a0 -text A0 -value A0	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+				pack $f_DIN_Format.a4 \
+					 $f_DIN_Format.a3 \
+					 $f_DIN_Format.a2 \
+					 $f_DIN_Format.a1 \
+					 $f_DIN_Format.a0
+			
+			set f_Scale		[frame $baseFrame.select.scale]
+			if {$type == {default}} {
+					radiobutton $f_Scale.s020 -text "1:5  " 	-value 0.20 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Scale.s025 -text "1:4  " 	-value 0.25 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Scale.s033 -text "1:3  " 	-value 0.33 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Scale.s040 -text "1:2,5" 	-value 0.40 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Scale.s050 -text "1:2  " 	-value 0.50 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Scale.s100 -text "1:1  " 	-value 1.00 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+				pack $f_Scale.s020 \
+					 $f_Scale.s025 \
+					 $f_Scale.s040 \
+					 $f_Scale.s050 \
+					 $f_Scale.s100
+			}
+			pack $f_DIN_Format $f_Scale -side left
+			
+			button 	$baseFrame.update \
+						-text "update" \
+						-command {lib_gui::notebook_formatCanvas  $lib_gui::stageFormat  $lib_gui::stageScale}
+			pack $baseFrame.update -expand yes -fill x			
 	}
 
 
@@ -633,65 +647,63 @@
        #  change Rendering Settings 
        #
 	proc set_RenderingSettings  {{type {}}}  {
-		variable noteBook_top
+			variable noteBook_top
 
-		set currentTab [$noteBook_top select]
-		set varName    [notebook_getVarName $currentTab]
-		set cv_Name    [notebook_getWidget  $varName]
-			# puts "  notebook_refitCanvas: varName: $varName"
-		if { $varName == {} } {
-				puts "     notebook_refitCanvas::varName: $varName ... undefined"
-				return
-		}
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
+			set cv_Name    [notebook_getWidget  $varName]
+				# puts "  notebook_refitCanvas: varName: $varName"
+			if { $varName == {} } {
+					puts "     notebook_refitCanvas::varName: $varName ... undefined"
+					return
+			}
+			
+				# puts "   ... $type"
+				# puts "   ... $currentTab"
+				# puts "   ... $varName"
+				# puts "   ... $cv_Name"
 		
-			# puts "   ... $type"
-			# puts "   ... $currentTab"
-			# puts "   ... $varName"
-			# puts "   ... $cv_Name"
-	
-		switch $type {
-				Fork	{ set listDefinition list://Rendering/Fork@render_list_ForkTypes }
-				Brake	{ set listDefinition list://Rendering/Brake/Front@render_list_BrakeTypes }
-				default { set listDefinition {	list://Rendering/Fork@render_list_ForkTypes
-												list://Rendering/Brake/Front@render_list_BrakeTypes
-												list://Rendering/Brake/Rear@render_list_BrakeTypes
-												list://Rendering/BottleCage/SeatTube@render_list_BottleCage
-												list://Rendering/BottleCage/DownTube@render_list_BottleCage
-												list://Rendering/BottleCage/DownTube_Lower@render_list_BottleCage}
-						}
-		}
-		
-		frame_geometry::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}
-				
+			switch $type {
+					Fork	{ set listDefinition list://Rendering/Fork@SELECT_ForkTypes }
+					Brake	{ set listDefinition list://Rendering/Brake/Front@SELECT_BrakeTypes }
+					default { set listDefinition {	list://Rendering/Fork@SELECT_ForkTypes
+													list://Rendering/Brake/Front@SELECT_BrakeTypes
+													list://Rendering/Brake/Rear@SELECT_BrakeTypes
+													list://Rendering/BottleCage/SeatTube@SELECT_BottleCage
+													list://Rendering/BottleCage/DownTube@SELECT_BottleCage
+													list://Rendering/BottleCage/DownTube_Lower@SELECT_BottleCage}
+							}
+			}
+			
+			frame_geometry::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}				
 	}
 	
 	#-------------------------------------------------------------------------
        #  change canvasCAD Format and Scale
        #
 	proc notebook_formatCanvas {stageFormat stageScale} {
-		variable canvasUpdate
-		variable noteBook_top
+			variable canvasUpdate
+			variable noteBook_top
 
-			# puts "\n=================="
-			# puts "    stageFormat $stageFormat"
-			# puts "    stageScale  $stageScale"
-			# puts "=================="
-				
-		set currentTab [$noteBook_top select]
-		set varName    [notebook_getVarName $currentTab]
+				# puts "\n=================="
+				# puts "    stageFormat $stageFormat"
+				# puts "    stageScale  $stageScale"
+				# puts "=================="
+					
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
 
-			# puts "   varName: $varName"
-		if { $varName == {} } {
-				puts "   notebook_refitCanvas::varName: $varName"
-				return
-		}
-						
-		$varName formatCanvas $stageFormat $stageScale
-		set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
-		notebook_updateCanvas force
-		notebook_refitCanvas
-		notebook_updateCanvas force
-
+				# puts "   varName: $varName"
+			if { $varName == {} } {
+					puts "   notebook_refitCanvas::varName: $varName"
+					return
+			}
+							
+			$varName formatCanvas $stageFormat $stageScale
+			set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
+			notebook_updateCanvas force
+			notebook_refitCanvas
+			notebook_updateCanvas force
 	}
 
 	
@@ -699,27 +711,27 @@
        #  load Template from File
        #
 	proc load_Template {type} {
-		variable canvasUpdate
-		variable noteBook_top
+			variable canvasUpdate
+			variable noteBook_top
 
-		lib_file::openTemplate_xml $type
-		return
-		
-		set userTemplateFile	[format "%s%s.xml" $::APPL_Env(USER_InitString) $type]
-		set userTemplateFile	[file join $::APPL_Env(USER_Dir)	$userTemplateFile]
-		if {[file exists $userTemplateFile ]} {
-			lib_file::openProject_xml "Template $type" $userTemplateFile
-		}
-		return
-		
-		switch $type {
-				Road {	set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad) ] }
-				MTB  {	set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB) ] }
-				
-				default { return }
-		}		
-		lib_file::openTemplate_xml "Template $type" $template_File
-		return
+			lib_file::openTemplate_xml $type
+			return
+			
+			set userTemplateFile	[format "%s%s.xml" $::APPL_Env(USER_InitString) $type]
+			set userTemplateFile	[file join $::APPL_Env(USER_Dir)	$userTemplateFile]
+			if {[file exists $userTemplateFile ]} {
+				lib_file::openProject_xml "Template $type" $userTemplateFile
+			}
+			return
+			
+			switch $type {
+					Road {	set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad_default) ] }
+					MTB  {	set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB_default) ] }
+					
+					default { return }
+			}		
+			lib_file::openTemplate_xml "Template $type" $template_File
+			return
 	}
 
 	#-------------------------------------------------------------------------
