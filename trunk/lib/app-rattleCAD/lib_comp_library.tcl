@@ -227,7 +227,7 @@
 	#-------------------------------------------------------------------------
        #  update Canvas
        #
-	proc updateCanvas {{entryVar ""} {value {0}}} {
+	proc updateCanvas {{entryVar ""} {value {0}} {drag_Event {}}} {
 			variable compCanvas
 			variable compFile
 			variable configValue

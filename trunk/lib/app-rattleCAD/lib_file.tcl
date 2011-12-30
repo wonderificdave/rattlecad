@@ -260,12 +260,18 @@
 			}
 				
 				# -- read from domConfig
-			set domConfig  [ lib_file::openFile_xml 	[file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad) ] ]
+			set domConfig  [ lib_file::openFile_xml 	[file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad_default) ] ]
+					# 20111229 ...
 					
 				# --- set xml-File Attributes
 			[ $domConfig selectNodes /root/Project/Name/text()  			] 	nodeValue 	[ file tail $fileName ]
 			[ $domConfig selectNodes /root/Project/modified/text() 			] 	nodeValue 	[ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
 			[ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ] 	nodeValue 	"$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+			
+			# maybe new
+				set project::Project(Name)				[ file tail $fileName ]
+				set project::Project(modified) 			[ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+				set project::Project(rattleCADVersion)  "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
 
 				# -- open File for writing
 			set fp [open $fileName w]
@@ -358,7 +364,7 @@
 				puts "       ... saveProject_xml - initialFile:     \"$initialFile\""			
 
 				# -- read from domConfig
-			set domConfig $::APPL_Env(root_ProjectDOM)
+				# set domConfig $::APPL_Env(root_ProjectDOM)
 			
 			switch $mode {
 				{save}		{
@@ -377,7 +383,9 @@
 								}
 								
 									# --- set xml-File Attributes
-								[ $domConfig selectNodes /root/Project/Name/text()  			] 	nodeValue 	[ file tail $fileName ]
+								set project::Project(Name) 	[ file tail $fileName ]
+									# [ $domConfig selectNodes /root/Project/Name/text()  			] 	nodeValue 	[ file tail $fileName ]
+								
 								
 									# --- set window Title
 								set windowTitle	$fileName								
@@ -385,12 +393,16 @@
 				default 	{	return}
 			}
 			
+				# --- set xml-File Attributes
+			set project::Project(modified) 			[ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+			set project::Project(rattleCADVersion) 	"$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+				# [ $domConfig selectNodes /root/Project/modified/text() 			] 	nodeValue 	[ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+				# [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ] 	nodeValue 	"$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+			
 				# -- read from domConfig
+			project::runTime_2_dom $::APPL_Env(root_ProjectDOM)
 			set domConfig $::APPL_Env(root_ProjectDOM)
 
-				# --- set xml-File Attributes
-			[ $domConfig selectNodes /root/Project/modified/text() 			] 	nodeValue 	[ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-			[ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ] 	nodeValue 	"$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
 
 				# -- open File for writing
 			set fp [open $fileName w]
@@ -401,7 +413,7 @@
 				
 			
 				#
-			set ::APPL_Env(root_ProjectDOM) $domConfig
+				# set ::APPL_Env(root_ProjectDOM) $domConfig
 				#
 			frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
 				# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -438,14 +450,14 @@
 			if { [file readable $fileName ] } {
 					set ::APPL_Env(root_ProjectDOM)	[lib_file::openFile_xml $fileName show]
 						#
-					lib_project::check_ProjectVersion {3.1}
-						# lib_project::check_ProjectVersion {3.2.20}
-					lib_project::check_ProjectVersion {3.2.22}
-					lib_project::check_ProjectVersion {3.2.23}
-					lib_project::check_ProjectVersion {3.2.28}
-					lib_project::check_ProjectVersion {3.2.32}
-					lib_project::check_ProjectVersion {3.2.40}
-					lib_project::check_ProjectVersion {3.2.63}
+					project::check_ProjectVersion {3.1}
+						# project::check_ProjectVersion {3.2.20}
+					project::check_ProjectVersion {3.2.22}
+					project::check_ProjectVersion {3.2.23}
+					project::check_ProjectVersion {3.2.28}
+					project::check_ProjectVersion {3.2.32}
+					project::check_ProjectVersion {3.2.40}
+					project::check_ProjectVersion {3.2.63}
 					
 						#
 					frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
@@ -622,15 +634,16 @@
 	#-------------------------------------------------------------------------
 		# component alternatives
 		# 
-	proc get_componentAlternatives {xPath} {
+	proc get_componentAlternatives {key} {
 	
-			set directory	[lindex [array get ::APPL_CompLocation $xPath ] 1 ]
+			set directory	[lindex [array get ::APPL_CompLocation $key ] 1 ]
 						# puts "     ... directory  $directory"
 			if {$directory == {}} {
 						# tk_messageBox -message "no directory"
 				puts "    -- <E> -------------------------------"
 				puts "         ... no directory configured for"
-				puts "               $xPath"
+				puts "               $key"
+					# parray ::APPL_CompLocation
 				puts "    -- <E> -------------------------------"
 				return {}
 			}
@@ -656,8 +669,8 @@
 			
 				# ------------------------
 				#	 some components are not neccessary at all
-			switch -exact $xPath {
-					Component/Derailleur/File  {
+			switch -exact $key {
+					Component(Derailleur/File)  {
 							set listAlternative [lappend listAlternative {etc:default_blank.svg} ]
 					}
 			}

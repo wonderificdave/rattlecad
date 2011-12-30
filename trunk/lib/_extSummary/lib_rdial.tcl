@@ -62,7 +62,8 @@
      array set def {
          background "#dfdfdf"
          foreground "black"
-         callback "" orient horizontal 
+         callback "" 
+		 orient horizontal 
          width 80 height  8
          step  10 value 0.0
          slow 0.1 fast 10
@@ -196,9 +197,11 @@
          set opt(value,$w) $val
      }
      
-     proc drag {w coord {mode 0}} {
+     proc drag {w coord drag_Event {mode 0}} {
          variable opt
          variable ovalue
+		 
+		 # puts "   -> drag %k:  $drag_Event"
  
          # calculate new value
          if {$opt(orient,$w) eq "horizontal"} {
@@ -215,7 +218,7 @@
              
          # call callback if defined...
          if {$opt(callback,$w) ne ""} {
-             {*}$opt(callback,$w) $opt(value,$w)
+             {*}$opt(callback,$w) $opt(value,$w) $drag_Event 
          }
              # {*}$opt(callback,$w) [expr {$opt(value,$w)*$opt(scale,$w)}]
  
@@ -274,31 +277,31 @@
          if {$opt(orient,$w) eq "horizontal"} {
              set canv($w) [canvas $w -width $wid -height $hgt]
              # standard bindings
-             bind $canv($w) <ButtonPress-1> [list set ${nsc}::ovalue(%W) %x]
-             bind $canv($w) <B1-Motion>       [list ${nsc}::drag %W %x]
-             bind $canv($w) <ButtonRelease-1> [list ${nsc}::drag %W %x]
+             bind $canv($w) <ButtonPress-1> 	[list set ${nsc}::ovalue(%W) %x]
+             bind $canv($w) <B1-Motion>       	[list ${nsc}::drag %W %x motion]
+             bind $canv($w) <ButtonRelease-1> 	[list ${nsc}::drag %W %x release]
              # fine movement
-             bind $canv($w) <Shift-ButtonPress-1> [list set ${nsc}::ovalue(%W) %x]
-             bind $canv($w) <Shift-B1-Motion>       [list ${nsc}::drag %W %x -1]
-             bind $canv($w) <Shift-ButtonRelease-1> [list ${nsc}::drag %W %x -1]
+             bind $canv($w) <Shift-ButtonPress-1> 	[list set ${nsc}::ovalue(%W) %x]
+             bind $canv($w) <Shift-B1-Motion>       [list ${nsc}::drag %W %x motion  -1]
+             bind $canv($w) <Shift-ButtonRelease-1> [list ${nsc}::drag %W %x release -1]
              # course movement
-             bind $canv($w) <Control-ButtonPress-1> [list set ${nsc}::ovalue(%W) %x]
-             bind $canv($w) <Control-B1-Motion>       [list ${nsc}::drag %W %x 1]
-             bind $canv($w) <Control-ButtonRelease-1> [list ${nsc}::drag %W %x 1]
+             bind $canv($w) <Control-ButtonPress-1> 	[list set ${nsc}::ovalue(%W) %x]
+             bind $canv($w) <Control-B1-Motion>       	[list ${nsc}::drag %W %x motion  1]
+             bind $canv($w) <Control-ButtonRelease-1> 	[list ${nsc}::drag %W %x release 1]
          } else {
              set canv($w) [canvas $w -width $hgt -height $wid]
              # standard bindings
              bind $canv($w) <ButtonPress-1> [list set ${nsc}::ovalue(%W) %y]
-             bind $canv($w) <B1-Motion>       [list ${nsc}::drag %W %y]
-             bind $canv($w) <ButtonRelease-1> [list ${nsc}::drag %W %y]
+             bind $canv($w) <B1-Motion>       [list ${nsc}::drag %W %y motion]
+             bind $canv($w) <ButtonRelease-1> [list ${nsc}::drag %W %y release]
              # fine movement
              bind $canv($w) <Shift-ButtonPress-1> [list set ${nsc}::ovalue(%W) %y]
-             bind $canv($w) <Shift-B1-Motion>       [list ${nsc}::drag %W %y -1]
-             bind $canv($w) <Shift-ButtonRelease-1> [list ${nsc}::drag %W %y -1]
+             bind $canv($w) <Shift-B1-Motion>       [list ${nsc}::drag %W %y motion  -1]
+             bind $canv($w) <Shift-ButtonRelease-1> [list ${nsc}::drag %W %y release -1]
              # course movement
              bind $canv($w) <Control-ButtonPress-1> [list set ${nsc}::ovalue(%W) %y]
-             bind $canv($w) <Control-B1-Motion>       [list ${nsc}::drag %W %y 1]
-             bind $canv($w) <Control-ButtonRelease-1> [list ${nsc}::drag %W %y 1]
+             bind $canv($w) <Control-B1-Motion>       [list ${nsc}::drag %W %y motion  1]
+             bind $canv($w) <Control-ButtonRelease-1> [list ${nsc}::drag %W %y release 1]
          }
              
          # draw insides

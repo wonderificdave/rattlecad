@@ -149,7 +149,5 @@
 			return [list [lindex $coordlist $index_x] [lindex $coordlist $index_y] ]
 	} 
 
-
- 
  }  
 

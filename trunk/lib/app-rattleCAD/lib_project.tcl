@@ -32,14 +32,139 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
  #
  # ---------------------------------------------------------------------------
- #	namespace:  rattleCAD::lib_project
+ #	namespace:  rattleCAD::project
  # ---------------------------------------------------------------------------
  #
  # 
 
- namespace eval lib_project {
+ namespace eval project {
 
-   
+ 
+	#-------------------------------------------------------------------------
+	proc get_xPath {node} {
+			variable xPath
+			set xPath "[$node nodeName]"
+			proc parentNode {node} {
+					variable xPath
+					#puts [$node nodeName]
+					set node [$node parent]
+					if {$node != {}} {
+							set xPath "[$node nodeName]/$xPath"
+							parentNode $node
+					}
+			}
+			parentNode $node
+			return "/$xPath"
+	}
+	#-------------------------------------------------------------------------
+	proc add_tracing {} {
+			trace add     variable [namespace current]::Personal 	write [namespace current]::trace_ProjectConfig
+			trace add     variable [namespace current]::Custom   	write [namespace current]::trace_ProjectConfig
+			trace add     variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
+			trace add     variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
+			trace add     variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
+	}
+	proc remove_tracing {} {
+			trace remove  variable [namespace current]::Personal 	write [namespace current]::trace_ProjectConfig
+			trace remove  variable [namespace current]::Custom   	write [namespace current]::trace_ProjectConfig
+			trace remove  variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
+			trace remove  variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
+			trace remove  variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
+	}
+	#-------------------------------------------------------------------------
+
+	proc trace_ProjectConfig {varname key operation} {
+			if {$key != ""} {
+					set varname ${varname}($key)
+					}
+			upvar $varname var
+			
+				puts ""
+				puts "   -------------------------------"
+				puts "    trace_ProjectConfig"
+				puts "       varname:         $var"
+				puts "       key:             $key"
+				puts "       operation:       $operation"
+			
+			frame_geometry::set_base_Parameters
+			cv_custom::update [lib_gui::current_canvasCAD]
+			return
+
+			#update
+			# cv_custom::update  lib_gui::cv_Custom02
+			catch {focus $cvEntry}
+			catch {$cvEntry selection range 0 end}
+	}	
+	#-------------------------------------------------------------------------
+	proc dom_2_runTime {projectDOM} {
+			
+			remove_tracing
+			
+			foreach branch [[$projectDOM selectNodes /root] childNodes] {
+					
+						# puts "  NodeType:  [$branch nodeType]"
+					if {[$branch nodeType] != {ELEMENT_NODE}} {
+							continue
+					}
+					set branch_Name 	[$branch nodeName]
+					set branch_xPath	[get_xPath $branch]
+					set myArray $branch_Name
+					array unset [namespace current]::$myArray
+					
+					foreach node [$branch getElementsByTagName *] {
+								# puts "\n-----\n[$node nodeName][$node nodeValue]"
+								# puts "\n-----\n[$node nodeName] [$node nodeType] -> [$node nodeValue]"
+								# puts "\n-----\n[$node nodeName] [$node nodeType]"
+								# puts "     [[$node firstChild] nodeType]  [[$node firstChild] asXML]"
+							if {[[$node firstChild] nodeType] == {TEXT_NODE}} {
+								set xPath [get_xPath $node]
+								set xPath [string range $xPath [string length $branch_xPath/] end]
+									# puts "----- [$node nodeType]: $xPath "
+									# puts "\n-----\n   [$node nodeType]: $xPath "
+									# puts "          -> [[$node firstChild] nodeValue]"
+								set [format "%s::%s(%s)" [namespace current] $myArray $xPath] [[$node firstChild] nodeValue]
+							}
+					}
+						#parray $myArray
+			}
+			
+			add_tracing
+	}
+
+
+	#-------------------------------------------------------------------------
+	proc runTime_2_dom {projectDOM} {
+			
+			foreach branch [[$projectDOM selectNodes /root] childNodes] {
+					
+					set branch_Name 	[$branch nodeName]
+					set branch_xPath	[get_xPath $branch]
+					set myArray $branch_Name
+
+					foreach node [$branch getElementsByTagName *] {
+								# puts "\n-----\n[$node nodeName][$node nodeValue]"
+								# puts "\n-----\n[$node nodeName] [$node nodeType] -> [$node nodeValue]"
+								# puts "\n-----\n[$node nodeName] [$node nodeType]"
+								# puts "     [[$node firstChild] nodeType]  [[$node firstChild] asXML]"
+							if {[[$node firstChild] nodeType] == {TEXT_NODE}} {
+								set xPath [get_xPath $node]
+								set xPath [string range $xPath [string length $branch_xPath/] end]
+									# puts "----- [$node nodeType]: $xPath "
+									# puts "\n-----\n   [$node nodeType]: $xPath "
+									# puts "          -> [[$node firstChild] nodeValue]"
+									# puts " -> $xPath"
+								set textNode [$node firstChild]
+									# puts "      [$textNode asXML]"
+								eval set value [format "$%s::%s(%s)" [namespace current] $myArray $xPath]
+									# puts "      $value"
+								$textNode nodeValue $value
+							}
+					}
+			}
+	}
+
+
+ 
 	#-------------------------------------------------------------------------
 		#  check File Version 3.1 -> 3.2
 		#	
@@ -119,7 +244,7 @@
 							if {$node == {}} {
 								puts "        ...  $Version   ... update File ... /root/Component/BottleCage"
 								set node [$domProject selectNode /root/Component]
-								puts "  [$node asXML]"
+								# puts "  [$node asXML]"
 								$node appendXML "<BottleCage>
 													<SeatTube>
 														<File>etc:bottle_cage/left/bottleCage.svg</File>
@@ -135,7 +260,7 @@
 													</DownTube_Lower>
 												</BottleCage>"
 								set node [$domProject selectNode /root/Component/BottleCage]
-								puts "  [$node asXML]"
+								# puts "  [$node asXML]"
 							}
 							
 								# --- /root/Rendering/BottleCage ...
@@ -371,7 +496,7 @@
 														</rear>
 													</WheelPosition>
 												</Temporary>"
-								puts "[$node asXML]"				
+								# puts "[$node asXML]"				
 							}
 
 						}			
@@ -472,40 +597,45 @@
 	#-------------------------------------------------------------------------
 		#  set value
 		#
-	proc setValue {xPath type args} {
+		# proc setValue {xPath type args} 
+	proc setValue {arrayName type args} {
 	
-			set domProject $::APPL_Env(root_ProjectDOM)
-			
-				# puts " ... setValue:  $xPath"
-				# puts "                $type"
-				# puts "                $args"
+			set _array [lindex [split $arrayName (] 0]
+			set _name [lindex [split $arrayName ()] 1]
 			
 				# -- Exception on different types of direction definitions
 			switch -exact $type {
 					direction 	{	
-									if { [file tail $xPath] != {polar} } {
-										set xPath 	[file join $xPath polar] 
+									if { [file tail $_name] != {polar} } {
+										set _name 	[file join $_name polar] 
 									}
 								}
 					polygon 	{	
-									if { [file tail $xPath] != {Polygon} } {
-										set xPath 	[file join $xPath Polygon] 
+									if { [file tail $_name] != {Polygon} } {
+										set _name 	[file join $_name Polygon] 
 									}
 								}
 			}
 			
-			set node	[$domProject selectNodes $xPath/text()]
-			if { $node == {} } {
+				# set domProject $::APPL_Env(root_ProjectDOM)			
+				# set node	[$domProject selectNodes /root/$_array/$_name/text()]
+				# puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
+			set check_name [array names [namespace current]::$_array $_name]
+			if { $check_name == {} } {
 				puts "\n"
 				puts "         --<E>--setValue----------------------------"
-				puts "             ... $xPath not found in document"
+				puts "             ... $_name not found in [namespace current]::$_array"
 				puts "         --<E>--setValue----------------------------"
 				puts "\n"
 				return
 			}
+
+				# eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
+				# puts "            -> current value: $value \n"
+			
 			switch -exact $type {
 					value 		{	
-									$node nodeValue [lindex $args 0] 
+									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] [lindex $args 0]
 								}
 					direction 	{	
 										# puts "\n   ... direction\n         ... $xPath\n  ______________________"
@@ -521,30 +651,34 @@
 									}
 									set value	[ vectormath::unifyVector	$p0 $p1]
 									set value	[format "%f,%f" [lindex $value 0] [lindex $value 1]] 
-									$node nodeValue $value	
+									#puts "  -- 01 --"
+									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] $value
 									
 										# --- set angular Value - degree
 									set angleDegree 0
-									set xPath 	[file join [ file dirname $xPath ] degree]
-									set node 	[$domProject selectNodes $xPath/text()]
-									if { $node != {} } {
+									set _name 	[file join [ file dirname $_name ] degree]
+									set check_name [array names [namespace current]::$_array $_name]
+									if { $check_name != {} } {
 										set angleDegree	[format "%.9f" [ vectormath::dirAngle {0 0} $p1] ]
-										$node nodeValue $angleDegree
+										#puts "  -- 02 --"
+										eval set [format "%s::%s(%s)" [namespace current] $_array [file join [ file dirname $_name ] degree]] $angleDegree
 									}
 										# --- set angular Value - radiant
 									set angleRadiant 0
-									set xPath 	[file join [ file dirname $xPath ] radiant]
-									set node 	[$domProject selectNodes $xPath/text()]
-									if { $node != {} } {
+									set _name 	[file join [ file dirname $_name ] radiant]
+									set check_name [array names [namespace current]::$_array $_name]
+									if { $check_name != {} } {
 											# puts "     angleDegree   $angleDegree"
 										set angleRadiant	[format "%.9f" [ vectormath::rad $angleDegree] ]
 											# puts "     angleRadiant  $angleRadiant"
-										$node nodeValue $angleRadiant
+										#puts "  -- 03 --"
+										eval set [format "%s::%s(%s)" [namespace current] $_array [file join [ file dirname $_name ] radiant]] $angleRadiant
 									}
 								}
 					position 	{	
 									set value	[ flatten_nestedList $args ]	
-									$node nodeValue [format "%f,%f" [lindex $value 0] [lindex $value 1]] 
+									#puts "  -- 04 --"
+									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] [format "%f,%f" [lindex $value 0] [lindex $value 1]]
 								}
 					polygon 	{	
 									set value {}
@@ -552,7 +686,8 @@
 											# puts "             $x $y"
 										append value [format "%f,%f " $x $y]
 									}
-									$node nodeValue $value
+									#puts "  -- 05 --"
+									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] \"$value\"
 								}
 					default		{	
 									puts "         --<E>--setValue----------------------------"
@@ -561,73 +696,77 @@
 									puts "     ... $type ... unhandled"
 								}
 			}
+			
+				# eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
+				# puts "            -> new value: $value \n"
 
 	}
 		
 	#-------------------------------------------------------------------------
 		#  get value
 		#
-	proc getValue {xPath type args} {
+		# proc getValue {xPath type args}
+	proc getValue {arrayName type args} {
 	
-			set domProject $::APPL_Env(root_ProjectDOM)
-			
-				# puts " ... getValue:  $xPath"
-				# puts "                $type"
-				# puts "                $args"
+			set _array [lindex [split $arrayName (] 0]
+			set _name  [lindex [split $arrayName ()] 1]
+			set xPath  [format "%s/%s" $_array $_name]
 			
 				# -- Exception on different types of direction definitions
 			switch -exact $type {
 					direction 	{	
-									if { [file tail $xPath] != {polar} } {
-										set xPath 	[file join $xPath polar] 
+									if { [file tail $_name] != {polar} } {
+										set _name 	[file join $_name polar] 
+									}
+								}
+					polygon 	{	
+									if { [file tail $_name] != {Polygon} } {
+										set _name 	[file join $_name Polygon] 
 									}
 								}
 			}
-			
-			set node	[$domProject selectNodes $xPath/text()]
-			if { $node == {} } {
+
+				# set domProject $::APPL_Env(root_ProjectDOM)			
+				# set node	[$domProject selectNodes /root/$_array/$_name/text()]
+				# puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
+			set check_name [array names [namespace current]::$_array $_name]
+			if { $check_name == {} } {
 				puts "\n"
 				puts "         --<E>--getValue----------------------------"
-				puts "             ... $xPath not found in document"
+				puts "             ... $_name not found in [namespace current]::$_array"
 				puts "         --<E>--getValue----------------------------"
 				puts "\n"
 				return
 			}
+			
+			eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
+				# puts "            -> current value: $value \n"
+					
 			switch -exact $type {
-					value 		{	set value [$node nodeValue] }
-					direction 	{	if {[llength $args] == 0} {
-										set value [$node nodeValue]
-									} else {
+					value 		{}
+					direction 	{	if {[llength $args] != 0} {
 										if {[lindex $args 0] == {angle} } {
 											puts "   \n .... will become continued \n" 									 
 											set value 0.0123
 										}
 									}
 								}
-					position 	{	if {[llength $args] == 0} {
-										set value [$node nodeValue]
-									} else {
-										set value [$node nodeValue]
+					position 	{	if {[llength $args] != 0} {
 										set value [lindex [split $value ,] [lindex $args 0] ]
 									}
 								}
-					polygon 	{	if {[llength $args] == 0} {
-										set value [$node nodeValue]
-									} else {									
-										set value [$node nodeValue]
+					polygon 	{	if {[llength $args] != 0} {
 											# puts "      ......... $value"
 										set value [lindex [split $value { }] [lindex $args 0] ]
 											# puts "      ......... $value"
 									}
 								}
 			}
-			return $value
-			
-			
-			#set node [$::APPL_Env(root_ProjectDOM) selectNode /root/Result/HeadTube/TopTubeAngle]
-
+			# puts "    ... return new: $value"
+			return $value			
 	}
-	
+
+
 	#-------------------------------------------------------------------------
 		# see  http://wiki.tcl.tk/440
 		#

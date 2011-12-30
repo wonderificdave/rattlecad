@@ -292,10 +292,10 @@
 		set node_Locations [ $root_InitDOM selectNodes /root/Options/ComponentLocation ]
 		foreach childNode [ $node_Locations childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
-					set xpath [$childNode getAttribute xpath {}]
-					set dir   [$childNode getAttribute dir   {}]
+					set key 	[$childNode getAttribute key	{}]
+					set dir   	[$childNode getAttribute dir	{}]
 				# puts "  childNode ->   [$childNode nodeName]   $xpath  $dir "
-				set ::APPL_CompLocation($xpath) $dir
+				set ::APPL_CompLocation($key) $dir
 			}
 		}
 		

@@ -41,11 +41,17 @@
 
 	proc cv_custom::update {cv_Name} {
 		
-		puts "     ... cv_custom:.update  $cv_Name"
 		variable 	bottomCanvasBorder
+
+			puts ""
+			puts "   -------------------------------"
+			puts "    cv_custom::update"
+			puts "       cv_Name:         $cv_Name"
+
 	
 			# --- get updateCommand
 		set updateCommand		[namespace current]::update 
+		#set editable			[namespace current]::update 
 
 			# puts " ->  $cv_Name"
 			
@@ -88,16 +94,16 @@
 					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame ]					
 					$cv_Name 		clean_StageContent	
 						#
-					frame_visualisation::createDecoration		$cv_Name $xy	SeatPost			$updateCommand	
+					frame_visualisation::createDecoration		$cv_Name $xy	SeatPost			editable   ;# $updateCommand	
 					frame_visualisation::createDecoration		$cv_Name $xy 	RearWheel_Rep		
 					frame_visualisation::createDecoration		$cv_Name $xy 	FrontWheel_Rep		
 						#
-					frame_visualisation::createFrame_Tubes		$cv_Name $xy 	$updateCommand 					
+					frame_visualisation::createFrame_Tubes		$cv_Name $xy 	editable   ;# $updateCommand					
 						#
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearDerailleur_ctr 	$updateCommand	
-					frame_visualisation::createDecoration		$cv_Name $xy 	Saddle				$updateCommand	
-					frame_visualisation::createDecoration		$cv_Name $xy 	HeadSet				$updateCommand	
-					frame_visualisation::createDecoration		$cv_Name $xy 	BottleCage			$updateCommand						
+					frame_visualisation::createDecoration		$cv_Name $xy 	RearDerailleur_ctr 	editable   ;# $updateCommand	
+					frame_visualisation::createDecoration		$cv_Name $xy 	Saddle				editable   ;# $updateCommand	
+					frame_visualisation::createDecoration		$cv_Name $xy 	HeadSet				editable   ;# $updateCommand	
+					frame_visualisation::createDecoration		$cv_Name $xy 	BottleCage			editable   ;# $updateCommand						
 					frame_visualisation::createDecoration		$cv_Name $xy 	Stem				
 					frame_visualisation::createDecoration		$cv_Name $xy 	LegClearance_Rep	
 						#
@@ -109,19 +115,19 @@
 						#
 					createDimensionType							$cv_Name $xy 	RearWheel_Clearance 	
 					createDimensionType							$cv_Name $xy 	LegClearance			
-					createDimensionType							$cv_Name $xy 	HeadTube_Length 	$updateCommand	
-					createDimensionType							$cv_Name $xy 	SeatTube_Extension	$updateCommand	
-					createDimensionType							$cv_Name $xy 	SeatStay_Offset		$updateCommand	
-					createDimensionType							$cv_Name $xy 	HeadTube_OffsetTT	$updateCommand	
-					createDimensionType							$cv_Name $xy 	HeadTube_OffsetDT	$updateCommand	
-					createDimensionType							$cv_Name $xy 	DownTube_Offset		$updateCommand	
-					createDimensionType							$cv_Name $xy 	TopTube_Angle		$updateCommand						
-					createDimensionType							$cv_Name $xy 	HeadSet_Bottom		$updateCommand
-					createDimensionType							$cv_Name $xy 	ForkHeight			$updateCommand				
-					createDimensionType							$cv_Name $xy 	Brake_Bridge		$updateCommand		
-					createDimensionType							$cv_Name $xy 	Brake_Fork			$updateCommand		
-					createDimensionType							$cv_Name $xy 	TopHeadTube_Angle	$updateCommand		
-					createDimensionType							$cv_Name $xy 	BottleCage			$updateCommand	
+					createDimensionType							$cv_Name $xy 	HeadTube_Length 	editable   ;# $updateCommand	
+					createDimensionType							$cv_Name $xy 	SeatTube_Extension	editable   ;# $updateCommand	
+					createDimensionType							$cv_Name $xy 	SeatStay_Offset		editable   ;# $updateCommand	
+					createDimensionType							$cv_Name $xy 	HeadTube_OffsetTT	editable   ;# $updateCommand	
+					createDimensionType							$cv_Name $xy 	HeadTube_OffsetDT	editable   ;# $updateCommand	
+					createDimensionType							$cv_Name $xy 	DownTube_Offset		editable   ;# $updateCommand	
+					createDimensionType							$cv_Name $xy 	TopTube_Angle		editable   ;# $updateCommand						
+					createDimensionType							$cv_Name $xy 	HeadSet_Bottom		editable   ;# $updateCommand
+					createDimensionType							$cv_Name $xy 	ForkHeight			editable   ;# $updateCommand				
+					createDimensionType							$cv_Name $xy 	Brake_Bridge		editable   ;# $updateCommand		
+					createDimensionType							$cv_Name $xy 	Brake_Fork			editable   ;# $updateCommand		
+					createDimensionType							$cv_Name $xy 	TopHeadTube_Angle	editable   ;# $updateCommand		
+					createDimensionType							$cv_Name $xy 	BottleCage			editable   ;# $updateCommand	
 						#
 					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#			
@@ -158,15 +164,15 @@
 						#
 					frame_visualisation::createFrame_Tubes	$cv_Name $xy					 
 						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	Brake			$updateCommand		
+					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle			editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	Brake			editable   ;# $updateCommand		
 					frame_visualisation::createDecoration	$cv_Name $xy 	HeadSet			
 					frame_visualisation::createDecoration	$cv_Name $xy 	Stem			
-					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 		$updateCommand		
-					frame_visualisation::createDecoration	$cv_Name $xy 	BottleCage		$updateCommand		
-					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear	$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront	$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 		$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 		editable   ;# $updateCommand		
+					frame_visualisation::createDecoration	$cv_Name $xy 	BottleCage		editable   ;# $updateCommand		
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear	editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront	editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 		editable   ;# $updateCommand	
 						#
 					createDimension							$cv_Name $xy 	cline_angle
 						#
@@ -281,21 +287,21 @@
 					$cv_Name 		clean_StageContent				
 					frame_visualisation::createBaseline 	$cv_Name $xy	
 						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			editable   ;# $updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost			
 						#
 					frame_visualisation::createFrame_Tubes	$cv_Name $xy 
-					frame_visualisation::createDecoration	$cv_Name $xy 	BottleCage			$updateCommand						
+					frame_visualisation::createDecoration	$cv_Name $xy 	BottleCage			editable   ;# $updateCommand						
 						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle				$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	Brake				$updateCommand
+					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle				editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	Brake				editable   ;# $updateCommand
 					frame_visualisation::createDecoration	$cv_Name $xy 	HeadSet				
 					frame_visualisation::createDecoration	$cv_Name $xy 	Stem				
-					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear	$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront	$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand
+					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear		editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront		editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			editable   ;# $updateCommand
 						# 
 					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#
@@ -312,21 +318,21 @@
 					$cv_Name 		clean_StageContent				
 					frame_visualisation::createBaseline 	$cv_Name $xy	
 						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			$updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			editable   ;# $updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost			
 						#
 					frame_visualisation::createFrame_Tubes	$cv_Name $xy 
-					frame_visualisation::createDecoration	$cv_Name $xy 	BottleCage			$updateCommand						
+					frame_visualisation::createDecoration	$cv_Name $xy 	BottleCage			editable   ;# $updateCommand						
 						#
-					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle				$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	Brake				$updateCommand
+					frame_visualisation::createDecoration	$cv_Name $xy 	Saddle				editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	Brake				editable   ;# $updateCommand
 					frame_visualisation::createDecoration	$cv_Name $xy 	HeadSet				
 					frame_visualisation::createDecoration	$cv_Name $xy 	Stem				
-					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear	$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront	$updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			$updateCommand
+					frame_visualisation::createDecoration	$cv_Name $xy 	HandleBar 			editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear		editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront		editable   ;# $updateCommand	
+					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			editable   ;# $updateCommand
 						# 
 					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#
