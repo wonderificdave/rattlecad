@@ -61,10 +61,8 @@
 			<component key="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
 		</ComponentLocation>
 		
-
 		<Brake>
-			<Road/>
-			<V-Brake/>
+			<Rim/>
 			<Disc/>
 			<off/>
 		</Brake>
@@ -120,8 +118,8 @@
 							<Angle>0.00</Angle>
 						</Brake>
 						<Blade>
-							<Offset>70.00</Offset>
-							<OffsetPerp>-4.00</OffsetPerp>
+							<Offset>45.00</Offset>
+							<OffsetPerp>-4.50</OffsetPerp>
 						</Blade>
 					</Crown>
 					<Blade>
@@ -134,48 +132,45 @@
 					</DropOut>
 				</Visualization>
 			</Composite>
-			
+						
 			<Suspension_26>
 				<Geometry>
 					<Rake>40.00</Rake>
 				</Geometry>
-				<Visualization>
-					<Crown>
-						<File>fork/_suspension/fork_crown.svg</File>
-					</Crown>
-					<DropOut>
-						<File>fork/_suspension/suspension_bridge_26.svg</File>
-					</DropOut>
-				</Visualization>
+				<DropOut>
+					<File>fork/_suspension/suspension_bridge_26.svg</File>
+				</DropOut>
 			</Suspension_26>
 			
 			<Suspension_28>   
 				<Geometry>
 					<Rake>40.00</Rake>
 				</Geometry>
-				<Visualization>
-					<Crown>
-						<File>fork/_suspension/fork_crown.svg</File>
-					</Crown>
-					<DropOut>
-						<File>fork/_suspension/suspension_bridge_28.svg</File>
-					</DropOut>
-				</Visualization>
+				<DropOut>
+					<File>fork/_suspension/suspension_bridge_28.svg</File>
+				</DropOut>
 			</Suspension_28>
 			
 			<Suspension_29>   
 				<Geometry>
 					<Rake>45.00</Rake>
 				</Geometry>
-				<Visualization>
-					<Crown>
-						<File>fork/_suspension/fork_crown.svg</File>
-					</Crown>
-					<DropOut>
-						<File>fork/_suspension/suspension_bridge_29.svg</File>
-					</DropOut>
-				</Visualization>
+				<DropOut>
+					<File>fork/_suspension/suspension_bridge_29.svg</File>
+				</DropOut>
 			</Suspension_29>
+			
+			<_Suspension>
+				<Crown>
+					<File>fork/_suspension/fork_crown.svg</File>
+				</Crown>
+				<Leg>
+					<Offset>200.00</Offset>
+					<OffsetPerp>21.00</OffsetPerp>
+					<Diameter>38.00</Diameter>
+				</Leg>
+			</_Suspension>
+				
 		</Fork>
 		
 		<Rim>

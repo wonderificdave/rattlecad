@@ -107,10 +107,10 @@
 		set SeatTube(Ground)		[ frame_geometry::object_values  	SeatTubeGround		position	$BB_Position ]			
 		set SeatTube(TopTube)		[ frame_geometry::object_values  	SeatTube/End		position	$BB_Position ]	
 		
-		set RearBrake(Mount)		[ frame_geometry::object_values  	BrakeMountRear		position	$BB_Position ]			
+		set RearBrake(Mount)		[ vectormath::addVector 			$frame_geometry::RearBrake(Mount)		$BB_Position ]		
 		set RearBrake(Help)			[ vectormath::addVector 			$frame_geometry::RearBrake(Help)		$BB_Position ]	
 		set RearBrake(Shoe)			[ vectormath::addVector 			$frame_geometry::RearBrake(Shoe)		$BB_Position ]	
-		set FrontBrake(Mount)		[ frame_geometry::object_values  	BrakeMountFront		position	$BB_Position ]	
+		set FrontBrake(Mount)		[ vectormath::addVector 			$frame_geometry::FrontBrake(Mount)		$BB_Position ]	
 		set FrontBrake(Help)		[ vectormath::addVector 			$frame_geometry::FrontBrake(Help)		$BB_Position ]	
 		set FrontBrake(Shoe)		[ vectormath::addVector 			$frame_geometry::FrontBrake(Shoe)		$BB_Position ]	
 		
@@ -183,7 +183,7 @@
 			cline_brake {
 						if {$Rendering(BrakeRear) != {off}} {
 							switch $Rendering(BrakeRear) {
-								Road { 
+								Rim { 
 									$cv_Name create circle 	$RearBrake(Shoe)	-radius  6  -outline gray50		-width 0.35		-tags __CenterLine__
 									$cv_Name create circle 	$RearBrake(Mount)	-radius  6  -outline gray50		-width 0.35		-tags __CenterLine__	
 									$cv_Name create centerline 	[ project::flatten_nestedList $RearBrake(Shoe) $RearBrake(Help) $RearBrake(Mount)] \
@@ -193,7 +193,7 @@
 						}
 						if {$Rendering(BrakeFront) != {off}} {
 							switch $Rendering(BrakeFront) {
-								Road { 
+								Rim { 
 									$cv_Name create circle 	$FrontBrake(Shoe)	-radius  6  -outline gray50		-width 0.35		-tags __CenterLine__
 									$cv_Name create circle 	$FrontBrake(Mount)	-radius  6  -outline gray50		-width 0.35		-tags __CenterLine__	
 									$cv_Name create centerline 	[ project::flatten_nestedList $FrontBrake(Shoe) $FrontBrake(Help) $FrontBrake(Mount)] \
@@ -740,7 +740,7 @@
 							# -- Rear Brake Mount ------------------
 						if {$Rendering(BrakeRear) != {off}} {
 							switch $Rendering(BrakeRear) {
-								Road {	
+								Rim {	
 											set SeatStay(polygon) 		[ frame_geometry::object_values 		SeatStay polygon $BB_Position  ]
 											set pt_01					[ frame_geometry::coords_get_xy 	$SeatStay(polygon)  8 ]
 											set pt_02					[ frame_geometry::coords_get_xy 	$SeatStay(polygon)  9 ]
@@ -1023,7 +1023,7 @@
 						set pt_01					[ frame_geometry::coords_get_xy $HeadTube(polygon) 0 ]
 						set pt_02					[ frame_geometry::coords_get_xy $HeadTube(polygon) 1 ]
 						set dimension 		[ $cv_Name dimension  length  	[ project::flatten_nestedList [list $pt_01 $pt_02] ] \
-																				aligned    [expr 50 * $stageScale]   0 \
+																				aligned    [expr  90 * $stageScale]   0 \
 																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry::createEdit  %x %y  $cv_Name  \
@@ -1181,7 +1181,7 @@
 						set pt_01 					[ frame_geometry::object_values 	HeadTube/Start	position	$BB_Position  ]
 						set pt_02 					[ frame_geometry::object_values 	Lugs/ForkCrown	position	$BB_Position  ]
 						set dimension 		[ $cv_Name dimension  length  	[ project::flatten_nestedList [list $pt_01 $pt_02] ] \
-																				aligned    [expr -110 * $stageScale]   [expr 50 * $stageScale] \
+																				aligned    [expr -150 * $stageScale]   [expr 50 * $stageScale] \
 																				darkred ]																				
 						if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
 																		[list frame_geometry::createEdit  %x %y  $cv_Name  \
@@ -1193,7 +1193,7 @@
 			Brake_Bridge {
 						if {$Rendering(BrakeRear) != {off}} {
 							switch $Rendering(BrakeRear) {
-								Road { 
+								Rim { 
 											set SeatStay(polygon) 		[ frame_geometry::object_values 	SeatStay 	polygon $BB_Position  ]
 											set pt_01					[ frame_geometry::coords_get_xy 	$SeatStay(polygon)  8 ]
 											set pt_02					[ frame_geometry::coords_get_xy 	$SeatStay(polygon)  9 ]
@@ -1202,17 +1202,22 @@
 											set pt_10 					[ vectormath::intersectPerp 		$pt_01 $pt_02 $pt_04  ]
 											# $cv_Name create circle  $pt_01 	-radius 20  -outline red
 											# $cv_Name create circle  $pt_02 	-radius 20  -outline blue
-										set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_10  $pt_04] \
+										set dimension_01	[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_10  $pt_04] \
 																								aligned  	[expr    40 * $stageScale]	[expr -40 * $stageScale] \
-																								gray50 ]
-										set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_03  $pt_04 ] \
+																								darkred ]	;# Component(Brake/Rear/Offset)
+										set dimension_02	[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_03  $pt_04 ] \
 																								aligned  	[expr   -50 * $stageScale]	0 \
-																								darkred ]
-										if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
+																								darkred ]	;# Component(Brake/Rear/LeverLength)
+										if {$updateCommand != {}} {	$cv_Name	bind	$dimension_01	<Double-ButtonPress-1>  \
+																						[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																									{	Component(Brake/Rear/Offset) \
+																									}	{Rear Brake Offset}]
+																	$cv_Name	bind	$dimension_02	<Double-ButtonPress-1>  \
 																						[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																									{	Component(Brake/Rear/LeverLength) \
 																									}	{Rear Brake LeverLength}]
-																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension_01
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension_02
 												}
 									}
 							}
@@ -1221,19 +1226,28 @@
 			Brake_Fork {
 						if {$Rendering(BrakeFront) != {off}} {
 							switch $Rendering(BrakeFront) {
-								Road { 
+								Rim { 
 											set pt_03 					[ vectormath::addVector	$frame_geometry::FrontBrake(Shoe)	$BB_Position ]
 											set pt_04 					[ vectormath::addVector	$frame_geometry::FrontBrake(Help)	$BB_Position ]
+											set pt_05 					[ vectormath::addVector	$frame_geometry::FrontBrake(Mount)	$BB_Position ]
 											# $cv_Name create circle  $pt_01 	-radius 20  -outline red
 											# $cv_Name create circle  $pt_02 	-radius 20  -outline blue
-										set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_03  $pt_04 ] \
+										set dimension_01		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_04  $pt_05 ] \
+																								aligned  	[expr   60 * $stageScale]	[expr  40 * $stageScale] \
+																								darkred ]	;# Component(Brake/Rear/Offset)
+										set dimension_02		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_03  $pt_04 ] \
 																								aligned  	[expr   20 * $stageScale]	[expr  50 * $stageScale] \
-																								darkred ]
-										if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
+																								darkred ]	;# Component(Brake/Rear/LeverLength)
+										if {$updateCommand != {}} {	$cv_Name	bind	$dimension_01	<Double-ButtonPress-1>  \
+																						[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																									{	Component(Brake/Front/Offset) \
+																									}	{Front Brake Offset}]
+																	$cv_Name	bind	$dimension_02	<Double-ButtonPress-1>  \
 																						[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																									{	Component(Brake/Front/LeverLength) \
 																									}	{Front Brake LeverLength}]
-																	lib_gui::object_CursorBinding 	$cv_Name	$dimension
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension_01
+																	lib_gui::object_CursorBinding 	$cv_Name	$dimension_02
 												}
 									}
 							}

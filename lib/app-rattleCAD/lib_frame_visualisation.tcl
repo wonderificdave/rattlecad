@@ -201,10 +201,10 @@
 							if {$Rendering(BrakeRear) != {off}} {
 								puts "          ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
 								switch $Rendering(BrakeRear) {
-									Road {
+									Rim {
 										set ss_direction	[ frame_geometry::object_values SeatStay direction ]
 										set ss_angle		[ expr - [ vectormath::angle {0 1} {0 0} $ss_direction ] ]
-										set RearBrake(position)	[ frame_geometry::object_values  BrakeMountRear  position	$BB_Position]
+										set RearBrake(position)	[ frame_geometry::object_values  BrakeRear  position	$BB_Position]
 										set RearBrake(file)			[ checkFileString $project::Component(Brake/Rear/File) ]
 										set RearBrake(object)		[ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$RearBrake(object)	<Double-ButtonPress-1> \
@@ -212,6 +212,7 @@
 																								{ 	list://Rendering(Brake/Rear@SELECT_BrakeTypes) \
 																									file://Component(Brake/Rear/File)	\
 																									Component(Brake/Rear/LeverLength)	\
+																									Component(Brake/Rear/Offset)	\
 																								} 	{RearBrake Parameter} \
 																				]
 																	  lib_gui::object_CursorBinding 	$cv_Name	$RearBrake(object)
@@ -225,21 +226,20 @@
 							if {$Rendering(BrakeFront) != {off}} {
 								puts "          ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
 								switch $Rendering(BrakeFront) {
-									Road {
+									Rim {
 										set ht_direction	[ frame_geometry::object_values HeadTube direction ]
 										set ht_angle		[ expr [ vectormath::angle {0 1} {0 0} $ht_direction ] ]
 										set fb_angle		$project::Component(Fork/Crown/Brake/Angle)
 										set fb_angle		[ expr $ht_angle + $fb_angle ]
-										set FrontBrake(position)	[ frame_geometry::object_values  BrakeMountFront  position	$BB_Position]
+										set FrontBrake(position)	[ frame_geometry::object_values  BrakeFront  position	$BB_Position]
 										set FrontBrake(file)		[ checkFileString $project::Component(Brake/Front/File) ]
 										set FrontBrake(object)		[ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __Decoration__ ]		
 										if {$updateCommand != {}} 	{ $cv_Name bind	$FrontBrake(object)	<Double-ButtonPress-1> \
 																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																								{ 	list://Rendering(Brake/Front@SELECT_BrakeTypes) \
 																									file://Component(Brake/Front/File)	\
-																									Component(Fork/Crown/Brake/Offset)	\
-																									Component(Fork/Crown/Brake/OffsetPerp)	\
 																									Component(Brake/Front/LeverLength)	\
+																									Component(Brake/Front/Offset)	\
 																								} 	{FrontBrake Parameter} \
 																				]
 																	  lib_gui::object_CursorBinding 	$cv_Name	$FrontBrake(object)
@@ -349,7 +349,7 @@
 						set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
 						if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
 																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	Component(HeadSet/Height/Bottom	)\
+																				{ 	Component(HeadSet/Height/Bottom)\
 																					Component(HeadSet/Diameter)		\
 																				} 	{HeadSet Parameter} \
 																]
@@ -368,7 +368,7 @@
 						set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
 						set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white -tags __Decoration__ ]
 														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5] 				-tags __Decoration__ 
-														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5] 				-tags __Decoration__ 
+														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4] 				-tags __Decoration__ 
 														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5] 	-tags __Decoration__  
 														$cv_Name create circle 	$Hub(position)  -radius 45											-tags __Decoration__ 	
 														$cv_Name create circle 	$Hub(position)  -radius 23											-tags __Decoration__ 
@@ -387,7 +387,7 @@
 						set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
 						set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white  -tags __Decoration__]
 														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]					-tags __Decoration__
-														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5]                   -tags __Decoration__
+														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]                   -tags __Decoration__
 														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]      -tags __Decoration__
 														$cv_Name create circle 	$Hub(position)  -radius 20                                              -tags __Decoration__
 														$cv_Name create circle 	$Hub(position)  -radius 4.5                                             -tags __Decoration__
@@ -436,19 +436,30 @@
 	}
 
 	
+	proc debug_geometry {cv_Name BB_Position} {
+			#variable DEBUG_Geometry
+			puts ""
+			puts "   -------------------------------"
+			puts "    debug_geometry"
+			
+			foreach position [array names frame_geometry::DEBUG_Geometry] {
+						# puts "       name:            $position    $frame_geometry::DEBUG_Geometry($position)"
+					set myPosition			[ frame_geometry::object_values		DEBUG_Geometry			$frame_geometry::DEBUG_Geometry($position)	$BB_Position ]
+					puts "         ... $position  $frame_geometry::DEBUG_Geometry($position)"
+					puts "					+ ($BB_Position)"
+					puts "             -> $myPosition"
+					$cv_Name create circle 	$myPosition   -radius 5  -outline orange  -tags {__CenterLine__} -width 2.0
+			}
+	} 
+
+
 	proc createFrame_Tubes {cv_Name BB_Position {updateCommand {}}} {
 			
-	
-			## -- read from domProject
-		# remove 3.2.70 ;# set domProject 	$::APPL_Env(root_ProjectDOM)
 		set domInit 	$::APPL_Env(root_InitDOM)
 
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		
-			# --- get Rendering Style
-		set Rendering(Fork)		$project::Rendering(Fork)
-
 			# --- check existance of File --- regarding on user/etc
 		proc checkFileString {fileString} {
 			switch -glob $fileString {
@@ -488,94 +499,6 @@
 									  lib_gui::object_CursorBinding 	$cv_Name	$RearDropout(object)
 				}
 
-			# --- create Fork Representation ----------------
-		puts "          ... \$Rendering(Fork) $Rendering(Fork)"
-		switch -glob $Rendering(Fork) {
-			SteelLugged {
-						set ForkBlade(polygon) 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-						set ForkCrown(file)			[ checkFileString $project::Component(Fork/Crown/File) ]
-						set ForkDropout(file)		[ checkFileString $project::Component(Fork/DropOut/File) ]
-						set ForkDropout(position)	[ frame_geometry::object_values  	FrontWheel  position	$BB_Position ]
-						set do_direction			[ frame_geometry::object_values 	Lugs/Dropout/Front 	direction ]
-						set do_angle				[ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
-						}
-			Composite 	{
-						set ForkBlade(polygon)		[ frame_geometry::set_compositeFork $::APPL_Env(root_InitDOM) $BB_Position ]
-						set ForkCrown(file)			[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Composite/Visualization/Crown/File ] asText ] ]
-						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Composite/Visualization/DropOut/File ]  asText ] ]
-						set ForkDropout(position)	[ frame_geometry::object_values		FrontWheel  position	$BB_Position ]
-						set Steerer_Fork(position)	[ frame_geometry::object_values  	Lugs/ForkCrown		position	$BB_Position]
-						set ht_direction			[ frame_geometry::object_values 	HeadTube direction ]
-						set ht_angle				[ vectormath::angle {0 1} {0 0} $ht_direction ]
-						set vct_01					[ vectormath::rotatePoint {0 0} {4 70} $ht_angle ]
-						set help_01					[ vectormath::subVector $Steerer_Fork(position) $vct_01 ]
-						set help_02					[ list 0 [lindex  $ForkDropout(position) 1] ]
-						set do_angle				[ expr 90 - [ vectormath::angle $help_01 $ForkDropout(position) $help_02  ] ]
-						}
-			Suspension* {
-							#puts "\n------------------\n                now Rendering   ... $Rendering(Fork)\n------------------\n"
-							set forkSize [lindex [split $Rendering(Fork) {_}] 1 ]
-							if {$forkSize == {} } { set forkSize "26" }
-							puts "             ... \$forkSize  $forkSize"
-						set ForkBlade(polygon) 		{}
-						set ForkCrown(file)			[ checkFileString [ [ $domInit   	selectNodes /root/Options/Fork/Suspension_$forkSize/Visualization/Crown/File ] asText ] ]
-						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Suspension_$forkSize/Visualization/DropOut/File ]  asText ] ]
-						set Suspension_ForkRake		[[ $domInit    	selectNodes /root/Options/Fork/Suspension_$forkSize/Geometry/Rake ]  asText ]
-						set Project_ForkRake		$project::Component(Fork/Rake)
-						set do_direction			[ frame_geometry::object_values 	HeadTube	direction ]
-						set do_angle				[ vectormath::angle {0 1} {0 0} $do_direction ]
-						set offset					[ expr $Project_ForkRake-$Suspension_ForkRake]
-						set vct_move				[ vectormath::rotatePoint {0 0} [list 0 $offset] [expr 90 + $do_angle] ]
-						set ForkDropout(position)	[ vectormath::addVector [ frame_geometry::object_values		FrontWheel  position	$BB_Position ] $vct_move]
-						}
-			default {}
-		}
-		
-			# --- create Fork Blade -----------------
-		set ForkBlade(object)		[ $cv_Name create polygon $ForkBlade(polygon) -fill white  -outline black -tags __Frame__]
-		if {$updateCommand != {}}	{ $cv_Name bind	$ForkBlade(object)	<Double-ButtonPress-1> \
-													[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																	{ 	list://Rendering(Fork@SELECT_ForkTypes) \
-																		Component(Fork/Blade/Width)			\
-																		Component(Fork/Blade/DiameterDO)	\
-																		Component(Fork/Blade/TaperLength)	\
-																		Component(Fork/Blade/Offset)		\
-																	} 	{ForkBlade Parameter} \
-													]
-									  lib_gui::object_CursorBinding 	$cv_Name	$ForkBlade(object)
-				}
-
-			# --- create ForkCrowh -------------------
-				set ht_direction	[ frame_geometry::object_values 	Lugs/ForkCrown direction ]
-				set ht_angle		[expr [ vectormath::dirAngle 		{0 0} 	$ht_direction ] -90 ]
-		set ForkCrown(position)		[ frame_geometry::object_values		Lugs/ForkCrown		position	$BB_Position ]
-		set ForkCrown(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __Frame__ ]
-		if {$updateCommand != {}}	{ $cv_Name bind 	$ForkCrown(object)	<Double-ButtonPress-1> \
-													[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																	{ 	list://Rendering(Fork@SELECT_ForkTypes) \
-																		file://Component(Fork/Crown/File)	\
-																		Component(Fork/Crown/Brake/Angle) 	\
-																		Component(Fork/Crown/Brake/Offset) 	\
-																		Component(Fork/Crown/Brake/OffsetPerp) \
-																		Component(Fork/Crown/Blade/Offset) 	\
-																		Component(Fork/Crown/Blade/OffsetPerp) \
-																	} 	{ForkCrown Parameter} \
-													]
-									  lib_gui::object_CursorBinding 	$cv_Name	$ForkCrown(object)
-				}
-								
-			# --- create Fork Dropout ---------------
-		set ForkDropout(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __Frame__] 
-		if {$updateCommand != {}}	{ $cv_Name bind 	$ForkDropout(object)	<Double-ButtonPress-1> \
-													[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																	{ 	file://Component(Fork/DropOut/File)	\
-																		Component(Fork/DropOut/Offset) 	\
-																		Component(Fork/DropOut/OffsetPerp) \
-																	} 	{ForkDropout Parameter} \
-													]
-									  lib_gui::object_CursorBinding 	$cv_Name	$ForkDropout(object)
-				}
-		
 			# --- create HeadTube --------------------
 		set HeadTube(polygon) 		[ frame_geometry::object_values HeadTube polygon $BB_Position  ]
 		set HeadTube(object)		[ $cv_Name create polygon $HeadTube(polygon) -fill white -outline black  -tags __Frame__]
@@ -656,7 +579,127 @@
 
 			# --- create BottomBracket ---------------
 		$cv_Name create circle  $BB_Position			-radius 20	-fill white	-tags __Frame__
-		$cv_Name create circle  $ForkDropout(position)	-radius 4.5	-fill white	-tags __Frame__
+
+	}
+
+	
+	proc createFork_Rep {cv_Name BB_Position {updateCommand {}}} {
+			
+		set domInit 	$::APPL_Env(root_InitDOM)
+
+			# --- get stageScale
+		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
+		
+			# --- get Rendering Style
+		set Rendering(Fork)		$project::Rendering(Fork)
+
+			# --- check existance of File --- regarding on user/etc
+		proc checkFileString {fileString} {
+			switch -glob $fileString {
+					user:* 	{ 	set svgFile [file join $::APPL_Env(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
+					etc:* 	{ 	set svgFile [file join $::APPL_Env(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
+					default {	set svgFile [file join $::APPL_Env(CONFIG_Dir)/components $fileString ]}
+				}
+				# puts "            ... createDecoration::checkFileString $svgFile"
+			if {![file exists $svgFile]} {
+						# puts "           ... does not exist, therfore .."
+					set svgFile [file join $::APPL_Env(CONFIG_Dir)/components default_exception.svg]
+			}
+				# puts "            ... createDecoration::checkFileString $svgFile"
+			return $svgFile
+		}
+
+		
+		set RearWheel(position)		[ frame_geometry::object_values		RearWheel	position	$BB_Position]
+		
+			# --- create Fork Representation ----------------
+		puts "          ... \$Rendering(Fork) $Rendering(Fork)"
+		switch -glob $Rendering(Fork) {
+			SteelLugged {
+						set ForkBlade(polygon) 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
+						set ForkCrown(file)			[ checkFileString $project::Component(Fork/Crown/File) ]
+						set ForkDropout(file)		[ checkFileString $project::Component(Fork/DropOut/File) ]
+						set ForkDropout(position)	[ frame_geometry::object_values  	FrontWheel  position	$BB_Position ]
+						set do_direction			[ frame_geometry::object_values 	Lugs/Dropout/Front 	direction ]
+						set do_angle				[ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
+						}
+			Composite 	{
+						set ForkBlade(polygon) 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
+						set ForkCrown(file)			[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Composite/Visualization/Crown/File ] asText ] ]
+						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Composite/Visualization/DropOut/File ]  asText ] ]
+						set ForkDropout(position)	[ frame_geometry::object_values		FrontWheel  position	$BB_Position ]
+						set Steerer_Fork(position)	[ frame_geometry::object_values  	Lugs/ForkCrown		position	$BB_Position]
+						set ht_direction			[ frame_geometry::object_values 	HeadTube direction ]
+						set ht_angle				[ vectormath::angle {0 1} {0 0} $ht_direction ]
+						set vct_01					[ vectormath::rotatePoint {0 0} {4 70} $ht_angle ]
+						set help_01					[ vectormath::subVector $Steerer_Fork(position) $vct_01 ]
+						set help_02					[ list 0 [lindex  $ForkDropout(position) 1] ]
+						set do_angle				[ expr 90 - [ vectormath::angle $help_01 $ForkDropout(position) $help_02  ] ]
+						}
+			Suspension* {
+							#puts "\n------------------\n                now Rendering   ... $Rendering(Fork)\n------------------\n"
+							set forkSize [lindex [split $Rendering(Fork) {_}] 1 ]
+							if {$forkSize == {} } { set forkSize "26" }
+							puts "             ... \$forkSize  $forkSize"
+						set ForkBlade(polygon) 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
+						set ForkCrown(file)			[ checkFileString [ [ $domInit   	selectNodes /root/Options/Fork/_Suspension/Crown/File ] asText ] ]
+						set ForkDropout(file)		[ checkFileString [ [ $domInit    	selectNodes /root/Options/Fork/Suspension_$forkSize/DropOut/File ]  asText ] ]
+						set Suspension_ForkRake		[[ $domInit    	selectNodes /root/Options/Fork/Suspension_$forkSize/Geometry/Rake ]  asText ]
+						set Project_ForkRake		$project::Component(Fork/Rake)
+						set do_direction			[ frame_geometry::object_values 	HeadTube	direction ]
+						set do_angle				[ vectormath::angle {0 1} {0 0} $do_direction ]
+						set offset					[ expr $Project_ForkRake-$Suspension_ForkRake]
+						set vct_move				[ vectormath::rotatePoint {0 0} [list 0 $offset] [expr 90 + $do_angle] ]
+						set ForkDropout(position)	[ vectormath::addVector [ frame_geometry::object_values		FrontWheel  position	$BB_Position ] $vct_move]
+						}
+			default {}
+		}
+		
+			# --- create Fork Blade -----------------
+		set ForkBlade(object)		[ $cv_Name create polygon $ForkBlade(polygon) -fill white  -outline black -tags __Frame__]
+		if {$updateCommand != {}}	{ $cv_Name bind	$ForkBlade(object)	<Double-ButtonPress-1> \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																	{ 	list://Rendering(Fork@SELECT_ForkTypes) \
+																		Component(Fork/Blade/Width)			\
+																		Component(Fork/Blade/DiameterDO)	\
+																		Component(Fork/Blade/TaperLength)	\
+																		Component(Fork/Blade/Offset)		\
+																	} 	{ForkBlade Parameter} \
+													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$ForkBlade(object)
+				}
+
+			# --- create ForkCrowh -------------------
+				set ht_direction	[ frame_geometry::object_values 	Lugs/ForkCrown direction ]
+				set ht_angle		[expr [ vectormath::dirAngle 		{0 0} 	$ht_direction ] -90 ]
+		set ForkCrown(position)		[ frame_geometry::object_values		Lugs/ForkCrown		position	$BB_Position ]
+		set ForkCrown(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __Frame__ ]
+		if {$updateCommand != {}}	{ $cv_Name bind 	$ForkCrown(object)	<Double-ButtonPress-1> \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																	{ 	list://Rendering(Fork@SELECT_ForkTypes) \
+																		file://Component(Fork/Crown/File)	\
+																		Component(Fork/Crown/Brake/Angle) 	\
+																		Component(Fork/Crown/Brake/Offset) 	\
+																		Component(Fork/Crown/Brake/OffsetPerp) \
+																		Component(Fork/Crown/Blade/Offset) 	\
+																		Component(Fork/Crown/Blade/OffsetPerp) \
+																	} 	{ForkCrown Parameter} \
+													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$ForkCrown(object)
+				}
+								
+			# --- create Fork Dropout ---------------
+		set ForkDropout(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __Frame__] 
+		if {$updateCommand != {}}	{ $cv_Name bind 	$ForkDropout(object)	<Double-ButtonPress-1> \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																	{ 	file://Component(Fork/DropOut/File)	\
+																		Component(Fork/DropOut/Offset) 	\
+																		Component(Fork/DropOut/OffsetPerp) \
+																	} 	{ForkDropout Parameter} \
+													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$ForkDropout(object)
+				}
+		
 
 			# --- check bindings and remove ----------
 		switch $Rendering(Fork) {
@@ -667,6 +710,8 @@
 			Suspension_29 	{}
 			default 		{}
 		}
+		
+		$cv_Name create circle  $ForkDropout(position)	-radius 4.5	-fill white	-tags __Frame__
 		
 			#switch $Rendering(Fork) 
 			#	SteelLugged {

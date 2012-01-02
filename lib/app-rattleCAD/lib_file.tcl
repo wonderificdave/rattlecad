@@ -458,6 +458,7 @@
 					project::check_ProjectVersion {3.2.32}
 					project::check_ProjectVersion {3.2.40}
 					project::check_ProjectVersion {3.2.63}
+					project::check_ProjectVersion {3.2.71}
 					
 						#
 					frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
