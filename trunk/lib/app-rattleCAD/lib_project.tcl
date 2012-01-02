@@ -164,6 +164,179 @@
 	}
 
 
+	#-------------------------------------------------------------------------
+		#  set value
+		#
+		# proc setValue {xPath type args} 
+	proc setValue {arrayName type args} {
+	
+			set _array [lindex [split $arrayName (] 0]
+			set _name [lindex [split $arrayName ()] 1]
+			
+				# -- Exception on different types of direction definitions
+			switch -exact $type {
+					direction 	{	
+									if { [file tail $_name] != {polar} } {
+										set _name 	[file join $_name polar] 
+									}
+								}
+					polygon 	{	
+									if { [file tail $_name] != {Polygon} } {
+										set _name 	[file join $_name Polygon] 
+									}
+								}
+			}
+			
+				# set domProject $::APPL_Env(root_ProjectDOM)			
+				# set node	[$domProject selectNodes /root/$_array/$_name/text()]
+				# puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
+			set check_name [array names [namespace current]::$_array $_name]
+			if { $check_name == {} } {
+				puts "\n"
+				puts "         --<E>--setValue----------------------------"
+				puts "             ... $_name not found in [namespace current]::$_array"
+				puts "         --<E>--setValue----------------------------"
+				puts "\n"
+				# eval parray [namespace current]::$_array
+				return
+			}
+
+				# eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
+				# puts "            -> current value: $value \n"
+			
+			switch -exact $type {
+					value 		{	
+									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] [lindex $args 0]
+								}
+					direction 	{	
+										# puts "\n   ... direction\n         ... $xPath\n  ______________________"
+										# puts "            $args"
+									set value 	[ flatten_nestedList [ flatten_nestedList $args ]]
+										# puts "            $value"
+									if {[llength $value] == 2} {
+										set p0	{0 0} 
+										set p1	[list [lindex $value 0] [lindex $value 1] ]
+									} else {
+										set p0	[list [lindex $value 0] [lindex $value 1] ]
+										set p1	[list [lindex $value 2] [lindex $value 3] ]
+									}
+									set value	[ vectormath::unifyVector	$p0 $p1]
+									set value	[format "%f,%f" [lindex $value 0] [lindex $value 1]] 
+									#puts "  -- 01 --"
+									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] $value
+									
+										# --- set angular Value - degree
+									set angleDegree 0
+									set _name 	[file join [ file dirname $_name ] degree]
+									set check_name [array names [namespace current]::$_array $_name]
+									if { $check_name != {} } {
+										set angleDegree	[format "%.9f" [ vectormath::dirAngle {0 0} $p1] ]
+										#puts "  -- 02 --"
+										eval set [format "%s::%s(%s)" [namespace current] $_array [file join [ file dirname $_name ] degree]] $angleDegree
+									}
+										# --- set angular Value - radiant
+									set angleRadiant 0
+									set _name 	[file join [ file dirname $_name ] radiant]
+									set check_name [array names [namespace current]::$_array $_name]
+									if { $check_name != {} } {
+											# puts "     angleDegree   $angleDegree"
+										set angleRadiant	[format "%.9f" [ vectormath::rad $angleDegree] ]
+											# puts "     angleRadiant  $angleRadiant"
+										#puts "  -- 03 --"
+										eval set [format "%s::%s(%s)" [namespace current] $_array [file join [ file dirname $_name ] radiant]] $angleRadiant
+									}
+								}
+					position 	{	
+									set value	[ flatten_nestedList $args ]	
+									#puts "  -- 04 --"
+									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] [format "%f,%f" [lindex $value 0] [lindex $value 1]]
+								}
+					polygon 	{	
+									set value {}
+									foreach {x y} [flatten_nestedList $args] {
+											# puts "             $x $y"
+										append value [format "%f,%f " $x $y]
+									}
+									#puts "  -- 05 --"
+									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] \"$value\"
+								}
+					default		{	
+									puts "         --<E>--setValue----------------------------"
+									puts "             ... $type ... unhandled"
+									puts "         --<E>--setValue----------------------------"
+									puts "     ... $type ... unhandled"
+								}
+			}
+			
+				# eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
+				# puts "            -> new value: $value \n"
+
+	}
+		
+	#-------------------------------------------------------------------------
+		#  get value
+		#
+		# proc getValue {xPath type args}
+	proc getValue {arrayName type args} {
+	
+			set _array [lindex [split $arrayName (] 0]
+			set _name  [lindex [split $arrayName ()] 1]
+			set xPath  [format "%s/%s" $_array $_name]
+			
+				# -- Exception on different types of direction definitions
+			switch -exact $type {
+					direction 	{	
+									if { [file tail $_name] != {polar} } {
+										set _name 	[file join $_name polar] 
+									}
+								}
+					polygon 	{	
+									if { [file tail $_name] != {Polygon} } {
+										set _name 	[file join $_name Polygon] 
+									}
+								}
+			}
+
+				# set domProject $::APPL_Env(root_ProjectDOM)			
+				# set node	[$domProject selectNodes /root/$_array/$_name/text()]
+				# puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
+			set check_name [array names [namespace current]::$_array $_name]
+			if { $check_name == {} } {
+				puts "\n"
+				puts "         --<E>--getValue----------------------------"
+				puts "             ... $_name not found in [namespace current]::$_array"
+				puts "         --<E>--getValue----------------------------"
+				puts "\n"
+				return
+			}
+			
+			eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
+				# puts "            -> current value: $value \n"
+					
+			switch -exact $type {
+					value 		{}
+					direction 	{	if {[llength $args] != 0} {
+										if {[lindex $args 0] == {angle} } {
+											puts "   \n .... will become continued \n" 									 
+											set value 0.0123
+										}
+									}
+								}
+					position 	{	if {[llength $args] != 0} {
+										set value [lindex [split $value ,] [lindex $args 0] ]
+									}
+								}
+					polygon 	{	if {[llength $args] != 0} {
+											# puts "      ......... $value"
+										set value [lindex [split $value { }] [lindex $args 0] ]
+											# puts "      ......... $value"
+									}
+								}
+			}
+			# puts "    ... return new: $value"
+			return $value			
+	}
+
  
 	#-------------------------------------------------------------------------
 		#  check File Version 3.1 -> 3.2
@@ -437,8 +610,8 @@
 													<SteererGround>0.00,0.00</SteererGround>
 													<SeatTubeGround>0.00,0.00</SeatTubeGround>
 													<DerailleurMountFront>0.00,0.00</DerailleurMountFront>
-													<BrakeMountFront>0.00,0.00</BrakeMountFront>
-													<BrakeMountRear>0.00,0.00</BrakeMountRear>
+													<BrakeFront>0.00,0.00</BrakeFront>
+													<BrakeRear>0.00,0.00</BrakeRear>
 													<SummarySize>0.00,0.00</SummarySize>
 												</Position>"
 												
@@ -516,6 +689,19 @@
 								# --- /root/Custom/HeadTube/Angle ...
 							$domProject selectNode /root/Temporary/WheelPosition/front/diagonal
 							
+							# 3.2.71 
+							set node [$domProject selectNode /root/Component/Brake/Front]
+							if {$node != {}} {
+								$node appendXML "<Offset>28.00</Offset>"
+							}	
+							set node [$domProject selectNode /root/Component/Brake/Rear]
+							if {$node != {}} {
+								$node appendXML "<Offset>30.00</Offset>"
+							}	
+
+
+
+
 							set node [$domProject selectNode /root/Temporary/WheelPosition/front/diagonal]
 							if {$node == {}} {
 								puts "        ...  $Version   ... update File ... /root/Temporary/WheelPosition/front/diagonal"
@@ -580,6 +766,30 @@
 								$oldNode delete
 							}
 						}
+				{3.2.71} {	set node {}			
+							set node [$domProject selectNode /root/Result/Position]
+							foreach child {BrakeShoeFront BrakeShoeRear BrakeMountFront BrakeMountRear } {
+									set removeNode [$domProject selectNode /root/Result/Position/$child]
+									if {$removeNode != {}} {
+										$node removeChild $removeNode 
+										$removeNode delete
+									}
+							}							
+							$node appendXML "<BrakeFront>0,0</BrakeFront>"
+							$node appendXML "<BrakeRear>0,0</BrakeRear>"
+							
+							foreach child {Front Rear} {
+									set node [$domProject selectNode /root/Rendering/Brake/$child]
+									if {$node != {}} {
+										set txtNode [$node firstChild] 
+										set value	[$txtNode nodeValue]
+										if {$value == "Road"} {
+											puts "\n   ... dawischt\n"
+											$txtNode nodeValue "Rim"
+										}
+									}
+							}
+						}
 								
 				{ab-xy} {	set node {}
 							set node [$domProject selectNode /root/Project/rattleCADVersion/text()]
@@ -591,179 +801,6 @@
 
 				default {}
 			}
-	}
-
-
-	#-------------------------------------------------------------------------
-		#  set value
-		#
-		# proc setValue {xPath type args} 
-	proc setValue {arrayName type args} {
-	
-			set _array [lindex [split $arrayName (] 0]
-			set _name [lindex [split $arrayName ()] 1]
-			
-				# -- Exception on different types of direction definitions
-			switch -exact $type {
-					direction 	{	
-									if { [file tail $_name] != {polar} } {
-										set _name 	[file join $_name polar] 
-									}
-								}
-					polygon 	{	
-									if { [file tail $_name] != {Polygon} } {
-										set _name 	[file join $_name Polygon] 
-									}
-								}
-			}
-			
-				# set domProject $::APPL_Env(root_ProjectDOM)			
-				# set node	[$domProject selectNodes /root/$_array/$_name/text()]
-				# puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
-			set check_name [array names [namespace current]::$_array $_name]
-			if { $check_name == {} } {
-				puts "\n"
-				puts "         --<E>--setValue----------------------------"
-				puts "             ... $_name not found in [namespace current]::$_array"
-				puts "         --<E>--setValue----------------------------"
-				puts "\n"
-				return
-			}
-
-				# eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
-				# puts "            -> current value: $value \n"
-			
-			switch -exact $type {
-					value 		{	
-									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] [lindex $args 0]
-								}
-					direction 	{	
-										# puts "\n   ... direction\n         ... $xPath\n  ______________________"
-										# puts "            $args"
-									set value 	[ flatten_nestedList [ flatten_nestedList $args ]]
-										# puts "            $value"
-									if {[llength $value] == 2} {
-										set p0	{0 0} 
-										set p1	[list [lindex $value 0] [lindex $value 1] ]
-									} else {
-										set p0	[list [lindex $value 0] [lindex $value 1] ]
-										set p1	[list [lindex $value 2] [lindex $value 3] ]
-									}
-									set value	[ vectormath::unifyVector	$p0 $p1]
-									set value	[format "%f,%f" [lindex $value 0] [lindex $value 1]] 
-									#puts "  -- 01 --"
-									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] $value
-									
-										# --- set angular Value - degree
-									set angleDegree 0
-									set _name 	[file join [ file dirname $_name ] degree]
-									set check_name [array names [namespace current]::$_array $_name]
-									if { $check_name != {} } {
-										set angleDegree	[format "%.9f" [ vectormath::dirAngle {0 0} $p1] ]
-										#puts "  -- 02 --"
-										eval set [format "%s::%s(%s)" [namespace current] $_array [file join [ file dirname $_name ] degree]] $angleDegree
-									}
-										# --- set angular Value - radiant
-									set angleRadiant 0
-									set _name 	[file join [ file dirname $_name ] radiant]
-									set check_name [array names [namespace current]::$_array $_name]
-									if { $check_name != {} } {
-											# puts "     angleDegree   $angleDegree"
-										set angleRadiant	[format "%.9f" [ vectormath::rad $angleDegree] ]
-											# puts "     angleRadiant  $angleRadiant"
-										#puts "  -- 03 --"
-										eval set [format "%s::%s(%s)" [namespace current] $_array [file join [ file dirname $_name ] radiant]] $angleRadiant
-									}
-								}
-					position 	{	
-									set value	[ flatten_nestedList $args ]	
-									#puts "  -- 04 --"
-									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] [format "%f,%f" [lindex $value 0] [lindex $value 1]]
-								}
-					polygon 	{	
-									set value {}
-									foreach {x y} [flatten_nestedList $args] {
-											# puts "             $x $y"
-										append value [format "%f,%f " $x $y]
-									}
-									#puts "  -- 05 --"
-									eval set [format "%s::%s(%s)" [namespace current] $_array $_name] \"$value\"
-								}
-					default		{	
-									puts "         --<E>--setValue----------------------------"
-									puts "             ... $type ... unhandled"
-									puts "         --<E>--setValue----------------------------"
-									puts "     ... $type ... unhandled"
-								}
-			}
-			
-				# eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
-				# puts "            -> new value: $value \n"
-
-	}
-		
-	#-------------------------------------------------------------------------
-		#  get value
-		#
-		# proc getValue {xPath type args}
-	proc getValue {arrayName type args} {
-	
-			set _array [lindex [split $arrayName (] 0]
-			set _name  [lindex [split $arrayName ()] 1]
-			set xPath  [format "%s/%s" $_array $_name]
-			
-				# -- Exception on different types of direction definitions
-			switch -exact $type {
-					direction 	{	
-									if { [file tail $_name] != {polar} } {
-										set _name 	[file join $_name polar] 
-									}
-								}
-					polygon 	{	
-									if { [file tail $_name] != {Polygon} } {
-										set _name 	[file join $_name Polygon] 
-									}
-								}
-			}
-
-				# set domProject $::APPL_Env(root_ProjectDOM)			
-				# set node	[$domProject selectNodes /root/$_array/$_name/text()]
-				# puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
-			set check_name [array names [namespace current]::$_array $_name]
-			if { $check_name == {} } {
-				puts "\n"
-				puts "         --<E>--getValue----------------------------"
-				puts "             ... $_name not found in [namespace current]::$_array"
-				puts "         --<E>--getValue----------------------------"
-				puts "\n"
-				return
-			}
-			
-			eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
-				# puts "            -> current value: $value \n"
-					
-			switch -exact $type {
-					value 		{}
-					direction 	{	if {[llength $args] != 0} {
-										if {[lindex $args 0] == {angle} } {
-											puts "   \n .... will become continued \n" 									 
-											set value 0.0123
-										}
-									}
-								}
-					position 	{	if {[llength $args] != 0} {
-										set value [lindex [split $value ,] [lindex $args 0] ]
-									}
-								}
-					polygon 	{	if {[llength $args] != 0} {
-											# puts "      ......... $value"
-										set value [lindex [split $value { }] [lindex $args 0] ]
-											# puts "      ......... $value"
-									}
-								}
-			}
-			# puts "    ... return new: $value"
-			return $value			
 	}
 
 

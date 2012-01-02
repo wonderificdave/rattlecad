@@ -95,7 +95,7 @@
 			<Crown>
 				<File>etc:fork/crown/longshen_max_36_5.svg</File>
 				<Brake>
-					<Offset>20.00</Offset>
+					<Offset>28.00</Offset>
 					<OffsetPerp>9.00</OffsetPerp>
 					<Angle>0.00</Angle>
 				</Brake>
@@ -124,10 +124,12 @@
 			<Front>
 				<File>etc:brake/front/campagnolo_frontbrake.svg</File>
 				<LeverLength>45.00</LeverLength>
+                <Offset>28.00</Offset>
 			</Front>
 			<Rear>
 				<File>etc:brake/rear/campagnolo_rearbrake.svg</File>
 				<LeverLength>45.00</LeverLength>
+                <Offset>30.00</Offset>
 			</Rear>
 		</Brake>
 		<RearDropOut>
@@ -245,8 +247,8 @@
 			<SteererGround>0.00,0.00</SteererGround>
 			<SeatTubeGround>0.00,0.00</SeatTubeGround>
 			<DerailleurMountFront>0.00,0.00</DerailleurMountFront>
-			<BrakeMountFront>0.00,0.00</BrakeMountFront>
-			<BrakeMountRear>0.00,0.00</BrakeMountRear>
+			<BrakeFront>0.00,0.00</BrakeFront>
+			<BrakeRear>0.00,0.00</BrakeRear>
 			<SummarySize>0.00,0.00</SummarySize>
 		</Position>
 
@@ -420,8 +422,8 @@
 		<!-- rendering information -->
 		<Fork>SteelLugged</Fork>
 		<Brake>
-			<Front>Road</Front>
-			<Rear>Road</Rear>
+			<Front>Rim</Front>
+			<Rear>Rim</Rear>
 		</Brake>		
 		<Derailleur>
 			<Front>Road</Front>

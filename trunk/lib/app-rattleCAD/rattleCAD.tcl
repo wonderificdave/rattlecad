@@ -247,7 +247,8 @@
 		set node_ForkTypes [ $root_InitDOM selectNodes /root/Options/Fork ]
 		foreach childNode [ $node_ForkTypes childNodes ] {
 			if {[$childNode nodeType] == {ELEMENT_NODE}} {
-					# puts "  childNode ->   [$childNode nodeName]  "
+				if {[string index [$childNode nodeName] 0 ] == {_}} continue
+				# puts "  childNode ->   [$childNode nodeName]  "
 				set APPL_Env(list_ForkTypes) [lappend APPL_Env(list_ForkTypes)  [$childNode nodeName]]
 			}
 		}

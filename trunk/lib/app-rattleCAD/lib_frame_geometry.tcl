@@ -71,6 +71,8 @@
 			variable FrameJig		; array set FrameJig		{}
 			variable TubeMitter		; array set TubeMitter		{}
 			
+			variable DEBUG_Geometry ; array set DEBUG_Geometry	{}
+			
 
 
 			#-------------------------------------------------------------------------
@@ -132,6 +134,8 @@
 			variable BottleCage
 			variable FrameJig
 			variable TubeMitter	
+			
+			variable DEBUG_Geometry
 
 
 				#
@@ -297,7 +301,9 @@
 				#
 				# --- get Front/Rear Brake PadLever --------------
 			set RearBrake(LeverLength)	$project::Component(Brake/Rear/LeverLength)
+			set RearBrake(Offset)		$project::Component(Brake/Rear/Offset)
 			set FrontBrake(LeverLength)	$project::Component(Brake/Front/LeverLength)
+			set FrontBrake(Offset)		$project::Component(Brake/Front/Offset)
 				
 				#
 				# --- get BottleCage Offset ----------------------
@@ -309,6 +315,11 @@
 				# --- get FrontDerailleur  ----------------------
 			set FrontDerailleur(Distance)	$project::Component(Derailleur/Front/Distance)
 			set FrontDerailleur(Offset)		$project::Component(Derailleur/Front/Offset)
+								
+								
+				#
+				# --- set DEBUG_Geometry  ----------------------
+			set DEBUG_Geometry(Base)		{0 0}
 								
 				
 				#
@@ -679,7 +690,7 @@
 										set taper_length	$Fork(BladeTaperLength) 
 									} 
 								
-								set hlp_00		{0 0}													;# point where Taper begins
+								set hlp_00		{0 0}											;# point where Taper begins
 								set hlp_01		[ list $taper_length	$Fork(BladeOffset) ]	;# point where Taper ends
 								set vct_taper	[ vectormath::unifyVector 	$hlp_00 $hlp_01 ]	;# direction caused by taper offset
 								set hlp_02		[ vectormath::addVector 	$hlp_01 [vectormath::scalePointList {0 0} $vct_taper $Fork(BladeOffsetDO) ] ]
@@ -700,22 +711,39 @@
 																		;# Fork Blade taper start
 							set pt_13		$pt_02						;# Crown Fork Blade center
 					project::setValue Result(Tubes/ForkBlade/Start)		position 	$pt_13				
-					project::setValue Result(Tubes/ForkBlade/End)		position 	$pt_11				
-						
-							set vct_10 		[ vectormath::parallel $pt_11 $pt_12 [expr 0.5*$Fork(BladeDiameterDO)] ]
-							set vct_11 		[ vectormath::parallel $pt_12 $pt_13 [expr 0.5*$Fork(BladeWith)] ]
-							set vct_12 		[ vectormath::parallel $pt_12 $pt_13 [expr 0.5*$Fork(BladeWith)] left]
-							set vct_13 		[ vectormath::parallel $pt_11 $pt_12 [expr 0.5*$Fork(BladeDiameterDO)] left ]
+					project::setValue Result(Tubes/ForkBlade/End)		position 	$pt_11
+
+
+					switch -glob $project::Rendering(Fork) {
+							SteelLugged {
+										set vct_10 		[ vectormath::parallel $pt_11 $pt_12 [expr 0.5*$Fork(BladeDiameterDO)] ]
+										set vct_11 		[ vectormath::parallel $pt_12 $pt_13 [expr 0.5*$Fork(BladeWith)] ]
+										set vct_12 		[ vectormath::parallel $pt_12 $pt_13 [expr 0.5*$Fork(BladeWith)] left]
+										set vct_13 		[ vectormath::parallel $pt_11 $pt_12 [expr 0.5*$Fork(BladeDiameterDO)] left ]
+								
+										#set polygon	[format "%s %s %s %s %s %s" \
+														[lindex $vct_10 0]  [lindex $vct_11 0] [lindex $vct_11 1]  \
+														[lindex $vct_12 1]  [lindex $vct_12 0] [lindex $vct_13 0] ]					
+										set polygon	[format "%s %s %s %s %s %s" \
+														[lindex $vct_11 1]  [lindex $vct_11 0] [lindex $vct_10 0]  \
+														[lindex $vct_13 0]  [lindex $vct_12 0] [lindex $vct_12 1] ]					
+										project::setValue Result(Tubes/ForkBlade)		polygon 	$polygon
+										
+										set Fork(DropoutDirection)	[ vectormath::unifyVector $pt_12 $pt_11 ]					
+										project::setValue Result(Lugs/Dropout/Front/Direction)	direction	$Fork(DropoutDirection)				
+									}
+							Composite 	{
+										project::setValue Result(Tubes/ForkBlade)		polygon		[ set_compositeFork ]
+									}
+							Suspension* {
+										project::setValue Result(Tubes/ForkBlade)		polygon		[ set_suspensionFork ]
+									}
+					}
 					
-							set polygon	[format "%s %s %s %s %s %s" \
-											[lindex $vct_10 0]  [lindex $vct_11 0] [lindex $vct_11 1]  \
-											[lindex $vct_12 1]  [lindex $vct_12 0] [lindex $vct_13 0] ]					
-					project::setValue Result(Tubes/ForkBlade)		polygon 	$polygon			
+
 							
 						#
 						# --- set Fork Dropout --------------------
-							set Fork(DropoutDirection)	[ vectormath::unifyVector $pt_12 $pt_11 ]					
-					project::setValue Result(Lugs/Dropout/Front/Direction)	direction	$Fork(DropoutDirection)				
 
 						#
 						# --- set Fork Crown ----------------------
@@ -1040,20 +1068,19 @@
 			
 			
 				#
-				# --- set RearBrakeMount ------------------
-			proc get_BrakeMountRear {} {
-					variable HeadTube
+				# --- set BrakePosition - Rear -------------
+			proc get_BrakePositionRear {} {
 					variable RearBrake
 					variable RearWheel
 					variable SeatStay
 
-							set brakeShoeDist	30
+							# set brakeShoeDist	30
 							set pt_00			$RearWheel(Position)
 							set pt_01					[split [ project::getValue Result(Tubes/SeatStay/Polygon)	polygon 8 ] , ]
 							set pt_02					[split [ project::getValue Result(Tubes/SeatStay/Polygon)	polygon 9 ] , ]
 							set RimBrakeRadius	[ expr 0.5 * $RearWheel(RimDiameter) ]
 							set pt_03			[ vectormath::intersectPerp	$pt_02 $pt_01 $pt_00 ]	;# point on SeatStay through RearWheel
-							set vct_01			[ vectormath::parallel $pt_01 $pt_03 $brakeShoeDist ]
+							set vct_01			[ vectormath::parallel $pt_01 $pt_03 $RearBrake(Offset) ]
 							set pt_04			[ lindex $vct_01 1 ]
 							set dist_00			[ vectormath::length $pt_00 $pt_04 ]
 							set dist_00_Ortho	[ expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2)) ]
@@ -1062,11 +1089,111 @@
 							set RearBrake(Help)		[ vectormath::addVector	$pt_04 [ vectormath::unifyVector {0 0} $SeatStay(Direction) [expr $RearBrake(LeverLength) + $dist_00_Ortho] ] ]
 							
 							set RearBrake(Mount)	[ vectormath::addVector	$pt_03 [ vectormath::unifyVector {0 0} $SeatStay(Direction) [expr $RearBrake(LeverLength) + $dist_00_Ortho] ] ]
-					project::setValue Result(Position/BrakeMountRear)	position	$RearBrake(Mount)
+					project::setValue Result(Position/BrakeRear)	position	$RearBrake(Shoe)
+					# project::setValue Result(Position/BrakeRear)	position	$RearBrake(Mount)
+					
+						variable DEBUG_Geometry
+						set DEBUG_Geometry(pt_21) "[lindex $pt_01 0],[lindex $pt_01 1]"
+						set DEBUG_Geometry(pt_22) "[lindex $pt_02 0],[lindex $pt_02 1]"
+						set DEBUG_Geometry(pt_23) "[lindex $pt_03 0],[lindex $pt_03 1]"
+						set DEBUG_Geometry(pt_24) "[lindex $pt_04 0],[lindex $pt_04 1]"
 			}
-			get_BrakeMountRear
+			get_BrakePositionRear
 
+			
+				#
+				# --- set BrakePosition - Front ------------
+			proc get_BrakeMountFront {} {
+					variable Fork
+					variable FrontBrake
+					variable HeadTube
+					variable Steerer
 
+							set brakeShoeDist	30
+							set pt_00			$Steerer(Fork)
+							set pt_01			[ vectormath::addVector	$pt_00 [ vectormath::unifyVector {0 0} $HeadTube(Direction) -$Fork(BrakeOffsetPerp)] ]
+							set vct_01			[ vectormath::parallel  $pt_00 $pt_01 $Fork(BrakeOffset) left]
+							set pt_10			[ lindex $vct_01 1]
+							set pt_11			[ vectormath::addVector	$pt_10 [ vectormath::unifyVector {0 0} $HeadTube(Direction) -$FrontBrake(LeverLength)] ] 
+							set pt_12			[ vectormath::rotatePoint	$pt_10	$pt_11	$Fork(BrakeAngle) ]
+							set vct_02			[ vectormath::parallel  $pt_10 $pt_12 $brakeShoeDist left]
+					
+							set FrontBrake(Help)	[ lindex $vct_02 0]
+							set FrontBrake(Shoe)	[ lindex $vct_02 1]
+							
+							set FrontBrake(Mount)				$pt_10		
+					project::setValue Result(Position/BrakeMountFront)		position	$FrontBrake(Mount)
+			}
+			proc get_BrakePositionFront {} {
+
+					variable HeadTube
+					variable Steerer
+					variable FrontBrake
+					variable FrontWheel
+					variable Fork
+
+							set brakeShoeDist	30
+							set RimBrakeRadius	[ expr 0.5 * $FrontWheel(RimDiameter) ]
+							
+							set pt_00			$FrontWheel(Position)
+							set pt_01			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	1] , ]
+							set pt_02			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	0] , ]
+							set pt_03			[ vectormath::intersectPerp	$pt_02 $pt_01 $pt_00 ]	;# point on Forkblade perpendicular through FrontWheel
+							set vct_01			[ vectormath::parallel $pt_01 $pt_03 $FrontBrake(Offset) left]
+							set pt_04			[ lindex $vct_01 1 ]
+
+							set dist_00			[ vectormath::length $pt_00 $pt_04 ]
+							set dist_00_Ortho	[ expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2)) ]
+							
+							set pt_10			[ vectormath::addVector	$pt_04 [ vectormath::unifyVector $pt_01 $pt_02 $dist_00_Ortho] ]			;# FrontBrake(Shoe)
+							set pt_11			[ vectormath::addVector	$pt_10 [ vectormath::unifyVector {0 0} $HeadTube(Direction) $FrontBrake(LeverLength)] ]
+							set pt_12			[ vectormath::rotatePoint	$pt_10	$pt_11	$Fork(BrakeAngle) ]										;# FrontBrake(Help)	
+							set pt_13			[ vectormath::addVector	$pt_12 [vectormath::VRotate [ vectormath::unifyVector $pt_10 $pt_12 $Fork(BrakeOffset)]  [ vectormath::rad 90] ] ];# FrontBrake(Help)
+							
+							set FrontBrake(Help)		$pt_12
+							set FrontBrake(Shoe)		$pt_10
+							set FrontBrake(Mount)		$pt_13
+
+					project::setValue Result(Position/BrakeFront)	position	$FrontBrake(Shoe)
+
+							
+							
+							set pt_18			[split [ project::getValue Result(Tubes/ForkBlade/Start) 	position] , ]
+							set pt_19			[split [ project::getValue Result(Tubes/ForkBlade/End)   	position] , ]
+							set pt_05			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	1] , ]
+							set pt_06			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	2] , ]
+							set pt_11			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	3] , ]
+							set pt_12			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	4] , ]
+							set pt_13			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	5] , ]
+							set pt_14			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	6] , ]
+							set pt_15			$FrontBrake(Mount)
+							set pt_18			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	0] , ]
+							set pt_19			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	5] , ]
+							
+
+							
+							variable DEBUG_Geometry
+							#set DEBUG_Geometry(pt_00) "[lindex $pt_00 0],[lindex $pt_00 1]"
+							set DEBUG_Geometry(pt_01) "[lindex $pt_01 0],[lindex $pt_01 1]"
+							set DEBUG_Geometry(pt_02) "[lindex $pt_02 0],[lindex $pt_02 1]"
+							
+							#set DEBUG_Geometry(pt_11) "[lindex $pt_11 0],[lindex $pt_11 1]"
+							#set DEBUG_Geometry(pt_12) "[lindex $pt_12 0],[lindex $pt_12 1]"
+							#set DEBUG_Geometry(pt_13) "[lindex $pt_13 0],[lindex $pt_13 1]"
+							#set DEBUG_Geometry(pt_14) "[lindex $pt_14 0],[lindex $pt_14 1]"
+							#set DEBUG_Geometry(pt_15) "[lindex $pt_15 0],[lindex $pt_15 1]"
+							
+							# set DEBUG_Geometry(pt_03) "[lindex $pt_03 0],[lindex $pt_03 1]"
+							# set DEBUG_Geometry(pt_04) "[lindex $pt_04 0],[lindex $pt_04 1]"
+							# set DEBUG_Geometry(pt_05) "[lindex $pt_05 0],[lindex $pt_05 1]"
+							# set DEBUG_Geometry(pt_06) "[lindex $pt_06 0],[lindex $pt_06 1]"
+							#set DEBUG_Geometry(pt_18) "[lindex $pt_18 0],[lindex $pt_18 1]"
+							#set DEBUG_Geometry(pt_19) "[lindex $pt_19 0],[lindex $pt_19 1]"
+
+			}
+			get_BrakePositionFront
+			
+			
 				#
 				# --- set BottleCageMount ------------------
 			proc get_BottleCageMount {} {
@@ -1097,31 +1224,6 @@
 			}
 			get_BottleCageMount
 
-			
-				#
-				# --- set FrontBrakeMount -----------------
-			proc get_BrakeMountFront {} {
-					variable Fork
-					variable FrontBrake
-					variable HeadTube
-					variable Steerer
-
-							set brakeShoeDist	30
-							set pt_00			$Steerer(Fork)
-							set pt_01			[ vectormath::addVector	$pt_00 [ vectormath::unifyVector {0 0} $HeadTube(Direction) -$Fork(BrakeOffsetPerp)] ]
-							set vct_01			[ vectormath::parallel  $pt_00 $pt_01 $Fork(BrakeOffset) left]
-							set pt_10			[ lindex $vct_01 1]
-							set pt_11			[ vectormath::addVector	$pt_10 [ vectormath::unifyVector {0 0} $HeadTube(Direction) -$FrontBrake(LeverLength)] ] 
-							set pt_12			[ vectormath::rotatePoint	$pt_10	$pt_11	$Fork(BrakeAngle) ]
-							set vct_02			[ vectormath::parallel  $pt_10 $pt_12 $brakeShoeDist left]
-					
-							set FrontBrake(Help)	[ lindex $vct_02 0]
-							set FrontBrake(Shoe)	[ lindex $vct_02 1]
-							
-							set FrontBrake(Mount)				$pt_10		
-					project::setValue Result(Position/BrakeMountFront)		position	$FrontBrake(Mount)
-			}
-			get_BrakeMountFront
 
 
 				#
@@ -1265,6 +1367,20 @@
 	proc object_values {object index {centerPoint {0 0}} } {
 				# puts "   ... $object"
 				# {lindex {-1}} 
+
+				# -- for debug purpose
+			if {$object == {DEBUG_Geometry}} {
+					set returnValue	{}
+					set pointValue $index
+					foreach xy $pointValue {
+						foreach {x y} [split $xy ,] break
+						lappend returnValue $x $y	; # puts "    ... $returnValue"
+					}
+					return [ coords_addVector  $returnValue  $centerPoint]
+			}
+							
+
+				# -- default purpose
 			switch -exact $index {
 
 				polygon	{	set returnValue	{}
@@ -1311,8 +1427,8 @@
 								BottomBracketGround -
 								SteererGround -
 								SeatTubeGround -
-								BrakeMountFront -
-								BrakeMountRear -
+								BrakeFront -
+								BrakeRear -
 								DerailleurMountFront -
 								SummarySize {	
 											set branch "Position/$object"		
@@ -1326,6 +1442,7 @@
 											set branch "$object/Position"	; # puts " ... $branch"											
 										}
 										
+										
 								default {	
 											# puts "   ... \$object $object"
 											set branch "Tubes/$object"	
@@ -1333,6 +1450,7 @@
 							}
 							
 							set pointValue	[ project::getValue Result($branch)	position ]	; # puts "    ... $pointValue"
+							
 							foreach xy $pointValue {
 								foreach {x y} [split $xy ,] break
 								lappend returnValue $x $y	; # puts "    ... $returnValue"
@@ -1379,10 +1497,11 @@
 	
 	#-------------------------------------------------------------------------
 		#  Fork Blade Polygon for composite Fork
-	proc set_compositeFork {domInit BB_Position} {
+	proc set_compositeFork {} {
 			
-			set ForkDropout(position)	[ frame_geometry::object_values		FrontWheel		position	$BB_Position]
-			set Steerer_Fork(position)	[ frame_geometry::object_values		Steerer/Start	position	$BB_Position]
+			set domInit $::APPL_Env(root_InitDOM)
+			set FrontWheel(position)	[ frame_geometry::object_values		FrontWheel		position	{0 0}]
+			set Steerer_Fork(position)	[ frame_geometry::object_values		Steerer/Start	position	{0 0}]
 			set ht_direction			[ frame_geometry::object_values		HeadTube		direction ]
 
 			set Fork(BladeWith)				[ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Blade/Width			]  asText ]
@@ -1391,43 +1510,93 @@
 			set Fork(BladeOffsetCrownPerp)	[ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Crown/Blade/OffsetPerp	]  asText ]
 			set Fork(BladeOffsetDO)			[ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/DropOut/Offset		]  asText ]
 			
-				# puts ""
-				# puts "   Fork(BladeWith)			$Fork(BladeWith)			"
-				# puts "   Fork(BladeDiameterDO)		$Fork(BladeDiameterDO)		"
-				# puts "   Fork(BladeOffsetCrown)		$Fork(BladeOffsetCrown)		"
-				# puts "   Fork(BladeOffsetCrownPerp)	$Fork(BladeOffsetCrownPerp)	"
-				# puts "   Fork(BladeOffsetDO)		$Fork(BladeOffsetDO)		"
-		
-			set ht_angle				[ vectormath::angle {0 1} {0 0} $ht_direction ]
-				set vct_03					[list [expr -1 * $Fork(BladeOffsetCrownPerp)] $Fork(BladeOffsetCrown) ]
-				set vct_04					[ vectormath::rotatePoint {0 0} $vct_03 $ht_angle ]
-			set pt_02				[ vectormath::subVector $Steerer_Fork(position) $vct_04 ]
-				set help_02					[ list 0 [lindex  $ForkDropout(position) 1] ]			
-				set do_angle				[ expr 90 - [ vectormath::angle $pt_02 $ForkDropout(position) $help_02  ] ]			
+			set ht_angle			[ vectormath::angle {0 1} {0 0} $ht_direction ]
+			set pt_00				[list $Fork(BladeOffsetCrownPerp) [expr -1.0*$Fork(BladeOffsetCrown)] ]
+			set pt_01				[ vectormath::addVector $pt_00 {0  -5} ]
+			set pt_02				[ vectormath::addVector $pt_00 {0 -15} ]
+			
+			set pt_00				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_00 $ht_angle ]]
+			set pt_01				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_01 $ht_angle ]]
+			set pt_02				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_02 $ht_angle ]]
+				# puts "     ... \$ht_angle  $ht_angle"
+				# puts "   -> pt_00  $pt_00"
+				# puts "   -> pt_01  $pt_01"
+			
+			set vct_10				[ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(BladeWith)] left]
+			set vct_19				[ vectormath::parallel $pt_00 $pt_02 [expr 0.5*$Fork(BladeWith)] ]
+					# puts "   -> pt_00  $pt_00"
+				# puts "   -> vct_10  $vct_10"
+				# puts "   -> vct_19  $vct_19"
+			
+				set help_02					[ list 0 [lindex  $FrontWheel(position) 1] ]			
+				set do_angle				[ expr 90 - [ vectormath::angle $pt_01 $FrontWheel(position) $help_02  ] ]			
 				set vct_05					[ list $Fork(BladeOffsetDO) 0 ]
 				set vct_06					[ vectormath::rotatePoint {0 0} $vct_05 [expr 90 + $do_angle] ]
-			set pt_03				[ vectormath::addVector $ForkDropout(position)  $vct_06 ]
-				set vct_01					[ vectormath::rotatePoint {0 0} {0 5} $do_angle ]
-			set pt_01				[ vectormath::addVector $pt_02 $vct_01 ]
+			set pt_03				[ vectormath::addVector $FrontWheel(position)  $vct_06 ]
 			
-			set vct_10 		[ vectormath::parallel $pt_01 $pt_02 [expr 0.5*$Fork(BladeWith) -1] ]
-			set vct_11 		[ vectormath::parallel $pt_02 $pt_03 [expr 0.5*$Fork(BladeWith)] ]
-			set vct_12 		[ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] ]
-			set vct_13 		[ vectormath::parallel $pt_03 $pt_01 [expr 0.5*$Fork(BladeDiameterDO)] ]
-			set vct_14 		[ vectormath::parallel $pt_03 $pt_02 [expr 0.5*$Fork(BladeWith)] ]
-			set vct_15 		[ vectormath::parallel $pt_02 $pt_01 [expr 0.5*$Fork(BladeWith) -1] ]
+				set vct_11			[ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] left]
+				set vct_18			[ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] ]
 			
 			set polygon 		[format "%s %s %s %s %s %s" \
-												[lindex $vct_10 0]  [lindex $vct_11 0]  [lindex $vct_12 1]  \
-												[lindex $vct_13 0]  [lindex $vct_14 1]  [lindex $vct_15 1] ]
-				# set ForkBlade(polygon) 		[format "%s %s %s %s %s %s" \
-													[lindex $vct_10 0]  [lindex $vct_11 0]  [lindex $vct_12 1]  \
-													[lindex $vct_13 0]  [lindex $vct_14 1]  [lindex $vct_15 1] ]
-													
-				# return $ForkBlade(polygon)
+									[lindex $vct_10 0] [lindex $vct_10 1] \
+									[lindex $vct_11 1] [lindex $vct_18 1] \
+									[lindex $vct_19 1] [lindex $vct_19 0] ]
+									
+
+			set do_direction	[ vectormath::unifyVector $FrontWheel(position) $pt_03 ]					
+			project::setValue Result(Lugs/Dropout/Front/Direction)	direction	$do_direction				
+
 			return $polygon
+	}
+
+
+	#-------------------------------------------------------------------------
+		#  Fork Blade Polygon for suspension Fork
+	proc set_suspensionFork {} {
 			
-	}		
+			set domInit $::APPL_Env(root_InitDOM)
+			set FrontWheel(position)	[ frame_geometry::object_values		FrontWheel		position	{0 0}]
+			set Steerer_Fork(position)	[ frame_geometry::object_values		Steerer/Start	position	{0 0}]
+			set ht_direction			[ frame_geometry::object_values		HeadTube		direction ]
+
+			set Fork(LegOffsetCrown)		[ [ $domInit selectNodes /root/Options/Fork/_Suspension/Leg/Offset		]  asText ]
+			set Fork(LegOffsetCrownPerp)	[ [ $domInit selectNodes /root/Options/Fork/_Suspension/Leg/OffsetPerp	]  asText ]
+			set Fork(LegDiameter)			[ [ $domInit selectNodes /root/Options/Fork/_Suspension/Leg/Diameter	]  asText ]
+			
+			
+
+			
+			
+			
+			set ht_angle			[ vectormath::angle {0 1} {0 0} $ht_direction ]
+			
+			set pt_00				[list $Fork(LegOffsetCrownPerp) [expr -1.0*$Fork(LegOffsetCrown)] ]
+			set pt_01				[ vectormath::addVector $pt_00 {0 -90} ]
+
+			set pt_00				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_00 $ht_angle ]]
+			set pt_01				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_01 $ht_angle ]]
+				# puts "     ... \$ht_angle  $ht_angle"
+				# puts "   -> pt_00  $pt_00"
+				# puts "   -> pt_01  $pt_01"
+			
+			set vct_10				[ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(LegDiameter)] left]
+			set vct_19				[ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(LegDiameter)] ]
+					# puts "   -> pt_00  $pt_00"
+				# puts "   -> vct_10  $vct_10"
+				# puts "   -> vct_19  $vct_19"
+			
+			
+			set polygon 		[format "%s %s %s %s" \
+									[lindex $vct_10 0] [lindex $vct_10 1] \
+									[lindex $vct_19 1] [lindex $vct_19 0] ]
+									
+
+			set do_direction	[ vectormath::unifyVector $pt_01 $pt_00 ]					
+			project::setValue Result(Lugs/Dropout/Front/Direction)	direction	$do_direction				
+
+			return $polygon
+	}
+
 
 	
  	#-------------------------------------------------------------------------
