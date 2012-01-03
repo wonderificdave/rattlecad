@@ -46,7 +46,10 @@
 	
 	
 	proc get_FormatFactor {stageFormat} {
-			puts "  get_FormatFactor: $stageFormat"
+			puts ""
+			puts "   -------------------------------"
+			puts "    get_FormatFactor::update"
+			puts "       stageFormat:     $stageFormat"
 			switch -regexp $stageFormat {
 				^A[0-9] {	set factorInt	[expr 1.0 * [string index $stageFormat end] ]
 							return			[expr pow(sqrt(2), $factorInt)]

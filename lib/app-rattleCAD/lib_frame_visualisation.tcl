@@ -39,400 +39,381 @@
 
  namespace eval frame_visualisation {
 
-	#  global 		APPL_Env
-	# parray      APPL_Env
-	#upvar #0 	APPL_Env	root_APPL_Env
-	
-#	variable    bottomCanvasBorder	30
-
-#	variable 	baseLine
-#	array	set	baseLine	{}
-
 
 	proc createBaseline {cv_Name BB_Position {colour {gray}}} {
-	
 
-			## -- read from domProject
-		# remove 3.2.70 ;# set domProject $::APPL_Env(root_ProjectDOM)
-		
-			# --- get distance to Ground
-		set BB_Ground(position)	[ vectormath::addVector $frame_geometry::BottomBracket(Ground)  $BB_Position ]
-						
-		set RimDiameter_Front		$frame_geometry::FrontWheel(RimDiameter)
-		set RimDiameter_Rear		$frame_geometry::RearWheel(RimDiameter)
-		
-		set FrontWheel(position)	[ frame_geometry::object_values		FrontWheel	position	$BB_Position]
-		set RearWheel(position)		[ frame_geometry::object_values		RearWheel	position	$BB_Position  ]
-			# puts "   ... \$RearWheel(position)  $RearWheel(position)"
-		
-						
-			# --- get RearWheel
-		foreach {x y} $RearWheel(position) break
-		set Rear(xy)				[ list [expr $x - 0.8 * 0.5 * $RimDiameter_Rear ] [lindex $BB_Ground(position) 1] ]
-				
-			# --- get FrontWheel
-		foreach {x y} $FrontWheel(position) break
-		set Front(xy)				[ list [expr $x + 0.8 * 0.5 * $RimDiameter_Front ] [lindex $BB_Ground(position) 1] ]
-		
-		
-			# --- create line
-		$cv_Name create line 	[ list  [ lindex $Rear(xy)   0 ] [ lindex $Rear(xy)   1 ] [ lindex $Front(xy)   0 ] [ lindex $Front(xy)   1 ] ]  -fill $colour 
-		$cv_Name create circle 	$BB_Position  -radius 10  -outline $colour		
+				# --- get distance to Ground
+			set BB_Ground(position)	[ vectormath::addVector $frame_geometry::BottomBracket(Ground)  $BB_Position ]
+							
+			set RimDiameter_Front		$frame_geometry::FrontWheel(RimDiameter)
+			set RimDiameter_Rear		$frame_geometry::RearWheel(RimDiameter)
+			
+			set FrontWheel(position)	[ frame_geometry::object_values		FrontWheel	position	$BB_Position]
+			set RearWheel(position)		[ frame_geometry::object_values		RearWheel	position	$BB_Position  ]
+				# puts "   ... \$RearWheel(position)  $RearWheel(position)"
+			
+							
+				# --- get RearWheel
+			foreach {x y} $RearWheel(position) break
+			set Rear(xy)				[ list [expr $x - 0.8 * 0.5 * $RimDiameter_Rear ] [lindex $BB_Ground(position) 1] ]
+					
+				# --- get FrontWheel
+			foreach {x y} $FrontWheel(position) break
+			set Front(xy)				[ list [expr $x + 0.8 * 0.5 * $RimDiameter_Front ] [lindex $BB_Ground(position) 1] ]
+			
+			
+				# --- create line
+			$cv_Name create line 	[ list  [ lindex $Rear(xy)   0 ] [ lindex $Rear(xy)   1 ] [ lindex $Front(xy)   0 ] [ lindex $Front(xy)   1 ] ]  -fill $colour 
+			$cv_Name create circle 	$BB_Position  -radius 10  -outline $colour		
 	}
 
 
 	proc createDecoration {cv_Name BB_Position type {updateCommand {}}} {
 			
-
-			## -- read from domProject
-		# remove 3.2.70 ;# set domProject 	$::APPL_Env(root_ProjectDOM)
-
-			# --- get stageScale
-		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
-		
-			# --- get Rendering Style
-		set Rendering(BrakeFront)		$project::Rendering(Brake/Front)
-		set Rendering(BrakeRear)		$project::Rendering(Brake/Rear)
-		set Rendering(BottleCage_ST)	$project::Rendering(BottleCage/SeatTube)
-		set Rendering(BottleCage_DT)	$project::Rendering(BottleCage/DownTube)
-		set Rendering(BottleCage_DT_L)	$project::Rendering(BottleCage/DownTube_Lower)
-		
-		
-
-
-		# --- check existance of File --- regarding on user/etc
-		proc checkFileString {fileString} {
-			switch -glob $fileString {
-					user:* 	{ 	set svgFile [file join $::APPL_Env(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
-					etc:* 	{ 	set svgFile [file join $::APPL_Env(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
-					default {	set svgFile [file join $::APPL_Env(CONFIG_Dir)/components $fileString ]}
-				}
-				# puts "            ... createDecoration::checkFileString $svgFile"
-			if {![file exists $svgFile]} {
-						# puts "           ... does not exist, therfore .."
-					set svgFile [file join $::APPL_Env(CONFIG_Dir)/components default_exception.svg]
-			}
-				# puts "            ... createDecoration::checkFileString $svgFile"
-			return $svgFile
-		}
-
-		
-		switch $type {
-			HandleBar {
-							# --- create Handlebar -------------
-						set HandleBar(position)		[ frame_geometry::object_values  HandleBar  position	$BB_Position]
-						set HandleBar(file)			[ checkFileString $project::Component(HandleBar/File)]
-						set HandleBar(object)		[ $cv_Name readSVG $HandleBar(file) $HandleBar(position) -5  __Decoration__ ]		
-						if {$updateCommand != {}} 	{ $cv_Name bind	$HandleBar(object)	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	file://Component(HandleBar/File)	\
-																				} 	{HandleBar Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$HandleBar(object)
-								}
-						}
-			DerailleurRear {
-							# --- create RearDerailleur --------
-						set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		$BB_Position]
-						set Derailleur(file)		[ checkFileString $project::Component(Derailleur/Rear/File) ]
-						set Derailleur(object)		[ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  0  __Decoration__ ]		
-						if {$updateCommand != {}} 	{ $cv_Name bind	$Derailleur(object)	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	file://Component(Derailleur/Rear/File)	\
-																				} 	{DerailleurRear Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$Derailleur(object)
-								}
-						}
-			DerailleurRear_ctr {
-							# --- create RearDerailleur --------
-						set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		  $BB_Position]
-						foreach {x y} $Derailleur(position) break
-						set x1	[expr $x + 15];		set x2	[expr $x - 15]; 	set y1	[expr $y + 15]; 	set y2	[expr $y - 15]
-						$cv_Name create line  [list $x1 $y $x2 $y]   -fill gray60  -tags __Decoration__
-						$cv_Name create line  [list $x $y1 $x $y2]   -fill gray60  -tags __Decoration__			
-						}
-			DerailleurFront {
-							# --- create FrontDerailleur --------
-						set Derailleur(position)	[ frame_geometry::object_values  DerailleurMountFront  position	$BB_Position]
-						set angle					[ vectormath::angle {0 1} {0 0} [ frame_geometry::object_values SeatTube direction ] ]
-						set Derailleur(file)		[ checkFileString $project::Component(Derailleur/Front/File) ]
-						set Derailleur(object)		[ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  $angle  __Decoration__ ]		
-						if {$updateCommand != {}} 	{ $cv_Name bind	$Derailleur(object)	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	file://Component(Derailleur/Front/File)	\
-																					Component(Derailleur/Front/Distance) \
-																					Component(Derailleur/Front/Offset) \
-																				} 	{DerailleurFront Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$Derailleur(object)
-								}
-						}
-			CrankSet {
-							# --- create Crankset --------------
-						set CrankSet(position)		$BB_Position
-						set CrankSet(file)			[ checkFileString $project::Component(CrankSet/File) ]	
-						set CrankSet(object)		[ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __Decoration__ ]
-						if {$updateCommand != {}} 	{ $cv_Name bind	$CrankSet(object)	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	file://Component(CrankSet/File) \
-																				} 	{CrankSet Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$CrankSet(object)
-								}
-						}
-			SeatPost {
-							# --- create SeatPost ------------------
-						set SeatPost(polygon) 		[ frame_geometry::object_values SeatPost polygon $BB_Position  ]						
-						set SeatPost(object)		[ $cv_Name create polygon $SeatPost(polygon) -fill white  -outline black  -tags __Decoration__ ]
-						if {$updateCommand != {}} 	{ $cv_Name bind	$SeatPost(object)	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	Component(Saddle/SeatPost/x)	\
-																					Component(Saddle/SeatPost/y)	\
-																					Component(Saddle/SeatPost/Diameter)	\
-																				} 	{SeatPost Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$SeatPost(object)
-								}
-						}
+				# --- get stageScale
+			set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 			
-			Brake {
-							# --- create RearBrake -----------------
-							if {$Rendering(BrakeRear) != {off}} {
-								puts "          ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
-								switch $Rendering(BrakeRear) {
-									Rim {
-										set ss_direction	[ frame_geometry::object_values SeatStay direction ]
-										set ss_angle		[ expr - [ vectormath::angle {0 1} {0 0} $ss_direction ] ]
-										set RearBrake(position)	[ frame_geometry::object_values  BrakeRear  position	$BB_Position]
-										set RearBrake(file)			[ checkFileString $project::Component(Brake/Rear/File) ]
-										set RearBrake(object)		[ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __Decoration__ ]		
-										if {$updateCommand != {}} 	{ $cv_Name bind	$RearBrake(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																								{ 	list://Rendering(Brake/Rear@SELECT_BrakeTypes) \
-																									file://Component(Brake/Rear/File)	\
-																									Component(Brake/Rear/LeverLength)	\
-																									Component(Brake/Rear/Offset)	\
-																								} 	{RearBrake Parameter} \
-																				]
-																	  lib_gui::object_CursorBinding 	$cv_Name	$RearBrake(object)
+				# --- get Rendering Style
+			set Rendering(BrakeFront)		$project::Rendering(Brake/Front)
+			set Rendering(BrakeRear)		$project::Rendering(Brake/Rear)
+			set Rendering(BottleCage_ST)	$project::Rendering(BottleCage/SeatTube)
+			set Rendering(BottleCage_DT)	$project::Rendering(BottleCage/DownTube)
+			set Rendering(BottleCage_DT_L)	$project::Rendering(BottleCage/DownTube_Lower)
+			
+			
+
+
+			# --- check existance of File --- regarding on user/etc
+			proc checkFileString {fileString} {
+				switch -glob $fileString {
+						user:* 	{ 	set svgFile [file join $::APPL_Env(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
+						etc:* 	{ 	set svgFile [file join $::APPL_Env(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
+						default {	set svgFile [file join $::APPL_Env(CONFIG_Dir)/components $fileString ]}
+					}
+					# puts "            ... createDecoration::checkFileString $svgFile"
+				if {![file exists $svgFile]} {
+							# puts "           ... does not exist, therfore .."
+						set svgFile [file join $::APPL_Env(CONFIG_Dir)/components default_exception.svg]
+				}
+					# puts "            ... createDecoration::checkFileString $svgFile"
+				return $svgFile
+			}
+
+			
+			switch $type {
+                    HandleBar {
+								# --- create Handlebar -------------
+							set HandleBar(position)		[ frame_geometry::object_values  HandleBar  position	$BB_Position]
+							set HandleBar(file)			[ checkFileString $project::Component(HandleBar/File)]
+							set HandleBar(object)		[ $cv_Name readSVG $HandleBar(file) $HandleBar(position) -5  __Decoration__ ]		
+							if {$updateCommand != {}} 	{ $cv_Name bind	$HandleBar(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	file://Component(HandleBar/File)	\
+																					} 	{HandleBar Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$HandleBar(object)
+									}
+							}
+                    DerailleurRear {
+								# --- create RearDerailleur --------
+							set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		$BB_Position]
+							set Derailleur(file)		[ checkFileString $project::Component(Derailleur/Rear/File) ]
+							set Derailleur(object)		[ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  0  __Decoration__ ]		
+							if {$updateCommand != {}} 	{ $cv_Name bind	$Derailleur(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	file://Component(Derailleur/Rear/File)	\
+																					} 	{DerailleurRear Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$Derailleur(object)
+									}
+							}
+                    DerailleurRear_ctr {
+								# --- create RearDerailleur --------
+							set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		  $BB_Position]
+							foreach {x y} $Derailleur(position) break
+							set x1	[expr $x + 15];		set x2	[expr $x - 15]; 	set y1	[expr $y + 15]; 	set y2	[expr $y - 15]
+							$cv_Name create line  [list $x1 $y $x2 $y]   -fill gray60  -tags __Decoration__
+							$cv_Name create line  [list $x $y1 $x $y2]   -fill gray60  -tags __Decoration__			
+							}
+                    DerailleurFront {
+								# --- create FrontDerailleur --------
+							set Derailleur(position)	[ frame_geometry::object_values  DerailleurMountFront  position	$BB_Position]
+							set angle					[ vectormath::angle {0 1} {0 0} [ frame_geometry::object_values SeatTube direction ] ]
+							set Derailleur(file)		[ checkFileString $project::Component(Derailleur/Front/File) ]
+							set Derailleur(object)		[ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  $angle  __Decoration__ ]		
+							if {$updateCommand != {}} 	{ $cv_Name bind	$Derailleur(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	file://Component(Derailleur/Front/File)	\
+																						Component(Derailleur/Front/Distance) \
+																						Component(Derailleur/Front/Offset) \
+																					} 	{DerailleurFront Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$Derailleur(object)
+									}
+							}
+                    CrankSet {
+								# --- create Crankset --------------
+							set CrankSet(position)		$BB_Position
+							set CrankSet(file)			[ checkFileString $project::Component(CrankSet/File) ]	
+							set CrankSet(object)		[ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __Decoration__ ]
+							if {$updateCommand != {}} 	{ $cv_Name bind	$CrankSet(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	file://Component(CrankSet/File) \
+																					} 	{CrankSet Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$CrankSet(object)
+									}
+							}
+                    SeatPost {
+								# --- create SeatPost ------------------
+							set SeatPost(polygon) 		[ frame_geometry::object_values SeatPost polygon $BB_Position  ]						
+							set SeatPost(object)		[ $cv_Name create polygon $SeatPost(polygon) -fill white  -outline black  -tags __Decoration__ ]
+							if {$updateCommand != {}} 	{ $cv_Name bind	$SeatPost(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	Component(Saddle/SeatPost/x)	\
+																						Component(Saddle/SeatPost/y)	\
+																						Component(Saddle/SeatPost/Diameter)	\
+																					} 	{SeatPost Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$SeatPost(object)
+									}
+							}
+				
+                    Brake {
+								# --- create RearBrake -----------------
+								if {$Rendering(BrakeRear) != {off}} {
+									puts "          ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
+									switch $Rendering(BrakeRear) {
+										Rim {
+											set ss_direction	[ frame_geometry::object_values SeatStay direction ]
+											set ss_angle		[ expr - [ vectormath::angle {0 1} {0 0} $ss_direction ] ]
+											set RearBrake(position)	[ frame_geometry::object_values  BrakeRear  position	$BB_Position]
+											set RearBrake(file)			[ checkFileString $project::Component(Brake/Rear/File) ]
+											set RearBrake(object)		[ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __Decoration__ ]		
+											if {$updateCommand != {}} 	{ $cv_Name bind	$RearBrake(object)	<Double-ButtonPress-1> \
+																					[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																									{ 	list://Rendering(Brake/Rear@SELECT_BrakeTypes) \
+																										file://Component(Brake/Rear/File)	\
+																										Component(Brake/Rear/LeverLength)	\
+																										Component(Brake/Rear/Offset)	\
+																									} 	{RearBrake Parameter} \
+																					]
+																		  lib_gui::object_CursorBinding 	$cv_Name	$RearBrake(object)
+													}
 												}
+										default {}
+									}
+								}
+
+								# --- create FrontBrake ----------------
+								if {$Rendering(BrakeFront) != {off}} {
+									puts "          ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
+									switch $Rendering(BrakeFront) {
+										Rim {
+											set ht_direction	[ frame_geometry::object_values HeadTube direction ]
+											set ht_angle		[ expr [ vectormath::angle {0 1} {0 0} $ht_direction ] ]
+											set fb_angle		$project::Component(Fork/Crown/Brake/Angle)
+											set fb_angle		[ expr $ht_angle + $fb_angle ]
+											set FrontBrake(position)	[ frame_geometry::object_values  BrakeFront  position	$BB_Position]
+											set FrontBrake(file)		[ checkFileString $project::Component(Brake/Front/File) ]
+											set FrontBrake(object)		[ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __Decoration__ ]		
+											if {$updateCommand != {}} 	{ $cv_Name bind	$FrontBrake(object)	<Double-ButtonPress-1> \
+																					[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																									{ 	list://Rendering(Brake/Front@SELECT_BrakeTypes) \
+																										file://Component(Brake/Front/File)	\
+																										Component(Brake/Front/LeverLength)	\
+																										Component(Brake/Front/Offset)	\
+																									} 	{FrontBrake Parameter} \
+																					]
+																		  lib_gui::object_CursorBinding 	$cv_Name	$FrontBrake(object)
+													}
+											}																																			
+										default {}
+									}
+								}
+							}
+							
+                    BottleCage {
+								# --- create FrontBrake ----------------
+								if {$Rendering(BottleCage_ST) != {off}} {	
+												# puts "   ... \$Rendering(BottleCage_ST) $Rendering(BottleCage_ST)"
+											switch $Rendering(BottleCage_ST) {
+												BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg  	 ] }
+												Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg	 ] }
+												Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
 											}
-									default {}
-								}
-							}
-
-							# --- create FrontBrake ----------------
-							if {$Rendering(BrakeFront) != {off}} {
-								puts "          ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
-								switch $Rendering(BrakeFront) {
-									Rim {
-										set ht_direction	[ frame_geometry::object_values HeadTube direction ]
-										set ht_angle		[ expr [ vectormath::angle {0 1} {0 0} $ht_direction ] ]
-										set fb_angle		$project::Component(Fork/Crown/Brake/Angle)
-										set fb_angle		[ expr $ht_angle + $fb_angle ]
-										set FrontBrake(position)	[ frame_geometry::object_values  BrakeFront  position	$BB_Position]
-										set FrontBrake(file)		[ checkFileString $project::Component(Brake/Front/File) ]
-										set FrontBrake(object)		[ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __Decoration__ ]		
-										if {$updateCommand != {}} 	{ $cv_Name bind	$FrontBrake(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																								{ 	list://Rendering(Brake/Front@SELECT_BrakeTypes) \
-																									file://Component(Brake/Front/File)	\
-																									Component(Brake/Front/LeverLength)	\
-																									Component(Brake/Front/Offset)	\
-																								} 	{FrontBrake Parameter} \
-																				]
-																	  lib_gui::object_CursorBinding 	$cv_Name	$FrontBrake(object)
-												}
-										}																																			
-									default {}
-								}
-							}
-						}
-						
-			BottleCage {
-							# --- create FrontBrake ----------------
-							if {$Rendering(BottleCage_ST) != {off}} {	
-											# puts "   ... \$Rendering(BottleCage_ST) $Rendering(BottleCage_ST)"
-										switch $Rendering(BottleCage_ST) {
-											BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg  	 ] }
-											Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg	 ] }
-											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
-										}
-											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"								
-										set st_direction	[ frame_geometry::object_values SeatTube direction ]
-										set st_angle		[ expr 180 + [ vectormath::dirAngle {0 0} $st_direction ] ]
-										set bc_position		[ frame_geometry::object_values	SeatTube/BottleCage/Base	position	$BB_Position]
-										
-											# set BottleCage(file)		[ checkFileString $project::Component(BottleCage/SeatTube/File ]  asText ] ]
-										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $st_angle  __Decoration__ ]		
-										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																								{ 	list://Rendering(BottleCage/SeatTube@SELECT_BottleCage) \
-																								} 	{BottleCage SeatTube Parameter} \
-																				]
-																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
-										}
-							}
-
-							if {$Rendering(BottleCage_DT) != {off}} {	
-											# puts "   ... \$Rendering(BottleCage_DT) $Rendering(BottleCage_DT)"
-										switch $Rendering(BottleCage_DT) {
-											BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/brazeOn.svg  	 ] }
-											Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottleCage.svg	 ] }
-											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottle_Large.svg ] }
-										}
-											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
-										set dt_direction	[ frame_geometry::object_values DownTube direction ]
-										set dt_angle		[ vectormath::dirAngle {0 0} $dt_direction ]
-										set bc_position		[ frame_geometry::object_values	DownTube/BottleCage/Base	position	$BB_Position]
-
-										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __Decoration__ ]		
-										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																								{ 	list://Rendering(BottleCage/DownTube@SELECT_BottleCage) \
-																								} 	{BottleCage DownTube-Upper Parameter} \
-																				]
-																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
-										}
-							}
-
-							if {$Rendering(BottleCage_DT_L) != {off}} {	
-											# puts "   ... \$Rendering(BottleCage_DT_L) $Rendering(BottleCage_DT_L)"
-										switch $Rendering(BottleCage_DT_L) {
-											BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg  	 ] }
-											Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg	 ] }
-											Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
-										}
-											# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
-										set dt_direction	[ frame_geometry::object_values DownTube direction ]
-										set dt_angle		[ expr 180 + [ vectormath::dirAngle {0 0} $dt_direction ] ]
-										set bc_position		[ frame_geometry::object_values	DownTube/BottleCage_Lower/Base	position	$BB_Position]
-
-										set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __Decoration__ ]		
-										if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
-																				[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																								{ 	list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) \
-																								} 	{BottleCage DownTube-Lower Parameter} \
-																				]
-																	  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
-										}						
-							}
-
-						}
-			Saddle {
-							# --- create Saddle --------------------
-						set Saddle(position)		[ frame_geometry::object_values		Saddle  position		$BB_Position ]
-						set Saddle(file)			[ checkFileString $project::Component(Saddle/File) ]
-						set Saddle(object)			[ $cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Decoration__ ]	
-						if {$updateCommand != {}} 	{ $cv_Name bind	$Saddle(object)	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	file://Component(Saddle/File)	\
-																				} 	{Saddle Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$Saddle(object)
-								}
-						}																																			
-			HeadSet {
-							# --- create HeadSet --------------------
-						set HeadSet(polygon) 		[ frame_geometry::object_values HeadSet/Top polygon $BB_Position  ]
-						set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
-						if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	Component(HeadSet/Height/Top)	\
-																					Component(HeadSet/Diameter)		\
-																				} 	{HeadSet Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$HeadSet(object)
-								}
-						set HeadSet(polygon) 		[ frame_geometry::object_values HeadSet/Bottom polygon $BB_Position ]
-						set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
-						if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	Component(HeadSet/Height/Bottom)\
-																					Component(HeadSet/Diameter)		\
-																				} 	{HeadSet Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$HeadSet(object)
-								}
-						}
-			Stem {
-							# --- create SeatPost ------------------
-						set Stem(polygon) 			[ frame_geometry::object_values Stem polygon $BB_Position  ]
-						set Stem(object)			[ $cv_Name create polygon $Stem(polygon) -fill white  -outline black  -tags __Decoration__ ]
-						}									
-			RearWheel {		# --- create RearWheel -----------------
-						set Hub(position)		[ frame_geometry::object_values		RearWheel  position		$BB_Position ]
-						set RimDiameter				$frame_geometry::RearWheel(RimDiameter)
-						set RimHeight				$frame_geometry::RearWheel(RimHeight)
-						set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
-						set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white -tags __Decoration__ ]
-														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5] 				-tags __Decoration__ 
-														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4] 				-tags __Decoration__ 
-														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5] 	-tags __Decoration__  
-														$cv_Name create circle 	$Hub(position)  -radius 45											-tags __Decoration__ 	
-														$cv_Name create circle 	$Hub(position)  -radius 23											-tags __Decoration__ 
-						if {$updateCommand != {}} 	{ $cv_Name bind	$my_Wheel	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	Component(Wheel/Rear/RimHeight)		\
-																				} 	{RearWheel Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$my_Wheel
-								}
-						}
-			FrontWheel {	# --- create FrontWheel ----------------
-						set Hub(position)		[ frame_geometry::object_values		FrontWheel  position	$BB_Position ] 
-						set RimDiameter				$frame_geometry::FrontWheel(RimDiameter)
-						set RimHeight				$frame_geometry::FrontWheel(RimHeight)
-						set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
-						set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white  -tags __Decoration__]
-														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]					-tags __Decoration__
-														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]                   -tags __Decoration__
-														$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]      -tags __Decoration__
-														$cv_Name create circle 	$Hub(position)  -radius 20                                              -tags __Decoration__
-														$cv_Name create circle 	$Hub(position)  -radius 4.5                                             -tags __Decoration__
-						if {$updateCommand != {}} 	{ $cv_Name bind	$my_Wheel	<Double-ButtonPress-1> \
-																[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																				{ 	Component(Wheel/Front/RimHeight)		\
-																				} 	{FrontWheel Parameter} \
-																]
-													  lib_gui::object_CursorBinding 	$cv_Name	$my_Wheel
-								}
-						}
-			RearWheel_Rep	{
-						set Hub(position)		[ frame_geometry::object_values		RearWheel  position		$BB_Position ] 
-						set RimDiameter				$frame_geometry::RearWheel(RimDiameter)
-						set RimHeight				$frame_geometry::RearWheel(RimHeight)
-						set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
-						set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start -20  -extent 105 -style arc -outline gray60  -tags __Decoration__]
-						set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start -25  -extent 100 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
-							# set my_Wheel				[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  30  -extent  45 -style arc -outline gray60 -width 0.35]
-						}									
-			FrontWheel_Rep	{
-						set Hub(position)		[ frame_geometry::object_values		FrontWheel  position	$BB_Position ] 
-						set RimDiameter				$frame_geometry::FrontWheel(RimDiameter)
-						set RimHeight				$frame_geometry::FrontWheel(RimHeight)
-						set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
-						set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start  95  -extent  85 -style arc -outline gray60 -tags __Decoration__]
-						set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start  90  -extent  80 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
-							# set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  95  -extent  45 -style arc -outline gray60 -width 0.35]
-						}	
-			LegClearance_Rep {
-						set LegClearance(position)	[ vectormath::addVector $frame_geometry::LegClearance(Position)  $BB_Position ]
-						$cv_Name create circle 	$LegClearance(position)  -radius 5  -outline grey60 -tags __Decoration__
-						}
+												# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"								
+											set st_direction	[ frame_geometry::object_values SeatTube direction ]
+											set st_angle		[ expr 180 + [ vectormath::dirAngle {0 0} $st_direction ] ]
+											set bc_position		[ frame_geometry::object_values	SeatTube/BottleCage/Base	position	$BB_Position]
 											
-			default	{
-						#set Stem(debug)		[ frame_geometry::object_values Stem debug $BB_Position  ]
-						#set Stem(object)		[ $cv_Name create line $Stem(debug) -fill red]
-						#$cv_Name create circle 	$RearWheel(coords)  -radius 30  -outline red	-width 1.0		
-						#$cv_Name create circle 	[ list  $FrontWheel(x) $FrontWheel(y) ]  -radius 30  -outline red	-width 1.0	
-						#$cv_Name create circle 	[ list  $RearWheel(x)  $RearWheel(y)  ]  -radius [ expr $RearWheel(Radius)  ]  -outline red	-width 1.0		
-						#$cv_Name create circle 	[ list  $FrontWheel(x) $FrontWheel(y) ]  -radius [ expr $FrontWheel(Radius) ]  -outline red	-width 1.0
-						}
-		}
-		
+												# set BottleCage(file)		[ checkFileString $project::Component(BottleCage/SeatTube/File ]  asText ] ]
+											set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $st_angle  __Decoration__ ]		
+											if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
+																					[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																									{ 	list://Rendering(BottleCage/SeatTube@SELECT_BottleCage) \
+																									} 	{BottleCage SeatTube Parameter} \
+																					]
+																		  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
+											}
+								}
 
+								if {$Rendering(BottleCage_DT) != {off}} {	
+												# puts "   ... \$Rendering(BottleCage_DT) $Rendering(BottleCage_DT)"
+											switch $Rendering(BottleCage_DT) {
+												BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/brazeOn.svg  	 ] }
+												Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottleCage.svg	 ] }
+												Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottle_Large.svg ] }
+											}
+												# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
+											set dt_direction	[ frame_geometry::object_values DownTube direction ]
+											set dt_angle		[ vectormath::dirAngle {0 0} $dt_direction ]
+											set bc_position		[ frame_geometry::object_values	DownTube/BottleCage/Base	position	$BB_Position]
+
+											set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __Decoration__ ]		
+											if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
+																					[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																									{ 	list://Rendering(BottleCage/DownTube@SELECT_BottleCage) \
+																									} 	{BottleCage DownTube-Upper Parameter} \
+																					]
+																		  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
+											}
+								}
+
+								if {$Rendering(BottleCage_DT_L) != {off}} {	
+												# puts "   ... \$Rendering(BottleCage_DT_L) $Rendering(BottleCage_DT_L)"
+											switch $Rendering(BottleCage_DT_L) {
+												BrazeOn { set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg  	 ] }
+												Cage 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg	 ] }
+												Bottle 	{ set BottleCage(file)		[ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
+											}
+												# puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
+											set dt_direction	[ frame_geometry::object_values DownTube direction ]
+											set dt_angle		[ expr 180 + [ vectormath::dirAngle {0 0} $dt_direction ] ]
+											set bc_position		[ frame_geometry::object_values	DownTube/BottleCage_Lower/Base	position	$BB_Position]
+
+											set BottleCage(object)		[ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __Decoration__ ]		
+											if {$updateCommand != {}} 	{ $cv_Name bind	$BottleCage(object)	<Double-ButtonPress-1> \
+																					[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																									{ 	list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) \
+																									} 	{BottleCage DownTube-Lower Parameter} \
+																					]
+																		  lib_gui::object_CursorBinding 	$cv_Name	$BottleCage(object)
+											}						
+								}
+
+							}
+                    Saddle {
+								# --- create Saddle --------------------
+							set Saddle(position)		[ frame_geometry::object_values		Saddle  position		$BB_Position ]
+							set Saddle(file)			[ checkFileString $project::Component(Saddle/File) ]
+							set Saddle(object)			[ $cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Decoration__ ]	
+							if {$updateCommand != {}} 	{ $cv_Name bind	$Saddle(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	file://Component(Saddle/File)	\
+																					} 	{Saddle Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$Saddle(object)
+									}
+							}																																			
+                    HeadSet {
+								# --- create HeadSet --------------------
+							set HeadSet(polygon) 		[ frame_geometry::object_values HeadSet/Top polygon $BB_Position  ]
+							set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
+							if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	Component(HeadSet/Height/Top)	\
+																						Component(HeadSet/Diameter)		\
+																					} 	{HeadSet Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$HeadSet(object)
+									}
+							set HeadSet(polygon) 		[ frame_geometry::object_values HeadSet/Bottom polygon $BB_Position ]
+							set HeadSet(object)			[ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
+							if {$updateCommand != {}} 	{ $cv_Name bind	$HeadSet(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	Component(HeadSet/Height/Bottom)\
+																						Component(HeadSet/Diameter)		\
+																					} 	{HeadSet Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$HeadSet(object)
+									}
+							}
+                    Stem {
+								# --- create SeatPost ------------------
+							set Stem(polygon) 			[ frame_geometry::object_values Stem polygon $BB_Position  ]
+							set Stem(object)			[ $cv_Name create polygon $Stem(polygon) -fill white  -outline black  -tags __Decoration__ ]
+							}									
+                    RearWheel {		# --- create RearWheel -----------------
+							set Hub(position)		[ frame_geometry::object_values		RearWheel  position		$BB_Position ]
+							set RimDiameter				$frame_geometry::RearWheel(RimDiameter)
+							set RimHeight				$frame_geometry::RearWheel(RimHeight)
+							set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
+							set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white -tags __Decoration__ ]
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5] 				-tags __Decoration__ 
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4] 				-tags __Decoration__ 
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5] 	-tags __Decoration__  
+															$cv_Name create circle 	$Hub(position)  -radius 45											-tags __Decoration__ 	
+															$cv_Name create circle 	$Hub(position)  -radius 23											-tags __Decoration__ 
+							if {$updateCommand != {}} 	{ $cv_Name bind	$my_Wheel	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	Component(Wheel/Rear/RimHeight)		\
+																					} 	{RearWheel Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$my_Wheel
+									}
+							}
+                    FrontWheel {	# --- create FrontWheel ----------------
+							set Hub(position)		[ frame_geometry::object_values		FrontWheel  position	$BB_Position ] 
+							set RimDiameter				$frame_geometry::FrontWheel(RimDiameter)
+							set RimHeight				$frame_geometry::FrontWheel(RimHeight)
+							set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
+							set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white  -tags __Decoration__]
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]					-tags __Decoration__
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]                   -tags __Decoration__
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]      -tags __Decoration__
+															$cv_Name create circle 	$Hub(position)  -radius 20                                              -tags __Decoration__
+															$cv_Name create circle 	$Hub(position)  -radius 4.5                                             -tags __Decoration__
+							if {$updateCommand != {}} 	{ $cv_Name bind	$my_Wheel	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	Component(Wheel/Front/RimHeight)		\
+																					} 	{FrontWheel Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$my_Wheel
+									}
+							}
+                    RearWheel_Rep	{
+							set Hub(position)		[ frame_geometry::object_values		RearWheel  position		$BB_Position ] 
+							set RimDiameter				$frame_geometry::RearWheel(RimDiameter)
+							set RimHeight				$frame_geometry::RearWheel(RimHeight)
+							set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
+							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start -20  -extent 105 -style arc -outline gray60  -tags __Decoration__]
+							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start -25  -extent 100 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
+								# set my_Wheel				[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  30  -extent  45 -style arc -outline gray60 -width 0.35]
+							}									
+                    FrontWheel_Rep	{
+							set Hub(position)		[ frame_geometry::object_values		FrontWheel  position	$BB_Position ] 
+							set RimDiameter				$frame_geometry::FrontWheel(RimDiameter)
+							set RimHeight				$frame_geometry::FrontWheel(RimHeight)
+							set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
+							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start  95  -extent  85 -style arc -outline gray60 -tags __Decoration__]
+							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start  90  -extent  80 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
+								# set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  95  -extent  45 -style arc -outline gray60 -width 0.35]
+							}	
+                    LegClearance_Rep {
+							set LegClearance(position)	[ vectormath::addVector $frame_geometry::LegClearance(Position)  $BB_Position ]
+							$cv_Name create circle 	$LegClearance(position)  -radius 5  -outline grey60 -tags __Decoration__
+							}
+												
+                    default	{
+							#set Stem(debug)		[ frame_geometry::object_values Stem debug $BB_Position  ]
+							#set Stem(object)		[ $cv_Name create line $Stem(debug) -fill red]
+							#$cv_Name create circle 	$RearWheel(coords)  -radius 30  -outline red	-width 1.0		
+							#$cv_Name create circle 	[ list  $FrontWheel(x) $FrontWheel(y) ]  -radius 30  -outline red	-width 1.0	
+							#$cv_Name create circle 	[ list  $RearWheel(x)  $RearWheel(y)  ]  -radius [ expr $RearWheel(Radius)  ]  -outline red	-width 1.0		
+							#$cv_Name create circle 	[ list  $FrontWheel(x) $FrontWheel(y) ]  -radius [ expr $FrontWheel(Radius) ]  -outline red	-width 1.0
+							}
+			}
 	}
 
 	

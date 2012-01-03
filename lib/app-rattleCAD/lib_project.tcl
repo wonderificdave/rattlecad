@@ -344,7 +344,7 @@
 	proc check_ProjectVersion {Version} {
 	
 			set domProject $::APPL_Env(root_ProjectDOM)
-			puts " ... check_ProjectVersion:  $Version"
+			puts "   ... check_ProjectVersion:  $Version"
 			
 			switch -exact $Version {
 			
@@ -717,7 +717,7 @@
 													<VirtualLength>0.00</VirtualLength>
 												</TopTube>"
 							}
-													set node [$domProject selectNode /root/Custom/HeadTube/Angle]
+							set node [$domProject selectNode /root/Custom/HeadTube/Angle]
 							if {$node == {}} {
 									# ... node does not exist
 								puts "        ...  $Version   ... update File ... /root/Custom/HeadTube/Angle"
@@ -744,14 +744,12 @@
 											if { $nodeWP != {} } {
 												set WheelPositionFront [$nodeWP nodeValue]
 												$nodeTA nodeValue $HeadTubeAngle
-												puts "  ... correction WheelPosition/Front: $WheelPositionFront"
+												puts "          ... correction WheelPosition/Front: $WheelPositionFront"
 												frame_geometry::set_base_Parameters $domProject
 												frame_geometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
-												puts "  ... correction WheelPosition/Front: $WheelPositionFront"
+												puts "          ... correction WheelPosition/Front: $WheelPositionFront"
 											}
 										}
-											
-											
 								}
 							}
 							# set node [$domProject selectNode /root/Custom/HeadTube]
@@ -761,6 +759,7 @@
 				{3.2.63} {	set node {}			
 							set oldNode [$domProject selectNode /root/Custom/WheelPosition/Front]
 							if {$oldNode != {}} {
+								puts "        ...  $Version   ... update File ... /root/Custom/WheelPosition/Front"
 								set node 	[$domProject selectNode /root/Custom/WheelPosition]
 								$node removeChild $oldNode 
 								$oldNode delete
@@ -774,9 +773,12 @@
 										$node removeChild $removeNode 
 										$removeNode delete
 									}
-							}							
-							$node appendXML "<BrakeFront>0,0</BrakeFront>"
-							$node appendXML "<BrakeRear>0,0</BrakeRear>"
+							}
+                            if {$node != {}} {
+								puts "        ...  $Version   ... update File ... /root/Result/Position/"							
+                                $node appendXML "<BrakeFront>0,0</BrakeFront>"
+                                $node appendXML "<BrakeRear>0,0</BrakeRear>"
+                            }
 							
 							foreach child {Front Rear} {
 									set node [$domProject selectNode /root/Rendering/Brake/$child]
@@ -784,8 +786,9 @@
 										set txtNode [$node firstChild] 
 										set value	[$txtNode nodeValue]
 										if {$value == "Road"} {
-											puts "\n   ... dawischt\n"
-											$txtNode nodeValue "Rim"
+											# puts "\n   ... dawischt\n"
+											puts "        ...  $Version   ... update File ... /root/Rendering/Brake/$child"							
+                                            $txtNode nodeValue "Rim"
 										}
 									}
 							}

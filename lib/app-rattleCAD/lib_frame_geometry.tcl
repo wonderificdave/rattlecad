@@ -39,11 +39,11 @@
 
  
  namespace eval frame_geometry {
-		# package require tdom
-		
-			#-------------------------------------------------------------------------
-				#  current Project Values
-				# variable BaseCenter		; array set BaseCenter		{}
+        # package require tdom
+        
+            #-------------------------------------------------------------------------
+                #  current Project Values
+                # variable BaseCenter		; array set BaseCenter		{}
 			variable Project		; array set Project	 		{}
 
 			variable RearWheel		; array set RearWheel 		{}
@@ -1259,9 +1259,10 @@
 
 							set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values HeadTube direction ] -1.0 ]
 								# puts " .. \$dir $dir"
+						                                # tube_mitter { diameter               direction            diameter_isect          direction_isect         isectionPoint 		{side {right}} {offset {0}}  {startAngle {0}}} 
 					set TubeMitter(TopTube_Head) 		[ tube_mitter	$TopTube(DiameterHT)  $TopTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$TopTube(HeadTube)  ]	
 					set TubeMitter(TopTube_Seat) 		[ tube_mitter	$TopTube(DiameterST)  $TopTube(Direction)	$SeatTube(DiameterTT)	$dir  					$TopTube(SeatTube)  ]	
-					set TubeMitter(DownTube_Head) 		[ tube_mitter	$DownTube(DiameterHT) $DownTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$DownTube(HeadTube) ]				
+					set TubeMitter(DownTube_Head) 		[ tube_mitter	$DownTube(DiameterHT) $DownTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$DownTube(HeadTube) right	0	opposite]				
 							set offset		[ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
 							set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values SeatStay direction ] -1.0 ]
 								# puts " .. \$dir $dir"
@@ -1271,13 +1272,13 @@
 					
 					project::setValue Result(TubeMitter/TopTube_Head)		polygon		[ project::flatten_nestedList $TubeMitter(TopTube_Head) 	]
 					project::setValue Result(TubeMitter/TopTube_Seat)		polygon		[ project::flatten_nestedList $TubeMitter(TopTube_Seat)		]
-					project::setValue Result(TubeMitter/DownTube_Head)		polygon		[ project::flatten_nestedList $TubeMitter(DownTube_Head)	]
+					project::setValue Result(TubeMitter/DownTube_Head)		polygon		[ project::flatten_nestedList $TubeMitter(DownTube_Head)	] ;#
 					project::setValue Result(TubeMitter/SeatStay_01)		polygon		[ project::flatten_nestedList $TubeMitter(SeatStay_01)		]
 					project::setValue Result(TubeMitter/SeatStay_02)		polygon		[ project::flatten_nestedList $TubeMitter(SeatStay_02)		]
-					project::setValue Result(TubeMitter/Reference)			polygon		[ project::flatten_nestedList $TubeMitter(Reference) 		]						
+					project::setValue Result(TubeMitter/Reference)			polygon		[ project::flatten_nestedList $TubeMitter(Reference) 		]	
+
 			}
-			get_TubeMitter
-			
+			get_TubeMitter	
 	}
 
 
@@ -1518,15 +1519,15 @@
 			set pt_00				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_00 $ht_angle ]]
 			set pt_01				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_01 $ht_angle ]]
 			set pt_02				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_02 $ht_angle ]]
-				# puts "     ... \$ht_angle  $ht_angle"
-				# puts "   -> pt_00  $pt_00"
-				# puts "   -> pt_01  $pt_01"
+					# puts "     ... \$ht_angle  $ht_angle"
+					# puts "   -> pt_00  $pt_00"
+					# puts "   -> pt_01  $pt_01"
 			
 			set vct_10				[ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(BladeWith)] left]
 			set vct_19				[ vectormath::parallel $pt_00 $pt_02 [expr 0.5*$Fork(BladeWith)] ]
 					# puts "   -> pt_00  $pt_00"
-				# puts "   -> vct_10  $vct_10"
-				# puts "   -> vct_19  $vct_19"
+					# puts "   -> vct_10  $vct_10"
+					# puts "   -> vct_19  $vct_19"
 			
 				set help_02					[ list 0 [lindex  $FrontWheel(position) 1] ]			
 				set do_angle				[ expr 90 - [ vectormath::angle $pt_01 $FrontWheel(position) $help_02  ] ]			
@@ -1542,7 +1543,6 @@
 									[lindex $vct_11 1] [lindex $vct_18 1] \
 									[lindex $vct_19 1] [lindex $vct_19 0] ]
 									
-
 			set do_direction	[ vectormath::unifyVector $FrontWheel(position) $pt_03 ]					
 			project::setValue Result(Lugs/Dropout/Front/Direction)	direction	$do_direction				
 
@@ -1563,11 +1563,6 @@
 			set Fork(LegOffsetCrownPerp)	[ [ $domInit selectNodes /root/Options/Fork/_Suspension/Leg/OffsetPerp	]  asText ]
 			set Fork(LegDiameter)			[ [ $domInit selectNodes /root/Options/Fork/_Suspension/Leg/Diameter	]  asText ]
 			
-			
-
-			
-			
-			
 			set ht_angle			[ vectormath::angle {0 1} {0 0} $ht_direction ]
 			
 			set pt_00				[list $Fork(LegOffsetCrownPerp) [expr -1.0*$Fork(LegOffsetCrown)] ]
@@ -1575,22 +1570,20 @@
 
 			set pt_00				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_00 $ht_angle ]]
 			set pt_01				[ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_01 $ht_angle ]]
-				# puts "     ... \$ht_angle  $ht_angle"
-				# puts "   -> pt_00  $pt_00"
-				# puts "   -> pt_01  $pt_01"
+					# puts "     ... \$ht_angle  $ht_angle"
+					# puts "   -> pt_00  $pt_00"
+					# puts "   -> pt_01  $pt_01"
 			
 			set vct_10				[ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(LegDiameter)] left]
 			set vct_19				[ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(LegDiameter)] ]
 					# puts "   -> pt_00  $pt_00"
-				# puts "   -> vct_10  $vct_10"
-				# puts "   -> vct_19  $vct_19"
-			
-			
+					# puts "   -> vct_10  $vct_10"
+					# puts "   -> vct_19  $vct_19"
+					
 			set polygon 		[format "%s %s %s %s" \
 									[lindex $vct_10 0] [lindex $vct_10 1] \
 									[lindex $vct_19 1] [lindex $vct_19 0] ]
 									
-
 			set do_direction	[ vectormath::unifyVector $pt_01 $pt_00 ]					
 			project::setValue Result(Lugs/Dropout/Front/Direction)	direction	$do_direction				
 
@@ -1613,32 +1606,32 @@
 		#
 	proc tube_intersection { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}} } {
 		
-		set direction_angle 	[vectormath::angle {0 1}	{0 0}	$direction ]
-		set intersection_angle 	[vectormath::angle $direction {0 0} $direction_isect]
-			# puts [format "   %2.f %2.f" $direction_angle $intersection_angle]
-		set coordList {}
-		set radius 			[expr 0.5*$diameter]
-		set radius_isect 	[expr 0.5*$diameter_isect]
-		foreach angle {90 60 30 10 0 -10 -30 -60 -90} {
-			set rad_Angle 	[vectormath::rad $angle]
-			set r1_x		[expr $radius*cos([vectormath::rad [expr 90+$angle]]) ]
-			set r1_y 		[expr $radius*sin([expr 1.0*(90-$angle)*$vectormath::CONST_PI/180]) + $offset]
-			if {[expr abs($radius_isect)] >= [expr abs($r1_y)]} {
-				set cut_perp	[expr sqrt(pow($radius_isect,2) - pow($r1_y,2)) ]
-			} else {
-				set cut_perp 	0
+			set direction_angle 	[vectormath::angle {0 1}	{0 0}	$direction ]
+			set intersection_angle 	[vectormath::angle $direction {0 0} $direction_isect]
+				# puts [format "   %2.f %2.f" $direction_angle $intersection_angle]
+			set coordList {}
+			set radius 			[expr 0.5*$diameter]
+			set radius_isect 	[expr 0.5*$diameter_isect]
+			foreach angle {90 60 30 10 0 -10 -30 -60 -90} {
+				set rad_Angle 	[vectormath::rad $angle]
+				set r1_x		[expr $radius*cos([vectormath::rad [expr 90+$angle]]) ]
+				set r1_y 		[expr $radius*sin([expr 1.0*(90-$angle)*$vectormath::CONST_PI/180]) + $offset]
+				if {[expr abs($radius_isect)] >= [expr abs($r1_y)]} {
+					set cut_perp	[expr sqrt(pow($radius_isect,2) - pow($r1_y,2)) ]
+				} else {
+					set cut_perp 	0
+				}
+				set cut_angle	[expr $cut_perp / sin([vectormath::rad $intersection_angle]) ]
+				set cut_angOff	[expr $r1_x / tan([vectormath::rad $intersection_angle]) ]
+				set cut_eff   	[expr $cut_angle + $cut_angOff ]
+				set xy	[list $r1_x $cut_eff]
+				if {$side != {right}}  {set xy	[vectormath::rotatePoint {0 0} $xy  180]}
+				set xy	[vectormath::rotatePoint {0 0} $xy $direction_angle]
+				set xy 	[coords_addVector $xy $isectionPoint]
+				set coordList [lappend coordList [lindex $xy 0] [lindex $xy 1]]
 			}
-			set cut_angle	[expr $cut_perp / sin([vectormath::rad $intersection_angle]) ]
-			set cut_angOff	[expr $r1_x / tan([vectormath::rad $intersection_angle]) ]
-			set cut_eff   	[expr $cut_angle + $cut_angOff ]
-			set xy	[list $r1_x $cut_eff]
-			if {$side != {right}}  {set xy	[vectormath::rotatePoint {0 0} $xy  180]}
-			set xy	[vectormath::rotatePoint {0 0} $xy $direction_angle]
-			set xy 	[coords_addVector $xy $isectionPoint]
-			set coordList [lappend coordList [lindex $xy 0] [lindex $xy 1]]
-		}
 
-		return $coordList
+			return $coordList
 	}		
 
  	
@@ -1654,7 +1647,64 @@
 		#   diameter    \     \     \ 
 		#                \     \     \ diameter_isect
 		#
-	proc tube_mitter { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}} } {	
+	proc tube_mitter { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}}  {opposite {no}}} {	
+
+			set intersection_angle 	[vectormath::angle $direction {0 0} $direction_isect]
+
+				# puts ""
+				# puts "   -------------------------------"
+				# puts "    tube_mitter"
+				# puts "       diameter:        $diameter	"			
+				# puts "       direction:       $direction	"			
+				# puts "       diameter:        $diameter	"			
+				# puts "       diameter_isect:  $diameter_isect	"			
+				# puts "       direction_isect: $direction_isect	"			
+				# puts "       isectionPoint:   $isectionPoint	"			
+				# puts "       side:            $side"			
+				# puts "       offset:          $offset"			
+				# puts "       opposite:        $opposite"	
+				# puts "       -> intersection_angle   $intersection_angle"
+				# puts [format " -> tube_mitter \n   %2.f %2.f" $direction_angle $intersection_angle]
+				
+			if {$opposite != {no}	} {
+				    set intersection_angle	[expr 180 - $intersection_angle]
+						# puts "       -> intersection_angle $intersection_angle"
+			}
+				
+			set radius 			[expr 0.5*$diameter]
+			set radius_isect 	[expr 0.5*$diameter_isect]
+			set angle 		-180
+				# set angle 		[expr -180 - $startAngle]
+			set loops 		36
+			set perimeter	[expr $radius * [vectormath::rad 360] ]
+			set coordList 	[list [expr 0.5*$perimeter] -70]
+				# while {$angle <= [expr 180 - $startAngle]}
+			while {$angle <= 180} {
+					set rad_Angle 	[vectormath::rad $angle]
+					set x [expr $diameter*[vectormath::rad 180]*$angle/360 ]
+				 
+					set h [expr $offset + $radius*sin($rad_Angle)]
+					set b [expr $diameter*0.5*cos($rad_Angle)]
+				 
+					if {[expr abs($radius_isect)] >= [expr abs($h)]} {
+						set l [expr sqrt(pow($radius_isect,2) - pow($h,2))]
+					} else {
+						set l 0
+					}
+					set v [expr $b/tan([vectormath::rad $intersection_angle])]
+				 
+						# puts [format "%.2f  -  %+.2f / %+.2f  -  %+.2f / %+.2f"   $angle  $h  $b  $l  $v ]
+					set y $h
+					set y [expr $l+$v]			 
+					set xy [list $x $y]
+					if {$side == {right}}  {set xy	[vectormath::rotatePoint {0 0} $xy  180]}
+					set coordList 	[lappend coordList [lindex $xy 0] [lindex $xy 1]]
+					set angle 		[expr $angle + 360 / $loops]
+			}
+			set coordList [ lappend coordList [expr -0.5*$perimeter] -70 ]
+			return $coordList
+	}		
+	proc tube_mitter_org { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}}} {	
 
 		set intersection_angle 	[vectormath::angle $direction {0 0} $direction_isect]
 		
@@ -2248,12 +2298,12 @@
 						}
 						
 				{WheelPosition/front/diagonal}	{			
-							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                                # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
 							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value]
-							# set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
+                                # set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
 							set newValue				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$newValue
-							puts "                 <D> ... $oldValue $newValue"
+                                # puts "                 <D> ... $oldValue $newValue"
 							
 								# --- set HandleBar(Angle)
 								#
