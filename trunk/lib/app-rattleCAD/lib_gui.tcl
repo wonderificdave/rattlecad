@@ -40,23 +40,18 @@
  
  namespace eval lib_gui {
      
-	variable 	canvasGeometry
-	array	set canvasGeometry {}
-	variable 	notebookCanvas 
-	array	set notebookCanvas {}
-	variable 	iconArray 
-	array	set iconArray {}
+	variable 	canvasGeometry      ; 	array	set canvasGeometry {}
+	variable 	notebookCanvas      ; 	array	set notebookCanvas {}
+	variable 	iconArray           ;   array	set iconArray {}
 	
-	variable 	canvasUpdate
-	array	set canvasUpdate {}
+	variable 	canvasUpdate        ;	array	set canvasUpdate {}
 	
 	variable	noteBook_top
 	
 	variable	stageFormat
 	variable	stageScale
 
-	variable 	external_canvasCAD	
-	array	set external_canvasCAD {}
+	variable 	external_canvasCAD  ;   array	set external_canvasCAD {}
 
 
 							
@@ -164,11 +159,11 @@
 				# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Tube Details    "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Mitter  "	A4  1.0  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Mitter  "	A4  1.0  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
 			
 			$noteBook_top add [frame $noteBook_top.components] 	-text "... Components" 
 			$noteBook_top add [frame $noteBook_top.report] 		-text "... info" 

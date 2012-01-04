@@ -56,12 +56,13 @@
 	proc rotatePoint { p_cent p_rot angle } { 
 			# start at 3 o'clock counterclockwise
 			# angle in degree
-			variable CONST_PI
+			# variable CONST_PI
 			foreach {x y} [ subVector $p_rot $p_cent ]  break
 			
 			set p0		[ list $x $y ]
-			set RADIANT	[ expr $angle * $CONST_PI / 180 ]
-			return 		[ addVector [ VRotate  $p0 $RADIANT ] $p_cent ]
+			# set RADIANT	[ expr $angle * $CONST_PI / 180 ]
+			# return 		[ addVector [ VRotate  $p0 $RADIANT ] $p_cent ]
+			return 		[ addVector [ VRotate  $p0 $angle grad ] $p_cent ]
 	}
 
 	proc rotateLine { p l angle } { 
@@ -321,9 +322,14 @@
 			return [expr {($x1*$y2) - ($y1*$x2)}]
 	}
              ##+##########################################################################
-             #   VRotate -- rotates vector counter-clockwise
-	proc VRotate {v beta} {
-	    foreach {x y} $v break
+             #   VRotate -- rotates vector counter-clockwise  beta [rad]
+	proc VRotate {v beta {unit {rad}}} {
+	    variable  CONST_PI
+        if {$unit != {rad}} {
+            set beta [ expr $beta * $CONST_PI / 180 ]
+        }
+            # puts "  -> $v   /  $beta"
+        foreach {x y} $v break
 	    set xx [expr {$x * cos($beta) - $y * sin($beta)}]
 	    set yy [expr {$x * sin($beta) + $y * cos($beta)}]
 	    return [list $xx $yy]

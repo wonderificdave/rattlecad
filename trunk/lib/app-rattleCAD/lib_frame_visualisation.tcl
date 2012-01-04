@@ -661,7 +661,6 @@
 																		file://Component(Fork/Crown/File)	\
 																		Component(Fork/Crown/Brake/Angle) 	\
 																		Component(Fork/Crown/Brake/Offset) 	\
-																		Component(Fork/Crown/Brake/OffsetPerp) \
 																		Component(Fork/Crown/Blade/Offset) 	\
 																		Component(Fork/Crown/Blade/OffsetPerp) \
 																	} 	{ForkCrown Parameter} \
