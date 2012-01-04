@@ -95,8 +95,7 @@
 			<Crown>
 				<File>etc:fork/crown/longshen_max_36_5.svg</File>
 				<Brake>
-					<Offset>28.00</Offset>
-					<OffsetPerp>9.00</OffsetPerp>
+					<Offset>19.00</Offset>
 					<Angle>0.00</Angle>
 				</Brake>
 				<Blade>

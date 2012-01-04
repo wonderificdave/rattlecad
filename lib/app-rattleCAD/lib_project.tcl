@@ -72,19 +72,20 @@
 			trace remove  variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
 	}
 	#-------------------------------------------------------------------------
-
 	proc trace_ProjectConfig {varname key operation} {
 			if {$key != ""} {
 					set varname ${varname}($key)
 					}
 			upvar $varname var
 			
-				puts ""
-				puts "   -------------------------------"
+				puts "\n\n"
+				puts "   --<trace>--------------------------"
 				puts "    trace_ProjectConfig"
 				puts "       varname:         $var"
 				puts "       key:             $key"
 				puts "       operation:       $operation"
+                
+                # tk_messageBox -message "trace_ProjectConfig: \n     varname:         $var \n     key:             $key \n     operation:       $operation"
 			
 			frame_geometry::set_base_Parameters
 			cv_custom::update [lib_gui::current_canvasCAD]
@@ -130,8 +131,6 @@
 			
 			add_tracing
 	}
-
-
 	#-------------------------------------------------------------------------
 	proc runTime_2_dom {projectDOM} {
 			
@@ -483,6 +482,7 @@
 								puts "        ...  $Version   ... update File ... /root/Rendering/Brakes"
 								set parentNode [$node parentNode]
 								$parentNode removeChild $node
+                                $node delete
 							}
 							
 								# --- /root/Rendering/Brake ...
@@ -793,6 +793,16 @@
 									}
 							}
 						}
+				{3.2.74} {	set node {}							
+							set node [$domProject selectNode /root/Component/Fork/Crown/Brake/OffsetPerp]
+							if {$node != {}} {
+								puts "        ...  $Version   ... update File ... /root/Component/Fork/Crown/Brake"
+								set parentNode [$node parentNode]
+								$parentNode removeChild $node
+                                $node delete
+							}
+                        }
+                       
 								
 				{ab-xy} {	set node {}
 							set node [$domProject selectNode /root/Project/rattleCADVersion/text()]

@@ -215,7 +215,6 @@
 			set Fork(BladeOffsetDOPerp)		$project::Component(Fork/DropOut/OffsetPerp)
 			set Fork(BrakeAngle)			$project::Component(Fork/Crown/Brake/Angle)
 			set Fork(BrakeOffset)			$project::Component(Fork/Crown/Brake/Offset) 
-			set Fork(BrakeOffsetPerp)		$project::Component(Fork/Crown/Brake/OffsetPerp)
 			
 				#
 				# --- get Stem -----------------------------
@@ -1074,56 +1073,45 @@
 					variable RearWheel
 					variable SeatStay
 
-							# set brakeShoeDist	30
-							set pt_00			$RearWheel(Position)
-							set pt_01					[split [ project::getValue Result(Tubes/SeatStay/Polygon)	polygon 8 ] , ]
-							set pt_02					[split [ project::getValue Result(Tubes/SeatStay/Polygon)	polygon 9 ] , ]
-							set RimBrakeRadius	[ expr 0.5 * $RearWheel(RimDiameter) ]
-							set pt_03			[ vectormath::intersectPerp	$pt_02 $pt_01 $pt_00 ]	;# point on SeatStay through RearWheel
-							set vct_01			[ vectormath::parallel $pt_01 $pt_03 $RearBrake(Offset) ]
-							set pt_04			[ lindex $vct_01 1 ]
-							set dist_00			[ vectormath::length $pt_00 $pt_04 ]
-							set dist_00_Ortho	[ expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2)) ]
-							
-							set RearBrake(Shoe)		[ vectormath::addVector	$pt_04 [ vectormath::unifyVector {0 0} $SeatStay(Direction) $dist_00_Ortho] ]
-							set RearBrake(Help)		[ vectormath::addVector	$pt_04 [ vectormath::unifyVector {0 0} $SeatStay(Direction) [expr $RearBrake(LeverLength) + $dist_00_Ortho] ] ]
-							
-							set RearBrake(Mount)	[ vectormath::addVector	$pt_03 [ vectormath::unifyVector {0 0} $SeatStay(Direction) [expr $RearBrake(LeverLength) + $dist_00_Ortho] ] ]
-					project::setValue Result(Position/BrakeRear)	position	$RearBrake(Shoe)
-					# project::setValue Result(Position/BrakeRear)	position	$RearBrake(Mount)
+                    set RimBrakeRadius	[ expr 0.5 * $RearWheel(RimDiameter) ]
+                    
+                    set pt_00			$RearWheel(Position)
+                    set pt_01           [split [ project::getValue Result(Tubes/SeatStay/Start)	position ] , ]
+                    set pt_02           [split [ project::getValue Result(Tubes/SeatStay/End)	position ] , ]
+                    set pt_03           [split [ project::getValue Result(Tubes/SeatStay/Polygon)	polygon 8 ] , ]
+                    set pt_04           [split [ project::getValue Result(Tubes/SeatStay/Polygon)	polygon 9 ] , ]
+                    set pt_05			[ vectormath::intersectPerp	$pt_04 $pt_03 $pt_00 ]	;# point on SeatStay through RearWheel
+                    set vct_01			[ vectormath::parallel $pt_03 $pt_05 $RearBrake(Offset) ]
+                    set pt_06			[ lindex $vct_01 1 ]
+                    set dist_00			[ vectormath::length $pt_00 $pt_06 ]
+                    set dist_00_Ortho	[ expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2)) ]
+                            
+                    set pt_10           [ vectormath::addVector	$pt_06 [ vectormath::unifyVector {0 0} $SeatStay(Direction) $dist_00_Ortho] ]
+                    set pt_12           [ vectormath::addVector	$pt_06 [ vectormath::unifyVector {0 0} $SeatStay(Direction) [expr $RearBrake(LeverLength) + $dist_00_Ortho] ] ]				
+                    set pt_13           [ vectormath::intersectPerp $pt_03 $pt_04 $pt_10 ]
+                    set pt_14           [ vectormath::intersectPerp	$pt_03 $pt_04 $pt_12 ]
+                        # set pt_14     [ vectormath::intersectPerp	$pt_01 $pt_02 $pt_12 ]
+                                                
+                    
+                    set RearBrake(Shoe)         $pt_10
+                    set RearBrake(Help)         $pt_12
+                    set RearBrake(Definition)   $pt_13
+                    set RearBrake(Mount)        $pt_14
+                            
+                    project::setValue Result(Position/BrakeRear)	position	$RearBrake(Shoe)
 					
 						variable DEBUG_Geometry
-						set DEBUG_Geometry(pt_21) "[lindex $pt_01 0],[lindex $pt_01 1]"
-						set DEBUG_Geometry(pt_22) "[lindex $pt_02 0],[lindex $pt_02 1]"
-						set DEBUG_Geometry(pt_23) "[lindex $pt_03 0],[lindex $pt_03 1]"
-						set DEBUG_Geometry(pt_24) "[lindex $pt_04 0],[lindex $pt_04 1]"
+						# set DEBUG_Geometry(pt_21) "[lindex $pt_01 0],[lindex $pt_01 1]"
+						# set DEBUG_Geometry(pt_22) "[lindex $pt_02 0],[lindex $pt_02 1]"
+						# set DEBUG_Geometry(pt_23) "[lindex $pt_03 0],[lindex $pt_03 1]"
+						set DEBUG_Geometry(pt_13) "[lindex $pt_13 0],[lindex $pt_13 1]"
+						set DEBUG_Geometry(pt_14) "[lindex $pt_14 0],[lindex $pt_14 1]"
 			}
 			get_BrakePositionRear
 
 			
 				#
 				# --- set BrakePosition - Front ------------
-			proc get_BrakeMountFront {} {
-					variable Fork
-					variable FrontBrake
-					variable HeadTube
-					variable Steerer
-
-							set brakeShoeDist	30
-							set pt_00			$Steerer(Fork)
-							set pt_01			[ vectormath::addVector	$pt_00 [ vectormath::unifyVector {0 0} $HeadTube(Direction) -$Fork(BrakeOffsetPerp)] ]
-							set vct_01			[ vectormath::parallel  $pt_00 $pt_01 $Fork(BrakeOffset) left]
-							set pt_10			[ lindex $vct_01 1]
-							set pt_11			[ vectormath::addVector	$pt_10 [ vectormath::unifyVector {0 0} $HeadTube(Direction) -$FrontBrake(LeverLength)] ] 
-							set pt_12			[ vectormath::rotatePoint	$pt_10	$pt_11	$Fork(BrakeAngle) ]
-							set vct_02			[ vectormath::parallel  $pt_10 $pt_12 $brakeShoeDist left]
-					
-							set FrontBrake(Help)	[ lindex $vct_02 0]
-							set FrontBrake(Shoe)	[ lindex $vct_02 1]
-							
-							set FrontBrake(Mount)				$pt_10		
-					project::setValue Result(Position/BrakeMountFront)		position	$FrontBrake(Mount)
-			}
 			proc get_BrakePositionFront {} {
 
 					variable HeadTube
@@ -1132,63 +1120,75 @@
 					variable FrontWheel
 					variable Fork
 
-							set brakeShoeDist	30
-							set RimBrakeRadius	[ expr 0.5 * $FrontWheel(RimDiameter) ]
-							
-							set pt_00			$FrontWheel(Position)
-							set pt_01			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	1] , ]
-							set pt_02			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	0] , ]
-							set pt_03			[ vectormath::intersectPerp	$pt_02 $pt_01 $pt_00 ]	;# point on Forkblade perpendicular through FrontWheel
-							set vct_01			[ vectormath::parallel $pt_01 $pt_03 $FrontBrake(Offset) left]
-							set pt_04			[ lindex $vct_01 1 ]
+                    set RimBrakeRadius	[ expr 0.5 * $FrontWheel(RimDiameter) ]
+                    
+                    set pt_00			$FrontWheel(Position)
+                    set pt_01           [split [ project::getValue Result(Tubes/Steerer/Start)	position ] , ]
+                    set pt_02           [split [ project::getValue Result(Tubes/Steerer/End)	position ] , ]
+                    set pt_03			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	1] , ]
+                    set pt_04			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	0] , ]
+                    set pt_05			[ vectormath::intersectPerp	$pt_04 $pt_03 $pt_00 ]	;# point on Forkblade perpendicular through FrontWheel
+                    set vct_01			[ vectormath::parallel $pt_03 $pt_05 $FrontBrake(Offset) left]
+                    set pt_06			[ lindex $vct_01 1 ]
 
-							set dist_00			[ vectormath::length $pt_00 $pt_04 ]
-							set dist_00_Ortho	[ expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2)) ]
-							
-							set pt_10			[ vectormath::addVector	$pt_04 [ vectormath::unifyVector $pt_01 $pt_02 $dist_00_Ortho] ]			;# FrontBrake(Shoe)
-							set pt_11			[ vectormath::addVector	$pt_10 [ vectormath::unifyVector {0 0} $HeadTube(Direction) $FrontBrake(LeverLength)] ]
-							set pt_12			[ vectormath::rotatePoint	$pt_10	$pt_11	$Fork(BrakeAngle) ]										;# FrontBrake(Help)	
-							set pt_13			[ vectormath::addVector	$pt_12 [vectormath::VRotate [ vectormath::unifyVector $pt_10 $pt_12 $Fork(BrakeOffset)]  [ vectormath::rad 90] ] ];# FrontBrake(Help)
-							
-							set FrontBrake(Help)		$pt_12
-							set FrontBrake(Shoe)		$pt_10
-							set FrontBrake(Mount)		$pt_13
+                    set dist_00			[ vectormath::length $pt_00 $pt_06 ]
+                    set dist_00_Ortho	[ expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2)) ]
+                    
+                    set pt_10			[ vectormath::addVector	$pt_06 [ vectormath::unifyVector $pt_03 $pt_04 $dist_00_Ortho] ]			;# FrontBrake(Shoe)
+                    set pt_11			[ vectormath::addVector	$pt_10 [ vectormath::unifyVector {0 0} $HeadTube(Direction) $FrontBrake(LeverLength)] ]
+                    set pt_12			[ vectormath::rotatePoint	$pt_10	$pt_11	$Fork(BrakeAngle) ]                            			;# FrontBrake(Help)	
+                    set pt_13           [ vectormath::intersectPerp $pt_04 $pt_03 $pt_10 ]
+                    
+                    
+                    # set pt_15           [ vectormath::intersectPerp	$pt_01 $pt_02 $pt_12 ]
+                    # set pt_13			[ vectormath::addVector	$pt_12 [vectormath::VRotate [ vectormath::unifyVector $pt_10 $pt_12 [expr 10 + $Fork(BrakeOffset)]]  [ vectormath::rad 90] ] ];# FrontBrake(Help)
+                    # set pt_13			[ vectormath::addVector	$pt_12 [vectormath::VRotate [ vectormath::unifyVector $pt_10 $pt_12 $Fork(BrakeOffset)]  [ vectormath::rad 90] ] ];# FrontBrake(Help)
 
+                    
+                    set vct_02          [ vectormath::parallel $pt_01 $pt_02 $Fork(BrakeOffset)]
+                    set pt_15           [ vectormath::rotatePoint	$pt_12	$pt_10	-90 ] 
+                    set pt_16           [ vectormath::intersectPoint  [lindex $vct_02 0] [lindex $vct_02 1] $pt_12 $pt_15 ]
+                    # set pt_16           [ vectormath::intersectPoint  $pt_01 $pt_02 $pt_12 $pt_15 ]
+                    
+                    set FrontBrake(Shoe)		$pt_10
+                    set FrontBrake(Help)		$pt_12
+                    set FrontBrake(Definition)	$pt_13
+                    set FrontBrake(Mount)       $pt_16
+ 
 					project::setValue Result(Position/BrakeFront)	position	$FrontBrake(Shoe)
 
-							
-							
-							set pt_18			[split [ project::getValue Result(Tubes/ForkBlade/Start) 	position] , ]
-							set pt_19			[split [ project::getValue Result(Tubes/ForkBlade/End)   	position] , ]
-							set pt_05			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	1] , ]
-							set pt_06			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	2] , ]
-							set pt_11			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	3] , ]
-							set pt_12			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	4] , ]
-							set pt_13			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	5] , ]
-							set pt_14			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	6] , ]
-							set pt_15			$FrontBrake(Mount)
-							set pt_18			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	0] , ]
-							set pt_19			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	5] , ]
-							
+                            # set pt_18			[split [ project::getValue Result(Tubes/ForkBlade/Start) 	position] , ]
+                            # set pt_19			[split [ project::getValue Result(Tubes/ForkBlade/End)   	position] , ]
+                            # set pt_05			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	1] , ]
+                            # set pt_06			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	2] , ]
+                            # set pt_11			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	3] , ]
+                            # set pt_12			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	4] , ]
+                            # set pt_13			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	5] , ]
+                            # set pt_14			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	6] , ]
+                            # set pt_15			$FrontBrake(Mount)
+                            # set pt_18			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	0] , ]
+                            # set pt_19			[split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon	5] , ]
+                            
 
-							
-							variable DEBUG_Geometry
-							#set DEBUG_Geometry(pt_00) "[lindex $pt_00 0],[lindex $pt_00 1]"
-							set DEBUG_Geometry(pt_01) "[lindex $pt_01 0],[lindex $pt_01 1]"
-							set DEBUG_Geometry(pt_02) "[lindex $pt_02 0],[lindex $pt_02 1]"
-							
-							#set DEBUG_Geometry(pt_11) "[lindex $pt_11 0],[lindex $pt_11 1]"
-							#set DEBUG_Geometry(pt_12) "[lindex $pt_12 0],[lindex $pt_12 1]"
-							#set DEBUG_Geometry(pt_13) "[lindex $pt_13 0],[lindex $pt_13 1]"
-							#set DEBUG_Geometry(pt_14) "[lindex $pt_14 0],[lindex $pt_14 1]"
-							#set DEBUG_Geometry(pt_15) "[lindex $pt_15 0],[lindex $pt_15 1]"
-							
-							# set DEBUG_Geometry(pt_03) "[lindex $pt_03 0],[lindex $pt_03 1]"
-							# set DEBUG_Geometry(pt_04) "[lindex $pt_04 0],[lindex $pt_04 1]"
-							# set DEBUG_Geometry(pt_05) "[lindex $pt_05 0],[lindex $pt_05 1]"
-							# set DEBUG_Geometry(pt_06) "[lindex $pt_06 0],[lindex $pt_06 1]"
-							#set DEBUG_Geometry(pt_18) "[lindex $pt_18 0],[lindex $pt_18 1]"
-							#set DEBUG_Geometry(pt_19) "[lindex $pt_19 0],[lindex $pt_19 1]"
+                            
+                            variable DEBUG_Geometry
+                            #set DEBUG_Geometry(pt_00) "[lindex $pt_00 0],[lindex $pt_00 1]"
+                            set DEBUG_Geometry(pt_03) "[lindex $pt_03 0],[lindex $pt_03 1]"
+                            set DEBUG_Geometry(pt_04) "[lindex $pt_04 0],[lindex $pt_04 1]"
+                            set DEBUG_Geometry(pt_14) "[lindex $pt_15 0],[lindex $pt_15 1]"
+                            
+                            #set DEBUG_Geometry(pt_11) "[lindex $pt_11 0],[lindex $pt_11 1]"
+                            #set DEBUG_Geometry(pt_12) "[lindex $pt_12 0],[lindex $pt_12 1]"
+                            #set DEBUG_Geometry(pt_13) "[lindex $pt_13 0],[lindex $pt_13 1]"
+                            #set DEBUG_Geometry(pt_14) "[lindex $pt_14 0],[lindex $pt_14 1]"
+                            #set DEBUG_Geometry(pt_15) "[lindex $pt_15 0],[lindex $pt_15 1]"
+                            
+                            # set DEBUG_Geometry(pt_03) "[lindex $pt_03 0],[lindex $pt_03 1]"
+                            # set DEBUG_Geometry(pt_04) "[lindex $pt_04 0],[lindex $pt_04 1]"
+                            # set DEBUG_Geometry(pt_05) "[lindex $pt_05 0],[lindex $pt_05 1]"
+                            # set DEBUG_Geometry(pt_06) "[lindex $pt_06 0],[lindex $pt_06 1]"
+                            #set DEBUG_Geometry(pt_18) "[lindex $pt_18 0],[lindex $pt_18 1]"
+                            #set DEBUG_Geometry(pt_19) "[lindex $pt_19 0],[lindex $pt_19 1]"
 
 			}
 			get_BrakePositionFront
@@ -1201,24 +1201,24 @@
 					variable SeatTube
 					variable DownTube
 					
-							set pt_00 	[ vectormath::addVector {0 0}	$SeatTube(Direction) 	$BottleCage(SeatTube)				]
-							set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr  0.5 * $SeatTube(DiameterBB)] ]
-							set SeatTube(BottleCage_Base) 			[ lindex $vct_01 1 ]
-							set SeatTube(BottleCage_Offset)			[ vectormath::addVector		$SeatTube(BottleCage_Base)			$SeatTube(Direction) 64.0 ]
+                            set pt_00 	[ vectormath::addVector {0 0}	$SeatTube(Direction) 	$BottleCage(SeatTube)				]
+                            set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr  0.5 * $SeatTube(DiameterBB)] ]
+                            set SeatTube(BottleCage_Base) 			[ lindex $vct_01 1 ]
+                            set SeatTube(BottleCage_Offset)			[ vectormath::addVector		$SeatTube(BottleCage_Base)			$SeatTube(Direction) 64.0 ]
 					project::setValue Result(Tubes/SeatTube/BottleCage/Base)			position	$SeatTube(BottleCage_Base) 				
 					project::setValue Result(Tubes/SeatTube/BottleCage/Offset)			position	$SeatTube(BottleCage_Offset)				
-														
-							set pt_00 	[ vectormath::addVector {0 0}	$DownTube(Direction) 	$BottleCage(DownTube)				]
-							set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr -0.5 * $DownTube(DiameterBB)] ]
-							set DownTube(BottleCage_Base) 			[ lindex $vct_01 1 ]
-							set DownTube(BottleCage_Offset)			[ vectormath::addVector		$DownTube(BottleCage_Base)			$DownTube(Direction) 64.0 ]
+                                                        
+                            set pt_00 	[ vectormath::addVector {0 0}	$DownTube(Direction) 	$BottleCage(DownTube)				]
+                            set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr -0.5 * $DownTube(DiameterBB)] ]
+                            set DownTube(BottleCage_Base) 			[ lindex $vct_01 1 ]
+                            set DownTube(BottleCage_Offset)			[ vectormath::addVector		$DownTube(BottleCage_Base)			$DownTube(Direction) 64.0 ]
 					project::setValue Result(Tubes/DownTube/BottleCage/Base)			position	$DownTube(BottleCage_Base)
 					project::setValue Result(Tubes/DownTube/BottleCage/Offset)			position	$DownTube(BottleCage_Offset)				
 					
-							set pt_00 	[ vectormath::addVector {0 0}	$DownTube(Direction) 	$BottleCage(DownTube_Lower)			]
-							set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr  0.5 * $DownTube(DiameterBB)] ]
-							set DownTube(BottleCage_Lower_Base) 	[ lindex $vct_01 1 ]
-							set DownTube(BottleCage_Lower_Offset)	[ vectormath::addVector		$DownTube(BottleCage_Lower_Base)	$DownTube(Direction) 64.0 ]
+                            set pt_00 	[ vectormath::addVector {0 0}	$DownTube(Direction) 	$BottleCage(DownTube_Lower)			]
+                            set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr  0.5 * $DownTube(DiameterBB)] ]
+                            set DownTube(BottleCage_Lower_Base) 	[ lindex $vct_01 1 ]
+                            set DownTube(BottleCage_Lower_Offset)	[ vectormath::addVector		$DownTube(BottleCage_Lower_Base)	$DownTube(Direction) 64.0 ]
 					project::setValue Result(Tubes/DownTube/BottleCage_Lower/Base)		position	$DownTube(BottleCage_Lower_Base)
 					project::setValue Result(Tubes/DownTube/BottleCage_Lower/Offset)	position	$DownTube(BottleCage_Lower_Offset)									
 			}
@@ -1234,13 +1234,13 @@
 					variable Steerer 
 					variable Saddle 
 			
-							set pt_00			$RearWheel(Position)
-							set pt_01			$Steerer(Stem)
-							set pt_02			$Steerer(Fork)
-							set pt_03			$Saddle(Position)
-							set pt_04			{0 0}
-							set pt_10			[ vectormath::intersectPerp		$pt_01 $pt_02 $pt_00 ]
-							set pt_11			[ vectormath::intersectPoint	$pt_00 $pt_10 $pt_03 $pt_04 ]
+                            set pt_00			$RearWheel(Position)
+                            set pt_01			$Steerer(Stem)
+                            set pt_02			$Steerer(Fork)
+                            set pt_03			$Saddle(Position)
+                            set pt_04			{0 0}
+                            set pt_10			[ vectormath::intersectPerp		$pt_01 $pt_02 $pt_00 ]
+                            set pt_11			[ vectormath::intersectPoint	$pt_00 $pt_10 $pt_03 $pt_04 ]
 					set FrameJig(HeadTube)	$pt_10
 					set FrameJig(SeatTube)	$pt_11
 			}
@@ -1257,15 +1257,15 @@
 					variable DownTube
 					variable TubeMitter
 
-							set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values HeadTube direction ] -1.0 ]
-								# puts " .. \$dir $dir"
+                            set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values HeadTube direction ] -1.0 ]
+                            	# puts " .. \$dir $dir"
 						                                # tube_mitter { diameter               direction            diameter_isect          direction_isect         isectionPoint 		{side {right}} {offset {0}}  {startAngle {0}}} 
 					set TubeMitter(TopTube_Head) 		[ tube_mitter	$TopTube(DiameterHT)  $TopTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$TopTube(HeadTube)  ]	
 					set TubeMitter(TopTube_Seat) 		[ tube_mitter	$TopTube(DiameterST)  $TopTube(Direction)	$SeatTube(DiameterTT)	$dir  					$TopTube(SeatTube)  ]	
 					set TubeMitter(DownTube_Head) 		[ tube_mitter	$DownTube(DiameterHT) $DownTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$DownTube(HeadTube) right	0	opposite]				
-							set offset		[ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
-							set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values SeatStay direction ] -1.0 ]
-								# puts " .. \$dir $dir"
+                            set offset		[ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
+                            set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values SeatStay direction ] -1.0 ]
+                            	# puts " .. \$dir $dir"
 					set TubeMitter(SeatStay_01) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right -$offset]	
 					set TubeMitter(SeatStay_02) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]	
 					set TubeMitter(Reference) 			{ -50 0  50 0  50 10  -50 10 }
@@ -1379,97 +1379,97 @@
 					}
 					return [ coords_addVector  $returnValue  $centerPoint]
 			}
-							
+                            
 
 				# -- default purpose
 			switch -exact $index {
 
 				polygon	{	set returnValue	{}
-							switch -exact $object {
-								Stem 			-
-								HeadSet/Top 	-
-								HeadSet/Bottom 	-
-								SeatPost 	{ 
-												set branch "Components/$object/Polygon"
-											}
-											
-								TubeMitter/TopTube_Head -
-								TubeMitter/TopTube_Seat -
-								TubeMitter/DownTube_Head -					
-								TubeMitter/SeatStay_01	-
-								TubeMitter/SeatStay_02	-
-								TubeMitter/Reference {
-												set branch "$object/Polygon"	; # puts " ... $branch"	
-											}
-											
-								default 	{ 
-												set branch "Tubes/$object/Polygon"		
-											}
-							}
-								# puts "    ... $branch"
-							set svgList	[ project::getValue Result($branch)	polygon ]
-							foreach xy $svgList {
-								foreach {x y} [split $xy ,] break
-								lappend returnValue $x $y
-							}
-							return [ coords_addVector  $returnValue  $centerPoint]
+                            switch -exact $object {
+                            	Stem 			-
+                            	HeadSet/Top 	-
+                            	HeadSet/Bottom 	-
+                            	SeatPost 	{ 
+                            					set branch "Components/$object/Polygon"
+                            				}
+                            				
+                            	TubeMitter/TopTube_Head -
+                            	TubeMitter/TopTube_Seat -
+                            	TubeMitter/DownTube_Head -					
+                            	TubeMitter/SeatStay_01	-
+                            	TubeMitter/SeatStay_02	-
+                            	TubeMitter/Reference {
+                            					set branch "$object/Polygon"	; # puts " ... $branch"	
+                            				}
+                            				
+                            	default 	{ 
+                            					set branch "Tubes/$object/Polygon"		
+                            				}
+                            }
+                            	# puts "    ... $branch"
+                            set svgList	[ project::getValue Result($branch)	polygon ]
+                            foreach xy $svgList {
+                            	foreach {x y} [split $xy ,] break
+                            	lappend returnValue $x $y
+                            }
+                            return [ coords_addVector  $returnValue  $centerPoint]
 						}
 						
 				position {
-							set returnValue	{}
-							switch -glob $object {
-								BottomBracket -
-								FrontWheel -
-								RearWheel -
-								Saddle -
-								SaddleProposal -
-								HandleBar -
-								LegClearance -
-								BottomBracketGround -
-								SteererGround -
-								SeatTubeGround -
-								BrakeFront -
-								BrakeRear -
-								DerailleurMountFront -
-								SummarySize {	
-											set branch "Position/$object"		
-										}
-										
-								Lugs/Dropout/Rear/Derailleur {
-											set branch "$object"		
-										}
-										
-								Lugs/* {
-											set branch "$object/Position"	; # puts " ... $branch"											
-										}
-										
-										
-								default {	
-											# puts "   ... \$object $object"
-											set branch "Tubes/$object"	
-										}
-							}
-							
-							set pointValue	[ project::getValue Result($branch)	position ]	; # puts "    ... $pointValue"
-							
-							foreach xy $pointValue {
-								foreach {x y} [split $xy ,] break
-								lappend returnValue $x $y	; # puts "    ... $returnValue"
-							}
-							return [ coords_addVector  $returnValue  $centerPoint]
+                            set returnValue	{}
+                            switch -glob $object {
+                            	BottomBracket -
+                            	FrontWheel -
+                            	RearWheel -
+                            	Saddle -
+                            	SaddleProposal -
+                            	HandleBar -
+                            	LegClearance -
+                            	BottomBracketGround -
+                            	SteererGround -
+                            	SeatTubeGround -
+                            	BrakeFront -
+                            	BrakeRear -
+                            	DerailleurMountFront -
+                            	SummarySize {	
+                            				set branch "Position/$object"		
+                            			}
+                            			
+                            	Lugs/Dropout/Rear/Derailleur {
+                            				set branch "$object"		
+                            			}
+                            			
+                            	Lugs/* {
+                            				set branch "$object/Position"	; # puts " ... $branch"                            				
+                            			}
+                            			
+                            			
+                            	default {	
+                            				# puts "   ... \$object $object"
+                            				set branch "Tubes/$object"	
+                            			}
+                            }
+                            
+                            set pointValue	[ project::getValue Result($branch)	position ]	; # puts "    ... $pointValue"
+                            
+                            foreach xy $pointValue {
+                            	foreach {x y} [split $xy ,] break
+                            	lappend returnValue $x $y	; # puts "    ... $returnValue"
+                            }
+                            return [ coords_addVector  $returnValue  $centerPoint]
 						}
 						
 				direction {
-							set returnValue	{}
-								# puts " ... $object"
-							switch -glob $object {
-									Lugs/* {
-											set branch "$object/Direction/polar"	; # puts " ... $branch"											
-										}
-										
-									default {	
-											set branch "Tubes/$object/Direction/polar"	
-										}
+                            set returnValue	{}
+                            	# puts " ... $object"
+                            switch -glob $object {
+                            		Lugs/* {
+                            				set branch "$object/Direction/polar"	; # puts " ... $branch"                            				
+                            			}
+                            			
+                            		default {	
+                            				set branch "Tubes/$object/Direction/polar"	
+                            			}
 							}
 							
 							set directionValue	[ project::getValue Result($branch)	direction ]	; # puts "    ... $directionValue"
@@ -1703,42 +1703,6 @@
 			}
 			set coordList [ lappend coordList [expr -0.5*$perimeter] -70 ]
 			return $coordList
-	}		
-	proc tube_mitter_org { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}}} {	
-
-		set intersection_angle 	[vectormath::angle $direction {0 0} $direction_isect]
-		
-			# puts [format " -> tube_mitter \n   %2.f %2.f" $direction_angle $intersection_angle]
-		set radius 			[expr 0.5*$diameter]
-		set radius_isect 	[expr 0.5*$diameter_isect]
-		set angle 		-180
-		set loops 		36
-		set perimeter	[expr $radius * [vectormath::rad 360] ]
-		set coordList 	[list [expr 0.5*$perimeter] -70]
-		while {$angle <= 180} {
-				set rad_Angle 	[vectormath::rad $angle]
-				set x [expr $diameter*[vectormath::rad 180]*$angle/360 ]
-			 
-				set h [expr $offset + $radius*sin($rad_Angle)]
-				set b [expr $diameter*0.5*cos($rad_Angle)]
-			 
-				if {[expr abs($radius_isect)] >= [expr abs($h)]} {
-					set l [expr sqrt(pow($radius_isect,2) - pow($h,2))]
-				} else {
-					set l 0
-				}
-				set v [expr $b/tan([vectormath::rad $intersection_angle])]
-			 
-					# puts [format "%.2f  -  %+.2f / %+.2f  -  %+.2f / %+.2f"   $angle  $h  $b  $l  $v ]
-				set y $h
-				set y [expr $l+$v]			 
-				set xy [list $x $y]
-			if {$side == {right}}  {set xy	[vectormath::rotatePoint {0 0} $xy  180]}
-			set coordList 	[lappend coordList [lindex $xy 0] [lindex $xy 1]]
-			set angle 		[expr $angle + 360 / $loops]
-		}
-		set coordList [ lappend coordList [expr -0.5*$perimeter] -70 ]
-		return $coordList
 	}		
 
 	
@@ -2075,8 +2039,6 @@
 
 			variable _updateValue
 			
-			#set domProject $::APPL_Env(root_ProjectDOM)
-			
 			# --- habdele xpath values --- 
 			switch -glob $xpath {
 				{_update_} {}
@@ -2091,7 +2053,7 @@
 					
 			#
 			# --- finaly update
-			frame_geometry::set_base_Parameters ;#$domProject
+                # frame_geometry::set_base_Parameters ;#$domProject
 			update
 			catch {focus $cvEntry}
 			catch {$cvEntry selection range 0 end}
