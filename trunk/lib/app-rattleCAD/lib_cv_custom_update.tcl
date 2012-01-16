@@ -250,7 +250,7 @@
 				}
 			lib_gui::cv_Custom05 {
 						#
-						# -- tubemitter
+						# -- tubemiter
 						#
 					$cv_Name 		clean_StageContent	
 						#
