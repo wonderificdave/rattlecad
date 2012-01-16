@@ -162,7 +162,7 @@
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Mitter  "	A4  1.0  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "	    A4  1.0  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
 			
 			$noteBook_top add [frame $noteBook_top.components] 	-text "... Components" 
@@ -488,8 +488,8 @@
 			
 				# --- set exportFile
 			set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
-			set fileName 	[winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ]]
-			set exportFile	[file join $printDir ${fileName}.svg]
+			set fileName 	[ winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ] ]
+			set exportFile	[ file join $printDir ${fileName}.svg ]
 				# set exportFile [ file join $printDir [winfo name   $currentTab].svg ]
 
 				# --- export content to File

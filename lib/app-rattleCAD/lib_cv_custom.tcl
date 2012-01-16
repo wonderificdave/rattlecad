@@ -1643,7 +1643,9 @@
                 # set textPos				[scale_toStage [list [expr $df_Border + $df_Width      -   2 ] [ expr $df_Border +  3.0 ] ]	$scaleFactor]
             set textPos				[scale_toStage {7 4}	$scaleFactor]
             set textText			[format "%s  /  %s  / \[DIN %s\] /  rattleCAD  V%s.%s " $projectFile $date $stageFormat $::APPL_Env(RELEASE_Version) $::APPL_Env(RELEASE_Revision) ]
-            $cv_Name create draftText $textPos  -text $textText -size 2.5 -anchor sw -fill gray80
+            $cv_Name create draftText $textPos  -text $textText -size 2.5 -anchor sw -fill gray20
+                # $cv_Name create draftText $textPos  -text $textText -size 2.5 -anchor sw -fill gray30
+                # $cv_Name create draftText $textPos  -text $textText -size 2.5 -anchor sw -fill gray80
 	}
 	
 }
