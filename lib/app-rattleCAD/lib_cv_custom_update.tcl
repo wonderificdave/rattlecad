@@ -83,6 +83,8 @@
 					$cv_Name 		clean_StageContent	
                         #
                     update_cv_Parameter                         $cv_Name $xy
+                        #
+                    createLugRep                                $cv_Name $xy
 						#
 					frame_visualisation::createDecoration		$cv_Name $xy	SeatPost			editable   ;# $updateCommand	
 					frame_visualisation::createDecoration		$cv_Name $xy 	RearWheel_Rep		
@@ -123,7 +125,9 @@
 						# frame_visualisation::debug_geometry			$cv_Name $xy 	
 						#
 					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
-						#			
+						#
+					lib_gui::notebook_createButton				$cv_Name 		TubingCheckAngles
+						#
 				}
 			lib_gui::cv_Custom03 {
 						#
@@ -254,12 +258,12 @@
 						#
 					$cv_Name 		clean_StageContent	
 						#
-					frame_visualisation::createTubemitter		$cv_Name { 80 190}	TopTube_Seat		
-					frame_visualisation::createTubemitter		$cv_Name {200 190}	TopTube_Head	
-					frame_visualisation::createTubemitter		$cv_Name { 80 105}	DownTube_Head	
-					frame_visualisation::createTubemitter		$cv_Name {180 105}	SeatStay_01	
-					frame_visualisation::createTubemitter		$cv_Name {250 105}	SeatStay_02	
-					frame_visualisation::createTubemitter		$cv_Name {220  15}	Reference	
+					frame_visualisation::createTubemiter		$cv_Name { 80 190}	TopTube_Seat		
+					frame_visualisation::createTubemiter		$cv_Name {200 190}	TopTube_Head	
+					frame_visualisation::createTubemiter		$cv_Name { 80 105}	DownTube_Head	
+					frame_visualisation::createTubemiter		$cv_Name {180 105}	SeatStay_01	
+					frame_visualisation::createTubemiter		$cv_Name {250 105}	SeatStay_02	
+					frame_visualisation::createTubemiter		$cv_Name {220  15}	Reference	
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
 						#
 					createWaterMark								$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]

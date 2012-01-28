@@ -60,6 +60,7 @@
 	proc add_tracing {} {
 			trace add     variable [namespace current]::Personal 	write [namespace current]::trace_ProjectConfig
 			trace add     variable [namespace current]::Custom   	write [namespace current]::trace_ProjectConfig
+			trace add     variable [namespace current]::Lugs        write [namespace current]::trace_ProjectConfig
 			trace add     variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
 			trace add     variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
 			trace add     variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
@@ -67,6 +68,7 @@
 	proc remove_tracing {} {
 			trace remove  variable [namespace current]::Personal 	write [namespace current]::trace_ProjectConfig
 			trace remove  variable [namespace current]::Custom   	write [namespace current]::trace_ProjectConfig
+			trace remove  variable [namespace current]::Lugs       	write [namespace current]::trace_ProjectConfig
 			trace remove  variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
 			trace remove  variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
 			trace remove  variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
@@ -101,6 +103,10 @@
 			
 			remove_tracing
 			
+				puts "\n\n"
+				puts "   -------------------------------"
+                puts "    project::dom_2_runTime"
+                
 			foreach branch [[$projectDOM selectNodes /root] childNodes] {
 					
 						# puts "  NodeType:  [$branch nodeType]"
@@ -108,6 +114,9 @@
 							continue
 					}
 					set branch_Name 	[$branch nodeName]
+                    
+                    puts "       branch_Name:     $branch_Name"
+
 					set branch_xPath	[get_xPath $branch]
 					set myArray $branch_Name
 					array unset [namespace current]::$myArray
@@ -134,9 +143,18 @@
 	#-------------------------------------------------------------------------
 	proc runTime_2_dom {projectDOM} {
 			
+				puts "\n\n"
+				puts "   -------------------------------"
+				puts "    project::runTime_2_dom"
+                
 			foreach branch [[$projectDOM selectNodes /root] childNodes] {
 					
+					if {[$branch nodeType] != {ELEMENT_NODE}} {
+							continue
+					}
+                    
 					set branch_Name 	[$branch nodeName]
+                    puts "       branch_Name:     $branch_Name"
 					set branch_xPath	[get_xPath $branch]
 					set myArray $branch_Name
 
@@ -278,7 +296,8 @@
 		# proc getValue {xPath type args}
 	proc getValue {arrayName type args} {
 	
-			set _array [lindex [split $arrayName (] 0]
+                # convert _array(_name) -> _array/_name
+            set _array [lindex [split $arrayName (] 0]
 			set _name  [lindex [split $arrayName ()] 1]
 			set xPath  [format "%s/%s" $_array $_name]
 			
@@ -404,9 +423,9 @@
 								# --- /root/Result/HeadTube/TopTubeAngle
 							set node [$domProject selectNode /root/Result/HeadTube/TopTubeAngle]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Result/HeadTube/TopTubeAngle"
-								set node [$domProject selectNode /root/Result/HeadTube]
-								$node appendXML "<TopTubeAngle>0.00</TopTubeAngle>"
+								# puts "        ...  $Version   ... update File ... /root/Result/HeadTube/TopTubeAngle"
+								# set node [$domProject selectNode /root/Result/HeadTube]
+								# $node appendXML "<TopTubeAngle>0.00</TopTubeAngle>"
 							}
 						}
 						
@@ -502,7 +521,8 @@
 							if {$node != {}} {
 								puts "        ...  $Version   ... update File ... /root/Result"
 								foreach childNode [ $node childNodes ] {
-									$node removeChild $childNode
+                                        # -- cleanup /root/Result
+                                    $node removeChild $childNode
 								}
 							}
 								# --- /root/Result/Tubes ...
@@ -615,10 +635,10 @@
 													<SummarySize>0.00,0.00</SummarySize>
 												</Position>"
 												
-								# --- /root/Result/TubeMitter ...
+								# --- /root/Result/TubeMiter ...
 							set node [$domProject selectNode /root/Result]
 								puts "        ...  $Version   ... update File ... /root/Result/Position"
-								$node appendXML "<TubeMitter>
+								$node appendXML "<TubeMiter>
 													<TopTube_Head>
 														<Polygon>0.00,0.00</Polygon>
 													</TopTube_Head> 
@@ -637,57 +657,24 @@
 													<Reference>
 														<Polygon>0.00,0.00</Polygon>
 													</Reference> 	
-												</TubeMitter>"
+												</TubeMiter>"
 							
-								# --- /root/Temporary ...
-							set node [$domProject selectNode /root/Temporary]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Temporary"
-								set node [$domProject selectNode /root]
-								$node appendXML "<Temporary>
-													<HeadTube>
-														<ReachLength>0.00</ReachLength>
-														<StackHeight>0.00</StackHeight>
-														<Angle>0.00</Angle>
-														<TopTubeAngle>0.00</TopTubeAngle>
-													</HeadTube>
-													<SeatTube>
-														<TubeLength>0.00</TubeLength>
-														<TubeHeight>0.00</TubeHeight>
-													</SeatTube>
-													<Saddle>
-														<Offset_BB>
-															<horizontal>0.00</horizontal>
-														</Offset_BB>
-													</Saddle>
-													<WheelPosition>
-														<front>
-															<horizontal>0.00</horizontal>
-														</front>
-														<rear>
-															<horizontal>0.00</horizontal>
-														</rear>
-													</WheelPosition>
-												</Temporary>"
-								# puts "[$node asXML]"				
-							}
-
 						}			
 				{3.2.32} {	set node {}	
 								# --- /root/Temporary/BottomBracket ...
 							set node [$domProject selectNode /root/Temporary/BottomBracket]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Temporary/BottomBracket"
-								set node [$domProject selectNode /root/Temporary]
-								$node appendXML "<BottomBracket>
-														<Height>0.00</Height>
-												</BottomBracket>"
+								#puts "        ...  $Version   ... update File ... /root/Temporary/BottomBracket"
+								#set node [$domProject selectNode /root/Temporary]
+								#$node appendXML "<BottomBracket>
+								#						<Height>0.00</Height>
+								#				</BottomBracket>"
 							}
 
  						}	
 				{3.2.40} {	set node {}	
 								# --- /root/Custom/HeadTube/Angle ...
-							$domProject selectNode /root/Temporary/WheelPosition/front/diagonal
+							#$domProject selectNode /root/Temporary/WheelPosition/front/diagonal
 							
 							# 3.2.71 
 							set node [$domProject selectNode /root/Component/Brake/Front]
@@ -698,30 +685,58 @@
 							if {$node != {}} {
 								$node appendXML "<Offset>30.00</Offset>"
 							}	
-
-
-
-
-							set node [$domProject selectNode /root/Temporary/WheelPosition/front/diagonal]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Temporary/WheelPosition/front/diagonal"
-								set node [$domProject selectNode /root/Temporary/WheelPosition/front]
-								$node appendXML "<diagonal>0.00</diagonal>"
+                            
+                            # 3.2.76
+                            set node [$domProject selectNode /root/Result]
+							if {$node != {}} {
+								$node appendXML "<Length>
+                                                    <HeadTube>
+                                                        <ReachLength>0.00</ReachLength>
+                                                        <StackHeight>0.00</StackHeight>
+                                                    </HeadTube>
+                                                    <TopTube>
+                                                        <VirtualLength>0.00</VirtualLength>
+                                                    </TopTube>
+                                                    <SeatTube>
+                                                        <TubeLength>0.00</TubeLength>
+                                                        <TubeHeight>0.00</TubeHeight>
+                                                    </SeatTube>
+                                                    <Saddle>
+                                                        <Offset_BB>0.00</Offset_BB>
+                                                    </Saddle>
+                                                    <BottomBracket>
+                                                        <Height>0.00</Height>
+                                                    </BottomBracket>
+                                                    <FrontWheel>
+                                                        <diagonal>600.00</diagonal>
+                                                        <horizontal>0.00</horizontal>
+                                                    </FrontWheel>
+                                                    <RearWheel>
+                                                        <horizontal>0.00</horizontal>
+                                                    </RearWheel>
+                                                 </Length>"
+								$node appendXML "<Angle>
+                                                    <HeadTube>
+                                                        <TopTube>0.00</TopTube>
+                                                        <DownTube>0.00</DownTube>
+                                                    </HeadTube>
+                                                    <SeatTube>
+                                                        <TopTube>0.00</TopTube>
+                                                        <SeatStay>0.00</SeatStay>
+                                                    </SeatTube>
+                                                    <BottomBracket>
+                                                        <DownTube>0.00</DownTube>
+                                                        <ChainStay>0.00</ChainStay>
+                                                    </BottomBracket>
+                                                </Angle>"
 							}
-							
-							set node [$domProject selectNode /root/Temporary/TopTube/VirtualLength]
-							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Temporary/TopTube/VirtualLength"
-								set node [$domProject selectNode /root/Temporary]
-								$node appendXML "<TopTube>
-													<VirtualLength>0.00</VirtualLength>
-												</TopTube>"
-							}
+
+
 							set node [$domProject selectNode /root/Custom/HeadTube/Angle]
 							if {$node == {}} {
 									# ... node does not exist
 								puts "        ...  $Version   ... update File ... /root/Custom/HeadTube/Angle"
-								set nodeTA [$domProject selectNode /root/Temporary/HeadTube/Angle/text()]
+								set nodeTA [$domProject selectNode /root/Result/Angle/HeadTube/TopTube/text()]
 								if {$nodeTA == {}} {
 										# ... no temporary informtion, take a default
 										set HeadTubeAngle	"73.50"
@@ -730,7 +745,8 @@
 								} else {
 										# ... temporary informtion, take this
 										set HeadTubeAngle [$nodeTA nodeValue]
-										set nodeHT [$domProject selectNode /root/Temporary/HeadTube/Angle/text()]
+										# 3.2.76 set nodeHT [$domProject selectNode /root/Temporary/HeadTube/Angle/text()]
+										set nodeHT [$domProject selectNode /root/Result/Length/HeadTube/Angle/text()]
 										set HeadTubeAngle [$nodeTA nodeValue]
 										set node [$domProject selectNode /root/Custom/HeadTube]
 										if { $HeadTubeAngle > 20 } {
@@ -746,7 +762,8 @@
 												$nodeTA nodeValue $HeadTubeAngle
 												puts "          ... correction WheelPosition/Front: $WheelPositionFront"
 												frame_geometry::set_base_Parameters $domProject
-												frame_geometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
+												# 3.2.76 frame_geometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
+												frame_geometry::set_projectValue Result/Length/FrontWheel/diagonal $WheelPositionFront update
 												puts "          ... correction WheelPosition/Front: $WheelPositionFront"
 											}
 										}
@@ -801,6 +818,102 @@
 								$parentNode removeChild $node
                                 $node delete
 							}
+                        }
+                       
+				{3.2.76} {	set node {}							
+							set node [$domProject selectNode /root/Lugs]
+                            if {$node == {}} {                     
+                                puts "        ...  $Version   ... update File ... /root/Lugs"
+                                set node [$domProject selectNode /root]
+                                $node appendXML "<Lugs>
+                                                    <HeadTube>
+                                                        <TopTube>
+                                                            <Angle>
+                                                                <value>73.00</value>
+                                                                <plus_minus>1.00</plus_minus>
+                                                            </Angle>
+                                                        </TopTube>
+                                                        <DownTube>
+                                                            <Angle>
+                                                                <value>61.00</value>
+                                                                <plus_minus>1.00</plus_minus>
+                                                            </Angle>
+                                                        </DownTube>
+                                                    </HeadTube>
+                                                    <SeatTube>
+                                                        <TopTube>
+                                                            <Angle>
+                                                                <value>76.00</value>
+                                                                <plus_minus>1.00</plus_minus>
+                                                            </Angle>
+                                                        </TopTube>
+                                                        <SeatStay>
+                                                            <Angle>
+                                                                <value>40.00</value>
+                                                                <plus_minus>1.00</plus_minus>
+                                                            </Angle>
+                                                            <MitterDiameter>20.00</MitterDiameter>
+                                                        </SeatStay>
+                                                    </SeatTube>
+                                                    <BottomBracket>
+                                                        <DownTube>
+                                                            <Angle>
+                                                                <value>60.00</value>
+                                                                <plus_minus>1.00</plus_minus>
+                                                            </Angle>
+                                                        </DownTube>
+                                                        <ChainStay>
+                                                            <Angle>
+                                                                <value>64.00</value>
+                                                                <plus_minus>1.00</plus_minus>
+                                                            </Angle>
+                                                        </ChainStay>
+                                                    </BottomBracket>
+                                                </Lugs>"
+
+                                    # puts "  ... debug 3.2.76 - 01"
+                                set node [$domProject selectNode /root/Lugs/SeatTube/SeatStay/MitterDiameter/text()]
+                                    # puts " ... $node nodeValue .."
+                                    # puts " ... [$node asXML] .."
+                                    # puts " ... [$node nodeValue] .."
+                                if {[$node nodeValue] == {20.00}} {
+                                        puts "        ...  $Version   ... update File ... /root/Lugs/SeatTube/SeatStay/MitterDiameter"
+                                        set resultNode [$domProject selectNode /root/FrameTubes/SeatTube/DiameterTT/text()]
+                                        # puts "    ... [$resultNode nodeValue] .."
+                                        $node nodeValue [$resultNode nodeValue]
+                                }
+                            }               
+                
+                            set node {}							
+							set node [$domProject selectNode /root/Component/RearDropOut]
+							if {$node != {}} {
+								puts "        ...  $Version   ... update File ... /root/Lugs/RearDropOut"
+								set parentNode [$node parentNode]
+								$parentNode removeChild $node
+                                set targetNode [$domProject selectNode /root/Lugs]
+                                $targetNode appendChild $node
+							}
+                            
+                            set node {}							
+							set node [$domProject selectNode /root/Lugs/RearDropOut]
+                            if {$node != {}} {
+								puts "        ...  $Version   ... update File ... /root/Lugs/RearDropOut/Angle"
+                                $node appendXML "<Angle>
+                                                    <value>67.00</value>
+                                                    <plus_minus>1.00</plus_minus>
+                                                </Angle>" 
+                            }
+                            
+                            set node {}	
+								# --- /root/Temporary ...
+							set node [$domProject selectNode /root/Temporary]
+							if {$node != {}} {
+								puts "        ...  $Version   ... update File ... /root/Temporary"
+								set parentNode [$node parentNode]
+								$parentNode removeChild $node
+                                $node delete
+							}
+
                         }
                        
 								

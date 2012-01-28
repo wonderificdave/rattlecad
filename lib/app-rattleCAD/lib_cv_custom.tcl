@@ -561,11 +561,11 @@
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Height								
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_TT_Virtual								
 
-                                    $cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Temporary(Saddle/Offset_BB/horizontal) ]
-                                    $cv_Name bind $_dim_FW_Distance  	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Temporary(WheelPosition/front/diagonal) ]
-                                    $cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Temporary(WheelPosition/front/horizontal) ]
-                                    $cv_Name bind $_dim_BB_Height		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Temporary(BottomBracket/Height) ]
-                                    $cv_Name bind $_dim_TT_Virtual		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Temporary(TopTube/VirtualLength) ]
+                                    $cv_Name bind $_dim_ST_XPosition	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB) ]
+                                    $cv_Name bind $_dim_FW_Distance  	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
+                                    $cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/horizontal) ]
+                                    $cv_Name bind $_dim_BB_Height		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/BottomBracket/Height) ]
+                                    $cv_Name bind $_dim_TT_Virtual		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/TopTube/VirtualLength) ]
                                         #
                                         # ... proc fill_resultValues ...
                                         # ... proc set_spec_Parameters ...
@@ -616,7 +616,13 @@
                             set _dim_Down_Seat_Angle	[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $BottomBracket(Position) $DownTube(Steerer) $TopTube(SeatTube) ] ] \
                                                                 110   0 \
                                                                 gray50 ]
+                            set _dim_Seat_SS_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $SeatStay(SeatTube) $Position(IS_ChainSt_SeatSt) $BottomBracket(Position) ] ] \
+                                                                110   0 \
+                                                                gray50 ]
                             set _dim_Seat_CS_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $BottomBracket(Position) $TopTube(SeatTube) $Position(IS_ChainSt_SeatSt)] ] \
+                                                                110   0 \
+                                                                gray50 ]
+                            set _dim_Dropout_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $Position(IS_ChainSt_SeatSt) $BottomBracket(Position) $SeatStay(SeatTube) ] ] \
                                                                 110   0 \
                                                                 gray50 ]
                                 set pt_01				[ vectormath::addVector	$BottomBracket(Position) {-1 0} ]
@@ -1281,7 +1287,7 @@
                                                                                     darkblue ]
                             if {$updateCommand != {}} {	$cv_Name	bind	$dimension	<Double-ButtonPress-1>  \
                                                                             [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                                        {	Temporary(HeadTube/TopTubeAngle) \
+                                                                                        {	Result(Angle/HeadTube/TopTube) \
                                                                                         }	{HeadTube TopTube Angle}]
                                                         lib_gui::object_CursorBinding 	$cv_Name	$dimension
                                     }
@@ -1503,22 +1509,174 @@
             set help_01					[ vectormath::intersectPerp		  $Steerer(Stem) $Steerer(Fork) $FrontWheel(Position) ] 
 
             
-            $cv_Name create centerline [ project::flatten_nestedList  $Steerer(Stem)   	$HandleBar(Position) 			] -fill gray60 -tags __CenterLine__
-            $cv_Name create centerline [ project::flatten_nestedList  $Steerer(Stem)   	$help_01 			] -fill gray60 -tags __CenterLine__ 
-            $cv_Name create centerline [ project::flatten_nestedList  $FrontWheel(Position)		   	$help_01 			] -fill gray60 -tags __CenterLine__ 
-            $cv_Name create centerline [ project::flatten_nestedList  $DownTube(BBracket)  		$DownTube(Steerer) 	] -fill gray60 -tags __CenterLine__ 
-            $cv_Name create centerline [ project::flatten_nestedList  $TopTube(SeatTube)	$TopTube(Steerer) 	] -fill gray60 -tags __CenterLine__ 
-            $cv_Name create centerline [ project::flatten_nestedList  $SeatStay(SeatTube)	$Position(IS_ChainSt_SeatSt)  ] -fill gray60 -tags __CenterLine__ 
-            $cv_Name create centerline [ project::flatten_nestedList  $Position(IS_ChainSt_SeatSt)	$BottomBracket(Position)		] -fill gray60 -tags __CenterLine__
+            $cv_Name create centerline [ project::flatten_nestedList  $Steerer(Stem)   	$HandleBar(Position)    ] -fill gray60 -tags __CenterLine__
+            $cv_Name create centerline [ project::flatten_nestedList  $Steerer(Stem)   	$help_01                ] -fill gray60 -tags __CenterLine__ 
+            $cv_Name create centerline [ project::flatten_nestedList  $FrontWheel(Position) $help_01 			] -fill gray60 -tags __CenterLine__ 
+            $cv_Name create centerline [ project::flatten_nestedList  $DownTube(BBracket)   $DownTube(Steerer) 	] -fill gray60 -tags __CenterLine__ 
+            $cv_Name create centerline [ project::flatten_nestedList  $TopTube(SeatTube)    $TopTube(Steerer) 	] -fill gray60 -tags __CenterLine__ 
+            $cv_Name create centerline [ project::flatten_nestedList  $SeatStay(SeatTube)   $Position(IS_ChainSt_SeatSt)    ] -fill gray60 -tags __CenterLine__ 
+            $cv_Name create centerline [ project::flatten_nestedList  $Position(IS_ChainSt_SeatSt)	$BottomBracket(Position)] -fill gray60 -tags __CenterLine__
             if {$extend_Saddle == {}} {
-                $cv_Name create centerline [ project::flatten_nestedList  $BottomBracket(Position)	$SeatTube(TopTube)	] -fill gray60 -tags __CenterLine__ 
+                $cv_Name create centerline [ project::flatten_nestedList  $BottomBracket(Position)	$SeatTube(TopTube)	    ] -fill gray60 -tags __CenterLine__ 
             } else {
-                $cv_Name create centerline [ project::flatten_nestedList  $BottomBracket(Position)	$Saddle(Position)				] -fill gray60 -tags __CenterLine__ 
+                $cv_Name create centerline [ project::flatten_nestedList  $BottomBracket(Position)	$Saddle(Position)       ] -fill gray60 -tags __CenterLine__ 
             }
             
                 # puts "\n =================\n"
                 # puts "    $SeatStay(SeatTube)	$SeatStay(RearWheel) "
                 # puts "\n =================\n"				
+	}
+
+    
+	proc createLugRep {cv_Name BB_Position {type {all}}} {
+			
+		puts ""
+        puts "   -------------------------------"
+		puts "     createLugRep"
+        puts "       cv_Name:         $cv_Name"
+        puts "       BB_Position:     $BB_Position"
+        puts "       checkAngles:     $lib_gui::checkAngles"
+        
+        if {$lib_gui::checkAngles != {on}} {
+            puts "       ... currently switched off"
+            return
+        }
+        
+            proc createAngleRep {cv_Name position point_1 point_2 radius lugPath} {
+                    set varName    [lindex [split $cv_Name {::}] end]
+                        # puts "          varName       $varName"
+                        # puts "          cv_Name       $cv_Name"              
+                        # puts "          position      $position" 
+                        # puts "          radius        $radius "
+                        # puts "          lugPath       $lugPath"
+                    set lineWidth  	[ $cv_Name  getNodeAttr	    Style   linewidth	]
+                        # puts "          canvasDOMNode $canvasDOMNode" 
+                        # puts "          stageScale    $stageScale"
+                        # puts "          lineWidth     $lineWidth"
+                    
+                    set angle_p1    [ vectormath::dirAngle $position $point_1 ]
+                    set angle_p2    [ vectormath::dirAngle $position $point_2 ]
+                    set angle_ext   [expr $angle_p2 - $angle_p1]
+                        # puts "     angle_p1  -> $angle_p1"
+                        # puts "     angle_p2  -> $angle_p2"
+                        # puts "     angle_ext -> $angle_ext"
+                    if {$angle_ext < 0 } {set angle_ext [expr $angle_ext +360]}
+                     
+                    set lugAngle        [project::getValue [format "%s/Angle/value)"        [string range $lugPath 0 end-1]] value]
+                    set lugTolerance    [project::getValue [format "%s/Angle/plus_minus)"   [string range $lugPath 0 end-1]] value]
+                    
+                    set colour          [getColour   $angle_ext $lugAngle $lugTolerance]
+                    
+                    set item [$cv_Name  create   arc  $position    -radius $radius  -start $angle_p1  -extent $angle_ext -tags {ArcRep_01}  -fill $colour  -outline $colour  -style pieslice]     
+                    return $item      
+            }
+            proc getColour {currentAngle lugAngle lugTolerance} {
+                        # puts "    --------"
+                        # puts "          currentAngle  $currentAngle"
+                        # puts "          lugAngle      $lugAngle"
+                        # puts "          lugTolerance  $lugTolerance"                   
+                    set difference [expr abs($currentAngle - $lugAngle)]
+                        # puts "          difference    $difference"
+                        
+                    if {$difference <= [expr 0.5*$lugTolerance] } {
+                            set configColour {lightgrey}
+                            puts "          configColour  $configColour"
+                            return $configColour
+                    }                  
+                    if {$difference <= $lugTolerance } {
+                            set range [ expr 0.5 * $lugTolerance ]
+                            set value [ expr $difference -$range ]
+                            if {$range > 0 } {
+                                set quote [ expr 100 * (1 - ($value / $range)) ]
+                            } else {
+                                set quote 100
+                            }
+                                                    
+                            # puts "      ----->  100 * (1 - ($value / $range)) = $quote"
+                            set quote [expr round($quote)]
+                            
+                            # puts "      ----->  100 * (1 - ($value / $range)) = $quote"
+                            # set yellow [format %x [expr 90 + $quote]]
+                            # puts "      ----->  $yellow"
+                            set configColour [format "#ff%x00" [expr 120 + $quote]]
+                    
+                            #set configColour {orange}
+                            #set configColour {gold}
+                            puts "          configColour  $configColour"
+                            return $configColour
+                    }
+                    
+                    set configColour {darkred}    
+                        # set configColour {orange}
+                        puts "          configColour  $configColour"
+                    return $configColour
+            }
+            
+
+			# --- get defining Point coords ----------
+		set BottomBracket(Position)	$BB_Position	
+		set SeatStay(SeatTube)		[ frame_geometry::object_values		SeatStay/End	position	$BB_Position ]
+		set TopTube(SeatTube)		[ frame_geometry::object_values		TopTube/Start	position	$BB_Position ]
+		set TopTube(Steerer)		[ frame_geometry::object_values		TopTube/End		position	$BB_Position ]
+		set Steerer(Stem)			[ frame_geometry::object_values		Steerer/End		position	$BB_Position ]
+		set Steerer(Fork)			[ frame_geometry::object_values  	Steerer/Start	position	$BB_Position ]
+		set DownTube(Steerer)		[ frame_geometry::object_values  	DownTube/End	position	$BB_Position ]
+		set DownTube(BBracket)		[ frame_geometry::object_values		DownTube/Start	position 	$BB_Position ]
+		set ChainSt_SeatSt_IS		[ frame_geometry::object_values  	ChainStay/SeatStay_IS	position	$BB_Position ]	
+        
+        set represent_DO       [ createAngleRep $cv_Name $ChainSt_SeatSt_IS        $BottomBracket(Position)    $SeatStay(SeatTube)          70   Lugs(RearDropOut)  ]  
+        set represent_BB_01    [ createAngleRep $cv_Name $BottomBracket(Position)  $DownTube(Steerer)          $TopTube(SeatTube)           90   Lugs(BottomBracket/DownTube)  ]
+		set represent_BB_02    [ createAngleRep $cv_Name $BottomBracket(Position)  $TopTube(SeatTube)          $ChainSt_SeatSt_IS           90   Lugs(BottomBracket/ChainStay) ]
+        set represent_SL_01    [ createAngleRep $cv_Name $TopTube(SeatTube)        $BottomBracket(Position)    $TopTube(Steerer)            80   Lugs(SeatTube/TopTube)  ]
+        set represent_SL_02    [ createAngleRep $cv_Name $SeatStay(SeatTube)       $ChainSt_SeatSt_IS          $BottomBracket(Position)     90   Lugs(SeatTube/SeatStay) ]
+        set represent_HL_TT    [ createAngleRep $cv_Name $TopTube(Steerer)         $Steerer(Stem)              $TopTube(SeatTube)           80   Lugs(HeadTube/TopTube)  ]
+        set represent_HL_DT    [ createAngleRep $cv_Name $DownTube(Steerer)        $BottomBracket(Position)    $Steerer(Fork)               90   Lugs(HeadTube/DownTube) ]
+        
+        
+        
+        $cv_Name bind   $represent_DO       <Double-ButtonPress-1> \
+                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                        {	Lugs(RearDropOut/Angle/value) \
+                                            Lugs(RearDropOut/Angle/plus_minus) }	            {Lug Specification:  RearDropout}]
+        $cv_Name bind   $represent_BB_01    <Double-ButtonPress-1> \
+                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                        {	Lugs(BottomBracket/DownTube/Angle/value) \
+                                            Lugs(BottomBracket/DownTube/Angle/plus_minus)  }	{Lug Specification:  Seat-/DownTube}]
+        $cv_Name bind   $represent_BB_02    <Double-ButtonPress-1> \
+                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                        {	Lugs(BottomBracket/ChainStay/Angle/value) \
+                                            Lugs(BottomBracket/ChainStay/Angle/plus_minus) }    {Lug Specification:  SeatTube/ChainStay}]
+        $cv_Name bind   $represent_SL_01    <Double-ButtonPress-1> \
+                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                        {	Lugs(SeatTube/TopTube/Angle/value) \
+                                            Lugs(SeatTube/TopTube/Angle/plus_minus) }           {Lug Specification:  Seat-/TopTube}]
+        $cv_Name bind   $represent_SL_02    <Double-ButtonPress-1> \
+                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                        {	Lugs(SeatTube/SeatStay/Angle/value) \
+                                            Lugs(SeatTube/SeatStay/Angle/plus_minus) 
+                                            Lugs(SeatTube/SeatStay/MitterDiameter)}             {Lug Specification:  SeatTube/SeatStay}]
+        $cv_Name bind   $represent_HL_TT    <Double-ButtonPress-1> \
+                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                        {	Lugs(HeadTube/TopTube/Angle/value) \
+                                            Lugs(HeadTube/TopTube/Angle/plus_minus) }	        {Lug Specification:  Top-/HeadTube}]
+        $cv_Name bind   $represent_HL_DT    <Double-ButtonPress-1> \
+                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                        {	Lugs(HeadTube/DownTube/Angle/value) \
+                                            Lugs(HeadTube/DownTube/Angle/plus_minus) }	        {Lug Specification:  Head-/DownTube}]
+                                            
+        $cv_Name bind   $represent_DO       <Enter>  \
+                            [list tk_messageBox -message "Angle in range of \[Angle - Tolerance\] and \[Angle + Tolerance\]"]
+                                                                  
+ 
+        lib_gui::object_CursorBinding 	$cv_Name	$represent_DO
+        lib_gui::object_CursorBinding 	$cv_Name	$represent_BB_01
+        lib_gui::object_CursorBinding 	$cv_Name	$represent_BB_02
+        lib_gui::object_CursorBinding 	$cv_Name	$represent_SL_01
+        lib_gui::object_CursorBinding 	$cv_Name	$represent_SL_02
+        lib_gui::object_CursorBinding 	$cv_Name	$represent_HL_TT
+        lib_gui::object_CursorBinding 	$cv_Name	$represent_HL_DT
+
+						
 	}
 
 	
@@ -1621,7 +1779,12 @@
             puts "       stageScale:      $stageScale" 
 	}
 	
-	proc createWaterMark {cv_Name projectFile date} {
+
+
+
+
+
+    proc createWaterMark {cv_Name projectFile date} {
 			
                 # --- get stageScale
             set stageWidth		[ $cv_Name	getNodeAttr  Stage  width  ]

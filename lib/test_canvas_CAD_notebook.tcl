@@ -48,6 +48,7 @@
 				$cv01  create   oval  		{30 160 155 230 } 	-tags {Line_01}  -fill red   -width 2 		
 				$cv01  create   circle  	{160 60}   -radius 50 -tags {Line_01}  -fill blue   -width 2 
 				$cv01  create   arc  		{270 160}  -radius 50  -start 30  -extent 170 -tags {Line_01}  -outline gray  -width 2  -style arc
+				$cv01  create   arc  		{370 260}  -radius 90  -start 30  -extent 170 -tags {Line_01}  -outline gray  -fill red -width 2  -style pieslice 
 				$cv01  create   text		{150 90}  -text "text 150 90"
 				$cv01  create   vectortext	{160 30}  -text "vectorText  160 30  -size 20"  -size 20	
 				$cv01  create   vectortext	{210 70}  -text "vectorText  210 70  -size 10"  -size 10

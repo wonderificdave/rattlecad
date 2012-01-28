@@ -69,7 +69,7 @@
 			
 			variable BottleCage		; array set BottleCage		{}
 			variable FrameJig		; array set FrameJig		{}
-			variable TubeMitter		; array set TubeMitter		{}
+			variable TubeMiter		; array set TubeMiter		{}
 			
 			variable DEBUG_Geometry ; array set DEBUG_Geometry	{}
 			
@@ -133,7 +133,7 @@
 
 			variable BottleCage
 			variable FrameJig
-			variable TubeMitter	
+			variable TubeMiter	
 			
 			variable DEBUG_Geometry
 
@@ -270,12 +270,12 @@
 
 				#
 				# --- get RearDropOut ----------------------
-			set RearDrop(OffsetCS)		$project::Component(RearDropOut/ChainStay/Offset)
-			set RearDrop(OffsetCSPerp)	$project::Component(RearDropOut/ChainStay/OffsetPerp)
-			set RearDrop(OffsetSS)		$project::Component(RearDropOut/SeatStay/Offset)
-			set RearDrop(OffsetSSPerp)	$project::Component(RearDropOut/SeatStay/OffsetPerp)
-			set RearDrop(Derailleur_x)	$project::Component(RearDropOut/Derailleur/x)
-			set RearDrop(Derailleur_y)	$project::Component(RearDropOut/Derailleur/y)
+			set RearDrop(OffsetCS)		$project::Lugs(RearDropOut/ChainStay/Offset)
+			set RearDrop(OffsetCSPerp)	$project::Lugs(RearDropOut/ChainStay/OffsetPerp)
+			set RearDrop(OffsetSS)		$project::Lugs(RearDropOut/SeatStay/Offset)
+			set RearDrop(OffsetSSPerp)	$project::Lugs(RearDropOut/SeatStay/OffsetPerp)
+			set RearDrop(Derailleur_x)	$project::Lugs(RearDropOut/Derailleur/x)
+			set RearDrop(Derailleur_y)	$project::Lugs(RearDropOut/Derailleur/y)
 			
 				#
 				# --- get LegClearance - Position
@@ -436,7 +436,7 @@
 					
 							set ChainStay(RearWheel)			$pt_00
 							set ChainStay(BottomBracket)		{0 0}
-					project::setValue Result(Tubes/ChainStay/Start)		position	{0 0}
+					project::setValue Result(Tubes/ChainStay/Start)		    position	{0 0}
 					project::setValue Result(Tubes/ChainStay/End)			position	$ChainStay(RearWheel)
 				
 							set vct_01 		[ vectormath::parallel 			$pt_00 $pt_01 [expr 0.5*$ChainStay(DiameterSS)] ]
@@ -950,7 +950,7 @@
 							#
 						set value		[ format "%.2f" [lindex $position 0] ]	
 							# puts "                  ... $value"
-						project::setValue Temporary(BottomBracket/Height) value $value
+						project::setValue Result(Length/BottomBracket/Height) value $value
 
 
 						# --- HeadTube
@@ -962,14 +962,16 @@
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 0] ]	
 							# puts "                  ... $value"
-						project::setValue Temporary(HeadTube/ReachLength) value $value
+						# 3.2.76 project::setValue Temporary(HeadTube/ReachLength) value $value
+						project::setValue Result(Length/HeadTube/ReachLength) value $value
 
 							# --- HeadTube/StackHeight
 							#
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 1] ]	
 							# puts "                  ... $value"
-						project::setValue Temporary(HeadTube/StackHeight) value $value
+						# 3.2.76 project::setValue Temporary(HeadTube/StackHeight) value $value
+						project::setValue Result(Length/HeadTube/StackHeight) value $value
 
 
 						# --- HeadTube / TopTubeAngle
@@ -983,7 +985,9 @@
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [expr $angle_ht + $angle_tt] ]	
 							# puts "                  ... $value"
-						project::setValue Temporary(HeadTube/TopTubeAngle) value $value
+						# 3.2.76 project::setValue Temporary(HeadTube/TopTubeAngle)      value   $value
+						project::setValue Result(Angle/HeadTube/TopTube)      value   $value
+
 
 			
 						# --- SeatTube
@@ -996,14 +1000,16 @@
 							# puts "                   ... [ frame_geometry::object_values		SeatTube TopTube	{0 0} ]" 
 						set value		[ format "%.2f" [ expr hypot([lindex $position 0],[lindex $position 1]) ] ]
 							# puts "                  ... $value"
-						project::setValue Temporary(SeatTube/TubeLength) value $value
+						# 3.2.76    project::setValue Temporary(SeatTube/TubeLength) value $value
+						project::setValue Result(Length/SeatTube/TubeLength) value $value
 						
 							# --- SeatTube/TubeHeight
 							#
 							# puts "                   ... [ frame_geometry::object_values		SeatTube TopTube	{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 1] ]
 							# puts "                  ... $value"
-						project::setValue Temporary(SeatTube/TubeHeight) value $value
+						# 3.2.76 project::setValue Temporary(SeatTube/TubeHeight) value $value
+						project::setValue Result(Length/SeatTube/TubeHeight) value $value
 
 						
 						# --- TopTube/VirtualLength
@@ -1011,7 +1017,7 @@
 					set position	[ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]   $TopTube(HeadTube)  {0 0} $Saddle(Position) ]
 						set value		[ format "%.2f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $position 0] ] ]
 							# puts "                  ... $value"
-						project::setValue Temporary(TopTube/VirtualLength) value $value
+						project::setValue Result(Length/TopTube/VirtualLength) value $value
 
 
 					# --- Saddle/Offset_BB/horizontal
@@ -1019,7 +1025,7 @@
 					set position	$Saddle(Position)					
 						set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
 							# puts "                  ... $value"
-						project::setValue Temporary(Saddle/Offset_BB/horizontal) value $value
+						project::setValue Result(Length/Saddle/Offset_BB) value $value
 
 					
 						# --- WheelPosition/front/diagonal
@@ -1028,7 +1034,7 @@
 							# puts "                ... $frameCoords::FrontWheel" 						
 						set value		[ format "%.2f" [expr { hypot( [lindex $position 0], [lindex $position 1] ) }] ]	
 							# puts "                  ... $value"
-						project::setValue Temporary(WheelPosition/front/diagonal) value $value
+						project::setValue Result(Length/FrontWheel/diagonal) value $value
 
 					
 						# --- WheelPosition/front/horizontal
@@ -1037,7 +1043,7 @@
 							# puts "                ... $frameCoords::FrontWheel" 
 						set value		[ format "%.2f" [lindex $position 0] ]	
 							# puts "                  ... $value"
-						project::setValue Temporary(WheelPosition/front/horizontal) value $value
+						project::setValue Result(Length/FrontWheel/horizontal) value $value
 
 					
 						# --- WheelPosition/rear/horizontal
@@ -1046,7 +1052,7 @@
 							# puts "                ... $frameCoords::RearWheel" 
 						set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
 							# puts "                  ... $value"
-						project::setValue Temporary(WheelPosition/rear/horizontal) value $value
+						project::setValue Result(Length/RearWheel/horizontal) value $value
 			}
 			fill_resultValues
 			# fill_resultValues $domProject
@@ -1225,7 +1231,6 @@
 			get_BottleCageMount
 
 
-
 				#
 				# --- set FrameJig ------------------------
 			proc get_FrameJig {} {
@@ -1248,37 +1253,37 @@
 
 
 				#
-				# --- set TubeMitter -----------------
-			proc get_TubeMitter {} {
+				# --- set TubeMiter -----------------
+			proc get_TubeMiter {} {
 					variable HeadTube
 					variable SeatTube
 					variable SeatStay
 					variable TopTube
 					variable DownTube
-					variable TubeMitter
+					variable TubeMiter
 
                             set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values HeadTube direction ] -1.0 ]
                             	# puts " .. \$dir $dir"
 						                                # tube_mitter { diameter               direction            diameter_isect          direction_isect         isectionPoint 		{side {right}} {offset {0}}  {startAngle {0}}} 
-					set TubeMitter(TopTube_Head) 		[ tube_mitter	$TopTube(DiameterHT)  $TopTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$TopTube(HeadTube)  ]	
-					set TubeMitter(TopTube_Seat) 		[ tube_mitter	$TopTube(DiameterST)  $TopTube(Direction)	$SeatTube(DiameterTT)	$dir  					$TopTube(SeatTube)  ]	
-					set TubeMitter(DownTube_Head) 		[ tube_mitter	$DownTube(DiameterHT) $DownTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$DownTube(HeadTube) right	0	opposite]				
+					set TubeMiter(TopTube_Head) 		[ tube_mitter	$TopTube(DiameterHT)  $TopTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$TopTube(HeadTube)  ]	
+					set TubeMiter(TopTube_Seat) 		[ tube_mitter	$TopTube(DiameterST)  $TopTube(Direction)	$SeatTube(DiameterTT)	$dir  					$TopTube(SeatTube)  ]	
+					set TubeMiter(DownTube_Head) 		[ tube_mitter	$DownTube(DiameterHT) $DownTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$DownTube(HeadTube) right	0	opposite]				
                             set offset		[ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
                             set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values SeatStay direction ] -1.0 ]
                             	# puts " .. \$dir $dir"
-					set TubeMitter(SeatStay_01) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right -$offset]	
-					set TubeMitter(SeatStay_02) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]	
-					set TubeMitter(Reference) 			{ -50 0  50 0  50 10  -50 10 }
+					set TubeMiter(SeatStay_01) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right -$offset]	
+					set TubeMiter(SeatStay_02) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]	
+					set TubeMiter(Reference) 			{ -50 0  50 0  50 10  -50 10 }
 					
-					project::setValue Result(TubeMitter/TopTube_Head)		polygon		[ project::flatten_nestedList $TubeMitter(TopTube_Head) 	]
-					project::setValue Result(TubeMitter/TopTube_Seat)		polygon		[ project::flatten_nestedList $TubeMitter(TopTube_Seat)		]
-					project::setValue Result(TubeMitter/DownTube_Head)		polygon		[ project::flatten_nestedList $TubeMitter(DownTube_Head)	] ;#
-					project::setValue Result(TubeMitter/SeatStay_01)		polygon		[ project::flatten_nestedList $TubeMitter(SeatStay_01)		]
-					project::setValue Result(TubeMitter/SeatStay_02)		polygon		[ project::flatten_nestedList $TubeMitter(SeatStay_02)		]
-					project::setValue Result(TubeMitter/Reference)			polygon		[ project::flatten_nestedList $TubeMitter(Reference) 		]	
+					project::setValue Result(TubeMiter/TopTube_Head)		polygon		[ project::flatten_nestedList $TubeMiter(TopTube_Head) 	]
+					project::setValue Result(TubeMiter/TopTube_Seat)		polygon		[ project::flatten_nestedList $TubeMiter(TopTube_Seat)		]
+					project::setValue Result(TubeMiter/DownTube_Head)		polygon		[ project::flatten_nestedList $TubeMiter(DownTube_Head)	] ;#
+					project::setValue Result(TubeMiter/SeatStay_01)		polygon		[ project::flatten_nestedList $TubeMiter(SeatStay_01)		]
+					project::setValue Result(TubeMiter/SeatStay_02)		polygon		[ project::flatten_nestedList $TubeMiter(SeatStay_02)		]
+					project::setValue Result(TubeMiter/Reference)			polygon		[ project::flatten_nestedList $TubeMiter(Reference) 		]	
 
 			}
-			get_TubeMitter	
+			get_TubeMiter	
 	}
 
 
@@ -1393,12 +1398,12 @@
                             					set branch "Components/$object/Polygon"
                             				}
                             				
-                            	TubeMitter/TopTube_Head -
-                            	TubeMitter/TopTube_Seat -
-                            	TubeMitter/DownTube_Head -					
-                            	TubeMitter/SeatStay_01	-
-                            	TubeMitter/SeatStay_02	-
-                            	TubeMitter/Reference {
+                            	TubeMiter/TopTube_Head -
+                            	TubeMiter/TopTube_Seat -
+                            	TubeMiter/DownTube_Head -					
+                            	TubeMiter/SeatStay_01	-
+                            	TubeMiter/SeatStay_02	-
+                            	TubeMiter/Reference {
                             					set branch "$object/Polygon"	; # puts " ... $branch"	
                             				}
                             				
@@ -1636,7 +1641,7 @@
 
  	
 	#-------------------------------------------------------------------------
-		#  create TubeMitter
+		#  create TubeMiter
 		#
 		#         \     \ direction_isect
 		#   -------\     \     \    
@@ -1728,13 +1733,20 @@
 			# --- local procedures ---
 				proc change_ValueEdit {textVar direction} {
 						#
-						# --- update value of spinbox ---
+						# --- dynamic update value ---
+                            set currentValue [set ::$textVar]
+                            set updateValue 1.0
+                            if {$currentValue < 20} { set updateValue 0.1 }
+                                # puts "\n  -> $currentValue   -> $updateValue\n"
+						#
+                        # --- update value of spinbox ---
 							if {$direction eq "up"} {\
-								set ::$textVar [expr {[set ::$textVar]+1.0}]\
+								set newValue [expr {$currentValue + $updateValue}]\
 							} else {\
-								set ::$textVar [expr {[set ::$textVar]-1.0}]\
+								set newValue [expr {$currentValue - $updateValue}]\
 							}
-				}
+                            set ::$textVar [format "%.2f" $newValue] 
+ 				}
 				
 				proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {					
 
@@ -2059,7 +2071,7 @@
 			catch {$cvEntry selection range 0 end}
 	}
  	#-------------------------------------------------------------------------
-		#  check comments in lsitbox
+		#  check comments in listbox
 	proc check_listBoxValue { w cv_Name xPath args} {
 		
 			variable _updateValue
@@ -2117,7 +2129,7 @@
 			if {$mode == {update}} {
 					# puts "  ... set_projectValue: $xpath"
 				switch -glob $_array {
-					{Temporary} {
+					{Result} {
 								# puts "\n  ... set_projectValue: ... Result/..."
 							set_temp_Parameters $_array $_name $value
 							# set_spec_Parameters $xpath $value
@@ -2205,9 +2217,10 @@
 			
 			switch -glob $_name {
 			
-				{BottomBracket/Height}	{			
+				{Length/BottomBracket/Height}	{			
 							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-							set oldValue				$project::Temporary(BottomBracket/Height)
+							set oldValue				$project::Result(Length/BottomBracket/Height)
+							# 3.2.76 set oldValue       $project::Temporary(BottomBracket/Height)
 							set newValue				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$newValue
 							set delta		[expr $newValue - $oldValue]
@@ -2224,7 +2237,7 @@
 							
 						}	
 							
-				{HeadTube/TopTubeAngle} {
+				{Angle/HeadTube/TopTube} {
 							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"						
 							set HeadTopTube_Angle		[ set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$HeadTopTube_Angle
@@ -2242,8 +2255,8 @@
 							
 						}
 				
-				{TopTube/VirtualLength}			-			
-				{WheelPosition/front/horizontal}	{			
+				{Length/TopTube/VirtualLength}			-			
+				{Length/FrontWheel/horizontal}	{			
 							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
 							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
 							# set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
@@ -2259,7 +2272,7 @@
 							set_projectValue $xpath  	$newValue
 						}
 						
-				{WheelPosition/front/diagonal}	{			
+				{Length/FrontWheel/diagonal}	{			
                                 # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
 							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value]
                                 # set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
@@ -2288,7 +2301,7 @@
 							set_projectValue $xpath  	$newValue
 						}
 						
-				{Saddle/Offset_BB/horizontal}	{			
+				{Length/Saddle/Offset_BB}	{			
 							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
 							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value]
 							# set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
