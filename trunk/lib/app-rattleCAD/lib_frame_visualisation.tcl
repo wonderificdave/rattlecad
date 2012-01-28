@@ -464,17 +464,17 @@
 
 			# --- create Rear Dropout ----------------
 		set RearWheel(position)		[ frame_geometry::object_values		RearWheel	position	$BB_Position]
-		set RearDropout(file)		[ checkFileString $project::Component(RearDropOut/File) ]
+		set RearDropout(file)		[ checkFileString $project::Lugs(RearDropOut/File) ]
 		set RearDropout(object)		[ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  0  __Frame__]
 		if {$updateCommand != {}} 	{ $cv_Name bind 	$RearDropout(object)	<Double-ButtonPress-1> \
 														[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																	{ 	file://Component(RearDropOut/File)			\
-																        Component(RearDropOut/ChainStay/Offset) 	\
-																		Component(RearDropOut/ChainStay/OffsetPerp)	\
-																		Component(RearDropOut/SeatStay/Offset)  	\
-																		Component(RearDropOut/SeatStay/OffsetPerp)  \
-																		Component(RearDropOut/Derailleur/x)   		\
-																		Component(RearDropOut/Derailleur/y)   		\
+																	{ 	file://Lugs(RearDropOut/File)			\
+																        Lugs(RearDropOut/ChainStay/Offset) 	\
+																		Lugs(RearDropOut/ChainStay/OffsetPerp)	\
+																		Lugs(RearDropOut/SeatStay/Offset)  	\
+																		Lugs(RearDropOut/SeatStay/OffsetPerp)  \
+																		Lugs(RearDropOut/Derailleur/x)   		\
+																		Lugs(RearDropOut/Derailleur/y)   		\
 																	} 	{RearDropout Parameter} \
 														]
 									  lib_gui::object_CursorBinding 	$cv_Name	$RearDropout(object)
@@ -833,7 +833,7 @@
 	}
 
 	
-	proc createTubemitter {cv_Name xy type} {
+	proc createTubemiter {cv_Name xy type} {
 	
 
 			## -- read from domProject
@@ -844,7 +844,7 @@
 					
 		switch $type {
 			TopTube_Seat {
-					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/TopTube_Seat		polygon	$xy ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMiter/TopTube_Seat		polygon	$xy ]
 					set Mitter(header)		"TopTube / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(TopTube/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values TopTube 	direction ]
@@ -853,7 +853,7 @@
 					set 	offSet				0
 				}
 			TopTube_Head {
-					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/TopTube_Head		polygon	$xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMiter/TopTube_Head		polygon	$xy  ]
 					set Mitter(header)		"TopTube / HeadTube"
 					set 	minorDiameter		$project::FrameTubes(TopTube/DiameterHT)
 					set 	minorDirection		[ frame_geometry::object_values TopTube 	direction ]
@@ -862,7 +862,7 @@
 					set 	offSet				0
 				}
 			DownTube_Head {
-					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/DownTube_Head	polygon		$xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMiter/DownTube_Head	polygon		$xy  ]
 					set Mitter(header)		"DownTube / HeadTube"
 					set 	minorDiameter		$project::FrameTubes(DownTube/DiameterHT)
 					set 	minorDirection		[ frame_geometry::object_values DownTube 	direction ]
@@ -872,27 +872,27 @@
 					set 	offSet				0
 				}
 			SeatStay_01 {
-					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/SeatStay_01		polygon		$xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMiter/SeatStay_01		polygon		$xy  ]
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(SeatStay/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
-					set 	majorDiameter		$project::FrameTubes(SeatTube/DiameterTT)
+					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MitterDiameter)
 					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
 				}
 			SeatStay_02 {
-					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/SeatStay_02		polygon		$xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMiter/SeatStay_02		polygon		$xy  ]
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(SeatStay/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
-					set 	majorDiameter		$project::FrameTubes(SeatTube/DiameterTT)
+					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MitterDiameter)
 					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
 				}
 			Reference {
-					set Mitter(polygon)		[ frame_geometry::object_values TubeMitter/Reference		polygon		$xy  ]
+					set Mitter(polygon)		[ frame_geometry::object_values TubeMiter/Reference		polygon		$xy  ]
 					set Mitter(header)		"Reference"
 				}
 			default {return}

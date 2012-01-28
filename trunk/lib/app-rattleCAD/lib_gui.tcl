@@ -45,7 +45,8 @@
 	variable 	iconArray           ;   array	set iconArray {}
 	
 	variable 	canvasUpdate        ;	array	set canvasUpdate {}
-	
+	variable    checkAngles         ;           set checkAngles off
+    
 	variable	noteBook_top
 	
 	variable	stageFormat
@@ -519,18 +520,6 @@
 			set cv  	[lib_gui::notebook_getWidget  $cv_Name]
 				
 			case $cv_Button {
-					Reference2Custom {
-								# -- create a Button to execute geometry_reference2personal
-								catch { destroy $cv.button_R2C }
-								catch {	button  $cv.button_R2C \
-												-text "copy settings to Base Geometry" \
-												-command lib_gui::geometry_reference2personal								
-										$cv create window 7 19 \
-												-window $cv.button_R2C \
-												-anchor w \
-												-tags __Button__R2C__
-								}
-							}
 					changeFormatScale {
 								if {$type != {default}} {
 									set buttonText "Format"
@@ -548,25 +537,106 @@
 												-tags __Button__Format_Scale__
 								}
 							}
+					TubingCheckAngles {
+								# -- create a Button to execute tubing_checkAngles
+								catch { destroy $cv.button_TCA }
+								catch {	button  $cv.button_TCA \
+												-text "check Angles" \
+												-command [format {lib_gui::tubing_checkAngles %s} $cv]								
+										$cv create window 7 19 \
+												-window $cv.button_TCA \
+												-anchor w \
+												-tags __Button__TCA__
+								}
+							}
+					Reference2Custom {
+								# -- create a Button to execute geometry_reference2personal
+								catch { destroy $cv.button_R2C }
+								catch {	button  $cv.button_R2C \
+												-text "copy settings to Base Geometry" \
+												-command lib_gui::geometry_reference2personal								
+										$cv create window 7 19 \
+												-window $cv.button_R2C \
+												-anchor w \
+												-tags __Button__R2C__
+								}
+							}
 			}
 	}
 
-
+    
 	#-------------------------------------------------------------------------
        #  update Personal Geometry with parameters of Reference Geometry 
        #
-	proc geometry_reference2personal {} {
+	proc tubing_checkAngles {cv {type {default}}} {
 		
-			set answer	[tk_messageBox -icon question -type okcancel -title "Reference to Personal" -default cancel\
-										-message "Do you really wants to overwrite your \"Personal\" parameter \n with \"Reference\" settings" ]
-				#tk_messageBox -message "$answer"	
-				
-			switch $answer {
-				cancel	return				
-				ok		{	frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Env(root_ProjectDOM)
-							lib_gui::fill_canvasCAD cv_Custom00 
-						}
+			if {$lib_gui::checkAngles != {on}} {
+                set lib_gui::checkAngles {on}
+            } else {
+                set lib_gui::checkAngles {off}         
+            }
+            cv_custom::update [lib_gui::current_canvasCAD]
+            return
+            
+            set cv_Name [lindex [split $cv .] end-1]
+			
+				# puts "  change_FormatScale:  cv: $cv"
+				# puts "  change_FormatScale:  cv_Name: $cv_Name"
+			
+			set 	lib_gui::stageFormat	A4
+			set 	lib_gui::stageScale		0.20		
+			
+			if {[ $cv find withtag __Select__Check_Angles__ ] == {} } {
+					catch 	{	set baseFrame [frame .f_checkAngle_$cv_Name  -relief raised -border 1]
+								$cv create window 27 35 \
+										-window $baseFrame \
+										-anchor nw \
+										-tags __Select__Check_Angles__
+								frame $baseFrame.select
+								pack  $baseFrame.select
+										
+							}
+			} else {
+					$cv delete 	__Select__Check_Angles__
+					$cv dtag 	__Select__Check_Angles__
+					destroy		.f_checkAngle__$cv_Name
+					#$cv.f_format destroy
+					return
 			}
+			
+			
+			set f_Angle	[frame $baseFrame.select.angle]
+					radiobutton $f_Angle.a4 -text A4 -value A4	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+					radiobutton $f_Angle.a3 -text A3 -value A3  -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+					radiobutton $f_Angle.a2 -text A2 -value A2	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+					radiobutton $f_Angle.a1 -text A1 -value A1	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+					radiobutton $f_Angle.a0 -text A0 -value A0	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+				pack $f_Angle.a4 \
+					 $f_Angle.a3 \
+					 $f_Angle.a2 \
+					 $f_Angle.a1 \
+					 $f_Angle.a0
+			
+			set f_Tolerance		[frame $baseFrame.select.tolerance]
+			if {$type == {default}} {
+					radiobutton $f_Tolerance.s020 -text "1:5  " 	-value 0.20 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Tolerance.s025 -text "1:4  " 	-value 0.25 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Tolerance.s033 -text "1:3  " 	-value 0.33 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Tolerance.s040 -text "1:2,5" 	-value 0.40 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Tolerance.s050 -text "1:2  " 	-value 0.50 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+					radiobutton $f_Tolerance.s100 -text "1:1  " 	-value 1.00 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
+				pack $f_Tolerance.s020 \
+					 $f_Tolerance.s025 \
+					 $f_Tolerance.s040 \
+					 $f_Tolerance.s050 \
+					 $f_Tolerance.s100
+			}
+			pack $f_Angle $f_Tolerance -side left
+			
+			button 	$baseFrame.update \
+						-text "update" \
+						-command {lib_gui::notebook_formatCanvas  $lib_gui::stageFormat  $lib_gui::stageScale}
+			pack $baseFrame.update -expand yes -fill x			
 	}
 
 
@@ -634,6 +704,24 @@
 						-text "update" \
 						-command {lib_gui::notebook_formatCanvas  $lib_gui::stageFormat  $lib_gui::stageScale}
 			pack $baseFrame.update -expand yes -fill x			
+	}
+
+
+	#-------------------------------------------------------------------------
+       #  update Personal Geometry with parameters of Reference Geometry 
+       #
+	proc geometry_reference2personal {} {
+		
+			set answer	[tk_messageBox -icon question -type okcancel -title "Reference to Personal" -default cancel\
+										-message "Do you really wants to overwrite your \"Personal\" parameter \n with \"Reference\" settings" ]
+				#tk_messageBox -message "$answer"	
+				
+			switch $answer {
+				cancel	return				
+				ok		{	frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Env(root_ProjectDOM)
+							lib_gui::fill_canvasCAD cv_Custom00 
+						}
+			}
 	}
 
 

@@ -205,11 +205,12 @@
 				#   Alternatives
 			ttk::labelframe	$menueFrame.sf.lf_03    	-text "Base Concept - Alternative Values" 
 				pack $menueFrame.sf.lf_03 				-side top  -fill x  -pady 2
-					create_config_cDial $menueFrame.sf.lf_03		Temporary(TopTube/VirtualLength) 			0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Temporary(WheelPosition/front/horizontal) 	0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Temporary(WheelPosition/front/diagonal) 	0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Temporary(Saddle/Offset_BB/horizontal) 		0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Temporary(BottomBracket/Height) 			0.20  darkblue
+					# 3.2.76 create_config_cDial $menueFrame.sf.lf_03		Temporary(TopTube/VirtualLength) 			0.20  darkblue
+					create_config_cDial $menueFrame.sf.lf_03		Result(Length/TopTube/VirtualLength)    0.20  darkblue
+					create_config_cDial $menueFrame.sf.lf_03		Result(Length/FrontWheel/horizontal)    0.20  darkblue
+					create_config_cDial $menueFrame.sf.lf_03		Result(Length/FrontWheel/diagonal)      0.20  darkblue
+					create_config_cDial $menueFrame.sf.lf_03		Result(Length/Saddle/Offset_BB)         0.20  darkblue
+					create_config_cDial $menueFrame.sf.lf_03		Result(Length/BottomBracket/Height)     0.20  darkblue
 
 				# -----------------
 				#   Wheels
@@ -226,15 +227,15 @@
 				#   Tube Details
 			ttk::labelframe	$menueFrame.sf.lf_06    	-text "Tube Details" 
 				pack $menueFrame.sf.lf_06 				-side top  -fill x  -pady 2
-					create_config_cDial $menueFrame.sf.lf_06		FrameTubes(HeadTube/Length) 		0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Component(HeadSet/Height/Bottom) 	0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(SeatTube/Extension) 			0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(SeatStay/OffsetTT)			0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(TopTube/Angle)				0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Temporary(HeadTube/TopTubeAngle) 	0.02  darkblue
-					create_config_cDial $menueFrame.sf.lf_06		Custom(TopTube/OffsetHT) 			0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(DownTube/OffsetHT) 			0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(DownTube/OffsetBB) 			0.20  darkred
+					create_config_cDial $menueFrame.sf.lf_06		FrameTubes(HeadTube/Length)         0.20  darkred
+					create_config_cDial $menueFrame.sf.lf_06		Component(HeadSet/Height/Bottom)    0.20  darkred
+					create_config_cDial $menueFrame.sf.lf_06		Custom(SeatTube/Extension)          0.20  darkred
+					create_config_cDial $menueFrame.sf.lf_06		Custom(SeatStay/OffsetTT)           0.20  darkred
+					create_config_cDial $menueFrame.sf.lf_06		Custom(TopTube/Angle)               0.20  darkred
+					create_config_cDial $menueFrame.sf.lf_06		Result(Angle/HeadTube/TopTube)      0.02  darkblue
+					create_config_cDial $menueFrame.sf.lf_06		Custom(TopTube/OffsetHT)            0.20  darkred
+					create_config_cDial $menueFrame.sf.lf_06		Custom(DownTube/OffsetHT)           0.20  darkred
+					create_config_cDial $menueFrame.sf.lf_06		Custom(DownTube/OffsetBB)           0.20  darkred
 
 				# -----------------
 				#   refresh Values
@@ -310,7 +311,7 @@
 				
 				set compList {	Component/Fork/Crown/File \
 								Component/Fork/DropOut/File \
-								Component/RearDropOut/File }
+								Lugs/RearDropOut/File }
 					set i 0
 				foreach xPath $compList {			
 						set _array 	[lindex [split $xPath /] 0]

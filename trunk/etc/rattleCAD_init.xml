@@ -48,7 +48,7 @@
 		<ComponentLocation>
 			<component key="Component/Fork/Crown/File"					dir="components/fork/crown"      />
 			<component key="Component/Fork/DropOut/File"				dir="components/fork/dropout"    />
-			<component key="Component/RearDropOut/File"					dir="components/dropout"		 />
+			<component key="Lugs/RearDropOut/File"					    dir="components/dropout"		 />
 			<component key="Component/Brake/Front/File"					dir="components/brake/front"     />
 			<component key="Component/Brake/Rear/File"					dir="components/brake/rear"      />
 			<component key="Component/HandleBar/File"					dir="components/handlebar"       />

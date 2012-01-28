@@ -663,7 +663,7 @@ package require tdom
 			}
 			
 			switch  -exact -- $type {
-				centerline	{ set myItem 	[ centerLine $canvasDOMNode $CoordList  [flatten_nestedList $args] ] }
+				centerline	{ set myItem 	[ centerLine            $canvasDOMNode $CoordList  [flatten_nestedList $args] ] }
 				draftLine	-
 				line		{ set myItem	[ eval $w create line  		$CoordList  [flatten_nestedList $args] ] }
 				oval -
@@ -782,7 +782,6 @@ package require tdom
 								[flatten_nestedList $args] ]
 			return $myItem
 		}
-
 		
 		
 	} ;# end of namespace

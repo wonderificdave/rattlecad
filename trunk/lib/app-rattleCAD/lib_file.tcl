@@ -460,6 +460,13 @@
 					project::check_ProjectVersion {3.2.63}
 					project::check_ProjectVersion {3.2.71}
 					project::check_ProjectVersion {3.2.74}
+					project::check_ProjectVersion {3.2.76}
+                    
+                        # set fp [open ../user/debug.xml w]
+                        # puts $fp [$::APPL_Env(root_ProjectDOM)  asXML]
+                        # close $fp
+
+
 					
 						#
 					frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
