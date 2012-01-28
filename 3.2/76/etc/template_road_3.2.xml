@@ -106,7 +106,7 @@
                     <value>40.00</value>
                     <plus_minus>1.00</plus_minus>
                 </Angle>
-                <MitterDiameter>30.00</MitterDiameter>
+                <MiterDiameter>28.60</MiterDiameter>
             </SeatStay>
         </SeatTube>
         <BottomBracket>
