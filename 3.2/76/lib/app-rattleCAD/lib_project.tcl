@@ -852,7 +852,7 @@
                                                                 <value>40.00</value>
                                                                 <plus_minus>1.00</plus_minus>
                                                             </Angle>
-                                                            <MitterDiameter>20.00</MitterDiameter>
+                                                            <MiterDiameter>20.00</MiterDiameter>
                                                         </SeatStay>
                                                     </SeatTube>
                                                     <BottomBracket>
@@ -872,12 +872,12 @@
                                                 </Lugs>"
 
                                     # puts "  ... debug 3.2.76 - 01"
-                                set node [$domProject selectNode /root/Lugs/SeatTube/SeatStay/MitterDiameter/text()]
+                                set node [$domProject selectNode /root/Lugs/SeatTube/SeatStay/MiterDiameter/text()]
                                     # puts " ... $node nodeValue .."
                                     # puts " ... [$node asXML] .."
                                     # puts " ... [$node nodeValue] .."
                                 if {[$node nodeValue] == {20.00}} {
-                                        puts "        ...  $Version   ... update File ... /root/Lugs/SeatTube/SeatStay/MitterDiameter"
+                                        puts "        ...  $Version   ... update File ... /root/Lugs/SeatTube/SeatStay/MiterDiameter"
                                         set resultNode [$domProject selectNode /root/FrameTubes/SeatTube/DiameterTT/text()]
                                         # puts "    ... [$resultNode nodeValue] .."
                                         $node nodeValue [$resultNode nodeValue]
