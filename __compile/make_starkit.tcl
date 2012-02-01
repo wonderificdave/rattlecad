@@ -40,17 +40,47 @@
 			return $fileList
 	}	
 
-
+if {$argc == 0} {
+    puts ""
+    puts "  -----------------------"
+    puts "     comoile rattleCAD Starkit"
+    puts ""
+    puts "     usage:  tclsh $argv0  trunkDir"
+    puts ""
+    puts "       e.g.: $argv0  3.2.76"
+    puts "\n"
+    exit
+}
+    
+    
 puts "\n ========================\n"
 puts "     update starkit\n"
 set dir_compile [file normalize .]
-set dir_trunk   [file join [file dirname [file normalize .]] trunk]
-set dir_version [file join [file dirname [file normalize .]] ___version/newVersion]
-set vfsDir [file join $dir_compile rattleCAD.vfs]
+set dir_trunk   [file join [file dirname [file normalize .]] [lindex $argv 0]]
+set dir_vfs 	[file join $dir_compile rattleCAD.vfs]
 
-puts "   -> $vfsDir"
+    puts "     "
+    puts "    dir_compile $dir_compile"
+    puts "    dir_trunk   $dir_trunk  "
+    puts "    dir_vfs     $dir_vfs    "
+    puts "\n"
+
+
+if {[file exists [file join $dir_trunk tclkit.inf]]} {
+		# puts " customizing strings in executable"
+		set fd [open [file join $dir_trunk tclkit.inf]]
+		array set strinfo [read $fd]
+		close $fd
+ 		set dir_version [file join [file dirname [file normalize .]] ___version/$strinfo(ProductVersion).$strinfo(FileVersion)]
+} else {
+		set dir_version [file join [file dirname [file normalize .]] ___version/newVersion]
+}
+
+	# set dir_version [file join [file dirname [file normalize .]] ___version/newVersion]
+
 puts "   -> $dir_compile"
 puts "   -> $dir_trunk"
+puts "   -> $dir_vfs"
 puts "   -> $dir_version"
 
 
@@ -59,43 +89,43 @@ puts "   -> $dir_version"
 puts "\n ========================\n"
 puts "         cleanup complete\n"
 
-file_delete [file join $vfsDir help.txt]
-file_delete [file join $vfsDir license.txt]
-file_delete [file join $vfsDir exclusion.txt]
-file_delete [file join $vfsDir main.tcl]
-file_delete [file join $vfsDir tclkit.inf] 
-file_delete [file join $vfsDir tclkit.ico] 
-file_delete [file join $vfsDir rattleCAD.tcl]
-file_delete [file join $vfsDir simplify_SVG.tcl]
-file_delete [file join $vfsDir Tcl.svg]
-file_delete [file join $vfsDir tclTk.svg]
+file_delete [file join $dir_vfs help.txt]
+file_delete [file join $dir_vfs license.txt]
+file_delete [file join $dir_vfs exclusion.txt]
+file_delete [file join $dir_vfs main.tcl]
+file_delete [file join $dir_vfs tclkit.inf] 
+file_delete [file join $dir_vfs tclkit.ico] 
+file_delete [file join $dir_vfs rattleCAD.tcl]
+file_delete [file join $dir_vfs simplify_SVG.tcl]
+file_delete [file join $dir_vfs Tcl.svg]
+file_delete [file join $dir_vfs tclTk.svg]
 
-file_delete [file join $vfsDir etc]
-file_delete [file join $vfsDir image]
-file_delete [file join $vfsDir lib]
+file_delete [file join $dir_vfs etc]
+file_delete [file join $dir_vfs image]
+file_delete [file join $dir_vfs lib]
 
 	# -- update $dir_compile
 	#
 puts "\n ========================\n"
 puts "         update\n"
 
-file_update [file join $dir_trunk      etc]  $vfsDir
-file_update [file join $dir_trunk    image]  $vfsDir
-file_update [file join $dir_trunk      lib]  $vfsDir
+file_update [file join $dir_trunk      etc]  $dir_vfs
+file_update [file join $dir_trunk    image]  $dir_vfs
+file_update [file join $dir_trunk      lib]  $dir_vfs
 foreach _dir [glob -directory [file join $dir_compile   _lib] *] {
-	file_update $_dir [file join $vfsDir lib]
+	file_update $_dir [file join $dir_vfs lib]
 }
 
-file_update [file join $dir_trunk help.txt]       	$vfsDir
-file_update [file join $dir_trunk license.txt]    	$vfsDir
-file_update [file join $dir_trunk exclusion.txt]  	$vfsDir
-file_update [file join $dir_trunk main.tcl]  		$vfsDir
-file_update [file join $dir_trunk tclkit.inf]  		$vfsDir
-file_update [file join $dir_trunk tclkit.ico]  		$vfsDir
-file_update [file join $dir_trunk rattleCAD.tcl]  	$vfsDir
-file_update [file join $dir_trunk simplify_SVG.tcl] $vfsDir
-file_update [file join $dir_trunk Tcl.svg] 			$vfsDir
-file_update [file join $dir_trunk tclTk.svg] 		$vfsDir
+file_update [file join $dir_trunk help.txt]       	$dir_vfs
+file_update [file join $dir_trunk license.txt]    	$dir_vfs
+file_update [file join $dir_trunk exclusion.txt]  	$dir_vfs
+file_update [file join $dir_trunk main.tcl]  		$dir_vfs
+file_update [file join $dir_trunk tclkit.inf]  		$dir_vfs
+file_update [file join $dir_trunk tclkit.ico]  		$dir_vfs
+file_update [file join $dir_trunk rattleCAD.tcl]  	$dir_vfs
+file_update [file join $dir_trunk simplify_SVG.tcl] $dir_vfs
+file_update [file join $dir_trunk Tcl.svg] 			$dir_vfs
+file_update [file join $dir_trunk tclTk.svg] 		$dir_vfs
 
 	# -- remove unused files
 	#
@@ -104,13 +134,13 @@ file_update [file join $dir_trunk tclTk.svg] 		$vfsDir
 puts "\n ========================\n"
 puts "         cleanup\n"
 	# -- etc
-foreach file [findFiles [file join $vfsDir etc] *.cdr {f r}] {
+foreach file [findFiles [file join $dir_vfs etc] *.cdr {f r}] {
 	file_delete $file
 }
-foreach file [findFiles [file join $vfsDir etc] *.jpg {f r}] {
+foreach file [findFiles [file join $dir_vfs etc] *.jpg {f r}] {
 	file_delete $file
 }
-foreach file [findFiles $vfsDir .svn {d r hidden} ] {
+foreach file [findFiles $dir_vfs .svn {d r hidden} ] {
 	file_delete $file
 }
 
@@ -142,25 +172,26 @@ file_delete	$dir_version
 file mkdir  $dir_version
 file mkdir  [file join $dir_version lib]
 
-file_update [file join $vfsDir  help.txt]			$dir_version
-file_update [file join $vfsDir  license.txt]    	$dir_version
-file_update [file join $vfsDir  exclusion.txt]  	$dir_version
-file_update [file join $vfsDir  main.tcl]  			$dir_version
-file_update [file join $vfsDir  tclkit.ico]  		$dir_version
-file_update [file join $vfsDir  rattleCAD.tcl]  	$dir_version
-file_update [file join $vfsDir  simplify_SVG.tcl]	$dir_version
-file_update [file join $vfsDir  Tcl.svg]			$dir_version
-file_update [file join $vfsDir  tclTk.svg]			$dir_version
+file_update [file join $dir_vfs  help.txt]			$dir_version
+file_update [file join $dir_vfs  license.txt]    	$dir_version
+file_update [file join $dir_vfs  exclusion.txt]  	$dir_version
+file_update [file join $dir_vfs  main.tcl]  			$dir_version
+file_update [file join $dir_vfs  tclkit.inf]  		$dir_version
+file_update [file join $dir_vfs  tclkit.ico]  		$dir_version
+file_update [file join $dir_vfs  rattleCAD.tcl]  	$dir_version
+file_update [file join $dir_vfs  simplify_SVG.tcl]	$dir_version
+file_update [file join $dir_vfs  Tcl.svg]			$dir_version
+file_update [file join $dir_vfs  tclTk.svg]			$dir_version
 
-file_update [file join $vfsDir  etc      ]                          $dir_version
-file_update [file join $vfsDir  image    ]                          $dir_version
-file_update [file join $vfsDir  lib/_apputil      ]                 [file join $dir_version lib]
-file_update [file join $vfsDir  lib/_canvasCAD    ]                 [file join $dir_version lib]
-file_update [file join $vfsDir  lib/_extSummary   ]                 [file join $dir_version lib]
-file_update [file join $vfsDir  lib/app-rattleCAD ]                 [file join $dir_version lib]
-file_update [file join $vfsDir  lib/test_canvas_CAD_ChainWheel.tcl] [file join $dir_version lib]
-file_update [file join $vfsDir  lib/test_canvas_CAD_Dimension.tcl ] [file join $dir_version lib]
-file_update [file join $vfsDir  lib/test_canvas_CAD_notebook.tcl  ] [file join $dir_version lib]
+file_update [file join $dir_vfs  etc      ]                          $dir_version
+file_update [file join $dir_vfs  image    ]                          $dir_version
+file_update [file join $dir_vfs  lib/_apputil      ]                 [file join $dir_version lib]
+file_update [file join $dir_vfs  lib/_canvasCAD    ]                 [file join $dir_version lib]
+file_update [file join $dir_vfs  lib/_extSummary   ]                 [file join $dir_version lib]
+file_update [file join $dir_vfs  lib/app-rattleCAD ]                 [file join $dir_version lib]
+file_update [file join $dir_vfs  lib/test_canvas_CAD_ChainWheel.tcl] [file join $dir_version lib]
+file_update [file join $dir_vfs  lib/test_canvas_CAD_Dimension.tcl ] [file join $dir_version lib]
+file_update [file join $dir_vfs  lib/test_canvas_CAD_notebook.tcl  ] [file join $dir_version lib]
 file_update rattleCAD.exe                                           $dir_version
 
 
