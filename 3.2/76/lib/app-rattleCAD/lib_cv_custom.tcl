@@ -1654,7 +1654,7 @@
                             [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                         {	Lugs(SeatTube/SeatStay/Angle/value) \
                                             Lugs(SeatTube/SeatStay/Angle/plus_minus) 
-                                            Lugs(SeatTube/SeatStay/MiterDiameter)}             {Lug Specification:  SeatTube/SeatStay}]
+                                            Lugs(SeatTube/SeatStay/MitterDiameter)}             {Lug Specification:  SeatTube/SeatStay}]
         $cv_Name bind   $represent_HL_TT    <Double-ButtonPress-1> \
                             [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                         {	Lugs(HeadTube/TopTube/Angle/value) \

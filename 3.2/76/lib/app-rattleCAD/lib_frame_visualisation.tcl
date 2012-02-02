@@ -876,7 +876,7 @@
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(SeatStay/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
-					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MiterDiameter)
+					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MitterDiameter)
 					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
@@ -886,7 +886,7 @@
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(SeatStay/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
-					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MiterDiameter)
+					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MitterDiameter)
 					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
