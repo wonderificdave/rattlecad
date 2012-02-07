@@ -63,7 +63,7 @@ exec wish "$0" "$@"
 	lappend auto_path           [file join $BASE_Dir lib]
 	
 	package require   rattleCAD  3.2 
-	package require   canvasCAD	 0.9
+	package require   canvasCAD	 0.11
 	package require	  extSummary 0.1
 
 
@@ -96,7 +96,6 @@ exec wish "$0" "$@"
 
 
 		# -- Version Info Summary  ---------------
-  
  		puts "  ----------------------------------------------"
 		puts "  rattleCAD      $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)"
 		puts "                             $APPL_Env(RELEASE_Date)"

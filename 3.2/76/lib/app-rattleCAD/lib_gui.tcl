@@ -159,7 +159,7 @@
 			
 				# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Tube Details    "	A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Frame Details  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  40  -bd 2  -bg white  -relief sunken
@@ -215,7 +215,7 @@
 	
 	
 	#-------------------------------------------------------------------------
-		#  fill cv_Custom01   
+		#  get current canvasCAD   
 		#
 	proc current_canvasCAD {} {
 			variable noteBook_top		
@@ -226,12 +226,34 @@
 			return $varName
 	}
 	#-------------------------------------------------------------------------
-		#  fill cv_Custom01   
+		#  select specific canvasCAD tab   
+		#
+	proc select_canvasCAD {cv} {
+			variable noteBook_top		
+            
+            set cvID    [format "lib_gui::%s" $cv]
+            set cvPath  [$cvID getNodeAttr Canvas path]
+            set noteBook   [winfo parent [winfo parent $cvPath]] 
+                # puts "         $noteBook"
+                # puts "         [winfo exists [winfo parent $cvPath]]"
+            if {[winfo exists $cvPath]} {
+                $noteBook select  [winfo parent $cvPath]   
+                return [$noteBook select]
+            } else {
+                puts ""
+                puts "         ... <E> select_canvasCAD:"
+                puts "               $cv / $cvID  ... does not exist\n"
+                return {}
+            }
+	}
+	#-------------------------------------------------------------------------
+		#  fill canvasCAD   
 		#
 	proc fill_canvasCAD {{varName {}}} {
 			variable noteBook_top
 			
-			if {$varName == {}} {
+			puts "      fill_canvasCAD: $varName"
+            if {$varName == {}} {
 				set current_cv [$noteBook_top select]
 				puts "        current canvasCAD: $current_cv"
 				set varName [lindex [split $current_cv .] end]
@@ -255,7 +277,7 @@
 						lib_gui::notebook_refitCanvas
 						lib_comp_library::updateCanvas
 					}
-				cv_Library {
+				__cv_Library {
 						::update
 						lib_gui::notebook_refitCanvas
 						lib_config::updateCanvas
@@ -541,7 +563,7 @@
 								# -- create a Button to execute tubing_checkAngles
 								catch { destroy $cv.button_TCA }
 								catch {	button  $cv.button_TCA \
-												-text "check Angles" \
+												-text "check Frame Angles" \
 												-command [format {lib_gui::tubing_checkAngles %s} $cv]								
 										$cv create window 7 19 \
 												-window $cv.button_TCA \

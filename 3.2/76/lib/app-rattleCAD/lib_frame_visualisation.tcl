@@ -441,6 +441,10 @@
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		
+			# --- set tubeColour
+            # set tubeColour "gray90"
+		set tubeColour 	    "white"		
+		
 			# --- check existance of File --- regarding on user/etc
 		proc checkFileString {fileString} {
 			switch -glob $fileString {
@@ -482,7 +486,7 @@
 
 			# --- create HeadTube --------------------
 		set HeadTube(polygon) 		[ frame_geometry::object_values HeadTube polygon $BB_Position  ]
-		set HeadTube(object)		[ $cv_Name create polygon $HeadTube(polygon) -fill white -outline black  -tags __Frame__]
+		set HeadTube(object)		[ $cv_Name create polygon $HeadTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$HeadTube(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{	FrameTubes(HeadTube/Diameter)	\
@@ -493,7 +497,7 @@
 				
 			# --- create DownTube --------------------
 		set DownTube(polygon) 		[ frame_geometry::object_values DownTube polygon $BB_Position  ]
-		set DownTube(object) 		[ $cv_Name create polygon $DownTube(polygon) -fill white -outline black  -tags __Frame__]
+		set DownTube(object) 		[ $cv_Name create polygon $DownTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$DownTube(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	FrameTubes(DownTube/DiameterHT)  \
@@ -506,7 +510,7 @@
 				
 			# --- create SeatTube --------------------
 		set SeatTube(polygon) 		[ frame_geometry::object_values SeatTube polygon $BB_Position  ]
-		set SeatTube(object)		[ $cv_Name create polygon $SeatTube(polygon) -fill white -outline black  -tags __Frame__]
+		set SeatTube(object)		[ $cv_Name create polygon $SeatTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$SeatTube(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	FrameTubes(SeatTube/DiameterTT)   \
@@ -519,7 +523,7 @@
 
 			# --- create TopTube ---------------------
 		set TopTube(polygon) 		[ frame_geometry::object_values TopTube polygon $BB_Position  ]
-		set TopTube(object)			[ $cv_Name create polygon $TopTube(polygon) -fill white -outline black  -tags __Frame__]
+		set TopTube(object)			[ $cv_Name create polygon $TopTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$TopTube(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	FrameTubes(TopTube/DiameterHT)   \
@@ -533,7 +537,7 @@
 
 			# --- create ChainStay -------------------
 		set ChainStay(polygon) 		[ frame_geometry::object_values ChainStay polygon $BB_Position  ]
-		set ChainStay(object)		[ $cv_Name create polygon $ChainStay(polygon) -fill white -outline black  -tags __Frame__]		
+		set ChainStay(object)		[ $cv_Name create polygon $ChainStay(polygon) -fill $tubeColour -outline black  -tags __Frame__]		
 		if {$updateCommand != {}}	{ $cv_Name bind	$ChainStay(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{	FrameTubes(ChainStay/DiameterSS)		\
@@ -546,7 +550,7 @@
 
 			# --- create SeatStay --------------------
 		set SeatStay(polygon) 		[ frame_geometry::object_values SeatStay polygon $BB_Position  ]
-		set SeatStay(object)		[ $cv_Name create polygon $SeatStay(polygon) -fill white -outline black  -tags __Frame__]
+		set SeatStay(object)		[ $cv_Name create polygon $SeatStay(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$SeatStay(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	FrameTubes(SeatStay/DiameterST)   \
@@ -559,7 +563,7 @@
 				}
 
 			# --- create BottomBracket ---------------
-		$cv_Name create circle  $BB_Position			-radius 20	-fill white	-tags __Frame__
+		$cv_Name create circle  $BB_Position			-radius 20	-fill $tubeColour	-tags __Frame__
 
 	}
 
@@ -571,6 +575,10 @@
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		
+			# --- set tubeColour
+            # set tubeColour "gray90"
+		set tubeColour 	    "white"		
+        
 			# --- get Rendering Style
 		set Rendering(Fork)		$project::Rendering(Fork)
 
@@ -637,7 +645,7 @@
 		}
 		
 			# --- create Fork Blade -----------------
-		set ForkBlade(object)		[ $cv_Name create polygon $ForkBlade(polygon) -fill white  -outline black -tags __Frame__]
+		set ForkBlade(object)		[ $cv_Name create polygon $ForkBlade(polygon) -fill $tubeColour  -outline black -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$ForkBlade(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	list://Rendering(Fork@SELECT_ForkTypes) \
@@ -876,7 +884,7 @@
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(SeatStay/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
-					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MitterDiameter)
+					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MiterDiameter)
 					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
@@ -886,7 +894,7 @@
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(SeatStay/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
-					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MitterDiameter)
+					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MiterDiameter)
 					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]

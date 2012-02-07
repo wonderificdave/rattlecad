@@ -49,6 +49,7 @@
 
 	variable 	componentList	{}
 	variable    compCanvas      {}
+	variable    frameCanvas     {}
 
 				
 	#-------------------------------------------------------------------------
@@ -138,15 +139,21 @@
 				#
 			set nb_Config	[ ttk::notebook $w.f.nb ]
 				pack $nb_Config  	-expand no -fill both   
-			$nb_Config add [frame $nb_Config.geometry] 	-text "Geometry" 		
-			$nb_Config add [frame $nb_Config.mockup] 	-text "Mockup" 
+			$nb_Config add [frame $nb_Config.geometry]      -text " Geometry " 		
+			$nb_Config add [frame $nb_Config.frameDetail]   -text " Frame " 
+			$nb_Config add [frame $nb_Config.frameCheck]    -text " Check " 
+			$nb_Config add [frame $nb_Config.bikeComp]      -text " Mockup " 
 		
 				# -----------------
 				# add content
-			add_Basic 	$nb_Config.geometry
-			$nb_Config select $nb_Config.mockup
-			add_Detail 	$nb_Config.mockup
-			$nb_Config select $nb_Config.geometry
+			add_Basic 	        $nb_Config.geometry
+			$nb_Config select   $nb_Config.frameDetail
+			add_FrameDetails    $nb_Config.frameDetail
+			$nb_Config select   $nb_Config.frameCheck
+			add_FrameCheck      $nb_Config.frameCheck
+			$nb_Config select   $nb_Config.bikeComp
+			add_BikeComponents  $nb_Config.bikeComp
+			$nb_Config select   $nb_Config.geometry
 			
 				# -----------------
 				#
@@ -224,20 +231,6 @@
 					
 		
 				# -----------------
-				#   Tube Details
-			ttk::labelframe	$menueFrame.sf.lf_06    	-text "Tube Details" 
-				pack $menueFrame.sf.lf_06 				-side top  -fill x  -pady 2
-					create_config_cDial $menueFrame.sf.lf_06		FrameTubes(HeadTube/Length)         0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Component(HeadSet/Height/Bottom)    0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(SeatTube/Extension)          0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(SeatStay/OffsetTT)           0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(TopTube/Angle)               0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Result(Angle/HeadTube/TopTube)      0.02  darkblue
-					create_config_cDial $menueFrame.sf.lf_06		Custom(TopTube/OffsetHT)            0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(DownTube/OffsetHT)           0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_06		Custom(DownTube/OffsetBB)           0.20  darkred
-
-				# -----------------
 				#   refresh Values
 			#ttk::labelframe	$menueFrame.sf.updateValues    			-text "refresh Values" 
 			#	pack $menueFrame.sf.updateValues 					-side top  -fill x  -pady 2
@@ -245,12 +238,148 @@
 			#button 	$menueFrame.sf.updateValues.f_upd.bt_update		-text {refresh}			-width 10	-command [namespace current]::init_configValues
 			#	pack $menueFrame.sf.updateValues.f_upd.bt_update 	-side right
 			
-	}	
-
+	}
 	#-------------------------------------------------------------------------
        #  add content 02
        #
-	proc add_Detail {w} {
+	proc add_FrameDetails {w} {
+	
+			variable APPL_Env
+			variable componentList
+			variable configValue
+			variable frameCanvas
+				#
+				# add content
+				#
+			set 	menueFrame	[ frame $w.f_menue	-relief flat -bd 1]
+			pack 	$menueFrame \
+				-fill both -side left -expand yes
+
+
+				# -----------------
+				#   build frame
+			frame	 		$menueFrame.sf -relief flat -bd 1			
+				pack $menueFrame.sf  		-side top  -fill x 
+		
+
+				# -----------------
+				#   Tube Details
+			ttk::labelframe	$menueFrame.sf.lf_01    	-text "Tube Details" 
+				pack $menueFrame.sf.lf_01 				-side top  -fill x  -pady 2
+					create_config_cDial_title $menueFrame.sf.lf_01  {HeadTube - Length}		        FrameTubes(HeadTube/Length)         0.20  darkred
+					create_config_cDial_title $menueFrame.sf.lf_01	{HeadTube/TopTube - Angle}	    Result(Angle/HeadTube/TopTube)      0.02  darkblue
+					create_config_cDial_title $menueFrame.sf.lf_01	{HeadTube/TopTube - Offset}	    Custom(TopTube/OffsetHT)            0.20  darkred
+					create_config_cDial_title $menueFrame.sf.lf_01	{HeadTube/DownTube - Offset}	Custom(DownTube/OffsetHT)           0.20  darkred
+					create_config_cDial_title $menueFrame.sf.lf_01	{HeadSet - BottomHeight}	    Component(HeadSet/Height/Bottom)    0.20  darkred
+					create_config_cDial_title $menueFrame.sf.lf_01	{SeatTube - Extension}	        Custom(SeatTube/Extension)          0.20  darkred
+					create_config_cDial_title $menueFrame.sf.lf_01	{TopTube/SeatStay - Offset}     Custom(SeatStay/OffsetTT)           0.20  darkred
+					create_config_cDial_title $menueFrame.sf.lf_01	{TopTube - Angle}	            Custom(TopTube/Angle)               0.20  darkred
+					create_config_cDial_title $menueFrame.sf.lf_01	{DownTube/BB - Offset}	        Custom(DownTube/OffsetBB)           0.20  darkred
+
+                    
+				# -----------------
+				#   Frame Parts
+			ttk::labelframe	$menueFrame.sf.lf_09    	-text "Frame & Fork Parts" 
+				pack $menueFrame.sf.lf_09 				-side top  -fill x -pady 2 
+				
+				set compList {	Lugs/RearDropOut/File Component/Fork/Crown/File \
+								Component/Fork/DropOut/File}
+					set i 0
+				foreach xPath $compList {			
+						set _array 	[lindex [split $xPath /] 0]
+						set _name 	[string range $xPath [string length $_array/] end]
+
+						incr i 1
+						puts "       ... $xPath  $configValue($xPath)"
+						
+						set fileFrame [frame $menueFrame.sf.lf_09.f_$i]
+						label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"		
+						set alternatives [lib_file::get_componentAlternatives  $xPath]
+						ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
+													-values $alternatives	-width 30
+							pack $fileFrame 	-fill x -expand yes  -pady 2
+							pack $fileFrame.cb 	-side right
+							pack $fileFrame.lb 	-side left
+							
+							bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] select]
+							bind $fileFrame.cb <ButtonPress> 		[list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
+				}
+				
+				if {$frameCanvas != {}} {
+					# puts "   ... 0 $compCanvas  exists"
+					$frameCanvas destroy
+				} 
+				set frameCanvas [canvasCAD::newCanvas cv_FrameParts $menueFrame.sf.lf_09.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
+					# puts " ---- created $compCanvas"			
+				
+                # -----------------
+				#   Update Values
+			#ttk::labelframe	$menueFrame.sf.updateValues    					-text "update Values" 
+			#	pack $menueFrame.sf.updateValues 							-side top  -fill x  -pady 2
+			#		pack [frame $menueFrame.sf.updateValues.f_upd] 			-fill x -expand yes -padx 3 -pady 2
+			#		button 	$menueFrame.sf.updateValues.f_upd.bt_update		-text {update}			-width 10	-command [namespace current]::update_Rendering
+			#			pack $menueFrame.sf.updateValues.f_upd.bt_update 	-side right
+						
+	}
+	#-------------------------------------------------------------------------
+       #  add content 03
+       #
+	proc add_FrameCheck {w} {
+	
+			variable APPL_Env
+			variable componentList
+			variable configValue
+			variable frameCanvas
+				#
+				# add content
+				#
+			set 	menueFrame	[ frame $w.f_menue	-relief flat -bd 1]
+			pack 	$menueFrame \
+				-fill both -side left -expand yes
+
+
+				# -----------------
+				#   build frame
+			frame	 		$menueFrame.sf -relief flat -bd 1			
+				pack $menueFrame.sf  		-side top  -fill x 
+		
+
+				# -----------------
+				#   Concept - Primary
+			ttk::labelframe	$menueFrame.sf.lf_06    	-text "Check Frame Angles" 
+				pack $menueFrame.sf.lf_06 				-side top  -fill x  -pady 2
+					create_config_cDial_title $menueFrame.sf.lf_06  {HeadTube/TopTube}		    Lugs(HeadTube/TopTube/Angle/value)	            0.10    darkred
+					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(HeadTube/TopTube/Angle/plus_minus)	        0.10    
+					create_config_cDial_title $menueFrame.sf.lf_06  {HeadTube/DownTube}		    Lugs(HeadTube/DownTube/Angle/value)	            0.10    darkred
+					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(HeadTube/DownTube/Angle/plus_minus)        0.10    
+					create_config_cDial_title $menueFrame.sf.lf_06  {BottomBracket/DownTube}    Lugs(BottomBracket/DownTube/Angle/value)	    0.10    darkred
+					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(BottomBracket/DownTube/Angle/plus_minus)	0.10    
+					create_config_cDial_title $menueFrame.sf.lf_06  {BottomBracket/ChainStay}   Lugs(BottomBracket/ChainStay/Angle/value)	    0.10    darkred
+					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(BottomBracket/ChainStay/Angle/plus_minus)	0.10    
+					create_config_cDial_title $menueFrame.sf.lf_06  {RearDropOut}               Lugs(RearDropOut/Angle/value)	                0.10    darkred
+					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(RearDropOut/Angle/plus_minus)	            0.10    
+					create_config_cDial_title $menueFrame.sf.lf_06  {SeatTube/SeatStay}         Lugs(SeatTube/SeatStay/Angle/value)	            0.10    darkred
+					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(SeatTube/SeatStay/Angle/plus_minus)	    0.10    
+ 			 		
+                    button 	$menueFrame.sf.lf_06.bt_f  -bd 4 -relief flat	
+                        pack $menueFrame.sf.lf_06.bt_f -fill both -expand yes
+                    button 	$menueFrame.sf.lf_06.bt_f.bt_check		-text {switch: check Frame Angles}  -width 30	-bd 1 -command [namespace current]::tubing_checkAngles
+						pack $menueFrame.sf.lf_06.bt_f.bt_check 	-side right -fill both -expand yes
+                   
+				
+                # -----------------
+				#   Update Values
+			#ttk::labelframe	$menueFrame.sf.updateValues    					-text "update Values" 
+			#	pack $menueFrame.sf.updateValues 							-side top  -fill x  -pady 2
+			#		pack [frame $menueFrame.sf.updateValues.f_upd] 			-fill x -expand yes -padx 3 -pady 2
+			#		button 	$menueFrame.sf.updateValues.f_upd.bt_update		-text {update}			-width 10	-command [namespace current]::update_Rendering
+			#			pack $menueFrame.sf.updateValues.f_upd.bt_update 	-side right
+						
+	}
+	#-------------------------------------------------------------------------
+       #  add content 04
+       #
+	proc add_BikeComponents {w} {
 	
 			variable APPL_Env
 			variable componentList
@@ -300,131 +429,43 @@
 							pack $fileFrame.cb 	-side right
 							pack $fileFrame.lb 	-side left
 							
-							bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W [format "%s::%s(%s)" project $_array $_name] select]
-							bind $fileFrame.cb <ButtonPress> 		[list [namespace current]::::ListboxEvent %W [format "%s::%s(%s)" project $_array $_name] update]			
+							bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
+							bind $fileFrame.cb <ButtonPress> 		[list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]			
 				}
-
-				# -----------------
-				#   Frame Parts
-			ttk::labelframe	$menueFrame.sf.lf_04    	-text "Frame Parts" 
-				pack $menueFrame.sf.lf_04 				-side top  -fill x -pady 2 
-				
-				set compList {	Component/Fork/Crown/File \
-								Component/Fork/DropOut/File \
-								Lugs/RearDropOut/File }
-					set i 0
-				foreach xPath $compList {			
-						set _array 	[lindex [split $xPath /] 0]
-						set _name 	[string range $xPath [string length $_array/] end]
-
-						incr i 1
-						puts "       ... $xPath  $configValue($xPath)"
-						
-						set fileFrame [frame $menueFrame.sf.lf_04.f_$i]
-						label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"		
-						set alternatives [lib_file::get_componentAlternatives  $xPath]
-						ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
-													-values $alternatives	-width 30
-							pack $fileFrame 	-fill x -expand yes  -pady 2
-							pack $fileFrame.cb 	-side right
-							pack $fileFrame.lb 	-side left
-							
-							bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W [format "%s::%s(%s)" project $_array $_name] select]
-							bind $fileFrame.cb <ButtonPress> 		[list [namespace current]::::ListboxEvent %W [format "%s::%s(%s)" project $_array $_name] update]
-						
-						
-						
-						
-						# bind $cfgFrame.cb <<ComboboxSelected>> 	[list [namespace current]::check_Value %W $xPath [format "%s::%s(%s)" project $_array $_name]]
-						
-						
-						
-						
-				}
-
-				# -----------------
-				#   Visualization
-			ttk::labelframe	$menueFrame.sf.lf_05    	-text "Preview" -height 210 
-				pack $menueFrame.sf.lf_05 				-side top  -fill x -pady 2
-				#update
-				#puts "  [info commands]\n --------------" 
-				#puts "  [info commands  ::lib_config]\n --------" 
-				#puts "  [info commands  ::lib_config::cv_Library]\n -------" 
-				#puts "  [info commands  cv_Library]\n -------" 
 				
 				if {$compCanvas != {}} {
 					# puts "   ... 0 $compCanvas  exists"
-					# $compCanvas exists
-					$compCanvas destroy
-					
-					#return
-				} else {
-					# puts "   ... 1 $compCanvas"			
-				}
+					$compCanvas destroy	
+				} 
 				
-				
-				set compCanvas [canvasCAD::newCanvas cv_Library $menueFrame.sf.lf_05.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
+				set compCanvas [canvasCAD::newCanvas cv_Components $menueFrame.sf.lf_01.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
 					# puts " ---- created $compCanvas"
 				
 
-				# -----------------
-				#   Options
 			ttk::labelframe	$menueFrame.sf.lf_02    	-text "Options" 
-				pack $menueFrame.sf.lf_02 				-side top  -fill x -pady 2
-						
-						# -- Fork Types
-					set optionFrame [frame $menueFrame.sf.lf_02.f_01]
-					label $optionFrame.lb -text "  Fork Type"		
-					ttk::combobox $optionFrame.cb 	-textvariable [format "%s::%s(%s)" project Rendering Fork] \
-													-values $::APPL_Env(list_ForkTypes)		-width 30
+				pack $menueFrame.sf.lf_02 				-side top  -fill x -pady 2                
+
+				# -----------------
+				#   Rendering
+				set entryList {	{Fork Type}         Fork                      list_ForkTypes  \
+                                {Brake Type Front}  Brake/Front               list_BrakeTypes \
+                                {Brake Type Rear}   Brake/Rear                list_BrakeTypes \
+                                {BottleCage ST}     BottleCage/SeatTube       list_BottleCage \
+                                {BottleCage DT}     BottleCage/DownTube       list_BottleCage \
+                                {BottleCage DT L}   BottleCage/DownTube_Lower list_BottleCage \
+                            } 
+					set i 10
+				foreach {label type name} $entryList {
+					incr i 1
+                    set optionFrame [frame $menueFrame.sf.lf_02.f___$i]
+					label $optionFrame.lb -text "  $label"		
+					ttk::combobox $optionFrame.cb 	-textvariable [format "%s::%s(%s)" project Rendering $type] \
+													-values $::APPL_Env($name)		-width 30
 						pack $optionFrame -fill x -expand yes  -pady 2
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
-						
-						# -- Brake Type Front
-					set optionFrame [frame $menueFrame.sf.lf_02.f_02]
-					label $optionFrame.lb -text "  Brake Type Front"		
-					ttk::combobox $optionFrame.cb 	-textvariable [format "%s::%s(%s)" project Rendering Brake/Front] \
-													-values $::APPL_Env(list_BrakeTypes)	-width 30
-						pack $optionFrame -fill x -expand yes  -pady 2
-						pack $optionFrame.cb -side right
-						pack $optionFrame.lb -side left
-						
-						# -- Brake Type Rear
-					set optionFrame [frame $menueFrame.sf.lf_02.f_03]
-					label $optionFrame.lb -text "  Brake Type Rear"		
-					ttk::combobox $optionFrame.cb 	-textvariable [format "%s::%s(%s)" project Rendering Brake/Rear] \
-													-values $::APPL_Env(list_BrakeTypes)	-width 30
-						pack $optionFrame -fill x -expand yes  -pady 2
-						pack $optionFrame.cb -side right
-						pack $optionFrame.lb -side left
-						
-						# -- Bottle Cage SeatTube
-					set optionFrame [frame $menueFrame.sf.lf_02.f_04]
-					label $optionFrame.lb -text "  BottleCage ST"		
-					ttk::combobox $optionFrame.cb 	-textvariable [format "%s::%s(%s)" project Rendering BottleCage/SeatTube] \
-													-values $::APPL_Env(list_BottleCage)	-width 30
-						pack $optionFrame -fill x -expand yes  -pady 2
-						pack $optionFrame.cb -side right
-						pack $optionFrame.lb -side left
-						
-						# -- Bottle Cage DownTube
-					set optionFrame [frame $menueFrame.sf.lf_02.f_05]
-					label $optionFrame.lb -text "  BottleCage DT"		
-					ttk::combobox $optionFrame.cb 	-textvariable [format "%s::%s(%s)" project Rendering BottleCage/DownTube] \
-													-values $::APPL_Env(list_BottleCage)	-width 30
-						pack $optionFrame -fill x -expand yes  -pady 2
-						pack $optionFrame.cb -side right
-						pack $optionFrame.lb -side left
-						
-						# -- Bottle Cage DownTube Lower
-					set optionFrame [frame $menueFrame.sf.lf_02.f_06]
-					label $optionFrame.lb -text "  BottleCage DT L"		
-					ttk::combobox $optionFrame.cb 	-textvariable [format "%s::%s(%s)" project Rendering BottleCage/DownTube_Lower] \
-													-values $::APPL_Env(list_BottleCage)	-width 30
-						pack $optionFrame -fill x -expand yes  -pady 2
-						pack $optionFrame.cb -side right
-						pack $optionFrame.lb -side left
+                }  
+
 				
 				# -----------------
 				#   Update Values
@@ -442,17 +483,20 @@
 	#-------------------------------------------------------------------------
        #  ListboxEvent Event
        #
-	proc ListboxEvent {w targetVar mode} {
+	proc ListboxEvent {w targetCanvas targetVar mode} {
 				# http://www.tek-tips.com/viewthread.cfm?qid=822756&page=42
 				# 2010.10.15
 			variable compFile
-			#puts [$w get]
+			#puts "ListboxEvent:  $w / [$w get]"
+			#puts "ListboxEvent:  $targetCanvas"
 			set compFile [$w get]
 				puts ""
 				puts "   -------------------------------"
 				puts "    ListboxEvent"
 				puts "       compFile:       $compFile"
-			[namespace current]::::updateCanvas
+				puts "       targetVar:      $targetVar"
+				puts "       targetCanvas:   $targetCanvas"
+			[namespace current]::::updateCanvas $targetCanvas
 			if {$mode == {select}} {
 				eval set $targetVar $compFile
 			}
@@ -461,8 +505,9 @@
 	#-------------------------------------------------------------------------
        #  create config_line
        #
-	proc updateCanvas {} {
+	proc updateCanvas {targetCanvas} {
 			variable compCanvas
+			variable frameCanvas
 			variable compFile
 
 				puts ""
@@ -477,11 +522,26 @@
 			}	
 				puts "       compFile:       $compFile"
 
-			$compCanvas clean_StageContent
 			if {$compFile != {}} {
-				set __my_Component__		[ $compCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
-				$compCanvas fit2Stage $__my_Component__
-				$compCanvas refitStage
+				switch -regexp -- $targetCanvas {
+                    cv_frameParts {
+                                # puts "            ... $frameCanvas"
+                            $frameCanvas clean_StageContent
+                            set __my_Component__		[ $frameCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
+                            $frameCanvas fit2Stage $__my_Component__
+                            $frameCanvas refitStage
+                            }
+                    cv_Components {
+                                # puts "            ... $compCanvas"
+                            $compCanvas  clean_StageContent
+                            set __my_Component__		[ $compCanvas  readSVG $compFile {0 0} 0  __Decoration__ ]
+                            $compCanvas fit2Stage $__my_Component__
+                            $compCanvas refitStage
+                            }
+                    default {
+                            puts " ... do hots wos: $targetCanvas"
+                            }
+                }
 			}
 	}
 
@@ -613,7 +673,33 @@
 			return			
 	}
 
+
+	#-------------------------------------------------------------------------
+       #  binding on config_line
+       #
+    proc change_ValueEdit {textVar scale direction} {
+            #
+            # --- dynamic update value ---
+                set currentValue [set ::$textVar]
+                # puts "    -> $direction"
+                # puts "    -> $scale"
+            #
+            # --- update value of spinbox ---
+                switch -glob $direction {
+                        "Up"        {set newValue [expr {$currentValue + $scale}]}
+                        "Down"      {set newValue [expr {$currentValue - $scale}]}
+                        "default"   {return}
+                }
+                set ::$textVar [format "%.2f" $newValue] 
+    }
 	
+	#-------------------------------------------------------------------------
+       #  create config_line
+       #
+	proc create_config_cDial_title {w title _arrayName scale {color {}}} {	
+            set cDial [create_config_cDial $w $_arrayName $scale $color]
+            $cDial.lb	configure -text "   $title"
+    }
 	#-------------------------------------------------------------------------
        #  create config_line
        #
@@ -628,10 +714,6 @@
 			set xPath		[format "%s/%s" $_array $_name]
 			eval set configValue($xPath)	[format "$%s::%s(%s)" project $_array $_name]	
 			set labelString	$_name
-				# set node		[$::APPL_Env(root_ProjectDOM) selectNodes $xPath]
-				# set childNode	[$node childNodes]
-				# set value 		[$childNode asText]
-				# set labelString	[string map "{/} { / }" [string map "$labelCut {}" $xPath] ]	
 			
 			
 				# --------------			
@@ -643,20 +725,20 @@
 					# puts "   ... \$entryVar [list [format "$%s" $entryVar]]"
 
 			set cfgFrame	[frame   [format "%s.fscl_%s" $w $rdialCount]]
-			pack    $cfgFrame
+			pack    $cfgFrame 
 			
 			if {[string length $labelString] > 29} {
-				set labelString "[string range $labelString 0 26] .."
+				set labelString "[string range $labelString 0 25] .."
 			}
 			label   $cfgFrame.lb	-text "   $labelString"      \
-							-width 25  \
+							-width 26  \
 							-bd 1  -anchor w 
 
 			entry   $cfgFrame.cfg	\
 							-textvariable [namespace current]::configValue($xPath) \
 							-width  7  \
 							-bd 1  -justify right -bg white 
-							
+                            
 			frame	$cfgFrame.f	-relief sunken \
 							-bd 2 -padx 2 -pady 0
 
@@ -669,21 +751,21 @@
 							-orient		horizontal \
 							-callback	[list  [namespace current]::updateEntry	  [namespace current]::configValue($xPath)  [format "%s::%s(%s)" project $_array $_name] ]
 							
-
 			if {$color != {}} {
 				$cfgFrame.lb  configure -fg $color 
 				$cfgFrame.cfg configure -fg $color
 			}
-							
-					
+										
 								
 			lappend rdials_list $cfgFrame.f.scl
+                bind $cfgFrame.cfg <Key>        [list [namespace current]::change_ValueEdit [namespace current]::configValue($xPath) $scale %K]					
 				bind $cfgFrame.cfg <Enter> 		[list [namespace current]::enterEntry $cfgFrame.cfg]
 				bind $cfgFrame.cfg <Leave> 		[list [namespace current]::leaveEntry $cfgFrame.cfg [format "%s::%s(%s)" project $_array $_name]]
 				bind $cfgFrame.cfg <Return> 	[list [namespace current]::leaveEntry $cfgFrame.cfg [format "%s::%s(%s)" project $_array $_name]]
 			pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl -side left  -fill x	
 			# pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl $cfgFrame.bt   -side left  -fill x	
-			pack      configure $cfgFrame.f  -padx 2	
+			pack      configure $cfgFrame.f  -padx 2
+            return    $cfgFrame
 	}	
 	proc updateEntry {{entryVar {}}  targetVar {value {0}} {drag_Event {}} } {
 			# puts "\n entryVar:    $entryVar"
@@ -725,16 +807,13 @@
 			}
 			eval set $targetVar 	$value
  	}
-	
-	
 
-	
+
 	#-------------------------------------------------------------------------
        #  create config_line
        #
 	proc create_config_cBox {w _arrayName contentList} {		
 			
-
 			variable	cboxList
 			variable	configValue
 			set _array [lindex [split $_arrayName (] 0]
@@ -783,6 +862,15 @@
 			pack      $cfgFrame.lb	-side left  	
 			pack      $cfgFrame.cb	-side right  -fill x	
 	}
+    
+    
+    proc tubing_checkAngles {} {
+        set lib_gui::checkAngles {on}
+        lib_gui::select_canvasCAD   cv_Custom01
+        cv_custom::update           [lib_gui::current_canvasCAD]
+    }
+    
+    
 	proc check_Value { w xPath targetVar} {
 		
 		variable configValue

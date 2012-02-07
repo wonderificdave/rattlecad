@@ -106,7 +106,7 @@
                     <value>40.00</value>
                     <plus_minus>1.00</plus_minus>
                 </Angle>
-                <MitterDiameter>28.60</MitterDiameter>
+                <MiterDiameter>28.60</MiterDiameter>
             </SeatStay>
         </SeatTube>
         <BottomBracket>
@@ -283,6 +283,7 @@
             </SeatTube>
             <Saddle>
                 <Offset_BB>0.00</Offset_BB>
+                <Offset_HB>0.00</Offset_HB>
             </Saddle>
             <BottomBracket>
                 <Height>0.00</Height>
@@ -309,6 +310,9 @@
                 <DownTube>0.00</DownTube>
                 <ChainStay>0.00</ChainStay>
             </BottomBracket>
+            <SeatStay>
+                <ChainStay>0.00</ChainStay>
+            </SeatStay>
         </Angle>
 
         <Lugs>

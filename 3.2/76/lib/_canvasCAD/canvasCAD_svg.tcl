@@ -379,8 +379,14 @@
 										set extent	[$cv itemcget $cvItem -extent]
 										set p_start	[vectormath::rotateLine [list $cx $cy] $rx -1.0*$start]  
 										set p_end	[vectormath::rotateLine [list $cx $cy] $rx [expr -1.0*($start + $extent)]]  
-										set d		"M [lindex $p_start 0],[lindex $p_start 1]  A [expr {($x1-$x0)/2}],[expr {($y1-$y0)/2}] 0 0 0 [lindex $p_end 0] [lindex $p_end 1]"
-									append svgAtts		[format_itemAttribute d $d]								
+                                    if {[$cv itemcget $cvItem -style] == {pieslice}} {
+                                        # pieslice segment of a circle results in a closed figure through the center point
+                                        set d		"M [lindex $p_start 0],[lindex $p_start 1]  A [expr {($x1-$x0)/2}],[expr {($y1-$y0)/2}] 0 0 0 [lindex $p_end 0] [lindex $p_end 1] L $cx,$cy z"                                    
+                                        puts "  -> arcStyle:  pieslice"
+                                    } else {
+                                        set d		"M [lindex $p_start 0],[lindex $p_start 1]  A [expr {($x1-$x0)/2}],[expr {($y1-$y0)/2}] 0 0 0 [lindex $p_end 0] [lindex $p_end 1]"                                    
+                                    }
+                                    append svgAtts		[format_itemAttribute d $d]								
 											# Bogen läuft gegen den Uhrzeigersinn
 											# rx, ry
 											# x-axis-rotation   drehung der Ellipse
@@ -390,7 +396,7 @@
 											#    * the arc starts at the current point
 											#    * the arc ends at point (x, y)
 											#    * the ellipse has the two radii (rx, ry)
-											#    * the x-axis of the ellipse is rotated by x-axis-rotation relative to the x-axis of the current coordinate system			
+											#    * the x-axis of the ellipse is rotated by x-axis-rotation relative to the x-axis of the current coordinate system	
 							}            
 							line -
 							polyline {

@@ -47,10 +47,15 @@
  #                            http://wiki.tcl.tk/8447
  # ---------------------------------------------------------------------------							
  #								
- #															
+ #  0.10    canvasCAD::exportSVG	
+ #              arc;  handle style pieslice
+ #								
+ #  0.11    canvasCAD::checkPointCoincidence
+ #          canvasCAD::dimension perpendicular
+ #
 
 
-package provide canvasCAD 0.9
+package provide canvasCAD 0.11
 package require tdom
 
   # -----------------------------------------------------------------------------------
