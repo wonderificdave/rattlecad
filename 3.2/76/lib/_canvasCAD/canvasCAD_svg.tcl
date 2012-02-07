@@ -439,7 +439,9 @@
 									append svgAtts 		[format_itemAttribute x $x0]
 									append svgAtts 		[format_itemAttribute y $y0]
 									append svgAtts 		[format_itemAttribute fill $itemFill "#000000"]
-									set text [$c itemcget $item -text]
+									# set text [$c itemcget $item -text]
+                                    set text [$cv itemcget $cvItem -text]
+                                    
 							}
 							default {
 									# error "type $type not(yet) dumpable to SVG"
