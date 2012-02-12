@@ -631,7 +631,7 @@
                 set resList {}
                 foreach {x y} [flatten_nestedList $args] {
                     # puts "      -> $arg / $args"
-                    lappend resList [expr -1.0 * ($x - $cv_ViewCenter_x) / ($unitScale * $wScale)]
+                    lappend resList [expr  1.0 * ($x - $cv_ViewCenter_x) / ($unitScale * $wScale)]
                     lappend resList [expr -1.0 * ($y - $cv_ViewCenter_y) / ($unitScale * $wScale)]
                 }
                 return $resList
@@ -685,14 +685,7 @@
             }
             proc dxf_format { args } {
                     variable dxfContent
-                        # puts "\n --------------------"
-                        #puts " -> [llength $args]  $args"
-                        #puts " ->            $args"
-                        # puts " ->            [lrange $args 0 end-1]"
                     set lastArg [lindex $args end]
-                        #puts " ->    lastArg $lastArg"
-                        #return 
-                        #set lastArg [eval concat $lastArg]
                     
                     if {[llength $lastArg] == 1} {
                         foreach { code value } $args { 
@@ -700,18 +693,10 @@
                         }
                     } else {
                         foreach { code value } [lrange $args 0 end-1] { 
-                            # puts $file "[format %3d $code]\n$value"
-                            # puts "   $code $value"
-                            # puts "   dxf_format: llength \$code [llength $code] $code]"
                             lappend dxfContent   [format "%3d\n%s" $code $value]
-                            # puts "--------------------\n[format %3d $code]\n$value"
-                        }
+                         }
                         foreach { code value } $lastArg { 
-                            # puts $file "[format %3d $code]\n$value"
-                            # puts "   $code $value"
-                            # puts "   dxf_format: llength \$code [llength $code] $code]"
                             lappend dxfContent   [format "%3d\n%s" $code $value]
-                           # puts "--------------------\n[format %3d $code]\n$value"
                         }
                         
                     }
@@ -815,12 +800,12 @@
                                     set start	[$cv itemcget $cvItem -start]
                                     set extend	[$cv itemcget $cvItem -extent]
                                     set end     [expr $start + $extend]
-                                    set start   [expr 180 -$start]
-                                    set end     [expr 180 -$end]
+                                    # set start   [expr 360 - $start]
+                                    # set end     [expr 360 - $end]
                                   
                                     set layer       0
                                     set lineType    0
-                                    dxf_format      0 ARC        8 $layer  6 $lineType 10 $cx  20 $cy  40 $rx  50 $end  51 $start
+                                    dxf_format      0 ARC        8 $layer  6 $lineType 10 $cx  20 $cy  40 $rx  50 $start  51 $end
 							}            
 							line_ {
                                     puts "  line:\n        -> $cvPoints"
