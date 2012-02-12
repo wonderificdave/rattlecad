@@ -75,6 +75,7 @@
 						{separator}
 						{command "&Print"			{}    	"Print current Graphic" {Ctrl p}	-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) } }
 						{command "&Export SVG"		{}    	"Export to SVG" 		{Ctrl f}	-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) } }
+						{command "&Export DXF"		{}    	"Export to DXF" 		{Ctrl d}	-command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) } }
 						{separator}
 						{command "&Intro-Image"		{}    	"Show Intro Window"     {}			-command { create_intro .intro } }
 						{separator}
@@ -100,6 +101,7 @@
 			Button	$tb_frame.save		-image  $iconArray(save)		-helptext "save ..."		-command { lib_file::saveProject_xml } 
 			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	-helptext "print .ps"		-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
 			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	-helptext "print .svg"		-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_dxf	-image  $iconArray(print_dxf)	-helptext "print .dxf"		-command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }  		
 														 
 			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		-helptext "template road"	-command { lib_gui::load_Template  Road }  
 			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		-helptext "template mtb"	-command { lib_gui::load_Template  MTB  }  
@@ -107,7 +109,7 @@
 			Button	$tb_frame.clear		-image  $iconArray(clear)		-helptext "clear ..."    	-command { lib_gui::notebook_cleanCanvas} 
 			Button	$tb_frame.render	-image  $iconArray(design)		-helptext "update ..."		-command { lib_gui::notebook_updateCanvas force}  
 			  
-			Button	$tb_frame.cfg		-image   $iconArray(cfg_panel)	-helptext "config Panel"   	-command { lib_gui::open_configPanel } 
+			Button	$tb_frame.cfg		-image  $iconArray(cfg_panel)	-helptext "config Panel"   	-command { lib_gui::open_configPanel } 
 			
 			
 
@@ -131,7 +133,7 @@
 				#		$tb_frame.render   $tb_frame.sp3  \
 				#
 			pack    $tb_frame.open       $tb_frame.save          $tb_frame.sp0  \
-					$tb_frame.print_ps   $tb_frame.print_svg     $tb_frame.sp1  \
+					$tb_frame.print_ps   $tb_frame.print_svg     $tb_frame.print_dxf     $tb_frame.sp1  \
 					$tb_frame.set_rd     $tb_frame.set_mb   $tb_frame.sp2  \
 					$tb_frame.clear      $tb_frame.render   $tb_frame.sp3  $tb_frame.cfg\
 				-side left -fill y
@@ -505,7 +507,7 @@
 			set currentTab 	[ $noteBook_top select ]
 			set cv_Name    	[ notebook_getVarName $currentTab]
 			if { $cv_Name == {} } {
-					puts "   notebook_printCanvas::cv_Name: $cv_Name"
+					puts "   notebook_exportSVG::cv_Name: $cv_Name"
 					return
 			}
 			
@@ -532,6 +534,45 @@
 	}
 
 
+	#-------------------------------------------------------------------------
+       #  export canvasCAD from current notebook-Tab as SVG Graphic
+       #
+	proc notebook_exportDXF {printDir} {
+			variable noteBook_top
+			
+				## -- read from domConfig
+			# remove 3.2.70 ;# set domConfig $::APPL_Env(root_ProjectDOM)
+
+				# --- get currentTab
+			set currentTab 	[ $noteBook_top select ]
+			set cv_Name    	[ notebook_getVarName $currentTab]
+			if { $cv_Name == {} } {
+					puts "   notebook_exportDXF::cv_Name: $cv_Name"
+					return
+			}
+			
+				# --- set exportFile
+			set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
+			set fileName 	[ winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ] ]
+			set exportFile	[ file join $printDir ${fileName}.dxf ]
+
+				# --- export content to File
+			puts "    ------------------------------------------------"
+			puts "      export DXF - Content to    $exportFile \n"
+			puts "      notebook_exportDXF   $currentTab "
+			puts "             currentTabp-Parent  [winfo parent $currentTab]  "
+			puts "             currentTabp-Parent  [winfo name   $currentTab]  "
+			puts "             canvasCAD Object    $cv_Name  "
+			
+			set exportFile [$cv_Name exportDXF $exportFile]
+			
+			puts "    ------------------------------------------------"
+			puts "      ... open $exportFile "
+			
+			lib_file::openFile_byExtension $exportFile .dxf
+	}
+
+    
 	#-------------------------------------------------------------------------
        #  create a Button inside a canvas of notebookCanvas
        #

@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.12
+package provide canvasCAD 0.13
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -496,6 +496,9 @@ package require tdom
 								}
 				exportSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									exportSVG $canvasDOMNode [lindex $argList 0]
+								}
+				exportDXF {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									exportDXF $canvasDOMNode [lindex $argList 0]
 								}
 					# ------------------------			
 				print {				set printFile 		[lindex $argList 0]
