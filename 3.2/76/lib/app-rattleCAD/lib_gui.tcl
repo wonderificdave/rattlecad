@@ -160,13 +160,13 @@
 				pack $noteBook_top -expand yes  -fill both  
 			
 				# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Frame Details  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "	    A4  1.0  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Frame Details  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "	    A4  1.0  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
 			
 			$noteBook_top add [frame $noteBook_top.components] 	-text "... Components" 
 			$noteBook_top add [frame $noteBook_top.report] 		-text "... info" 

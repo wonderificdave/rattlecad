@@ -78,8 +78,8 @@
 			set repCoords	[ $w coords {__PointerPostion__} ]
 			if { $repCoords == {} } return
 			foreach {x y} $repCoords break
-			set move_x		[ expr  0 - $x + 15 ]
-			set move_y		[ expr [winfo height $w] - $y - 10 ]
+			set move_x		[ expr  0 - $x + 8 ]
+			set move_y		[ expr [winfo height $w] - $y - 4 ]
 			$w move {__PointerPostion__} $move_x $move_y
 	}
 		

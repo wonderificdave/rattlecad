@@ -285,8 +285,8 @@ package require tdom
 							#		
 						$w create rectangle   0  0  $x$Unit  $y$Unit    \
 											  -tags    {__StageShadow__}  \
-											  -fill    gray10   \
-											  -outline gray10    \
+											  -fill    gray40   \
+											  -outline gray40    \
 											  -width   0
 						$w create rectangle   0  0  $x$Unit  $y$Unit    \
 											  -tags    {__Stage__}  \

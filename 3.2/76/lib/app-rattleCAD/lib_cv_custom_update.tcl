@@ -62,16 +62,18 @@
 					frame_visualisation::createBaseline 		$cv_Name $xy	
 						#
 					createDimension								$cv_Name $xy	point_seat	
-					createDimension								$cv_Name $xy	cline_frame
+                    createDimension								$cv_Name $xy	cline_frame
 					createDimension								$cv_Name $xy	point_frame					
 					createDimension								$cv_Name $xy	geometry_bg		
 						#
-					frame_visualisation::createFrame_Centerline	$cv_Name $xy 	{saddle seattube steerer chainstay fork}
+					frame_visualisation::createFrame_Centerline	$cv_Name $xy 	{saddle seattube steerer chainstay fork} {rearWheel frontWheel baseLine}
 						#
-					createDimension								$cv_Name $xy	point_personal	
+					createDimension								$cv_Name $xy	point_personal
 					createDimension								$cv_Name $xy	point_crank								
-					createDimension								$cv_Name $xy	geometry_fg								
+                    createDimension								$cv_Name $xy	geometry_fg								
 						#
+                    update_renderCenterline                     $cv_Name
+                        #
 					createWaterMark								$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#
 				}
@@ -124,9 +126,11 @@
 						#
 						# frame_visualisation::debug_geometry			$cv_Name $xy 	
 						#
-					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    update_renderCanvas                     $cv_Name
 						#
-					lib_gui::notebook_createButton				$cv_Name 		TubingCheckAngles
+					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+						# 
+					lib_gui::notebook_createButton			$cv_Name 		TubingCheckAngles
 						#
 				}
 			lib_gui::cv_Custom03 {
@@ -162,6 +166,8 @@
 						#
 					$cv_Name 		centerContent				{ 0  25}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__  }
 						#
+                    update_renderCanvas                         $cv_Name
+						# 
 					lib_gui::notebook_createButton				$cv_Name 		changeFormatScale
 						#
 				}
@@ -217,6 +223,8 @@
 						#
 					frame_visualisation::createBaseline 	$cv_Name $xy	black
 						#
+                    update_renderCanvas                     $cv_Name
+						# 
 					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#
 					lib_gui::notebook_createButton			$cv_Name 		changeFormatScale	format
@@ -248,9 +256,11 @@
 					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurRear		editable   ;# $updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	DerailleurFront		editable   ;# $updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	CrankSet 			editable   ;# $updateCommand
+						#
+                    update_renderCanvas                     $cv_Name
 						# 
 					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
-						#
+                        #
 				}
 			lib_gui::cv_Custom05 {
 						#
@@ -258,15 +268,17 @@
 						#
 					$cv_Name 		clean_StageContent	
 						#
-					frame_visualisation::createTubemiter		$cv_Name { 80 190}	TopTube_Seat		
-					frame_visualisation::createTubemiter		$cv_Name {200 190}	TopTube_Head	
-					frame_visualisation::createTubemiter		$cv_Name { 80 105}	DownTube_Head	
-					frame_visualisation::createTubemiter		$cv_Name {180 105}	SeatStay_01	
-					frame_visualisation::createTubemiter		$cv_Name {250 105}	SeatStay_02	
-					frame_visualisation::createTubemiter		$cv_Name {220  15}	Reference	
+					frame_visualisation::createTubemiter	$cv_Name { 80 190}	TopTube_Seat		
+					frame_visualisation::createTubemiter	$cv_Name {200 190}	TopTube_Head	
+					frame_visualisation::createTubemiter	$cv_Name { 80 105}	DownTube_Head	
+					frame_visualisation::createTubemiter	$cv_Name {180 105}	SeatStay_01	
+					frame_visualisation::createTubemiter	$cv_Name {250 105}	SeatStay_02	
+					frame_visualisation::createTubemiter	$cv_Name {220  15}	Reference	
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
 						#
-					createWaterMark								$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    update_renderCanvas                     $cv_Name
+						#
+					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#
 				}
 			lib_gui::cv_Custom04 {
