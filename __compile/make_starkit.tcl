@@ -99,6 +99,7 @@ file_delete [file join $dir_vfs rattleCAD.tcl]
 file_delete [file join $dir_vfs simplify_SVG.tcl]
 file_delete [file join $dir_vfs Tcl.svg]
 file_delete [file join $dir_vfs tclTk.svg]
+file_delete [file join $dir_vfs rattleCAD.svg]
 
 file_delete [file join $dir_vfs etc]
 file_delete [file join $dir_vfs image]
