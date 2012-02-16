@@ -109,7 +109,7 @@
 			Button	$tb_frame.clear		-image  $iconArray(clear)		-helptext "clear ..."    	-command { lib_gui::notebook_cleanCanvas} 
 			Button	$tb_frame.render	-image  $iconArray(design)		-helptext "update ..."		-command { lib_gui::notebook_updateCanvas force}  
 			  
-			Button	$tb_frame.cfg		-image  $iconArray(cfg_panel)	-helptext "config Panel"   	-command { lib_gui::open_configPanel } 
+			Button	$tb_frame.cfg		-image   $iconArray(cfg_panel)	-helptext "config Panel"   	-command { lib_gui::open_configPanel } 
 			
 			
 
@@ -255,7 +255,7 @@
 			variable noteBook_top
 			
 			puts "      fill_canvasCAD: $varName"
-            if {$varName == {}} {
+			if {$varName == {}} {
 				set current_cv [$noteBook_top select]
 				puts "        current canvasCAD: $current_cv"
 				set varName [lindex [split $current_cv .] end]

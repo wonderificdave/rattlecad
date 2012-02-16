@@ -139,21 +139,21 @@
 				#
 			set nb_Config	[ ttk::notebook $w.f.nb ]
 				pack $nb_Config  	-expand no -fill both   
-			$nb_Config add [frame $nb_Config.geometry]      -text " Geometry " 		
+			$nb_Config add [frame $nb_Config.geometry] 	-text "Geometry" 		
 			$nb_Config add [frame $nb_Config.frameDetail]   -text " Frame " 
 			$nb_Config add [frame $nb_Config.frameCheck]    -text " Check " 
 			$nb_Config add [frame $nb_Config.bikeComp]      -text " Mockup " 
 		
 				# -----------------
 				# add content
-			add_Basic 	        $nb_Config.geometry
+			add_Basic 	$nb_Config.geometry
 			$nb_Config select   $nb_Config.frameDetail
 			add_FrameDetails    $nb_Config.frameDetail
 			$nb_Config select   $nb_Config.frameCheck
 			add_FrameCheck      $nb_Config.frameCheck
 			$nb_Config select   $nb_Config.bikeComp
 			add_BikeComponents  $nb_Config.bikeComp
-			$nb_Config select   $nb_Config.geometry
+			$nb_Config select $nb_Config.geometry
 			
 				# -----------------
 				#
@@ -238,7 +238,7 @@
 			#button 	$menueFrame.sf.updateValues.f_upd.bt_update		-text {refresh}			-width 10	-command [namespace current]::init_configValues
 			#	pack $menueFrame.sf.updateValues.f_upd.bt_update 	-side right
 			
-	}
+	}	
 	#-------------------------------------------------------------------------
        #  add content 02
        #
@@ -260,12 +260,12 @@
 				#   build frame
 			frame	 		$menueFrame.sf -relief flat -bd 1			
 				pack $menueFrame.sf  		-side top  -fill x 
-		
 
+			
 				# -----------------
 				#   Tube Details
 			ttk::labelframe	$menueFrame.sf.lf_01    	-text "Tube Details" 
-				pack $menueFrame.sf.lf_01 				-side top  -fill x  -pady 2
+				pack $menueFrame.sf.lf_01 				-side top  -fill x -pady 2 
 					create_config_cDial_title $menueFrame.sf.lf_01  {HeadTube - Length}		        FrameTubes(HeadTube/Length)         0.20  darkred
 					create_config_cDial_title $menueFrame.sf.lf_01	{HeadTube/TopTube - Angle}	    Result(Angle/HeadTube/TopTube)      0.02  darkblue
 					create_config_cDial_title $menueFrame.sf.lf_01	{HeadTube/TopTube - Offset}	    Custom(TopTube/OffsetHT)            0.20  darkred
@@ -275,7 +275,7 @@
 					create_config_cDial_title $menueFrame.sf.lf_01	{TopTube/SeatStay - Offset}     Custom(SeatStay/OffsetTT)           0.20  darkred
 					create_config_cDial_title $menueFrame.sf.lf_01	{TopTube - Angle}	            Custom(TopTube/Angle)               0.20  darkred
 					create_config_cDial_title $menueFrame.sf.lf_01	{DownTube/BB - Offset}	        Custom(DownTube/OffsetBB)           0.20  darkred
-
+				
                     
 				# -----------------
 				#   Frame Parts
@@ -285,10 +285,10 @@
 				set compList {	Lugs/RearDropOut/File Component/Fork/Crown/File \
 								Component/Fork/DropOut/File}
 					set i 0
-				foreach xPath $compList {			
+				foreach xPath $compList {
 						set _array 	[lindex [split $xPath /] 0]
 						set _name 	[string range $xPath [string length $_array/] end]
-
+						
 						incr i 1
 						puts "       ... $xPath  $configValue($xPath)"
 						
@@ -304,7 +304,7 @@
 							bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] select]
 							bind $fileFrame.cb <ButtonPress> 		[list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
 				}
-				
+
 				if {$frameCanvas != {}} {
 					# puts "   ... 0 $compCanvas  exists"
 					$frameCanvas destroy
@@ -312,14 +312,14 @@
 				set frameCanvas [canvasCAD::newCanvas cv_FrameParts $menueFrame.sf.lf_09.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
 					# puts " ---- created $compCanvas"			
 				
-                # -----------------
+				# -----------------
 				#   Update Values
 			#ttk::labelframe	$menueFrame.sf.updateValues    					-text "update Values" 
 			#	pack $menueFrame.sf.updateValues 							-side top  -fill x  -pady 2
 			#		pack [frame $menueFrame.sf.updateValues.f_upd] 			-fill x -expand yes -padx 3 -pady 2
 			#		button 	$menueFrame.sf.updateValues.f_upd.bt_update		-text {update}			-width 10	-command [namespace current]::update_Rendering
 			#			pack $menueFrame.sf.updateValues.f_upd.bt_update 	-side right
-						
+				
 	}
 	#-------------------------------------------------------------------------
        #  add content 03
@@ -412,10 +412,10 @@
 								Component/Derailleur/Front/File \
 								Component/Derailleur/Rear/File }
 					set i 0
-				foreach xPath $compList {
+				foreach xPath $compList {			
 						set _array 	[lindex [split $xPath /] 0]
 						set _name 	[string range $xPath [string length $_array/] end]
-						
+
 						incr i 1
 						puts "       ... $xPath  $configValue($xPath)"
 						
@@ -432,19 +432,19 @@
 							bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
 							bind $fileFrame.cb <ButtonPress> 		[list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]			
 				}
-				
+
 				if {$compCanvas != {}} {
 					# puts "   ... 0 $compCanvas  exists"
-					$compCanvas destroy	
-				} 
+					$compCanvas destroy
+				}
 				
 				set compCanvas [canvasCAD::newCanvas cv_Components $menueFrame.sf.lf_01.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
 					# puts " ---- created $compCanvas"
 				
 
 			ttk::labelframe	$menueFrame.sf.lf_02    	-text "Options" 
-				pack $menueFrame.sf.lf_02 				-side top  -fill x -pady 2                
-
+				pack $menueFrame.sf.lf_02 				-side top  -fill x -pady 2
+						
 				# -----------------
 				#   Rendering
 				set entryList {	{Fork Type}         Fork                      list_ForkTypes  \
@@ -465,8 +465,8 @@
 						pack $optionFrame.cb -side right
 						pack $optionFrame.lb -side left
                 }  
-
-				
+						
+						
 				# -----------------
 				#   Update Values
 			#ttk::labelframe	$menueFrame.sf.updateValues    					-text "update Values" 
@@ -533,14 +533,14 @@
                             }
                     cv_Components {
                                 # puts "            ... $compCanvas"
-                            $compCanvas  clean_StageContent
-                            set __my_Component__		[ $compCanvas  readSVG $compFile {0 0} 0  __Decoration__ ]
-                            $compCanvas fit2Stage $__my_Component__
-                            $compCanvas refitStage
-                            }
+			$compCanvas clean_StageContent
+				set __my_Component__		[ $compCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
+				$compCanvas fit2Stage $__my_Component__
+				$compCanvas refitStage
+			}
                     default {
                             puts " ... do hots wos: $targetCanvas"
-                            }
+	}
                 }
 			}
 	}
@@ -673,7 +673,7 @@
 			return			
 	}
 
-
+	
 	#-------------------------------------------------------------------------
        #  binding on config_line
        #
@@ -725,7 +725,7 @@
 					# puts "   ... \$entryVar [list [format "$%s" $entryVar]]"
 
 			set cfgFrame	[frame   [format "%s.fscl_%s" $w $rdialCount]]
-			pack    $cfgFrame 
+			pack    $cfgFrame
 			
 			if {[string length $labelString] > 29} {
 				set labelString "[string range $labelString 0 25] .."
@@ -738,7 +738,7 @@
 							-textvariable [namespace current]::configValue($xPath) \
 							-width  7  \
 							-bd 1  -justify right -bg white 
-                            
+							
 			frame	$cfgFrame.f	-relief sunken \
 							-bd 2 -padx 2 -pady 0
 
@@ -755,8 +755,8 @@
 				$cfgFrame.lb  configure -fg $color 
 				$cfgFrame.cfg configure -fg $color
 			}
-										
-								
+							
+					
 			lappend rdials_list $cfgFrame.f.scl
                 bind $cfgFrame.cfg <Key>        [list [namespace current]::change_ValueEdit [namespace current]::configValue($xPath) $scale %K]					
 				bind $cfgFrame.cfg <Enter> 		[list [namespace current]::enterEntry $cfgFrame.cfg]
@@ -764,7 +764,7 @@
 				bind $cfgFrame.cfg <Return> 	[list [namespace current]::leaveEntry $cfgFrame.cfg [format "%s::%s(%s)" project $_array $_name]]
 			pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl -side left  -fill x	
 			# pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl $cfgFrame.bt   -side left  -fill x	
-			pack      configure $cfgFrame.f  -padx 2
+			pack      configure $cfgFrame.f  -padx 2	
             return    $cfgFrame
 	}	
 	proc updateEntry {{entryVar {}}  targetVar {value {0}} {drag_Event {}} } {
@@ -807,8 +807,8 @@
 			}
 			eval set $targetVar 	$value
  	}
-
-
+	
+	
 	#-------------------------------------------------------------------------
        #  create config_line
        #
