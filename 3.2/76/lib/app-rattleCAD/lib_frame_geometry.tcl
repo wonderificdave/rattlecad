@@ -486,6 +486,7 @@
 			proc get_DownTube {} {
 					variable HeadTube 
 					variable DownTube 
+					variable SeatTube 
 					variable Saddle 
 					variable Steerer 
 			
@@ -496,6 +497,7 @@
 							set pt_02		[ vectormath::cathetusPoint 	{0 0}  $pt_01 [expr 0.5 * $DownTube(DiameterHT) - $DownTube(OffsetBB) ]]
 							set vct_01      [ vectormath::parallel 			$pt_02 $pt_01 [expr 0.5 * $DownTube(DiameterHT)] left]	;# DownTube centerline Vector
 							set DownTube(Direction)		[ vectormath::unifyVector [lindex $vct_01 0] [lindex $vct_01 1] ]
+							set SeatTube(Direction)		[ vectormath::unifyVector {0 0} $Saddle(Position) ]
 					project::setValue Result(Tubes/DownTube/Direction)	direction	$DownTube(Direction)
 
 							set vct_02      [ vectormath::parallel 			$pt_02 $pt_01 $DownTube(DiameterHT) left]				;# DownTube upper Vector
@@ -518,11 +520,14 @@
 							set vct_22		[ vectormath::parallel  		$pt_12 $pt_13 [expr 0.5*$DownTube(DiameterHT)] left  ]
 							
 							set dir 		[ vectormath::addVector {0 0} $DownTube(Direction) -1] 
-							set is_dt_ht	[ tube_intersection	$DownTube(DiameterHT) $dir  $HeadTube(Diameter)  $HeadTube(Direction)  $DownTube(HeadTube) ]				
 
-							set polygon		[ list            [lindex $vct_10 0] [lindex $vct_10 1] [lindex $vct_21 0]]
+							set is_dt_ht	[ tube_intersection	$DownTube(DiameterHT) $dir  $HeadTube(Diameter)     $HeadTube(Direction)  $DownTube(HeadTube) ]				
+							set is_dt_st	[ tube_intersection	$DownTube(DiameterBB) $dir  $SeatTube(DiameterBB)   $SeatTube(Direction)  $DownTube(BottomBracket) left]				
+
+							set polygon		[ list            [lindex $vct_10 1] [lindex $vct_10 1] [lindex $vct_21 0]]
 							set polygon		[ lappend polygon [project::flatten_nestedList $is_dt_ht]]
-							set polygon		[ lappend polygon [lindex $vct_22 0] [lindex $vct_11 1] [lindex $vct_11 0]]					
+							set polygon		[ lappend polygon [lindex $vct_22 0] [lindex $vct_11 1] [lindex $vct_11 1]]					
+							set polygon		[ lappend polygon [project::flatten_nestedList $is_dt_st]]				
 					project::setValue Result(Tubes/DownTube)			polygon 	[project::flatten_nestedList $polygon]				
 			}
 			get_DownTube
