@@ -47,10 +47,15 @@
  #                            http://wiki.tcl.tk/8447
  # ---------------------------------------------------------------------------							
  #								
- #															
+ #  0.10    canvasCAD::exportSVG	
+ #              arc;  handle style pieslice
+ #								
+ #  0.11    canvasCAD::checkPointCoincidence
+ #          canvasCAD::dimension perpendicular
+ #
 
 
-package provide canvasCAD 0.9
+package provide canvasCAD 0.13
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -280,8 +285,8 @@ package require tdom
 							#		
 						$w create rectangle   0  0  $x$Unit  $y$Unit    \
 											  -tags    {__StageShadow__}  \
-											  -fill    gray10   \
-											  -outline gray10    \
+											  -fill    gray40   \
+											  -outline gray40    \
 											  -width   0
 						$w create rectangle   0  0  $x$Unit  $y$Unit    \
 											  -tags    {__Stage__}  \
@@ -491,6 +496,9 @@ package require tdom
 								}
 				exportSVG {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
 									exportSVG $canvasDOMNode [lindex $argList 0]
+								}
+				exportDXF {			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+									exportDXF $canvasDOMNode [lindex $argList 0]
 								}
 					# ------------------------			
 				print {				set printFile 		[lindex $argList 0]

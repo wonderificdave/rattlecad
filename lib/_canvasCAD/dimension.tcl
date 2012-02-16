@@ -716,7 +716,7 @@ namespace eval dimension {
 						set p_start		$p1
 						set p_end		[ list [lindex $p1 0] [lindex $p2 1] ]
 					}                   					   
-				perpendicular    { # dimension line from p0/p1 perpendicular through p2 , p0 as direction ref
+				perpendicular    { # dimension line through p0 & p1 perpendicular through p2 , p0 as direction ref
 						set p0    		[ list [lindex $p_Coords 0] [lindex $p_Coords 1] ]
 						set p1    		[ list [lindex $p_Coords 2] [lindex $p_Coords 3] ]
 						set p2    		[ list [lindex $p_Coords 4] [lindex $p_Coords 5] ]
@@ -724,6 +724,9 @@ namespace eval dimension {
 						set p_isect		[ vectormath::intersectPerp	$p0 $p1 $p2 ]
 						set p1_aln_vct	[ vectormath::subVector		$p1 $p_isect ]
 						set p_end		[ vectormath::addVector		$p2 $p1_aln_vct ]
+                        set perpAngle   [ vectormath::dirAngle_Coincidence $p_start $p_end  0.0001 $p0 ] 
+                        set dimPerp     [ vectormath::length 	  $p_start $p_end]
+                        set dimDir      [ vectormath::VRotate 	  $p1_aln_vct 90]
 					}                  
 			}
 			
@@ -731,6 +734,9 @@ namespace eval dimension {
 				# set helpline parameters
 			set dimDistance     [ expr $dimDistance / $stageScale ]
 			set textAngle		[ vectormath::dirAngle    $p_start $p_end]
+            if {$dimOrientation == {perpendicular}} {
+                set textAngle   $perpAngle
+            }
 			set textPosAngle	[ expr $textAngle - 90]
 			set dimLength		[ vectormath::length 	  $p_start $p_end]
 			set p_hl_dim_p1  	[ vectormath::rotateLine  $p_start	$dimDistance  $textPosAngle ]

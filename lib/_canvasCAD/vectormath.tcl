@@ -56,12 +56,8 @@
 	proc rotatePoint { p_cent p_rot angle } { 
 			# start at 3 o'clock counterclockwise
 			# angle in degree
-			# variable CONST_PI
-			foreach {x y} [ subVector $p_rot $p_cent ]  break
-			
+			foreach {x y} [ subVector $p_rot $p_cent ]  break			
 			set p0		[ list $x $y ]
-			# set RADIANT	[ expr $angle * $CONST_PI / 180 ]
-			# return 		[ addVector [ VRotate  $p0 $RADIANT ] $p_cent ]
 			return 		[ addVector [ VRotate  $p0 $angle grad ] $p_cent ]
 	}
 
@@ -72,21 +68,22 @@
 			return [rotatePoint  $p  $p1  $angle]
 	}
 
-	proc dirAngle { p1 p2 } { 
+	proc dirAngle { p1 p2} { 
 			# angle from positive x-axis
 			# angle in degree
 			variable CONST_PI
 			set xy [subVector $p2 $p1]
-			set p1 {0 0}
 			foreach {x y} $xy  break
-			   # debug::print "    $x  $y"
-			if { $x == 0 } { 
+			    # debug::print "    $x  $y"
+                # y - axis
+            if { $x == 0 } { 
 				 if {$y > 0 } {
 					  return  90 
 				 } else {
-					  return -90
-				 }
+                      return -90
+                 }
 			}
+                
 			set angle  [expr atan(1.0*$y/$x)*180/$CONST_PI]
 			if { $x <  0 } { 
 				return [ expr $angle+180] 
@@ -94,6 +91,28 @@
 				return $angle
 			}
 	}
+    
+    proc dirAngle_Coincidence {p1 p2 tolerance p_perp} {
+            set distance [checkPointCoincidence $p1 $p2 $tolerance]
+            if { $distance  == 0 } {
+                    # puts "       --> $distance / coincident  in ($tolerance)"
+                set angle [expr [dirAngle $p1 $p_perp] - 90]
+                    # puts "           $angle"
+                return $angle
+            } else {
+                set angle [dirAngle $p1 $p2]
+                return $angle
+            }
+    }    
+    
+    proc checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
+            set disctance [length $p1 $p2]
+            if { $disctance < $tolerance} {
+                return 0
+            } else {
+                return $disctance
+            }            
+    }
 
 	proc intersectPerp { p1 p2 p3 } { 
 			# perpendicular intersectPoint from vector(p1,p2) through p3
