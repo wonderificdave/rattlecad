@@ -63,7 +63,7 @@
 			
 			
 				# --- create line
-			$cv_Name create line 	[ list  [ lindex $Rear(xy)   0 ] [ lindex $Rear(xy)   1 ] [ lindex $Front(xy)   0 ] [ lindex $Front(xy)   1 ] ]  -fill $colour 
+			$cv_Name create line 	[ list  [ lindex $Rear(xy)   0 ] [ lindex $Rear(xy)   1 ] [ lindex $Front(xy)   0 ] [ lindex $Front(xy)   1 ] ]  -fill $colour -tags {__CenterLine__ baseLine}
 			$cv_Name create circle 	$BB_Position  -radius 10  -outline $colour		
 	}
 
@@ -106,6 +106,7 @@
 							set HandleBar(position)		[ frame_geometry::object_values  HandleBar  position	$BB_Position]
 							set HandleBar(file)			[ checkFileString $project::Component(HandleBar/File)]
 							set HandleBar(object)		[ $cv_Name readSVG $HandleBar(file) $HandleBar(position) -5  __Decoration__ ]		
+                                                          $cv_Name addtag __HandleBar__ withtag $HandleBar(object)                            
 							if {$updateCommand != {}} 	{ $cv_Name bind	$HandleBar(object)	<Double-ButtonPress-1> \
 																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																					{ 	file://Component(HandleBar/File)	\
@@ -308,6 +309,7 @@
 							set Saddle(position)		[ frame_geometry::object_values		Saddle  position		$BB_Position ]
 							set Saddle(file)			[ checkFileString $project::Component(Saddle/File) ]
 							set Saddle(object)			[ $cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Decoration__ ]	
+                                                          $cv_Name addtag __Saddle__ withtag $Saddle(object)
 							if {$updateCommand != {}} 	{ $cv_Name bind	$Saddle(object)	<Double-ButtonPress-1> \
 																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																					{ 	file://Component(Saddle/File)	\
@@ -349,12 +351,12 @@
 							set RimDiameter				$frame_geometry::RearWheel(RimDiameter)
 							set RimHeight				$frame_geometry::RearWheel(RimHeight)
 							set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
-							set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white -tags __Decoration__ ]
-															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5] 				-tags __Decoration__ 
-															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4] 				-tags __Decoration__ 
-															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5] 	-tags __Decoration__  
-															$cv_Name create circle 	$Hub(position)  -radius 45											-tags __Decoration__ 	
-															$cv_Name create circle 	$Hub(position)  -radius 23											-tags __Decoration__ 
+							set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight]     -tags {__Decoration__ __Tyre__}     -fill white ]
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5] 				-tags {__Decoration__ __Rim_01__}   -fill white
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4] 				-tags {__Decoration__ __Rim_02__}   -fill white
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5] 	-tags {__Decoration__ __Rim_03__}   -fill white
+															$cv_Name create circle 	$Hub(position)  -radius 45											-tags {__Decoration__ __Hub__}      -fill white
+															$cv_Name create circle 	$Hub(position)  -radius 23											-tags {__Decoration__}              -fill white
 							if {$updateCommand != {}} 	{ $cv_Name bind	$my_Wheel	<Double-ButtonPress-1> \
 																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																					{ 	Component(Wheel/Rear/RimHeight)		\
@@ -368,12 +370,12 @@
 							set RimDiameter				$frame_geometry::FrontWheel(RimDiameter)
 							set RimHeight				$frame_geometry::FrontWheel(RimHeight)
 							set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
-							set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -fill white  -tags __Decoration__]
-															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]					-tags __Decoration__
-															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]                   -tags __Decoration__
-															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]      -tags __Decoration__
-															$cv_Name create circle 	$Hub(position)  -radius 20                                              -tags __Decoration__
-															$cv_Name create circle 	$Hub(position)  -radius 4.5                                             -tags __Decoration__
+							set my_Wheel				[	$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight]     -tags {__Decoration__ __Tyre__}     -fill white  ]
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]				-tags {__Decoration__ __Rim_01__}   -fill white
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]               -tags {__Decoration__ __Rim_02__}   -fill white
+															$cv_Name create circle 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]  -tags {__Decoration__ __Rim_03__}   -fill white
+															$cv_Name create circle 	$Hub(position)  -radius 20                                          -tags {__Decoration__ __Hub__}      -fill white
+															$cv_Name create circle 	$Hub(position)  -radius 4.5                                         -tags {__Decoration__}              -fill white
 							if {$updateCommand != {}} 	{ $cv_Name bind	$my_Wheel	<Double-ButtonPress-1> \
 																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																					{ 	Component(Wheel/Front/RimHeight)		\
@@ -388,7 +390,7 @@
 							set RimHeight				$frame_geometry::RearWheel(RimHeight)
 							set TyreHeight				$frame_geometry::RearWheel(TyreHeight)
 							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start -20  -extent 105 -style arc -outline gray60  -tags __Decoration__]
-							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start -25  -extent 100 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
+							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start -25  -extent 100 -style arc -outline gray60  -tags __Decoration__  -width 0.35]
 								# set my_Wheel				[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  30  -extent  45 -style arc -outline gray60 -width 0.35]
 							}									
                     FrontWheel_Rep	{
@@ -397,7 +399,7 @@
 							set RimHeight				$frame_geometry::FrontWheel(RimHeight)
 							set TyreHeight				$frame_geometry::FrontWheel(TyreHeight)
 							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start  95  -extent  85 -style arc -outline gray60 -tags __Decoration__]
-							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start  90  -extent  80 -style arc -outline gray60 -width 0.35  -tags __Decoration__]
+							set my_Wheel				[ $cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter ]				-start  90  -extent  80 -style arc -outline gray60  -tags __Decoration__  -width 0.35  ]
 								# set my_Wheel		[	$cv_Name create arc 	$Hub(position)  -radius [expr 0.5 * $RimDiameter - 5 ]			-start  95  -extent  45 -style arc -outline gray60 -width 0.35]
 							}	
                     LegClearance_Rep {
@@ -441,6 +443,10 @@
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		
+			# --- set tubeColour
+            # set tubeColour "gray90"
+		set tubeColour 	    "white"		
+		
 			# --- check existance of File --- regarding on user/etc
 		proc checkFileString {fileString} {
 			switch -glob $fileString {
@@ -482,7 +488,7 @@
 
 			# --- create HeadTube --------------------
 		set HeadTube(polygon) 		[ frame_geometry::object_values HeadTube polygon $BB_Position  ]
-		set HeadTube(object)		[ $cv_Name create polygon $HeadTube(polygon) -fill white -outline black  -tags __Frame__]
+		set HeadTube(object)		[ $cv_Name create polygon $HeadTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$HeadTube(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{	FrameTubes(HeadTube/Diameter)	\
@@ -493,7 +499,7 @@
 				
 			# --- create DownTube --------------------
 		set DownTube(polygon) 		[ frame_geometry::object_values DownTube polygon $BB_Position  ]
-		set DownTube(object) 		[ $cv_Name create polygon $DownTube(polygon) -fill white -outline black  -tags __Frame__]
+		set DownTube(object) 		[ $cv_Name create polygon $DownTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$DownTube(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	FrameTubes(DownTube/DiameterHT)  \
@@ -506,7 +512,7 @@
 				
 			# --- create SeatTube --------------------
 		set SeatTube(polygon) 		[ frame_geometry::object_values SeatTube polygon $BB_Position  ]
-		set SeatTube(object)		[ $cv_Name create polygon $SeatTube(polygon) -fill white -outline black  -tags __Frame__]
+		set SeatTube(object)		[ $cv_Name create polygon $SeatTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$SeatTube(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	FrameTubes(SeatTube/DiameterTT)   \
@@ -519,7 +525,7 @@
 
 			# --- create TopTube ---------------------
 		set TopTube(polygon) 		[ frame_geometry::object_values TopTube polygon $BB_Position  ]
-		set TopTube(object)			[ $cv_Name create polygon $TopTube(polygon) -fill white -outline black  -tags __Frame__]
+		set TopTube(object)			[ $cv_Name create polygon $TopTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$TopTube(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	FrameTubes(TopTube/DiameterHT)   \
@@ -533,7 +539,7 @@
 
 			# --- create ChainStay -------------------
 		set ChainStay(polygon) 		[ frame_geometry::object_values ChainStay polygon $BB_Position  ]
-		set ChainStay(object)		[ $cv_Name create polygon $ChainStay(polygon) -fill white -outline black  -tags __Frame__]		
+		set ChainStay(object)		[ $cv_Name create polygon $ChainStay(polygon) -fill $tubeColour -outline black  -tags __Frame__]		
 		if {$updateCommand != {}}	{ $cv_Name bind	$ChainStay(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{	FrameTubes(ChainStay/DiameterSS)		\
@@ -546,7 +552,7 @@
 
 			# --- create SeatStay --------------------
 		set SeatStay(polygon) 		[ frame_geometry::object_values SeatStay polygon $BB_Position  ]
-		set SeatStay(object)		[ $cv_Name create polygon $SeatStay(polygon) -fill white -outline black  -tags __Frame__]
+		set SeatStay(object)		[ $cv_Name create polygon $SeatStay(polygon) -fill $tubeColour -outline black  -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$SeatStay(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	FrameTubes(SeatStay/DiameterST)   \
@@ -559,7 +565,7 @@
 				}
 
 			# --- create BottomBracket ---------------
-		$cv_Name create circle  $BB_Position			-radius 20	-fill white	-tags __Frame__
+		$cv_Name create circle  $BB_Position			-radius 20	-fill $tubeColour	-tags __Frame__
 
 	}
 
@@ -571,6 +577,10 @@
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 		
+			# --- set tubeColour
+            # set tubeColour "gray90"
+		set tubeColour 	    "white"		
+        
 			# --- get Rendering Style
 		set Rendering(Fork)		$project::Rendering(Fork)
 
@@ -637,7 +647,7 @@
 		}
 		
 			# --- create Fork Blade -----------------
-		set ForkBlade(object)		[ $cv_Name create polygon $ForkBlade(polygon) -fill white  -outline black -tags __Frame__]
+		set ForkBlade(object)		[ $cv_Name create polygon $ForkBlade(polygon) -fill $tubeColour  -outline black -tags __Frame__]
 		if {$updateCommand != {}}	{ $cv_Name bind	$ForkBlade(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																	{ 	list://Rendering(Fork@SELECT_ForkTypes) \
@@ -731,7 +741,7 @@
 	}
 
 	
-	proc createFrame_Centerline {cv_Name BB_Position {highlightList {}} {excludeList {}} } {
+	proc createFrame_Centerline {cv_Name BB_Position {highlightList {}} {backgroundList {}} {excludeList {}} } {
 			
 
 			## -- read from domProject
@@ -768,17 +778,17 @@
 
 			
 			# ------ rearwheel representation
-		$cv_Name create circle 	$RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]  	-outline gray60	-width 1.0	-tags __CenterLine__	
-		$cv_Name create circle 	$RearWheel   -radius 15  -outline gray60  -tags {__CenterLine__}
+            $cv_Name create circle 	$RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]  	-outline gray60 -width 1.0	    -tags {__CenterLine__	rearWheel}
 			# ------ frontwheel representation
-		$cv_Name create circle 	$FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  	-outline gray60	-width 1.0	-tags __CenterLine__	
-		$cv_Name create circle 	$FrontWheel  -radius 15  -outline gray60  -tags {__CenterLine__}
+            $cv_Name create circle 	$FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  	-outline gray60	-width 1.0	    -tags {__CenterLine__	frontWheel}
 
+            
 			# ------ headtube extension to ground
 		$cv_Name create centerline [ project::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]  	-fill gray60 				-tags __CenterLine__
 			# ------ seattube extension to ground
 		$cv_Name create centerline [ project::flatten_nestedList  $BottomBracket  $SeatTube_Ground  ]  	-fill gray60 				-tags {__CenterLine__	seattube_center}
 
+            
 		# ------ chainstay
 		$cv_Name create line 	[ project::flatten_nestedList  $RearWheel 		$BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	chainstay}			
 			# ------ seattube                                                                                                               
@@ -804,12 +814,6 @@
 				}                                                                                                                           
 		$cv_Name create line  $saddle_polygon   													   		-fill gray60  -width 1.0  	-tags {__CenterLine__	saddle}				
 		
-			# --- create position points
-		# $cv_Name create circle 	$BottomBracket	-radius 10  -outline gray60
-		# $cv_Name create circle	$HandleBar		-radius 10  -outline gray60
-		# $cv_Name create circle 	$LegClearance	-radius 10  -outline gray60 
-		# $cv_Name create circle 	$Saddle			-radius 10  -outline gray60 
-		$cv_Name create circle 	$BaseCenter		-radius 10  -outline gray60		-tags 	__CenterLine__
 
 		# puts "  $highlightList "
 			# --- highlightList
@@ -818,12 +822,32 @@
 				# set highlight(colour) darkred
 				# set highlight(colour) firebrick
 				# set highlight(colour) blue
+                    
+                    
 		set highlight(colour) red
-		set highlight(width)  1.5
+            set highlight(width)  2.0       
+                # --- create position points
+            $cv_Name create circle 	$BottomBracket	-radius 20  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle	$HandleBar		-radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+                    # $cv_Name create circle 	$LegClearance	-radius 10  -outline $highlight(colour) 
+            $cv_Name create circle 	$Saddle			-radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width) 
+            $cv_Name create circle 	$FrontWheel     -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle 	$RearWheel      -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle 	$BaseCenter		-radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)    
+
+            
+            set highlight(colour) red
+            set highlight(width)  3.0
+                # ------------------------
 		foreach item $highlightList {
 			catch {$cv_Name itemconfigure $item  -fill 		$highlight(colour) -width $highlight(width) } error
 			catch {$cv_Name itemconfigure $item  -outline 	$highlight(colour) -width $highlight(width) } error
 		}
+
+            foreach item $backgroundList {
+                catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
+                catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
+            }
 
 		puts "  $excludeList "
 			# --- highlightList
@@ -876,7 +900,7 @@
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(SeatStay/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
-					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MitterDiameter)
+					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MiterDiameter)
 					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
@@ -886,7 +910,7 @@
 					set Mitter(header)		"SeatStay / SeatTube"
 					set 	minorDiameter		$project::FrameTubes(SeatStay/DiameterST)
 					set 	minorDirection		[ frame_geometry::object_values SeatStay 	direction ]
-					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MitterDiameter)
+					set 	majorDiameter		$project::Lugs(SeatTube/SeatStay/MiterDiameter)
 					set 	majorDirection		[ frame_geometry::object_values SeatTube 	direction ]
 					set 	majorDirection		[ vectormath::unifyVector {0 0} $majorDirection -1 ]
 					set 	offSet				[ format "%.2f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]

@@ -78,6 +78,10 @@
                             Keith Vetter 2003-03-07
                             Cubic Tension Splines: TensionSpline.tcl
                             http://wiki.tcl.tk/10530
+                    exportDXF:
+                            John Roll 2009-03-18
+                            Writing DXF
+                            http://www2.tcl.tk/22794     
                           
        vectorfont
       ------------------------------------------

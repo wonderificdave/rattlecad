@@ -18,6 +18,7 @@
 			<image name="print"		src="print.gif" />
 			<image name="print_ps"	src="print_ps.gif" />
 			<image name="print_svg"	src="print_svg.gif" />
+			<image name="print_dxf"	src="print_dxf.gif" />
 			<image name="clear"		src="clean.gif" />
 			<image name="design"	src="design.gif" />
 			<image name="drawing"	src="drawing.gif" />

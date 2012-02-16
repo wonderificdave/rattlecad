@@ -75,6 +75,7 @@
 						{separator}
 						{command "&Print"			{}    	"Print current Graphic" {Ctrl p}	-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) } }
 						{command "&Export SVG"		{}    	"Export to SVG" 		{Ctrl f}	-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) } }
+						{command "&Export DXF"		{}    	"Export to DXF" 		{Ctrl d}	-command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) } }
 						{separator}
 						{command "&Intro-Image"		{}    	"Show Intro Window"     {}			-command { create_intro .intro } }
 						{separator}
@@ -100,6 +101,7 @@
 			Button	$tb_frame.save		-image  $iconArray(save)		-helptext "save ..."		-command { lib_file::saveProject_xml } 
 			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	-helptext "print .ps"		-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
 			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	-helptext "print .svg"		-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_dxf	-image  $iconArray(print_dxf)	-helptext "print .dxf"		-command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }  		
 														 
 			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		-helptext "template road"	-command { lib_gui::load_Template  Road }  
 			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		-helptext "template mtb"	-command { lib_gui::load_Template  MTB  }  
@@ -131,7 +133,7 @@
 				#		$tb_frame.render   $tb_frame.sp3  \
 				#
 			pack    $tb_frame.open       $tb_frame.save          $tb_frame.sp0  \
-					$tb_frame.print_ps   $tb_frame.print_svg     $tb_frame.sp1  \
+					$tb_frame.print_ps   $tb_frame.print_svg     $tb_frame.print_dxf     $tb_frame.sp1  \
 					$tb_frame.set_rd     $tb_frame.set_mb   $tb_frame.sp2  \
 					$tb_frame.clear      $tb_frame.render   $tb_frame.sp3  $tb_frame.cfg\
 				-side left -fill y
@@ -158,13 +160,13 @@
 				pack $noteBook_top -expand yes  -fill both  
 			
 				# --- 	create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Tube Details    "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "	    A4  1.0  40  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  40  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Frame Details  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "	    A4  1.0  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
 			
 			$noteBook_top add [frame $noteBook_top.components] 	-text "... Components" 
 			$noteBook_top add [frame $noteBook_top.report] 		-text "... info" 
@@ -215,7 +217,7 @@
 	
 	
 	#-------------------------------------------------------------------------
-		#  fill cv_Custom01   
+		#  get current canvasCAD   
 		#
 	proc current_canvasCAD {} {
 			variable noteBook_top		
@@ -226,11 +228,33 @@
 			return $varName
 	}
 	#-------------------------------------------------------------------------
-		#  fill cv_Custom01   
+		#  select specific canvasCAD tab   
+		#
+	proc select_canvasCAD {cv} {
+			variable noteBook_top		
+            
+            set cvID    [format "lib_gui::%s" $cv]
+            set cvPath  [$cvID getNodeAttr Canvas path]
+            set noteBook   [winfo parent [winfo parent $cvPath]] 
+                # puts "         $noteBook"
+                # puts "         [winfo exists [winfo parent $cvPath]]"
+            if {[winfo exists $cvPath]} {
+                $noteBook select  [winfo parent $cvPath]   
+                return [$noteBook select]
+            } else {
+                puts ""
+                puts "         ... <E> select_canvasCAD:"
+                puts "               $cv / $cvID  ... does not exist\n"
+                return {}
+            }
+	}
+	#-------------------------------------------------------------------------
+		#  fill canvasCAD   
 		#
 	proc fill_canvasCAD {{varName {}}} {
 			variable noteBook_top
 			
+			puts "      fill_canvasCAD: $varName"
 			if {$varName == {}} {
 				set current_cv [$noteBook_top select]
 				puts "        current canvasCAD: $current_cv"
@@ -255,7 +279,7 @@
 						lib_gui::notebook_refitCanvas
 						lib_comp_library::updateCanvas
 					}
-				cv_Library {
+				__cv_Library {
 						::update
 						lib_gui::notebook_refitCanvas
 						lib_config::updateCanvas
@@ -483,7 +507,7 @@
 			set currentTab 	[ $noteBook_top select ]
 			set cv_Name    	[ notebook_getVarName $currentTab]
 			if { $cv_Name == {} } {
-					puts "   notebook_printCanvas::cv_Name: $cv_Name"
+					puts "   notebook_exportSVG::cv_Name: $cv_Name"
 					return
 			}
 			
@@ -510,6 +534,45 @@
 	}
 
 
+	#-------------------------------------------------------------------------
+       #  export canvasCAD from current notebook-Tab as SVG Graphic
+       #
+	proc notebook_exportDXF {printDir} {
+			variable noteBook_top
+			
+				## -- read from domConfig
+			# remove 3.2.70 ;# set domConfig $::APPL_Env(root_ProjectDOM)
+
+				# --- get currentTab
+			set currentTab 	[ $noteBook_top select ]
+			set cv_Name    	[ notebook_getVarName $currentTab]
+			if { $cv_Name == {} } {
+					puts "   notebook_exportDXF::cv_Name: $cv_Name"
+					return
+			}
+			
+				# --- set exportFile
+			set stageTitle	[ $cv_Name  getNodeAttr  Stage  title ]
+			set fileName 	[ winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ] ]
+			set exportFile	[ file join $printDir ${fileName}.dxf ]
+
+				# --- export content to File
+			puts "    ------------------------------------------------"
+			puts "      export DXF - Content to    $exportFile \n"
+			puts "      notebook_exportDXF   $currentTab "
+			puts "             currentTabp-Parent  [winfo parent $currentTab]  "
+			puts "             currentTabp-Parent  [winfo name   $currentTab]  "
+			puts "             canvasCAD Object    $cv_Name  "
+			
+			set exportFile [$cv_Name exportDXF $exportFile]
+			
+			puts "    ------------------------------------------------"
+			puts "      ... open $exportFile "
+			
+			lib_file::openFile_byExtension $exportFile .dxf
+	}
+
+    
 	#-------------------------------------------------------------------------
        #  create a Button inside a canvas of notebookCanvas
        #
@@ -541,7 +604,7 @@
 								# -- create a Button to execute tubing_checkAngles
 								catch { destroy $cv.button_TCA }
 								catch {	button  $cv.button_TCA \
-												-text "check Angles" \
+												-text "check Frame Angles" \
 												-command [format {lib_gui::tubing_checkAngles %s} $cv]								
 										$cv create window 7 19 \
 												-window $cv.button_TCA \
