@@ -497,19 +497,6 @@
 									  lib_gui::object_CursorBinding 	$cv_Name	$HeadTube(object)
 				}
 				
-			# --- create DownTube --------------------
-		set DownTube(polygon) 		[ frame_geometry::object_values DownTube polygon $BB_Position  ]
-		set DownTube(object) 		[ $cv_Name create polygon $DownTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
-		if {$updateCommand != {}}	{ $cv_Name bind	$DownTube(object)	<Double-ButtonPress-1> \
-													[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																	{ 	FrameTubes(DownTube/DiameterHT)  \
-																		FrameTubes(DownTube/DiameterBB)  \
-																		FrameTubes(DownTube/TaperLength) \
-																	}	{DownTube Parameter}
-													]
-									  lib_gui::object_CursorBinding 	$cv_Name	$DownTube(object)
-				}
-				
 			# --- create SeatTube --------------------
 		set SeatTube(polygon) 		[ frame_geometry::object_values SeatTube polygon $BB_Position  ]
 		set SeatTube(object)		[ $cv_Name create polygon $SeatTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
@@ -535,6 +522,19 @@
 																	} 	{TopTube Parameter}
 													]
 									  lib_gui::object_CursorBinding 	$cv_Name	$TopTube(object)
+				}
+				
+			# --- create DownTube --------------------
+		set DownTube(polygon) 		[ frame_geometry::object_values DownTube polygon $BB_Position  ]
+		set DownTube(object) 		[ $cv_Name create polygon $DownTube(polygon) -fill $tubeColour -outline black  -tags __Frame__]
+		if {$updateCommand != {}}	{ $cv_Name bind	$DownTube(object)	<Double-ButtonPress-1> \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																	{ 	FrameTubes(DownTube/DiameterHT)  \
+																		FrameTubes(DownTube/DiameterBB)  \
+																		FrameTubes(DownTube/TaperLength) \
+																	}	{DownTube Parameter}
+													]
+									  lib_gui::object_CursorBinding 	$cv_Name	$DownTube(object)
 				}
 
 			# --- create ChainStay -------------------
