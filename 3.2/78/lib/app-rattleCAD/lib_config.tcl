@@ -85,10 +85,16 @@
 				# -----------------
 				# create a toplevel window to edit the attribute values
 				#
+                # puts " \$tcl_platform(os)  $tcl_platform(os) $tcl_platform(platform)"
+                #
 			toplevel 	$w
 			wm title 	$w "Configuration Panel"
 				# create iconBitmap  -----
-			wm iconbitmap $w [file join $::APPL_Env(BASE_Dir) tclkit.ico]  
+            if {$::tcl_platform(platform) == {windows}} {
+                wm iconbitmap . [file join $APPL_Env(BASE_Dir) tclkit.ico]  	
+            } else {
+                # wm iconbitmap . [file join $APPL_Env(BASE_Dir) icon_16.xbm] 
+            } 
 				# puts "    geometry:  [wm geometry .]"
 			wm geometry	$w +[expr $root_x+8+$root_w]+[expr $root_y]	
 

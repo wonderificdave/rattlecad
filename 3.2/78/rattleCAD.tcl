@@ -220,7 +220,12 @@ exec wish "$0" "$@"
 
 	
 		# --- 	create iconBitmap  -----
-	wm iconbitmap . [file join $APPL_Env(BASE_Dir) tclkit.ico]  
+            #puts " \$tcl_platform(os)  $tcl_platform(os) $tcl_platform(platform)"	
+	if {$tcl_platform(platform) == {windows}} {
+		wm iconbitmap . [file join $APPL_Env(BASE_Dir) tclkit.ico]  	
+	} else {
+		# wm iconbitmap . [file join $APPL_Env(BASE_Dir) icon_16.xbm] 
+	} 
   
   
  		# --- 	create Mainframe  -----
