@@ -47,7 +47,7 @@ if {$argc == 0} {
     puts ""
     puts "     usage:  tclsh $argv0  trunkDir"
     puts ""
-    puts "           e.g.:     tclsh $argv0  3.2.76"
+    puts "           e.g.:     tclsh $argv0  3.2.79"
     puts "\n"
     exit
 }
@@ -95,6 +95,7 @@ file_delete [file join $dir_vfs exclusion.txt]
 file_delete [file join $dir_vfs main.tcl]
 file_delete [file join $dir_vfs tclkit.inf] 
 file_delete [file join $dir_vfs tclkit.ico] 
+file_delete [file join $dir_vfs icon_16.xbm] 
 file_delete [file join $dir_vfs rattleCAD.tcl]
 file_delete [file join $dir_vfs simplify_SVG.tcl]
 file_delete [file join $dir_vfs Tcl.svg]
@@ -122,11 +123,13 @@ file_update [file join $dir_trunk license.txt]    	$dir_vfs
 file_update [file join $dir_trunk exclusion.txt]  	$dir_vfs
 file_update [file join $dir_trunk main.tcl]  		$dir_vfs
 file_update [file join $dir_trunk tclkit.inf]  		$dir_vfs
-file_update [file join $dir_trunk tclkit.ico]  		$dir_vfs
+file_update [file join $dir_trunk tclkit.ico]       $dir_vfs
+file_update [file join $dir_trunk icon_16.xbm]      $dir_vfs
 file_update [file join $dir_trunk rattleCAD.tcl]  	$dir_vfs
 file_update [file join $dir_trunk simplify_SVG.tcl] $dir_vfs
 file_update [file join $dir_trunk Tcl.svg] 			$dir_vfs
 file_update [file join $dir_trunk tclTk.svg] 		$dir_vfs
+file_update [file join $dir_trunk rattleCAD.svg] 	$dir_vfs
 
 	# -- remove unused files
 	#
@@ -176,13 +179,16 @@ file mkdir  [file join $dir_version lib]
 file_update [file join $dir_vfs  help.txt]			$dir_version
 file_update [file join $dir_vfs  license.txt]    	$dir_version
 file_update [file join $dir_vfs  exclusion.txt]  	$dir_version
-file_update [file join $dir_vfs  main.tcl]  			$dir_version
+file_update [file join $dir_vfs  main.tcl]  		$dir_version
 file_update [file join $dir_vfs  tclkit.inf]  		$dir_version
-file_update [file join $dir_vfs  tclkit.ico]  		$dir_version
+file_update [file join $dir_vfs  tclkit.ico]        $dir_version
+file_update [file join $dir_vfs  icon_16.xbm]       $dir_version
 file_update [file join $dir_vfs  rattleCAD.tcl]  	$dir_version
 file_update [file join $dir_vfs  simplify_SVG.tcl]	$dir_version
 file_update [file join $dir_vfs  Tcl.svg]			$dir_version
 file_update [file join $dir_vfs  tclTk.svg]			$dir_version
+file_update [file join $dir_vfs  rattleCAD.svg]  	$dir_version
+
 
 file_update [file join $dir_vfs  etc      ]                          $dir_version
 file_update [file join $dir_vfs  image    ]                          $dir_version
