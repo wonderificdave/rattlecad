@@ -105,6 +105,7 @@ file_delete [file join $dir_vfs rattleCAD.svg]
 file_delete [file join $dir_vfs etc]
 file_delete [file join $dir_vfs image]
 file_delete [file join $dir_vfs lib]
+file_delete [file join $dir_vfs _style]
 
 	# -- update $dir_compile
 	#
@@ -114,6 +115,7 @@ puts "         update\n"
 file_update [file join $dir_trunk      etc]  $dir_vfs
 file_update [file join $dir_trunk    image]  $dir_vfs
 file_update [file join $dir_trunk      lib]  $dir_vfs
+# file_update [file join $dir_trunk   _style]  $dir_vfs
 foreach _dir [glob -directory [file join $dir_compile   _lib] *] {
 	file_update $_dir [file join $dir_vfs lib]
 }
@@ -192,6 +194,7 @@ file_update [file join $dir_vfs  rattleCAD.svg]  	$dir_version
 
 file_update [file join $dir_vfs  etc      ]                          $dir_version
 file_update [file join $dir_vfs  image    ]                          $dir_version
+file_update [file join $dir_vfs  _style   ]                          $dir_version
 file_update [file join $dir_vfs  lib/_apputil      ]                 [file join $dir_version lib]
 file_update [file join $dir_vfs  lib/_canvasCAD    ]                 [file join $dir_version lib]
 file_update [file join $dir_vfs  lib/_extSummary   ]                 [file join $dir_version lib]
