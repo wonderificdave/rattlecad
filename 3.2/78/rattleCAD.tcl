@@ -259,7 +259,7 @@ exec wish "$0" "$@"
 	if {$tcl_platform(platform) == {windows}} {
 		wm iconbitmap . [file join $APPL_Env(BASE_Dir) tclkit.ico]  	
 	} else {
-		# wm iconbitmap . [file join $APPL_Env(BASE_Dir) icon_16.xbm] 
+		wm iconphoto  . [image create photo .ico1 -format gif -file [file join $APPL_Env(BASE_Dir)  icon16.gif] ]
 	} 
   
   

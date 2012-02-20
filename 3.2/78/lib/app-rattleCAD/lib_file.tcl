@@ -519,17 +519,21 @@
 		#	
 	proc check_user_dir {checkDir} {
  
-            set install_Dir $::APPL_Env(BASE_Dir)
-
-				# puts  "install_Dir  $install_Dir"  1
-				# puts  "checkDir    $checkDir"     1  
-				# set search_dir [file join [file dirname $install_Dir] user]
-			# removed since 3.2.79 ... set check_Dir 	[file join [file dirname $install_Dir] $userDir]
+			# changed since 3.2.78.03 
             
                 # thanks to:  http://wiki.tcl.tk/3834
             if { [expr [string compare "$::tcl_platform(platform)" "windows" ] == 0] } {
                     package require registry 1.0
-                    set homeDir [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders} {Personal}]
+                    set homeDir_Request [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders} {Personal}]
+                    set homeDir {}
+                    foreach dir [string trim [split $homeDir_Request \\]] {
+                            set dirString [string trim $dir {%} ]
+                            if {$dirString eq $dir} {
+                                set homeDir [file join $homeDir $dir]
+                            } else {
+                                set homeDir [file join $homeDir $::env($dirString)]
+                            }
+                    }
             } else {
                     set homeDir $::env(HOME)
             }
