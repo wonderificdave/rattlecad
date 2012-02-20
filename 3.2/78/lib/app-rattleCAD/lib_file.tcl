@@ -517,32 +517,39 @@
 	#-------------------------------------------------------------------------
 		#  get user project directory
 		#	
-	proc check_user_dir {userDir} {
+	proc check_user_dir {checkDir} {
  
-			set install_Dir $::APPL_Env(BASE_Dir)
+            set install_Dir $::APPL_Env(BASE_Dir)
 
 				# puts  "install_Dir  $install_Dir"  1
-				# puts  "check_Dir    $check_Dir"     1
-	   
+				# puts  "checkDir    $checkDir"     1  
 				# set search_dir [file join [file dirname $install_Dir] user]
-			set check_Dir 	[file join [file dirname $install_Dir] $userDir]
-				#puts  "dirname      [file dirname $install_Dir]"  1
-				#puts  "search_dir   $search_dir"  1
+			# removed since 3.2.79 ... set check_Dir 	[file join [file dirname $install_Dir] $userDir]
+            
+                # thanks to:  http://wiki.tcl.tk/3834
+            if { [expr [string compare "$::tcl_platform(platform)" "windows" ] == 0] } {
+                    package require registry 1.0
+                    set homeDir [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders} {Personal}]
+            } else {
+                    set homeDir $::env(HOME)
+            }
+                # and now the the directory to check for
+            set checkDir [file join $homeDir $checkDir]
 		   
-			if {[file exists $check_Dir]} {
-				if {[file isdirectory $check_Dir]} {
-					set check_Dir $check_Dir
-						# puts  "         check_user_dir:  $check_Dir" 
+			if {[file exists $checkDir]} {
+				if {[file isdirectory $checkDir]} {
+					set checkDir $checkDir
+						# puts  "         check_user_dir:  $checkDir" 
 				} else {
 					tk_messageBox -title   "Config ERROR" \
 								  -icon    error \
-								  -message "There is af file \n   ... $check_Dir\n     should be ad directory\n\n  ... please remove file"
+								  -message "There is a file \n   ... $checkDir\n     should be ad directory\n\n  ... please remove file"
 					return
 				}
 			} else {
-				file mkdir $check_Dir
+				file mkdir $checkDir
 			}
-			return $check_Dir
+			return $checkDir
 	}
 
 

@@ -91,8 +91,8 @@ exec wish "$0" "$@"
 	set APPL_Env(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
 	set APPL_Env(IMAGE_Dir)     [file join    $BASE_Dir image ]
 	set APPL_Env(ROOT_Dir)      [file dirname $BASE_Dir]
-	set APPL_Env(USER_Dir)      [lib_file::check_user_dir user]	
-	set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir export]
+	set APPL_Env(USER_Dir)      [lib_file::check_user_dir rattleCAD]	
+	set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir rattleCAD/export]
 
 
 		# -- Version Info Summary  ---------------
@@ -122,6 +122,41 @@ exec wish "$0" "$@"
  		puts "  ----------------------------------------------"
 		puts ""
 
+  
+  ###########################################################################
+  #
+  #                 W  -  A  -  R  -  N  -  I  -  N  -  G
+  #
+  ###########################################################################
+    # set APPL_Env(USER_Dir) $APPL_Env(BASE_Dir)
+    proc check_BASE_Dir {} {
+            if {$::APPL_Env(BASE_Dir) eq $::APPL_Env(USER_Dir)} {
+                set     message "Dear User!\n"
+                append  message "\n  ...  since rattleCAD Version 3.2.78.03"
+                append  message "\n        there is a new definition of the user-Directory."
+                append  message "\n"
+                append  message "\n  ... your new user-Directory is defined as:"
+                append  message "\n        $::APPL_Env(USER_Dir)"
+                append  message "\n"
+                append  message "\n  ... please install rattleCAD in an other Directory"
+                append  message "\n"
+                append  message "\n    e.g.:\n"
+                append  message "\n         \[Windows\] C:\\Program Files\\rattleCAD\\"
+                append  message "\n                                     .\\3.2.78.03"
+                append  message "\n                                     .\\rattleCAD.tcl"
+                append  message "\n"
+                append  message "\n         \[Linux\]   /opt/rattleCAD/"
+                append  message "\n                                     ./3.2.78.03"
+                append  message "\n                                     ./rattleCAD.tcl"
+                append  message "\n"
+                append  message "\n                            your rattleCAD!"
+
+               
+                tk_messageBox -icon info -message $message
+                exit
+            }           
+    }
+    check_BASE_Dir
   
   ###########################################################################
   #
