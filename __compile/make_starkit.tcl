@@ -47,7 +47,8 @@ if {$argc == 0} {
     puts ""
     puts "     usage:  tclsh $argv0  trunkDir"
     puts ""
-    puts "           e.g.:     tclsh $argv0  3.2.79"
+    puts "           e.g.:     tclsh $argv0  3.2.78"
+    puts "                     tclsh $argv0  3.2.79"
     puts "\n"
     exit
 }
