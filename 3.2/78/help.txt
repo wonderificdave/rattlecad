@@ -48,19 +48,23 @@ What is the aim of this program?
 
 Directory Structure of rattleCAD
 -----------------------------------------------------------------
-        .../rattleCAD/
+        C:\Programme (x86)\rattleCAD
+        /opt/rattleCAD/       
                     ./3.2.06a           
                     ./3.2.14
                     ./3.2.15
                     ./...                  ... Version Directories 
                     ./rattleCAD.tcl
                     ./rattleCAD.bat        ... batch files to start
-                    ./user/
-                         ./components      ... users components Library
-                         ./__file__.xml    ... project Files
-                    ./export/     
-                           ./__file__.ps   ... print postscript
-                           ./__file__.svg  ... export SVG
+                    
+         C:\Eigene Dateien\rattleCAD
+         /home/~/rattleCAD/                   
+                     ./components      ... users components Library
+                     ./__file__.xml    ... project Files
+                     ./...
+                     ./export/     
+                            ./__file__.ps   ... print postscript
+                            ./__file__.svg  ... export SVG
     
     
     
@@ -139,13 +143,7 @@ How to print  .ps / .svg
     
     .ps and .svg-Files are exporte to the "export" directory which 
         resides:
-        .../rattleCAD/
-                    ./3.2.06a
-                    ./3.2.14
-                    ./3.2.15
-                    ./rattleCAD.tcl
-                    ./rattleCAD.bat
-                    ./user
+        $HOME/rattleCAD/
                     ./export/     <---
                            ./__file__.ps
                            ./__file__.svg

@@ -50,7 +50,7 @@
 			  variable current_filename
 			  variable filetypes
 		   
-			check_user_dir user
+			check_user_dir rattleCAD
 
 			while {true} {
 				set fileName [tk_getOpenFile  -initialdir $USER_Dir  -filetypes  $filetypes ] 
@@ -251,7 +251,7 @@
 					{{Project Files 3.x }       {.xml}  }
 				}
 				
-			set userDir		[check_user_dir user]
+			set userDir		[check_user_dir rattleCAD]
 			set fileName 	[tk_getSaveFile -initialdir $userDir -initialfile {new_Project.xml} -filetypes $types]
 			
 			if {$fileName == {}} return
@@ -309,7 +309,7 @@
 			puts "  ====== s a v e  F I L E ========================="
 
 
-				set userDir		[check_user_dir user]
+				set userDir		[check_user_dir rattleCAD]
 			set initialFile	[file tail $::APPL_Config(PROJECT_Name)]
 				puts "       ... saveProject_xml - mode:            \"$mode\""
 				puts "       ... saveProject_xml - userDir:         \"$userDir\""
@@ -439,8 +439,6 @@
 					{{Project Files 3.x }       {.xml}  }
 				}
 			set userDir		$::APPL_Env(USER_Dir)
-				# set userDir		[check_user_dir user]
-				# puts "   openProject_xml - userDir    $userDir"
 				# puts "   openProject_xml - types      $types"
 			if {$fileName == {}} {
 				set fileName 	[tk_getOpenFile -initialdir $userDir -filetypes $types]
