@@ -77,13 +77,13 @@
 						{command "&Export SVG"		{}    	"Export to SVG" 		{Ctrl f}	-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) } }
 						{command "&Export DXF"		{}    	"Export to DXF" 		{Ctrl d}	-command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) } }
 						{separator}
-						{command "&Intro-Image"		{}    	"Show Intro Window"     {}			-command { create_intro .intro } }
+						{command "Intro-Image"		{}    	"Show Intro Window"     {}			-command { create_intro .intro } }
 						{separator}
 						{command "E&xit"			{}     	"Exit rattle_CAD"       {Ctrl x}	-command { exit } }
 				}
 				"Info"   all info 0 {
-						{command "Info"				{}		"Information"      		{Ctrl i}	-command { version_info::create  .v_info 0} }
-						{command "Help"				{}		"Help"      			{Ctrl h}	-command { version_info::create  .v_info 1} }
+						{command "&Info"			{}		"Information"      		{Ctrl i}	-command { version_info::create  .v_info 0} }
+						{command "&Help"			{}		"Help"      			{Ctrl h}	-command { version_info::create  .v_info 1} }
 				}
 			}
 		
@@ -97,25 +97,25 @@
 	proc create_ButtonBar {tb_frame } {	
 			variable iconArray
 		
-			Button	$tb_frame.open		-image  $iconArray(open)		-helptext "open ..."		-command { lib_file::openProject_xml }  
-			Button	$tb_frame.save		-image  $iconArray(save)		-helptext "save ..."		-command { lib_file::saveProject_xml } 
-			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	-helptext "print .ps"		-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
-			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	-helptext "print .svg"		-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
-			Button	$tb_frame.print_dxf	-image  $iconArray(print_dxf)	-helptext "print .dxf"		-command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.open		-image  $iconArray(open)		-helptext "open ..."		    -command { lib_file::openProject_xml }  
+			Button	$tb_frame.save		-image  $iconArray(save)		-helptext "save ..."		    -command { lib_file::saveProject_xml } 
+			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	-helptext "print Postscript"	-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_dxf	-image  $iconArray(print_dxf)	-helptext "print DXF"		    -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	-helptext "print SVG"		    -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
 														 
-			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		-helptext "template road"	-command { lib_gui::load_Template  Road }  
-			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		-helptext "template mtb"	-command { lib_gui::load_Template  MTB  }  
+			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		-helptext "a roadbike Template"	-command { lib_gui::load_Template  Road }  
+			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		-helptext "a offroad Template"	-command { lib_gui::load_Template  MTB  }  
 			  
-			Button	$tb_frame.clear		-image  $iconArray(clear)		-helptext "clear ..."    	-command { lib_gui::notebook_cleanCanvas} 
-			Button	$tb_frame.render	-image  $iconArray(design)		-helptext "update ..."		-command { lib_gui::notebook_updateCanvas force}  
+			Button	$tb_frame.clear		-image  $iconArray(clear)		-helptext "clear Canvas..."    	-command { lib_gui::notebook_cleanCanvas} 
+			Button	$tb_frame.render	-image  $iconArray(update)		-helptext "update Canvas..."	-command { lib_gui::notebook_updateCanvas force}  
 			  
-			Button	$tb_frame.cfg		-image   $iconArray(cfg_panel)	-helptext "config Panel"   	-command { lib_gui::open_configPanel } 
+			Button	$tb_frame.cfg		-image  $iconArray(cfg_panel)	-helptext "open config Panel"   -command { lib_gui::open_configPanel } 
 			
 			
 
-			Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		-helptext "scale plus"		-command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
-			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		-helptext "scale minus"		-command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
-			Button	$tb_frame.resize	-image  $iconArray(resize)		-helptext "resize"			-command { lib_gui::notebook_refitCanvas }  
+			Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		-helptext "scale plus"		    -command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
+			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		-helptext "scale minus"		    -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
+			Button	$tb_frame.resize	-image  $iconArray(resize)		-helptext "resize"			    -command { lib_gui::notebook_refitCanvas }  
 			
 			Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
 			  
@@ -132,10 +132,10 @@
 				#		$tb_frame.set_rd   $tb_frame.set_mb   $tb_frame.sp2  \
 				#		$tb_frame.render   $tb_frame.sp3  \
 				#
-			pack    $tb_frame.open       $tb_frame.save          $tb_frame.sp0  \
-					$tb_frame.print_ps   $tb_frame.print_svg     $tb_frame.print_dxf     $tb_frame.sp1  \
-					$tb_frame.set_rd     $tb_frame.set_mb   $tb_frame.sp2  \
-					$tb_frame.clear      $tb_frame.render   $tb_frame.sp3  $tb_frame.cfg\
+			pack    $tb_frame.open       $tb_frame.save         $tb_frame.sp0  \
+					$tb_frame.print_ps   $tb_frame.print_dxf    $tb_frame.print_svg     $tb_frame.sp1  \
+					$tb_frame.set_rd     $tb_frame.set_mb       $tb_frame.sp2  \
+					$tb_frame.clear      $tb_frame.render       $tb_frame.sp3  $tb_frame.cfg\
 				-side left -fill y
 					   
 			pack    $tb_frame.exit   $tb_frame.sp6  \
