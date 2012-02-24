@@ -26,6 +26,8 @@
 			<image name="resize"	src="resize.gif" />
 			<image name="exit"     	src="exit.gif" />
 			<image name="cfg_panel"	src="cfg_panel.gif" />
+			<image name="iconClose" src="iconClose.gif" />
+			<image name="confirm" 	src="confirm.gif" />
 		</images>
 	</lib_gui>	
 	
