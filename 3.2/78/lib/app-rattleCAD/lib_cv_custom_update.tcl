@@ -271,8 +271,8 @@
 					frame_visualisation::createTubemiter		$cv_Name { 80 190}	TopTube_Seat		
 					frame_visualisation::createTubemiter		$cv_Name {200 190}	TopTube_Head	
 					frame_visualisation::createTubemiter		$cv_Name { 80 105}	DownTube_Head	
-					frame_visualisation::createTubemiter		$cv_Name {180 105}	SeatStay_01	
-					frame_visualisation::createTubemiter		$cv_Name {250 105}	SeatStay_02	
+					frame_visualisation::createTubemiter		$cv_Name {180 105}	SeatStay_02	
+					frame_visualisation::createTubemiter		$cv_Name {250 105}	SeatStay_01	
 					frame_visualisation::createTubemiter		$cv_Name {220  15}	Reference	
 						# [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
 						#

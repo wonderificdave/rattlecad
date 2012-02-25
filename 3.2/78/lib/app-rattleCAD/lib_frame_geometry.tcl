@@ -1301,15 +1301,15 @@
 
                             set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values HeadTube direction ] -1.0 ]
                             	# puts " .. \$dir $dir"
-						                                # tube_mitter { diameter               direction            diameter_isect          direction_isect         isectionPoint 		{side {right}} {offset {0}}  {startAngle {0}}} 
-					set TubeMiter(TopTube_Head) 		[ tube_mitter	$TopTube(DiameterHT)  $TopTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$TopTube(HeadTube)  ]	
-					set TubeMiter(TopTube_Seat) 		[ tube_mitter	$TopTube(DiameterST)  $TopTube(Direction)	$SeatTube(DiameterTT)	$dir  					$TopTube(SeatTube)  ]	
-					set TubeMiter(DownTube_Head) 		[ tube_mitter	$DownTube(DiameterHT) $DownTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$DownTube(HeadTube) right	0	opposite]				
+						                                # tube_miter { diameter               direction            diameter_isect          direction_isect         isectionPoint 		{side {right}} {offset {0}}  {startAngle {0}}} 
+					set TubeMiter(TopTube_Head) 		[ tube_miter	$TopTube(DiameterHT)  $TopTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$TopTube(HeadTube)  ]	
+					set TubeMiter(TopTube_Seat) 		[ tube_miter	$TopTube(DiameterST)  $TopTube(Direction)	$SeatTube(DiameterTT)	$dir  					$TopTube(SeatTube)  ]	
+					set TubeMiter(DownTube_Head) 		[ tube_miter	$DownTube(DiameterHT) $DownTube(Direction)	$HeadTube(Diameter)		$HeadTube(Direction)	$DownTube(HeadTube) right	0	opposite]				
                             set offset		[ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
                             set dir 		[ vectormath::scalePointList {0 0} [ frame_geometry::object_values SeatStay direction ] -1.0 ]
                             	# puts " .. \$dir $dir"
-					set TubeMiter(SeatStay_01) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right -$offset]	
-					set TubeMiter(SeatStay_02) 		[ tube_mitter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]	
+					set TubeMiter(SeatStay_01) 		[ tube_miter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right -$offset]	
+					set TubeMiter(SeatStay_02) 		[ tube_miter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]	
 					set TubeMiter(Reference) 			{ -50 0  50 0  50 10  -50 10 }
 					
 					project::setValue Result(TubeMiter/TopTube_Head)		polygon		[ project::flatten_nestedList $TubeMiter(TopTube_Head) 	]
@@ -1689,13 +1689,13 @@
 		#   diameter    \     \     \ 
 		#                \     \     \ diameter_isect
 		#
-	proc tube_mitter { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}}  {opposite {no}}} {	
+	proc tube_miter { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}}  {opposite {no}}} {	
 
 			set intersection_angle 	[vectormath::angle $direction {0 0} $direction_isect]
 
 				# puts ""
 				# puts "   -------------------------------"
-				# puts "    tube_mitter"
+				# puts "    tube_miter"
 				# puts "       diameter:        $diameter	"			
 				# puts "       direction:       $direction	"			
 				# puts "       diameter:        $diameter	"			
@@ -1706,7 +1706,7 @@
 				# puts "       offset:          $offset"			
 				# puts "       opposite:        $opposite"	
 				# puts "       -> intersection_angle   $intersection_angle"
-				# puts [format " -> tube_mitter \n   %2.f %2.f" $direction_angle $intersection_angle]
+				# puts [format " -> tube_miter \n   %2.f %2.f" $direction_angle $intersection_angle]
 				
 			if {$opposite != {no}	} {
 				    set intersection_angle	[expr 180 - $intersection_angle]

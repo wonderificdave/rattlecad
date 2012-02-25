@@ -130,7 +130,7 @@
 
 				#--------------------------------------------------------
 					#  Check for zero-size area
-			if {($CANVAS_Point(x0)==$CANVAS_Point(x1)) || ($CANVAS_Point(y0)==$CANVAS_Point(y1))} {
+			if {($CANVAS_Point(x0)==$CANVAS_Point(x1)) && ($CANVAS_Point(y0)==$CANVAS_Point(y1))} {
 				return
 			}
 

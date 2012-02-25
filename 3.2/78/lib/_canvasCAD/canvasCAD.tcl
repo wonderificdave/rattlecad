@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.13
+package provide canvasCAD 0.14
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -480,6 +480,10 @@ package require tdom
 				formatCanvas {		set format 			[lindex $argList 0]
 									set scale 			[lindex $argList 1]
 									return [ formatCanvas 	$name $format $scale ] 
+								}							
+				moveCanvas {		set x 		[lindex $argList 0]
+									set y 		[lindex $argList 1]
+									return [ moveCanvas 	$name $x $y] 
 								}							
 					# ------------------------		
 				reportXML { 		eval "$method" $name $argList

@@ -63,7 +63,7 @@ exec wish "$0" "$@"
 	lappend auto_path           [file join $BASE_Dir lib]
 	
 	package require   rattleCAD  3.2 
-	package require   canvasCAD	 0.13
+	package require   canvasCAD	 0.14
 	package require	  extSummary 0.1
 
 
@@ -314,11 +314,14 @@ exec wish "$0" "$@"
 	update 
 	wm minsize . [winfo width  .]   [winfo height  .]
  
-		# -- open config panel -----------------------
-	# lib_config::create . .cfg	
+		# -- keyboard bindings -----------------------
+    lib_gui::global_kb_Binding ab
 
 		# -- window title ----------------------------
 	set_window_title 				$APPL_Config(PROJECT_Name)
+		
+        # -- open config panel -----------------------
+	# lib_config::create . .cfg
 
 	
   ###########################################################################
@@ -336,4 +339,5 @@ exec wish "$0" "$@"
 		# -- keep on top --------------
 	wm deiconify .
 
-	
+
+

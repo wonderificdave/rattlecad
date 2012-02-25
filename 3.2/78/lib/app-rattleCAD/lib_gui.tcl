@@ -177,17 +177,17 @@
 				# --- 	fill with Library Widgets
 			lib_comp_library::createLibrary $noteBook_top.components
 			lib_comp_library::update_compList
-		
-			
+
+
 				# --- 	bind event to update Tab on selection
 			bind $noteBook_top <<NotebookTabChanged>> {lib_gui::notebook_updateCanvas}
 
 				# --- 	bind event Control-Tab and Shift-Control-Tab
 			ttk::notebook::enableTraversal $noteBook_top
-			
+
 				# --- 	select and update following Tab
 			$noteBook_top select $noteBook_top.cv_Custom02
-					
+
 				# --- 	return
 			return $noteBook_top
 	}
@@ -388,7 +388,7 @@
        #  update canvasCAD in current notebook-Tab  
        #
 	proc notebook_updateCanvas {{mode {}}} {
-			variable noteBook_top
+            variable noteBook_top
 			variable canvasUpdate
 					
 			set currentTab 				[$noteBook_top select]
@@ -788,7 +788,6 @@
 	}
 
 
-
 	#-------------------------------------------------------------------------
        #  change Rendering Settings 
        #
@@ -851,6 +850,24 @@
 			notebook_refitCanvas
 			notebook_updateCanvas force
 	}
+	
+	#-------------------------------------------------------------------------
+       #  move canvas content
+       #
+	proc move_Canvas {x y} {
+			variable canvasUpdate
+			variable noteBook_top
+
+				# puts "\n=================="
+				# puts "    stageFormat $stageFormat"
+				# puts "    stageScale  $stageScale"
+				# puts "=================="
+					
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
+
+            $varName moveCanvas $x $y      
+	}
 
 	
 	#-------------------------------------------------------------------------
@@ -897,9 +914,29 @@
 						}
 			}
 	}
-	
+
+
+    proc global_kb_Binding {ab} {
+            variable noteBook_top
+
+            # puts "\n   -----> keyboard binding \n -------------"
+            bind . <F1>     {version_info::create  .v_info 1}
+            bind . <F3>     {lib_gui::notebook_scaleCanvas  [expr 2.0/3]}
+            bind . <F4>     {lib_gui::notebook_scaleCanvas  [expr 3.0/2]}
+            bind . <F5>     {lib_gui::notebook_refitCanvas}
+            bind . <F6>     {lib_gui::notebook_updateCanvas force}
+            
+            bind . <Key-Up>     {lib_gui::move_Canvas    0  50 }
+            bind . <Key-Down>   {lib_gui::move_Canvas    0 -50 }
+            bind . <Key-Left>   {lib_gui::move_Canvas   50   0 }
+            bind . <Key-Right>  {lib_gui::move_Canvas  -50   0 }
+            
+            # bind . <Key-Tab>    {lib_gui::notebook_nextTab}
+            # bind . <Key-Tab>    {tk_messageBox -message "Keyboard Event: <Key-Tab>"}
+            # bind . <F5>     { tk_messageBox -message "Keyboard Event: <F5>" }
+    }
 	#-------------------------------------------------------------------------
-       #  cursor binding on objects
+       #  cursor binding on canvas objects
        #
 	proc object_CursorBinding {cv_Name tag {cursor {hand2}} } {
 			$cv_Name bind $tag	<Enter> [list $cv_Name configure -cursor $cursor]

@@ -435,5 +435,18 @@
 			return $canvasDOMNode
 
 	}
+	#-------------------------------------------------------------------------
+		#  move Canvase
+		#
+	proc canvasCAD::moveCanvas  {cv_ObjectName x y} {
+			set canvasDOMNode	[ getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_ObjectName] ]							 
+			set w				[ getNodeAttribute	$canvasDOMNode	Canvas	path ]	
+
+            setMark     $w  0   0   move
+            setStroke   $w  $x  $y
+            moveContent $w  $x  $y  $cv_ObjectName        
+            $w configure -cursor arrow
+            return
+	}
 		
 

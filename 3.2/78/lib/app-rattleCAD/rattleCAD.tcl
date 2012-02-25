@@ -322,4 +322,4 @@
 		wm title . $APPL_Config(WINDOW_Title)
 	}
 
-	
+
