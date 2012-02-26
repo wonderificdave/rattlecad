@@ -974,16 +974,6 @@
             }
                 
             return     
-				# puts "=================="
-				# puts "\n=================="
-				# puts "    stageFormat $stageFormat"
-				# puts "    stageScale  $stageScale"
-				# puts "=================="
-					
-			set currentTab [$noteBook_top select]
-			set varName    [notebook_getVarName $currentTab]
-
-            $varName moveCanvas $x $y      
 	}
 
 

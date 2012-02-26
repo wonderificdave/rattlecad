@@ -1312,12 +1312,12 @@
 					set TubeMiter(SeatStay_02) 		[ tube_miter	$SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)	  $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]	
 					set TubeMiter(Reference) 			{ -50 0  50 0  50 10  -50 10 }
 					
-					project::setValue Result(TubeMiter/TopTube_Head)		polygon		[ project::flatten_nestedList $TubeMiter(TopTube_Head) 	]
-					project::setValue Result(TubeMiter/TopTube_Seat)		polygon		[ project::flatten_nestedList $TubeMiter(TopTube_Seat)		]
-					project::setValue Result(TubeMiter/DownTube_Head)		polygon		[ project::flatten_nestedList $TubeMiter(DownTube_Head)	] ;#
-					project::setValue Result(TubeMiter/SeatStay_01)		polygon		[ project::flatten_nestedList $TubeMiter(SeatStay_01)		]
-					project::setValue Result(TubeMiter/SeatStay_02)		polygon		[ project::flatten_nestedList $TubeMiter(SeatStay_02)		]
-					project::setValue Result(TubeMiter/Reference)			polygon		[ project::flatten_nestedList $TubeMiter(Reference) 		]	
+					project::setValue Result(TubeMiter/TopTube_Head)        polygon		[ project::flatten_nestedList $TubeMiter(TopTube_Head) 	]
+					project::setValue Result(TubeMiter/TopTube_Seat)        polygon		[ project::flatten_nestedList $TubeMiter(TopTube_Seat)		]
+					project::setValue Result(TubeMiter/DownTube_Head)       polygon		[ project::flatten_nestedList $TubeMiter(DownTube_Head)	] ;#
+					project::setValue Result(TubeMiter/SeatStay_01)         polygon		[ project::flatten_nestedList $TubeMiter(SeatStay_01)		]
+					project::setValue Result(TubeMiter/SeatStay_02)         polygon		[ project::flatten_nestedList $TubeMiter(SeatStay_02)		]
+					project::setValue Result(TubeMiter/Reference)           polygon		[ project::flatten_nestedList $TubeMiter(Reference) 		]	
 
 			}
 			get_TubeMiter	
@@ -2294,13 +2294,13 @@
 				
 				{Length/TopTube/VirtualLength}			-			
 				{Length/FrontWheel/horizontal}	{			
-							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							# puts "  -> Length/TopTube/VirtualLength"
+                            # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
 							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
 							# set oldValue				[ [ $domProject selectNodes $xpath  ]	asText ]
 							set newValue				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$newValue
 							set delta					[expr $newValue - $oldValue]
-									# puts "          $newValue - $oldValue = $delta"
 								 
 								# --- set HandleBar(Distance)
 								#

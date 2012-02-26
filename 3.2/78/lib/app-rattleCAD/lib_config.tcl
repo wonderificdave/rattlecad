@@ -739,9 +739,10 @@
 							-bd 1  -anchor w 
 
 			entry   $cfgFrame.cfg	\
-							-textvariable [namespace current]::configValue($xPath) \
+							-textvariable [format "project::%s(%s)"  $_array $_name] \
 							-width  7  \
 							-bd 1  -justify right -bg white 
+                            # e.g.: project::Result(Length/TopTube/VirtualLength)                            
 							
 			frame	$cfgFrame.f	-relief sunken \
 							-bd 2 -padx 2 -pady 0
@@ -753,7 +754,7 @@
 							-height		11 \
 							-width		60 \
 							-orient		horizontal \
-							-callback	[list  [namespace current]::updateEntry	  [namespace current]::configValue($xPath)  [format "%s::%s(%s)" project $_array $_name] ]
+							-callback	[list  [namespace current]::callback_cDial	  [namespace current]::configValue($xPath)  [format "%s::%s(%s)" project $_array $_name] ]
 							
 			if {$color != {}} {
 				$cfgFrame.lb  configure -fg $color 
@@ -766,27 +767,54 @@
 				bind $cfgFrame.cfg <Enter> 		[list [namespace current]::enterEntry $cfgFrame.cfg]
 				bind $cfgFrame.cfg <Leave> 		[list [namespace current]::leaveEntry $cfgFrame.cfg [format "%s::%s(%s)" project $_array $_name]]
 				bind $cfgFrame.cfg <Return> 	[list [namespace current]::leaveEntry $cfgFrame.cfg [format "%s::%s(%s)" project $_array $_name]]
+                
+                bind $cfgFrame.cfg <MouseWheel> [list [namespace current]::bind_MouseWheel [format "%s::%s(%s)" project $_array $_name] $scale %D]  ;# move up/down
 			pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl -side left  -fill x	
 			# pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl $cfgFrame.bt   -side left  -fill x	
 			pack      configure $cfgFrame.f  -padx 2	
             return    $cfgFrame
 	}	
-	proc updateEntry {{entryVar {}}  targetVar {value {0}} {drag_Event {}} } {
+	proc bind_MouseWheel {var scale value} {
+			#variable canvasUpdate
+			#variable noteBook_top
+
+				puts "\n=================="
+				puts "    bind_MouseWheel"
+				puts "       var    $var"
+				puts "       scale  $scale"
+				puts "       value  $value"
+                
+                if {$value < 0} {set scale [expr -1.0*$scale]}
+                set newValue  [expr \$$var + $scale] 
+                set $var [format "%.2f" $newValue]
+                
+            return     
+	}
+	proc callback_cDial {{entryVar {}}  targetVar {value {0}} {drag_Event {}} } {
 			# puts "\n entryVar:    $entryVar"
 			# puts "\n target_Var:  $target_Var"
 			# puts "\n value:       $value"
 			# puts "\n drag_Event:  $drag_Event"
 			
 			set value [format "%.2f" $value]
+                # puts "\n value:       $value"
 			if {$entryVar ne ""} {
 					# reformat value
 				eval set $entryVar 		$value
 			}
 			if {$drag_Event == {release}} {
-				eval set $targetVar 	$value
+                    # -- exception for changing Result Values
+                    #       e.g.: targetVar     project::Result(Length/TopTube/VirtualLength)                
+                set _array [lindex [split $targetVar (:] 2]
+                set _name  [lindex [split $targetVar ()] 1]
+                if {$_array eq {Result}} {
+                    frame_geometry::set_temp_Parameters $_array $_name $value
+                } else {
+                    eval set $targetVar 	$value
+                }
 			}
  	}
-	proc enterEntry {entry} {
+    proc enterEntry {entry} {
 			set entryVar [$entry cget -text]
 			eval set currentValue 	[expr 1.0 * \$$entryVar]
 			set value [format "%.2f" $currentValue]
