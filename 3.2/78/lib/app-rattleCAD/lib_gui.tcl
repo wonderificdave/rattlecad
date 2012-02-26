@@ -117,7 +117,7 @@
 			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		-helptext "scale minus"		    -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
 			Button	$tb_frame.resize	-image  $iconArray(resize)		-helptext "resize"			    -command { lib_gui::notebook_refitCanvas }  
 			
-			Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
+			# Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
 			  
 			label   $tb_frame.sp0      -text   " "
 			label   $tb_frame.sp1      -text   " "
@@ -138,8 +138,10 @@
 					$tb_frame.clear      $tb_frame.render       $tb_frame.sp3  $tb_frame.cfg\
 				-side left -fill y
 					   
-			pack    $tb_frame.exit   $tb_frame.sp6  \
-					$tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
+                # pack    $tb_frame.exit   $tb_frame.sp6  \
+				#	    $tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
+                #
+			pack    $tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
 				-side right 
 	}
 
@@ -852,25 +854,6 @@
 	}
 	
 	#-------------------------------------------------------------------------
-       #  move canvas content
-       #
-	proc move_Canvas {x y} {
-			variable canvasUpdate
-			variable noteBook_top
-
-				# puts "\n=================="
-				# puts "    stageFormat $stageFormat"
-				# puts "    stageScale  $stageScale"
-				# puts "=================="
-					
-			set currentTab [$noteBook_top select]
-			set varName    [notebook_getVarName $currentTab]
-
-            $varName moveCanvas $x $y      
-	}
-
-	
-	#-------------------------------------------------------------------------
        #  load Template from File
        #
 	proc load_Template {type} {
@@ -931,6 +914,10 @@
             bind . <Key-Left>   {lib_gui::move_Canvas   50   0 }
             bind . <Key-Right>  {lib_gui::move_Canvas  -50   0 }
             
+            bind . <MouseWheel>         {lib_gui::bind_MouseWheel standard %D}  ;# move up/down
+            bind . <Control-MouseWheel> {lib_gui::bind_MouseWheel control  %D}  ;# move left/right
+            bind . <Shift-MouseWheel>   {lib_gui::bind_MouseWheel shift    %D}  ;# scale
+            
             # bind . <Key-Tab>    {lib_gui::notebook_nextTab}
             # bind . <Key-Tab>    {tk_messageBox -message "Keyboard Event: <Key-Tab>"}
             # bind . <F5>     { tk_messageBox -message "Keyboard Event: <F5>" }
@@ -942,7 +929,63 @@
 			$cv_Name bind $tag	<Enter> [list $cv_Name configure -cursor $cursor]
 			$cv_Name bind $tag	<Leave> [list $cv_Name configure -cursor {}]
 	}
-	
-	
+	#-------------------------------------------------------------------------
+       #  move canvas content
+       #
+	proc move_Canvas {x y} {
+			variable canvasUpdate
+			variable noteBook_top
+
+				# puts "\n=================="
+				# puts "    stageFormat $stageFormat"
+				# puts "    stageScale  $stageScale"
+				# puts "=================="
+					
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
+
+            $varName moveCanvas $x $y      
+	}
+	#-------------------------------------------------------------------------
+       #  move canvas content
+       #
+	proc bind_MouseWheel {type value} {
+			variable canvasUpdate
+			variable noteBook_top
+
+				puts "\n=================="
+				puts "    bind_MouseWheel"
+				puts "       type   $type"
+				puts "       value  $value"
+                
+                
+                
+            switch -exact $type {
+                standard {  if {$value > 0} {set scale 1.0} else {set scale -1.0}
+                            lib_gui::move_Canvas    0  [expr $scale * 40] 
+                         }
+                control {   if {$value > 0} {set scale 1.0} else {set scale -1.0}
+                            lib_gui::move_Canvas    [expr $scale * 40]  0 
+                         }
+                shift {     if {$value > 0} {set scale 1.1} else {set scale 0.9}
+                            lib_gui::notebook_scaleCanvas $scale
+                         }
+                default  {}
+            }
+                
+            return     
+				# puts "=================="
+				# puts "\n=================="
+				# puts "    stageFormat $stageFormat"
+				# puts "    stageScale  $stageScale"
+				# puts "=================="
+					
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
+
+            $varName moveCanvas $x $y      
+	}
+
+
 }
 

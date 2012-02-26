@@ -923,6 +923,9 @@
                             
                             
                                 # -- Bottle Cage Mount ------------------
+                            set DownTube(polygon) 		[ frame_geometry::object_values DownTube polygon		$BB_Position  ]
+                            set pt_49					[ frame_geometry::coords_get_xy $DownTube(polygon) 15 ]
+                                            
                             if {$Rendering(BottleCage_ST) != {off}} {
                                             set st_direction			[ frame_geometry::object_values SeatTube 	direction ]
                                             set pt_01 					[ frame_geometry::object_values	SeatTube/BottleCage/Offset	position	$BB_Position]
@@ -934,6 +937,9 @@
                                                                                                     gray50 ] 																
                                             set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_02  $pt_03 ] \
                                                                                                     aligned		[expr  90 * $stageScale]	[expr -115 * $stageScale] \
+                                                                                                    gray50 ]										
+                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList   $pt_49 	$pt_02 ] \
+                                                                                                    aligned		[expr  35 * $stageScale]	[expr -105 * $stageScale] \
                                                                                                     gray50 ]										
                             }
                             
@@ -949,8 +955,11 @@
                                                                                                     aligned		[expr -1.0 * (180 + $addDist) * $stageScale]	0 \
                                                                                                     gray50 ]
                                             set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_02  $pt_03 ] \
-                                                                                                    aligned 	[expr -1.0 * (180 + $addDist) * $stageScale]	[expr  15 * $stageScale] \
-                                                                                                    darkblue ] 																
+                                                                                                    aligned 	[expr -1.0 * (180 + $addDist) * $stageScale]	[expr   15 * $stageScale] \
+                                                                                                    gray50 ] 																
+                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_49 	$pt_02 ] \
+                                                                                                    aligned 	[expr -1.0 * (35 + $addDist) * $stageScale]	    [expr -115 * $stageScale] \
+                                                                                                    gray50 ] 																
                             }
                             
                             if {$Rendering(BottleCage_DT_L) != {off}} {

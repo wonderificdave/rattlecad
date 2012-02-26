@@ -102,15 +102,16 @@ How to move the zoomed area
     Press the left mouse button on the graphic area, drag the mouse 
     over the screen and release it. During dragging a red line appears
     and shows you the direction of dragging.
-    
 
-  
-How to print  .ps / .svg
+
+
+How to print  .ps / .dxf / .svg
 -----------------------------------------------------------------
 
     rattleCAD is able to export canvas content as 
         .ps     Postscript
-        .svg    StandardVectorGraphic.
+        .dxf    Drawing Interchange File 
+        .svg    Standard Vector Graphic.
     
     rattleCAD prints via postscript and does not directly send content
     to a printer. Postscript requires a postscript viewer to print 
@@ -146,7 +147,27 @@ How to print  .ps / .svg
         $HOME/rattleCAD/
                     ./export/     <---
                            ./__file__.ps
+                           ./__file__.dxf
                            ./__file__.svg
+
+
+
+Mouse and Keyboard bindings
+-----------------------------------------------------------------
+
+    <F1> .................  help
+    <F3> .................  scale view  <minus>
+    <F4> .................  scale view  <plus>
+    <F5> .................  fit to canvas
+    <F6> .................  recompute project
     
+    <Key-Up> .............  move view  <up>
+    <Key-Down> ...........  move view  <down>
+    <Key-Left> ...........  move view  <left>
+    <Key-Right> ..........  move view  <right>
+    
+    <MouseWheel> .........  move view  <up>/<down>
+    <Ctrl-MouseWheel> ....  move view  <left>/<right>
+    <Shift-MouseWheel> ...  scale view  <minus>/<plus>
 
     
