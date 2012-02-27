@@ -180,48 +180,48 @@
 				#
 			set 	menueFrame	[ frame $w.f_menue	-relief flat -bd 1]
 			pack 	$menueFrame \
-				-fill both -side left
+				-fill x  -side top  -expand no
 
 
 				# -----------------
 				#   build frame
 			frame	 		$menueFrame.sf -relief flat -bd 1			
-				pack $menueFrame.sf  		-side top  
+				pack $menueFrame.sf  		-side top  -fill x  -expand yes
 
 				
 				# -----------------
 				#   Concept - Primary
 			ttk::labelframe	$menueFrame.sf.lf_01    	-text "Base Concept - Primary Values" 
-				pack $menueFrame.sf.lf_01 				-side top  -fill x  -pady 2
-					create_config_cDial $menueFrame.sf.lf_01		Personal(HandleBar_Distance)	0.20  orangered
-					create_config_cDial $menueFrame.sf.lf_01		Personal(HandleBar_Height)		0.20  orangered
-					create_config_cDial $menueFrame.sf.lf_01		Personal(SeatTube_Length)		0.20  orangered
-					create_config_cDial $menueFrame.sf.lf_01		Personal(SeatTube_Angle)		0.02  orangered
-					create_config_cDial $menueFrame.sf.lf_01		Personal(InnerLeg_Length)		0.20  darkviolet
-					create_config_cDial $menueFrame.sf.lf_01		Custom(TopTube/PivotPosition) 	0.20  darkviolet
+				pack $menueFrame.sf.lf_01 				-side top  -fill x  -expand yes  -pady 2
+					create_configEdit $menueFrame.sf.lf_01		Personal(HandleBar_Distance)	0.20  orangered
+					create_configEdit $menueFrame.sf.lf_01		Personal(HandleBar_Height)		0.20  orangered
+					create_configEdit $menueFrame.sf.lf_01		Personal(SeatTube_Length)		0.20  orangered
+					create_configEdit $menueFrame.sf.lf_01		Personal(SeatTube_Angle)		0.02  orangered
+					create_configEdit $menueFrame.sf.lf_01		Personal(InnerLeg_Length)		0.20  darkviolet
+					create_configEdit $menueFrame.sf.lf_01		Custom(TopTube/PivotPosition) 	0.20  darkviolet
 
 				# -----------------
 				#   Concept
 			ttk::labelframe	$menueFrame.sf.lf_02    	-text "Base Concept - Secondary Values" 
-				pack $menueFrame.sf.lf_02 				-side top  -fill x  -pady 2
-					create_config_cDial $menueFrame.sf.lf_02		Component(Fork/Rake) 			0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_02		Component(Fork/Height) 			0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_02		Custom(HeadTube/Angle) 			0.02  darkred
-					create_config_cDial $menueFrame.sf.lf_02		Component(Stem/Angle)			0.10  darkred
-					create_config_cDial $menueFrame.sf.lf_02		Component(Stem/Length) 			0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_02		Custom(WheelPosition/Rear) 		0.20  darkred
-					create_config_cDial $menueFrame.sf.lf_02		Custom(BottomBracket/Depth) 	0.20  darkred
+				pack $menueFrame.sf.lf_02 				-side top  -fill x  -expand yes  -pady 2
+					create_configEdit $menueFrame.sf.lf_02		Component(Fork/Rake) 			0.20  darkred
+					create_configEdit $menueFrame.sf.lf_02		Component(Fork/Height) 			0.20  darkred
+					create_configEdit $menueFrame.sf.lf_02		Custom(HeadTube/Angle) 			0.02  darkred
+					create_configEdit $menueFrame.sf.lf_02		Component(Stem/Angle)			0.10  darkred
+					create_configEdit $menueFrame.sf.lf_02		Component(Stem/Length) 			0.20  darkred
+					create_configEdit $menueFrame.sf.lf_02		Custom(WheelPosition/Rear) 		0.20  darkred
+					create_configEdit $menueFrame.sf.lf_02		Custom(BottomBracket/Depth) 	0.20  darkred
 
 				# -----------------
 				#   Alternatives
 			ttk::labelframe	$menueFrame.sf.lf_03    	-text "Base Concept - Alternative Values" 
-				pack $menueFrame.sf.lf_03 				-side top  -fill x  -pady 2
-					# 3.2.76 create_config_cDial $menueFrame.sf.lf_03		Temporary(TopTube/VirtualLength) 			0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Result(Length/TopTube/VirtualLength)    0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Result(Length/FrontWheel/horizontal)    0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Result(Length/FrontWheel/diagonal)      0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Result(Length/Saddle/Offset_BB)         0.20  darkblue
-					create_config_cDial $menueFrame.sf.lf_03		Result(Length/BottomBracket/Height)     0.20  darkblue
+				pack $menueFrame.sf.lf_03 				-side top  -fill x  -expand yes  -pady 2
+					# 3.2.76 create_configEdit $menueFrame.sf.lf_03		Temporary(TopTube/VirtualLength) 			0.20  darkblue
+					create_configEdit $menueFrame.sf.lf_03		Result(Length/TopTube/VirtualLength)    0.20  darkblue
+					create_configEdit $menueFrame.sf.lf_03		Result(Length/FrontWheel/horizontal)    0.20  darkblue
+					create_configEdit $menueFrame.sf.lf_03		Result(Length/FrontWheel/diagonal)      0.20  darkblue
+					create_configEdit $menueFrame.sf.lf_03		Result(Length/Saddle/Offset_BB)         0.20  darkblue
+					create_configEdit $menueFrame.sf.lf_03		Result(Length/BottomBracket/Height)     0.20  darkblue
 
 				# -----------------
 				#   Wheels
@@ -229,9 +229,9 @@
 				pack $menueFrame.sf.lf_04 				-side top  -fill x  -pady 2
 					
 					create_config_cBox	$menueFrame.sf.lf_04 		Component(Wheel/Rear/RimDiameter) 	$::APPL_Env(list_Rims)	
-					create_config_cDial $menueFrame.sf.lf_04		Component(Wheel/Rear/TyreHeight) 	0.20 
+					create_configEdit $menueFrame.sf.lf_04		Component(Wheel/Rear/TyreHeight) 	0.20 
 					create_config_cBox	$menueFrame.sf.lf_04 		Component(Wheel/Front/RimDiameter)  $::APPL_Env(list_Rims)		
-					create_config_cDial $menueFrame.sf.lf_04		Component(Wheel/Front/TyreHeight) 	0.20 
+					create_configEdit $menueFrame.sf.lf_04		Component(Wheel/Front/TyreHeight) 	0.20 
 					
 		
 				# -----------------
@@ -257,34 +257,34 @@
 				#
 			set 	menueFrame	[ frame $w.f_menue	-relief flat -bd 1]
 			pack 	$menueFrame \
-				-fill both -side left -expand yes
+				-fill x  -side top  -expand no
 
 
 				# -----------------
 				#   build frame
 			frame	 		$menueFrame.sf -relief flat -bd 1			
-				pack $menueFrame.sf  		-side top  -fill x 
+				pack $menueFrame.sf  		-side top  -fill x  -expand yes 
 
 			
 				# -----------------
 				#   Tube Details
 			ttk::labelframe	$menueFrame.sf.lf_01    	-text "Tube Details" 
-				pack $menueFrame.sf.lf_01 				-side top  -fill x -pady 2 
-					create_config_cDial_title $menueFrame.sf.lf_01  {HeadTube - Length}		        FrameTubes(HeadTube/Length)         0.20  darkred
-					create_config_cDial_title $menueFrame.sf.lf_01	{HeadTube/TopTube - Angle}	    Result(Angle/HeadTube/TopTube)      0.02  darkblue
-					create_config_cDial_title $menueFrame.sf.lf_01	{HeadTube/TopTube - Offset}	    Custom(TopTube/OffsetHT)            0.20  darkred
-					create_config_cDial_title $menueFrame.sf.lf_01	{HeadTube/DownTube - Offset}	Custom(DownTube/OffsetHT)           0.20  darkred
-					create_config_cDial_title $menueFrame.sf.lf_01	{HeadSet - BottomHeight}	    Component(HeadSet/Height/Bottom)    0.20  darkred
-					create_config_cDial_title $menueFrame.sf.lf_01	{SeatTube - Extension}	        Custom(SeatTube/Extension)          0.20  darkred
-					create_config_cDial_title $menueFrame.sf.lf_01	{TopTube/SeatStay - Offset}     Custom(SeatStay/OffsetTT)           0.20  darkred
-					create_config_cDial_title $menueFrame.sf.lf_01	{TopTube - Angle}	            Custom(TopTube/Angle)               0.20  darkred
-					create_config_cDial_title $menueFrame.sf.lf_01	{DownTube/BB - Offset}	        Custom(DownTube/OffsetBB)           0.20  darkred
+				pack $menueFrame.sf.lf_01 				-side top  -fill x  -expand yes  -pady 2 
+					create_configEdit_title $menueFrame.sf.lf_01  {HeadTube - Length}		        FrameTubes(HeadTube/Length)         0.20  darkred
+					create_configEdit_title $menueFrame.sf.lf_01	{HeadTube/TopTube - Angle}	    Result(Angle/HeadTube/TopTube)      0.02  darkblue
+					create_configEdit_title $menueFrame.sf.lf_01	{HeadTube/TopTube - Offset}	    Custom(TopTube/OffsetHT)            0.20  darkred
+					create_configEdit_title $menueFrame.sf.lf_01	{HeadTube/DownTube - Offset}	Custom(DownTube/OffsetHT)           0.20  darkred
+					create_configEdit_title $menueFrame.sf.lf_01	{HeadSet - BottomHeight}	    Component(HeadSet/Height/Bottom)    0.20  darkred
+					create_configEdit_title $menueFrame.sf.lf_01	{SeatTube - Extension}	        Custom(SeatTube/Extension)          0.20  darkred
+					create_configEdit_title $menueFrame.sf.lf_01	{TopTube/SeatStay - Offset}     Custom(SeatStay/OffsetTT)           0.20  darkred
+					create_configEdit_title $menueFrame.sf.lf_01	{TopTube - Angle}	            Custom(TopTube/Angle)               0.20  darkred
+					create_configEdit_title $menueFrame.sf.lf_01	{DownTube/BB - Offset}	        Custom(DownTube/OffsetBB)           0.20  darkred
 				
                     
 				# -----------------
 				#   Frame Parts
 			ttk::labelframe	$menueFrame.sf.lf_09    	-text "Frame & Fork Parts" 
-				pack $menueFrame.sf.lf_09 				-side top  -fill x -pady 2 
+				pack $menueFrame.sf.lf_09 				-side top  -fill x  -expand yes  -pady 2 
 				
 				set compList {	Lugs/RearDropOut/File Component/Fork/Crown/File \
 								Component/Fork/DropOut/File}
@@ -339,31 +339,31 @@
 				#
 			set 	menueFrame	[ frame $w.f_menue	-relief flat -bd 1]
 			pack 	$menueFrame \
-				-fill both -side left -expand yes
+				-fill x  -side top  -expand no
 
 
 				# -----------------
 				#   build frame
 			frame	 		$menueFrame.sf -relief flat -bd 1			
-				pack $menueFrame.sf  		-side top  -fill x 
+				pack $menueFrame.sf  		-side top  -fill x  -expand yes 
 		
 
 				# -----------------
 				#   Concept - Primary
 			ttk::labelframe	$menueFrame.sf.lf_06    	-text "Check Frame Angles" 
-				pack $menueFrame.sf.lf_06 				-side top  -fill x  -pady 2
-					create_config_cDial_title $menueFrame.sf.lf_06  {HeadTube/TopTube}		    Lugs(HeadTube/TopTube/Angle/value)	            0.10    darkred
-					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(HeadTube/TopTube/Angle/plus_minus)	        0.10    
-					create_config_cDial_title $menueFrame.sf.lf_06  {HeadTube/DownTube}		    Lugs(HeadTube/DownTube/Angle/value)	            0.10    darkred
-					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(HeadTube/DownTube/Angle/plus_minus)        0.10    
-					create_config_cDial_title $menueFrame.sf.lf_06  {BottomBracket/DownTube}    Lugs(BottomBracket/DownTube/Angle/value)	    0.10    darkred
-					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(BottomBracket/DownTube/Angle/plus_minus)	0.10    
-					create_config_cDial_title $menueFrame.sf.lf_06  {BottomBracket/ChainStay}   Lugs(BottomBracket/ChainStay/Angle/value)	    0.10    darkred
-					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(BottomBracket/ChainStay/Angle/plus_minus)	0.10    
-					create_config_cDial_title $menueFrame.sf.lf_06  {RearDropOut}               Lugs(RearDropOut/Angle/value)	                0.10    darkred
-					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(RearDropOut/Angle/plus_minus)	            0.10    
-					create_config_cDial_title $menueFrame.sf.lf_06  {SeatTube/SeatStay}         Lugs(SeatTube/SeatStay/Angle/value)	            0.10    darkred
-					create_config_cDial_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(SeatTube/SeatStay/Angle/plus_minus)	    0.10    
+				pack $menueFrame.sf.lf_06 				-side top  -fill x  -expand yes  -pady 2
+					create_configEdit_title $menueFrame.sf.lf_06  {HeadTube/TopTube}		    Lugs(HeadTube/TopTube/Angle/value)	            0.10    darkred
+					create_configEdit_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(HeadTube/TopTube/Angle/plus_minus)	        0.10    
+					create_configEdit_title $menueFrame.sf.lf_06  {HeadTube/DownTube}		    Lugs(HeadTube/DownTube/Angle/value)	            0.10    darkred
+					create_configEdit_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(HeadTube/DownTube/Angle/plus_minus)        0.10    
+					create_configEdit_title $menueFrame.sf.lf_06  {BottomBracket/DownTube}    Lugs(BottomBracket/DownTube/Angle/value)	    0.10    darkred
+					create_configEdit_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(BottomBracket/DownTube/Angle/plus_minus)	0.10    
+					create_configEdit_title $menueFrame.sf.lf_06  {BottomBracket/ChainStay}   Lugs(BottomBracket/ChainStay/Angle/value)	    0.10    darkred
+					create_configEdit_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(BottomBracket/ChainStay/Angle/plus_minus)	0.10    
+					create_configEdit_title $menueFrame.sf.lf_06  {RearDropOut}               Lugs(RearDropOut/Angle/value)	                0.10    darkred
+					create_configEdit_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(RearDropOut/Angle/plus_minus)	            0.10    
+					create_configEdit_title $menueFrame.sf.lf_06  {SeatTube/SeatStay}         Lugs(SeatTube/SeatStay/Angle/value)	            0.10    darkred
+					create_configEdit_title $menueFrame.sf.lf_06	{      Tolerance +/-}       Lugs(SeatTube/SeatStay/Angle/plus_minus)	    0.10    
  			 		
                     button 	$menueFrame.sf.lf_06.bt_f  -bd 4 -relief flat	
                         pack $menueFrame.sf.lf_06.bt_f -fill both -expand yes
@@ -394,19 +394,19 @@
 				#
 			set 	menueFrame	[ frame $w.f_menue	-relief flat -bd 1]
 			pack 	$menueFrame \
-				-fill both -side left -expand yes
+				-fill both -side top -expand yes
 
 
 				# -----------------
 				#   build frame
 			frame	 		$menueFrame.sf -relief flat -bd 1			
-				pack $menueFrame.sf  		-side top  -fill x 
+				pack $menueFrame.sf  		-side top  -fill x  -expand yes
 
 			
 				# -----------------
 				#   Components
 			ttk::labelframe	$menueFrame.sf.lf_01    	-text "Components" 
-				pack $menueFrame.sf.lf_01 				-side top  -fill x -pady 2 
+				pack $menueFrame.sf.lf_01 				-side top  -fill x  -expand yes  -pady 2 
 				
 				set compList {	Component/HandleBar/File \
 								Component/Saddle/File \
@@ -502,7 +502,7 @@
 				puts "       targetCanvas:   $targetCanvas"
 			[namespace current]::::updateCanvas $targetCanvas
 			if {$mode == {select}} {
-				eval set $targetVar $compFile
+				eval set $targetVar \"$compFile\"
 			}
 	}
 
@@ -700,19 +700,19 @@
 	#-------------------------------------------------------------------------
        #  create config_line
        #
-	proc create_config_cDial_title {w title _arrayName scale {color {}}} {	
-            set cDial [create_config_cDial $w $_arrayName $scale $color]
+	proc create_configEdit_title {w title _arrayName scale {color {}}} {	
+            set cDial [create_configEdit $w $_arrayName $scale $color]
             $cDial.lb	configure -text "   $title"
     }
 	#-------------------------------------------------------------------------
        #  create config_line
        #
-	proc create_config_cDial {w _arrayName scale {color {}}} {		
+	proc create_configEdit {w _arrayName scale {color {}}} {		
 			
 			variable	rdials_list
 			variable	configValue
 			set _array [lindex [split $_arrayName (] 0]
-			set _name [lindex [split $_arrayName ()] 1]
+			set _name  [lindex [split $_arrayName ()] 1]
 
 
 			set xPath		[format "%s/%s" $_array $_name]
@@ -729,26 +729,24 @@
 					# puts "   ... \$entryVar [list [format "$%s" $entryVar]]"
 
 			set cfgFrame	[frame   [format "%s.fscl_%s" $w $rdialCount]]
-			pack    $cfgFrame
+			pack    $cfgFrame -fill x -expand yes
 			
 			if {[string length $labelString] > 33} {
 				set labelString "[string range $labelString 0 29] .."
 			}
-			label   $cfgFrame.sp	-text "   "      \
-							-width 10  \
-							-bd 1  -anchor w 
+			label   $cfgFrame.sp	-text ""      \
+							-bd 1 
 			label   $cfgFrame.lb	-text "   $labelString "      \
 							-width 30  \
 							-bd 1  -anchor w 
 
-			set myEntry [
             entry   $cfgFrame.cfg	\
 							-textvariable [format "project::%s(%s)"  $_array $_name] \
 							-width 10  \
-							-bd 1  -justify right -bg white ]
+							-bd 1  -justify right -bg white
                             # e.g.: project::Result(Length/TopTube/VirtualLength)                            
 							
-			frame	$cfgFrame.f	-relief sunken \
+			# frame	$cfgFrame.f	-relief sunken \
 							-bd 2 -padx 2 -pady 0
 
 			# 3.2.78.10 rdial::create   $cfgFrame.f.scl	\
@@ -766,25 +764,29 @@
 			}
 							
 					
-			lappend rdials_list $cfgFrame.f.scl
-                bind $cfgFrame.cfg <Key>        [list [namespace current]::change_ValueEdit [namespace current]::configValue($xPath) $scale %K]					
-				bind $cfgFrame.cfg <Enter> 		[list [namespace current]::enterEntry $cfgFrame.cfg]
-				bind $cfgFrame.cfg <Leave> 		[list [namespace current]::leaveEntry $cfgFrame.cfg]
-				bind $cfgFrame.cfg <Return> 	[list [namespace current]::leaveEntry $cfgFrame.cfg]
-                
-                bind $cfgFrame.cfg <Double-1>   [list [namespace current]::selectEntry $myEntry]  ;# 
-                
-                bind $cfgFrame.cfg <MouseWheel> [list [namespace current]::bind_MouseWheel $myEntry $scale %D]  ;# move up/down
-                bind $cfgFrame.cfg <Key-Up>     [list [namespace current]::bind_MouseWheel $myEntry $scale  1] 
-                bind $cfgFrame.cfg <Key-Down>   [list [namespace current]::bind_MouseWheel $myEntry $scale -1] 
+			lappend rdials_list [expr [llength $rdials_list] + 1]
+            
+            bind $cfgFrame.cfg <Key>        [list [namespace current]::change_ValueEdit [namespace current]::configValue($xPath) $scale %K]					
+            bind $cfgFrame.cfg <Enter> 		[list [namespace current]::enterEntry  $cfgFrame.cfg]
+            bind $cfgFrame.cfg <Leave> 		[list [namespace current]::leaveEntry  $cfgFrame.cfg]
+            bind $cfgFrame.cfg <Return> 	[list [namespace current]::leaveEntry  $cfgFrame.cfg]
+            
+            bind $cfgFrame.cfg <Double-1>   [list [namespace current]::selectEntry $cfgFrame.cfg]  ;# 
+            
+            bind $cfgFrame.cfg <MouseWheel> [list [namespace current]::bind_MouseWheel $cfgFrame.cfg $scale %D]  ;# move up/down
+            bind $cfgFrame.cfg <Key-Up>     [list [namespace current]::bind_MouseWheel $cfgFrame.cfg $scale  1] 
+            bind $cfgFrame.cfg <Key-Down>   [list [namespace current]::bind_MouseWheel $cfgFrame.cfg $scale -1] 
                 # bind $cfgFrame.cfg <Key-+>    [list [namespace current]::bind_MouseWheel $myEntry $scale  1] 
                 # bind $cfgFrame.cfg <Key-->    [list [namespace current]::bind_MouseWheel $myEntry $scale -1] 
                 
                 
-			pack      $cfgFrame.sp  $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  -side left  -fill x	
-                # pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl -side left  -fill x	
-                # pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl $cfgFrame.bt   -side left  -fill x	
-			pack      configure $cfgFrame.f  -padx 2	
+			pack      $cfgFrame.cfg  $cfgFrame.lb $cfgFrame.sp  -side right  
+            pack configure $cfgFrame.sp  -fill x	
+            pack configure $cfgFrame.cfg -padx 2	
+                    # pack      $cfgFrame.sp  $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  -side left  -fill x	
+                    # pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl -side left  -fill x	
+                    # pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl $cfgFrame.bt   -side left  -fill x	
+                    # pack      configure $cfgFrame.f  -padx 2	
             return    $cfgFrame
 	}	
 	proc bind_MouseWheel {entry scale value} {
@@ -831,8 +833,7 @@
             return
 	}
 	proc leaveEntry {entry} {
-    
-            
+             
             set targetVar   [$entry cget -textvariable]
             set _array      [lindex [split $targetVar (:] 2]
             set _name       [lindex [split $targetVar ()] 1]

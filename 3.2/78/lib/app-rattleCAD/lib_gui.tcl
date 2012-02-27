@@ -97,26 +97,24 @@
 	proc create_ButtonBar {tb_frame } {	
 			variable iconArray
 		
-			Button	$tb_frame.open		-image  $iconArray(open)		-helptext "open ..."		    -command { lib_file::openProject_xml }  
-			Button	$tb_frame.save		-image  $iconArray(save)		-helptext "save ..."		    -command { lib_file::saveProject_xml } 
-			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	-helptext "print Postscript"	-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
-			Button	$tb_frame.print_dxf	-image  $iconArray(print_dxf)	-helptext "print DXF"		    -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }  		
-			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	-helptext "print SVG"		    -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.open		-image  $iconArray(open)		    -helptext "open ..."		    -command { lib_file::openProject_xml }  
+			Button	$tb_frame.save		-image  $iconArray(save)		    -helptext "save ..."		    -command { lib_file::saveProject_xml } 
+			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	    -helptext "print Postscript"	-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_dxf	-image  $iconArray(print_dxf)	    -helptext "print DXF"		    -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	    -helptext "print SVG"		    -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
 														 
-			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		-helptext "a roadbike Template"	-command { lib_gui::load_Template  Road }  
-			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		-helptext "a offroad Template"	-command { lib_gui::load_Template  MTB  }  
+			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		    -helptext "a roadbike Template"	-command { lib_gui::load_Template  Road }  
+			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		    -helptext "a offroad Template"	-command { lib_gui::load_Template  MTB  }  
 			  
-			Button	$tb_frame.clear		-image  $iconArray(clear)		-helptext "clear Canvas..."    	-command { lib_gui::notebook_cleanCanvas} 
-			Button	$tb_frame.render	-image  $iconArray(update)		-helptext "update Canvas..."	-command { lib_gui::notebook_updateCanvas force}  
+			Button	$tb_frame.clear		-image  $iconArray(clear)		    -helptext "clear Canvas..."    	-command { lib_gui::notebook_cleanCanvas} 
+			Button	$tb_frame.render	-image  $iconArray(update)		    -helptext "update Canvas..."	-command { lib_gui::notebook_updateCanvas force}  
 			  
-			Button	$tb_frame.cfg		-image  $iconArray(cfg_panel)	-helptext "open config Panel"   -command { lib_gui::open_configPanel } 
-			
-			
 
-			Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		-helptext "scale plus"		    -command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
-			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		-helptext "scale minus"		    -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
-			Button	$tb_frame.resize	-image  $iconArray(resize)		-helptext "resize"			    -command { lib_gui::notebook_refitCanvas }  
+			Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		    -helptext "scale plus"		    -command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
+			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		    -helptext "scale minus"		    -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
+			Button	$tb_frame.resize	-image  $iconArray(resize)		    -helptext "resize"			    -command { lib_gui::notebook_refitCanvas }  
 			
+			Button	$tb_frame.cfg		-image  $iconArray(config_panel)    -helptext "open config Panel"   -command { lib_gui::open_configPanel } 
 			# Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
 			  
 			label   $tb_frame.sp0      -text   " "
@@ -135,13 +133,14 @@
 			pack    $tb_frame.open       $tb_frame.save         $tb_frame.sp0  \
 					$tb_frame.print_ps   $tb_frame.print_dxf    $tb_frame.print_svg     $tb_frame.sp1  \
 					$tb_frame.set_rd     $tb_frame.set_mb       $tb_frame.sp2  \
-					$tb_frame.clear      $tb_frame.render       $tb_frame.sp3  $tb_frame.cfg\
+					$tb_frame.clear      $tb_frame.render       $tb_frame.sp3  \
 				-side left -fill y
 					   
                 # pack    $tb_frame.exit   $tb_frame.sp6  \
 				#	    $tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
                 #
-			pack    $tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
+			pack    $tb_frame.resize    $tb_frame.scale_p   $tb_frame.scale_m   \
+                    $tb_frame.sp6       $tb_frame.cfg       \
 				-side right 
 	}
 
@@ -692,6 +691,7 @@
 					radiobutton $f_Tolerance.s100 -text "1:1  " 	-value 1.00 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
 				pack $f_Tolerance.s020 \
 					 $f_Tolerance.s025 \
+					 $f_Tolerance.s033 \
 					 $f_Tolerance.s040 \
 					 $f_Tolerance.s050 \
 					 $f_Tolerance.s100

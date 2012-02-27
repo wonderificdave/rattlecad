@@ -12,22 +12,23 @@
 			<canvas width="900" height="650"/>
 		</geometry>
 		<images directory="image">
-			<image name="open"		src="open.gif" />
-			<image name="save"		src="save.gif" />
-			<image name="print_ps"	src="print_ps.gif" />
-			<image name="print_svg"	src="print_svg.gif" />
-			<image name="print_dxf"	src="print_dxf.gif" />
-			<image name="clear"		src="clean.gif" />
-			<image name="update"	src="update.gif" />
-			<image name="reset_r"	src="reset_road.gif" />
-			<image name="reset_o"	src="reset_offroad.gif" />
-			<image name="scale_p"	src="scale_plus.gif" />
-			<image name="scale_m"	src="scale_minus.gif" />
-			<image name="resize"	src="resize.gif" />
-			<image name="exit"     	src="exit.gif" />
-			<image name="cfg_panel"	src="cfg_panel.gif" />
-			<image name="iconClose" src="iconClose.gif" />
-			<image name="confirm" 	src="confirm.gif" />
+			<image name="open"			src="open.gif" />
+			<image name="save"			src="save.gif" />
+			<image name="print_ps"		src="print_ps.gif" />
+			<image name="print_svg"		src="print_svg.gif" />
+			<image name="print_dxf"		src="print_dxf.gif" />
+			<image name="clear"			src="clean.gif" />
+			<image name="update"		src="update.gif" />
+			<image name="reset_r"		src="reset_road.gif" />
+			<image name="reset_o"		src="reset_offroad.gif" />
+			<image name="scale_p"		src="scale_plus.gif" />
+			<image name="scale_m"		src="scale_minus.gif" />
+			<image name="resize"		src="resize.gif" />
+			<image name="exit"     		src="exit.gif" />
+			<image name="cfg_panel"		src="cfg_panel.gif" />
+			<image name="config_panel"  src="config_panel.gif" />
+			<image name="iconClose" 	src="iconClose.gif" />
+			<image name="confirm" 		src="confirm.gif" />
 		</images>
 	</lib_gui>	
 	

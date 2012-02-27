@@ -772,10 +772,14 @@
                             #$cv_Name create circle  [lindex $SeatTube(vct_Top) 1] 	    -radius 15  -outline blue   -width 1		-tags __CenterLine__                 
                                                                                     
                                                                 
-                                set help_fk				[ vectormath::addVector   	$Steerer(Fork) 	[ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
-                                set help_rw_rim			[ vectormath::rotateLine 	$RearWheel(Position) 		[expr 0.5 * $RearWheel(RimDiameter) ] 70 ]
-                                set help_tt_c1			[ vectormath::rotateLine 	$RearWheel(Position) 		[expr 0.5 * $RearWheel(RimDiameter) ] 70 ]
-                        
+                                set DownTube(polygon)   [ frame_geometry::object_values DownTube polygon		$BB_Position  ]
+ 
+                                set help_fk             [ vectormath::addVector   	$Steerer(Fork) 	[ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
+                                set help_rw_rim         [ vectormath::rotateLine 	$RearWheel(Position) 		[expr 0.5 * $RearWheel(RimDiameter) ] 70 ]
+                                set help_tt_c1          [ vectormath::rotateLine 	$RearWheel(Position) 		[expr 0.5 * $RearWheel(RimDiameter) ] 70 ]
+                                set help_st_dt          [ frame_geometry::coords_get_xy $DownTube(polygon) 15 ]
+                                # set pt_49					[ frame_geometry::coords_get_xy $DownTube(polygon) 15 ]
+                       
                                 # -- Dimensions ------------------------
                                 #
                             set _dim_CS_Length 			[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$RearWheel(Position)  $BottomBracket(Position)] \
@@ -923,9 +927,6 @@
                             
                             
                                 # -- Bottle Cage Mount ------------------
-                            set DownTube(polygon) 		[ frame_geometry::object_values DownTube polygon		$BB_Position  ]
-                            set pt_49					[ frame_geometry::coords_get_xy $DownTube(polygon) 15 ]
-                                            
                             if {$Rendering(BottleCage_ST) != {off}} {
                                             set st_direction			[ frame_geometry::object_values SeatTube 	direction ]
                                             set pt_01 					[ frame_geometry::object_values	SeatTube/BottleCage/Offset	position	$BB_Position]
@@ -938,7 +939,7 @@
                                             set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_02  $pt_03 ] \
                                                                                                     aligned		[expr  90 * $stageScale]	[expr -115 * $stageScale] \
                                                                                                     gray50 ]										
-                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList   $pt_49 	$pt_02 ] \
+                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList   $help_st_dt 	$pt_02 ] \
                                                                                                     aligned		[expr  35 * $stageScale]	[expr -105 * $stageScale] \
                                                                                                     gray50 ]										
                             }
@@ -957,7 +958,7 @@
                                             set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_02  $pt_03 ] \
                                                                                                     aligned 	[expr -1.0 * (180 + $addDist) * $stageScale]	[expr   15 * $stageScale] \
                                                                                                     gray50 ] 																
-                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_49 	$pt_02 ] \
+                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$help_st_dt 	$pt_02 ] \
                                                                                                     aligned 	[expr -1.0 * (35 + $addDist) * $stageScale]	    [expr -115 * $stageScale] \
                                                                                                     gray50 ] 																
                             }
@@ -991,6 +992,11 @@
                                 set pt_01				[ frame_geometry::coords_get_xy $DownTube(polygon)  3 ]
                             set _dim_DownTube_CutLength [ $cv_Name dimension  length  	[ project::flatten_nestedList [list $BB_Position $pt_01] ] \
                                                                                         aligned    [expr  70 * $stageScale] [expr 10 * $stageScale] \
+                                                                                        darkviolet ]
+                                set SeatTube(polygon) 	[ frame_geometry::object_values SeatTube polygon $BB_Position  ]
+                                set pt_01				[ frame_geometry::coords_get_xy $SeatTube(polygon)  3 ]
+                            set _dim_SeatTube_CutLength [ $cv_Name dimension  length  	[ project::flatten_nestedList [list $help_st_dt $pt_01] ] \
+                                                                                        aligned    [expr   90 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
 
                                                                                         
