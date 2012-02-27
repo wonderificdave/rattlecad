@@ -338,6 +338,13 @@ exec wish "$0" "$@"
 
 		# -- keep on top --------------
 	wm deiconify .
+    
+        # -- secure binding -----------
+    proc getFocusIn {} {
+        puts "\n\n       ... getFocusIn .\n\n"
+        project::add_tracing
+    }
+    bind . <FocusIn> [list getFocusIn]
 
 
 

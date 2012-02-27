@@ -731,30 +731,34 @@
 			set cfgFrame	[frame   [format "%s.fscl_%s" $w $rdialCount]]
 			pack    $cfgFrame
 			
-			if {[string length $labelString] > 29} {
-				set labelString "[string range $labelString 0 25] .."
+			if {[string length $labelString] > 33} {
+				set labelString "[string range $labelString 0 29] .."
 			}
-			label   $cfgFrame.lb	-text "   $labelString"      \
-							-width 26  \
+			label   $cfgFrame.sp	-text "   "      \
+							-width 10  \
+							-bd 1  -anchor w 
+			label   $cfgFrame.lb	-text "   $labelString "      \
+							-width 30  \
 							-bd 1  -anchor w 
 
-			entry   $cfgFrame.cfg	\
+			set myEntry [
+            entry   $cfgFrame.cfg	\
 							-textvariable [format "project::%s(%s)"  $_array $_name] \
-							-width  7  \
-							-bd 1  -justify right -bg white 
+							-width 10  \
+							-bd 1  -justify right -bg white ]
                             # e.g.: project::Result(Length/TopTube/VirtualLength)                            
 							
 			frame	$cfgFrame.f	-relief sunken \
 							-bd 2 -padx 2 -pady 0
 
-			rdial::create   $cfgFrame.f.scl	\
+			# 3.2.78.10 rdial::create   $cfgFrame.f.scl	\
 							-value		$configValue($xPath) \
 							-scale		$scale \
 							-step		12 \
 							-height		11 \
 							-width		60 \
 							-orient		horizontal \
-							-callback	[list  [namespace current]::callback_cDial	  [namespace current]::configValue($xPath)  [format "%s::%s(%s)" project $_array $_name] ]
+							-callback	[list  [namespace current]::callback_cDial	  [namespace current]::configValue($xPath)  $myEntry ]
 							
 			if {$color != {}} {
 				$cfgFrame.lb  configure -fg $color 
@@ -765,32 +769,106 @@
 			lappend rdials_list $cfgFrame.f.scl
                 bind $cfgFrame.cfg <Key>        [list [namespace current]::change_ValueEdit [namespace current]::configValue($xPath) $scale %K]					
 				bind $cfgFrame.cfg <Enter> 		[list [namespace current]::enterEntry $cfgFrame.cfg]
-				bind $cfgFrame.cfg <Leave> 		[list [namespace current]::leaveEntry $cfgFrame.cfg [format "%s::%s(%s)" project $_array $_name]]
-				bind $cfgFrame.cfg <Return> 	[list [namespace current]::leaveEntry $cfgFrame.cfg [format "%s::%s(%s)" project $_array $_name]]
+				bind $cfgFrame.cfg <Leave> 		[list [namespace current]::leaveEntry $cfgFrame.cfg]
+				bind $cfgFrame.cfg <Return> 	[list [namespace current]::leaveEntry $cfgFrame.cfg]
                 
-                bind $cfgFrame.cfg <MouseWheel> [list [namespace current]::bind_MouseWheel [format "%s::%s(%s)" project $_array $_name] $scale %D]  ;# move up/down
-			pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl -side left  -fill x	
-			# pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl $cfgFrame.bt   -side left  -fill x	
+                bind $cfgFrame.cfg <Double-1>   [list [namespace current]::selectEntry $myEntry]  ;# 
+                
+                bind $cfgFrame.cfg <MouseWheel> [list [namespace current]::bind_MouseWheel $myEntry $scale %D]  ;# move up/down
+                bind $cfgFrame.cfg <Key-Up>     [list [namespace current]::bind_MouseWheel $myEntry $scale  1] 
+                bind $cfgFrame.cfg <Key-Down>   [list [namespace current]::bind_MouseWheel $myEntry $scale -1] 
+                # bind $cfgFrame.cfg <Key-+>    [list [namespace current]::bind_MouseWheel $myEntry $scale  1] 
+                # bind $cfgFrame.cfg <Key-->    [list [namespace current]::bind_MouseWheel $myEntry $scale -1] 
+                
+                
+			pack      $cfgFrame.sp  $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  -side left  -fill x	
+                # pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl -side left  -fill x	
+                # pack      $cfgFrame.lb  $cfgFrame.cfg  $cfgFrame.f  $cfgFrame.f.scl $cfgFrame.bt   -side left  -fill x	
 			pack      configure $cfgFrame.f  -padx 2	
             return    $cfgFrame
 	}	
-	proc bind_MouseWheel {var scale value} {
+	proc bind_MouseWheel {entry scale value} {
 			#variable canvasUpdate
 			#variable noteBook_top
 
-				puts "\n=================="
-				puts "    bind_MouseWheel"
-				puts "       var    $var"
-				puts "       scale  $scale"
-				puts "       value  $value"
+				#puts "\n=================="
+				#puts "    bind_MouseWheel"
+				#puts "       var    $var"
+				#puts "       scale  $scale"
+				#puts "       value  $value"
                 
-                if {$value < 0} {set scale [expr -1.0*$scale]}
-                set newValue  [expr \$$var + $scale] 
-                set $var [format "%.2f" $newValue]
-                
+            project::remove_tracing
+            
+            set targetVar   [$entry cget -textvariable]
+            eval set oldValue   \$$targetVar
+                # puts "   -> $targetVar"
+                # puts "   -> $oldValue"
+            if {$value < 0} {set scale [expr -1.0*$scale]}
+            set newValue  [expr $oldValue + $scale]
+            set newValue [format "%.2f" $newValue] 
+                # puts "  -> newValue $newValue"
+            set $targetVar $newValue
+                # eval puts \"  ->    \$$targetVar\"
+            
             return     
 	}
-	proc callback_cDial {{entryVar {}}  targetVar {value {0}} {drag_Event {}} } {
+    proc selectEntry {entry} {
+    
+            # puts "   ... selectEntry"
+            project::remove_tracing 
+            
+            return
+	}
+    proc enterEntry {entry} {
+    
+            project::remove_tracing
+            
+			set entryVar [$entry cget -text]
+			eval set currentValue 	[expr 1.0 * \$$entryVar]
+			set value [format "%.2f" $currentValue]
+            set [namespace current]::configValue(entry) $value
+            
+            return
+	}
+	proc leaveEntry {entry} {
+    
+            
+            set targetVar   [$entry cget -textvariable]
+            set _array      [lindex [split $targetVar (:] 2]
+            set _name       [lindex [split $targetVar ()] 1]
+            
+            set entryVar [$entry cget -text]
+            eval set newValue 	[expr 1.0 * \$$entryVar]
+            eval set oldValue	$[namespace current]::configValue(entry)
+                    # puts "     \$oldValue $oldValue"
+                    # puts "     \$newValue $newValue"
+                    # puts "[$entry cget -text]"
+                    
+            if {$newValue == $oldValue} {
+                return
+            }
+            
+            project::add_tracing
+           
+            puts "\n=================="
+            puts "    leaveEntry"
+            puts "       entry        $entry"
+            puts "       targetVar    $targetVar"
+
+            if {$_array eq {Result}} {
+                eval set $targetVar $oldValue
+                 frame_geometry::set_temp_Parameters $_array $_name $newValue
+                return
+            }
+            
+            eval set $targetVar $newValue
+            
+            project::remove_tracing
+            
+            return
+ 	}
+
+	proc rem_callback_cDial {{entryVar {}}  entry  {value {0}} {drag_Event {}} } {
 			# puts "\n entryVar:    $entryVar"
 			# puts "\n target_Var:  $target_Var"
 			# puts "\n value:       $value"
@@ -798,46 +876,21 @@
 			
 			set value [format "%.2f" $value]
                 # puts "\n value:       $value"
-			if {$entryVar ne ""} {
-					# reformat value
-				eval set $entryVar 		$value
+			if {$entryVar ne ""} {					
+				eval set $entryVar 		$value;  # reformat value
 			}
 			if {$drag_Event == {release}} {
                     # -- exception for changing Result Values
                     #       e.g.: targetVar     project::Result(Length/TopTube/VirtualLength)                
-                set _array [lindex [split $targetVar (:] 2]
-                set _name  [lindex [split $targetVar ()] 1]
+                set targetVar   [$entry cget -textvariable]
+                set _array      [lindex [split $targetVar (:] 2]
+                set _name       [lindex [split $targetVar ()] 1]
                 if {$_array eq {Result}} {
                     frame_geometry::set_temp_Parameters $_array $_name $value
                 } else {
                     eval set $targetVar 	$value
                 }
 			}
- 	}
-    proc enterEntry {entry} {
-			set entryVar [$entry cget -text]
-			eval set currentValue 	[expr 1.0 * \$$entryVar]
-			set value [format "%.2f" $currentValue]
-			set [namespace current]::configValue(entry) $value
-	}
-	proc leaveEntry {entry targetVar} {
-				# puts "[$entry cget -text]"
-			set entryVar [$entry cget -text]
-			eval set currentValue 	[expr 1.0 * \$$entryVar]
-			eval set oldValue	$[namespace current]::configValue(entry)
-				# puts "     \$oldValue $oldValue"
-
-			if {$currentValue == $oldValue} {
-				return
-			}
-			
-				# puts "   .. super is anders: $currentValue != $oldValue"
-			
-			set value [format "%.2f" $currentValue]
-			if {$entryVar ne ""} {
-				eval set $entryVar 	$value	; # reformat value
-			}
-			eval set $targetVar 	$value
  	}
 	
 	

@@ -944,7 +944,7 @@
 			set currentTab [$noteBook_top select]
 			set varName    [notebook_getVarName $currentTab]
 
-            $varName moveCanvas $x $y      
+            catch {$varName moveCanvas $x $y}     
 	}
 	#-------------------------------------------------------------------------
        #  move canvas content
