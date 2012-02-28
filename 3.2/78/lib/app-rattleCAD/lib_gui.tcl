@@ -915,9 +915,9 @@
             bind . <Key-Left>   {lib_gui::move_Canvas   50   0 }
             bind . <Key-Right>  {lib_gui::move_Canvas  -50   0 }
             
-            bind . <MouseWheel>         {lib_gui::bind_MouseWheel standard %D}  ;# move up/down
-            bind . <Control-MouseWheel> {lib_gui::bind_MouseWheel control  %D}  ;# move left/right
-            bind . <Shift-MouseWheel>   {lib_gui::bind_MouseWheel shift    %D}  ;# scale
+            bind . <MouseWheel>         {lib_gui::bind_MouseWheel updown    %D}  ;# move up/down
+            bind . <Shift-MouseWheel>   {lib_gui::bind_MouseWheel leftright %D}  ;# move left/right
+            bind . <Control-MouseWheel> {lib_gui::bind_MouseWheel scale     %D}  ;# scale
             
             # bind . <Key-Tab>    {lib_gui::notebook_nextTab}
             # bind . <Key-Tab>    {tk_messageBox -message "Keyboard Event: <Key-Tab>"}
@@ -959,18 +959,16 @@
 				puts "       type   $type"
 				puts "       value  $value"
                 
-                
-                
             switch -exact $type {
-                standard {  if {$value > 0} {set scale 1.0} else {set scale -1.0}
+                updown { if {$value > 0} {set scale 1.0} else {set scale -1.0}
                             lib_gui::move_Canvas    0  [expr $scale * 40] 
-                         }
-                control {   if {$value > 0} {set scale 1.0} else {set scale -1.0}
+                        }
+                leftright {   if {$value > 0} {set scale 1.0} else {set scale -1.0}
                             lib_gui::move_Canvas    [expr $scale * 40]  0 
-                         }
-                shift {     if {$value > 0} {set scale 1.1} else {set scale 0.9}
+                        }
+                scale {  if {$value > 0} {set scale 1.1} else {set scale 0.9}
                             lib_gui::notebook_scaleCanvas $scale
-                         }
+                        }
                 default  {}
             }
                 

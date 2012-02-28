@@ -167,7 +167,7 @@ Mouse and Keyboard bindings
     <Key-Right> ..........  move view  <right>
     
     <MouseWheel> .........  move view  <up>/<down>
-    <Ctrl-MouseWheel> ....  move view  <left>/<right>
-    <Shift-MouseWheel> ...  scale view  <minus>/<plus>
+    <Ctrl-MouseWheel> ....  scale view  <minus>/<plus>
+    <Shift-MouseWheel> ...  move view  <left>/<right>
 
     
