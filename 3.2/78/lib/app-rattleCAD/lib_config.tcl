@@ -78,6 +78,7 @@
 				}
 				wm deiconify 	$w
 				wm deiconify	$main
+                focus           $w
 				return
 			}
 					
@@ -114,7 +115,9 @@
 				#
 			wm deiconify	$main
 			
-			#$nb_Config select 1
+			focus           $w
+            
+            #$nb_Config select 1
 			
 	}
 

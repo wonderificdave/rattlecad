@@ -1766,7 +1766,8 @@
 				puts "       _arrayNameList:  $_arrayNameList"
 				puts "       title:           $title"
 			
-			
+			project::remove_tracing
+            
 			# --- local procedures ---
 				proc change_ValueEdit {textVar direction} {
 						#
@@ -1785,6 +1786,19 @@
                             set ::$textVar [format "%.2f" $newValue] 
  				}
 				
+				proc bind_MouseWheel {textVar value} {
+                            set currentValue [set ::$textVar]
+                            set updateValue 1.0
+                            if {$currentValue < 20} { set updateValue 0.1 }
+                            if {$value > 0} {
+                                set scale 1.0
+                            } else {
+                                set scale -1.0
+                            }
+                            set newValue [expr {$currentValue + $scale * $updateValue}]                          
+                            set ::$textVar [format "%.2f" $newValue] 
+ 				}
+				
 				proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {					
 
 						eval set currentValue $[namespace current]::_updateValue($key)
@@ -1795,14 +1809,13 @@
 							set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key) -justify right -relief sunken -width 10 -bd 1]
 							$cvEntry configure -command \
 								"[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
-							set	cvUpdate 	[button $cvContentFrame.update_${index} -image $lib_gui::iconArray(confirm)]
-							$cvUpdate configure -command \
-								"[namespace current]::updateConfig $cv_Name $key $cvEntry"
 							if {$index == {oneLine}} {
 								set	cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
-								grid	$cvLabel $cvEntry $cvUpdate $cvClose -sticky news
+								grid	$cvLabel $cvEntry $cvClose -sticky news
+                                    # grid	$cvLabel $cvEntry $cvUpdate $cvClose -sticky news
 							} else {	
-								grid	$cvLabel $cvEntry $cvUpdate -sticky news
+								grid	$cvLabel $cvEntry -sticky news
+                                    # grid	$cvLabel $cvEntry $cvUpdate -sticky news
 							}
 							grid configure $cvLabel  -padx 3 -sticky nws
 							grid configure $cvEntry  -padx 2
@@ -1814,9 +1827,12 @@
 							}
 						#
 						# --- define bindings ---
-							bind $cvLabel	<ButtonPress-1> 	[list [namespace current]::dragStart 	%X %Y]
-							bind $cvLabel	<B1-Motion> 		[list [namespace current]::drag 		%X %Y $cv $cvEdit]			
-							bind $cvEntry	<Return> 			[list [namespace current]::updateConfig $cv_Name $key $cvEntry]			
+							bind $cvLabel	<ButtonPress-1> 	    [list [namespace current]::dragStart 	    %X %Y]
+							bind $cvLabel	<B1-Motion> 		    [list [namespace current]::drag 		    %X %Y $cv $cvEdit]			
+							bind $cvEntry	<MouseWheel> 			[list [namespace current]::bind_MouseWheel  [namespace current]::_updateValue($key)  %D]
+							bind $cvEntry	<Return> 			    [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]			
+							bind $cvEntry	<Leave> 			    [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]			
+							bind $cvEntry	<Double-ButtonPress-1>  [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]			
 				}
 							
 				proc create_ListEdit {type cv cv_Name cvEdit cvContentFrame index labelText key} {					
@@ -1881,7 +1897,7 @@
 						}
 						#
 						# --- create cvLabel, cvEntry, Select ---
-							set cvFrame		[ frame 		$cvContentFrame.frame_${index} ]
+                            set cvFrame		[ frame 		$cvContentFrame.frame_${index} ]
 							set	  cvLabel	[ label  		$cvFrame.label   -text "${labelText} : "]
 							set	  cvCBox	[ ttk::combobox $cvFrame.cb \
 													-textvariable [namespace current]::_updateValue($key) \
@@ -1894,10 +1910,7 @@
 									$cvCBox configure -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::_updateValue($key)]
 
 							if {$index == {oneLine}} {
-									set	cvUpdat [button $cvContentFrame.update -image $lib_gui::iconArray(confirm)]
-									$cvUpdat configure -command \
-										"[namespace current]::updateConfig $cv_Name $key"										
-									set	cvClose [ button 		$cvFrame.close   -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+									set	cvClose [ button 		$cvFrame.close   -image $lib_gui::iconArray(iconClose) -command [list [namespace current]::closeEdit $cv $cvEdit]]
 									grid	$cvLabel $cvCBox $cvClose 	-sticky news
 									grid 	$cvFrame  					-sticky news 	-padx 1 
 							} else {																
@@ -1911,20 +1924,24 @@
 							bind $cvCBox 	<<ComboboxSelected>> 		[list [namespace current]::check_listBoxValue	%W $cv_Name $key]
 							bind $cvLabel	<ButtonPress-1> 			[list [namespace current]::dragStart 	%X %Y]
 							bind $cvLabel	<B1-Motion> 				[list [namespace current]::drag 		%X %Y $cv $cvEdit]			
+							#bind $cvLabel	<B1-Motion> 				[list [namespace current]::drag 		%X %Y $cv __cvEdit__]			
 				}
 				
 
 			
 			set x_offset 20
 			set domProject $::APPL_Env(root_ProjectDOM)	
-			set cv 		[ $cv_Name getNodeAttr Canvas path]
-			
-			if { [catch { set cvEdit [frame $cv.f_edit -bd 2 -relief raised] } errorID ] } {
+			set cv 		[ $cv_Name getNodeAttr Canvas path]		
+            if { [catch { set cvEdit [frame $cv.f_edit -bd 2 -relief raised] } errorID ] } {
 					closeEdit $cv $cv.f_edit
 					set cvEdit [frame $cv.f_edit -bd 2 -relief raised]
 			}
 			# --- create Window ---
+            $cv_Name addtag __cvEdit__ withtag $cvEdit
 			$cv create window [expr $x + $x_offset] $y  -window $cvEdit  -anchor w -tags $cvEdit
+            $cv_Name addtag __cvEdit__ withtag $cvEdit
+            
+			# $cv create window [expr $x + $x_offset] $y  -window $cvEdit  -anchor w -tags __cvEdit__
 
 			# --- create WindowFrames ---
 			set cvTitleFrame	[frame $cvEdit.f_title -bg gray60  ]
@@ -2087,16 +2104,30 @@
 	proc updateConfig {cv_Name xpath {cvEntry {}}} {
 
 			variable _updateValue
+            
+            set _array 	[lindex [split $xpath /] 0]
+			set _name 	[string range $xpath [string length $_array/] end]
+
 			
-			# --- habdele xpath values --- 
+			# --- handele xpath values --- 
 			switch -glob $xpath {
 				{_update_} {}
 				default {
+						set oldValue [project::getValue [format "%s(%s)" $_array $_name] value]
+                        if {$_updateValue($xpath) == $oldValue} {
+                            return
+                        }                        
+                            # puts "003  -> update"
+                            # puts "001  ->$oldValue"
+                            # puts "001  ->$_updateValue($xpath)"
+                            
 						puts ""
 						puts "   -------------------------------"
 						puts "    updateConfig"
 						puts "       updateConfig:    $_updateValue($xpath)"
-						set_projectValue $xpath $_updateValue($xpath)				
+                        project::add_tracing
+                        set_projectValue $xpath $_updateValue($xpath)				
+						project::remove_tracing
 					}			
 			}
 					

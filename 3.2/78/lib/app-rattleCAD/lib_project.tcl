@@ -58,6 +58,7 @@
 	}
 	#-------------------------------------------------------------------------
 	proc add_tracing {} {
+                # puts "\n   project::add_tracing\n"
 			trace add     variable [namespace current]::Personal 	write [namespace current]::trace_ProjectConfig
 			trace add     variable [namespace current]::Custom   	write [namespace current]::trace_ProjectConfig
 			trace add     variable [namespace current]::Lugs        write [namespace current]::trace_ProjectConfig
@@ -66,7 +67,8 @@
 			trace add     variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
 	}
 	proc remove_tracing {} {
-			trace remove  variable [namespace current]::Personal 	write [namespace current]::trace_ProjectConfig
+                # puts "\n   project::remove_tracing\n"
+            trace remove  variable [namespace current]::Personal 	write [namespace current]::trace_ProjectConfig
 			trace remove  variable [namespace current]::Custom   	write [namespace current]::trace_ProjectConfig
 			trace remove  variable [namespace current]::Lugs       	write [namespace current]::trace_ProjectConfig
 			trace remove  variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig

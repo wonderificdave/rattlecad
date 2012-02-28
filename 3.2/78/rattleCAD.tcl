@@ -222,6 +222,12 @@ exec wish "$0" "$@"
     # -- set standard font ------------
 	option add *font $APPL_Config(GUI_Font)
 	
+    lib_gui::binding_copyClass Spinbox mySpinbox
+    lib_gui::binding_removeOnly     mySpinbox [list <Clear>]
+    # lib_gui::binding_reportBindings Text
+    lib_gui::binding_reportBindings mySpinbox
+    
+
   
   ###########################################################################
   #
@@ -339,12 +345,4 @@ exec wish "$0" "$@"
 		# -- keep on top --------------
 	wm deiconify .
     
-        # -- secure binding -----------
-    proc getFocusIn {} {
-        puts "\n\n       ... getFocusIn .\n\n"
-        project::add_tracing
-    }
-    bind . <FocusIn> [list getFocusIn]
-
-
 

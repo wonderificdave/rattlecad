@@ -53,6 +53,7 @@
 	variable	stageScale
 
 	variable 	external_canvasCAD  ;   array	set external_canvasCAD {}
+     
 
 
 							
@@ -954,6 +955,18 @@
 			variable canvasUpdate
 			variable noteBook_top
 
+                # frame_geometry::createEdit
+                #    creates window $cv.f_edit
+                #    catch <MouseWheel> for $cv.f_edit
+            set currentTab [$noteBook_top select]
+            set varName    [notebook_getVarName $currentTab]
+            set cv 		[ $varName getNodeAttr Canvas path]
+            if {[llength [ $cv gettags  __cvEdit__]] > 0 } {
+				# puts "\n=================="
+				# puts "    bind_MouseWheel: catched"
+                return
+            }
+            
 				puts "\n=================="
 				puts "    bind_MouseWheel"
 				puts "       type   $type"
@@ -975,6 +988,48 @@
             return     
 	}
 
+ 	#-------------------------------------------------------------------------
+       #  modify standard widget bindings
+       #
+       #       http://wiki.tcl.tk/2944
+    proc binding_copyClass {class newClass} {
+        set bindingList [bind $class]
+        #puts $bindingList
 
+        foreach binding $bindingList {
+          bind $newClass $binding [bind $class $binding]
+        }
+    }
+    proc binding_removeAllBut {class bindList} {
+        foreach binding $bindList {
+          array set tmprab "<${binding}> 0"
+        }
+
+        foreach binding [bind $class] {
+          if {[info exists tmprab($binding)]} {
+            continue
+          }
+          bind $class $binding {}
+        }
+    }
+    proc binding_removeOnly {class bindList} {
+        foreach binding $bindList {
+          array set tmprab "<${binding}> 0"
+        }
+
+        foreach binding [bind $class] {
+          if {[info exists tmprab($binding)]} {
+            bind $class $binding {}
+          }
+          continue
+          # bind $class $binding {}
+        }
+    }
+    proc binding_reportBindings {class} {
+        puts "    reportBindings: $class"
+        foreach binding [bind $class] {
+            puts "           $binding"
+        }
+    }	
 }
 
