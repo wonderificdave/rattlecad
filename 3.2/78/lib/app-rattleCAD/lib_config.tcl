@@ -231,10 +231,10 @@
 			ttk::labelframe	$menueFrame.sf.lf_04    	-text "Wheels" 
 				pack $menueFrame.sf.lf_04 				-side top  -fill x  -pady 2
 					
-					create_config_cBox	$menueFrame.sf.lf_04 		Component(Wheel/Rear/RimDiameter) 	$::APPL_Env(list_Rims)	
-					create_configEdit $menueFrame.sf.lf_04		Component(Wheel/Rear/TyreHeight) 	0.20 
-					create_config_cBox	$menueFrame.sf.lf_04 		Component(Wheel/Front/RimDiameter)  $::APPL_Env(list_Rims)		
-					create_configEdit $menueFrame.sf.lf_04		Component(Wheel/Front/TyreHeight) 	0.20 
+					create_config_cBox	$menueFrame.sf.lf_04    Component(Wheel/Rear/RimDiameter) 	$::APPL_Env(list_Rims)	
+					create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Rear/TyreHeight) 	0.20 
+					create_config_cBox	$menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)  $::APPL_Env(list_Rims)		
+					create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Front/TyreHeight) 	0.20 
 					
 		
 				# -----------------
@@ -972,7 +972,8 @@
 								# puts "   ... change value"
 							set configValue($xPath) $oldValue
 						} else {
-								# puts "   ... $configValue($xPath)"
+							project::add_tracing
+                        	# puts "   ... $configValue($xPath)"
 								# puts "      >[split $configValue($xPath) ;]<"
 								# puts "      >[lindex [split $configValue($xPath) ;] 0]<"
 							set value [string trim [lindex [split $configValue($xPath) ;] 0]]
@@ -981,6 +982,7 @@
 								# puts "   ... $configValue($xPath)"
 								# puts "   ... $targetVar"
 							eval set $targetVar $value
+                            project::remove_tracing
 						}	
 					}
 		}
