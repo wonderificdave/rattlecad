@@ -114,8 +114,8 @@
 			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		    -helptext "scale minus"		    -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
 			Button	$tb_frame.resize	-image  $iconArray(resize)		    -helptext "resize"			    -command { lib_gui::notebook_refitCanvas }  
 			
-			Button	$tb_frame.cfg		-image  $iconArray(config_panel)    -helptext "open config Panel"   -command { lib_gui::open_configPanel } 
-			# Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
+			Button	$tb_frame.cfg		-image  $iconArray(cfg_panel)    -helptext "open config Panel"   -command { lib_gui::open_configPanel } 
+			Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
 			  
 			label   $tb_frame.sp0      -text   " "
 			label   $tb_frame.sp1      -text   " "
@@ -139,7 +139,8 @@
                 # pack    $tb_frame.exit   $tb_frame.sp6  \
 				#	    $tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
                 #
-			pack    $tb_frame.resize    $tb_frame.scale_p   $tb_frame.scale_m   \
+			pack    $tb_frame.exit      $tb_frame.sp5       \
+                    $tb_frame.resize    $tb_frame.scale_p   $tb_frame.scale_m   \
                     $tb_frame.sp6       $tb_frame.cfg       \
 				-side right 
 	}
