@@ -504,8 +504,10 @@
 				puts "       targetVar:      $targetVar"
 				puts "       targetCanvas:   $targetCanvas"
 			[namespace current]::::updateCanvas $targetCanvas
-			if {$mode == {select}} {
-				eval set $targetVar \"$compFile\"
+			if {$mode == {select}} {		
+                project::add_tracing
+                eval set $targetVar \"$compFile\"
+                project::remove_tracing
 			}
 	}
 
@@ -540,14 +542,14 @@
                             }
                     cv_Components {
                                 # puts "            ... $compCanvas"
-			$compCanvas clean_StageContent
-				set __my_Component__		[ $compCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
-				$compCanvas fit2Stage $__my_Component__
-				$compCanvas refitStage
-			}
+                                $compCanvas clean_StageContent
+                                set __my_Component__		[ $compCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
+                                $compCanvas fit2Stage $__my_Component__
+                                $compCanvas refitStage
+                            }
                     default {
-                            puts " ... do hots wos: $targetCanvas"
-	}
+                                puts " ... do hots wos: $targetCanvas"
+                            }
                 }
 			}
 	}

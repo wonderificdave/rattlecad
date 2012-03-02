@@ -1251,15 +1251,16 @@
 					project::setValue Result(Tubes/SeatTube/BottleCage/Base)			position	$SeatTube(BottleCage_Base) 				
 					project::setValue Result(Tubes/SeatTube/BottleCage/Offset)			position	$SeatTube(BottleCage_Offset)				
                                                         
-                            set pt_00 	[ vectormath::addVector {0 0}	$DownTube(Direction) 	$BottleCage(DownTube)				]
-                            set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr -0.5 * $DownTube(DiameterBB)] ]
+                            set pt_00 	[ vectormath::addVector $DownTube(BottomBracket)	$DownTube(Direction) 	$BottleCage(DownTube)				]
+                            set vct_01	[ vectormath::parallel	$DownTube(BottomBracket)	$pt_00 					[expr -0.5 * $DownTube(DiameterBB)] ]
                             set DownTube(BottleCage_Base) 			[ lindex $vct_01 1 ]
                             set DownTube(BottleCage_Offset)			[ vectormath::addVector		$DownTube(BottleCage_Base)			$DownTube(Direction) 64.0 ]
 					project::setValue Result(Tubes/DownTube/BottleCage/Base)			position	$DownTube(BottleCage_Base)
 					project::setValue Result(Tubes/DownTube/BottleCage/Offset)			position	$DownTube(BottleCage_Offset)				
 					
-                            set pt_00 	[ vectormath::addVector {0 0}	$DownTube(Direction) 	$BottleCage(DownTube_Lower)			]
-                            set vct_01	[ vectormath::parallel	{0 0}	$pt_00 					[expr  0.5 * $DownTube(DiameterBB)] ]
+                            set pt_00 	[ vectormath::addVector $DownTube(BottomBracket)	$DownTube(Direction) 	$BottleCage(DownTube_Lower)			]
+                            set vct_01	[ vectormath::parallel	$DownTube(BottomBracket)	$pt_00 					[expr  0.5 * $DownTube(DiameterBB)] ]
+                            set DownTube(BottleCage_Lower_Base) 	[ lindex $vct_01 1 ]
                             set DownTube(BottleCage_Lower_Base) 	[ lindex $vct_01 1 ]
                             set DownTube(BottleCage_Lower_Offset)	[ vectormath::addVector		$DownTube(BottleCage_Lower_Base)	$DownTube(Direction) 64.0 ]
 					project::setValue Result(Tubes/DownTube/BottleCage_Lower/Base)		position	$DownTube(BottleCage_Lower_Base)

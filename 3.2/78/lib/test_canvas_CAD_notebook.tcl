@@ -48,7 +48,6 @@
 				$cv01  create   oval  		{30 160 155 230 } 	-tags {Line_01}  -fill red   -width 2 		
 				$cv01  create   circle  	{160 60}   -radius 50 -tags {Line_01}  -fill blue   -width 2 
 				$cv01  create   arc  		{270 160}  -radius 50  -start 30  -extent 170 -tags {Line_01}  -outline gray  -width 2  -style arc
-				$cv01  create   arc  		{370 260}  -radius 90  -start 30  -extent 170 -tags {Line_01}  -outline gray  -fill red -width 2  -style pieslice 
 				$cv01  create   text		{150 90}  -text "text 150 90"
 				$cv01  create   vectortext	{160 30}  -text "vectorText  160 30  -size 20"  -size 20	
 				$cv01  create   vectortext	{210 70}  -text "vectorText  210 70  -size 10"  -size 10
@@ -89,7 +88,7 @@
 
 			button $f3_config.bt_open -text "open File" -command openFile_svg
 			pack $f3_config.bt_open 
-			button $f3_config.bt_fit -text "refit" -command {$cv03 refitToCanvas}
+			button $f3_config.bt_fit -text "refit" -command {$cv03 refitStage}				
 			pack $f3_config.bt_fit 
 			button $f3_config.bt_small -text "small" -command {$cv03 scaleToCenter 0.5}
 			pack $f3_config.bt_small 
@@ -123,7 +122,8 @@
 			set file [tk_getOpenFile]
 		}
 		
-		$cv03 readSVG $file {120 200}
+		$cv03 readSVG $file {120 200} 0 AB
+		$cv03 readSVG $file {320 400} 
 		
 	}
 			

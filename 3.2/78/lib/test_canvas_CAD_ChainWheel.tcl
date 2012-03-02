@@ -153,7 +153,8 @@
 				puts "\n============================="
 				puts "\n\n"
 				
-				set cv_scale [ $myCanvas refitToCanvas ]
+				# set cv_scale [ $myCanvas refitToCanvas ]
+                set cv_scale [ $myCanvas refitStage]
 		}
 		proc scale_board {{value {1}}} {
 			

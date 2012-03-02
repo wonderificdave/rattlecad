@@ -103,7 +103,7 @@
 					set transform {_no_transformation_}
 					catch {set transform    [ $node getAttribute transform ] }
 					
-					case [$node nodeName] {
+					switch -exact [$node nodeName] {
 							rect {
 									set x [expr  [$node getAttribute x] - $svgPosition(x) ]
 									set y [expr -[$node getAttribute y] + $svgPosition(y) ]
@@ -200,7 +200,11 @@
 											set pos_objectPoints [lappend pos_objectPoints [expr $x + $pos_x]]
 											set pos_objectPoints [lappend pos_objectPoints [expr $y + $pos_y]]
 										}									
-										$w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]
+										if {$tagList ne {}} {
+                                            $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]
+                                        } else {
+                                            $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black ]
+                                        }
 									}
 									set nodeName {}
 								}							
@@ -221,14 +225,25 @@
 						#
 						# -- create object
 						#
-					case [$node nodeName] {
-								rect 		{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $tagList]}
-								polygon 	{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $tagList]}
-								polyline 	{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]}
-								line 		{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]}
-								circle 		{ $w addtag $svgListName withtag [create oval 		$canvasDOMNode $pos_objectPoints -outline black -fill white -tags $tagList]}
-								default 	{}
-					}
+                    if {$tagList ne {}} {
+                        switch -exact [$node nodeName] {
+                                    rect 		{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $tagList]}
+                                    polygon 	{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $tagList]}
+                                    polyline 	{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]}
+                                    line 		{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]}
+                                    circle 		{ $w addtag $svgListName withtag [create oval 		$canvasDOMNode $pos_objectPoints -outline black -fill white -tags $tagList]}
+                                    default 	{}
+                        }
+                    } else {
+                         switch -exact [$node nodeName] {
+                                    rect 		{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
+                                    polygon 	{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
+                                    polyline 	{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black ]}
+                                    line 		{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black ]}
+                                    circle 		{ $w addtag $svgListName withtag [create oval 		$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
+                                    default 	{}
+                        }
+                   }
 			}
 
 			

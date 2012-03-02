@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.14
+package provide canvasCAD 0.15
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -561,10 +561,10 @@ package require tdom
 			# -------------------------------
 			switch -exact -- $type {
 				line -	
-				centerline {set CoordList   [ eval convert_BottomLeft [expr $wScale*$stageScale] $CoordList] }	
+				centerline {	set CoordList	[ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }	
 				polygon	-
 				rectangle -
-				oval	{ 	set CoordList   [ eval convert_BottomLeft [expr $wScale*$stageScale] $CoordList] }		
+				oval	{ 		set CoordList	[ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }		
 				arc -
 				circle	{	
 							set new_args 	[ flatten_nestedList $args ]
@@ -587,7 +587,7 @@ package require tdom
 								# tk_messageBox -message "createCircle Radius $Radius \n   $args"
 							foreach {x y} $CoordList break
 							set CoordList   [ list [expr $x-$Radius] [expr $y+$Radius] [expr $x+$Radius] [expr $y-$Radius] ]
-							set CoordList   [ eval convert_BottomLeft [expr $wScale*$stageScale] $CoordList]
+							set CoordList   [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]]
 						}
 				text 	{
 							set new_args 	[ flatten_nestedList $args ]
@@ -601,7 +601,7 @@ package require tdom
 							}
 							set fontSize	[ expr round($fontSize * 10 * $stageScale / 2.8) ]
 								# set fontSize	[ expr round($fontSize * 10 / 2.8) ]
-							set CoordList   [ eval convert_BottomLeft [expr $wScale*$stageScale] $CoordList]
+							set CoordList   [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]]
 						}
 				vectortext {	
 							vectorfont::setalign    "sw"		;# standard text alignment
@@ -627,7 +627,7 @@ package require tdom
 								#   mm  -> 
 							vectorfont::setscale  [expr ($fontSize * $stageScale) / (8 * [get_unitRefScale m] ) ] 
 								# vectorfont::setscale  [expr ($fontSize * $stageScale) / (8 * $unitScale) ] 
-							set CoordList   [ eval convert_BottomLeft [expr $wScale*$stageScale] $CoordList]
+							set CoordList   [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]]
 									# vectorfont does not support canvas Units m, c, i, p 
 						}
 				draftText {	
@@ -655,11 +655,11 @@ package require tdom
 								#   mm  -> 
 							vectorfont::setscale  [expr $fontSize  / (8 * [get_unitRefScale m] ) ] 
 								# vectorfont::setscale  [expr ($fontSize * $stageScale) / (8 * $unitScale) ] 
-							set CoordList   [ eval convert_BottomLeft [expr $wScale*$stageScale] $CoordList]
+							set CoordList   [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]]
 									# vectorfont does not support canvas Units m, c, i, p 
 						}
 				draftLine {	
-							set CoordList   [ eval convert_BottomLeft [expr $wScale*$stageScale] $CoordList]
+							set CoordList   [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]]
 							set new_args 	[ flatten_nestedList $args ]
 							set args		{}
 							for {set x 0} {$x<[llength $new_args]} {incr x} {
@@ -677,12 +677,12 @@ package require tdom
 			switch  -exact -- $type {
 				centerline	{ set myItem 	[ centerLine            $canvasDOMNode $CoordList  [flatten_nestedList $args] ] }
 				draftLine	-
-				line		{ set myItem	[ eval $w create line  		$CoordList  [flatten_nestedList $args] ] }
+				line		{ set myItem	[ eval $w create line        $CoordList  [flatten_nestedList $args] ] }
 				oval -
-				circle 		{ set myItem	[ eval $w create oval  		$CoordList  [flatten_nestedList $args] ] }
-				arc			{ set myItem	[ eval $w create arc		$CoordList  [flatten_nestedList $args] ] }
-				rectangle	{ set myItem 	[ eval $w create rectangle  $CoordList  [flatten_nestedList $args] ] }
-				polygon		{ set myItem 	[ eval $w create polygon  	$CoordList  [flatten_nestedList $args] ] }
+				circle 		{ set myItem	[ eval $w create oval        $CoordList  [flatten_nestedList $args] ] }
+				arc			{ set myItem	[ eval $w create arc         $CoordList  [flatten_nestedList $args] ] }
+				rectangle	{ set myItem 	[ eval $w create rectangle   $CoordList  [flatten_nestedList $args] ] }
+				polygon		{ set myItem 	[ eval $w create polygon     $CoordList  [flatten_nestedList $args] ] }
 				text		{ 	
 								set font 	[ format "%s %s"   $font  	$fontSize ]
 								set myItem 	[ eval $w create text  		$CoordList 	-anchor se \

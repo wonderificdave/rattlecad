@@ -55,7 +55,7 @@ exec wish "$0" "$@"
 	set APPL_Type       [file tail $BASE_Dir]	
 	if {$APPL_Type == {rattleCAD.exe}}	{	
 		set BASE_Dir	[file dirname $BASE_Dir]
-						}
+    }
 
 
 
@@ -63,8 +63,8 @@ exec wish "$0" "$@"
 	lappend auto_path           [file join $BASE_Dir lib]
 	
 	package require   rattleCAD  3.2 
-	package require   canvasCAD	 0.14
-	package require	  extSummary 0.1
+	package require   canvasCAD	 0.15
+	package require   extSummary 0.1
 
 
 	# -- Version Info  ----------------------
