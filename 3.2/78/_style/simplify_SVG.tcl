@@ -416,36 +416,52 @@ exec wish "$0" "$@"
 
 
                         # -- get transform attribute
-                    if {[catch {set transform(this)  [ $node getAttribute transform ]} errmsg] } {
-                        set transform(this_x) 0
-                        set transform(this_y) 0
+                    if {[catch {set transform(self)  [ $node getAttribute transform ]} errmsg] } {
+                        set transform(type) {xy}
+                        set transform(self_x) 0
+                        set transform(self_y) 0
                     } else {
-                        set transform(this)  [ lrange [ split [ $node getAttribute transform ] (,) ] 1 2]
-                        foreach {transform(this_x) transform(this_y)} $transform(this) break
+                        # puts "\n -> $transform(self)"
+                        set transform(type) [lindex [split $transform(self) ()] 0]
+                        set transform(args) [lindex [split $transform(self) ()] 1]
+                        switch -exact $transform(type) {
+                            matrix {
+                                    #puts "\n-----"
+                                    #puts "$transform(type)"
+                                    #puts "$transform(args)"
+                                    set transform(self_x) 0
+                                    set transform(self_y) 0
+                                    }
+                            default {
+                                    set transform(self)  [ lrange [ split [ $node getAttribute transform ] (,) ] 1 2]
+                                    foreach {transform(self_x) transform(self_y)} $transform(self) break
+                                    }
+                       }
                     }
-                    
-                        # puts "       ... this:    $transform(this_x) / $transform(this_y)"
-                    set transform(this_x) [expr $transform(this_x) + $transform(parent_x)] 
-                    set transform(this_y) [expr $transform(this_y) + $transform(parent_y)] 
-                        # puts "         ... this:  $transform(this_x) / $transform(this_y)\n"
+
+                   
+                        # puts "       ... this:    $transform(self_x) / $transform(self_y)"
+                    set transform(self_x) [expr $transform(self_x) + $transform(parent_x)] 
+                    set transform(self_y) [expr $transform(self_y) + $transform(parent_y)] 
+                        # puts "         ... this:  $transform(self_x) / $transform(self_y)\n"
                     
                         # -- get nodeName
                     set nodeName [$node nodeName]
                     
                         # puts "  ... $nodeName :"
-                        # puts "     ... $transform(this_x) / $transform(this_y)"
+                        # puts "     ... $transform(self_x) / $transform(self_y)"
 
                     
                     switch -exact $nodeName {
                             g {
                                             # puts "\n\n  ... looping"
                                             # puts "   [$node asXML]"
-                                        simplifySVG $node [list $transform(this_x) $transform(this_y)]
+                                        simplifySVG $node [list $transform(self_x) $transform(self_y)]
                                 }
                             rect {
                                         set myNode [ $flatSVG createElement $nodeName]
-                                            $myNode setAttribute x               [ expr [ $node getAttribute x ] + $transform(this_x) ]
-                                            $myNode setAttribute y               [ expr [ $node getAttribute y ] + $transform(this_y) ]
+                                            $myNode setAttribute x               [ expr [ $node getAttribute x ] + $transform(self_x) ]
+                                            $myNode setAttribute y               [ expr [ $node getAttribute y ] + $transform(self_y) ]
                                             $myNode setAttribute width           [ $node getAttribute width  ]
                                             $myNode setAttribute height          [ $node getAttribute height ]
                                             $myNode setAttribute fill            none
@@ -458,8 +474,8 @@ exec wish "$0" "$@"
 										set pointList     [filterList $pointList {}]
 										set valueList     {}
                                         foreach {x y} $pointList {
-                                            set x          [expr $x + + $transform(this_x) ]
-                                            set y          [expr $y + + $transform(this_y) ]
+                                            set x          [expr $x + + $transform(self_x) ]
+                                            set y          [expr $y + + $transform(self_y) ]
                                             set valueList  [lappend valueList $x,$y]
                                         }
                                         set myNode         [ $flatSVG createElement     $nodeName]
@@ -474,8 +490,8 @@ exec wish "$0" "$@"
 										set pointList     [filterList $pointList {}]
                                         set valueList     {}
                                         foreach {x y} $pointList {
-                                            set x          [expr $x + + $transform(this_x) ]
-                                            set y          [expr $y + + $transform(this_y) ]
+                                            set x          [expr $x + + $transform(self_x) ]
+                                            set y          [expr $y + + $transform(self_y) ]
                                             set valueList  [lappend valueList $x,$y]
                                         }
                                         set myNode         [ $flatSVG createElement $nodeName]
@@ -487,10 +503,10 @@ exec wish "$0" "$@"
                                 }
                             line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
                                         set myNode         [ $flatSVG createElement $nodeName]
-                                            $myNode setAttribute x1              [ expr [ $node getAttribute x1 ] + $transform(this_x) ]
-                                            $myNode setAttribute y1              [ expr [ $node getAttribute y1 ] + $transform(this_y) ]
-                                            $myNode setAttribute x2              [ expr [ $node getAttribute x2 ] + $transform(this_x) ]
-                                            $myNode setAttribute y2              [ expr [ $node getAttribute y2 ] + $transform(this_y) ]
+                                            $myNode setAttribute x1              [ expr [ $node getAttribute x1 ] + $transform(self_x) ]
+                                            $myNode setAttribute y1              [ expr [ $node getAttribute y1 ] + $transform(self_y) ]
+                                            $myNode setAttribute x2              [ expr [ $node getAttribute x2 ] + $transform(self_x) ]
+                                            $myNode setAttribute y2              [ expr [ $node getAttribute y2 ] + $transform(self_y) ]
                                             $myNode setAttribute fill            none
                                             $myNode setAttribute stroke          black
                                             $myNode setAttribute stroke-width    0.1
@@ -499,8 +515,8 @@ exec wish "$0" "$@"
                             ellipse { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
                                         # --- dont display the center_object with id="center_00"
                                         set myNode         [ $flatSVG createElement $nodeName]
-                                            $myNode setAttribute cx              [ expr [ $node getAttribute cx ] + $transform(this_x) ]
-                                            $myNode setAttribute cy              [ expr [ $node getAttribute cy ] + $transform(this_y) ]
+                                            $myNode setAttribute cx              [ expr [ $node getAttribute cx ] + $transform(self_x) ]
+                                            $myNode setAttribute cy              [ expr [ $node getAttribute cy ] + $transform(self_y) ]
                                             $myNode setAttribute rx              [ $node getAttribute rx  ]
                                             $myNode setAttribute ry              [ $node getAttribute ry  ]
                                             $myNode setAttribute fill            none
@@ -510,18 +526,48 @@ exec wish "$0" "$@"
                                 }
                             circle { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
                                         # --- dont display the center_object with id="center_00"
-                                        set myNode         [ $flatSVG createElement $nodeName]
-                                            $myNode setAttribute cx              [ expr [ $node getAttribute cx ] + $transform(this_x) ]
-                                            $myNode setAttribute cy              [ expr [ $node getAttribute cy ] + $transform(this_y) ]
+                                        if {$transform(type) eq "matrix"} {
+                                            # puts " .. inside matrix"
+                                            puts "\n-----"
+                                            puts "[$node asXML]"
+                                            puts "      $transform(type)"
+                                            puts "      $transform(args)"
+                                                    foreach {a b c d e f} $transform(args) break
+                                            set scale_x  [format "%.4f" [expr $a + $c]]
+                                            set scale_y  [format "%.4f" [expr $b + $d]]
+                                            set radius   [$node getAttribute r]
+                                            puts "   scale:  $scale_x / $scale_y"
+                                            if {[expr abs($scale_x) - abs($scale_y)] == 0} {
+                                                set myNode         [ $flatSVG createElement $nodeName]
+                                                $myNode setAttribute cx $e
+                                                $myNode setAttribute cy $f
+                                                #$myNode setAttribute cx [expr $a*1.0 + $c*1.0 + $e*1.0]
+                                                #$myNode setAttribute cy [expr $b*1.0 + $d*1.0 + $f*1.0]
+                                                #$myNode setAttribute cx [expr $a*$e + $c*$e]
+                                                #$myNode setAttribute cy [expr $b*$f + $d*$f]
+                                                $myNode setAttribute r  [expr abs($scale_x) * $radius]
+                                            } else {
+                                                set myNode         [ $flatSVG createElement ellipse]
+                                                $myNode setAttribute cx $e
+                                                $myNode setAttribute cy $f
+                                                $myNode setAttribute rx [expr abs($scale_x) * $radius]     
+                                                $myNode setAttribute ry [expr abs($scale_y) * $radius]        
+                                            }
+                                        } else {
+                                            set myNode         [ $flatSVG createElement $nodeName]
+                                            $myNode setAttribute cx              [ expr [ $node getAttribute cx ] + $transform(self_x) ]
+                                            $myNode setAttribute cy              [ expr [ $node getAttribute cy ] + $transform(self_y) ]
                                             $myNode setAttribute r               [ $node getAttribute r  ]
+                                        }
                                             $myNode setAttribute fill            none
                                             $myNode setAttribute stroke          black
                                             $myNode setAttribute stroke-width    0.1
+                                            puts "[$myNode asXML]"
                                         $root appendChild $myNode
                                 }
                             path { # path d="M ......."
                                         # absolutPath
-                                        set svgPath     [ absolutPath [ $node getAttribute d ] [ list $transform(this_x) $transform(this_y)] ]
+                                        set svgPath     [ absolutPath [ $node getAttribute d ] [ list $transform(self_x) $transform(self_y)] ]
                                         set splitIndex    [lsearch -exact -all $svgPath {M}]
                                         set splitIndex    [lappend splitIndex end]
                                             set i 0
@@ -753,7 +799,7 @@ exec wish "$0" "$@"
 										$canvas create line $objectPoints -fill black
                                     }
                             circle { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
-                                        # --- dont display the center_object with id="center_00"
+                                        puts "[$node asXML]"
                                         set cx [expr [$node getAttribute cx] + $transform_x ]
                                         set cy [expr [$node getAttribute cy] + $transform_y ]
                                         set r  [$node getAttribute  r]

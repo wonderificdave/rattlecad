@@ -220,13 +220,13 @@
             </SeatPost>
         </Saddle>
         <CrankSet>
-            <File>etc:crankset/campagnolo_ultra_torque.svg</File>
+            <File>etc:crankset/shimano_hollowtech_II.svg</File>
             <Length>175</Length>
         </CrankSet>
         <Derailleur>
             <Front>
                 <File>etc:derailleur/front/campagnolo_qs.svg</File>
-                <Distance>150.00</Distance>
+                <Distance>135.00</Distance>
                 <Offset>9.20</Offset>
             </Front>
             <Rear>

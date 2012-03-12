@@ -100,5 +100,13 @@
             ... based on Code from 
                     ???
             ... see http://wiki.tcl.tk/3834
-            
 
+
+
+... uses following svg - components:
+----------------------------------------
+
+       crankset/shimano_hollowtech_II.svg
+            ... iges by Simon Weishaupt
+       dropout/rear_dropout_ss_wild_lilies_grow.svg
+            ... dxf  by Michael Wiedemann
