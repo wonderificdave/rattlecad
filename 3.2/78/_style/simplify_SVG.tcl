@@ -21,7 +21,24 @@ exec wish "$0" "$@"
     package require Tk
     package require tdom
  
+    variable min_SegmentLength 0.3
     
+    # -- procedures from: canvasCAD	->	vectormath.tcl
+    # 
+    proc pointDistance { p1 p2 } { 
+            # distance from  p1  to  p2 
+            set vector [ subVector $p2 $p1 ]
+            set length [ expr hypot([lindex $vector 0],[lindex $vector 1]) ] 
+            return $length
+    }
+    proc addVector {v1 v2 {scaling 1}} {
+            foreach {x1 y1} $v1 {x2 y2} $v2 break
+            return [list [expr {$x1 + $scaling*$x2}] [expr {$y1 + $scaling*$y2}]]
+    }	 
+    proc subVector {v1 v2} { return [addVector $v1 $v2 -1] }
+    #
+    # ----------------------------------------------
+
 
 	proc mirrorPoint {p a} {
             # reflects point p on line {{0 0} a}
@@ -397,6 +414,8 @@ exec wish "$0" "$@"
             puts "  =============================================="
             puts "\n"
 
+                        
+            variable min_SegmentLength
             variable flatSVG
                 # puts "  ... [ $flatSVG asXML]\n"
             set root [ $flatSVG documentElement ]
@@ -448,7 +467,7 @@ exec wish "$0" "$@"
                         # -- get nodeName
                     set nodeName [$node nodeName]
                     
-                        # puts "  ... $nodeName :"
+                        # puts "  ... $nodeName"
                         # puts "     ... $transform(self_x) / $transform(self_y)"
 
                     
@@ -473,10 +492,31 @@ exec wish "$0" "$@"
                                         set pointList     [split [string map {, { }} [$node getAttribute points ] ] ]
 										set pointList     [filterList $pointList {}]
 										set valueList     {}
-                                        foreach {x y} $pointList {
-                                            set x          [expr $x + + $transform(self_x) ]
-                                            set y          [expr $y + + $transform(self_y) ]
-                                            set valueList  [lappend valueList $x,$y]
+                                            # -- remove tiny segments from polyline ---
+                                        foreach {x y} $pointList break
+                                        set x             [expr $x + $transform(self_x) ]
+                                        set y             [expr $y + $transform(self_y) ]
+                                        set valueList     [lappend valueList $x,$y]
+                                        set lastBase      [list $x $y]
+                                        set lastCount     0
+                                        
+                                        foreach {x y} [lrange $pointList 2 end] {
+                                           incr lastCount
+                                            set x          [expr $x + $transform(self_x) ]
+                                            set y          [expr $y + $transform(self_y) ]
+                                            set segLength  [pointDistance $lastBase [list $x $y]]
+                                            # puts "   -> \$segLength $segLength"
+                                            if {$segLength > $min_SegmentLength} {
+                                                puts "   -> add to valueList; $lastCount ignored"
+                                                set lastBase   [list $x $y]
+                                                set valueList  [lappend valueList $x,$y]
+                                            }
+                                        }
+                                         if {[llength $valueList] < 3} {
+                                                puts "\n"
+                                                puts "polygon,valueList:  $valueList   <- [llength $valueList]"
+                                                puts "      ... excepted\n"
+                                                continue
                                         }
                                         set myNode         [ $flatSVG createElement     $nodeName]
                                             $myNode setAttribute points          $valueList
@@ -489,10 +529,31 @@ exec wish "$0" "$@"
                                         set pointList     [split [string map {, { }} [$node getAttribute points ] ] ]
 										set pointList     [filterList $pointList {}]
                                         set valueList     {}
-                                        foreach {x y} $pointList {
-                                            set x          [expr $x + + $transform(self_x) ]
-                                            set y          [expr $y + + $transform(self_y) ]
-                                            set valueList  [lappend valueList $x,$y]
+                                            # -- remove tiny segments from polyline ---
+                                        foreach {x y} $pointList break
+                                        set x             [expr $x + $transform(self_x) ]
+                                        set y             [expr $y + $transform(self_y) ]
+                                        set valueList     [lappend valueList $x,$y]
+                                        set lastBase      [list $x $y]
+                                        set lastCount     0
+                                        
+                                        foreach {x y} [lrange $pointList 2 end] {
+                                            incr lastCount
+                                            set x          [expr $x + $transform(self_x) ]
+                                            set y          [expr $y + $transform(self_y) ]
+                                            set segLength  [pointDistance $lastBase [list $x $y]]
+                                            # puts "   -> \$segLength $segLength"
+                                            if {$segLength > $min_SegmentLength} {
+                                                puts "   -> add to valueList; $lastCount ignored"
+                                                set lastBase   [list $x $y]
+                                                set valueList  [lappend valueList $x,$y]
+                                            }                                       
+                                        }
+                                        if {[llength $valueList] < 2} {
+                                                puts "\n"
+                                                puts "polyline,valueList:  $valueList   <- [llength $valueList]"
+                                                puts "      ... excepted\n"
+                                                continue
                                         }
                                         set myNode         [ $flatSVG createElement $nodeName]
                                             $myNode setAttribute points          $valueList
@@ -503,10 +564,22 @@ exec wish "$0" "$@"
                                 }
                             line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
                                         set myNode         [ $flatSVG createElement $nodeName]
-                                            $myNode setAttribute x1              [ expr [ $node getAttribute x1 ] + $transform(self_x) ]
-                                            $myNode setAttribute y1              [ expr [ $node getAttribute y1 ] + $transform(self_y) ]
-                                            $myNode setAttribute x2              [ expr [ $node getAttribute x2 ] + $transform(self_x) ]
-                                            $myNode setAttribute y2              [ expr [ $node getAttribute y2 ] + $transform(self_y) ]
+                                            set x1 [ expr [ $node getAttribute x1 ] + $transform(self_x) ]
+                                            set y1 [ expr [ $node getAttribute y1 ] + $transform(self_y) ]
+                                            set x2 [ expr [ $node getAttribute x2 ] + $transform(self_x) ]
+                                            set y2 [ expr [ $node getAttribute y2 ] + $transform(self_y) ]
+                                      
+                                            $myNode setAttribute x1     $x1         
+                                            $myNode setAttribute y1     $y1        
+                                            $myNode setAttribute x2     $x2        
+                                            $myNode setAttribute y2     $y2        
+                                            set segLength  [pointDistance [list $x1 $y1] [list $x2 $y2]]
+                                            # puts "   -> \$segLength $segLength"
+                                            if {$segLength < $min_SegmentLength} {
+                                                puts "line,segLength:  $segLength   < $min_SegmentLength"
+                                                puts "      ... excepted\n"
+                                                continue
+                                            }
                                             $myNode setAttribute fill            none
                                             $myNode setAttribute stroke          black
                                             $myNode setAttribute stroke-width    0.1
@@ -593,6 +666,14 @@ exec wish "$0" "$@"
                                                 set objectPoints [ convertPath2Line $pathSegment ]
                                                     # puts "\n$objectPoints\n_________objectPoints________"
 
+                                                if {[llength $objectPoints] < 2} {
+                                                puts "\n"
+                                                puts "polyline-polygon,objectPoints:  $objectPoints   <- [llength $objectPoints]"
+                                                puts "      ... excepted\n"
+                                                continue
+                                        }
+                                                
+                                                
                                                 set myNode [ $flatSVG createElement $elementType]
                                                     $myNode setAttribute points          $objectPoints
                                                     $myNode setAttribute fill            none
@@ -605,9 +686,18 @@ exec wish "$0" "$@"
 
                                 }        
 
-                            default { }
+                            default { 
+                                        # -- for temporary use, will never be added to $root
+                                        set myNode [ $flatSVG createElement unused ]
+                                }
                     }
                     # puts "        $nodeName:  $objectPoints"
+                    # -- get nodeID
+                    if {[$node hasAttribute id]} {
+                        set nodeID   [$node getAttribute id]
+                        puts "  ... $nodeName / $nodeID"
+                        $myNode setAttribute id $nodeID
+                    } 
                 
             }
             
@@ -925,10 +1015,28 @@ exec wish "$0" "$@"
             puts "\n"
     
                 # --- result SVG -----------
-            set flatSVG [dom createDocument svg]
-            set root [$flatSVG documentElement]
-            $root     setAttribute version 1.0
-            $root     setAttribute xmlns "http://www.w3.org/2000/svg"
+            set svgXML {<?xml version="1.0" encoding="UTF-8"?>
+                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                <svg width="210mm" height="297mm" viewBox="0 0 210 297">
+                 <defs>
+                  <style type="text/css">
+                   <![CDATA[
+                    .str0 {stroke:#1F1A17;stroke-width:0.0762}
+                    .str1 {stroke:black;stroke-width:0.1}
+                    .fil1 {fill:none}
+                    .fil2 {fill:#727577}
+                    .fil0 {fill:#7F7E7C}
+                   ]]>
+                  </style>
+                 </defs>
+                </svg>} 
+            set flatSVG [dom parse $svgXML]    
+            # set root [$flatSVG documentElement]
+            
+                # set flatSVG [dom createDocument svg]
+                # set root [$flatSVG documentElement]
+                # $root     setAttribute version 1.0
+                # $root     setAttribute xmlns "http://www.w3.org/2000/svg"
 
 
                 # --- open File ------------
@@ -965,7 +1073,10 @@ exec wish "$0" "$@"
             recurseInsert $deepTree    $root         {}
             $deepText insert end $xml
             recurseInsert $flatTree     $flatSVG     {}
-            $flatText insert end [$flatSVG asXML]
+            $flatSVG     setAttribute xmlns "http://www.w3.org/2000/svg"
+            $flatText insert end {<?xml version="1.0" encoding="UTF-8"?>}
+            $flatText insert end "\n"
+            $flatText insert end [[$flatSVG ownerDocument ] asXML -doctypeDeclaration 1]
             
             wm title . "simplifySVG - $fileName"
     }

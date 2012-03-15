@@ -220,17 +220,17 @@
             </SeatPost>
         </Saddle>
         <CrankSet>
-            <File>etc:crankset/shimano_hollowtech_II.svg</File>
+            <File>etc:crankset/shimano_XT_FC-M770.svg</File>
             <Length>175</Length>
         </CrankSet>
         <Derailleur>
             <Front>
                 <File>etc:derailleur/front/campagnolo_qs.svg</File>
-                <Distance>135.00</Distance>
+                <Distance>128.00</Distance>
                 <Offset>9.20</Offset>
             </Front>
             <Rear>
-                <File>etc:derailleur/rear/custom_00.svg</File>
+                <File>etc:derailleur/rear/shimano_XT_RD-M773.svg</File>
             </Rear>
         </Derailleur>
         <BottleCage>
