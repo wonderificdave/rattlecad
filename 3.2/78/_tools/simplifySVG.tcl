@@ -1232,9 +1232,9 @@ exec wish "$0" "$@"
             puts "\n"
     
                 # --- result SVG -----------
-            set svgXML {<?xml version="1.0" encoding="UTF-8"?>
+            set svgXML {<?xml version="1.0" encoding="UTF-8" standalone="no"?>
                 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-                <svg width="210mm" height="297mm" viewBox="0 0 210 297">
+                <svg width="297mm" height="210mm" viewBox="0 0 297 210">
                  <defs>
                   <style type="text/css">
                    <![CDATA[
