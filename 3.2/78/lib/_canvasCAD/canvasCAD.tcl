@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.15
+package provide canvasCAD 0.16
 package require tdom
 
   # -----------------------------------------------------------------------------------

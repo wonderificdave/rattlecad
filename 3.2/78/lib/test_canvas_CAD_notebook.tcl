@@ -104,6 +104,10 @@
 				$cv03  create   text		{3.4 2.2}  -text "text  3.4 2.2"
 				$cv03  create   vectortext	{4.0 1.5}  -text "vectorText  4.0 1.5  -size 0.5"  -size 0.5
 				$cv03  create   vectortext	{5.0 3.0}  -text "vectorText  5.0 3.0  -size 1"  -size 1		
+                
+                
+                $cv03  readSVG "shimano_XT_FC-M770.svg"                {550 450} 0 {crankset}
+                $cv03  readSVG "shimano_crankset_XT_FC-M770_try.svg"   {250 350} 0 {crankset}
 	
 	
 		# --------------------------------------------

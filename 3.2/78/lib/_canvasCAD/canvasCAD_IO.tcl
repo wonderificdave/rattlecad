@@ -42,7 +42,7 @@
 	#-------------------------------------------------------------------------
 		#  read SVG from File
 		#
-	proc canvasCAD::readSVG {canvasDOMNode file {position {0 0}} {angle {0}} {tagList {}} } {
+	proc canvasCAD::readSVG {canvasDOMNode file {canvasPosition {0 0}} {angle {0}} {customTagList {}} } {
 		
 			set fp [open $file]
 					
@@ -53,22 +53,6 @@
 			set doc  [dom parse  $xml]
 			set root [$doc documentElement]
 
-				#
-				# -- get graphic content nodes
-				#
-			if {[$root getElementsByTagNameNS [$root namespaceURI]  g ] == {}} {
-					set nodeList 	  [$root getElementsByTagNameNS [$root namespaceURI]  * ] 
-			} else {
-					set geometryNode  [$root 	getElementsByTagNameNS [$root namespaceURI]  g]
-					set nodeList 	  [$geometryNode childNodes]
-			}
-				#
-				# -- position
-				#
-			foreach {pos_x pos_y} $position break
-				#
-				# -- get center SVG
-				#
 			set center_Node [$root find id center_00]
 			if { $center_Node != {} } {
 					set svgPosition(x)	[$center_Node getAttribute cx]
@@ -78,179 +62,224 @@
 					set svgPosition(x)	0
 					set svgPosition(y)	0
 			}
-			set svgPosition(xy)	[list $svgPosition(x) $svgPosition(y)]
+            set svgCenter [list $svgPosition(x) $svgPosition(y)]
+
+                    # puts "  -> [namespace current]"
+                    # puts "\n [$root nodeName]\n"
+                
+                #
+				# -- define a unique id for svgContent
+				#
+			set w		 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Canvas 	path ]        
+			set svgTag      [format "svg_%s" [llength [$w find withtag all]] ]
+			set $svgTag     {}
+    
+                #
+				# -- get graphic content nodes
+				#
+            set nodeList [$root childNodes]
+            foreach svgNode $nodeList {
+                # puts "   readSVG -> $svgNode [$svgNode nodeName]"
+                write_svgNode $canvasDOMNode $svgNode $canvasPosition $svgCenter $angle $svgTag $customTagList
+            }            
+            return $svgTag
+    }
+    
+    proc write_svgNode {canvasDOMNode svgNode canvasPosition svgCenter angle svgTag {customTagList {}}} {
+            
+				#
+				# -- canvasPosition
+				#
+			foreach {pos_x pos_y} $canvasPosition break
+				#
+				# -- get center SVG
+				#		
+            set svgPosition(x)	[lindex $svgCenter 0]
+			set svgPosition(y)	[lindex $svgCenter 1]
+            set svgPosition(xy)	[list $svgPosition(x) $svgPosition(y)]
+            
 				#
 				# -- define item container
 				#
-			set w		 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Canvas 	path ]
-			set svgListName [format "svg_%s" [llength [$w find withtag all]] ]
-			set $svgListName {}
+			set w		 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Canvas 	path ]        
+                
+                # -- handle exceptions
+            if {[$svgNode nodeType] != {ELEMENT_NODE}} return
+            if {[$svgNode hasAttribute id]} {
+                    if {[$svgNode getAttribute id] == {center_00}} return
+            }
+            
 				#
-				# -- parse children
+				# -- get svg Object attributs
 				#
-			foreach node $nodeList {
-					
-						# -- handle exceptions
-					if {[$node nodeType] != {ELEMENT_NODE}} continue
-					if {[$node hasAttribute id]} {
-							if {[$node getAttribute id] == {center_00}} continue
-					}
-				
-						# -- set defaults
-					set objectPoints {}
+                # puts "   write_svgNode -> $svgNode [$svgNode nodeName]"
+            
+                # -- set defaults
+            set objectPoints {}
 
-						# -- get transform attribute
-					set transform {_no_transformation_}
-					catch {set transform    [ $node getAttribute transform ] }
-					
-					switch -exact [$node nodeName] {
-							rect {
-									set x [expr  [$node getAttribute x] - $svgPosition(x) ]
-									set y [expr -[$node getAttribute y] + $svgPosition(y) ]
-									set width   [$node getAttribute  width ]
-									set height  [$node getAttribute  height]
-									set x2 [expr $x + $width ]
-									set y2 [expr $y - $height]
-									set objectPoints [list $x $y $x $y2 $x2 $y2 $x2 $y]
-									if {$angle != 0} { 
-										set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
-									}
-								}
-							polygon {
-										set valueList [ $node getAttribute points ]
-										foreach {coords} $valueList {
-											foreach {x y}  [split $coords ,] break
-											set objectPoints [lappend objectPoints $x $y ]
-										}
-										if {$transform != {_no_transformation_}} {
-												set matrix [split [string map {matrix( {} ) {}} $transform] ,]
-												set objectPoints [ transform_SVGObject $objectPoints $matrix ]
-													# puts "      polygon  -> SVGObject $objectPoints " 
-													# puts "      polygon  -> matrix    $matrix" 
-										}
-										
-										set tmpList {}
-										foreach {x y} $objectPoints {
-											set tmpList [lappend tmpList [expr  $x - $svgPosition(x) ] [expr -$y + $svgPosition(y) ]]	
-										}
-										set objectPoints $tmpList
-										
-										if {$angle != 0} { 
-											set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
-										}
-								}
-							polyline { # polyline class="fil0 str0" points="44.9197,137.492 47.3404,135.703 48.7804,133.101 ...
-										set valueList [ $node getAttribute points ]
-										foreach {coords} $valueList {
-											foreach {x y}  [split $coords ,] break
-											set objectPoints [lappend objectPoints $x $y ]
-										}
-										if {$transform != {_no_transformation_}} {
-												set matrix [split [string map {matrix( {} ) {}} $transform] ,]
-												set objectPoints [ transform_SVGObject $objectPoints $matrix ]
-													# puts "      polygon  -> SVGObject $objectPoints " 
-													# puts "      polygon  -> matrix    $matrix" 
-										}
-										
-										set tmpList {}
-										foreach {x y} $objectPoints {
-											set tmpList [lappend tmpList [expr  $x - $svgPosition(x) ] [expr -$y + $svgPosition(y) ]]	
-										}
-										set objectPoints $tmpList
-										
-										if {$angle != 0} { 
-											set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
-										}
-								}
-							line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
-									set objectPoints [list 	[expr [$node getAttribute x1] - $svgPosition(x)] [expr -([$node getAttribute y1] - $svgPosition(y))] \
-															[expr [$node getAttribute x2] - $svgPosition(x)] [expr -([$node getAttribute y2] - $svgPosition(y))] ]
-									if {$angle != 0} { 
-										set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
-									}
-								}
-							circle { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
-										# --- dont display the center_object with id="center_00"
-									if {![$node hasAttribute cx]} continue
-									set cx [expr   [$node getAttribute cx] - $svgPosition(x) ]
-									set cy [expr -([$node getAttribute cy] - $svgPosition(y))]
-									if {$angle != 0} { 
-										set c_xy [vectormath::rotatePointList {0 0} [list $cx $cy] $angle] 
-										foreach {cx cy} $c_xy break
-									}
-									set r  [$node getAttribute  r]
-									set x1 [expr $cx - $r]
-									set y1 [expr $cy - $r]
-									set x2 [expr $cx + $r]
-									set y2 [expr $cy + $r]
-									set objectPoints [list $x1 $y1 $x2 $y2]
-								}
-							path { # the complex all inclusive object in svg
-									set valueList  [ $node getAttribute d ]
-									set partialPath	[split [string trim $valueList] "zZ"]
-										# [string map {Z {_Z}} {z {_z}} $valueList]
-									foreach path $partialPath {		
-										set objectPoints [ path2Line $valueList [list $svgPosition(x) $svgPosition(y)] ]										
-											# puts "\n path-valueList:  $objectPoints"											
-										if {$angle != 0} { 
-											set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
-										}
-										set pos_objectPoints {}
-										foreach {x y} $objectPoints {
-											set pos_objectPoints [lappend pos_objectPoints [expr $x + $pos_x]]
-											set pos_objectPoints [lappend pos_objectPoints [expr $y + $pos_y]]
-										}									
-										if {$tagList ne {}} {
-                                            $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]
-                                        } else {
-                                            $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black ]
-                                        }
-									}
-									set nodeName {}
-								}							
-								
-								
-							default { }
-					}
-					
-						#
-						# -- move the content to its position
-						#
-					set pos_objectPoints {}
-					foreach {x y} $objectPoints {
-						set pos_objectPoints [lappend pos_objectPoints [expr $x + $pos_x]]
-						set pos_objectPoints [lappend pos_objectPoints [expr $y + $pos_y]]
-					}
-					
-						#
-						# -- create object
-						#
-                    if {$tagList ne {}} {
-                        switch -exact [$node nodeName] {
-                                    rect 		{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $tagList]}
-                                    polygon 	{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $tagList]}
-                                    polyline 	{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]}
-                                    line 		{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $tagList]}
-                                    circle 		{ $w addtag $svgListName withtag [create oval 		$canvasDOMNode $pos_objectPoints -outline black -fill white -tags $tagList]}
-                                    default 	{}
+                # -- get transform attribute
+            set transform {_no_transformation_}
+            catch {set transform    [ $svgNode getAttribute transform ] }
+            
+            switch -exact [$svgNode nodeName] {
+                    g {      
+                            foreach childNode [$svgNode childNodes] {
+                                # puts "    -> $childNode  [$childNode nodeName]"
+                                write_svgNode $canvasDOMNode $childNode $canvasPosition $svgCenter $angle $svgTag
+                            }
                         }
-                    } else {
-                         switch -exact [$node nodeName] {
-                                    rect 		{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
-                                    polygon 	{ $w addtag $svgListName withtag [create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
-                                    polyline 	{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black ]}
-                                    line 		{ $w addtag $svgListName withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black ]}
-                                    circle 		{ $w addtag $svgListName withtag [create oval 		$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
-                                    default 	{}
+                    
+                    rect {
+                            set x [expr  [$svgNode getAttribute x] - $svgPosition(x) ]
+                            set y [expr -[$svgNode getAttribute y] + $svgPosition(y) ]
+                            set width   [$svgNode getAttribute  width ]
+                            set height  [$svgNode getAttribute  height]
+                            set x2 [expr $x + $width ]
+                            set y2 [expr $y - $height]
+                            set objectPoints [list $x $y $x $y2 $x2 $y2 $x2 $y]
+                            if {$angle != 0} { 
+                                set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
+                            }
                         }
-                   }
-			}
+                    polygon {
+                                set valueList [ $svgNode getAttribute points ]
+                                foreach {coords} $valueList {
+                                    foreach {x y}  [split $coords ,] break
+                                    set objectPoints [lappend objectPoints $x $y ]
+                                }
+                                if {$transform != {_no_transformation_}} {
+                                        set matrix [split [string map {matrix( {} ) {}} $transform] ,]
+                                        set objectPoints [ transform_SVGObject $objectPoints $matrix ]
+                                            # puts "      polygon  -> SVGObject $objectPoints " 
+                                            # puts "      polygon  -> matrix    $matrix" 
+                                }
+                                
+                                set tmpList {}
+                                foreach {x y} $objectPoints {
+                                    set tmpList [lappend tmpList [expr  $x - $svgPosition(x) ] [expr -$y + $svgPosition(y) ]]	
+                                }
+                                set objectPoints $tmpList
+                                
+                                if {$angle != 0} { 
+                                    set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
+                                }
+                        }
+                    polyline { # polyline class="fil0 str0" points="44.9197,137.492 47.3404,135.703 48.7804,133.101 ...
+                                set valueList [ $svgNode getAttribute points ]
+                                foreach {coords} $valueList {
+                                    foreach {x y}  [split $coords ,] break
+                                    set objectPoints [lappend objectPoints $x $y ]
+                                }
+                                if {$transform != {_no_transformation_}} {
+                                        set matrix [split [string map {matrix( {} ) {}} $transform] ,]
+                                        set objectPoints [ transform_SVGObject $objectPoints $matrix ]
+                                            # puts "      polygon  -> SVGObject $objectPoints " 
+                                            # puts "      polygon  -> matrix    $matrix" 
+                                }
+                                
+                                set tmpList {}
+                                foreach {x y} $objectPoints {
+                                    set tmpList [lappend tmpList [expr  $x - $svgPosition(x) ] [expr -$y + $svgPosition(y) ]]	
+                                }
+                                set objectPoints $tmpList
+                                
+                                if {$angle != 0} { 
+                                    set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
+                                }
+                        }
+                    line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
+                            set objectPoints [list 	[expr [$svgNode getAttribute x1] - $svgPosition(x)] [expr -([$svgNode getAttribute y1] - $svgPosition(y))] \
+                                                    [expr [$svgNode getAttribute x2] - $svgPosition(x)] [expr -([$svgNode getAttribute y2] - $svgPosition(y))] ]
+                            if {$angle != 0} { 
+                                set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
+                            }
+                        }
+                    circle { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
+                                # --- dont display the center_object with id="center_00"
+                            if {![$svgNode hasAttribute cx]} return
+                            set cx [expr   [$svgNode getAttribute cx] - $svgPosition(x) ]
+                            set cy [expr -([$svgNode getAttribute cy] - $svgPosition(y))]
+                            if {$angle != 0} { 
+                                set c_xy [vectormath::rotatePointList {0 0} [list $cx $cy] $angle] 
+                                foreach {cx cy} $c_xy break
+                            }
+                            set r  [$svgNode getAttribute  r]
+                            set x1 [expr $cx - $r]
+                            set y1 [expr $cy - $r]
+                            set x2 [expr $cx + $r]
+                            set y2 [expr $cy + $r]
+                            set objectPoints [list $x1 $y1 $x2 $y2]
+                        }
+                    path { # the complex all inclusive object in svg
+                            
+                            return
+                            # continue
+                            
+                            set valueList  [ $svgNode getAttribute d ]
+                            set partialPath	[split [string trim $valueList] "zZ"]
+                                # [string map {Z {_Z}} {z {_z}} $valueList]
+                            foreach path $partialPath {		
+                                set objectPoints [ path2Line $valueList [list $svgPosition(x) $svgPosition(y)] ]										
+                                    # puts "\n path-valueList:  $objectPoints"											
+                                if {$angle != 0} { 
+                                    set objectPoints [vectormath::rotatePointList {0 0} $objectPoints $angle] 
+                                }
+                                set pos_objectPoints {}
+                                foreach {x y} $objectPoints {
+                                    set pos_objectPoints [lappend pos_objectPoints [expr $x + $pos_x]]
+                                    set pos_objectPoints [lappend pos_objectPoints [expr $y + $pos_y]]
+                                }									
+                                if {$svgTag ne {}} {
+                                    $w addtag $svgTag withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black  -tags $svgTag]
+                                } else {
+                                    $w addtag $svgTag withtag [create line 		$canvasDOMNode $pos_objectPoints -fill black ]
+                                }
+                            }
+                            set nodeName {}
+                        }							
+                        
+                        
+                    default { }
+            }
+            
+                #
+                # -- move the content to its canvasPosition
+                #
+            set pos_objectPoints {}
+            foreach {x y} $objectPoints {
+                set pos_objectPoints [lappend pos_objectPoints [expr $x + $pos_x]]
+                set pos_objectPoints [lappend pos_objectPoints [expr $y + $pos_y]]
+            }
+            
+                #
+                # -- create object
+                #
+            if {$customTagList ne {}} {
+                switch -exact [$svgNode nodeName] {
+                            rect 		{ $w addtag $svgTag withtag [canvasCAD::create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $customTagList]}
+                            polygon 	{ $w addtag $svgTag withtag [canvasCAD::create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $customTagList]}
+                            polyline 	{ $w addtag $svgTag withtag [canvasCAD::create line 	$canvasDOMNode $pos_objectPoints                -fill black  -tags $customTagList]}
+                            line 		{ $w addtag $svgTag withtag [canvasCAD::create line 	$canvasDOMNode $pos_objectPoints                -fill black  -tags $customTagList]}
+                            circle 		{ $w addtag $svgTag withtag [canvasCAD::create oval 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $customTagList]}
+                            default 	{}
+                }
+            } else {
+                 switch -exact [$svgNode nodeName] {
+                            rect 		{ $w addtag $svgTag withtag [canvasCAD::create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
+                            polygon 	{ $w addtag $svgTag withtag [canvasCAD::create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
+                            polyline 	{ $w addtag $svgTag withtag [canvasCAD::create line 	$canvasDOMNode $pos_objectPoints                -fill black ]}
+                            line 		{ $w addtag $svgTag withtag [canvasCAD::create line 	$canvasDOMNode $pos_objectPoints                -fill black ]}
+                            circle 		{ $w addtag $svgTag withtag [canvasCAD::create oval 	$canvasDOMNode $pos_objectPoints -outline black -fill white ]}
+                            default 	{}
+                }
+           }
+			#{}
 
 			
 				#
-				# -- add each to unique $svgListName
+				# -- add each to unique $svgTag
 				#		
-			return $svgListName
+			return $svgTag
 
 	}	
 	
