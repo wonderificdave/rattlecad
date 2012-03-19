@@ -28,6 +28,7 @@ exec wish "$0" "$@"
     variable centerNode        {}
     variable svg_LastHighlight {}
     variable free_ObjectID     0
+    variable file_saveCount    0
 
     # -- handling puts
     # http://wiki.tcl.tk/1290
@@ -1236,19 +1237,9 @@ exec wish "$0" "$@"
                 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
                 <svg width="297mm" height="210mm" viewBox="0 0 297 210">
                  <defs>
-                  <style type="text/css">
-                   <![CDATA[
-                    .str0 {stroke:#1F1A17;stroke-width:0.0762}
-                    .str1 {stroke:black;stroke-width:0.1}
-                    .fil1 {fill:none}
-                    .fil2 {fill:#727577}
-                    .fil0 {fill:#7F7E7C}
-                   ]]>
-                  </style>
                  </defs>
                 </svg>} 
             set flatSVG [dom parse $svgXML]    
-            # set root [$flatSVG documentElement]
             
                 # set flatSVG [dom createDocument svg]
                 # set root [$flatSVG documentElement]
@@ -1259,13 +1250,14 @@ exec wish "$0" "$@"
                 # --- open File ------------
             if {[llength $argv] == 0} {
                 set fileName [tk_getOpenFile]
+                set exportFileName $fileName
             } else {
                 set fileName [file join [lindex $argv 0]]
             }
             if {$fileName == {}} {return}
 			
             set fp [open $fileName]
-			fconfigure    $fp -encoding utf-8
+			# fconfigure    $fp -encoding utf-8
             set svg [read $fp]
             close         $fp
          
@@ -1276,6 +1268,8 @@ exec wish "$0" "$@"
 
             set flatSVG [simplifySVG $root {0 0}]
                 # set flatSVG [simplifySVG $root {50 50} ]
+            $flatSVG setAttribute xmlns "http://www.w3.org/2000/svg"
+
 
 
                 # --- cleanup outputs ------            
@@ -1398,6 +1392,7 @@ exec wish "$0" "$@"
     proc saveContent {{mode {}}} {
             variable flatText 
             variable exportFileName
+            variable file_saveCount
  
             puts "\n"
             puts "  =============================================="
@@ -1405,16 +1400,33 @@ exec wish "$0" "$@"
             puts "  =============================================="
             puts "\n"
             
-            set data [$flatText get 1.0 end]
+            set systemTime [clock seconds]
+            set timeString [clock format $systemTime -format %Y%m%d_%H%M%S]
+            incr file_saveCount
+           
+            set fileName   [file rootname  [file tail $exportFileName]]
+            set fileName   [format "%s_%s_%s.svg" $fileName $timeString $file_saveCount]
+            
+            
+            set svgText [$flatText get 1.0 end]            
+            dom parse  $svgText doc
+            $doc documentElement root
+            $root setAttribute  xmlns "http://www.w3.org/2000/svg"
              
             if {$mode eq {}} {
-                set fileName [tk_getSaveFile -title "Export Content as svg" -initialdir [file normalize .] -initialfile $exportFileName ]
+                set fileName [tk_getSaveFile -title "Export Content as svg" -initialdir [file normalize .] -initialfile $fileName ]
                 if {$fileName eq {}} return
-                set exportFileName $fileName
             }
             
-            set fileId [open $exportFileName "w"]
-            puts -nonewline $fileId $data
+            set fileId [open $fileName "w"]
+                # puts -nonewline $fileId {<?xml version="1.0" encoding="UTF-8"?>}
+                # puts -nonewline $fileId "\n"
+            puts [encoding names]
+                # fconfigure $fileId -encoding {utf-8}
+                # fconfigure $fileId -encoding {iso8859-8}
+                # puts -nonewline $fileId $svgText
+            puts -nonewline $fileId [$doc asXML -doctypeDeclaration 1]
+                # puts -nonewline $fileId [$doc asXML]
             close $fileId
             
             puts "\n         ... file saved as:"
@@ -1606,7 +1618,8 @@ exec wish "$0" "$@"
             }       
      
         
-        
+   # tk_messageBox -message "encoding system  [encoding system]"
+   puts "encoding system  [encoding system]"
         
         # --- store fileName --
         #
