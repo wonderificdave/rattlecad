@@ -251,8 +251,8 @@
 					{{Project Files 3.x }       {.xml}  }
 				}
 				
-			set userDir		[check_user_dir rattleCAD]
-			set fileName 	[tk_getSaveFile -initialdir $userDir -initialfile {new_Project.xml} -filetypes $types]
+                # set userDir		[check_user_dir rattleCAD]
+			set fileName 	[tk_getSaveFile -initialdir $::APPL_Env(USER_Dir) -initialfile {new_Project.xml} -filetypes $types]
 			
 			if {$fileName == {}} return
 			if {! [string equal [file extension $fileName] {.xml}]} {
@@ -309,10 +309,10 @@
 			puts "  ====== s a v e  F I L E ========================="
 
 
-				set userDir		[check_user_dir rattleCAD]
+				# set userDir		[check_user_dir rattleCAD]
 			set initialFile	[file tail $::APPL_Config(PROJECT_Name)]
 				puts "       ... saveProject_xml - mode:            \"$mode\""
-				puts "       ... saveProject_xml - userDir:         \"$userDir\""
+				puts "       ... saveProject_xml - USER_Dir:        \"$::APPL_Env(USER_Dir)\""
 				puts "       ... saveProject_xml - APPL_Config:     \"$::APPL_Config(PROJECT_Name)\""			
 				puts "       ... saveProject_xml - initialFile:     \"$initialFile\""			
 			
@@ -368,10 +368,10 @@
 			
 			switch $mode {
 				{save}		{
-								set fileName 	[file join $userDir $initialFile]
+								set fileName 	[file join $::APPL_Env(USER_Dir) $initialFile]
 							}
 				{saveAs}	{
-								set fileName 	[tk_getSaveFile -initialdir $userDir -initialfile $initialFile -filetypes $types]
+								set fileName 	[tk_getSaveFile -initialdir $::APPL_Env(USER_Dir) -initialfile $initialFile -filetypes $types]
 									puts "   saveProject_xml - fileName:   		$fileName"
 									# -- $fileName is not empty
 								if {$fileName == {} } return
@@ -405,11 +405,16 @@
 
 
 				# -- open File for writing
-			set fp [open $fileName w]
-			puts $fp [$domConfig  asXML]
-			close $fp
+            if {[file writable $fileName]} {
+                set fp [open $fileName w]
+                puts $fp [$domConfig  asXML]
+                close $fp
 				puts "           ... write $fileName "
 				puts "		           ... done"
+            } else {
+                tk_messageBox -icon error -message "File: \n   $fileName\n  ... not writeable!"
+                saveProject_xml saveAs
+            }
 				
 			
 				#
@@ -438,10 +443,10 @@
 			set types {
 					{{Project Files 3.x }       {.xml}  }
 				}
-			set userDir		$::APPL_Env(USER_Dir)
+			    # set userDir		$::APPL_Env(USER_Dir)
 				# puts "   openProject_xml - types      $types"
 			if {$fileName == {}} {
-				set fileName 	[tk_getOpenFile -initialdir $userDir -filetypes $types]
+				set fileName 	[tk_getOpenFile -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
 			}
 			
 				# puts "   openProject_xml - fileName:   $fileName"
@@ -551,7 +556,8 @@
 			} else {
 				file mkdir $checkDir
 			}
-			return $checkDir
+			
+            return $checkDir
 	}
 
 
@@ -560,13 +566,11 @@
 		#	
 	proc openFile_xml {{file {}} {show {}}} {
 
-			variable USER_Dir
-            
-            set types {
+			set types {
 					{{xml }       {.xml}  }
 				}
 			if {$file == {} } {
-				set file [tk_getOpenFile -initialdir $USER_Dir -filetypes $types]
+				set file [tk_getOpenFile -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
 			}
 				# -- $fileName is not empty
 			if {$file == {} } return
