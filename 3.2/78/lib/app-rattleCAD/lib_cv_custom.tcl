@@ -1835,7 +1835,7 @@
 	}
 	
     
-    proc update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}}} {
+    proc update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {decoColour2 {gray90}} } {
                 #
             foreach cv_Item [$cv_Name find withtag __Frame__] {
                 set cv_Type     [$cv_Name type $cv_Item]
@@ -1857,6 +1857,7 @@
             foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Rim_02__}] {
                 $cv_Name itemconfigure  $cv_Item -fill $decoColour
             }
+			# return
             foreach cv_Item [$cv_Name find withtag {__Decoration__ && __HandleBar__}] {
                 $cv_Name itemconfigure  $cv_Item -fill $tubeColour
             }

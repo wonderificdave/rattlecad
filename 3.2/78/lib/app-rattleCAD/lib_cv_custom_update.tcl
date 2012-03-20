@@ -164,7 +164,7 @@
 					createDimension								$cv_Name $xy	cline_brake	
 					createDimension								$cv_Name $xy 	frameDrafting_bg
 						#
-					$cv_Name 		centerContent				{ 0  25}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__  }
+					$cv_Name 		centerContent				{ 0  25}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__}
 						#
                     update_renderCanvas                         $cv_Name
 						# 

@@ -42,7 +42,7 @@
 	#-------------------------------------------------------------------------
 		#  read SVG from File
 		#
-	proc canvasCAD::readSVG {canvasDOMNode file {canvasPosition {0 0}} {angle {0}} {customTagList {}} } {
+	proc canvasCAD::readSVG {canvasDOMNode file {canvasPosition {0 0}} {angle {0}} {customTag {}} } {
 		
 			set fp [open $file]
 					
@@ -71,8 +71,14 @@
 				# -- define a unique id for svgContent
 				#
 			set w		 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Canvas 	path ]        
-			set svgTag      [format "svg_%s" [llength [$w find withtag all]] ]
-			set $svgTag     {}
+			if {$customTag eq {}} { 
+				set svgTag      [format "svg_%s" [llength [$w find withtag all]] ]
+				set $svgTag     {}
+			} else {
+				set svgTag 		$customTag
+			}
+			
+			# set svgTag      [format "svg_%s" [llength [$w find withtag all]] ]
     
                 #
 				# -- get graphic content nodes
@@ -80,12 +86,13 @@
             set nodeList [$root childNodes]
             foreach svgNode $nodeList {
                 # puts "   readSVG -> $svgNode [$svgNode nodeName]"
-                write_svgNode $canvasDOMNode $svgNode $canvasPosition $svgCenter $angle $svgTag $customTagList
+                set newNode [write_svgNode $canvasDOMNode $svgNode $canvasPosition $svgCenter $angle $svgTag]
+				$w addtag $svgTag withtag $newNode
             }            
-            return $svgTag
+			return $svgTag
     }
     
-    proc write_svgNode {canvasDOMNode svgNode canvasPosition svgCenter angle svgTag {customTagList {}}} {
+    proc write_svgNode {canvasDOMNode svgNode canvasPosition svgCenter angle svgTag {svgTag {}}} {
             
 				#
 				# -- canvasPosition
@@ -254,13 +261,13 @@
                 #
                 # -- create object
                 #
-            if {$customTagList ne {}} {
+            if {$svgTag ne {}} {
                 switch -exact [$svgNode nodeName] {
-                            rect 		{ $w addtag $svgTag withtag [canvasCAD::create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $customTagList]}
-                            polygon 	{ $w addtag $svgTag withtag [canvasCAD::create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $customTagList]}
-                            polyline 	{ $w addtag $svgTag withtag [canvasCAD::create line 	$canvasDOMNode $pos_objectPoints                -fill black  -tags $customTagList]}
-                            line 		{ $w addtag $svgTag withtag [canvasCAD::create line 	$canvasDOMNode $pos_objectPoints                -fill black  -tags $customTagList]}
-                            circle 		{ $w addtag $svgTag withtag [canvasCAD::create oval 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $customTagList]}
+                            rect 		{ $w addtag $svgTag withtag [canvasCAD::create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $svgTag]}
+                            polygon 	{ $w addtag $svgTag withtag [canvasCAD::create polygon 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $svgTag]}
+                            polyline 	{ $w addtag $svgTag withtag [canvasCAD::create line 	$canvasDOMNode $pos_objectPoints                -fill black  -tags $svgTag]}
+                            line 		{ $w addtag $svgTag withtag [canvasCAD::create line 	$canvasDOMNode $pos_objectPoints                -fill black  -tags $svgTag]}
+                            circle 		{ $w addtag $svgTag withtag [canvasCAD::create oval 	$canvasDOMNode $pos_objectPoints -outline black -fill white  -tags $svgTag]}
                             default 	{}
                 }
             } else {

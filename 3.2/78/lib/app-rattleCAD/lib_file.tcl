@@ -560,11 +560,13 @@
 		#	
 	proc openFile_xml {{file {}} {show {}}} {
 
-			set types {
+			variable USER_Dir
+            
+            set types {
 					{{xml }       {.xml}  }
 				}
 			if {$file == {} } {
-				set file [tk_getOpenFile -filetypes $types]
+				set file [tk_getOpenFile -initialdir $USER_Dir -filetypes $types]
 			}
 				# -- $fileName is not empty
 			if {$file == {} } return
