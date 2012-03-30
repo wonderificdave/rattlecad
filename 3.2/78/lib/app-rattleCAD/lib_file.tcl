@@ -405,15 +405,23 @@
 
 
 				# -- open File for writing
-            if {[file writable $fileName]} {
+            if {[file exist $fileName]} {
+                if {[file writable $fileName]} {
+                    set fp [open $fileName w]
+                    puts $fp [$domConfig  asXML]
+                    close $fp
+                    puts "           ... write $fileName "
+                    puts "		           ... done"
+                } else {
+                tk_messageBox -icon error -message "File: \n   $fileName\n  ... not writeable!"
+                saveProject_xml saveAs
+                }       
+            } else {
                 set fp [open $fileName w]
                 puts $fp [$domConfig  asXML]
                 close $fp
-				puts "           ... write $fileName "
-				puts "		           ... done"
-            } else {
-                tk_messageBox -icon error -message "File: \n   $fileName\n  ... not writeable!"
-                saveProject_xml saveAs
+                puts "           ... write $fileName "
+                puts "		           ... done"
             }
 				
 			

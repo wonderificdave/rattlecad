@@ -29,6 +29,8 @@ exec wish "$0" "$@"
     variable svg_LastHighlight {}
     variable free_ObjectID     0
     variable file_saveCount    0
+    
+    set currentVersion 0.5.07
 
     # -- handling puts
     # http://wiki.tcl.tk/1290
@@ -1223,6 +1225,8 @@ exec wish "$0" "$@"
             variable flatTree
             variable flatText 
             variable flatSVG
+            variable currentVersion
+
             
             variable exportFileName {exportFile.svg}
         
@@ -1291,7 +1295,7 @@ exec wish "$0" "$@"
             
             updateContent
                         
-            wm title . "simplifySVG - $fileName"
+            wm title . "simplifySVG $currentVersion - $fileName"
     }
 
     proc reloadSVG {} {
@@ -1307,6 +1311,7 @@ exec wish "$0" "$@"
             variable flatTree
             variable flatText 
             variable flatSVG
+            variable currentVersion
             
             set svg [$flatText get 1.0 end]
             
@@ -1323,7 +1328,7 @@ exec wish "$0" "$@"
             
             fitContent
             
-            wm title . "simplifySVG - $fileName (modified)"
+            wm title . "simplifySVG $currentVersion - $fileName (modified)"
 
             
     }
@@ -1785,6 +1790,8 @@ exec wish "$0" "$@"
 	update	
 	#$nb_result select  0	
 		
+    wm title . "simplifySVG $currentVersion"
+    
     puts " ... $argv"
     openSVG $argv
     
