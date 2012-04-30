@@ -199,7 +199,7 @@
 			# $noteBook_top select $noteBook_top.cv_Custom00
 			# $noteBook_top select $noteBook_top.cv_Custom07
 			
-            $noteBook_top select $noteBook_top.cv_Custom00
+            $noteBook_top select $noteBook_top.cv_Custom02
 
 				# --- 	return
 			return $noteBook_top

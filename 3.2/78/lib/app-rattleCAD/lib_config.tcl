@@ -207,6 +207,7 @@
 				#   Concept
 			ttk::labelframe	$menueFrame.sf.lf_02    	-text "Base Concept - Secondary Values" 
 				pack $menueFrame.sf.lf_02 				-side top  -fill x  -expand yes  -pady 2
+					create_configEdit $menueFrame.sf.lf_01		Component(SeatPost/Setback)	    0.20  darkred
 					create_configEdit $menueFrame.sf.lf_02		Component(Fork/Rake) 			0.20  darkred
 					create_configEdit $menueFrame.sf.lf_02		Component(Fork/Height) 			0.20  darkred
 					create_configEdit $menueFrame.sf.lf_02		Custom(HeadTube/Angle) 			0.02  darkred

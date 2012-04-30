@@ -745,9 +745,6 @@
                             set help_fk				[ vectormath::addVector   $Steerer(Fork) [ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
 
                             
-                            set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $SeatTube(Saddle) $BottomBracket(Position) ] \
-                                                                horizontal	[expr  -80 * $stageScale]    0 \
-                                                                darkblue ] 
                             set _dim_ST_Length 		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $SeatTube(Saddle) ] \
                                                                 aligned		[expr -150 * $stageScale]   [expr -210 * $stageScale]  \
                                                                 darkblue ] 
@@ -793,27 +790,32 @@
                             set _dim_ST_Angle  		[ $cv_Name dimension  angle   	[ project::flatten_nestedList  $SeatTube(Ground)	$SeatTube(Saddle) $help_00 ] \
                                                                 120   0  \
                                                                 darkred ]
-
+                            
+                            set _dim_ST_XPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $SeatTube(Saddle) $BottomBracket(Position) ] \
+                                                                horizontal	[expr  -80 * $stageScale]    0 \
+                                                                darkblue ] 
+                            set _dim_HT_Reach		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$HeadTube(Stem)	$BottomBracket(Position) ] \
+                                                                horizontal  [expr  (120 + $Length(Height_HB_Seat)) * $stageScale ]    0 \
+                                                                darkblue ] 
+                            
                             set _dim_SD_XPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $Saddle(Position) $BottomBracket(Position) ] \
-                                                                horizontal	[expr  -160 * $stageScale]    0 \
-                                                                darkred ] 
-                            set _dim_SD_YPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
-                                                                vertical	[expr -580 * $stageScale]  [expr -130 * $stageScale]  \
+                                                                horizontal	[expr  -140 * $stageScale]    0 \
                                                                 darkred ] 
                             set _dim_HB_XPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $HandleBar(Position)		$BottomBracket(Position) ] \
-                                                                horizontal  [expr   (160 + $Length(Height_HB_Seat)) * $stageScale ]    0 \
+                                                                horizontal  [expr   (140 + $Length(Height_HB_Seat)) * $stageScale ]    0 \
+                                                                darkred ] 
+                            
+                            set _dim_SD_YPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
+                                                                vertical	[expr -580 * $stageScale]  [expr -130 * $stageScale]  \
                                                                 darkred ] 
                             set _dim_HB_YPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $HandleBar(Position)		$BottomBracket(Position) ] \
                                                                 vertical    [expr -270 * $stageScale]    [expr  180 * $stageScale]  \
                                                                 darkred ] 
-                            set _dim_HT_Reach		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$HeadTube(Stem)	$BottomBracket(Position) ] \
-                                                                horizontal  [expr (140 + $Length(Height_HB_Seat)) * $stageScale ]    0 \
-                                                                darkblue ] 
                             set _dim_HT_Stack		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$HeadTube(Stem)	$BottomBracket(Position) ] \
                                                                 vertical    [expr -280 * $stageScale]    [expr  170 * $stageScale]  \
                                                                 darkblue ] 
                             set _dim_LC_Position_x	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $LegClearance(Position)  $BottomBracket(Position) ] \
-                                                                horizontal  [expr   40 * $stageScale]   0  \
+                                                                horizontal  [expr   60 * $stageScale]   0  \
                                                                 darkblue ] 
                             set _dim_LC_Position_y	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $LegClearance(Position)  $Position(BaseCenter) ] \
                                                                 vertical    [expr -130 * $stageScale]   [expr   250 * $stageScale]  \
