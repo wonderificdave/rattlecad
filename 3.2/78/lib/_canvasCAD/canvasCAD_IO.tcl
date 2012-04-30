@@ -83,13 +83,22 @@
                 #
 				# -- get graphic content nodes
 				#
+            set svgNode [$root firstChild]
+            while {$svgNode ne {}} {
+                # puts "  -> [$svgNode asXML]"
+                set newNode [write_svgNode $canvasDOMNode $svgNode $canvasPosition $svgCenter $angle $svgTag]
+				$w addtag $svgTag withtag $newNode
+                set svgNode [$svgNode nextSibling]
+            }            
+			return $svgTag
+            
             set nodeList [$root childNodes]
             foreach svgNode $nodeList {
                 # puts "   readSVG -> $svgNode [$svgNode nodeName]"
                 set newNode [write_svgNode $canvasDOMNode $svgNode $canvasPosition $svgCenter $angle $svgTag]
 				$w addtag $svgTag withtag $newNode
             }            
-			return $svgTag
+			# return $svgTag 
     }
     
     proc write_svgNode {canvasDOMNode svgNode canvasPosition svgCenter angle svgTag {svgTag {}}} {
@@ -130,6 +139,14 @@
             
             switch -exact [$svgNode nodeName] {
                     g {      
+                            set childNode [$svgNode firstChild]
+                            while {$childNode ne {}} {
+                                # puts "    -> $childNode  [$childNode nodeName]"
+                                write_svgNode $canvasDOMNode $childNode $canvasPosition $svgCenter $angle $svgTag
+                                set childNode [$childNode nextSibling]
+                            }
+                        }
+                    g_old {      
                             foreach childNode [$svgNode childNodes] {
                                 # puts "    -> $childNode  [$childNode nodeName]"
                                 write_svgNode $canvasDOMNode $childNode $canvasPosition $svgCenter $angle $svgTag

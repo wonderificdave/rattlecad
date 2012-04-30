@@ -86,6 +86,11 @@
 						{command "&Info"			{}		"Information"      		{Ctrl i}	-command { version_info::create  .v_info 0} }
 						{command "&Help"			{}		"Help"      			{Ctrl h}	-command { version_info::create  .v_info 1} }
 				}
+				"rattleCAD-Project"   all info 0 {
+                        {command "rattleCAD WebSite"    {}  "about rattleCAD"       {}          -command { lib_file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
+                        {command "project@sourceforge"  {}  "sourceforge.net"       {}          -command { lib_file::open_URL {http://sourceforge.net/projects/rattlecad/index.html} } }
+                        {command "like rattleCAD"       {}  "donate"                {}          -command { lib_file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
+				}
 			}
 		
 		return [MainFrame .mainframe  -menu $mainframe_Menue ]
@@ -168,6 +173,7 @@
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  25  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom07  "  Rear Mockup  "	A4  0.5  25  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "	    A4  1.0  25  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
 			
@@ -189,7 +195,11 @@
 			ttk::notebook::enableTraversal $noteBook_top
 
 				# --- 	select and update following Tab
-			$noteBook_top select $noteBook_top.cv_Custom02
+			# $noteBook_top select $noteBook_top.cv_Custom02
+			# $noteBook_top select $noteBook_top.cv_Custom00
+			# $noteBook_top select $noteBook_top.cv_Custom07
+			
+            $noteBook_top select $noteBook_top.cv_Custom00
 
 				# --- 	return
 			return $noteBook_top
@@ -273,7 +283,8 @@
 				cv_Custom03 -
 				cv_Custom04 -
 				cv_Custom05 -
-				cv_Custom06 {
+				cv_Custom06 -
+				cv_Custom07 {
 						$noteBook_top select $noteBook_top.$varName
 						cv_custom::update 	lib_gui::$varName 
 					}
@@ -533,7 +544,10 @@
 			puts "    ------------------------------------------------"
 			puts "      ... open $exportFile "
 			
-			lib_file::openFile_byExtension $exportFile .htm
+			lib_file::open_localFile $exportFile
+            
+                # lib_file::openFile_byExtension $exportFile
+                # lib_file::openFile_byExtension $exportFile .htm
 	}
 
 
@@ -572,7 +586,9 @@
 			puts "    ------------------------------------------------"
 			puts "      ... open $exportFile "
 			
-			lib_file::openFile_byExtension $exportFile .dxf
+			lib_file::open_localFile $exportFile
+
+                # lib_file::openFile_byExtension $exportFile .dxf
 	}
 
     
@@ -581,11 +597,11 @@
        #
 	proc notebook_createButton {nb_Canvas cv_Button	{type {default}}} {
 			
-			# puts " createButton_Reference2Custom:  $cv_Name"
+			puts "       createButton_Reference2Custom:  $cv_Button"
 			set cv_Name 	[lindex [split $nb_Canvas :] end]
 			set cv  	[lib_gui::notebook_getWidget  $cv_Name]
 				
-			case $cv_Button {
+			switch -regexp $cv_Button {
 					changeFormatScale {
 								if {$type != {default}} {
 									set buttonText "Format"
@@ -606,13 +622,25 @@
 					TubingCheckAngles {
 								# -- create a Button to execute tubing_checkAngles
 								catch { destroy $cv.button_TCA }
-								catch {	button  $cv.button_TCA \
+                                catch {	button  $cv.button_TCA \
 												-text "check Frame Angles" \
 												-command [format {lib_gui::tubing_checkAngles %s} $cv]								
 										$cv create window 7 19 \
 												-window $cv.button_TCA \
 												-anchor w \
 												-tags __Button__TCA__
+								}
+							}
+					ChainStayRendering {
+								# -- create a Button to set ChainStayRendering
+                                catch { destroy $cv.button_CSR }
+								catch {	button  $cv.button_CSR \
+												-text "switch: straight/bent/off" \
+												-command [format {lib_gui::rendering_ChainStay %s} $cv]								
+										$cv create window 7 19 \
+												-window $cv.button_CSR \
+												-anchor w \
+												-tags __Button__CSR__
 								}
 							}
 					Reference2Custom {
@@ -643,67 +671,23 @@
             }
             cv_custom::update [lib_gui::current_canvasCAD]
             return
-            
-            set cv_Name [lindex [split $cv .] end-1]
-			
-				# puts "  change_FormatScale:  cv: $cv"
-				# puts "  change_FormatScale:  cv_Name: $cv_Name"
-			
-			set 	lib_gui::stageFormat	A4
-			set 	lib_gui::stageScale		0.20		
-			
-			if {[ $cv find withtag __Select__Check_Angles__ ] == {} } {
-					catch 	{	set baseFrame [frame .f_checkAngle_$cv_Name  -relief raised -border 1]
-								$cv create window 27 35 \
-										-window $baseFrame \
-										-anchor nw \
-										-tags __Select__Check_Angles__
-								frame $baseFrame.select
-								pack  $baseFrame.select
-										
-							}
-			} else {
-					$cv delete 	__Select__Check_Angles__
-					$cv dtag 	__Select__Check_Angles__
-					destroy		.f_checkAngle__$cv_Name
-					#$cv.f_format destroy
-					return
-			}
-			
-			
-			set f_Angle	[frame $baseFrame.select.angle]
-					radiobutton $f_Angle.a4 -text A4 -value A4	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-					radiobutton $f_Angle.a3 -text A3 -value A3  -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-					radiobutton $f_Angle.a2 -text A2 -value A2	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-					radiobutton $f_Angle.a1 -text A1 -value A1	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-					radiobutton $f_Angle.a0 -text A0 -value A0	-variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-				pack $f_Angle.a4 \
-					 $f_Angle.a3 \
-					 $f_Angle.a2 \
-					 $f_Angle.a1 \
-					 $f_Angle.a0
-			
-			set f_Tolerance		[frame $baseFrame.select.tolerance]
-			if {$type == {default}} {
-					radiobutton $f_Tolerance.s020 -text "1:5  " 	-value 0.20 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-					radiobutton $f_Tolerance.s025 -text "1:4  " 	-value 0.25 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-					radiobutton $f_Tolerance.s033 -text "1:3  " 	-value 0.33 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-					radiobutton $f_Tolerance.s040 -text "1:2,5" 	-value 0.40 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-					radiobutton $f_Tolerance.s050 -text "1:2  " 	-value 0.50 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-					radiobutton $f_Tolerance.s100 -text "1:1  " 	-value 1.00 -anchor w 	-variable lib_gui::stageScale -command {puts $lib_gui::stageScale}
-				pack $f_Tolerance.s020 \
-					 $f_Tolerance.s025 \
-					 $f_Tolerance.s033 \
-					 $f_Tolerance.s040 \
-					 $f_Tolerance.s050 \
-					 $f_Tolerance.s100
-			}
-			pack $f_Angle $f_Tolerance -side left
-			
-			button 	$baseFrame.update \
-						-text "update" \
-						-command {lib_gui::notebook_formatCanvas  $lib_gui::stageFormat  $lib_gui::stageScale}
-			pack $baseFrame.update -expand yes -fill x			
+	}
+
+
+	#-------------------------------------------------------------------------
+       #  update Personal Geometry with parameters of Reference Geometry 
+       #
+	proc rendering_ChainStay {cv {type {default}}} {
+		
+			switch $project::Rendering(ChainStay) {
+                {straight}  { project::setValue Rendering(ChainStay)		value	{off-nb} }
+                {off-nb}    { project::setValue Rendering(ChainStay)		value	{s-bent} }       
+                {s-bent}    { project::setValue Rendering(ChainStay)		value	{off-ns} }
+                {off-ns}    { project::setValue Rendering(ChainStay)		value	{straight} }
+                default     { project::setValue Rendering(ChainStay)		value	{straight} }
+            }
+            cv_custom::update [lib_gui::current_canvasCAD]
+            return
 	}
 
 

@@ -39,6 +39,7 @@
 
  namespace eval project {
 
+    variable postUpdate [ dict create ]
  
 	#-------------------------------------------------------------------------
 	proc get_xPath {node} {
@@ -204,6 +205,8 @@
 										set _name 	[file join $_name Polygon] 
 									}
 								}
+                    value       {}
+                    default     {}
 			}
 			
 				# set domProject $::APPL_Env(root_ProjectDOM)			
@@ -213,7 +216,7 @@
 			if { $check_name == {} } {
 				puts "\n"
 				puts "         --<E>--setValue----------------------------"
-				puts "             ... $_name not found in [namespace current]::$_array"
+				puts "             ... /$_array/$_name not found in [namespace current]::$_array"
 				puts "         --<E>--setValue----------------------------"
 				puts "\n"
 				# eval parray [namespace current]::$_array
@@ -324,7 +327,7 @@
 			if { $check_name == {} } {
 				puts "\n"
 				puts "         --<E>--getValue----------------------------"
-				puts "             ... $_name not found in [namespace current]::$_array"
+				puts "             ... /$_array/$_name not found in [namespace current]::$_array"
 				puts "         --<E>--getValue----------------------------"
 				puts "\n"
 				return
@@ -361,18 +364,76 @@
 	#-------------------------------------------------------------------------
 		#  check File Version 3.1 -> 3.2
 		#	
-	proc check_ProjectVersion {Version} {
-	
-			set domProject $::APPL_Env(root_ProjectDOM)
-			puts "   ... check_ProjectVersion:  $Version"
+	proc update_Project {} {
+            
+			variable postUpdate ;# this dict will be returned at the end
+            
+            foreach key [dict keys $postUpdate] {
+                dict unset $postUpdate $key ;   # clear the dict
+            }
+            
+            set domProject      $::APPL_Env(root_ProjectDOM)
+            set project_Version [[$::APPL_Env(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
 			
-			switch -exact $Version {
+            		puts "\n"
+            		puts "    -------------------------------"
+            		puts "    project::update_Project"
+            		puts "       RELEASE_Version:  $::APPL_Env(RELEASE_Version)"
+            		puts "       RELEASE_Revision: $::APPL_Env(RELEASE_Revision)"
+                    puts ""
+                    puts "       project_Version:  $project_Version \n"
+            
+            if { $project_Version < 3.2 } {    
+                        #
+                    puts "\n\n       -- 3.1.xx -----------"
+                        #
+                    project::update_ProjectVersion {3.1}
+            }
+            if { $project_Version < 3.3 } {    
+                        #
+                     puts "\n\n       -- 3.2.xx -----------"
+                        #
+                    project::update_ProjectVersion {3.2.22}
+                    project::update_ProjectVersion {3.2.23}
+                    project::update_ProjectVersion {3.2.28}
+                    project::update_ProjectVersion {3.2.32}
+                    project::update_ProjectVersion {3.2.40}
+                    project::update_ProjectVersion {3.2.63}
+                    project::update_ProjectVersion {3.2.71}
+                    project::update_ProjectVersion {3.2.74}
+                    project::update_ProjectVersion {3.2.76}
+                        #
+                    project::update_ProjectVersion {3.3.00}
+            } 
+            if { $project_Version < 3.4 } {    
+                     puts "\n\n       -- 3.3.xx -----------"
+            }
+
+            return $postUpdate
+	}               
+             
+			
+	#-------------------------------------------------------------------------
+		#  check File Version 3.1 -> 3.2
+		#	
+	proc update_ProjectVersion {Version} {
+	
+			variable postUpdate
+            set domProject $::APPL_Env(root_ProjectDOM)
+			
+            		puts "\n"
+            		puts "       -------------------------------"
+            		puts "          project::update_ProjectVersion"
+            		puts "             Version:   $Version"
+            
+            switch -exact $Version {
 			
 				{3.1} {		set node {}
 								# --- /root/Personal/SeatTube_Length
 							set node [$domProject selectNode /root/Personal/SeatTube_Length]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Personal/SeatTube_Length"
+								puts "                           ... update File ... /root/Personal/SeatTube_Length"
+								puts "                           ... update File ... /root/Personal/SeatTube_Length"
 								set LegLength [expr 0.88 * [[$domProject selectNode /root/Personal/InnerLeg_Length] asText ] ]
 								set node [$domProject selectNode /root/Personal]
 								$node appendXML "<SeatTube_Length>$LegLength</SeatTube_Length>"
@@ -381,7 +442,7 @@
 								# --- /root/Result
 							set node [$domProject selectNode /root/Result]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Result"
+								puts "                           ... update File ... /root/Result"
 								set node [$domProject selectNode /root]
 								$node appendXML "<Result>
 													<HeadTube>
@@ -412,7 +473,7 @@
 								# --- /root/Rendering
 							set node [$domProject selectNode /root/Rendering]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Rendering"
+								puts "                           ... update File ... /root/Rendering"
 								set node [$domProject selectNode /root]
 								$node appendXML "<Rendering>
 													<Fork>SteelLugged</Fork>
@@ -425,7 +486,7 @@
 								# --- /root/Result/HeadTube/TopTubeAngle
 							set node [$domProject selectNode /root/Result/HeadTube/TopTubeAngle]
 							if {$node == {}} {
-								# puts "        ...  $Version   ... update File ... /root/Result/HeadTube/TopTubeAngle"
+								# puts "                           ... update File ... /root/Result/HeadTube/TopTubeAngle"
 								# set node [$domProject selectNode /root/Result/HeadTube]
 								# $node appendXML "<TopTubeAngle>0.00</TopTubeAngle>"
 							}
@@ -435,7 +496,7 @@
 								# --- /root/Component/BottleCage
 							set node [$domProject selectNode /root/Component/BottleCage]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Component/BottleCage"
+								puts "                           ... update File ... /root/Component/BottleCage"
 								set node [$domProject selectNode /root/Component]
 								# puts "  [$node asXML]"
 								$node appendXML "<BottleCage>
@@ -459,7 +520,7 @@
 								# --- /root/Rendering/BottleCage ...
 							set node [$domProject selectNode /root/Rendering/BottleCage]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Rendering/BottleCage"
+								puts "                           ... update File ... /root/Rendering/BottleCage"
 								set node [$domProject selectNode /root/Rendering]
 								$node appendXML "<BottleCage>
 													<SeatTube>Cage</SeatTube>
@@ -471,7 +532,7 @@
 								# --- /root/Component/Derailleur
 							set node [$domProject selectNode /root/Component/Derailleur/Front]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Component/Derailleur"
+								puts "                           ... update File ... /root/Component/Derailleur"
 								set oldNode [$domProject selectNode /root/Component/Derailleur/File/text()]
 								# puts " ... asXML     [$oldNode asXML]"				
 								# puts " ... nodeValue [$oldNode nodeValue]"				
@@ -500,7 +561,7 @@
 								# --- /root/Rendering/Brake ...
 							set node [$domProject selectNode /root/Rendering/Brakes]
 							if {$node != {}} {
-								puts "        ...  $Version   ... update File ... /root/Rendering/Brakes"
+								puts "                           ... update File ... /root/Rendering/Brakes"
 								set parentNode [$node parentNode]
 								$parentNode removeChild $node
                                 $node delete
@@ -509,7 +570,7 @@
 								# --- /root/Rendering/Brake ...
 							set node [$domProject selectNode /root/Rendering/Brake]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Rendering/Brake"
+								puts "                           ... update File ... /root/Rendering/Brake"
 								set node [$domProject selectNode /root/Rendering]
 								$node appendXML "<Brake>
 													<Front>Road</Front>
@@ -521,7 +582,7 @@
 								# --- /root/Result ...
 							set node [$domProject selectNode /root/Result]
 							if {$node != {}} {
-								puts "        ...  $Version   ... update File ... /root/Result"
+								puts "                           ... update File ... /root/Result"
 								foreach childNode [ $node childNodes ] {
                                         # -- cleanup /root/Result
                                     $node removeChild $childNode
@@ -530,7 +591,7 @@
 								# --- /root/Result/Tubes ...
 							set node [$domProject selectNode /root/Result/Tubes]
 							if {$node == {}} {
-								puts "        ...  $Version   ... update File ... /root/Result/Tubes"
+								puts "                           ... update File ... /root/Result/Tubes"
 								set node [$domProject selectNode /root/Result]
 								$node appendXML "<Tubes/>"
 								set node [$domProject selectNode /root/Result/Tubes]
@@ -546,7 +607,7 @@
 															<Polygon>0.00,0.00</Polygon>
 														</$tubeName>"
 								}
-								puts "        ...  $Version   ... update File ... /root/Result/Tubes/.../BottleCage"
+								puts "                           ... update File ... /root/Result/Tubes/.../BottleCage"
 								set bottleCageXML "<BottleCage>
 														<Base>0.00,0.00</Base>
 														<Offset>0.00,0.00</Offset>
@@ -559,14 +620,14 @@
 														<Base>0.00,0.00</Base>
 														<Offset>0.00,0.00</Offset>
 													</BottleCage_Lower>"
-								puts "        ...  $Version   ... update File ... /root/Result/Tubes/ChainStay/SeatStay_IS"
+								puts "                           ... update File ... /root/Result/Tubes/ChainStay/SeatStay_IS"
 								set node [$domProject selectNode /root/Result/Tubes/ChainStay]
 								$node appendXML "<SeatStay_IS>0.00,0.00</SeatStay_IS>"
 							}
 							
 								# --- /root/Result/Lugs ...
 							set node [$domProject selectNode /root/Result]
-								puts "        ...  $Version   ... update File ... /root/Result/Lugs"
+								puts "                           ... update File ... /root/Result/Lugs"
 								$node appendXML "<Lugs>
 													<Dropout>
 														<Rear>
@@ -599,7 +660,7 @@
 												
 								# --- /root/Result/Components ...
 							set node [$domProject selectNode /root/Result]
-								puts "        ...  $Version   ... update File ... /root/Result/Components"
+								puts "                           ... update File ... /root/Result/Components"
 								$node appendXML "<Components>
 													<SeatPost>
 														<Polygon>0.00,0.00</Polygon>
@@ -619,7 +680,7 @@
 												
 								# --- /root/Result/Position ...
 							set node [$domProject selectNode /root/Result]
-								puts "        ...  $Version   ... update File ... /root/Result/Position"
+								puts "                           ... update File ... /root/Result/Position"
 								$node appendXML "<Position>
 													<BottomBracket>0.00,0.00</BottomBracket>
 													<FrontWheel>0.00,0.00</FrontWheel>
@@ -639,7 +700,7 @@
 												
 								# --- /root/Result/TubeMiter ...
 							set node [$domProject selectNode /root/Result]
-								puts "        ...  $Version   ... update File ... /root/Result/Position"
+								puts "                           ... update File ... /root/Result/Position"
 								$node appendXML "<TubeMiter>
 													<TopTube_Head>
 														<Polygon>0.00,0.00</Polygon>
@@ -666,7 +727,7 @@
 								# --- /root/Temporary/BottomBracket ...
 							set node [$domProject selectNode /root/Temporary/BottomBracket]
 							if {$node == {}} {
-								#puts "        ...  $Version   ... update File ... /root/Temporary/BottomBracket"
+								#puts "                           ... update File ... /root/Temporary/BottomBracket"
 								#set node [$domProject selectNode /root/Temporary]
 								#$node appendXML "<BottomBracket>
 								#						<Height>0.00</Height>
@@ -741,7 +802,7 @@
 							set node [$domProject selectNode /root/Custom/HeadTube/Angle]
 							if {$node == {}} {
 									# ... node does not exist
-								puts "        ...  $Version   ... update File ... /root/Custom/HeadTube/Angle"
+								puts "                           ... update File ... /root/Custom/HeadTube/Angle"
 								set nodeTA [$domProject selectNode /root/Result/Angle/HeadTube/TopTube/text()]
 								if {$nodeTA == {}} {
 										# ... no temporary informtion, take a default
@@ -782,7 +843,7 @@
 				{3.2.63} {	set node {}			
 							set oldNode [$domProject selectNode /root/Custom/WheelPosition/Front]
 							if {$oldNode != {}} {
-								puts "        ...  $Version   ... update File ... /root/Custom/WheelPosition/Front"
+								puts "                           ... update File ... /root/Custom/WheelPosition/Front"
 								set node 	[$domProject selectNode /root/Custom/WheelPosition]
 								$node removeChild $oldNode 
 								$oldNode delete
@@ -798,7 +859,7 @@
 									}
 							}
                             if {$node != {}} {
-								puts "        ...  $Version   ... update File ... /root/Result/Position/"							
+								puts "                           ... update File ... /root/Result/Position/"							
                                 $node appendXML "<BrakeFront>0,0</BrakeFront>"
                                 $node appendXML "<BrakeRear>0,0</BrakeRear>"
                             }
@@ -810,7 +871,7 @@
 										set value	[$txtNode nodeValue]
 										if {$value == "Road"} {
 											# puts "\n   ... dawischt\n"
-											puts "        ...  $Version   ... update File ... /root/Rendering/Brake/$child"							
+											puts "                           ... update File ... /root/Rendering/Brake/$child"							
                                             $txtNode nodeValue "Rim"
 										}
 									}
@@ -819,17 +880,17 @@
 				{3.2.74} {	set node {}							
 							set node [$domProject selectNode /root/Component/Fork/Crown/Brake/OffsetPerp]
 							if {$node != {}} {
-								puts "        ...  $Version   ... update File ... /root/Component/Fork/Crown/Brake"
-								set parentNode [$node parentNode]
-								$parentNode removeChild $node
-                                $node delete
+                                    puts "                           ... update File ... /root/Component/Fork/Crown/Brake"
+                                    set parentNode [$node parentNode]
+                                    $parentNode removeChild $node
+                                    $node delete
 							}
                         }
                        
 				{3.2.76} {	set node {}							
 							set node [$domProject selectNode /root/Lugs]
                             if {$node == {}} {                     
-                                puts "        ...  $Version   ... update File ... /root/Lugs"
+                                puts "                           ... update File ... /root/Lugs"
                                 set node [$domProject selectNode /root]
                                 $node appendXML "<Lugs>
                                                     <HeadTube>
@@ -883,7 +944,7 @@
                                     # puts " ... [$node asXML] .."
                                     # puts " ... [$node nodeValue] .."
                                 if {[$node nodeValue] == {20.00}} {
-                                        puts "        ...  $Version   ... update File ... /root/Lugs/SeatTube/SeatStay/MiterDiameter"
+                                        puts "                           ... update File ... /root/Lugs/SeatTube/SeatStay/MiterDiameter"
                                         set resultNode [$domProject selectNode /root/FrameTubes/SeatTube/DiameterTT/text()]
                                         # puts "    ... [$resultNode nodeValue] .."
                                         $node nodeValue [$resultNode nodeValue]
@@ -893,7 +954,7 @@
                             set node {}							
 							set node [$domProject selectNode /root/Component/RearDropOut]
 							if {$node != {}} {
-								puts "        ...  $Version   ... update File ... /root/Lugs/RearDropOut"
+								puts "                           ... update File ... /root/Lugs/RearDropOut"
 								set parentNode [$node parentNode]
 								$parentNode removeChild $node
                                 set targetNode [$domProject selectNode /root/Lugs]
@@ -903,7 +964,7 @@
                             set node {}							
 							set node [$domProject selectNode /root/Lugs/RearDropOut]
                             if {$node != {}} {
-								puts "        ...  $Version   ... update File ... /root/Lugs/RearDropOut/Angle"
+								puts "                           ... update File ... /root/Lugs/RearDropOut/Angle"
                                 $node appendXML "<Angle>
                                                     <value>67.00</value>
                                                     <plus_minus>1.00</plus_minus>
@@ -914,12 +975,205 @@
 								# --- /root/Temporary ...
 							set node [$domProject selectNode /root/Temporary]
 							if {$node != {}} {
-								puts "        ...  $Version   ... update File ... /root/Temporary"
+								puts "                           ... update File ... /root/Temporary"
 								set parentNode [$node parentNode]
 								$parentNode removeChild $node
                                 $node delete
 							}
 
+                        }
+                       
+								
+				{3.3.00} {	
+                                #
+                                # -- /root/Rendering
+                                #
+                            set parentNode [$domProject selectNode /root/Rendering]
+                            
+                            set node {}							
+                            set node [$domProject selectNode /root/Rendering/ChainStay]
+                            if {$node == {}} {                     
+                                    puts "                           ... update File ... /root/Rendering/ChainStay"
+                                    $parentNode appendXML "       <ChainStay>straight</ChainStay>"
+                            }
+                            
+                            set node {}							
+							set node [$domProject selectNode /root/Rendering/RearMockup]
+                            if {$node == {}} {                     
+                                    puts "                           ... update File ... /root/Rendering/RearMockup"
+                                    $parentNode appendXML " <RearMockup>
+                                                                <TyreClearance>5.00</TyreClearance>
+                                                                <CrankClearance>5.00</CrankClearance>
+                                                                <ChainWheelClearance>5.00</ChainWheelClearance>
+                                                                <CassetteClearance>3.00</CassetteClearance>
+                                                            </RearMockup>"
+                            }
+                                
+                                #
+                                # -- /root/FrameTubes/ChainStay
+                                #
+                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay]
+                                
+                                set value(DiameterBB)  [[ $parentNode selectNode DiameterBB/text() ] nodeValue]
+                                set value(DiameterSS)  [[ $parentNode selectNode DiameterSS/text() ] nodeValue]
+                                set value(TaperLength) [[ $parentNode selectNode TaperLength/text()] nodeValue]
+
+                            foreach node [$parentNode childNodes] {
+                                    $parentNode removeChild $node
+                                    $node delete                                    
+                            }
+                            
+                            $parentNode appendXML "<HeightBB>$value(DiameterBB)</HeightBB>"
+                            $parentNode appendXML "<Height>$value(DiameterBB)</Height>"
+                            $parentNode appendXML "<DiameterSS>$value(DiameterSS)</DiameterSS>"
+                            $parentNode appendXML "<TaperLength>$value(TaperLength)</TaperLength>"
+                            $parentNode appendXML "<Width>18.00</Width>"
+                            $parentNode appendXML "<WidthBB>18.00</WidthBB>"
+                            $parentNode appendXML "<Bent>
+                                                        <Base_00>
+                                                            <Offset>120.00</Offset>
+                                                            <OffsetPerp>0.00</OffsetPerp>
+                                                        </Base_00>
+                                                        <Base_DO>
+                                                            <Offset>60.00</Offset>
+                                                            <OffsetPerp>-7.00</OffsetPerp>
+                                                        </Base_DO>
+                                                        <Base_BB>
+                                                            <Offset>90.00</Offset>
+                                                            <OffsetPerp>5.00</OffsetPerp>
+                                                        </Base_BB>
+                                                    </Bent>"                            
+                            
+                                #
+                                # -- /root/Lugs/BottomBracket
+                                #
+                            set parentNode [$domProject selectNode /root/Lugs]
+                                     
+                            set node {}							
+							set node [$parentNode selectNode BottomBracket]
+                            if {$node != {}} {                     
+                                    puts "                           ... update File ... /root/Lugs/BottomBracket/.."
+                                    $node appendXML "<Diameter>
+                                                        <outside>40.00</outside>
+                                                        <inside>36.00</inside>
+                                                    </Diameter>"
+                                    $node appendXML "<Width>68.00</Width>"
+                            }
+                            
+                            set node {}							
+							set node [$parentNode selectNode BottomBracket/ChainStay]
+                            if {$node != {}} {                     
+                                    puts "                           ... update File ... /root/Lugs/BottomBracket/ChainStay/Offset_TopView"
+                                    $node appendXML " <Offset_TopView>6.00</Offset_TopView>"
+                            }
+                            
+                            set node {}							
+							set node [$parentNode selectNode RearDropOut/ChainStay]
+                            if {$node != {}} {                     
+                                    puts "                           ... update File ... /root/Lugs/RearDropOut/ChainStay/Offset_TopView"
+                                    $node appendXML "<Offset_TopView>5.00</Offset_TopView>"
+                            }
+                            
+                            
+                                #
+                                # -- /root/Component
+                                #
+                            set parentNode [$domProject selectNode /root/Component]
+                            
+                                # -- /root/Component/Wheel/Rear
+                                #
+                            set node {}							
+							set node [$parentNode selectNode Wheel/Rear]
+                            if {$node != {}} {                     
+                                    puts "                           ... update File ... /root/Component/Wheel/Rear ..."
+                                    $node appendXML "<HubWidth>130.00</HubWidth>"
+                                    $node appendXML "<FirstSprocket>15</FirstSprocket>"
+                            }
+                            
+                                # -- /root/Component/Saddle
+                                #
+                            set node {}							
+							set node [$parentNode selectNode Saddle]
+                            if {$node != {}} {                     
+                                    puts "                           ... update File ... /root/Component/Saddle/Height"
+                                    $node appendXML "<Height>40.00</Height>"
+                            }
+                            
+                                # -- /root/Component/SeatPost
+                                #
+                            set node {}	
+							set node [$parentNode selectNode SeatPost]
+                            if {$node == {}} {                     
+                                    puts "                           ... update File ... /root/Component/SeatPost"
+                                    set value(DiameterSP)  [[ $parentNode selectNode Saddle/SeatPost/Diameter/text() ] nodeValue]
+                                            
+                                    set nodeSP  [$parentNode selectNode Saddle/SeatPost]
+                                    if {$nodeSP != {}} {                     
+                                            [$nodeSP parentNode ] removeChild $nodeSP
+                                            $nodeSP delete
+                                    }
+                                    set nextNode [$parentNode selectNode CrankSet]
+                                    set newNode  [[$parentNode ownerDocument ] createElement SeatPost]
+                                    $parentNode insertBefore  $newNode  $nextNode
+                                    $newNode appendXML "<Setback>25.00</Setback>"
+                                    $newNode appendXML "<Diameter>27.20</Diameter>"
+                            }
+                            
+                                # -- /root/Component/CrankSet
+                                #
+                            set node {}	
+							set node [$parentNode selectNode CrankSet]
+                            if {$node != {}} {                     
+                                    puts "                           ... update File ... /root/Component/CrankSet"
+                                    $node appendXML "<PedalEye>17.50</PedalEye>"
+                                    $node appendXML "<Q-Factor>145.50</Q-Factor>"
+                                    $node appendXML "<ArmWidth>13.75</ArmWidth>"
+                                    $node appendXML "<ChainLine>43.50</ChainLine>"
+                                    $node appendXML "<ChainRings>39;53</ChainRings>"
+                           }
+                           
+                           
+                                #
+                                # -- /root/Result
+                                #
+                            set parentNode [$domProject selectNode /root/Result]
+                                    puts "                           ... update File ... /root/Result"
+                            foreach node [$parentNode childNodes] {
+                                    $parentNode removeChild $node
+                                    $node delete                                    
+                            } 
+                            set templateRoot    [ lib_file::openFile_xml $::APPL_Env(TemplateInit)]
+                            set resultNode      [ $templateRoot selectNode /root/Result]
+                                # puts "[$resultNode asXML]"
+                            foreach child       [ $resultNode childNodes ] {
+                                    catch {$parentNode appendXML [$child asXML]}
+                            }
+                           
+                           
+                                #
+                                # -- /root/Personal
+                                #
+                            set parentNode [$domProject selectNode /root/Personal]
+                                    puts "                           ... update File ... /root/Personal"
+                                set value(ST_Angle)     [[ $parentNode selectNode SeatTube_Angle/text() ] nodeValue]
+                                # set value(ST_Length)  [[ $parentNode selectNode SeatTube_Length/text() ] nodeValue]
+                                
+                            foreach nodeName {SeatTube_Angle SeatTube_Length} {
+                                    set node    [$parentNode selectNode $nodeName]
+                                    $parentNode removeChild $node
+                                    $node delete                                    
+                            }
+                            $parentNode appendXML   "<Saddle_Distance>200</Saddle_Distance>"
+                            $parentNode appendXML   "<Saddle_Height>718.00</Saddle_Height>"
+                            
+                            
+                                #
+                                # -- update values
+                                #
+                            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                            dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
+                            # pdict $postUpdate
+                        
                         }
                        
 								
@@ -948,6 +1202,53 @@
 				# tk_messageBox -message "flatten_nestedList:\n    $args  -/- [llength $args] \n $flatList  -/- [llength $flatList]"
 			return $flatList
 	}	
+    
+    
+	#-------------------------------------------------------------------------
+		# see  http://wiki.tcl.tk/23526
+		#
+    proc pdict { d {i 0} {p "  "} {s " -> "} } {
+            set errorInfo $::errorInfo
+            set errorCode $::errorCode
+                set fRepExist [expr {0 < [llength\
+                        [info commands tcl::unsupported::representation]]}]
+            while 1 {
+                if { [catch {dict keys $d}] } {
+                    if {! [info exists dName] && [uplevel 1 [list info exists $d]]} {
+                        set dName $d
+                        unset d
+                        upvar 1 $dName d
+                        continue
+                    }
+                    return -code error  "error: pdict - argument is not a dict"
+                }
+                break
+            }
+            if {[info exists dName]} {
+                puts "dict $dName"
+            }
+            set prefix [string repeat $p $i]
+            set max 0
+            foreach key [dict keys $d] {
+                if { [string length $key] > $max } {
+                    set max [string length $key]
+                }
+            }
+            dict for {key val} ${d} {
+                puts -nonewline "${prefix}[format "%-${max}s" $key]$s"
+                if {    $fRepExist && ! [string match "value is a dict*"\
+                            [tcl::unsupported::representation $val]]
+                        || ! $fRepExist && [catch {dict keys $val}] } {
+                    puts "'${val}'"
+                } else {
+                    puts ""
+                    pdict $val [expr {$i+1}] $p $s
+                }
+            }
+            set ::errorInfo $errorInfo
+            set ::errorCode $errorCode
+            return ""
+    }
 		
 }
 

@@ -52,6 +52,16 @@
 			}
 			return $newList
 	}
+    proc addVectorPointList {v  p_list {scaling 1}} {
+			set newList {}
+            foreach {x1 y1} $v break
+            foreach {xl yl} $p_list { 
+                set x [expr {$x1 + $scaling*$xl}] 
+                set y [expr {$y1 + $scaling*$yl}]
+                lappend newList $x $y
+            }
+			return $newList
+	}
 
 	proc rotatePoint { p_cent p_rot angle } { 
 			# start at 3 o'clock counterclockwise
@@ -114,6 +124,14 @@
             }            
     }
 
+	proc mirrorPoint { p1 p2 p3 } { 
+			# perpendicular intersectPoint from vector(p1,p2) through p3
+            set p_IS_Perp   [intersectPerp $p1 $p2 $p3]
+            set vct_perp    [ subVector $p_IS_Perp $p3 ]
+            set mP          [ addVector $p_IS_Perp $vct_perp]
+            return $mP
+	}
+
 	proc intersectPerp { p1 p2 p3 } { 
 			# perpendicular intersectPoint from vector(p1,p2) through p3
 			set vct_h1	[ subVector [ rotatePoint $p1 $p2 90 ] $p1]
@@ -148,7 +166,14 @@
 			return          [ addVector $p1 $v_line_c]
 	}
 
-	proc unifyVector { p1 p2 {length {1.0}}} {
+	proc unifyVectorPointList {vct {length {1.0}}} {
+            set p1 [lindex $vct 0]
+            set p2 [lindex $vct 1]
+            set vector [unifyVector $p1 $p2 $length]
+            return $vector
+    }
+    
+    proc unifyVector { p1 p2 {length {1.0}}} {
 			# return vector with length 1 as default
 			set vector 		[ addVector $p2 $p1 -1 ] 
 			set vctLength 	[ expr hypot([lindex $vector 0],[lindex $vector 1]) ]
@@ -174,7 +199,8 @@
 
 	proc cathetusPoint { p1 p2 cathetus {position {close}}} { 
 			# return third point of rectangular triangle
-			#   p3 allways on right side from p1 to p2
+			#   p3  locates perpendicular Angle
+            #       allways on right side from p1 to p2 
 			#   position:  [close/opposite] ... given cathetus close to p1 / close to p2
 			variable CONST_PI
 			set hypothenuse	[ addVector $p1 $p2 -1 ] 
@@ -226,10 +252,17 @@
              #   we want K,J where p1+K(v1) = p3+J(v3)
              #   convert into and solve matrix equation (a b / c d) ( K / J) = ( e / f )
              #            
-	proc intersectPoint {p1 p2 p3 p4} {
-			return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]]
+	proc intersectVector {v1 v2   {errorMode {}} } {
+			set p1 [lindex $v1 0]
+			set p2 [lindex $v1 1]
+			set p3 [lindex $v2 0]
+			set p4 [lindex $v2 1]
+            return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
 	} 
-	proc intersectPointVector {p1 v1 p3 v3} {
+	proc intersectPoint {p1 p2 p3 p4   {errorMode {}} } {
+			return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
+	} 
+	proc intersectPointVector {p1 v1 p3 v3   {errorMode {}} } {
 			foreach {x1 y1} $p1 {vx1 vy1} $v1 {x3 y3} $p3 {vx3 vy3} $v3 break
 
 			set a $vx1
@@ -240,7 +273,20 @@
 			set f [expr {$y3 - $y1}]
 
 			set det [expr {double($a*$d - $b*$c)}]
-			if {$det == 0} {error "Determinant is 0"}
+			if {$det == 0} {
+                switch $errorMode {
+                    {}  { error "Determinant is 0" }
+                    {center} {
+                            puts "\n   <E>\n   <E>  Determinant is 0 \n   <E>"
+                            set p4 [ center $p1 $p3 ]
+                            set p5 [ addVector $p4 [list [expr 0.5 * ($vx1 + $vx3)]  [expr 0.5 * ($vy1 + $vy3)] ] ]
+                            return $p5
+                        }
+                    default {
+                            error "Determinant is 0" 
+                        }
+                }
+            }
 
 			set k [expr {($d*$e - $b*$f) / $det}]
 			return [addVector $p1 $v1 $k]

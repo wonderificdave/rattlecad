@@ -174,9 +174,7 @@
 							set SeatPost(object)		[ $cv_Name create polygon $SeatPost(polygon) -fill white  -outline black  -tags __Decoration__ ]
 							if {$updateCommand != {}} 	{ $cv_Name bind	$SeatPost(object)	<Double-ButtonPress-1> \
 																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																					{ 	Component(Saddle/SeatPost/x)	\
-																						Component(Saddle/SeatPost/y)	\
-																						Component(Saddle/SeatPost/Diameter)	\
+																					{ 	Component(SeatPost/Diameter)	\
 																					} 	{SeatPost Parameter} \
 																	]
 														  lib_gui::object_CursorBinding 	$cv_Name	$SeatPost(object)
@@ -472,9 +470,6 @@
 		}
 
 		
-			# --- create Steerer ---------------------
-		set Steerer(polygon) 		[ frame_geometry::object_values 	Steerer 	polygon		$BB_Position  ]
-		#set Steerer(object)			[ $cv_Name create polygon $Steerer(polygon) -fill white -outline black -tags __Frame__ ]
 
 			# --- create Rear Dropout ----------------
 		set RearWheel(position)		[ frame_geometry::object_values		RearWheel	position	$BB_Position]
@@ -557,8 +552,9 @@
 		                              $cv_Name addtag  __Frame__ withtag $ChainStay(object)
 		if {$updateCommand != {}}	{ $cv_Name bind	$ChainStay(object)	<Double-ButtonPress-1> \
 													[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																	{	FrameTubes(ChainStay/DiameterSS)		\
-																		FrameTubes(ChainStay/DiameterBB)		\
+																	{	FrameTubes(ChainStay/DiameterSS)	\
+																		FrameTubes(ChainStay/Height)		\
+																		FrameTubes(ChainStay/HeightBB)		\
 																		FrameTubes(ChainStay/TaperLength)	\
 																	} 	{Chainstay Parameter}
 													]
@@ -581,12 +577,26 @@
 				}
 
 			# --- create BottomBracket ---------------
-		$cv_Name create circle  $BB_Position			-radius 20	-fill $tubeColour	-tags __Frame__
-
+		set BottomBracket(outerDiameter) 	$project::Lugs(BottomBracket/Diameter/outside)
+		set BottomBracket(innerDiameter) 	$project::Lugs(BottomBracket/Diameter/inside)
+		set BottomBracket(object_1)         [ $cv_Name create circle  $BB_Position  -radius [expr 0.5 * $BottomBracket(outerDiameter)]	-fill $tubeColour	-tags {__Frame__  __BottomBracket__  outside} ]
+		set BottomBracket(object_2)         [ $cv_Name create circle  $BB_Position  -radius [expr 0.5 * $BottomBracket(innerDiameter)]	-fill $tubeColour	-tags {__Frame__  __BottomBracket__  inside} ]
+        set BottomBracket(object)   __BottomBracket__
+        $cv_Name addtag $BottomBracket(object) withtag $BottomBracket(object_1) 
+        $cv_Name addtag $BottomBracket(object) withtag $BottomBracket(object_2) 
+		if {$updateCommand != {}}	{ $cv_Name bind	__BottomBracket__	<Double-ButtonPress-1> \
+													[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																	{ 	Lugs(BottomBracket/Diameter/outside)   \
+																		Lugs(BottomBracket/Diameter/inside))   \
+																	} 	{BottomBracket Diameter}
+													]
+									lib_gui::object_CursorBinding 	$cv_Name	$BottomBracket(object)
+                }
 	}
 
+
 	
-	proc createFork_Rep {cv_Name BB_Position {updateCommand {}}} {
+	proc createFork_Rep {cv_Name BB_Position {updateCommand {}} } {
 			
 		set domInit 	$::APPL_Env(root_InitDOM)
 
@@ -616,6 +626,12 @@
 			return $svgFile
 		}
 
+
+			# --- create Steerer ---------------------
+		set Steerer(polygon) 		[ frame_geometry::object_values 	Steerer 	polygon		$BB_Position  ]
+		set Steerer(object)			[ $cv_Name create polygon $Steerer(polygon) -fill white -outline black -tags __Frame__ ]
+        
+        
 		
 		set RearWheel(position)		[ frame_geometry::object_values		RearWheel	position	$BB_Position]
 		
@@ -722,7 +738,9 @@
 		
 		$cv_Name create circle  $ForkDropout(position)	-radius 4.5	-fill white	-tags __Frame__
 		
-			#switch $Rendering(Fork) 
+		
+			# SeatPost_Saddle(Position)
+            #switch $Rendering(Fork) 
 			#	SteelLugged {
 			#				}
 			#	Composite 	{
@@ -763,9 +781,6 @@
 	proc createFrame_Centerline {cv_Name BB_Position {highlightList {}} {backgroundList {}} {excludeList {}} } {
 			
 
-			## -- read from domProject
-		# remove 3.2.70 ;# set domProject $::APPL_Env(root_ProjectDOM)
-
 			# --- get stageScale
 		set stageScale 	[ $cv_Name  getNodeAttr  Stage	scale ]	
 	
@@ -774,21 +789,34 @@
 		set CrankSetLength			$project::Component(CrankSet/Length)
 			# --- get defining Point coords ----------
 		set BottomBracket		$BB_Position	
-		set RearWheel			[ frame_geometry::object_values		RearWheel			position	$BB_Position ]
-		set FrontWheel			[ frame_geometry::object_values  	FrontWheel			position	$BB_Position ]
-		set Saddle				[ frame_geometry::object_values  	Saddle				position	$BB_Position ]
-		set SeatTube_Ground		[ frame_geometry::object_values  	SeatTubeGround		position	$BB_Position ]
-		set SeatStay_SeatTube	[ frame_geometry::object_values     SeatStay/End		position	$BB_Position ]
-		set SeatStay_RearWheel	[ frame_geometry::object_values     SeatStay/Start		position	$BB_Position ]
-		set TopTube_SeatTube	[ frame_geometry::object_values     TopTube/Start		position	$BB_Position ]
-		set TopTube_Steerer		[ frame_geometry::object_values		TopTube/End			position	$BB_Position ]
-		set Steerer_Stem		[ frame_geometry::object_values  	Steerer/End			position	$BB_Position ]
-		set Steerer_Fork		[ frame_geometry::object_values  	Steerer/Start		position	$BB_Position ]
-		set DownTube_Steerer	[ frame_geometry::object_values		DownTube/End		position 	$BB_Position ]
-		set HandleBar			[ frame_geometry::object_values  	HandleBar 			position	$BB_Position ]
-		set BaseCenter			[ frame_geometry::object_values  	BottomBracketGround	position	$BB_Position ]
-		set Steerer_Ground		[ frame_geometry::object_values  	SteererGround		position	$BB_Position ]		
-		set LegClearance		[ vectormath::addVector $frame_geometry::LegClearance(Position)  	$BB_Position ]
+		set RearWheel			[ frame_geometry::object_values		RearWheel			    position	$BB_Position ]
+		set FrontWheel			[ frame_geometry::object_values  	FrontWheel			    position	$BB_Position ]
+		set Saddle				[ frame_geometry::object_values  	Saddle				    position	$BB_Position ]
+		set Saddle_Proposal		[ frame_geometry::object_values  	SaddleProposal	        position	$BB_Position ]
+		set SeatPost_Saddle		[ frame_geometry::object_values  	SeatPostSaddle		    position	$BB_Position ]
+		set SeatPost_SeatTube	[ frame_geometry::object_values  	SeatPostSeatTube	    position	$BB_Position ]
+		set SeatTube_Ground		[ frame_geometry::object_values  	SeatTubeGround		    position	$BB_Position ]
+		set SeatStay_SeatTube	[ frame_geometry::object_values     SeatStay/End		    position	$BB_Position ]
+		set SeatStay_RearWheel	[ frame_geometry::object_values     SeatStay/Start		    position	$BB_Position ]
+		set TopTube_SeatTube	[ frame_geometry::object_values     TopTube/Start		    position	$BB_Position ]
+		set TopTube_Steerer		[ frame_geometry::object_values		TopTube/End			    position	$BB_Position ]
+		set Steerer_Stem		[ frame_geometry::object_values  	Steerer/End			    position	$BB_Position ]
+		set Steerer_Fork		[ frame_geometry::object_values  	Steerer/Start		    position	$BB_Position ]
+		set DownTube_Steerer	[ frame_geometry::object_values		DownTube/End		    position 	$BB_Position ]
+		set HandleBar			[ frame_geometry::object_values  	HandleBar 			    position	$BB_Position ]
+		set BaseCenter			[ frame_geometry::object_values  	BottomBracketGround	    position	$BB_Position ]
+		set Steerer_Ground		[ frame_geometry::object_values  	SteererGround		    position	$BB_Position ]		
+		set LegClearance		[ vectormath::addVector     $frame_geometry::LegClearance(Position)  	$BB_Position ]
+
+        set Saddle_PropRadius	[ vectormath::length                $Saddle_Proposal $BB_Position]
+        set SeatTube_Angle      [ vectormath::angle                 $SeatPost_SeatTube $BB_Position [list -500 [lindex $BB_Position 1] ] ]
+
+        
+        # set debug_01 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
+		# set debug_01        [ frame_geometry::object_values		Lugs/ForkCrown		position	$BB_Position ]				
+        # set debug_01 		[ frame_geometry::object_values		Result/Position/SeatPost_Saddle position	$BB_Position ]
+        # $cv_Name create circle  $debug_01	-radius 20	-fill white	-tags __Frame__ -outline darkred
+
 						
 		set RimDiameter_Front	$project::Component(Wheel/Front/RimDiameter)
 		set TyreHeight_Front	$project::Component(Wheel/Front/TyreHeight)
@@ -797,23 +825,23 @@
 
 			
 			# ------ rearwheel representation
-            $cv_Name create circle 	$RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]  	-outline gray60 -width 1.0	    -tags {__CenterLine__	rearWheel}
+        $cv_Name create circle 	$RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]  	-outline gray60 -width 1.0	-tags {__CenterLine__	rearWheel}
 			# ------ frontwheel representation
-            $cv_Name create circle 	$FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  	-outline gray60	-width 1.0	    -tags {__CenterLine__	frontWheel}
+        $cv_Name create circle 	$FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  	-outline gray60	-width 1.0	-tags {__CenterLine__	frontWheel}
 
             
 			# ------ headtube extension to ground
-		$cv_Name create centerline [ project::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]  	-fill gray60 				-tags __CenterLine__
+		$cv_Name create centerline [ project::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]  	    -fill gray60 				-tags __CenterLine__
 			# ------ seattube extension to ground
-		$cv_Name create centerline [ project::flatten_nestedList  $BottomBracket  $SeatTube_Ground  ]  	-fill gray60 				-tags {__CenterLine__	seattube_center}
+		$cv_Name create centerline [ project::flatten_nestedList  $BottomBracket  $SeatTube_Ground  ]  	    -fill gray60 				-tags {__CenterLine__	seattube_center}
 
             
 		# ------ chainstay
-		$cv_Name create line 	[ project::flatten_nestedList  $RearWheel 		$BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	chainstay}			
+		$cv_Name create line 	[ project::flatten_nestedList  $RearWheel 		    $BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	chainstay}			
 			# ------ seattube                                                                                                               
-		$cv_Name create line 	[ project::flatten_nestedList  $Saddle 			$BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	seattube}			
+		$cv_Name create line 	[ project::flatten_nestedList  $SeatPost_SeatTube   $BottomBracket	 ]      -fill gray60  -width 1.0  	-tags {__CenterLine__	seattube}			
 			# ------ seatstay                                                                                                               
-		$cv_Name create line 	[ project::flatten_nestedList  $SeatStay_SeatTube $RearWheel		 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__ 	seatstay}			
+		$cv_Name create line 	[ project::flatten_nestedList  $SeatStay_SeatTube   $RearWheel		 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__ 	seatstay}			
 			# ------ toptube                                                                                                                
 		$cv_Name create line 	[ project::flatten_nestedList  $TopTube_SeatTube	$TopTube_Steerer ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	toptube}				
 			# ------ steerer / stem                                                                                                         
@@ -822,16 +850,30 @@
 		$cv_Name create line 	[ project::flatten_nestedList  $DownTube_Steerer 	$BB_Position	]  		-fill gray60  -width 1.0  	-tags {__CenterLine__	downtube}			
 			# ------ fork                                                                                                                   
 		$cv_Name create line 	[ project::flatten_nestedList  $Steerer_Fork 		$FrontWheel		]  		-fill gray60  -width 1.0  	-tags {__CenterLine__	fork}				
-			                                                                                                                                
+			
+            # ------ seatpost                                                                                                                  
+		$cv_Name create line 	[ project::flatten_nestedList  $Saddle $SeatPost_Saddle $SeatPost_SeatTube] -fill gray60  -width 0.5  	-tags {__CenterLine__	saddlemount}				
+
+			# ------ seattube                                                                                                               
+            # $cv_Name create line 	[ project::flatten_nestedList  $Saddle  $SeatPost_SeatTube   $BottomBracket	 ]  \
+            # ------ seatpost                                                                                                                  
+            # $cv_Name create line 	[ project::flatten_nestedList  $Saddle $SeatPost_Saddle  $SeatPost_SeatTube ] -fill gray60  -width 1.0  	-tags {__CenterLine__	saddlemount}				
+
+        
 			# ------ crankset representation	                                                                                            
-		$cv_Name create arc  	$BottomBracket  -radius $CrankSetLength  -start -50  -extent 130  -style arc \
-																											-outline gray -width 1.0  	-tags {__CenterLine__	crankset} 			
-			# ------ saddle representation	                                                                                                
+		$cv_Name create arc  	$BottomBracket  -radius $CrankSetLength      -start -95  -extent 170  -style arc  -outline gray \
+                                                                                                                          -width 1.0  	-tags {__CenterLine__	crankset} 			
+			# ------ saddle proposal	                                                                                            
+        $cv_Name create arc 	$BottomBracket  -radius $Saddle_PropRadius   -start [expr 177 - $SeatTube_Angle]   -extent 6   -style arc  -outline darkmagenta \
+                                                                                                                          -width 1.0  	-tags {__CenterLine__	saddleproposal}
+
+            # ------ saddle representation	                                                                                                
 				set saddle_polygon {}                                                                                                       
 				foreach xy {{-120 4} {0 0} {130 -1} {140 -5} {160 -12}} {                                                                   
 					set saddle_polygon [ lappend saddle_polygon [vectormath::addVector $Saddle $xy ] ]                                      
 				}                                                                                                                           
 		$cv_Name create line  $saddle_polygon   													   		-fill gray60  -width 1.0  	-tags {__CenterLine__	saddle}				
+        # $cv_Name create circle  $SeatPost_Saddle	-radius 20	-fill white	-tags __Frame__ -outline darkred
 		
 
 		# puts "  $highlightList "
@@ -843,16 +885,18 @@
 				# set highlight(colour) blue
                     
                     
-		set highlight(colour) red
+            set highlight(colour) red
             set highlight(width)  2.0       
                 # --- create position points
-            $cv_Name create circle 	$BottomBracket	-radius 20  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle	$HandleBar		-radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                    # $cv_Name create circle 	$LegClearance	-radius 10  -outline $highlight(colour) 
-            $cv_Name create circle 	$Saddle			-radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width) 
-            $cv_Name create circle 	$FrontWheel     -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle 	$RearWheel      -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle 	$BaseCenter		-radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)    
+            $cv_Name create circle 	$BottomBracket	    -radius 20  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle	$HandleBar		    -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle 	$Saddle			    -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width) 
+            $cv_Name create circle 	$FrontWheel         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle 	$RearWheel          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle 	$BaseCenter		    -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)    
+            $cv_Name create circle 	$SeatPost_Saddle	-radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width) 
+                # $cv_Name create circle 	$SeatPost_SeatTube	-radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width) 
+                # $cv_Name create circle 	$LegClearance	-radius 10  -outline $highlight(colour) 
 
             
             set highlight(colour) red
@@ -863,10 +907,10 @@
 			catch {$cv_Name itemconfigure $item  -outline 	$highlight(colour) -width $highlight(width) } error
 		}
 
-            foreach item $backgroundList {
-                catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
-                catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
-            }
+        foreach item $backgroundList {
+            catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
+            catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
+        }
 
 		puts "  $excludeList "
 			# --- highlightList

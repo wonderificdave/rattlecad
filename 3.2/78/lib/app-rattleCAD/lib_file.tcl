@@ -116,6 +116,37 @@
 	
 
 	#-------------------------------------------------------------------------
+       #  open File by OS - Definition
+       #
+	proc open_localFile {fileName} {
+            set fileName [file normalize $fileName]
+            
+            puts ""
+            puts "   -------------------------------"
+            puts "    lib_file::open_localFile"
+            puts "       fileName:        $fileName"
+            
+			if {![file exists $fileName]} {
+					puts  "         --<E>----------------------------------------------------" 
+					puts  "           <E> File : $fileName" 
+					puts  "           <E>      ... does not exist localy! " 
+					puts  "         --<E>----------------------------------------------------"
+					return					
+			}
+            
+            eval exec [auto_execok start] \"\" [list $fileName] &
+    }
+	proc open_URL {url} {
+            puts ""
+            puts "   -------------------------------"
+            puts "    lib_file::open_URL"
+            puts "            url:        $url"
+            
+            eval exec [auto_execok start] \"\" [list $url] &
+    }
+	
+
+	#-------------------------------------------------------------------------
        #  open File by Extension
        #
 	proc openFile_byExtension {fileName {altExtension {}}} {
@@ -292,8 +323,8 @@
 			lib_gui::open_configPanel  refresh
 	
 	}
-	
-	
+
+ 
 	#-------------------------------------------------------------------------
 		#  save File Type: xml
 		#
@@ -460,27 +491,39 @@
 				# puts "   openProject_xml - fileName:   $fileName"
 			if { [file readable $fileName ] } {
 					set ::APPL_Env(root_ProjectDOM)	[lib_file::openFile_xml $fileName show]
-						#
-					project::check_ProjectVersion {3.1}
-						# project::check_ProjectVersion {3.2.20}
-					project::check_ProjectVersion {3.2.22}
-					project::check_ProjectVersion {3.2.23}
-					project::check_ProjectVersion {3.2.28}
-					project::check_ProjectVersion {3.2.32}
-					project::check_ProjectVersion {3.2.40}
-					project::check_ProjectVersion {3.2.63}
-					project::check_ProjectVersion {3.2.71}
-					project::check_ProjectVersion {3.2.74}
-					project::check_ProjectVersion {3.2.76}
+					set rattleCAD_Version [[$::APPL_Env(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
                     
-                        # set fp [open ../user/debug.xml w]
-                        # puts $fp [$::APPL_Env(root_ProjectDOM)  asXML]
-                        # close $fp
-
+                    puts "\n"
+                    puts "  ====== o p e n   F I L E ========================"
+                    puts ""			
+                    puts "         ... version:    $rattleCAD_Version"	
+                    
+                    set postUpdate [ project::update_Project ]
+                    
+                    
+                    # set debugFile  [file join $::APPL_Env(USER_Dir) debug.xml]  
+                    # puts "   -> $debugFile"
+                    # set fp [open $debugFile w]
+                    # puts $fp [$::APPL_Env(root_ProjectDOM)  asXML]
+                    # close $fp
 
 					
 						#
 					frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                        #
+                    foreach key [dict keys $postUpdate] {
+                            puts " -> $key"
+                            set valueDict   [dict get $postUpdate $key]
+                            foreach valueKey [dict keys $valueDict] {
+                                puts " $key $valueKey [dict get $valueDict $valueKey]"
+                                frame_geometry::set_projectValue $key/$valueKey [dict get $valueDict $valueKey] update
+                                
+                            }
+                            project::pdict $valueDict
+                    }
+                    
+                    #frame_geometry::set_projectValue Result/Angle/SeatTube/Direction 72.0 update
+                    
 					
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
 					if {$windowTitle == {}} {

@@ -126,12 +126,32 @@
 						#
 						# frame_visualisation::debug_geometry			$cv_Name $xy 	
 						#
-                    update_renderCanvas                     $cv_Name
+                    update_renderCanvas                         $cv_Name
 						#
-					createWaterMark							$cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+					createWaterMark							    $cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
 						#
 					lib_gui::notebook_createButton				$cv_Name 		TubingCheckAngles
 						#
+				}
+			lib_gui::cv_Custom07 {
+						#
+						# -- frame - drafting 
+						#
+					set stageScale	[$cv_Name getNodeAttr Stage scale]
+					set stageFormat	[$cv_Name getNodeAttr Stage format]
+						#
+					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
+						#
+					$cv_Name 		clean_StageContent	
+                        #
+                    update_cv_Parameter                         $cv_Name $xy
+                        #
+                    createRearMockup                            $cv_Name
+                        #
+                    $cv_Name 		centerContent				{ 0  25}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
+                        #
+					lib_gui::notebook_createButton				$cv_Name 		ChainStayRendering
+                        #
 				}
 			lib_gui::cv_Custom03 {
 						#

@@ -41,7 +41,7 @@
   package require   BWidget 	    
   package require   tdom 	
   
-  package provide 	rattleCAD	3.2
+  package provide 	rattleCAD	3.3
 
                    
     # -- default Parameters  ----
@@ -54,9 +54,9 @@
   ###########################################################################
     
 	array set APPL_Env { 
-						RELEASE_Version		{3.2}  
+						RELEASE_Version		{3.3}  
 						RELEASE_Revision	{tbd}
-						RELEASE_Date		{01. Jan. 2010}
+						RELEASE_Date		{01. May. 2012}
     
 						BASE_Dir			{}
 						ROOT_Dir			{}

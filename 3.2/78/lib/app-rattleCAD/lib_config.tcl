@@ -198,8 +198,8 @@
 				pack $menueFrame.sf.lf_01 				-side top  -fill x  -expand yes  -pady 2
 					create_configEdit $menueFrame.sf.lf_01		Personal(HandleBar_Distance)	0.20  orangered
 					create_configEdit $menueFrame.sf.lf_01		Personal(HandleBar_Height)		0.20  orangered
-					create_configEdit $menueFrame.sf.lf_01		Personal(SeatTube_Length)		0.20  orangered
-					create_configEdit $menueFrame.sf.lf_01		Personal(SeatTube_Angle)		0.02  orangered
+					create_configEdit $menueFrame.sf.lf_01		Personal(Saddle_Distance)		0.20  orangered
+					create_configEdit $menueFrame.sf.lf_01		Personal(Saddle_Height)		    0.02  orangered
 					create_configEdit $menueFrame.sf.lf_01		Personal(InnerLeg_Length)		0.20  darkviolet
 					create_configEdit $menueFrame.sf.lf_01		Custom(TopTube/PivotPosition) 	0.20  darkviolet
 
