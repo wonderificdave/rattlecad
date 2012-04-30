@@ -62,8 +62,8 @@ exec wish "$0" "$@"
 		# -- Libraries  ---------------
 	lappend auto_path           [file join $BASE_Dir lib]
 	
-	package require   rattleCAD  3.2 
-	package require   canvasCAD	 0.17
+	package require   rattleCAD  3.3 
+	package require   canvasCAD	 0.18
 	package require   extSummary 0.1
 
 
@@ -75,7 +75,7 @@ exec wish "$0" "$@"
 		close $fd
 	} else {
 		array set strinfo {
-				ProductVersion	{3.2}
+				ProductVersion	{3.3.xx}
 				FileVersion  	{??}
 				FileDate		{??. ???. 201?}
 		}
@@ -216,16 +216,16 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-	# ttk::style configure TCombobox -padding 0
-	# ttk::style theme use default
+        # ttk::style configure TCombobox -padding 0
+        # ttk::style theme use default
 	ttk::style configure TCombobox -padding 0
     # -- set standard font ------------
 	option add *font $APPL_Config(GUI_Font)
 	
     lib_gui::binding_copyClass Spinbox mySpinbox
     lib_gui::binding_removeOnly     mySpinbox [list <Clear>]
-    # lib_gui::binding_reportBindings Text
-    lib_gui::binding_reportBindings mySpinbox
+        # lib_gui::binding_reportBindings Text
+        # lib_gui::binding_reportBindings mySpinbox
     
 
   
