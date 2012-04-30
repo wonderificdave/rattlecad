@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <rattleCAD>
-        <Version>3.2.52</Version>
+        <Version>3.3.00</Version>
         <Name>rattleCAD_init</Name>
-        <modified>2011.08.10/00:00</modified>
+        <modified>2012.03.02/12:00</modified>
     </rattleCAD>
 	
 	<!-- Startup Settings -->
@@ -38,8 +38,8 @@
 	</Startup>
 	
 	<Template>
-		<Road>template_road_3.2.xml</Road>
-		<MTB>template_mtb_3.2.xml</MTB>
+		<Road>template_road_3.3.xml</Road>
+		<MTB>template_mtb_3.3.xml</MTB>
 	</Template>
 
 	<Options>
