@@ -1026,7 +1026,6 @@
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 0] ]	
 							# puts "                  ... $value"
-						# 3.2.76 project::setValue Temporary(HeadTube/ReachLength) value $value
 						project::setValue Result(Length/HeadTube/ReachLength) value $value
 
 							# --- HeadTube/StackHeight
@@ -1034,7 +1033,6 @@
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
 						set value		[ format "%.2f" [lindex $position 1] ]	
 							# puts "                  ... $value"
-						# 3.2.76 project::setValue Temporary(HeadTube/StackHeight) value $value
 						project::setValue Result(Length/HeadTube/StackHeight) value $value
 
 
@@ -1054,7 +1052,7 @@
 							# puts "                   ... [ frame_geometry::object_values		SeatTube TopTube	{0 0} ]" 
 						set value		[ format "%.2f" [ expr hypot([lindex $position 0],[lindex $position 1]) ] ]
 						project::setValue Result(Length/SeatTube/TubeLength) value $value
-						
+                            
                             # --- SeatTube/TubeHeight -------------------------
 							#
 							# puts "                   ... [ frame_geometry::object_values		SeatTube TopTube	{0 0} ]" 
@@ -1078,9 +1076,17 @@
 						project::setValue Result(Length/Saddle/Offset_BB) value $value
 
 					
+                        # --- Saddle/Offset_BB_ST --------------------------------
+						#
+					set position_Saddle	    [ project::getValue Result(Position/SeatTubeSaddle)	position]
+						set value		[ format "%.2f" [expr -1 * [lindex [split $position_Saddle ,] 0]] ]	
+							# puts "                  ... $value"
+						project::setValue Result(Length/Saddle/Offset_BB_ST) value $value
+
+					
                         # --- Saddle/Offset_HB --------------------------------
 						#
-					set position_Saddle	    $SeatPost(SeatTube)
+					set position_Saddle	    $Saddle(Position)
 					set position_HandleBar	$HandleBar(Position)					
 						set value		[ format "%.2f" [expr [lindex $position_Saddle 1] - [lindex $position_HandleBar 1]] ]	
 							# puts "                  ... $value"
@@ -1411,7 +1417,7 @@
 			if {$stageScale != {}} {
 					set Stage(scale)		$stageScale
 			} else {
-					set Stage(scale)		[ expr 0.8 * $Stage(width) / $SummaryLength ]
+					set Stage(scale)		[ expr 0.75 * $Stage(width) / $SummaryLength ]
 			}
 			set Stage(scale_fmt)  	[ format "%.4f" $Stage(scale) ]	
 				# puts ""
@@ -2323,9 +2329,9 @@
 					# puts "  ... set_projectValue: $xpath"
 				switch -glob $_array {
 					{Result} {
-								# puts "\n  ... set_projectValue: ... Result/..."
-							set_temp_Parameters $_array $_name $value
-							# set_spec_Parameters $xpath $value
+							set newValue [ string map {, .} $value]
+                                # puts "\n  ... set_projectValue: ... Result/..."
+							set_temp_Parameters $_array $_name $newValue
 							return
 						}	
 					default {}			
@@ -2339,7 +2345,7 @@
                     {Component/CrankSet/ChainRings} -
                     {Component/Wheel/Rear/FirstSprocket} {
                                 set newValue [ string map {, .} $value]
-                                # puts " <D> $newValue"
+                                    # puts " <D> $newValue"
                                 if {$mode == {update}} {
                                     project::setValue [format "%s(%s)" $_array $_name] value $newValue
                                 }
@@ -2403,7 +2409,6 @@
 	
  	#-------------------------------------------------------------------------
 		#  handle modification on /root/Result/... values
-	# proc set_spec_Parameters {domProject cv_Name updateCommand xpath cvEntry} 
 	proc set_temp_Parameters {_array _name value} {
 
 			variable 		_updateValue
@@ -2485,6 +2490,8 @@
 							set xpath					Personal/Saddle_Distance
                             set_projectValue $xpath  	$value
                             return
+                                # set newValue                [set_projectValue $xpath  $value format]
+                                # set_projectValue $xpath  	$newValue
 						}
 				
 				{Length/TopTube/VirtualLength}			-			
@@ -2549,6 +2556,18 @@
 							set newValue				[ expr $HandleBar(Height)	+ $delta ]
 							set xpath 					Personal/HandleBar_Height
 							set_projectValue $xpath  	$newValue
+                            return
+						}
+						
+				{Length/Saddle/Offset_BB_ST}	{			
+							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							set newValue				[set_projectValue $xpath  $value format]
+							set height                  [project::getValue [format "%s(%s)" Personal Saddle_Height] value]
+                            set angle                   [vectormath::dirAngle {0 0} [list $newValue $height] ]
+                            
+                            set_temp_Parameters Result Angle/SeatTube/Direction $angle
+                            
+                                # puts "   $newValue / $height -> $angle"
                             return
 						}
 						

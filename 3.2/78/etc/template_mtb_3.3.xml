@@ -317,6 +317,7 @@
             </SeatTube>
             <Saddle>
                 <Offset_BB>0.00</Offset_BB>
+                <Offset_BB_ST>0.00</Offset_BB_ST>    
                 <Offset_HB>0.00</Offset_HB>
             </Saddle>
             <BottomBracket>

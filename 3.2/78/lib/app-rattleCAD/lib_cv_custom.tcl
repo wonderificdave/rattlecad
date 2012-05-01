@@ -287,7 +287,8 @@
                 point_personal {
                             $cv_Name create circle 	$BottomBracket(Position)    -radius 20  -outline darkred 	-width 1.0   -tags {__CenterLine__  __CenterPoint__  personalBB}
                             $cv_Name create circle 	$HandleBar(Position)		-radius 10  -outline darkred 	-width 1.0   -tags {__CenterLine__  __CenterPoint__  personalHB}
-                            $cv_Name create circle 	$Saddle(Position)			-radius 10  -outline darkred 	-width 1.0   -tags {__CenterLine__  __CenterPoint__  personalSeat}
+                            $cv_Name create circle 	$Saddle(Position)			-radius 10  -outline darkred 	-width 1.0   -tags {__CenterLine__  __CenterPoint__  personalSaddle}
+                            $cv_Name create circle 	$SeatTube(Saddle)	        -radius  5  -outline darkblue	-width 2.0	 -tags {__CenterLine__  __CenterPoint__  personalSeat}                        
                        }
                 point_crank {
                             $cv_Name create circle 	$Position(help_91)          -radius  4  -outline gray50 	-width 1.0	 -tags __CenterLine__
@@ -369,7 +370,7 @@
                                                                 vertical    [expr -380 * $stageScale]  [expr  230 * $stageScale]  \
                                                                 gray50 ] 
                             set _dim_SD_HB_Length	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $Saddle(Position) $HandleBar(Position) ] \
-                                                                horizontal	[expr  -150 * $stageScale]    0 \
+                                                                horizontal	[expr  -210 * $stageScale]    0 \
                                                                 gray50 ] 
                             
 
@@ -458,6 +459,9 @@
                             set _dim_TT_Virtual		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $TopTube(SeatVirtual)  $TopTube(Steerer)] \
                                                                 aligned     [expr   80 * $stageScale]   [expr  -80 * $stageScale] \
                                                                 $colour(result) ] 
+                            set _dim_ST_Length 		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $SeatTube(Saddle)    $BottomBracket(Position) ] \
+                                                                horizontal  [expr  -80 * $stageScale]   [expr    0 * $stageScale]  \
+                                                                darkblue ]                             
                             set _dim_ST_Angle  		[ $cv_Name dimension  angle   	[ project::flatten_nestedList  $SeatTube(Ground)	$SeatPost(SeatTube) $help_00 ] \
                                                                 150   0  \
                                                                 $colour(result) ]
@@ -537,13 +541,13 @@
                                 # --- primary - level - dimensions
                                 #
                             set _dim_HB_XPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $HandleBar(Position)		$BottomBracket(Position) ] \
-                                                                horizontal  [expr   (80 + $Length(Height_HB_Seat)) * $stageScale ]    0 \
+                                                                horizontal  [expr (150 + $Length(Height_HB_Seat)) * $stageScale ]    0 \
                                                                 $colour(primary) ] 
                             set _dim_HB_YPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $HandleBar(Position)		$BottomBracket(Position) ] \
                                                                 vertical    [expr -310 * $stageScale]    [expr  180 * $stageScale]  \
                                                                 $colour(primary) ] 
                             set _dim_SD_XPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $Saddle(Position)        $BottomBracket(Position)  ] \
-                                                                horizontal	[expr  -80 * $stageScale]    0 \
+                                                                horizontal	[expr -150 * $stageScale]    0 \
                                                                 $colour(primary) ] 
                             set _dim_SD_YPosition	[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
                                                                 vertical	[expr -580 * $stageScale]  [expr -130 * $stageScale]  \
@@ -560,8 +564,9 @@
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_SP_SetBack	
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Length		
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_LC_Position_x	
-                                    lib_gui::object_CursorBinding 	$cv_Name	$_dim_LC_Position_y	
+                                    lib_gui::object_CursorBinding 	$cv_Name	$_dim_LC_Position_y	    
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_Angle  		
+                                    lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_Length  		
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Depth   		
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_CS_Length   	
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Angle   
@@ -640,6 +645,7 @@
                                     $cv_Name bind $_dim_CR_Length   	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
                                     
                                     $cv_Name bind $_dim_ST_Angle  		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Angle/SeatTube/Direction) ]
+                                    $cv_Name bind $_dim_ST_Length  		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_ST) ]
                                     
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_SD_HB_Height                                    
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_Distance  	
@@ -1972,7 +1978,7 @@
                 # foreach cv_Item [$cv_Name find withtag "__CenterPoint__ && headtubeStem"]   { $cv_Name itemconfigure  $cv_Item -outline red -radius 15}
             foreach cv_Item [$cv_Name find withtag "__CenterPoint__ && personalBB"]     { $cv_Name delete  $cv_Item }
             foreach cv_Item [$cv_Name find withtag "__CenterPoint__ && personalHB"]     { $cv_Name delete  $cv_Item }
-            foreach cv_Item [$cv_Name find withtag "__CenterPoint__ && personalSeat"]   { $cv_Name delete  $cv_Item }
+            foreach cv_Item [$cv_Name find withtag "__CenterPoint__ && personalSaddle"] { $cv_Name delete  $cv_Item }
     }
     
 	
