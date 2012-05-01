@@ -2331,7 +2331,7 @@
 					{Result} {
 							set newValue [ string map {, .} $value]
                                 # puts "\n  ... set_projectValue: ... Result/..."
-							set_temp_Parameters $_array $_name $newValue
+							set_resulting_Parameters $_array $_name $newValue
 							return
 						}	
 					default {}			
@@ -2409,13 +2409,13 @@
 	
  	#-------------------------------------------------------------------------
 		#  handle modification on /root/Result/... values
-	proc set_temp_Parameters {_array _name value} {
+	proc set_resulting_Parameters {_array _name value} {
 
 			variable 		_updateValue
 			
 			puts ""
 			puts "   -------------------------------"
-			puts "    set_temp_Parameters"
+			puts "    set_resulting_Parameters"
 			puts "       _array:          $_array"
 			puts "       _name:           $_name"
 			puts "       value:           $value"
@@ -2565,7 +2565,7 @@
 							set height                  [project::getValue [format "%s(%s)" Personal Saddle_Height] value]
                             set angle                   [vectormath::dirAngle {0 0} [list $newValue $height] ]
                             
-                            set_temp_Parameters Result Angle/SeatTube/Direction $angle
+                            set_resulting_Parameters Result Angle/SeatTube/Direction $angle
                             
                                 # puts "   $newValue / $height -> $angle"
                             return
@@ -2575,7 +2575,7 @@
 							puts "\n"
 							puts "     WARNING!"
 							puts "\n"
-							puts "        ... set_temp_Parameters:  "
+							puts "        ... set_resulting_Parameters:  "
 							puts "                 $xpath"
 							puts "            ... is not registered!"
 							puts "\n"

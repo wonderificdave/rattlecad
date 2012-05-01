@@ -512,17 +512,15 @@
 					frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
                         #
                     foreach key [dict keys $postUpdate] {
-                            puts " -> $key"
+                              # puts " -> $key"
                             set valueDict   [dict get $postUpdate $key]
                             foreach valueKey [dict keys $valueDict] {
-                                puts " $key $valueKey [dict get $valueDict $valueKey]"
+                                puts "\n      -------------------------------"
+                                puts "          postUpdate:   $key - $valueKey [dict get $valueDict $valueKey]"
                                 frame_geometry::set_projectValue $key/$valueKey [dict get $valueDict $valueKey] update
-                                
                             }
-                            project::pdict $valueDict
+                                # project::pdict $valueDict
                     }
-                    
-                    #frame_geometry::set_projectValue Result/Angle/SeatTube/Direction 72.0 update
                     
 					
 						# -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------

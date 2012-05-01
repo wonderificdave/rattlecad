@@ -1134,23 +1134,6 @@
                            
                            
                                 #
-                                # -- /root/Result
-                                #
-                            set parentNode [$domProject selectNode /root/Result]
-                                    puts "                           ... update File ... /root/Result"
-                            foreach node [$parentNode childNodes] {
-                                    $parentNode removeChild $node
-                                    $node delete                                    
-                            } 
-                            set templateRoot    [ lib_file::openFile_xml $::APPL_Env(TemplateInit)]
-                            set resultNode      [ $templateRoot selectNode /root/Result]
-                                # puts "[$resultNode asXML]"
-                            foreach child       [ $resultNode childNodes ] {
-                                    catch {$parentNode appendXML [$child asXML]}
-                            }
-                           
-                           
-                                #
                                 # -- /root/Personal
                                 #
                             set parentNode [$domProject selectNode /root/Personal]
@@ -1165,6 +1148,23 @@
                             }
                             $parentNode appendXML   "<Saddle_Distance>200</Saddle_Distance>"
                             $parentNode appendXML   "<Saddle_Height>718.00</Saddle_Height>"
+                            
+                            
+                                #
+                                # -- /root/Result
+                                #
+                            set parentNode [$domProject selectNode /root/Result]
+                                    puts "                           ... update File ... /root/Result"
+                            foreach node [$parentNode childNodes] {
+                                    $parentNode removeChild $node
+                                    $node delete                                    
+                            } 
+                            set templateRoot    [ lib_file::openFile_xml $::APPL_Env(TemplateInit)]
+                            set resultNode      [ $templateRoot selectNode /root/Result]
+                                # puts "[$resultNode asXML]"
+                            foreach child       [ $resultNode childNodes ] {
+                                    catch {$parentNode appendXML [$child asXML]}
+                            }
                             
                             
                                 #
@@ -1251,4 +1251,3 @@
     }
 		
 }
-

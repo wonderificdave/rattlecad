@@ -864,7 +864,7 @@
 
             if {$_array eq {Result}} {
                 eval set $targetVar $oldValue
-                 frame_geometry::set_temp_Parameters $_array $_name $newValue
+                 frame_geometry::set_resulting_Parameters $_array $_name $newValue
                 return
             }
             
@@ -893,7 +893,7 @@
                 set _array      [lindex [split $targetVar (:] 2]
                 set _name       [lindex [split $targetVar ()] 1]
                 if {$_array eq {Result}} {
-                    frame_geometry::set_temp_Parameters $_array $_name $value
+                    frame_geometry::set_resulting_Parameters $_array $_name $value
                 } else {
                     eval set $targetVar 	$value
                 }
