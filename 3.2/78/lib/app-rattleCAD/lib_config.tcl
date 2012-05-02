@@ -504,7 +504,7 @@
 				puts "       compFile:       $compFile"
 				puts "       targetVar:      $targetVar"
 				puts "       targetCanvas:   $targetCanvas"
-			[namespace current]::::updateCanvas $targetCanvas
+			catch {[namespace current]::::updateCanvas $targetCanvas}
 			if {$mode == {select}} {		
                 project::add_tracing
                 eval set $targetVar \"$compFile\"

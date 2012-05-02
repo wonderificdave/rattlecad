@@ -252,7 +252,7 @@
 									set _name 	[file join [ file dirname $_name ] degree]
 									set check_name [array names [namespace current]::$_array $_name]
 									if { $check_name != {} } {
-										set angleDegree	[format "%.9f" [ vectormath::dirAngle {0 0} $p1] ]
+										set angleDegree	[format "%.5f" [ vectormath::dirAngle {0 0} $p1] ]
 										#puts "  -- 02 --"
 										eval set [format "%s::%s(%s)" [namespace current] $_array [file join [ file dirname $_name ] degree]] $angleDegree
 									}
@@ -262,7 +262,7 @@
 									set check_name [array names [namespace current]::$_array $_name]
 									if { $check_name != {} } {
 											# puts "     angleDegree   $angleDegree"
-										set angleRadiant	[format "%.9f" [ vectormath::rad $angleDegree] ]
+										set angleRadiant	[format "%.6f" [ vectormath::rad $angleDegree] ]
 											# puts "     angleRadiant  $angleRadiant"
 										#puts "  -- 03 --"
 										eval set [format "%s::%s(%s)" [namespace current] $_array [file join [ file dirname $_name ] radiant]] $angleRadiant

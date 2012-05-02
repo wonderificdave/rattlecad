@@ -62,9 +62,9 @@ exec wish "$0" "$@"
 	variable  APPL_Config
 
 	array set APPL_Env { 
-						RELEASE_Version		{3.2}  
-						RELEASE_Revision	{57}
-						RELEASE_Date		{13.Oct. 2011}
+						RELEASE_Version		{3.3}  
+						RELEASE_Revision	{00}
+						RELEASE_Date		{02.May. 2011}
 						BASE_Dir			{}
 						ROOT_Dir			{}
 						CONFIG_Dir			{}
@@ -103,8 +103,8 @@ exec wish "$0" "$@"
 	
 	package require   Tk		 8.5
 	package require   BWidget 	    
-	package require   rattleCAD  3.2 
-	package require   canvasCAD	 0.9
+	package require   rattleCAD  3.3 
+	package require   canvasCAD	 0.22
 	package require	  extSummary 0.1
 
 		# -- Tcl/Tk Runtime  ----------

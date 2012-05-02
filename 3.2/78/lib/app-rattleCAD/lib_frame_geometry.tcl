@@ -1012,7 +1012,7 @@
 
 							# --- BottomBracket/Height
 							#
-						set value		[ format "%.2f" [lindex $position 0] ]	
+						set value		[ format "%.3f" [lindex $position 0] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/BottomBracket/Height) value $value
 
@@ -1024,14 +1024,14 @@
 							# --- HeadTube/ReachLength
 							#
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
-						set value		[ format "%.2f" [lindex $position 0] ]	
+						set value		[ format "%.3f" [lindex $position 0] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/HeadTube/ReachLength) value $value
 
 							# --- HeadTube/StackHeight
 							#
 							# puts "                ... [ frame_geometry::object_values		HeadTube Stem			{0 0} ]" 
-						set value		[ format "%.2f" [lindex $position 1] ]	
+						set value		[ format "%.3f" [lindex $position 1] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/HeadTube/StackHeight) value $value
 
@@ -1044,26 +1044,26 @@
                             # --- SeatTube/Angle ------------------------------
 							#
                     set angle [ vectormath::angle $SeatPost(SeatTube) {0 0} {-200 0} ]
-                    set angle [ format "%.2f" $angle ]
+                    set angle [ format "%.3f" $angle ]
                     project::setValue Result(Angle/SeatTube/Direction) value $angle
 						
                             # --- SeatTube/TubeLength -------------------------
 							#
 							# puts "                   ... [ frame_geometry::object_values		SeatTube TopTube	{0 0} ]" 
-						set value		[ format "%.2f" [ expr hypot([lindex $position 0],[lindex $position 1]) ] ]
+						set value		[ format "%.3f" [ expr hypot([lindex $position 0],[lindex $position 1]) ] ]
 						project::setValue Result(Length/SeatTube/TubeLength) value $value
                             
                             # --- SeatTube/TubeHeight -------------------------
 							#
 							# puts "                   ... [ frame_geometry::object_values		SeatTube TopTube	{0 0} ]" 
-						set value		[ format "%.2f" [lindex $position 1] ]
+						set value		[ format "%.3f" [lindex $position 1] ]
 						project::setValue Result(Length/SeatTube/TubeHeight) value $value
 
 						
 						# --- TopTube/VirtualLength ---------------------------
 						#
 					set position	[ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]   $TopTube(HeadTube)  {0 0} $SeatPost(SeatTube) ]
-						set value		[ format "%.2f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $position 0] ] ]
+						set value		[ format "%.3f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $position 0] ] ]
 							# puts "                  ... $value"
 						project::setValue Result(Length/TopTube/VirtualLength) value $value
 
@@ -1071,7 +1071,7 @@
                         # --- Saddle/Offset_BB --------------------------------
 						#
 					set position	$Saddle(Position)					
-						set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
+						set value		[ format "%.3f" [expr -1 * [lindex $position 0]] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/Saddle/Offset_BB) value $value
 
@@ -1079,7 +1079,7 @@
                         # --- Saddle/Offset_BB_ST --------------------------------
 						#
 					set position_Saddle	    [ project::getValue Result(Position/SeatTubeSaddle)	position]
-						set value		[ format "%.2f" [expr -1 * [lindex [split $position_Saddle ,] 0]] ]	
+						set value		[ format "%.3f" [expr -1 * [lindex [split $position_Saddle ,] 0]] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/Saddle/Offset_BB_ST) value $value
 
@@ -1088,7 +1088,7 @@
 						#
 					set position_Saddle	    $Saddle(Position)
 					set position_HandleBar	$HandleBar(Position)					
-						set value		[ format "%.2f" [expr [lindex $position_Saddle 1] - [lindex $position_HandleBar 1]] ]	
+						set value		[ format "%.3f" [expr [lindex $position_Saddle 1] - [lindex $position_HandleBar 1]] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/Saddle/Offset_HB) value $value
 
@@ -1097,7 +1097,7 @@
 						#
 					set position	$FrontWheel(Position)					
 							# puts "                ... $frameCoords::FrontWheel" 						
-						set value		[ format "%.2f" [expr { hypot( [lindex $position 0], [lindex $position 1] ) }] ]	
+						set value		[ format "%.3f" [expr { hypot( [lindex $position 0], [lindex $position 1] ) }] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/FrontWheel/diagonal) value $value
 
@@ -1106,7 +1106,7 @@
 						#
 					set position	$FrontWheel(Position)					
 							# puts "                ... $frameCoords::FrontWheel" 
-						set value		[ format "%.2f" [lindex $position 0] ]	
+						set value		[ format "%.3f" [lindex $position 0] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/FrontWheel/horizontal) value $value
 
@@ -1115,7 +1115,7 @@
 						#
 					set position	$RearWheel(Position)
 							# puts "                ... $frameCoords::RearWheel" 
-						set value		[ format "%.2f" [expr -1 * [lindex $position 0]] ]	
+						set value		[ format "%.3f" [expr -1 * [lindex $position 0]] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/RearWheel/horizontal) value $value
                         
@@ -1846,7 +1846,7 @@
 							} else {\
 								set newValue [expr {$currentValue - $updateValue}]\
 							}
-                            set ::$textVar [format "%.2f" $newValue] 
+                            set ::$textVar [format "%.3f" $newValue] 
  				}
 				
 				proc bind_MouseWheel {textVar value} {
@@ -1859,7 +1859,7 @@
                                 set scale -1.0
                             }
                             set newValue [expr {$currentValue + $scale * $updateValue}]                          
-                            set ::$textVar [format "%.2f" $newValue] 
+                            set ::$textVar [format "%.3f" $newValue] 
  				}
 				
 				proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {					
@@ -2291,7 +2291,7 @@
 									# puts "      >[split $_updateValue($xPath) ;]<"
 									# puts "      >[lindex [split $_updateValue($xPath) ;] 0]<"
 								set value [string trim [lindex [split $_updateValue($xPath) ;] 0]]
-								set value [format "%.2f" $value]
+								set value [format "%.3f" $value]
 								set _updateValue($xPath) $value
 									# puts "   ... $_updateValue($xPath)"
 									
@@ -2394,7 +2394,7 @@
 					puts "\n$errorID\n"
 					return
 				} else {
-					set newValue [format "%.2f" $newValue]
+					set newValue [format "%.3f" $newValue]
 				}
 			}
 			

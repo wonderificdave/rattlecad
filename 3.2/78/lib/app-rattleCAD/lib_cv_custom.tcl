@@ -164,12 +164,12 @@
             set DownTube(Steerer)           [ frame_geometry::object_values		DownTube/End		position 	$BB_Position ]
             set DownTube(BBracket)          [ frame_geometry::object_values		DownTube/Start		position 	$BB_Position ]
             set HandleBar(Position)         [ frame_geometry::object_values  	HandleBar 			position	$BB_Position ]
-            set Position(BaseCenter)        [ frame_geometry::object_values  	BottomBracketGround	position	$BB_Position ]	
-            set Steerer(Ground)             [ frame_geometry::object_values  	SteererGround		position	$BB_Position ]	
-            set SeatTube(Ground)            [ frame_geometry::object_values  	SeatTubeGround		position	$BB_Position ]			
             set SeatTube(TopTube)           [ frame_geometry::object_values  	SeatTube/End		position	$BB_Position ]	
             set SeatTube(Saddle)            [ frame_geometry::object_values  	SeatTubeSaddle		position	$BB_Position ]	
             set SeatStay(End)               [ frame_geometry::object_values 	SeatStay/End        position    $BB_Position ]
+            set SeatTube(Ground)            [ frame_geometry::object_values  	SeatTubeGround		position	$BB_Position ]			
+            set Steerer(Ground)             [ frame_geometry::object_values  	SteererGround		position	$BB_Position ]	
+            set Position(BaseCenter)        [ frame_geometry::object_values  	BottomBracketGround	position	$BB_Position ]	
             
             set RearBrake(Mount)            [ vectormath::addVector 			$frame_geometry::RearBrake(Mount)		$BB_Position ]		
             set RearBrake(Help)             [ vectormath::addVector 			$frame_geometry::RearBrake(Help)		$BB_Position ]	
@@ -489,7 +489,7 @@
                                                                 $colour(secondary) ] 
                             set _dim_CS_Length 		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $RearWheel(Position)  $BottomBracket(Position)] \
                                                                 aligned     [expr   100 * $stageScale]   0 \
-                                                                $colour(secondary) ] 
+                                                                $colour(secondary) ]                          
                             set _dim_HT_Angle  		[ $cv_Name dimension  angle   	[ project::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $Position(BaseCenter) ] \
                                                                 150   0  \
                                                                 $colour(secondary) ]
@@ -717,13 +717,16 @@
                             set _dim_Dropout_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $Position(IS_ChainSt_SeatSt) $BottomBracket(Position) $SeatStay(SeatTube) ] ] \
                                                                 110   0 \
                                                                 gray50 ]
+                                                                
                                 set pt_01				[ vectormath::addVector	$BottomBracket(Position) {-1 0} ]
                             set _dim_SeatTube_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $BottomBracket(Position) $SeatTube(TopTube) $pt_01] ] \
                                                                 150   0 \
                                                                 gray50 ]
+                                                                
                                 set pt_01				[ vectormath::intersectPoint	$Steerer(Stem)  $Steerer(Fork)		$FrontWheel(Position) [vectormath::addVector	$FrontWheel(Position) {-10 0}] ]
-                                set pt_02				[ vectormath::addVector	$pt_01 {-1 0} ]
-                            set _dim_HeadTube_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $pt_02 $Steerer(Stem) [vectormath::addVector	$pt_02 {-10 0}]] ] \
+                                set pt_02				[ vectormath::addVector	$pt_01 {-1 0} 120 ]
+                                $cv_Name create centerline [ project::flatten_nestedList  $FrontWheel(Position)  $pt_02    ] -fill gray60 -tags __CenterLine__
+                           set _dim_HeadTube_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $pt_01 $Steerer(Stem) $pt_02] ] \
                                                                 110   0 \
                                                                 gray50 ]
                         }
@@ -984,8 +987,9 @@
                                                                                         130   0 \
                                                                                         darkred ]
                                 set pt_01				[ vectormath::intersectPoint	$Steerer(Stem)  $Steerer(Fork)		$FrontWheel(Position) [vectormath::addVector	$FrontWheel(Position) {-10 0}] ]
-                                set pt_02				[ vectormath::addVector	$pt_01 {-1 0} ]
-                            set _dim_HeadTube_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $pt_02 $Steerer(Stem) [vectormath::addVector	$pt_02 {-10 0}]] ] \
+                                set pt_02				[ vectormath::addVector	$pt_01 {-1 0} 100 ]
+                                $cv_Name create centerline [ project::flatten_nestedList  $FrontWheel(Position)  $pt_02    ] -fill gray60 -tags __CenterLine__
+                           set _dim_HeadTube_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $pt_01 $Steerer(Stem) $pt_02] ] \
                                                                                          90   0 \
                                                                                         darkred ]
 

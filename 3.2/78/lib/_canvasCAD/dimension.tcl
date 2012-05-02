@@ -163,9 +163,10 @@ namespace eval dimension {
 			# -------------------------------
 				# format text
 			if { $fontColour != $colour } { set fontColour 	$colour }
-			if { $dimValue < 0 } {set text	[ format "%.1f" [expr -1*$dimValue]	}
-			set text	[ format "%.1f" $dimValue	]
-			set text 	[ string map {. ,} $text	]	
+			if { $dimValue < 0 } {set dimValue [expr -1*$dimValue]	}
+			set text_1	[ format "%.1f" $dimValue	]
+            set text 	[ string map {. ,} $text_1	]
+                # set text_2	[ format "%.2f" $dimValue	]
 			
 			# -------------------------------
 				# geometric definitions			
