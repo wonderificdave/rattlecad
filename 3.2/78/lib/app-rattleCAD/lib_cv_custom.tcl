@@ -1029,6 +1029,7 @@
                                             set pt_01 					[ frame_geometry::object_values	SeatTube/BottleCage/Offset	position	$BB_Position]
                                             set pt_02 					[ frame_geometry::object_values	SeatTube/BottleCage/Base	position	$BB_Position]
                                             set pt_03					[ vectormath::addVector	$pt_02	$st_direction	[expr -1.0 * $frame_geometry::BottleCage(SeatTube)] ] 
+                                            set pt_04				    [ frame_geometry::coords_get_xy $SeatTube(polygon)  0 ]
                                             
                                             set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_01  $pt_02 ] \
                                                                                                     aligned 	[expr  90 * $stageScale]	[expr    0 * $stageScale] \
@@ -1039,14 +1040,25 @@
                                             set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList   $help_st_dt 	$pt_02 ] \
                                                                                                     aligned		[expr  35 * $stageScale]	[expr -105 * $stageScale] \
                                                                                                     gray50 ]										
+                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList   $pt_04     $help_st_dt ] \
+                                                                                                    aligned		[expr  35 * $stageScale]	[expr   50 * $stageScale] \
+                                                                                                    gray50 ]										
+                            } else {
+                                            set pt_04				    [ frame_geometry::coords_get_xy $SeatTube(polygon)  0 ]
+                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList   $pt_04  $DownTube(BBracket) $help_st_dt ] \
+                                                                                                    perpendicular   [expr  50 * $stageScale]	[expr   50 * $stageScale] \
+                                                                                                    gray50 ]										
                             }
                             
                             if {$Rendering(BottleCage_DT) != {off}} {
                                             set dt_direction			[ frame_geometry::object_values DownTube 	direction ]
-                                            set pt_01 					[ frame_geometry::object_values	DownTube/BottleCage/Offset	position	$BB_Position]
-                                            set pt_02 					[ frame_geometry::object_values	DownTube/BottleCage/Base	position	$BB_Position]
+                                            set pt_01 					[ frame_geometry::object_values	DownTube/BottleCage/Offset	position	$BB_Position ]
+                                            set pt_02 					[ frame_geometry::object_values	DownTube/BottleCage/Base	position	$BB_Position ]
                                             set pt_03					[ vectormath::addVector	$pt_02	$dt_direction	[expr -1.0 * $frame_geometry::BottleCage(DownTube)] ] 
-
+                                            set pt_04h					[ vectormath::intersectPerp     $DownTube(BBracket) $DownTube(Steerer) $help_st_dt ]
+                                            set vct_04h                 [ vectormath::subVector         $help_st_dt $pt_04h ]
+                                            set pt_04                   [ vectormath::addVector	        $DownTube(BBracket) $vct_04h ] 
+                                            
                                             if { $Rendering(BottleCage_DT_L) != {off}} { set addDist 40 } else { set addDist 0}
                                             
                                             set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$pt_01  $pt_02 ] \
@@ -1058,6 +1070,19 @@
                                             set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$help_st_dt 	$pt_02 ] \
                                                                                                     aligned 	[expr -1.0 * (35 + $addDist) * $stageScale]	    [expr -115 * $stageScale] \
                                                                                                     gray50 ] 																
+                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList   $pt_04     $help_st_dt ] \
+                                                                                                    aligned		[expr -1.0 * (35 + $addDist) * $stageScale]	[expr   50 * $stageScale] \
+                                                                                                    gray50 ]										
+                            } else {
+                                            set pt_04h					[ vectormath::intersectPerp     $DownTube(BBracket) $DownTube(Steerer) $help_st_dt ]
+                                            set vct_04h                 [ vectormath::subVector         $help_st_dt $pt_04h ]
+                                            set pt_04                   [ vectormath::addVector	        $DownTube(BBracket) $vct_04h ] 
+                                            
+                                            if { $Rendering(BottleCage_DT_L) != {off}} { set addDist 40 } else { set addDist 0}
+                                            
+                                            set dimension		[ $cv_Name dimension  length  	[ project::flatten_nestedList   $pt_04  $DownTube(BBracket) $help_st_dt ] \
+                                                                                                    perpendicular   [expr -1.0 * (50 + $addDist) * $stageScale]	[expr   50 * $stageScale] \
+                                                                                                    gray50 ]										
                             }
                             
                             if {$Rendering(BottleCage_DT_L) != {off}} {
@@ -1094,8 +1119,7 @@
                                 set pt_01				[ frame_geometry::coords_get_xy $SeatTube(polygon)  3 ]
                             set _dim_SeatTube_CutLength [ $cv_Name dimension  length  	[ project::flatten_nestedList [list $help_st_dt $pt_01] ] \
                                                                                         aligned    [expr   90 * $stageScale] [expr 10 * $stageScale] \
-                                                                                        darkviolet ]
-
+                                                                                        darkviolet ]                         
                                                                                         
                                                                                         
                                 # -- Tubing Details --------------------
