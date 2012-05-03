@@ -1136,18 +1136,29 @@
                                 #
                                 # -- /root/Personal
                                 #
+                            #set parentNode [$domProject selectNode /root/Result]
+                            #    puts [$parentNode asXML]
+                            #    set textValue           [[ $parentNode selectNode Position/Saddle/text() ] nodeValue]
+                            #    set value(SD_Height)    [expr -1.0 * [lindex [split $textValue ,] 1]]
+                            #    puts "  <D> $value(SD_Height) $textValue"
+                            #    exit
+ 
                             set parentNode [$domProject selectNode /root/Personal]
                                     puts "                           ... update File ... /root/Personal"
-                                set value(ST_Angle)     [[ $parentNode selectNode SeatTube_Angle/text() ] nodeValue]
-                                # set value(ST_Length)  [[ $parentNode selectNode SeatTube_Length/text() ] nodeValue]
+                                set value(ST_Angle)     [[ $parentNode selectNode SeatTube_Angle/text()  ] nodeValue]
+                                set value(ST_Length)    [[ $parentNode selectNode SeatTube_Length/text() ] nodeValue]
+                                set pt_01               [ vectormath::rotatePoint {0 0} [list $value(ST_Length) 0] $value(ST_Angle) ]
+                                set value(SD_Height)    [lindex $pt_01 1]
                                 
+                            puts "  <D> $value(ST_Angle) $value(ST_Length)"
                             foreach nodeName {SeatTube_Angle SeatTube_Length} {
                                     set node    [$parentNode selectNode $nodeName]
                                     $parentNode removeChild $node
                                     $node delete                                    
                             }
+                                
                             $parentNode appendXML   "<Saddle_Distance>200</Saddle_Distance>"
-                            $parentNode appendXML   "<Saddle_Height>718.00</Saddle_Height>"
+                            $parentNode appendXML   "<Saddle_Height>$value(SD_Height)</Saddle_Height>"
                             
                             
                                 #

@@ -2475,24 +2475,28 @@
 							# puts "\n"
                             # puts "  ... Angle/SeatTube/Direction comes here: $value"
                             # puts ""
-                            set oldAngle 		[ vectormath::angle $SeatPost(Saddle) {0 0} {-200 0} ]
                             set oldValue        $project::Result(Angle/SeatTube/Direction)
-                            set diffAngle       [ expr $value - $oldValue ]
+                            set SP_Setback      [project::getValue Component(SeatPost/Setback)   value]
+                            set length_Setback  [expr $SP_Setback * sin([vectormath::rad $value])]
+                            set height_Setback  [expr $SP_Setback * cos([vectormath::rad $value])]
+                                # puts "    -> value $value"
+                                # puts "    -> oldValue $oldValue"
+                                # puts "    -> SP_Setback $SP_Setback"
+                                # puts "    -> length_Setback $length_Setback"
+                                # puts "    -> height_Setback $height_Setback"                           
+                            set ST_height       [expr [project::getValue Personal(Saddle_Height)   value] - [project::getValue Component(Saddle/Height)   value] + $height_Setback]
+                            set length_SeatTube [expr $ST_height / tan([vectormath::rad $value])]
+                                # puts "    -> ST_height $ST_height"
+                                # puts "    -> length_SeatTube $length_SeatTube"
                             
-                            # puts " newValue -> $value "
-                            # puts " oldValue -> $oldValue "
-                            # puts " diffValue -> $diffAngle"
-                            set height          [expr [project::getValue Personal(Saddle_Height)   value] - [project::getValue Component(Saddle/Height)   value] ]
-                            	
                                 # --- update value 
 								# 
-							set value					[expr $height*tan([vectormath::rad [expr 90 - $oldAngle - $diffAngle]])]
+                            set value [expr $length_Setback + $length_SeatTube]
 							set xpath					Personal/Saddle_Distance
                             set_projectValue $xpath  	$value
                             return
-                                # set newValue                [set_projectValue $xpath  $value format]
-                                # set_projectValue $xpath  	$newValue
-						}
+ 						}
+
 				
 				{Length/TopTube/VirtualLength}			-			
 				{Length/FrontWheel/horizontal}	{			
