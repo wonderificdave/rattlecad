@@ -1129,7 +1129,7 @@
                                     $node appendXML "<Q-Factor>145.50</Q-Factor>"
                                     $node appendXML "<ArmWidth>13.75</ArmWidth>"
                                     $node appendXML "<ChainLine>43.50</ChainLine>"
-                                    $node appendXML "<ChainRings>39;53</ChainRings>"
+                                    $node appendXML "<ChainRings>39-53</ChainRings>"
                            }
                            
                            
