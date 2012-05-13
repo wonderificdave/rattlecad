@@ -407,6 +407,7 @@
             } 
             if { $project_Version < 3.4 } {    
                      puts "\n\n       -- 3.3.xx -----------"
+                    project::update_ProjectVersion {3.3.02}
             }
 
             return $postUpdate
@@ -1188,6 +1189,44 @@
                         }
                        
 								
+				{3.3.02} {	
+                                #
+                                # -- /root/Component/Saddle
+                                #
+                            set parentNode [$domProject selectNode /root/Component/Saddle]
+                            
+                            set node {}							
+                            set node [$domProject selectNode /root/Component/Saddle/Length]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Component/Saddle/..."
+                                    $parentNode appendXML "<Length>280.00</Length>"
+                                    $parentNode appendXML "<LengthNose>153.00</LengthNose>"
+                            }
+                                
+                                #
+                                # -- /root/Length/Saddle
+                                #
+                            set parentNode [$domProject selectNode /root/Result/Length/Saddle]
+                            
+                            set node {}							
+                            set node [$domProject selectNode /root/Result/Length/Saddle/Offset_BB_Nose]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Result/Length/Saddle/Offset_BB_Nose"
+                                    $parentNode appendXML "<Offset_BB_Nose>0.00</Offset_BB_Nose>"
+                            }
+                            
+                                #
+                                # -- /root/Position/SaddleNose
+                                #
+                            set parentNode [$domProject selectNode /root/Result/Position]
+                            
+                            set node {}							
+                            set node [$domProject selectNode /root/Result/Position/SaddleNose]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Result/Position/SaddleNose"
+                                    $parentNode appendXML "<SaddleNose>0.00,0.00</SaddleNose>"
+                            }
+                        }                            
 				{ab-xy} {	set node {}
 							set node [$domProject selectNode /root/Project/rattleCADVersion/text()]
 							puts " ... [$node nodeValue] .."

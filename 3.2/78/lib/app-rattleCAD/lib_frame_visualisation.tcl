@@ -319,6 +319,7 @@
 							if {$updateCommand != {}} 	{ $cv_Name bind	$Saddle(object)	<Double-ButtonPress-1> \
 																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
 																					{ 	file://Component(Saddle/File)	\
+                                                                                        Component(Saddle/LengthNose)	\
 																					} 	{Saddle Parameter} \
 																	]
 														  lib_gui::object_CursorBinding 	$cv_Name	$Saddle(object)
@@ -868,8 +869,12 @@
                                                                                                                           -width 1.0  	-tags {__CenterLine__	saddleproposal}
 
             # ------ saddle representation	                                                                                                
-				set saddle_polygon {}                                                                                                       
-				foreach xy {{-120 4} {0 0} {130 -1} {140 -5} {160 -12}} {                                                                   
+				set saddle_polygon {} 
+                set x_04   $project::Component(Saddle/LengthNose)
+                set x_03   [ expr $x_04 - 20 ]
+                set x_02   [ expr $x_04 - 30 ]
+                set x_01   [ expr $project::Component(Saddle/LengthNose) - $project::Component(Saddle/Length) ]
+				foreach xy [ list [list $x_01 4] {0 0} [list $x_02 -1] [list $x_03 -5] [list $x_04 -12] ] {                                                                   
 					set saddle_polygon [ lappend saddle_polygon [vectormath::addVector $Saddle $xy ] ]                                      
 				}                                                                                                                           
 		$cv_Name create line  $saddle_polygon   													   		-fill gray60  -width 1.0  	-tags {__CenterLine__	saddle}				

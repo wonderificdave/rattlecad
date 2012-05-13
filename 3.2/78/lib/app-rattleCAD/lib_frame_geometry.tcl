@@ -213,6 +213,7 @@
                        set Saddle(Saddle_Height) 0
                 }
             set Saddle(Position)		[ list [expr -1.0*$Saddle(Distance)]  $Saddle(Height) ]
+            set Saddle(Nose)		    [ vectormath::addVector  $Saddle(Position) [list $project::Component(Saddle/LengthNose) -15] ]
             
                 #
 				# --- get SaddleMount - Position
@@ -348,6 +349,7 @@
 			project::setValue Result(Position/SeatPostSeatTube)	    position	$SeatPost(SeatTube)
 			project::setValue Result(Position/Saddle) 				position	$Saddle(Position)
 			project::setValue Result(Position/SaddleProposal)		position	$Saddle(Proposal)
+			project::setValue Result(Position/SaddleNose)		    position	$Saddle(Nose)
 			project::setValue Result(Position/LegClearance)			position	$TopTube(PivotPosition) 	[expr $LegClearance(Length) - ($RearWheel(Radius) - $project::Custom(BottomBracket/Depth)) ]
 			project::setValue Result(Position/BottomBracketGround)	position	0 	[expr - $RearWheel(Radius) + $project::Custom(BottomBracket/Depth) ] ;# Point on the Ground perp. to BB
 			project::setValue Result(Position/SeatTubeSaddle)		position	[ vectormath::intersectPoint [list 0 [lindex $Saddle(Position) 1] ] [list 100 [lindex $Saddle(Position) 1]] {0 0} $SeatPost(SeatTube) ]
@@ -1075,7 +1077,7 @@
 							# puts "                  ... $value"
 						project::setValue Result(Length/Saddle/Offset_BB) value $value
 
-					
+
                         # --- Saddle/Offset_BB_ST --------------------------------
 						#
 					set position_Saddle	    [ project::getValue Result(Position/SeatTubeSaddle)	position]
@@ -1083,7 +1085,7 @@
 							# puts "                  ... $value"
 						project::setValue Result(Length/Saddle/Offset_BB_ST) value $value
 
-					
+
                         # --- Saddle/Offset_HB --------------------------------
 						#
 					set position_Saddle	    $Saddle(Position)
@@ -1091,6 +1093,14 @@
 						set value		[ format "%.3f" [expr [lindex $position_Saddle 1] - [lindex $position_HandleBar 1]] ]	
 							# puts "                  ... $value"
 						project::setValue Result(Length/Saddle/Offset_HB) value $value
+                        
+                        
+                        # --- Saddle/Offset_BB_Nose --------------------------------
+						#
+					set position_Nose	    $Saddle(Nose)
+						set value		[ format "%.3f" [expr -1.0 * [lindex $position_Nose 0]] ]	
+							# puts "                  ... $value"
+						project::setValue Result(Length/Saddle/Offset_BB_Nose) value $value
 
 					
 						# --- WheelPosition/front/diagonal --------------------
@@ -2548,11 +2558,11 @@
 							
 				{Length/Saddle/Offset_HB}	{			
 							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value]
-							set newValue				[set_projectValue $xpath  $value format]
+							set oldValue				[ project::getValue [format "%s(%s)" $_array $_name] value ]
+							set newValue				[ set_projectValue $xpath  $value format ]
 							set _updateValue($xpath) 	$newValue
 							
-							set delta					[expr $oldValue - $newValue]
+							set delta					[ expr $oldValue - $newValue ]
 									# puts "          $newValue - $oldValue = $delta"
 								 
 								# --- set HandleBar(Distance)
@@ -2565,15 +2575,32 @@
 						
 				{Length/Saddle/Offset_BB_ST}	{			
 							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-							set newValue				[set_projectValue $xpath  $value format]
-							set height                  [project::getValue [format "%s(%s)" Personal Saddle_Height] value]
-                            set angle                   [vectormath::dirAngle {0 0} [list $newValue $height] ]
+							set newValue				[ set_projectValue $xpath  $value format ]
+							set height                  [ project::getValue [format "%s(%s)" Personal Saddle_Height] value ]
+                            set angle                   [ vectormath::dirAngle {0 0} [list $newValue $height] ]
                             
                             set_resulting_Parameters Result Angle/SeatTube/Direction $angle
                             
                                 # puts "   $newValue / $height -> $angle"
                             return
 						}
+                        
+				{Length/Saddle/Offset_BB_Nose}	{			
+							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							set oldValue				[ project::getValue [format "%s(%s)" $_array $_name] value ]
+							set newValue				[ set_projectValue $xpath  $value format ]
+							set delta					[ expr -1.0 * $newValue - $oldValue ]
+                            
+								# --- set HandleBar(Distance)
+								#
+							set newValue				[ expr $project::Component(Saddle/LengthNose) + $delta ]
+							set xpath 					Component/Saddle/LengthNose
+							set_projectValue $xpath  	$newValue
+                            return
+						}
+                  
+                        
+                        
 						
 				default {
 							puts "\n"

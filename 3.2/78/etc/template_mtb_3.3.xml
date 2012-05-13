@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <Project>
-        <rattleCADVersion>3.3.00</rattleCADVersion>
+        <rattleCADVersion>3.3.02</rattleCADVersion>
         <Name>Template MTB</Name>
-        <modified>2012.04.07/12:00</modified>
+        <modified>2012.05.12/12:00</modified>
     </Project>
 
     <Personal>
@@ -241,6 +241,8 @@
         <Saddle>
             <File>etc:saddle/saddle_c.svg</File>
             <Height>40.00</Height>
+            <Length>280.00</Length>
+            <LengthNose>153.00</LengthNose>
         </Saddle>
         <SeatPost>
             <Setback>25.00</Setback>
@@ -288,6 +290,7 @@
             <FrontWheel>0.00,0.00</FrontWheel>
             <RearWheel>0.00,0.00</RearWheel>
             <Saddle>0.00,0.00</Saddle>
+            <SaddleNose>0.00,0.00</SaddleNose>
             <SaddleProposal>0.00,0.00</SaddleProposal>
             <HandleBar>0.00,0.00</HandleBar>
             <LegClearance>0.00,0.00</LegClearance>
