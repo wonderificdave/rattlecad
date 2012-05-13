@@ -2589,7 +2589,7 @@
 							# puts "               ... [format "%s(%s)" $_array $_name] $xpath"
 							set oldValue				[ project::getValue [format "%s(%s)" $_array $_name] value ]
 							set newValue				[ set_projectValue $xpath  $value format ]
-							set delta					[ expr -1.0 * $newValue - $oldValue ]
+							set delta					[ expr -1.0 * ($newValue - $oldValue) ]
                             
 								# --- set HandleBar(Distance)
 								#

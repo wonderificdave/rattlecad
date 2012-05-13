@@ -405,6 +405,7 @@
                         #
                     project::update_ProjectVersion {3.3.00}
             } 
+            puts " -> $project_Version < 3.4"
             if { $project_Version < 3.4 } {    
                      puts "\n\n       -- 3.3.xx -----------"
                     project::update_ProjectVersion {3.3.02}
@@ -1151,7 +1152,7 @@
                                 set pt_01               [ vectormath::rotatePoint {0 0} [list $value(ST_Length) 0] $value(ST_Angle) ]
                                 set value(SD_Height)    [lindex $pt_01 1]
                                 
-                            puts "  <D> $value(ST_Angle) $value(ST_Length)"
+                                # puts "  <D> $value(ST_Angle) $value(ST_Length)"
                             foreach nodeName {SeatTube_Angle SeatTube_Length} {
                                     set node    [$parentNode selectNode $nodeName]
                                     $parentNode removeChild $node
@@ -1182,9 +1183,8 @@
                                 #
                                 # -- update values
                                 #
-                            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                            # frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
                             dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # pdict $postUpdate
                         
                         }
                        
@@ -1226,6 +1226,13 @@
                                     puts "                           ... update File ... /root/Result/Position/SaddleNose"
                                     $parentNode appendXML "<SaddleNose>0.00,0.00</SaddleNose>"
                             }
+                                
+                                #
+                                # -- update values
+                                #
+                            # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
+                            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                        
                         }                            
 				{ab-xy} {	set node {}
 							set node [$domProject selectNode /root/Project/rattleCADVersion/text()]
