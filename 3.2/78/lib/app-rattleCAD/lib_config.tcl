@@ -845,7 +845,10 @@
             set _name       [lindex [split $targetVar ()] 1]
             
             set entryVar [$entry cget -text]
-            eval set newValue 	[expr 1.0 * \$$entryVar]
+            eval set newValue   \$$entryVar
+            set newValue 	[expr 1.0 * [string map {, .} $newValue]]
+            #set newValue [ string map {, .} $value]
+            
             eval set oldValue	$[namespace current]::configValue(entry)
                     # puts "     \$oldValue $oldValue"
                     # puts "     \$newValue $newValue"

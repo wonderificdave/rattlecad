@@ -283,10 +283,10 @@
                         set pt_19                       [ vectormath::addVector $ext_Center(ChainStay_DO) {1 0} $csLength ]
 
                         set pt_14_b                     [ vectormath::addVector $pt_15 [ vectormath::unifyVector $pt_15 $pt_10 $csBase_DO_Offset ] ]
-                        set pt_14                       [lindex [ vectormath::parallel  $pt_14_b $pt_15 $csBase_DO_OffsetPerp ] 0 ]
+                        set pt_14                       [ lindex [ vectormath::parallel  $pt_14_b $pt_15 $csBase_DO_OffsetPerp ] 0 ]
                         
                         set pt_16_b                     [ vectormath::addVector $pt_15 [ vectormath::unifyVector $pt_15 $pt_19 $csBase_BB_Offset ] ]
-                        set pt_16                       [lindex [ vectormath::parallel  $pt_16_b $pt_19 $csBase_BB_OffsetPerp ] 0 ]
+                        set pt_16                       [ lindex [ vectormath::parallel  $pt_16_b $pt_19 $csBase_BB_OffsetPerp ] 0 ]
                         
 
                         set vct_01   [ vectormath::parallel      $ext_Center(ChainStay_DO)  $pt_14      [expr 0.5 * $project::FrameTubes(ChainStay/DiameterSS)] ]   
@@ -306,15 +306,34 @@
                         
                         set cs_01   [ lindex $vct_01 0 ]
                         set cs_02   [ vectormath::addVector [lindex $vct_01_2 1] [vectormath::unifyVectorPointList $vct_01_2 -15] ]
-                        set cs_03   [ vectormath::intersectVector $vct_01_2 $vct_02 ]
-                        set cs_04   [ vectormath::intersectVector $vct_02   $vct_09 ]
-                        set cs_05   [ vectormath::intersectVector $vct_09_2 $vct_10 ]
+                        if {$csBase_DO_OffsetPerp != 0} {
+                            set cs_03   [ vectormath::intersectVector $vct_01_2 $vct_02 ]
+                            set cs_04   [ vectormath::intersectVector $vct_02   $vct_09 ]
+                        } else {
+                            set cs_03   [ lindex $vct_01_2 1 ]
+                            set cs_04   [ lindex $vct_02   1 ]
+                        }
+                        if {$csBase_BB_OffsetPerp != 0} {
+                            set cs_05   [ vectormath::intersectVector $vct_09_2 $vct_10 ]
+                        } else {
+                            set cs_05   [ lindex $vct_09_2 1 ]
+                        }
                         set cs_06   [ vectormath::addVector [lindex $vct_10   1]  [vectormath::unifyVectorPointList $vct_10 5] ]
                         
+                        
                         set cs_14   [ vectormath::addVector [lindex $vct_11   1]  [vectormath::unifyVectorPointList $vct_11 5] ]
-                        set cs_15   [ vectormath::intersectVector $vct_12_2 $vct_11 ]
-                        set cs_16   [ vectormath::intersectVector $vct_18   $vct_12 ]
-                        set cs_17   [ vectormath::intersectVector $vct_19_2 $vct_18 ]
+                        if {$csBase_BB_OffsetPerp != 0} {
+                            set cs_15   [ vectormath::intersectVector $vct_12_2 $vct_11 ]
+                            set cs_16   [ vectormath::intersectVector $vct_18   $vct_12 ]
+                        } else {
+                            set cs_15   [ lindex $vct_12_2 1 ]
+                            set cs_16   [ lindex $vct_18   1 ]
+                        }
+                        if {$csBase_DO_OffsetPerp != 0} {
+                            set cs_17   [ vectormath::intersectVector $vct_19_2 $vct_18 ]
+                        } else {
+                            set cs_17   [ lindex $vct_19_2 1 ]
+                        }
                         set cs_18   [ vectormath::addVector [lindex $vct_19_2 1] [vectormath::unifyVectorPointList $vct_19_2 -15] ]
                         set cs_19   [ lindex $vct_19 0 ]
                                                 
@@ -331,7 +350,13 @@
                     set ext_Center(DIM_Base_BB)     [ vectormath::rotatePoint       $ext_Center(ChainStay_DO) $pt_16    [expr -1.0*$angle] ]
                     set ext_Center(DIM_Base_BB_Ref) [ vectormath::rotatePoint       $ext_Center(ChainStay_DO) $pt_16_b  [expr -1.0*$angle] ]
 
-                    return                    
+                    return 
+                        if {$csBase_DO_OffsetPerp != 0} {
+                        } else {
+                                set pt_14               $pt_14_b
+                        }
+        
+                    
             }
             proc get_ChainWheel {z w position} {                    
                     set cw_Diameter_TK  [ expr 12.7 / sin ($vectormath::CONST_PI/$z)  ]

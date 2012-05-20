@@ -1,3 +1,16 @@
+3.3.02.02   - 2012.05.20
+-------------------------------------------------------------------------------
+    bugfix:
+        ... lib_config::leaveEntry: handle {,.} on decimal values
+        ... cv_custom::createRearMockup::get_ChainStay_bent: handle "0" values
+        
+
+3.3.02.01   - 2012.05.12
+-------------------------------------------------------------------------------
+    update/bugfix:
+        ... add personal dimension: saddlenose / bottombracket as reference
+        
+        
 3.3.00.32   - 2012.05.03
 -------------------------------------------------------------------------------
     bugfix:
