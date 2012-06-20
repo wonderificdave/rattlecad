@@ -173,7 +173,7 @@
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  25  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "   		A4  0.2  25  -bd 2  -bg white  -relief sunken
-			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom07  "  Rear Mockup  "	A4  0.5  25  -bd 2  -bg white  -relief sunken
+			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom07  "  Rear Mockup  "	A2  1.0  25  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "	    A4  1.0  25  -bd 2  -bg white  -relief sunken
 			lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "	A4  0.2  25  -bd 2  -bg white  -relief sunken
 			
@@ -595,67 +595,88 @@
 	#-------------------------------------------------------------------------
        #  create a Button inside a canvas of notebookCanvas
        #
-	proc notebook_createButton {nb_Canvas cv_Button	{type {default}}} {
+	proc notebook_createButton {nb_Canvas cv_ButtonList	{type {default}}} {
 			
-			puts "       createButton_Reference2Custom:  $cv_Button"
+			puts "       notebook_createButton:  $cv_ButtonList"
 			set cv_Name 	[lindex [split $nb_Canvas :] end]
 			set cv  	[lib_gui::notebook_getWidget  $cv_Name]
-				
-			switch -regexp $cv_Button {
-					changeFormatScale {
-								if {$type != {default}} {
-									set buttonText "Format"
-								} else {
-									set buttonText "Format & Scale"
-								}
-								# -- create a Button to change Format and Scale of Stage
-								catch { destroy $cv.button_FormatScale }
-								catch {	button  $cv.button_FormatScale \
-												-text $buttonText \
-												-command [format {lib_gui::change_FormatScale %s %s} $cv $type]								
-										$cv create window 7 19 \
-												-window $cv.button_FormatScale \
-												-anchor w \
-												-tags __Button__Format_Scale__
-								}
-							}
-					TubingCheckAngles {
-								# -- create a Button to execute tubing_checkAngles
-								catch { destroy $cv.button_TCA }
-                                catch {	button  $cv.button_TCA \
-												-text "check Frame Angles" \
-												-command [format {lib_gui::tubing_checkAngles %s} $cv]								
-										$cv create window 7 19 \
-												-window $cv.button_TCA \
-												-anchor w \
-												-tags __Button__TCA__
-								}
-							}
-					ChainStayRendering {
-								# -- create a Button to set ChainStayRendering
-                                catch { destroy $cv.button_CSR }
-								catch {	button  $cv.button_CSR \
-												-text "switch: straight/bent/off" \
-												-command [format {lib_gui::rendering_ChainStay %s} $cv]								
-										$cv create window 7 19 \
-												-window $cv.button_CSR \
-												-anchor w \
-												-tags __Button__CSR__
-								}
-							}
-					Reference2Custom {
-								# -- create a Button to execute geometry_reference2personal
-								catch { destroy $cv.button_R2C }
-								catch {	button  $cv.button_R2C \
-												-text "copy settings to Base Geometry" \
-												-command lib_gui::geometry_reference2personal								
-										$cv create window 7 19 \
-												-window $cv.button_R2C \
-												-anchor w \
-												-tags __Button__R2C__
-								}
-							}
-			}
+            
+                # puts [$cv find withtag __NB_Button__]
+            foreach cv_Window [$cv find withtag __NB_Button__] {
+                #puts "   <D> $cv_Window"
+                #set cv_Button [$cv itemcget $cv_Window -window]
+                #puts "   <D> $cv_Button"
+                #destroy     $cv_Window  ; # delete containing window           
+                #$cv delete  $cv_Button  ; # delete button
+            }
+            puts "   <D> [$cv find withtag __NB_Button__]"
+            
+            set idx 0
+            foreach cv_Button $cv_ButtonList {
+                puts "                    -> $cv_Button"
+                set buttonCount [llength [$cv find withtag __NB_Button__]]
+                    # puts $buttonCount
+                set x_Position  7
+                set y_Position  [expr 19 + $idx * 25]
+                incr idx
+                    
+                
+                switch -regexp $cv_Button {
+                        changeFormatScale {
+                                    if {$type != {default}} {
+                                        set buttonText "Format"
+                                    } else {
+                                        set buttonText "Format & Scale"
+                                    }
+                                    # -- create a Button to change Format and Scale of Stage
+                                    catch { destroy $cv.button_FormatScale }
+                                    catch {	button  $cv.button_FormatScale \
+                                                    -text $buttonText \
+                                                    -command [format {lib_gui::change_FormatScale %s %s %s} $cv $y_Position $type ]								
+                                            $cv create window $x_Position $y_Position \
+                                                    -window $cv.button_FormatScale \
+                                                    -anchor w \
+                                                    -tags {__Button__Format_Scale__ __NB_Button__}
+                                    }
+                                }
+                        TubingCheckAngles {
+                                    # -- create a Button to execute tubing_checkAngles
+                                    catch { destroy $cv.button_TCA }
+                                    catch {	button  $cv.button_TCA \
+                                                    -text "check Frame Angles" \
+                                                    -command [format {lib_gui::tubing_checkAngles %s} $cv]								
+                                            $cv create window $x_Position $y_Position \
+                                                    -window $cv.button_TCA \
+                                                    -anchor w \
+                                                    -tags {__Button__TCA__ __NB_Button__}
+                                    }
+                                }
+                        ChainStayRendering {
+                                    # -- create a Button to set ChainStayRendering
+                                    catch { destroy $cv.button_CSR }
+                                    catch {	button  $cv.button_CSR \
+                                                    -text "switch: straight/bent/off" \
+                                                    -command [format {lib_gui::rendering_ChainStay %s} $cv]								
+                                            $cv create window $x_Position $y_Position \
+                                                    -window $cv.button_CSR \
+                                                    -anchor w \
+                                                    -tags {__Button__CSR__ __NB_Button__}
+                                    }
+                                }
+                        Reference2Custom {
+                                    # -- create a Button to execute geometry_reference2personal
+                                    catch { destroy $cv.button_R2C }
+                                    catch {	button  $cv.button_R2C \
+                                                    -text "copy settings to Base Geometry" \
+                                                    -command lib_gui::geometry_reference2personal								
+                                            $cv create window $x_Position $y_Position \
+                                                    -window $cv.button_R2C \
+                                                    -anchor w \
+                                                    -tags {__Button__R2C__ __NB_Button__}
+                                    }
+                                }
+                }
+            }
 	}
 
     
@@ -694,7 +715,7 @@
 	#-------------------------------------------------------------------------
        #  create menue to change scale and size of Stage 
        #
-	proc change_FormatScale {cv {type {default}}}  {
+	proc change_FormatScale {cv y {type {default}}}  {
 	
 			set cv_Name [lindex [split $cv .] end-1]
 			
@@ -706,7 +727,7 @@
 			
 			if {[ $cv find withtag __Select__Format_Scale__ ] == {} } {
 					catch 	{	set baseFrame [frame .f_format_$cv_Name  -relief raised -border 1]
-								$cv create window 27 35 \
+								$cv create window 27 [expr $y+16] \
 										-window $baseFrame \
 										-anchor nw \
 										-tags __Select__Format_Scale__

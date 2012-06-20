@@ -200,8 +200,8 @@
 						#
 					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			
 					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			
-					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost		
 					frame_visualisation::createDecoration	$cv_Name $xy 	Brake			editable   ;# $updateCommand		
+					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost		
 						#
 					frame_visualisation::createFork_Rep		$cv_Name $xy 	
 					frame_visualisation::createFrame_Tubes	$cv_Name $xy					 
@@ -242,8 +242,8 @@
 						#
 					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			editable   ;# $updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			editable   ;# $updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost			
 					frame_visualisation::createDecoration	$cv_Name $xy 	Brake				editable   ;# $updateCommand
+					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost			
 						#
 					frame_visualisation::createFork_Rep		$cv_Name $xy 	editable                       ;# $updateCommand
 					frame_visualisation::createFrame_Tubes	$cv_Name $xy 	
@@ -264,7 +264,7 @@
 				}
 			lib_gui::cv_Custom07 {
 						#
-						# -- frame - drafting 
+						# -- rear - mockup 
 						#
 					set stageScale	[$cv_Name getNodeAttr Stage scale]
 					set stageFormat	[$cv_Name getNodeAttr Stage format]
@@ -275,11 +275,13 @@
                         #
                     update_cv_Parameter                         $cv_Name $xy
                         #
+					createDraftingFrame							$cv_Name		$stageFormat	[expr 1/$stageScale]	$::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                        #
                     createRearMockup                            $cv_Name
                         #
                     $cv_Name 		centerContent				{ 0  25}		{__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
                         #
-					lib_gui::notebook_createButton				$cv_Name 		ChainStayRendering
+					lib_gui::notebook_createButton				$cv_Name 		{ChainStayRendering changeFormatScale}
                         #
 				}
 			lib_gui::cv_Custom05 {
@@ -347,8 +349,8 @@
 						#
 					frame_visualisation::createDecoration	$cv_Name $xy 	RearWheel			editable   ;# $updateCommand	
 					frame_visualisation::createDecoration	$cv_Name $xy 	FrontWheel			editable   ;# $updateCommand	
-					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost			
 					frame_visualisation::createDecoration	$cv_Name $xy 	Brake				editable   ;# $updateCommand
+					frame_visualisation::createDecoration	$cv_Name $xy 	SeatPost			
 						#
 					frame_visualisation::createFork_Rep		$cv_Name $xy 
 					frame_visualisation::createFrame_Tubes	$cv_Name $xy 
