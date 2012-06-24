@@ -315,7 +315,7 @@
                         }			
                 cline_frame {
                             $cv_Name create centerline 	[ project::flatten_nestedList $TopTube(Steerer) $TopTube(SeatVirtual) ] \
-                                                                                -fill darkblue 		-width 2.00			-tags __CenterLine__	
+                                                                                -fill darkorange 		    -width 2.0			-tags __CenterLine__	
                             #$cv_Name create centerline 	[ project::flatten_nestedList $TopTube(Steerer) $TopTube(SeatVirtual) ] \
                                                                                 -fill gray50 		-width 0.25			-tags __CenterLine__	
                                                                                 
