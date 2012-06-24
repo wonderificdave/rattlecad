@@ -1,8 +1,13 @@
+3.3.03.04   - 2012.06.24
+-------------------------------------------------------------------------------
+    feature:
+        ... Base Concept: add editable dimesion: stack & reach
+
+
 3.3.03.01   - 2012.06.24
 -------------------------------------------------------------------------------
     feature:
-        ... Base Concept 
-           ... add editable dimesion: virtual seattube length
+        ... Base Concept: add editable dimesion: virtual seattube length
 
 
 3.3.02.04   - 2012.06.20

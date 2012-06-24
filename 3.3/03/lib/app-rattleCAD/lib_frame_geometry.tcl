@@ -2517,28 +2517,21 @@
                             return
  						}
 
-				
 				{Length/SeatTube/VirtualLength}			{
-							 puts "  -> Length/SeatTube/VirtualLength"
-                             puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							# puts "  -> Length/SeatTube/VirtualLength"
+                            # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
 							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
 							set newValue				[set_projectValue $xpath  $value format]
 							set _updateValue($xpath) 	$newValue
 							set delta					[expr $newValue - $oldValue]
                             
-                            puts "\n===================================\n"
-                            puts "\n   <D>  $delta \n"
-                            puts "   -> $project::Result(Angle/SeatTube/Direction)"
-                            
                                 # SeatTube Offset
                             set offsetSeatTube          [vectormath::rotateLine {0 0} $delta [expr 180 - $project::Result(Angle/SeatTube/Direction)]]
                             set offsetSeatTube_x        [lindex $offsetSeatTube 0]
-                            puts "   -> $offsetSeatTube"
+                                # puts "   -> $offsetSeatTube"
                                 # HeadTube Offset
                             set deltaHeadTube           [ expr [lindex $offsetSeatTube 1] * sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-                            set offsetHeadTube_x        [ expr [lindex $offsetSeatTube 1] / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-                            #set offsetHeadTube_y        [ expr [lindex $offsetSeatTube 1] * cos($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-                            
+                            set offsetHeadTube_x        [ expr [lindex $offsetSeatTube 1] / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]                            
                                 #
                             project::remove_tracing ; #because of setting two parameters at once
                                 #
@@ -2546,13 +2539,8 @@
                             set newValue				[ expr $HandleBar(Distance)	+ $offsetHeadTube_x + $offsetSeatTube_x]
                             set_projectValue $xpath  	$newValue
                                 #
-                        #    set xpath					Personal/HandleBar_Height
-                        #    set newValue				[ expr $HandleBar(Height)	+ [lindex $offsetSeatTube 1] ]
-                        #    set_projectValue $xpath  	$newValue
-                                #
                             project::add_tracing
-                                #
-                                
+                                #       
                             set xpath					FrameTubes/HeadTube/Length
                             set oldValue				$project::FrameTubes(HeadTube/Length)
                             set newValue				[ expr $project::FrameTubes(HeadTube/Length) + $deltaHeadTube ]
@@ -2561,7 +2549,51 @@
                             return
                 }
 
+                {Length/HeadTube/ReachLength}   {
+							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
+							set newValue				[set_projectValue $xpath  $value format]
+							set _updateValue($xpath) 	$newValue
+							set delta					[expr $newValue - $oldValue]
                             
+                            set xpath					Personal/HandleBar_Distance
+							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
+                            set newValue				[ expr $HandleBar(Distance)	+ $delta]
+                            set_projectValue $xpath  	$newValue
+                            return
+                }
+                
+                {Length/HeadTube/StackHeight}   {
+							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
+							set newValue				[set_projectValue $xpath  $value format]
+							set _updateValue($xpath) 	$newValue
+							set delta					[expr $newValue - $oldValue]
+                            
+                            set deltaHeadTube           [ expr $delta / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+                            set offsetHeadTube_x        [ expr $delta / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]                            
+
+                                # puts "==================="
+                                # puts "    delta             $delta"
+                                # puts "    deltaHeadTube     $deltaHeadTube"
+                                # puts "    offsetHeadTube_x  $offsetHeadTube_x"
+                            
+                                #
+                            project::remove_tracing ; #because of setting two parameters at once
+                                #                    
+                            set xpath					Personal/HandleBar_Height
+							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
+                            set newValue				[ expr $HandleBar(Height)	+ $delta]
+                            set_projectValue $xpath  	$newValue
+                                #
+                            project::add_tracing
+                                #       
+                            set xpath					FrameTubes/HeadTube/Length
+                            set oldValue				$project::FrameTubes(HeadTube/Length)
+                            set newValue				[ expr $project::FrameTubes(HeadTube/Length) + $deltaHeadTube ]
+                            set_projectValue $xpath  	$newValue
+                                #
+                            return
+                }
+
 				{Length/TopTube/VirtualLength}			-			
 				{Length/FrontWheel/horizontal}	{			
 							# puts "  -> Length/TopTube/VirtualLength"
