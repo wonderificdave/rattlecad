@@ -405,10 +405,14 @@
                         #
                     project::update_ProjectVersion {3.3.00}
             } 
-            puts " -> $project_Version < 3.4"
+                # puts " -> $project_Version < 3.4"
             if { $project_Version < 3.4 } {    
                      puts "\n\n       -- 3.3.xx -----------"
                     project::update_ProjectVersion {3.3.02}
+                    project::update_ProjectVersion {3.3.03}
+                    
+                    # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
+                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
             }
 
             return $postUpdate
@@ -1231,7 +1235,40 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                            # frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                        
+                        }                            
+				{3.3.03} {	
+                                #
+                                # -- /root/Result/Position/SeatTubeVirtualTopTube
+                                #
+                            set parentNode [$domProject selectNode /root/Result/Position]
+                            
+                            set node {}							
+                            set node [$domProject selectNode /root/Result/Position/SeatTubeVirtualTopTube]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Result/Position/SeatTubeVirtualTopTube"
+                                    $parentNode appendXML "<SeatTubeVirtualTopTube>0.00</SeatTubeVirtualTopTube>"
+                            }
+                                
+                                #
+                                # -- /root/Result/Length/SeatTube/VirtualLength
+                                #
+                            set parentNode [$domProject selectNode /root/Result/Length/SeatTube]
+                            
+                            set node {}							
+                            set node [$domProject selectNode /root/Result/Length/SeatTube/VirtualLength]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Result/Length/SeatTube/VirtualLength"
+                                    $parentNode appendXML "<VirtualLength>0.00</VirtualLength>"
+                            }
+
+                                
+                                #
+                                # -- update values
+                                #
+                            # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
+                            # frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
                         
                         }                            
 				{ab-xy} {	set node {}

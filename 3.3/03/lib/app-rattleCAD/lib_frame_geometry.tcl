@@ -421,7 +421,7 @@
 						set summaryLength [ expr $RearWheel(Distance_X) + $FrontWheel(Distance_X)]
 						set summaryHeight [ expr $project::Custom(BottomBracket/Depth) + 40 + [lindex $SeatPost(SeatTube) 1] ]
 					project::setValue Result(Position/SummarySize)		position	$summaryLength	$summaryHeight
-												
+                    												
 			}
 			get_basePoints
 			project::setValue Result(Position/FrontWheel)			position	$FrontWheel(Position)
@@ -1062,12 +1062,22 @@
 						project::setValue Result(Length/SeatTube/TubeHeight) value $value
 
 						
-						# --- TopTube/VirtualLength ---------------------------
+						# --- VirtualTopTube ----------------------------------
 						#
-					set position	[ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]   $TopTube(HeadTube)  {0 0} $SeatPost(SeatTube) ]
-						set value		[ format "%.3f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $position 0] ] ]
-							# puts "                  ... $value"
+					set SeatTube(VirtualTopTube)	[ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]   $TopTube(HeadTube)  {0 0} $SeatPost(SeatTube) ]
+ 					project::setValue Result(Position/SeatTubeVirtualTopTube)	position	$SeatTube(VirtualTopTube)		;# Point on the SeatTube of virtual TopTube	
+                                              
+                            # --- TopTube/VirtualLength -----------------------
+                            #
+                            # puts "                  ... $value"
+                        set value		[ format "%.3f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $SeatTube(VirtualTopTube) 0] ] ]
 						project::setValue Result(Length/TopTube/VirtualLength) value $value
+                        
+                            # --- SeatTube/VirtualLength ----------------------
+                            #
+                            # puts "                  ... $value"
+                        set value       [ format "%.3f" [vectormath::length $SeatTube(VirtualTopTube) {0 0}] ]                
+						project::setValue Result(Length/SeatTube/VirtualLength) value $value                      
 
 
                         # --- Saddle/Offset_BB --------------------------------
@@ -2508,6 +2518,50 @@
  						}
 
 				
+				{Length/SeatTube/VirtualLength}			{
+							 puts "  -> Length/SeatTube/VirtualLength"
+                             puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+							set oldValue				[project::getValue [format "%s(%s)" $_array $_name] value] 
+							set newValue				[set_projectValue $xpath  $value format]
+							set _updateValue($xpath) 	$newValue
+							set delta					[expr $newValue - $oldValue]
+                            
+                            puts "\n===================================\n"
+                            puts "\n   <D>  $delta \n"
+                            puts "   -> $project::Result(Angle/SeatTube/Direction)"
+                            
+                                # SeatTube Offset
+                            set offsetSeatTube          [vectormath::rotateLine {0 0} $delta [expr 180 - $project::Result(Angle/SeatTube/Direction)]]
+                            set offsetSeatTube_x        [lindex $offsetSeatTube 0]
+                            puts "   -> $offsetSeatTube"
+                                # HeadTube Offset
+                            set deltaHeadTube           [ expr [lindex $offsetSeatTube 1] * sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+                            set offsetHeadTube_x        [ expr [lindex $offsetSeatTube 1] / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+                            #set offsetHeadTube_y        [ expr [lindex $offsetSeatTube 1] * cos($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+                            
+                                #
+                            project::remove_tracing ; #because of setting two parameters at once
+                                #
+                            set xpath					Personal/HandleBar_Distance
+                            set newValue				[ expr $HandleBar(Distance)	+ $offsetHeadTube_x + $offsetSeatTube_x]
+                            set_projectValue $xpath  	$newValue
+                                #
+                        #    set xpath					Personal/HandleBar_Height
+                        #    set newValue				[ expr $HandleBar(Height)	+ [lindex $offsetSeatTube 1] ]
+                        #    set_projectValue $xpath  	$newValue
+                                #
+                            project::add_tracing
+                                #
+                                
+                            set xpath					FrameTubes/HeadTube/Length
+                            set oldValue				$project::FrameTubes(HeadTube/Length)
+                            set newValue				[ expr $project::FrameTubes(HeadTube/Length) + $deltaHeadTube ]
+                            set_projectValue $xpath  	$newValue
+                                #
+                            return
+                }
+
+                            
 				{Length/TopTube/VirtualLength}			-			
 				{Length/FrontWheel/horizontal}	{			
 							# puts "  -> Length/TopTube/VirtualLength"

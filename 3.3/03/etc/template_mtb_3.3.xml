@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <Project>
-        <rattleCADVersion>3.3.02</rattleCADVersion>
+        <rattleCADVersion>3.3.03</rattleCADVersion>
         <Name>Template MTB</Name>
-        <modified>2012.05.12/12:00</modified>
+        <modified>2012.06.24/12:00</modified>
     </Project>
 
     <Personal>
@@ -298,8 +298,9 @@
             <SteererGround>0.00,0.00</SteererGround>
             <SeatTubeGround>0.00,0.00</SeatTubeGround>
             <SeatTubeSaddle>0.00,0.00</SeatTubeSaddle>
+            <SeatTubeVirtualTopTube>0.00,0.00</SeatTubeVirtualTopTube>
             <DerailleurMountFront>0.00,0.00</DerailleurMountFront>
-            <BrakeFront>0.00,0.00</BrakeFront>
+            <BrakeFront>0.00,0.00</BrakeFront>           
             <BrakeRear>0.00,0.00</BrakeRear>
             <SummarySize>0.00,0.00</SummarySize>
             <SeatPostSaddle>0.00,0.00</SeatPostSaddle>
@@ -317,11 +318,13 @@
             <SeatTube>
                 <TubeLength>0.00</TubeLength>
                 <TubeHeight>0.00</TubeHeight>
+                <VirtualLength>0.00</VirtualLength>
             </SeatTube>
             <Saddle>
                 <Offset_BB>0.00</Offset_BB>
                 <Offset_BB_ST>0.00</Offset_BB_ST>    
                 <Offset_HB>0.00</Offset_HB>
+                <Offset_BB_Nose>0.00</Offset_BB_Nose>
             </Saddle>
             <BottomBracket>
                 <Height>0.00</Height>

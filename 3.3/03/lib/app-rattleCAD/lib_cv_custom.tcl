@@ -315,7 +315,11 @@
                         }			
                 cline_frame {
                             $cv_Name create centerline 	[ project::flatten_nestedList $TopTube(Steerer) $TopTube(SeatVirtual) ] \
+                                                                                -fill darkblue 		-width 2.00			-tags __CenterLine__	
+                            #$cv_Name create centerline 	[ project::flatten_nestedList $TopTube(Steerer) $TopTube(SeatVirtual) ] \
                                                                                 -fill gray50 		-width 0.25			-tags __CenterLine__	
+                                                                                
+                                                                                
                          }
                 cline_angle {
                             $cv_Name create circle 	$HeadTube(Stem)			-radius  4  -outline blue 		-width 1.0			-tags __CenterLine__		
@@ -389,7 +393,7 @@
                                                                 horizontal  [expr   70 * $stageScale]   [expr  -70 * $stageScale] \
                                                                 gray20 ] 
                                                                 
-                            set _dim_ST_Virtual		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $TopTube(SeatVirtual) ] \
+                            #set _dim_ST_Virtual		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $TopTube(SeatVirtual) ] \
                                                                 aligned     [expr   80 * $stageScale]   [expr   90 * $stageScale] \
                                                                 gray50 ] 
 
@@ -463,6 +467,9 @@
                                                                 $colour(result) ]
                             set _dim_TT_Virtual		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $TopTube(SeatVirtual)  $TopTube(Steerer)] \
                                                                 aligned     [expr   80 * $stageScale]   [expr  -80 * $stageScale] \
+                                                                $colour(result) ] 
+                            set _dim_ST_Virtual		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $TopTube(SeatVirtual) ] \
+                                                                aligned     [expr   80 * $stageScale]   [expr   90 * $stageScale] \
                                                                 $colour(result) ] 
                             set _dim_ST_Length 		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $SeatTube(Saddle)    $BottomBracket(Position) ] \
                                                                 horizontal  [expr  -80 * $stageScale]   [expr    0 * $stageScale]  \
@@ -662,12 +669,14 @@
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_FW_DistanceX   	
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_BB_Height								
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_TT_Virtual								
+                                    lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_Virtual								
 
                                     $cv_Name bind $_dim_SD_HB_Height	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_HB) ]
                                     $cv_Name bind $_dim_FW_Distance  	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
                                     $cv_Name bind $_dim_FW_DistanceX	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/horizontal) ]
                                     $cv_Name bind $_dim_BB_Height		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/BottomBracket/Height) ]
                                     $cv_Name bind $_dim_TT_Virtual		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/TopTube/VirtualLength) ]
+                                    $cv_Name bind $_dim_ST_Virtual	    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/SeatTube/VirtualLength) ]
                                         #
                                         # ... proc fill_resultValues ...
                                         # ... proc set_spec_Parameters ...

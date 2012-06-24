@@ -609,11 +609,11 @@
                 #destroy     $cv_Window  ; # delete containing window           
                 #$cv delete  $cv_Button  ; # delete button
             }
-            puts "   <D> [$cv find withtag __NB_Button__]"
+                # puts "   <D> [$cv find withtag __NB_Button__]"
             
             set idx 0
             foreach cv_Button $cv_ButtonList {
-                puts "                    -> $cv_Button"
+                puts "          ... $cv_Button"
                 set buttonCount [llength [$cv find withtag __NB_Button__]]
                     # puts $buttonCount
                 set x_Position  7
