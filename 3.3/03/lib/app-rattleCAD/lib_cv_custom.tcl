@@ -383,7 +383,7 @@
                                                                 gray50 ] 
                             
 
-                            set _dim_CS_LengthX 	[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$RearWheel(Ground)  $Position(BaseCenter) ] \
+                            # set _dim_CS_LengthX 	[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$RearWheel(Ground)  $Position(BaseCenter) ] \
                                                                 horizontal  [expr   70 * $stageScale]   0 \
                                                                 gray50 ] 
                             set _dim_Wh_Distance	[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$RearWheel(Ground)  $FrontWheel(Ground) ] \
@@ -393,7 +393,7 @@
                                                                 horizontal  [expr   70 * $stageScale]   [expr  -70 * $stageScale] \
                                                                 gray20 ] 
                                                                 
-                            #set _dim_ST_Virtual		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $TopTube(SeatVirtual) ] \
+                            # set _dim_ST_Virtual		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $BottomBracket(Position) $TopTube(SeatVirtual) ] \
                                                                 aligned     [expr   80 * $stageScale]   [expr   90 * $stageScale] \
                                                                 gray50 ] 
 
@@ -401,10 +401,10 @@
                                                                 aligned		0   [expr -150 * $stageScale]  \
                                                                 gray50 ] 
                                                                 
-                            #set _dim_HT_Reach_X		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$HeadTube(Stem)	$BottomBracket(Position) ] \
+                            # set _dim_HT_Reach_X		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$HeadTube(Stem)	$BottomBracket(Position) ] \
                                                                 horizontal  [expr   50 * $stageScale]    0 \
                                                                 gray50 ] 
-                            #set _dim_HT_Stack_Y		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$HeadTube(Stem)	$BottomBracket(Position) ] \
+                            # set _dim_HT_Stack_Y		[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$HeadTube(Stem)	$BottomBracket(Position) ] \
                                                                 vertical    [expr   80 * $stageScale]    [expr  120 * $stageScale]  \
                                                                 gray50 ] 
                             
@@ -471,8 +471,9 @@
                             set _dim_ST_Angle  		[ $cv_Name dimension  angle   	[ project::flatten_nestedList  $SeatTube(Ground)	$SeatPost(SeatTube) $help_00 ] \
                                                                 150   0  \
                                                                 $colour(result) ]
-                                                                
-                                                                
+                            set _dim_CS_LengthX 	[ $cv_Name dimension  length  	[ project::flatten_nestedList  	$RearWheel(Ground)  $Position(BaseCenter) ] \
+                                                                horizontal  [expr   70 * $stageScale]   0 \
+                                                                $colour(result) ] 
                             set _dim_TT_Virtual		[ $cv_Name dimension  length  	[ project::flatten_nestedList  $TopTube(SeatVirtual)  $TopTube(Steerer)] \
                                                                 aligned     [expr   80 * $stageScale]   [expr  -80 * $stageScale] \
                                                                 $colour(result) ] 
@@ -658,7 +659,7 @@
                                     
                                     $cv_Name bind $_dim_SD_Height	    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Saddle/Height) ]
                                     $cv_Name bind $_dim_SP_SetBack	    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(SeatPost/Setback) ]
-                                    $cv_Name bind $_dim_HT_Length		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
+                                    $cv_Name bind $_dim_HT_Length		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Custom(TopTube/OffsetHT) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
                                     $cv_Name bind $_dim_LC_Position_x	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(TopTube/PivotPosition) ]
                                     $cv_Name bind $_dim_LC_Position_y	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Personal(InnerLeg_Length) ]
                                     $cv_Name bind $_dim_SN_Position_x	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_Nose) ]
@@ -684,6 +685,7 @@
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_ST_Virtual								
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Reach_X								
                                     lib_gui::object_CursorBinding 	$cv_Name	$_dim_HT_Stack_Y								
+                                    lib_gui::object_CursorBinding 	$cv_Name	$_dim_CS_LengthX								
 
                                     $cv_Name bind $_dim_SD_HB_Height	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_HB) ]
                                     $cv_Name bind $_dim_FW_Distance  	<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
@@ -693,6 +695,7 @@
                                     $cv_Name bind $_dim_ST_Virtual	    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/SeatTube/VirtualLength) ]
                                     $cv_Name bind $_dim_HT_Reach_X		<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/ReachLength) ]
                                     $cv_Name bind $_dim_HT_Stack_Y	    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/StackHeight) ]
+                                    $cv_Name bind $_dim_CS_LengthX	    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/RearWheel/horizontal) ]
                                         
                                         #
                                         # ... proc fill_resultValues ...

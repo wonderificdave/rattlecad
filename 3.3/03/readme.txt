@@ -1,7 +1,11 @@
+3.3.03.05   - 2012.06.24
 3.3.03.04   - 2012.06.24
+3.3.03.01   - 2012.06.24
 -------------------------------------------------------------------------------
     feature:
-        ... Base Concept: add editable dimesion: stack & reach
+        ... Base Concept: get dimensions from existing frames
+           ... editable dimesion: stack & reach, virtual seattube length
+                  horizontal chainstay length
 
 
 3.3.03.01   - 2012.06.24
