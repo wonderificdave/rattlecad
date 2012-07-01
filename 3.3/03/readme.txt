@@ -1,6 +1,11 @@
-3.3.03.05   - 2012.06.24
-3.3.03.04   - 2012.06.24
-3.3.03.01   - 2012.06.24
+3.3.03.06   - 2012.07.01 
+-------------------------------------------------------------------------------
+    feature:
+        ... Crankset Mockup: parameterized by length and Chainwheel
+          ... requires any file named custom.svg in etc/components/crankset
+
+
+3.3.03.05   - 2012.06.24  ... (3.3.03.04, 3.3.03.01)
 -------------------------------------------------------------------------------
     feature:
         ... Base Concept: get dimensions from existing frames

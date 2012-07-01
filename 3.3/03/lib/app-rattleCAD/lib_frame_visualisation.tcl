@@ -157,16 +157,33 @@
                     CrankSet {
 								# --- create Crankset --------------
 							set CrankSet(position)		$BB_Position
-							set CrankSet(file)			[ checkFileString $project::Component(CrankSet/File) ]	
-							set CrankSet(object)		[ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __CrankSet__ ]
-														  $cv_Name addtag  __Decoration__ withtag $CrankSet(object)							
-							if {$updateCommand != {}} 	{ $cv_Name bind	$CrankSet(object)	<Double-ButtonPress-1> \
-																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
-																					{ 	file://Component(CrankSet/File) \
-																					} 	{CrankSet Parameter} \
-																	]
-														  lib_gui::object_CursorBinding 	$cv_Name	$CrankSet(object)
-									}
+							set CrankSet(file)			[ checkFileString $project::Component(CrankSet/File) ]
+                                # puts "\n  -> \$CrankSet(position) $CrankSet(position)\n"
+                                # puts "\n  -> \$CrankSet(file) $CrankSet(file)\n"
+                            set compString [file tail $CrankSet(file)]
+                            if {[file tail $CrankSet(file)] == {custom.svg}} {
+                                    set CrankSet(object)		[ create_customCrank  $cv_Name  $CrankSet(position) ]
+                                                                  $cv_Name addtag  __Decoration__ withtag $CrankSet(object)	
+                                    if {$updateCommand != {}} 	{ $cv_Name bind	$CrankSet(object)	<Double-ButtonPress-1> \
+                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            {	file://Component(CrankSet/File) \
+                                                                                                Component(CrankSet/Length) \
+                                                                                                text://Component(CrankSet/ChainRings) 
+                                                                                            }   {Crankset:  Parameter}
+                                                                            ]
+                                                                  lib_gui::object_CursorBinding 	$cv_Name	$CrankSet(object)
+                                        }
+                                } else {
+                                    set CrankSet(object)		[ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __CrankSet__ ]
+                                                                  $cv_Name addtag  __Decoration__ withtag $CrankSet(object)							
+                                    if {$updateCommand != {}} 	{ $cv_Name bind	$CrankSet(object)	<Double-ButtonPress-1> \
+                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            { 	file://Component(CrankSet/File) \
+                                                                                            } 	{CrankSet Parameter} \
+                                                                            ]
+                                                                  lib_gui::object_CursorBinding 	$cv_Name	$CrankSet(object)
+                                        }
+                                }
 							}
                     SeatPost {
 								# --- create SeatPost ------------------
@@ -595,7 +612,111 @@
                 }
 	}
 
+    proc create_customCrank {cv_Name BB_Position} {
+		variable crankLength    $project::Component(CrankSet/Length)
+        variable teethCount     [lindex [lsort [split $project::Component(CrankSet/ChainRings) -]] end]
+        variable decoRadius     80
+               
+                puts ""
+				puts "   -------------------------------"
+				puts "   create_customCrank"
+                puts "       crankLength:    $crankLength"
+                puts "       teethCount:     $teethCount"
+                
+        proc get_polygonChainWheel {BB_Position} {
+                variable teethCount
+                variable decoRadius
+                
+                    # -----------------------------    
+                    #   initValues
+                set toothWith 			12.7
+                set toothWithAngle 		[expr 2*$vectormath::CONST_PI/$teethCount]
+                set chainWheelRadius	[expr 0.5*$toothWith/sin([expr 0.5*$toothWithAngle])]
+                set decoRadius          [expr $chainWheelRadius - 8]
+                
+                    # -----------------------------    
+                    #   toothProfile
+                    set pt_00 {2 5}									    ; foreach {x0 y0} $pt_00 break
+                    set pt_01 [vectormath::rotateLine {0 0} 3.8 100]	; foreach {x1 y1} $pt_01 break
+                    set pt_02 [vectormath::rotateLine {0 0} 3.8 125]	; foreach {x2 y2} $pt_02 break
+                    set pt_03 [vectormath::rotateLine {0 0} 3.8 150]	; foreach {x3 y3} $pt_03 break
+                    set pt_04 [vectormath::rotateLine {0 0} 3.8 170]	; foreach {x4 y4} $pt_04 break
+                set toothProfile [list $x0 -$y0    $x1 -$y1    $x2 -$y2    $x3 -$y3    $x4 -$y4    $x4 $y4    $x3 $y3    $x2 $y2    $x1 $y1    $x0 $y0]
+                
+                    # -----------------------------    
+                    #    chainwheel profile outside
+                set index 0 ;# start her for symetriy purpose
+                set outsideProfile {}
+                while { $index < $teethCount } {
+                    set currentAngle [expr $index * [vectormath::grad $toothWithAngle]]
+                    set pos [vectormath::rotateLine {0 0} $chainWheelRadius $currentAngle ]
+                    
+                    set tmpList_01 {}
+                    foreach {x y} $toothProfile {
+                        set pt_xy [list $x $y]
+                        set pt_xy [vectormath::rotatePoint {0 0} $pt_xy $currentAngle]
+                        set pt_xy [vectormath::addVector $pos $pt_xy]
+                        set tmpList_01 [lappend tmpList_01 [canvasCAD::flatten_nestedList $pt_xy] ]
+                    }
+                    set outsideProfile [lappend teethProfile [canvasCAD::flatten_nestedList $tmpList_01]]
+                    incr index 
+                }
+                set chainWheelProfile [canvasCAD::flatten_nestedList $outsideProfile]
+                set chainWheelProfile [vectormath::addVectorPointList $BB_Position $chainWheelProfile]                   
+                return $chainWheelProfile
+        }              
+        proc get_polygonCrankArm {BB_Position} {
+                variable crankLength
 
+                    # -----------------------------    
+                    #   initValues
+                set index 0
+                set crankArmProfile {{10 -19} {0 -19}}
+                    # -----------------------------    
+                set point [lindex $crankArmProfile 1]
+                set angle 270
+                    # -----------------------------    
+                while {$angle > 90} {
+                    incr angle -5
+                    set point [vectormath::rotatePoint {0 0} $point -5]
+                    lappend crankArmProfile $point
+                }
+                    # -----------------------------    
+                lappend crankArmProfile {10 19}
+                lappend crankArmProfile [list [expr $crankLength -30] 14] [list $crankLength 14] 
+                    # -----------------------------    
+                set point [lindex $crankArmProfile end]
+                set angle 90
+                while {$angle > -90} {
+                    incr angle -5
+                    set point [vectormath::rotatePoint [list $crankLength 0] $point -5]
+                        # puts "         -> \$angle $angle  -- \$point $point"
+                    lappend crankArmProfile $point
+                }
+                    # -----------------------------    
+                lappend crankArmProfile [list [expr $crankLength -30] -14]
+                set crankArmProfile [canvasCAD::flatten_nestedList $crankArmProfile]
+                set crankArmProfile [vectormath::addVectorPointList $BB_Position $crankArmProfile]                   
+                return $crankArmProfile
+        }
+        
+        set polygonChainWheel   [get_polygonChainWheel  $BB_Position]      
+        set polygonCrankArm     [get_polygonCrankArm    $BB_Position]            
+        set positon_00          $BB_Position
+        set positon_01          [vectormath::addVector $BB_Position [list $crankLength 0]]
+        
+        set chainWheel          [$cv_Name create polygon 	$polygonChainWheel			-tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill white  -outline black]
+        set chainWheelRing      [$cv_Name create circle     $positon_00                 -tags {__Decoration__ __Crankset__ __ChainWheelRing__}  -fill white  -outline black  -radius  $decoRadius ]
+        set crankArm            [$cv_Name create polygon 	$polygonCrankArm			-tags {__Decoration__ __Crankset__ __CrankArm__}        -fill white  -outline black]
+        set pedalMount          [$cv_Name create circle     $positon_01                 -tags {__Decoration__ __Crankset__ __PedalMount__}      -fill white  -outline black  -radius  6 ]
+        set crankAxle           [$cv_Name create circle     $positon_00                 -tags {__Decoration__ __Crankset__ __PedalMount__}      -fill white  -outline black  -radius 10 ]
+        
+        set tagName myTags
+        $cv_Name addtag $tagName withtag $chainWheel 
+        $cv_Name addtag $tagName withtag $chainWheelRing 
+        $cv_Name addtag $tagName withtag $crankArm
+        return $tagName
+    }
 	
 	proc createFork_Rep {cv_Name BB_Position {updateCommand {}} } {
 			
@@ -813,10 +934,10 @@
         set SeatTube_Angle      [ vectormath::angle                 $SeatPost_SeatTube $BB_Position [list -500 [lindex $BB_Position 1] ] ]
 
         
-        # set debug_01 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-		# set debug_01        [ frame_geometry::object_values		Lugs/ForkCrown		position	$BB_Position ]				
-        # set debug_01 		[ frame_geometry::object_values		Result/Position/SeatPost_Saddle position	$BB_Position ]
-        # $cv_Name create circle  $debug_01	-radius 20	-fill white	-tags __Frame__ -outline darkred
+            # set debug_01 		[ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
+            # set debug_01        [ frame_geometry::object_values		Lugs/ForkCrown		position	$BB_Position ]				
+            # set debug_01 		[ frame_geometry::object_values		Result/Position/SeatPost_Saddle position	$BB_Position ]
+            # $cv_Name create circle  $debug_01	-radius 20	-fill white	-tags __Frame__ -outline darkred
 
 						
 		set RimDiameter_Front	$project::Component(Wheel/Front/RimDiameter)
@@ -881,7 +1002,7 @@
         # $cv_Name create circle  $SeatPost_Saddle	-radius 20	-fill white	-tags __Frame__ -outline darkred
 		
 
-		# puts "  $highlightList "
+            # puts "  $highlightList "
 			# --- highlightList
 				# set highlight(colour) firebrick
 				# set highlight(colour) darkorchid
@@ -928,9 +1049,7 @@
 	proc createTubemiter {cv_Name xy type} {
 	
 
-			## -- read from domProject
-		# remove 3.2.70 ;# set domProject $::APPL_Env(root_ProjectDOM)
-		
+			## -- read from domProject		
 					set		minorAngle			2
 					set		majorAngle			50
 					

@@ -125,7 +125,7 @@
     }
 
 	proc mirrorPoint { p1 p2 p3 } { 
-			# perpendicular intersectPoint from vector(p1,p2) through p3
+			# mirror p3 by vector(p1,p2)
             set p_IS_Perp   [intersectPerp $p1 $p2 $p3]
             set vct_perp    [ subVector $p_IS_Perp $p3 ]
             set mP          [ addVector $p_IS_Perp $vct_perp]
