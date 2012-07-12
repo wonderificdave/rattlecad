@@ -66,7 +66,7 @@
 					createDimension								$cv_Name $xy	point_frame					
 					createDimension								$cv_Name $xy	geometry_bg		
 						#
-					frame_visualisation::createFrame_Centerline	$cv_Name $xy 	{saddle seattube steerer chainstay fork} {rearWheel frontWheel baseLine}
+					frame_visualisation::createFrame_Centerline	$cv_Name $xy 	{saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
 						#
 					createDimension								$cv_Name $xy	point_personal	
 					createDimension								$cv_Name $xy	point_crank								
@@ -79,7 +79,7 @@
 				}
 			lib_gui::cv_Custom01 {
 						#
-						# -- frame - tubing
+						# -- frame - details
 						#
 					set xy			[ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame ]					
 					$cv_Name 		clean_StageContent	
@@ -116,6 +116,7 @@
 					createDimensionType							$cv_Name $xy 	HeadTube_OffsetTT	editable   ;# $updateCommand	
 					createDimensionType							$cv_Name $xy 	HeadTube_OffsetDT	editable   ;# $updateCommand	
 					createDimensionType							$cv_Name $xy 	DownTube_Offset		editable   ;# $updateCommand	
+					createDimensionType							$cv_Name $xy 	SeatTube_Offset		editable   ;# $updateCommand	
 					createDimensionType							$cv_Name $xy 	TopTube_Angle		editable   ;# $updateCommand						
 					createDimensionType							$cv_Name $xy 	HeadSet_Bottom		editable   ;# $updateCommand
 					createDimensionType							$cv_Name $xy 	ForkHeight			editable   ;# $updateCommand				

@@ -1,3 +1,19 @@
+3.3.04.00   - 2012.07.12
+-------------------------------------------------------------------------------
+    feature:
+        ... SeatTube offset
+    
+
+3.3.03.07   - 2012.07.02
+-------------------------------------------------------------------------------
+    feature:
+        ... Import File
+          ... imports just a subset of the xml-Project-File
+          ... allows defining templates of Tubesets
+          ... allows importing personal paramaters for saddle & handlebar
+          ... 
+          
+
 3.3.03.06   - 2012.07.01 
 -------------------------------------------------------------------------------
     feature:

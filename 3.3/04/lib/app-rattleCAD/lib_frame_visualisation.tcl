@@ -900,7 +900,7 @@
 	}
 
 	
-	proc createFrame_Centerline {cv_Name BB_Position {highlightList {}} {backgroundList {}} {excludeList {}} } {
+	proc createFrame_Centerline {cv_Name BB_Position {highlightList_1 {}} {highlightList_2 {}} {backgroundList {}} {excludeList {}} } {
 			
 
 			# --- get stageScale
@@ -918,6 +918,7 @@
 		set SeatPost_Saddle		[ frame_geometry::object_values  	SeatPostSaddle		    position	$BB_Position ]
 		set SeatPost_SeatTube	[ frame_geometry::object_values  	SeatPostSeatTube	    position	$BB_Position ]
 		set SeatTube_Ground		[ frame_geometry::object_values  	SeatTubeGround		    position	$BB_Position ]
+        set SeatTube_BBracket   [ frame_geometry::object_values  	SeatTube/Start		    position	$BB_Position ]	
 		set SeatStay_SeatTube	[ frame_geometry::object_values     SeatStay/End		    position	$BB_Position ]
 		set SeatStay_RearWheel	[ frame_geometry::object_values     SeatStay/Start		    position	$BB_Position ]
 		set TopTube_SeatTube	[ frame_geometry::object_values     TopTube/Start		    position	$BB_Position ]
@@ -955,13 +956,13 @@
 			# ------ headtube extension to ground
 		$cv_Name create centerline [ project::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]  	    -fill gray60 				-tags __CenterLine__
 			# ------ seattube extension to ground
-		$cv_Name create centerline [ project::flatten_nestedList  $BottomBracket  $SeatTube_Ground  ]  	    -fill gray60 				-tags {__CenterLine__	seattube_center}
+		$cv_Name create centerline [ project::flatten_nestedList  $SeatTube_BBracket  $SeatTube_Ground ]    -fill gray60 				-tags {__CenterLine__	seattube_center}
 
             
-		# ------ chainstay
+            # ------ chainstay
 		$cv_Name create line 	[ project::flatten_nestedList  $RearWheel 		    $BottomBracket	 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__	chainstay}			
 			# ------ seattube                                                                                                               
-		$cv_Name create line 	[ project::flatten_nestedList  $SeatPost_SeatTube   $BottomBracket	 ]      -fill gray60  -width 1.0  	-tags {__CenterLine__	seattube}			
+		$cv_Name create line 	[ project::flatten_nestedList  $SeatPost_SeatTube   $SeatTube_BBracket ]    -fill gray60  -width 1.0  	-tags {__CenterLine__	seattube}			
 			# ------ seatstay                                                                                                               
 		$cv_Name create line 	[ project::flatten_nestedList  $SeatStay_SeatTube   $RearWheel		 ]  	-fill gray60  -width 1.0  	-tags {__CenterLine__ 	seatstay}			
 			# ------ toptube                                                                                                                
@@ -1023,12 +1024,20 @@
             $cv_Name create circle 	$SeatPost_Saddle	-radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width) 
                 # $cv_Name create circle 	$SeatPost_SeatTube	-radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width) 
                 # $cv_Name create circle 	$LegClearance	-radius 10  -outline $highlight(colour) 
-
+            
+            
             
             set highlight(colour) red
             set highlight(width)  3.0
                 # ------------------------
-		foreach item $highlightList {
+		foreach item $highlightList_1 {
+			catch {$cv_Name itemconfigure $item  -fill 		$highlight(colour) -width $highlight(width) } error
+			catch {$cv_Name itemconfigure $item  -outline 	$highlight(colour) -width $highlight(width) } error
+		}
+
+            set highlight(colour) darkorange
+                # ------------------------
+		foreach item $highlightList_2 {
 			catch {$cv_Name itemconfigure $item  -fill 		$highlight(colour) -width $highlight(width) } error
 			catch {$cv_Name itemconfigure $item  -outline 	$highlight(colour) -width $highlight(width) } error
 		}

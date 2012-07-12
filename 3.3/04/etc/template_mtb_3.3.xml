@@ -29,6 +29,7 @@
         </TopTube>
         <SeatTube>
             <Extension>20.00</Extension>
+            <OffsetBB>0.00</OffsetBB>
         </SeatTube>
         <DownTube>
             <OffsetHT>8.50</OffsetHT>

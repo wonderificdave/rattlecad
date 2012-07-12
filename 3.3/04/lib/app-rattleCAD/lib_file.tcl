@@ -567,6 +567,23 @@
 
 
 	#-------------------------------------------------------------------------
+		#  open a File, containing just a subset of a Project-xml
+		#	
+    proc opemProject_Subset_xml {{fileName {}}} {
+            set types {
+                {{Project Files 3.x }       {.xml}  }
+            }
+            if {$fileName == {}} {
+				set fileName 	[tk_getOpenFile -title "Import" -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
+			} else {
+                return
+            }
+            set root [lib_file::openFile_xml $fileName]
+            project::import_ProjectSubset $root
+    }
+    
+    
+	#-------------------------------------------------------------------------
 		#  get user project directory
 		#	
 	proc check_user_dir {checkDir} {
