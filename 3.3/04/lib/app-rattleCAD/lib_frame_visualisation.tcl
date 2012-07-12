@@ -370,6 +370,25 @@
 							set Stem(polygon) 			[ frame_geometry::object_values Stem polygon $BB_Position  ]
 							set Stem(object)			[ $cv_Name create polygon $Stem(polygon) -fill white  -outline black  -tags __Decoration__ ]
 							}									
+                    Logo {
+								# --- create Logo --------------------
+                            set DownTube(Steerer)		[ frame_geometry::object_values  	DownTube/End	position		$BB_Position ]
+                            set DownTube(BBracket)		[ frame_geometry::object_values		DownTube/Start	position		$BB_Position ]
+                            set Logo(Angle)   		    $project::Result(Tubes/DownTube/Direction/degree)
+                            set Logo(Direction)   		[ split $project::Result(Tubes/DownTube/Direction/polar) ,]
+                                # puts "  -> \$Logo(Direction)  $Logo(Direction) "
+                            set Logo(position)   		[ vectormath::addVector [ vectormath::center $DownTube(BBracket) $DownTube(Steerer) ] $Logo(Direction) -90]  
+                            set Logo(file)			    [ checkFileString $project::Component(Logo/File) ]
+							set Logo(object)			[ $cv_Name readSVG $Logo(file) $Logo(position)    $Logo(Angle)  __Logo__ ]	
+                                                          $cv_Name addtag  __Decoration__ withtag $Logo(object)
+							if {$updateCommand != {}} 	{ $cv_Name bind	$Saddle(object)	<Double-ButtonPress-1> \
+																	[list frame_geometry::createEdit  %x %y  $cv_Name  \
+																					{ 	file://Component(Logo/File)	\
+																					} 	{Logo Parameter} \
+																	]
+														  lib_gui::object_CursorBinding 	$cv_Name	$Saddle(object)																																			
+									}
+                    }
                     RearWheel {		# --- create RearWheel -----------------
 							set Hub(position)		[ frame_geometry::object_values		RearWheel  position		$BB_Position ]
 							set RimDiameter				$frame_geometry::RearWheel(RimDiameter)

@@ -1338,6 +1338,20 @@
                                     $parentNode appendXML "<OffsetBB>0.00</OffsetBB>"
                             }
 
+                                 #
+                                # -- /root/Component/Logo/File)
+                                #
+                            set parentNode [$domProject selectNode /root/Component]
+                            
+                            set node {}							
+                            set node [$domProject selectNode /root/Component/Logo/File]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Component/Logo/File"
+                                    $parentNode appendXML "<Logo>
+                                                                <File>etc:logo/rattleCAD.svg</File>
+                                                           </Logo>"
+                            }
+
                                 #
                                 # -- update values
                                 #

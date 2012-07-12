@@ -1,7 +1,15 @@
+3.3.04.01   - 2012.07.12
+-------------------------------------------------------------------------------
+    feature:
+        ... rattleCAD Logo on DownTube
+        ... extend FileFormat: ... /root/Component/Logo/File
+        
+
 3.3.04.00   - 2012.07.12
 -------------------------------------------------------------------------------
     feature:
         ... SeatTube offset
+        ... extend FileFormat: ... /root/Custom/SeatTube/OffsetBB
     
 
 3.3.03.07   - 2012.07.02

@@ -171,6 +171,9 @@
 
     <Component>
         <!-- bicycle components for visulization -->
+        <Logo>
+            <File>etc:logo/rattleCAD.svg</File>
+        </Logo>
         <HeadSet>
             <Height>
                 <Bottom>13.50</Bottom>

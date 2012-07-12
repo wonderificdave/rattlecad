@@ -58,6 +58,7 @@
 			<component key="Component/BottleCage/SeatTube/File"			dir="components/bottle_cage/left" 	 />
 			<component key="Component/BottleCage/DownTube/File" 		dir="components/bottle_cage/right" 	 />
 			<component key="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
+			<component key="Component/Label"	                        dir="components/label" 	         />
 		</ComponentLocation>
 		
 		<Brake>

@@ -562,11 +562,14 @@
 
 							set is_dt_ht	[ tube_intersection	$DownTube(DiameterHT) $dir  $HeadTube(Diameter)     $HeadTube(Direction)  $DownTube(HeadTube) ]				
 							set is_dt_st	[ tube_intersection	$DownTube(DiameterBB) $dir  $SeatTube(DiameterBB)   $SeatTube(Direction)  $DownTube(BottomBracket) left]				
-
+                            set  list_lgth	[ expr int (0.5 * [llength $is_dt_st]) ]
+                            set is_dt_st	[ lrange $is_dt_st 0 $list_lgth ]				
+                            
 							set polygon		[ list            [lindex $vct_10 1] [lindex $vct_10 1] [lindex $vct_21 0]]
 							set polygon		[ lappend polygon [project::flatten_nestedList $is_dt_ht]]
 							set polygon		[ lappend polygon [lindex $vct_22 0] [lindex $vct_11 1] [lindex $vct_11 1]]					
 							set polygon		[ lappend polygon [project::flatten_nestedList $is_dt_st]]				
+                            set polygon		[ lappend polygon [lindex $vct_10 0]]				
 					project::setValue Result(Tubes/DownTube)			polygon 	[project::flatten_nestedList $polygon]				
 			}
 			get_DownTube_SeatTube
