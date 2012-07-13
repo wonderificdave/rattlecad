@@ -1,3 +1,13 @@
+3.3.04.02   - 2012.07.13
+-------------------------------------------------------------------------------
+    feature:
+        ... dimension line on FrameDetails for SeatTube Angle
+        ... additional dropout: ... etc/components/dropout/kinesis_1113.svg
+    bugfix:
+        ... cv_custom::update: centerlines for RearDeraileur 
+           ... cahnge: RearDerailleur_ctr to DerailleurRear_ctr
+       
+
 3.3.04.01   - 2012.07.12
 -------------------------------------------------------------------------------
     feature:

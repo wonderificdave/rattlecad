@@ -775,14 +775,15 @@
                                                                 110   0 \
                                                                 gray50 ]
                                                                 
-                                            set pt_01   [ vectormath::addVector	$BottomBracket(Position) {-1000 0} ]
+                                            set pt_01   [ vectormath::addVector	$BottomBracket(Position) {-180 0} ]
                                             set pt_base [ vectormath::intersectPoint  $SeatTube(BBracket) $TopTube(SeatTube)  $BottomBracket(Position) $pt_01 ]
+                                $cv_Name create centerline [ project::flatten_nestedList $BottomBracket(Position)  $pt_01    ] -fill gray60 -tags __CenterLine__
                             set _dim_SeatTube_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $pt_base $SeatTube(TopTube) $pt_01] ] \
                                                                 150   0 \
                                                                 gray50 ]
                                                                 
-                                set pt_01				[ vectormath::intersectPoint	$Steerer(Stem)  $Steerer(Fork)		$FrontWheel(Position) [vectormath::addVector	$FrontWheel(Position) {-10 0}] ]
-                                set pt_02				[ vectormath::addVector	$pt_01 {-1 0} 120 ]
+                                            set pt_01   [ vectormath::intersectPoint	$Steerer(Stem)  $Steerer(Fork)		$FrontWheel(Position) [vectormath::addVector	$FrontWheel(Position) {-10 0}] ]
+                                            set pt_02   [ vectormath::addVector	$pt_01 {-1 0} 120 ]
                                 $cv_Name create centerline [ project::flatten_nestedList  $FrontWheel(Position)  $pt_02    ] -fill gray60 -tags __CenterLine__
                            set _dim_HeadTube_Angle		[ $cv_Name dimension  angle  	[ project::flatten_nestedList [list $pt_01 $Steerer(Stem) $pt_02] ] \
                                                                 110   0 \

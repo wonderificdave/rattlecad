@@ -131,7 +131,7 @@
 							}
                     DerailleurRear_ctr {
 								# --- create RearDerailleur --------
-							set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		  $BB_Position]
+                            set Derailleur(position)	[ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position		  $BB_Position]
 							foreach {x y} $Derailleur(position) break
 							set x1	[expr $x + 15];		set x2	[expr $x - 15]; 	set y1	[expr $y + 15]; 	set y2	[expr $y - 15]
 							$cv_Name create line  [list $x1 $y $x2 $y]   -fill gray60  -tags __Decoration__

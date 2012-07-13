@@ -96,7 +96,7 @@
 					frame_visualisation::createFrame_Tubes		$cv_Name $xy 	editable   ;# $updateCommand					
 						#
 					frame_visualisation::createDecoration		$cv_Name $xy 	Logo						
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearDerailleur_ctr 	editable   ;# $updateCommand	
+					frame_visualisation::createDecoration		$cv_Name $xy 	DerailleurRear_ctr 	editable   ;# $updateCommand	
 					frame_visualisation::createDecoration		$cv_Name $xy 	Saddle				editable   ;# $updateCommand	
 					frame_visualisation::createDecoration		$cv_Name $xy 	HeadSet				editable   ;# $updateCommand	
 					frame_visualisation::createDecoration		$cv_Name $xy 	BottleCage			editable   ;# $updateCommand						
@@ -159,7 +159,7 @@
 						#
 					frame_visualisation::createDecoration		$cv_Name $xy 	Logo						
 					frame_visualisation::createDecoration		$cv_Name $xy 	BottleCage				
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearDerailleur_ctr 		
+					frame_visualisation::createDecoration		$cv_Name $xy 	DerailleurRear_ctr 		
 					frame_visualisation::createDecoration		$cv_Name $xy 	LegClearance_Rep	
 						#
 					createCenterline							$cv_Name $xy
@@ -328,7 +328,7 @@
 						#
 					frame_visualisation::createFrame_Tubes		$cv_Name $xy 						
 						#
-					frame_visualisation::createDecoration		$cv_Name $xy 	RearDerailleur_ctr 		
+					frame_visualisation::createDecoration		$cv_Name $xy 	DerailleurRear_ctr 		
 						#
 					createCenterline							$cv_Name $xy
 						#
