@@ -1,3 +1,10 @@
+3.3.04.03   - 2012.07.14
+-------------------------------------------------------------------------------
+    bugfix:
+        ... etc/template_mtb_3.3.xml 
+           ... add: /root/Component/Logo/File
+       
+
 3.3.04.02   - 2012.07.13
 -------------------------------------------------------------------------------
     feature:
@@ -5,7 +12,7 @@
         ... additional dropout: ... etc/components/dropout/kinesis_1113.svg
     bugfix:
         ... cv_custom::update: centerlines for RearDeraileur 
-           ... cahnge: RearDerailleur_ctr to DerailleurRear_ctr
+           ... change: RearDerailleur_ctr to DerailleurRear_ctr
        
 
 3.3.04.01   - 2012.07.12
