@@ -447,6 +447,7 @@
 			} else {
 						puts "\n       ... notebook_updateCanvas ... update $varName .. force\n"
 						fill_canvasCAD $varName
+                        notebook_refitCanvas
                         set updateDone  {done}
 			}
             
@@ -454,7 +455,7 @@
                 # -- refit stage if window size changed
             if { $canvasUpdate($varName) < $::APPL_Env(window_Update) } {
                         puts "\n       ... notebook_updateCanvas ... refitStage $varName\n"
-                        $varName refitStage
+                        notebook_refitCanvas
                         set updateDone  {done}       
             }
 			
