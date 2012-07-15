@@ -322,6 +322,9 @@ exec wish "$0" "$@"
  
 		# -- keyboard bindings -----------------------
     lib_gui::global_kb_Binding ab
+    
+     	# -- window binding -----------------------
+    bind . <Configure> [list lib_gui::check_windowSize]
 
 		# -- window title ----------------------------
 	set_window_title 				$APPL_Config(PROJECT_Name)
@@ -344,5 +347,7 @@ exec wish "$0" "$@"
 
 		# -- keep on top --------------
 	wm deiconify .
+    
+
     
 

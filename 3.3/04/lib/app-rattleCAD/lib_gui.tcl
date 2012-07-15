@@ -105,24 +105,24 @@
 	proc create_ButtonBar {tb_frame } {	
 			variable iconArray
 		
-			Button	$tb_frame.open		-image  $iconArray(open)		    -helptext "open ..."		    -command { lib_file::openProject_xml }  
-			Button	$tb_frame.save		-image  $iconArray(save)		    -helptext "save ..."		    -command { lib_file::saveProject_xml } 
-			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	    -helptext "print Postscript"	-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
-			Button	$tb_frame.print_dxf	-image  $iconArray(print_dxf)	    -helptext "print DXF"		    -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }  		
-			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	    -helptext "print SVG"		    -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.open		-image  $iconArray(open)		 -helptext "open ..."		        -command { lib_file::openProject_xml }  
+			Button	$tb_frame.save		-image  $iconArray(save)		 -helptext "save ..."		        -command { lib_file::saveProject_xml } 
+			Button	$tb_frame.print_ps	-image  $iconArray(print_ps)	 -helptext "print Postscript"	    -command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_dxf	-image  $iconArray(print_dxf)	 -helptext "print DXF"		        -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }  		
+			Button	$tb_frame.print_svg	-image  $iconArray(print_svg)	 -helptext "print SVG"		        -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }  		
 														 
-			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		    -helptext "a roadbike Template"	-command { lib_gui::load_Template  Road }  
-			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		    -helptext "a offroad Template"	-command { lib_gui::load_Template  MTB  }  
+			Button	$tb_frame.set_rd	-image  $iconArray(reset_r)		 -helptext "a roadbike Template"    -command { lib_gui::load_Template  Road }  
+			Button	$tb_frame.set_mb	-image  $iconArray(reset_o)		 -helptext "a offroad Template"	    -command { lib_gui::load_Template  MTB  }  
 			  
-			Button	$tb_frame.clear		-image  $iconArray(clear)		    -helptext "clear Canvas..."    	-command { lib_gui::notebook_cleanCanvas} 
-			Button	$tb_frame.render	-image  $iconArray(update)		    -helptext "update Canvas..."	-command { lib_gui::notebook_updateCanvas force}  
+			Button	$tb_frame.clear		-image  $iconArray(clear)		 -helptext "clear Canvas..."        -command { lib_gui::notebook_cleanCanvas} 
+			Button	$tb_frame.render	-image  $iconArray(update)		 -helptext "update Canvas..."	    -command { lib_gui::notebook_updateCanvas force}  
 			  
 
-			Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		    -helptext "scale plus"		    -command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
-			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		    -helptext "scale minus"		    -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
-			Button	$tb_frame.resize	-image  $iconArray(resize)		    -helptext "resize"			    -command { lib_gui::notebook_refitCanvas }  
+			Button	$tb_frame.scale_p	-image  $iconArray(scale_p)		 -helptext "scale plus"		        -command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
+			Button	$tb_frame.scale_m	-image  $iconArray(scale_m)		 -helptext "scale minus"		    -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
+			Button	$tb_frame.resize	-image  $iconArray(resize)		 -helptext "resize"			        -command { lib_gui::notebook_refitCanvas }  
 			
-			Button	$tb_frame.cfg		-image  $iconArray(cfg_panel)    -helptext "open config Panel"   -command { lib_gui::open_configPanel } 
+			Button	$tb_frame.cfg		-image  $iconArray(cfg_panel)    -helptext "open config Panel"      -command { lib_gui::open_configPanel } 
 			Button	$tb_frame.exit		-image  $iconArray(exit)    	 -command { exit }
 			  
 			label   $tb_frame.sp0      -text   " "
@@ -289,6 +289,7 @@
 				cv_Custom07 {
 						$noteBook_top select $noteBook_top.$varName
 						cv_custom::update 	lib_gui::$varName 
+                        # lib_gui::notebook_refitCanvas
 					}
 				cv_Component {
 						::update
@@ -357,10 +358,22 @@
 			puts "\n            register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
 			puts   "                                         [$cvID getNodeAttr Canvas path]"
 	 }
-	   
-	   
 	
 	
+ 	#-------------------------------------------------------------------------
+       #  get sizeinfo:  http://www2.tcl.tk/8423
+       #
+    proc check_windowSize {} {
+            # puts "<D>   APPL_Env(window_Size):    $::APPL_Env(window_Size)"
+        set newSize [lindex [split [wm geometry .] +] 0]
+        if {![string equal $newSize $::APPL_Env(window_Size)]} {
+                set ::APPL_Env(window_Size) $newSize
+                set ::APPL_Env(window_Update) [ clock milliseconds ]
+                    puts "   -> Update $::APPL_Env(window_Update)"
+        }
+    }
+    
+    
 	#-------------------------------------------------------------------------
        #  refit notebookCanvas in current notebook-Tab  
        #
@@ -410,34 +423,54 @@
 			set currentTab 				[$noteBook_top select]
 			set varName    				[notebook_getVarName $currentTab]
 			set varName    				[lindex [split $varName {::}] end]
+            
+            set updateDone              {no}
 
 			
 			if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
-				set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
+                 set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
 			}
 			
 			set timeStart 	[clock milliseconds]
-
-			# puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Env(canvasCAD_Update)\n"
+       
+            
+                # -- update stage content if parameters changed
+                    # puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Env(canvasCAD_Update)\n"
 			if { $mode == {} } {
 					if { $canvasUpdate($varName) < $::APPL_Env(canvasCAD_Update) } {
 						puts "\n       ... notebook_updateCanvas ... update $varName\n"
 						fill_canvasCAD $varName
-						set canvasUpdate($varName) [ clock milliseconds ]
+						set updateDone  {done}
 					} else {
 						puts "\n       ... notebook_updateCanvas ... update $varName not required\n"
 					}
 			} else {
 						puts "\n       ... notebook_updateCanvas ... update $varName .. force\n"
 						fill_canvasCAD $varName
+                        set updateDone  {done}
 			}
+            
+
+                # -- refit stage if window size changed
+            if { $canvasUpdate($varName) < $::APPL_Env(window_Update) } {
+                        puts "\n       ... notebook_updateCanvas ... refitStage $varName\n"
+                        $varName refitStage
+                        set updateDone  {done}       
+            }
 			
+                        
 			set timeEnd 	[clock milliseconds]
 			set timeDiff	[expr $timeEnd - $timeStart]
+            
 			
 			puts "\n     ... time to update:"
 			puts   "          ... [format "%9.3f" $timeDiff] milliseconds"
 			puts   "          ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
+            
+            if {$updateDone == {done}} {
+                set canvasUpdate($varName) [ clock milliseconds ]
+            }
+                        
 	}
 
 	

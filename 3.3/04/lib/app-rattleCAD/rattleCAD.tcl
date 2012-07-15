@@ -69,6 +69,8 @@
 						root_ProjectDOM		{}
 						
  						canvasCAD_Update	{0}
+ 						window_Size	        {0}
+						window_Update	    {0}
 						
 						list_ForkTypes		{}
 						list_BrakeTypes		{}
