@@ -358,38 +358,6 @@
 			puts "\n            register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
 			puts   "                                         [$cvID getNodeAttr Canvas path]"
 	 }
-	
-	
- 	#-------------------------------------------------------------------------
-       #  get sizeinfo:  http://www2.tcl.tk/8423
-       #
-    proc check_windowSize {} {
-            # puts "<D>   APPL_Env(window_Size):    $::APPL_Env(window_Size)"
-        set newSize [lindex [split [wm geometry .] +] 0]
-        if {![string equal $newSize $::APPL_Env(window_Size)]} {
-                set ::APPL_Env(window_Size) $newSize
-                set ::APPL_Env(window_Update) [ clock milliseconds ]
-                    puts "   -> Update $::APPL_Env(window_Update)"
-        }
-    }
-    
-    
-	#-------------------------------------------------------------------------
-       #  refit notebookCanvas in current notebook-Tab  
-       #
-	proc notebook_refitCanvas {} {
-			variable noteBook_top
-
-			set currentTab [$noteBook_top select]
-			set varName    [notebook_getVarName $currentTab]
-				 puts "  notebook_refitCanvas: varName: $varName"
-			if { $varName == {} } {
-					puts "     notebook_refitCanvas::varName: $varName ... undefined"
-					return
-			}
-			  # tk_messageBox -message "currentTab: $currentTab   /  varName  $varName"
-			$varName refitStage
-	}
 
 	
 	#-------------------------------------------------------------------------
@@ -412,7 +380,21 @@
 			$varName scaleToCenter $newScale
 	}
 
-	
+
+ 	#-------------------------------------------------------------------------
+       #  get sizeinfo:  http://www2.tcl.tk/8423
+       #
+    proc check_windowSize {} {
+            # puts "<D>   APPL_Env(window_Size):    $::APPL_Env(window_Size)"
+        set newSize [lindex [split [wm geometry .] +] 0]
+        if {![string equal $newSize $::APPL_Env(window_Size)]} {
+                set ::APPL_Env(window_Size) $newSize
+                set ::APPL_Env(window_Update) [ clock milliseconds ]
+                puts "     ... update WindowSize: $::APPL_Env(window_Update)"
+        }
+    }
+
+
 	#-------------------------------------------------------------------------
        #  update canvasCAD in current notebook-Tab  
        #
@@ -442,20 +424,20 @@
 						fill_canvasCAD $varName
 						set updateDone  {done}
 					} else {
-						puts "\n       ... notebook_updateCanvas ... update $varName not required\n"
+						puts "\n       ... notebook_updateCanvas ... update $varName ... not required\n"
 					}
 			} else {
-						puts "\n       ... notebook_updateCanvas ... update $varName .. force\n"
+						puts "\n       ... notebook_updateCanvas ... update $varName ... force\n"
 						fill_canvasCAD $varName
-                        notebook_refitCanvas
                         set updateDone  {done}
 			}
             
 
                 # -- refit stage if window size changed
             if { $canvasUpdate($varName) < $::APPL_Env(window_Update) } {
-                        puts "\n       ... notebook_updateCanvas ... refitStage $varName\n"
-                        notebook_refitCanvas
+                        puts "\n       ... notebook_updateCanvas ... refitStage ........ $varName\n"
+                        update
+                        $varName refitStage
                         set updateDone  {done}       
             }
 			
@@ -475,6 +457,24 @@
 	}
 
 	
+	#-------------------------------------------------------------------------
+       #  refit notebookCanvas in current notebook-Tab  
+       #
+	proc notebook_refitCanvas {} {
+			variable noteBook_top
+
+			set currentTab [$noteBook_top select]
+			set varName    [notebook_getVarName $currentTab]
+				 puts "  notebook_refitCanvas: varName: $varName"
+			if { $varName == {} } {
+					puts "     notebook_refitCanvas::varName: $varName ... undefined"
+					return
+			}
+			  # tk_messageBox -message "currentTab: $currentTab   /  varName  $varName"
+			$varName refitStage
+	}
+
+
 	#-------------------------------------------------------------------------
        #  clean canvasCAD in current notebook-Tab  
        #

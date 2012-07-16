@@ -536,10 +536,10 @@
 				switch -regexp -- $targetCanvas {
                     cv_frameParts {
                                 # puts "            ... $frameCanvas"
-                            $frameCanvas clean_StageContent
-                            set __my_Component__		[ $frameCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
-                            $frameCanvas fit2Stage $__my_Component__
-                            $frameCanvas refitStage
+                                $frameCanvas clean_StageContent
+                                set __my_Component__		[ $frameCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
+                                $frameCanvas fit2Stage $__my_Component__
+                                $frameCanvas refitStage
                             }
                     cv_Components {
                                 # puts "            ... $compCanvas"
