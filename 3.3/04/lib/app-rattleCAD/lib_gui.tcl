@@ -69,12 +69,11 @@
 						{command "&Save"			{}     	"Save Project File"		{Ctrl s}	-command { lib_file::saveProject_xml }	}
 						{command "Save &As ..."		{}   	"Save Project File As"	{Ctrl a}	-command { lib_file::saveProject_xml saveAs} }
 						{separator}
+						{command "&Rendering"		{}     	"Rendering Settings"	{}			-command { lib_gui::set_RenderingSettings } }
 						{command "Impo&rt"			{}     	"import Parameter"		{Ctrl i}	-command { lib_file::opemProject_Subset_xml }	}
 						{separator}
 						{command "&Config Panel"	{}     	"open Config Panel"		{Ctrl m} 	-command { lib_gui::open_configPanel }	}
 						{command "&Update"			{}     	"update Configuration"	{Ctrl u} 	-command { lib_gui::notebook_updateCanvas force } }
-						{separator}
-						{command "&Rendering"		{}     	"Rendering Settings"	{}			-command { lib_gui::set_RenderingSettings } }
 						{separator}
 						{command "&Print"			{}    	"Print current Graphic" {Ctrl p}	-command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) } }
 						{command "&Export SVG"		{}    	"Export to SVG" 		{Ctrl f}	-command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) } }
@@ -854,18 +853,18 @@
 				# puts "   ... $cv_Name"
 		
 			switch $type {
-					Fork	{ set listDefinition list://Rendering/Fork@SELECT_ForkTypes }
-					Brake	{ set listDefinition list://Rendering/Brake/Front@SELECT_BrakeTypes }
-					default { set listDefinition {	list://Rendering/Fork@SELECT_ForkTypes
-													list://Rendering/Brake/Front@SELECT_BrakeTypes
-													list://Rendering/Brake/Rear@SELECT_BrakeTypes
-													list://Rendering/BottleCage/SeatTube@SELECT_BottleCage
-													list://Rendering/BottleCage/DownTube@SELECT_BottleCage
-													list://Rendering/BottleCage/DownTube_Lower@SELECT_BottleCage}
+					Fork	{ set listDefinition list://Rendering(Fork@SELECT_ForkTypes) }
+					Brake	{ set listDefinition list://Rendering(Brake/Front@SELECT_BrakeTypes) }
+					default { set listDefinition {	list://Rendering(Fork@SELECT_ForkTypes)
+													list://Rendering(Brake/Front@SELECT_BrakeTypes)
+													list://Rendering(Brake/Rear@SELECT_BrakeTypes)
+													list://Rendering(BottleCage/SeatTube@SELECT_BottleCage)
+													list://Rendering(BottleCage/DownTube@SELECT_BottleCage)
+													list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) }
 							}
-			}
-			
-			frame_geometry::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}				
+			} 
+			frame_geometry::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}				
+			# frame_geometry::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}				
 	}
 	
 	#-------------------------------------------------------------------------

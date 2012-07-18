@@ -383,6 +383,7 @@
                     Custom      -
                     FrameTubes  -
                     Component   -
+                    Lugs        -
                     Rendering   {
                                 set _name       [lrange [split $nodePath /] 3 end-1]
                                 set _nameValue  [lindex $_name 0]

@@ -1859,8 +1859,16 @@
 				puts "    createEdit"
 				puts "       x / y:           $x / $y"
 				puts "       cv_Name:         $cv_Name"
-				puts "       _arrayNameList:  $_arrayNameList"
 				puts "       title:           $title"
+				if {[llength $_arrayNameList] > 1} {
+                    puts "       _arrayNameList:"
+                    foreach entry $_arrayNameList {
+                        puts "                        $entry"
+                    }
+                } else {
+                    puts "       _arrayNameList:  $_arrayNameList"
+                }
+				puts ""
 			
 			project::remove_tracing
             
@@ -1977,7 +1985,7 @@
 						case $type {
 								{SELECT_File} {
 										set listBoxContent {}
-											puts "createEdit::create_ListEdit::SELECT_File:"
+											puts "     createEdit::create_ListEdit::SELECT_File:"
 											# puts "     currentFile: $currentFile"
 											# puts "           key: $key"										
 										set listBoxContent [lib_file::get_componentAlternatives  $key]
