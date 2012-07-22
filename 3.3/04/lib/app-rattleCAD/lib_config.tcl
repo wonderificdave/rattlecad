@@ -354,23 +354,23 @@
 
                 # -----------------
                 #   Concept - Primary
-            ttk::labelframe $menueFrame.sf.lf_06  ...   -text "Check Frame Angles"
+            ttk::labelframe $menueFrame.sf.lf_06        -text "Check Frame Angles"
                 pack $menueFrame.sf.lf_06               -side top  -fill x  -expand yes  -pady 2
                     create_configEdit_title $menueFrame.sf.lf_06  {HeadTube/TopTube}            Lugs(HeadTube/TopTube/Angle/value)              0.10    darkred
                     create_configEdit_title $menueFrame.sf.lf_06    {      Tolerance +/-}       Lugs(HeadTube/TopTube/Angle/plus_minus)         0.10
                     create_configEdit_title $menueFrame.sf.lf_06  {HeadTube/DownTube}           Lugs(HeadTube/DownTube/Angle/value)             0.10    darkred
                     create_configEdit_title $menueFrame.sf.lf_06    {      Tolerance +/-}       Lugs(HeadTube/DownTube/Angle/plus_minus)        0.10
-                    create_configEdit_title $menueFrame.sf.lf_06  {BottomBracket/DownTube}    Lugs(BottomBracket/DownTube/Angle/value)      0.10    darkred
+                    create_configEdit_title $menueFrame.sf.lf_06  {BottomBracket/DownTube}      Lugs(BottomBracket/DownTube/Angle/value)        0.10    darkred
                     create_configEdit_title $menueFrame.sf.lf_06    {      Tolerance +/-}       Lugs(BottomBracket/DownTube/Angle/plus_minus)   0.10
-                    create_configEdit_title $menueFrame.sf.lf_06  {BottomBracket/ChainStay}   Lugs(BottomBracket/ChainStay/Angle/value)     0.10    darkred
+                    create_configEdit_title $menueFrame.sf.lf_06  {BottomBracket/ChainStay}     Lugs(BottomBracket/ChainStay/Angle/value)       0.10    darkred
                     create_configEdit_title $menueFrame.sf.lf_06    {      Tolerance +/-}       Lugs(BottomBracket/ChainStay/Angle/plus_minus)  0.10
-                    create_configEdit_title $menueFrame.sf.lf_06  {RearDropOut}               Lugs(RearDropOut/Angle/value)                 0.10    darkred
+                    create_configEdit_title $menueFrame.sf.lf_06  {RearDropOut}                 Lugs(RearDropOut/Angle/value)                   0.10    darkred
                     create_configEdit_title $menueFrame.sf.lf_06    {      Tolerance +/-}       Lugs(RearDropOut/Angle/plus_minus)              0.10
-                    create_configEdit_title $menueFrame.sf.lf_06  {SeatTube/SeatStay}         Lugs(SeatTube/SeatStay/Angle/value)               0.10    darkred
+                    create_configEdit_title $menueFrame.sf.lf_06  {SeatTube/SeatStay}           Lugs(SeatTube/SeatStay/Angle/value)             0.10    darkred
                     create_configEdit_title $menueFrame.sf.lf_06    {      Tolerance +/-}       Lugs(SeatTube/SeatStay/Angle/plus_minus)        0.10
 
-                    button     $menueFrame.sf.lf_06.bt_f  -bd 4 -relief flat
-                        pack $menueFrame.sf.lf_06.bt_f -fill both -expand yes
+                    button     $menueFrame.sf.lf_06.bt_f    -bd 4       -relief flat
+                        pack $menueFrame.sf.lf_06.bt_f      -fill both  -expand yes
                     button  $menueFrame.sf.lf_06.bt_f.bt_check      -text {switch: check Frame Angles}  -width 30   -bd 1 -command [namespace current]::tubing_checkAngles
                         pack $menueFrame.sf.lf_06.bt_f.bt_check     -side right -fill both -expand yes
 
