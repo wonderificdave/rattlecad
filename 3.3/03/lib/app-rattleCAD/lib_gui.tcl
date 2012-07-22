@@ -69,6 +69,8 @@
 						{command "&Save"			{}     	"Save Project File"		{Ctrl s}	-command { lib_file::saveProject_xml }	}
 						{command "Save &As ..."		{}   	"Save Project File As"	{Ctrl a}	-command { lib_file::saveProject_xml saveAs} }
 						{separator}
+						{command "Impo&rt"			{}     	"import Parameter"		{Ctrl i}	-command { lib_file::opemProject_Subset_xml }	}
+						{separator}
 						{command "&Config Panel"	{}     	"open Config Panel"		{Ctrl m} 	-command { lib_gui::open_configPanel }	}
 						{command "&Update"			{}     	"update Configuration"	{Ctrl u} 	-command { lib_gui::notebook_updateCanvas force } }
 						{separator}
@@ -83,7 +85,7 @@
 						{command "E&xit"			{}     	"Exit rattle_CAD"       {Ctrl x}	-command { exit } }
 				}
 				"Info"   all info 0 {
-						{command "&Info"			{}		"Information"      		{Ctrl i}	-command { version_info::create  .v_info 0} }
+						{command "&Info"			{}		"Information"      		{Ctrl w}	-command { version_info::create  .v_info 0} }
 						{command "&Help"			{}		"Help"      			{Ctrl h}	-command { version_info::create  .v_info 1} }
 				}
 				"rattleCAD-Project"   all info 0 {

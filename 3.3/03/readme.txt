@@ -1,3 +1,21 @@
+3.3.03.08   - 2012.07.22 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... File -> Save
+          ... a file located in an other directory than USER_Dir was saved in
+               USER_Dir
+
+
+3.3.03.07   - 2012.07.02
+-------------------------------------------------------------------------------
+    feature:
+        ... Import File
+          ... imports just a subset of the xml-Project-File
+          ... allows defining templates of Tubesets
+          ... allows importing personal paramaters for saddle & handlebar
+          ...
+
+
 3.3.03.06   - 2012.07.01 
 -------------------------------------------------------------------------------
     feature:

@@ -219,8 +219,9 @@
 				puts "             ... /$_array/$_name not found in [namespace current]::$_array"
 				puts "         --<E>--setValue----------------------------"
 				puts "\n"
-				# eval parray [namespace current]::$_array
-				return
+                    # eval parray [namespace current]::$_array
+				error "... /$_array/$_name not found in [namespace current]::$_array"
+                return 1
 			}
 
 				# eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
@@ -361,7 +362,59 @@
 	}
 
  
-	#-------------------------------------------------------------------------
+	proc import_ProjectSubset {nodeRoot} {
+                # puts "[$nodeRoot asXML]"
+                
+            		puts "\n"
+            		puts "    -------------------------------"
+            		puts "    project::import_ProjectSubset"
+                    
+            project::remove_tracing
+            set setValue_Command    {}
+            set setValue_Command_OK {}
+                
+            foreach branch  [$nodeRoot selectNodes {descendant::text()}] {
+                set nodeValue   [$branch nodeValue]
+                set nodePath    [$branch toXPath]
+                set _array      [lindex [split $nodePath /] 2]
+                
+                switch -exact $_array {
+                    Personal    -
+                    Custom      -
+                    FrameTubes  -
+                    Component   -
+                    Rendering   {
+                                set _name       [lrange [split $nodePath /] 3 end-1]
+                                set _nameValue  [lindex $_name 0]
+                                foreach value [lrange $_name 1 end] {
+                                    append _nameValue "/$value"
+                                }
+                                
+                                set setValue_Command    [format "setValue %s(%s) value $nodeValue" $_array $_nameValue]
+                                #if { [catch {eval [format "setValue %s(%s) value $nodeValue" $_array $_nameValue]} fid] } 
+                                if { [catch {eval $setValue_Command} fid] } {
+                                    puts [format "              <fail>   setValue %s(%s) value $nodeValue" $_array $_nameValue]
+                                } else {
+                                    puts [format "                  ->   setValue %s(%s) value $nodeValue" $_array $_nameValue]
+                                    set setValue_Command_OK $setValue_Command
+                                }
+                            }
+                    default {}
+                }
+
+            }
+            
+            project::add_tracing
+            if {$setValue_Command_OK != {}} {
+                eval $setValue_Command
+            }
+            # eval [format "setValue %s(%s) value $nodeValue" $_array $_nameValue]
+
+    }
+    
+    
+    
+    #-------------------------------------------------------------------------
 		#  check File Version 3.1 -> 3.2
 		#	
 	proc update_Project {} {
@@ -417,8 +470,8 @@
 
             return $postUpdate
 	}               
-             
-			
+
+
 	#-------------------------------------------------------------------------
 		#  check File Version 3.1 -> 3.2
 		#	
