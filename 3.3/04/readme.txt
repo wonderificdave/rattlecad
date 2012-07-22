@@ -1,3 +1,11 @@
+3.3.04.08   - 2012.07.22 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... File -> Save
+          ... a file located in an other directory than USER_Dir was
+                nevertheless  saved in USER_Dir
+                
+               
 3.3.04.06   - 2012.07.18
 -------------------------------------------------------------------------------
     bugfix:
@@ -48,6 +56,14 @@
         ... extend FileFormat: ... /root/Custom/SeatTube/OffsetBB
     
 
+3.3.03.08   - 2012.07.22 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... File -> Save
+          ... a file located in an other directory than USER_Dir was
+                nevertheless  saved in USER_Dir
+                
+               
 3.3.03.07   - 2012.07.02
 -------------------------------------------------------------------------------
     feature:

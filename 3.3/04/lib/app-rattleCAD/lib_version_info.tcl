@@ -1,6 +1,6 @@
  ##+##########################################################################
  #
- # package: rattleCAD	->	lib_version_info.tcl
+ # package: rattleCAD   ->  lib_version_info.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their 
@@ -32,7 +32,7 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
  #
  # ---------------------------------------------------------------------------
- #	namespace:  rattleCAD::version_info
+ #  namespace:  rattleCAD::version_info
  # ---------------------------------------------------------------------------
  #
  # 
@@ -45,13 +45,13 @@
        #
    proc create { w {tab 0}} {
         
-		 global APPL_Env APPL_Config
+         global APPL_Env APPL_Config
 
 
         if {[winfo exists $w]} {
-			wm deiconify  $w
-			$w.nb	raise [ $w.nb page $tab ]
-			return
+            wm deiconify  $w
+            $w.nb    raise [ $w.nb page $tab ]
+            return
         }
         
         set widget_font {-*-Courier-Medium-R-Normal--*-120-*-*-*-*-*-*}
@@ -174,18 +174,18 @@
         $env_text  insert end "  ====================================================\n"
         $env_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
         $env_text  insert end "  ====================================================\n"
-		$env_text  insert end "\n\n"
+        $env_text  insert end "\n\n"
         $env_text  insert end "   Runtime:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
         $env_text  insert end "     Tcl/Tk:         [info patchlevel]\n"
         $env_text  insert end "     Exec:             [info nameofexecutable]\n"
- 		$env_text  insert end "\n"
-		$env_text  insert end "       Tk:             [package require Tk]\n"
-		$env_text  insert end "       BWidget:        [package require BWidget]\n"
-		$env_text  insert end "       rattleCAD:      [package require rattleCAD]\n"
-		$env_text  insert end "       canvasCAD:      [package require canvasCAD]\n"
-		$env_text  insert end "       extSummary:     [package require extSummary]\n"  
- 		$env_text  insert end "\n\n"
+        $env_text  insert end "\n"
+        $env_text  insert end "       Tk:             [package require Tk]\n"
+        $env_text  insert end "       BWidget:        [package require BWidget]\n"
+        $env_text  insert end "       rattleCAD:      [package require rattleCAD]\n"
+        $env_text  insert end "       canvasCAD:      [package require canvasCAD]\n"
+        $env_text  insert end "       extSummary:     [package require extSummary]\n"  
+        $env_text  insert end "\n\n"
         $env_text  insert end "   Version:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
         $env_text  insert end "     Version:        $APPL_Env(RELEASE_Version)\n"
@@ -207,7 +207,7 @@
         $env_text  insert end "  ----------------------------------------------------\n"
         $env_text  insert end "\n"
         $env_text  insert end "     \$::vectorfont::font_dir  $::vectorfont::font_dir  "
-		$env_text  insert end "\n\n\n\n"
+        $env_text  insert end "\n\n\n\n"
         $env_text  insert end "   others:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
         $env_text  insert end "\n\n\n"
@@ -225,15 +225,15 @@
         
         set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] help.txt] r]
         while {![eof $fd]} {
-	         set line [gets $fd]
-	         $help_text  insert end "    $line\n"
+             set line [gets $fd]
+             $help_text  insert end "    $line\n"
         }
         close $fd
 
         $help_text  insert end "\n\n"
         
 
-		
+        
         ;# =======================================================================
           ;# -- insert into version_license ---------
           ;#
@@ -245,8 +245,8 @@
         
         set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] license.txt] r]
         while {![eof $fd]} {
-	         set line [gets $fd]
-	         $lic_text  insert end "    $line\n"
+             set line [gets $fd]
+             $lic_text  insert end "    $line\n"
         }
         close $fd
 
@@ -265,8 +265,8 @@
         
         set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] exclusion.txt] r]
         while {![eof $fd]} {
-	         set line [gets $fd]
-	         $excl_text  insert end "    $line\n"
+             set line [gets $fd]
+             $excl_text  insert end "    $line\n"
         }
         close $fd
 
@@ -274,14 +274,14 @@
         
 
                                
-        $version_intro			configure  -borderwidth 2 
-        $version_help			configure  -borderwidth 2 
-        $version_env			configure  -borderwidth 2 
-        $version_license		configure  -borderwidth 2 
-        $version_exclusion		configure  -borderwidth 2 
+        $version_intro          configure  -borderwidth 2 
+        $version_help           configure  -borderwidth 2 
+        $version_env            configure  -borderwidth 2 
+        $version_license        configure  -borderwidth 2 
+        $version_exclusion      configure  -borderwidth 2 
 
-        $INFO_Notebook 			compute_size
-        $INFO_Notebook			raise [ $INFO_Notebook page $tab ]
+        $INFO_Notebook          compute_size
+        $INFO_Notebook          raise [ $INFO_Notebook page $tab ]
         
         return $INFO_Notebook
    }

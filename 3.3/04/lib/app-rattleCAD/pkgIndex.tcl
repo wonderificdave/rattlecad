@@ -18,13 +18,13 @@ package ifneeded   rattleCAD  3.3 "\
         [list source  [file join $dir lib_comp_library.tcl]]; \
         [list source  [file join $dir lib_frame_geometryExtend.tcl]]; \
         [list source  [file join $dir lib_frame_geometry.tcl]]; \
-        [list source  [file join $dir lib_frame_visualisation.tcl]]; \		
+        [list source  [file join $dir lib_frame_visualisation.tcl]]; \        
         [list source  [file join $dir lib_version_info.tcl]]; \
-        [list source  [file join $dir lib_cv_custom.tcl]]; \		
-        [list source  [file join $dir lib_cv_customRearMockup.tcl]]; \		
-        [list source  [file join $dir lib_cv_customUpdate.tcl]]; \		
+        [list source  [file join $dir lib_cv_custom.tcl]]; \        
+        [list source  [file join $dir lib_cv_customRearMockup.tcl]]; \        
+        [list source  [file join $dir lib_cv_customUpdate.tcl]]; \        
    "
 
  # .. unused since 3.1.00
  # [list source  [file join $dir lib_control.tcl]]; 
- # [list source  [file join $dir lib_frame_ref_geometry.tcl]]; \		
+ # [list source  [file join $dir lib_frame_ref_geometry.tcl]]; \        

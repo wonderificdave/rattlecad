@@ -1,11 +1,11 @@
  ##+##########################################################################
  #
- # package: rattleCAD	->	lib_cfg_report.tcl
+ # package: rattleCAD   ->  lib_cfg_report.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
- #       based on tclTk, BWidgets and tdom on their 
+ #       based on tclTk, BWidgets and tdom on their
  #       own Licenses.
- # 
+ #
  # Copyright (c) Manfred ROSENBERGER, 2010/10/24
  #
  # The author  hereby grant permission to use,  copy, modify, distribute,
@@ -29,139 +29,139 @@
  # MERCHANTABILITY,    FITNESS   FOR    A    PARTICULAR   PURPOSE,    AND
  # NON-INFRINGEMENT.  THIS  SOFTWARE IS PROVIDED  ON AN "AS  IS" BASIS,
  # AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
- # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
+ # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #	namespace:  rattleCAD::lib_cfg_report
+ #  namespace:  rattleCAD::lib_cfg_report
  # ---------------------------------------------------------------------------
  #
- # 
+ #
 
 
  namespace eval lib_cfg_report {
-                            
-	global      APPL_Env
 
-	variable	treeWidget  {}
-	variable 	menueFrame	{}
+    global      APPL_Env
 
-	#-------------------------------------------------------------------------
+    variable    treeWidget  {}
+    variable    menueFrame  {}
+
+    #-------------------------------------------------------------------------
        #  create report widget
        #
-	proc createReport {w} {
-		variable treeWidget
-		variable menueFrame
-		variable APPL_Env
-		
-			# --- ttk::style - treeview ---
-			#
-		ttk::style map Treeview.Row  -background [ list selected gainsboro ]
+    proc createReport {w} {
+        variable treeWidget
+        variable menueFrame
+        variable APPL_Env
 
-			
-			# --- create GUI ---
-			#
-		pack [ frame $w.f ] -fill both -expand yes
-		set menueFrame	[ frame $w.f.f_bt	-relief groove -bd 1]
-		set treeFrame 	[ frame $w.f.f_tree ]
-		pack 	$menueFrame \
-				$treeFrame\
-			-fill both 	-side left
-		pack configure $treeFrame	-expand yes
-
-        button 	$menueFrame.open	-text {Open xml-File}					-width 30	-command { lib_file::openFile_xml {}	visualize}
-        button 	$menueFrame.bt01	-text {canvasCAD}					    -width 30	-command { lib_cfg_report::fillTree_Variable $canvasCAD::__packageRoot	}
-        button 	$menueFrame.bt02	-text {rattleCAD_init.xml}				-width 30	-command { lib_cfg_report::fillTree_Variable $APPL_Env(root_InitDOM) }
-        button 	$menueFrame.bt03	-text {Template Road}					-width 30	-command { lib_file::openFile_xml [lib_file::getTemplateFile Road] 	visualize}
-        button 	$menueFrame.bt04	-text {Template OffRoad}				-width 30	-command { lib_file::openFile_xml [lib_file::getTemplateFile MTB ] 	visualize}
-        #button 	$menueFrame.bt03	-text {Template Road}					-width 30	-command { lib_file::openFile_xml [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad)] 	visualize}
-        #button 	$menueFrame.bt04	-text {Template OffRoad}				-width 30	-command { lib_file::openFile_xml [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB) ] 	visualize}
-        
-		
-		button 	$menueFrame.bt05	-text {current Values}					-width 30	-command { lib_cfg_report::fillTree_Variable $frame_geometry::domFrame	}
-        button 	$menueFrame.bt06	-text {current Project}					-width 30	-command { project::runTime_2_dom $::APPL_Env(root_ProjectDOM); lib_cfg_report::fillTree_Variable $::APPL_Env(root_ProjectDOM)}
-        button 	$menueFrame.clear	-text {clear Tree} 						-width 30	-command { lib_cfg_report::cleanupTree }
-		pack 	$menueFrame.open \
-				$menueFrame.bt01 \
-				$menueFrame.bt02 \
-				$menueFrame.bt03 \
-				$menueFrame.bt04 \
-				$menueFrame.bt06 \
-				$menueFrame.clear \
-				-side top
+            # --- ttk::style - treeview ---
+            #
+        ttk::style map Treeview.Row  -background [ list selected gainsboro ]
 
 
-			#	[lib_file::getTemplateFile	$::APPL_Env(TemplateType)]
-				
-		set treeWidget 	[ ttk::treeview	$treeFrame.tree \
-		                                            -columns "value" \
-													-xscrollcommand "$treeFrame.tree_x set" \
-													-yscrollcommand "$treeFrame.tree_y set" ]													
-			$treeWidget heading "#0"   -anchor w  -text "XML" -anchor w
-			$treeWidget column  "#0"   -width  160
-			$treeWidget heading value  -anchor w  -text "Value" 
-			$treeWidget column  value  -width  900 
-													
-													
-													
-		scrollbar 	$treeFrame.tree_x 	-ori hori 	-command "$treeFrame.tree xview"
-		scrollbar 	$treeFrame.tree_y 	-ori vert 	-command "$treeFrame.tree yview" 
-			grid 	$treeFrame.tree 	$treeFrame.tree_y  -sticky news
-			grid 						$treeFrame.tree_x  -sticky news
+            # --- create GUI ---
+            #
+        pack [ frame $w.f ] -fill both -expand yes
+        set menueFrame    [ frame $w.f.f_bt    -relief groove -bd 1]
+        set treeFrame     [ frame $w.f.f_tree ]
+        pack    $menueFrame \
+                $treeFrame\
+            -fill both     -side left
+        pack configure $treeFrame    -expand yes
 
-			grid 	rowconfig    	$treeFrame 0 -weight 1
-			grid 	columnconfig 	$treeFrame 0 -weight 1	
-	}
+        button  $menueFrame.open    -text {Open xml-File}                   -width 30   -command { lib_file::openFile_xml {}    visualize}
+        button  $menueFrame.bt01    -text {canvasCAD}                       -width 30   -command { lib_cfg_report::fillTree_Variable $canvasCAD::__packageRoot    }
+        button  $menueFrame.bt02    -text {rattleCAD_init.xml}              -width 30   -command { lib_cfg_report::fillTree_Variable $APPL_Env(root_InitDOM) }
+        button  $menueFrame.bt03    -text {Template Road}                   -width 30   -command { lib_file::openFile_xml [lib_file::getTemplateFile Road]     visualize}
+        button  $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { lib_file::openFile_xml [lib_file::getTemplateFile MTB ]     visualize}
+        #button     $menueFrame.bt03    -text {Template Road}               -width 30   -command { lib_file::openFile_xml [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad)]     visualize}
+        #button     $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { lib_file::openFile_xml [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB) ]     visualize}
 
-	
-	#-------------------------------------------------------------------------
+
+        button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { lib_cfg_report::fillTree_Variable $frame_geometry::domFrame    }
+        button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { project::runTime_2_dom $::APPL_Env(root_ProjectDOM); lib_cfg_report::fillTree_Variable $::APPL_Env(root_ProjectDOM)}
+        button  $menueFrame.clear   -text {clear Tree}                      -width 30   -command { lib_cfg_report::cleanupTree }
+        pack    $menueFrame.open \
+                $menueFrame.bt01 \
+                $menueFrame.bt02 \
+                $menueFrame.bt03 \
+                $menueFrame.bt04 \
+                $menueFrame.bt06 \
+                $menueFrame.clear \
+                -side top
+
+
+            #    [lib_file::getTemplateFile    $::APPL_Env(TemplateType)]
+
+        set treeWidget  [ ttk::treeview $treeFrame.tree \
+                                                    -columns "value" \
+                                                    -xscrollcommand "$treeFrame.tree_x set" \
+                                                    -yscrollcommand "$treeFrame.tree_y set" ]
+            $treeWidget heading "#0"   -anchor w  -text "XML" -anchor w
+            $treeWidget column  "#0"   -width  160
+            $treeWidget heading value  -anchor w  -text "Value"
+            $treeWidget column  value  -width  900
+
+
+
+        scrollbar     $treeFrame.tree_x     -ori hori     -command "$treeFrame.tree xview"
+        scrollbar     $treeFrame.tree_y     -ori vert     -command "$treeFrame.tree yview"
+            grid     $treeFrame.tree     $treeFrame.tree_y  -sticky news
+            grid                         $treeFrame.tree_x  -sticky news
+
+            grid     rowconfig        $treeFrame 0 -weight 1
+            grid     columnconfig     $treeFrame 0 -weight 1
+    }
+
+
+    #-------------------------------------------------------------------------
        #  cleanup Tree
        #
-	proc cleanupTree {} {
-		variable treeWidget
-			# puts "  ... $treeWidget "
-		foreach childNode [$treeWidget children {} ] {
-				# puts "   .... $childNode"
-			$treeWidget detach     $childNode
-			$treeWidget delete     $childNode
-		}  
-	}
+    proc cleanupTree {} {
+        variable treeWidget
+            # puts "  ... $treeWidget "
+        foreach childNode [$treeWidget children {} ] {
+                # puts "   .... $childNode"
+            $treeWidget detach     $childNode
+            $treeWidget delete     $childNode
+        }
+    }
 
 
-	#-------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
        #  fill Tree - Variable
        #
-	proc fillTree_Variable {var} {
-			#
-			# -- define global parameters
-			#
-		lib_cfg_report::fillTree "$var" root
-	}
+    proc fillTree_Variable {var} {
+            #
+            # -- define global parameters
+            #
+        lib_cfg_report::fillTree "$var" root
+    }
 
-		
-	#-------------------------------------------------------------------------
+
+    #-------------------------------------------------------------------------
        #  fill Tree - File
        #
-	proc fillTree {node parent} {
-		variable treeWidget	
-		cleanupTree						
-		# recurseInsert $treeWidget "$node" $parent
-		recurseInsert $treeWidget "$node" {}
-		# $treeWidget toggle $node
-	}	
-	   
-	   
-	   
-	#-------------------------------------------------------------------------
+    proc fillTree {node parent} {
+        variable treeWidget
+        cleanupTree
+        # recurseInsert $treeWidget "$node" $parent
+        recurseInsert $treeWidget "$node" {}
+        # $treeWidget toggle $node
+    }
+
+
+
+    #-------------------------------------------------------------------------
        #  fill Tree - help function
        #
     proc recurseInsert {w node parent} {
-            
-			proc getAttributes node {
-					if {![catch {$node attributes} res]} {set res}
-			} 
-				
-			set domDepth [llength [split [$node toXPath] /]]			
-			set nodeName [$node nodeName]
+
+            proc getAttributes node {
+                    if {![catch {$node attributes} res]} {set res}
+            }
+
+            set domDepth [llength [split [$node toXPath] /]]
+            set nodeName [$node nodeName]
             set done 0
             if {$nodeName eq "#text" || $nodeName eq "#cdata"} {
                 set text [string map {\n " "} [$node nodeValue]]
@@ -176,31 +176,31 @@
                     set done 1
                 }
             }
-            $w insert $parent end -id $node -text $nodeName -tags $node -values [list "$text" ] 
-			
-			case [expr $domDepth-1] {
-				 0 	{	set r [format %x  0];	set g [format %x  0];	set b [format %x 15]}
-				 1 	{	set r [format %x  3];	set g [format %x  0];	set b [format %x 12]}
-				 2 	{	set r [format %x  6];	set g [format %x  0];	set b [format %x  9]}
-				 3 	{	set r [format %x  9];	set g [format %x  0];	set b [format %x  6]}
-				 4 	{	set r [format %x 12];	set g [format %x  0];	set b [format %x  3]}
-				 5 	{	set r [format %x 15];	set g [format %x  0];	set b [format %x  0]}
-				 6 	{	set r [format %x 12];	set g [format %x  3];	set b [format %x  0]}
-				 7 	{	set r [format %x  9];	set g [format %x  6];	set b [format %x  0]}
-				 8 	{	set r [format %x  6];	set g [format %x  9];	set b [format %x  0]}
-				 9 	{	set r [format %x  3];	set g [format %x 12];	set b [format %x  0]}
- 				10 	{	set r [format %x  0];	set g [format %x 15];	set b [format %x  0]}
-				11 	{	set r [format %x  0];	set g [format %x 12];	set b [format %x  3]}
-				12 	{	set r [format %x  0];	set g [format %x  9];	set b [format %x  6]}
-				13 	{	set r [format %x  0];	set g [format %x  6];	set b [format %x  9]}
-				14 	{	set r [format %x  0];	set g [format %x  3];	set b [format %x 12]}
-				15 	{	set r [format %x  0];	set g [format %x  0];	set b [format %x 15]}
-				default 
-					{	set r [format %x 12];	set g [format %x 12];	set b [format %x 12]}
-			}
-			set fill [format "#%s%s%s%s%s%s" $r $r $g $g $b $b] 
-			
-			$w tag configure $node -foreground $fill
+            $w insert $parent end -id $node -text $nodeName -tags $node -values [list "$text" ]
+
+            case [expr $domDepth-1] {
+                 0  {   set r [format %x  0];   set g [format %x  0];   set b [format %x 15]}
+                 1  {   set r [format %x  3];   set g [format %x  0];   set b [format %x 12]}
+                 2  {   set r [format %x  6];   set g [format %x  0];   set b [format %x  9]}
+                 3  {   set r [format %x  9];   set g [format %x  0];   set b [format %x  6]}
+                 4  {   set r [format %x 12];   set g [format %x  0];   set b [format %x  3]}
+                 5  {   set r [format %x 15];   set g [format %x  0];   set b [format %x  0]}
+                 6  {   set r [format %x 12];   set g [format %x  3];   set b [format %x  0]}
+                 7  {   set r [format %x  9];   set g [format %x  6];   set b [format %x  0]}
+                 8  {   set r [format %x  6];   set g [format %x  9];   set b [format %x  0]}
+                 9  {   set r [format %x  3];   set g [format %x 12];   set b [format %x  0]}
+                10  {   set r [format %x  0];   set g [format %x 15];   set b [format %x  0]}
+                11  {   set r [format %x  0];   set g [format %x 12];   set b [format %x  3]}
+                12  {   set r [format %x  0];   set g [format %x  9];   set b [format %x  6]}
+                13  {   set r [format %x  0];   set g [format %x  6];   set b [format %x  9]}
+                14  {   set r [format %x  0];   set g [format %x  3];   set b [format %x 12]}
+                15  {   set r [format %x  0];   set g [format %x  0];   set b [format %x 15]}
+                default
+                    {    set r [format %x 12];    set g [format %x 12];    set b [format %x 12]}
+            }
+            set fill [format "#%s%s%s%s%s%s" $r $r $g $g $b $b]
+
+            $w tag configure $node -foreground $fill
             if {$parent eq {}} {$w item $node -open 1}
             if !$done {
                 foreach child [$node childNodes] {

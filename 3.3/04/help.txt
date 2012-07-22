@@ -7,7 +7,7 @@ What is the aim of this program?
     during definition of a bicycle frame represented in tabs:
 
     Base Concept (Base Geometry):
-	-----------------------------------
+    -----------------------------------
         ... define riders parameter
         ... define the main geometry parameters
             You can edit parameters by doubleclicking the measured value
@@ -15,17 +15,17 @@ What is the aim of this program?
  
                 
     Tube Details (Frame Tubing):
-	-----------------------------------
+    -----------------------------------
         ... detail your geometry to define all tube parameters
             Editing like in Personal Tab
                 
     Summary / Frame Drafting / Frame - Jig:
-	-----------------------------------
+    -----------------------------------
         ... summaries for the workshop
             There are no editable dimensions here.
 
     Mockup (Assembly):
-	-----------------------------------
+    -----------------------------------
         ... take your frame and assemble it with components
             There are no dimensions to edit but you can exchange 
             components if still defined for rattleCAD. The library 
@@ -33,13 +33,13 @@ What is the aim of this program?
             rattleCAD supports to use a personal component library.
             This library has to have the same structure es in the
             applications etc directory.
-			
-		... also use the ".cfg"-Button in the menu-bar. By pressing 
-		    this button configuration Panel appears. Go to the 
-			"Mockup"-Tab
+            
+        ... also use the ".cfg"-Button in the menu-bar. By pressing 
+            this button configuration Panel appears. Go to the 
+            "Mockup"-Tab
 
     Tube Mitter:
-	-----------------------------------
+    -----------------------------------
         ... mittering of main tubes and seat stays
         ... seat stay mittering is an approximate mittering as 
             tangential to seat tube.
@@ -75,8 +75,8 @@ How to edit parameters
     You can edit parameters by doubleclicking the measured value
     on the coloured dimensions. Inactive dimensions are mostly gray
     coloured.
-	Also use the ".cfg"-Button in the menu-bar. By pressing this button
-	a configuration Panel appears.
+    Also use the ".cfg"-Button in the menu-bar. By pressing this button
+    a configuration Panel appears.
 
 
 

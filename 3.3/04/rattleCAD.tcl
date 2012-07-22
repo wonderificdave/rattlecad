@@ -44,83 +44,83 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-		puts "\n\n ====== I N I T ============================ \n\n"
-		
-		# -- APPL_Env(BASE_Dir)  ------
-	set BASE_Dir  [file dirname [file normalize $::argv0] ]
+        puts "\n\n ====== I N I T ============================ \n\n"
+        
+        # -- APPL_Env(BASE_Dir)  ------
+    set BASE_Dir  [file dirname [file normalize $::argv0] ]
  
-		# -- redefine on Starkit  -----
-		# 		exception for starkit compilation
-		#   	 .../rattleCAD.exe
-	set APPL_Type       [file tail $BASE_Dir]	
-	if {$APPL_Type == {rattleCAD.exe}}	{	
-		set BASE_Dir	[file dirname $BASE_Dir]
+        # -- redefine on Starkit  -----
+        #         exception for starkit compilation
+        #        .../rattleCAD.exe
+    set APPL_Type       [file tail $BASE_Dir]    
+    if {$APPL_Type == {rattleCAD.exe}}    {    
+        set BASE_Dir    [file dirname $BASE_Dir]
     }
 
 
 
-		# -- Libraries  ---------------
-	lappend auto_path           [file join $BASE_Dir lib]
-	
-	package require   rattleCAD  3.3 
-	package require   canvasCAD	 0.22
-	package require   extSummary 0.1
+        # -- Libraries  ---------------
+    lappend auto_path           [file join $BASE_Dir lib]
+    
+    package require   rattleCAD  3.3 
+    package require   canvasCAD  0.23
+    package require   extSummary 0.1
 
 
-	# -- Version Info  ----------------------
+    # -- Version Info  ----------------------
     if {[file exists [file join $APPL_Env(ROOT_Dir) tclkit.inf]]} {
-		# puts " customizing strings in executable"
-		set fd [open [file join $APPL_Env(ROOT_Dir) tclkit.inf]]
-		array set strinfo [read $fd]
-		close $fd
-	} else {
-		array set strinfo {
-				ProductVersion	{3.3.xx}
-				FileVersion  	{??}
-				FileDate		{??. ???. 201?}
-		}
-	}
-	# parray strinfo
-	
- 	set APPL_Env(RELEASE_Version)	$strinfo(ProductVersion) 	;#{3.2}
-	set APPL_Env(RELEASE_Revision)	$strinfo(FileVersion) 		;#{66}
-	set APPL_Env(RELEASE_Date)		$strinfo(FileDate)			;#{18. Dec. 2011}
-	
- 		# -- Application Directories  -----------
-	set APPL_Env(BASE_Dir)    	$BASE_Dir
-	set APPL_Env(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
-	set APPL_Env(IMAGE_Dir)     [file join    $BASE_Dir image ]
-	set APPL_Env(ROOT_Dir)      [file dirname $BASE_Dir]
-	set APPL_Env(USER_Dir)      [lib_file::check_user_dir rattleCAD]	
-	set APPL_Env(EXPORT_Dir) 	[lib_file::check_user_dir rattleCAD/export]
+        # puts " customizing strings in executable"
+        set fd [open [file join $APPL_Env(ROOT_Dir) tclkit.inf]]
+        array set strinfo [read $fd]
+        close $fd
+    } else {
+        array set strinfo {
+                ProductVersion  {3.3.xx}
+                FileVersion     {??}
+                FileDate        {??. ???. 201?}
+        }
+    }
+    # parray strinfo
+    
+     set APPL_Env(RELEASE_Version)    $strinfo(ProductVersion)      ;#{3.2}
+    set APPL_Env(RELEASE_Revision)    $strinfo(FileVersion)         ;#{66}
+    set APPL_Env(RELEASE_Date)        $strinfo(FileDate)            ;#{18. Dec. 2011}
+    
+         # -- Application Directories  -----------
+    set APPL_Env(BASE_Dir)      $BASE_Dir
+    set APPL_Env(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
+    set APPL_Env(IMAGE_Dir)     [file join    $BASE_Dir image ]
+    set APPL_Env(ROOT_Dir)      [file dirname $BASE_Dir]
+    set APPL_Env(USER_Dir)      [lib_file::check_user_dir rattleCAD]    
+    set APPL_Env(EXPORT_Dir)    [lib_file::check_user_dir rattleCAD/export]
 
 
-		# -- Version Info Summary  ---------------
- 		puts "  ----------------------------------------------"
-		puts "  rattleCAD      $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)"
-		puts "                             $APPL_Env(RELEASE_Date)"
- 		puts "  ----------------------------------------------"
+        # -- Version Info Summary  ---------------
+        puts "  ----------------------------------------------"
+        puts "  rattleCAD      $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)"
+        puts "                             $APPL_Env(RELEASE_Date)"
+        puts "  ----------------------------------------------"
 
 
-		# -- Tcl/Tk Runtime  --------------------
-		puts "  Tcl/Tk:    [info patchlevel]"
-		puts "  Exec:      [info nameofexecutable]"
- 		puts "  ----------------------------------------------"
-		puts "    Tk:          [package require Tk]"
-		puts "    BWidget:     [package require BWidget]"
-		puts "    tdom:        [package require tdom]"
-		puts "    rattleCAD:   [package require rattleCAD]"
-		puts "    canvasCAD:   [package require canvasCAD]"
-		puts "    extSummary:  [package require extSummary]"
- 		puts "  ----------------------------------------------"
- 		puts "    APPL_Env(ROOT_Dir)   $APPL_Env(ROOT_Dir)"
- 		puts "    APPL_Env(BASE_Dir)   $APPL_Env(BASE_Dir)"
-		puts "    APPL_Env(CONFIG_Dir) $APPL_Env(CONFIG_Dir)"
-		puts "    APPL_Env(IMAGE_Dir)  $APPL_Env(IMAGE_Dir)"
-		puts "    APPL_Env(USER_Dir)   $APPL_Env(USER_Dir)"
-		puts "    APPL_Env(EXPORT_Dir) $APPL_Env(EXPORT_Dir)"
- 		puts "  ----------------------------------------------"
-		puts ""
+        # -- Tcl/Tk Runtime  --------------------
+        puts "  Tcl/Tk:    [info patchlevel]"
+        puts "  Exec:      [info nameofexecutable]"
+        puts "  ----------------------------------------------"
+        puts "    Tk:          [package require Tk]"
+        puts "    BWidget:     [package require BWidget]"
+        puts "    tdom:        [package require tdom]"
+        puts "    rattleCAD:   [package require rattleCAD]"
+        puts "    canvasCAD:   [package require canvasCAD]"
+        puts "    extSummary:  [package require extSummary]"
+        puts "  ----------------------------------------------"
+        puts "    APPL_Env(ROOT_Dir)   $APPL_Env(ROOT_Dir)"
+        puts "    APPL_Env(BASE_Dir)   $APPL_Env(BASE_Dir)"
+        puts "    APPL_Env(CONFIG_Dir) $APPL_Env(CONFIG_Dir)"
+        puts "    APPL_Env(IMAGE_Dir)  $APPL_Env(IMAGE_Dir)"
+        puts "    APPL_Env(USER_Dir)   $APPL_Env(USER_Dir)"
+        puts "    APPL_Env(EXPORT_Dir) $APPL_Env(EXPORT_Dir)"
+        puts "  ----------------------------------------------"
+        puts ""
 
   
   ###########################################################################
@@ -165,48 +165,48 @@ exec wish "$0" "$@"
   ###########################################################################
 
 
-		# -- init Parameters  ----
-	set APPL_Env(root_InitDOM)  [ lib_file::openFile_xml 	[file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml ] ]
-		puts "     ... root_InitDOM      [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml]"
+        # -- init Parameters  ----
+    set APPL_Env(root_InitDOM)  [ lib_file::openFile_xml     [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml ] ]
+        puts "     ... root_InitDOM      [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml]"
 
 
-	initValues
-		
-		
-		# -- load template ----------
-		puts "     ... TemplateType      $APPL_Env(TemplateType)"
-		puts "     ... TemplateInit      $APPL_Env(TemplateInit)"
-		
-	
-	set APPL_Env(root_ProjectDOM)	[ lib_file::openFile_xml 	$APPL_Env(TemplateInit) ]
+    initValues
+        
+        
+        # -- load template ----------
+        puts "     ... TemplateType      $APPL_Env(TemplateType)"
+        puts "     ... TemplateInit      $APPL_Env(TemplateInit)"
+        
+    
+    set APPL_Env(root_ProjectDOM)    [ lib_file::openFile_xml     $APPL_Env(TemplateInit) ]
 
-	
-		# -- status messages --------
-	puts "\n     APPL_Env(list_ForkTypes)"
-	foreach entry $APPL_Env(list_ForkTypes) {
-		puts "        -> $entry"
-	}
+    
+        # -- status messages --------
+    puts "\n     APPL_Env(list_ForkTypes)"
+    foreach entry $APPL_Env(list_ForkTypes) {
+        puts "        -> $entry"
+    }
 
-	puts "\n     APPL_Env(list_BrakeTypes)"
-	foreach entry $APPL_Env(list_BrakeTypes) {
-		puts "        -> $entry"
-	}
-	
-	puts "\n     APPL_Env(list_BottleCage)"
-	foreach entry $APPL_Env(list_BottleCage) {
-		puts "        -> $entry"
-	}
-	
-	puts "\n     APPL_Env(list_Rims)"
-	foreach entry $APPL_Env(list_Rims) {
-		puts "        -> $entry"
-	}
-	
-	puts "\n  APPL_CompLocation"
-	foreach index [array names APPL_CompLocation] {
-		puts [format "        -> %-42s %s" $index    $APPL_CompLocation($index)]
-	} 
-	
+    puts "\n     APPL_Env(list_BrakeTypes)"
+    foreach entry $APPL_Env(list_BrakeTypes) {
+        puts "        -> $entry"
+    }
+    
+    puts "\n     APPL_Env(list_BottleCage)"
+    foreach entry $APPL_Env(list_BottleCage) {
+        puts "        -> $entry"
+    }
+    
+    puts "\n     APPL_Env(list_Rims)"
+    foreach entry $APPL_Env(list_Rims) {
+        puts "        -> $entry"
+    }
+    
+    puts "\n  APPL_CompLocation"
+    foreach index [array names APPL_CompLocation] {
+        puts [format "        -> %-42s %s" $index    $APPL_CompLocation($index)]
+    } 
+    
 
 
 
@@ -218,10 +218,10 @@ exec wish "$0" "$@"
 
         # ttk::style configure TCombobox -padding 0
         # ttk::style theme use default
-	ttk::style configure TCombobox -padding 0
+    ttk::style configure TCombobox -padding 0
     # -- set standard font ------------
-	option add *font $APPL_Config(GUI_Font)
-	
+    option add *font $APPL_Config(GUI_Font)
+    
     lib_gui::binding_copyClass Spinbox mySpinbox
     lib_gui::binding_removeOnly     mySpinbox [list <Clear>]
         # lib_gui::binding_reportBindings Text
@@ -235,7 +235,7 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-		puts "\n\n ====== M A I N ============================ \n\n"
+        puts "\n\n ====== M A I N ============================ \n\n"
 
 
 
@@ -247,7 +247,7 @@ exec wish "$0" "$@"
   ###########################################################################
 
 
-	create_intro  .intro  
+    create_intro  .intro  
 
 
 
@@ -259,94 +259,94 @@ exec wish "$0" "$@"
   ###########################################################################
 
 
-	
-		# --- 	create iconBitmap  -----
-            #puts " \$tcl_platform(os)  $tcl_platform(os) $tcl_platform(platform)"	
-	if {$tcl_platform(platform) == {windows}} {
-		wm iconbitmap . [file join $APPL_Env(BASE_Dir) tclkit.ico]  	
-	} else {
-		wm iconphoto  . [image create photo .ico1 -format gif -file [file join $APPL_Env(BASE_Dir)  icon16.gif] ]
-	} 
+    
+        # ---     create iconBitmap  -----
+            #puts " \$tcl_platform(os)  $tcl_platform(os) $tcl_platform(platform)"    
+    if {$tcl_platform(platform) == {windows}} {
+        wm iconbitmap . [file join $APPL_Env(BASE_Dir) tclkit.ico]      
+    } else {
+        wm iconphoto  . [image create photo .ico1 -format gif -file [file join $APPL_Env(BASE_Dir)  icon16.gif] ]
+    } 
   
   
- 		# --- 	create Mainframe  -----
-	set	mainframe	[ lib_gui::create_MainFrame ]
-		pack $mainframe  -fill both  -expand yes  -side top 
-	set	indicator	[$mainframe addindicator -textvariable "::APPL_Config(PROJECT_Name)"  -anchor w]
-		$indicator  configure -relief flat
-	set frame		[$mainframe getframe]
+         # ---     create Mainframe  -----
+    set    mainframe    [ lib_gui::create_MainFrame ]
+        pack $mainframe  -fill both  -expand yes  -side top 
+    set    indicator    [$mainframe addindicator -textvariable "::APPL_Config(PROJECT_Name)"  -anchor w]
+        $indicator  configure -relief flat
+    set frame        [$mainframe getframe]
 
 
-		# --- 	Button-bar frame  --------
-	set bb_frame [ frame $frame.f1  -relief sunken        -bd 1  ]
-		pack  $bb_frame  -padx 0  -pady 3  -expand no   -fill x
-	lib_gui::create_ButtonBar $bb_frame 
+        # ---     Button-bar frame  --------
+    set bb_frame [ frame $frame.f1  -relief sunken        -bd 1  ]
+        pack  $bb_frame  -padx 0  -pady 3  -expand no   -fill x
+    lib_gui::create_ButtonBar $bb_frame 
 
-	
-		# --- 	notebook frame  -------
-	set nb_frame [ frame $frame.f2  -relief sunken        -bd 1  ]
-		pack  $nb_frame  -padx 0  -pady 0  -expand yes  -fill both
+    
+        # ---     notebook frame  -------
+    set nb_frame [ frame $frame.f2  -relief sunken        -bd 1  ]
+        pack  $nb_frame  -padx 0  -pady 0  -expand yes  -fill both
         
-		# --- 	notebook  -------------
+        # ---     notebook  -------------
     lib_gui::create_Notebook $nb_frame
 
-	
-	
-		# --------------------------------------------
-		#	create custom base Parameters
-	frame_geometry::set_base_Parameters $APPL_Env(root_ProjectDOM)
+    
+    
+        # --------------------------------------------
+        #    create custom base Parameters
+    frame_geometry::set_base_Parameters $APPL_Env(root_ProjectDOM)
 
 
-		# --------------------------------------------
-		#	set APPL_Config(PROJECT_Name)		
-	set APPL_Config(PROJECT_Name)           "Template $APPL_Env(TemplateType)"
+        # --------------------------------------------
+        #    set APPL_Config(PROJECT_Name)        
+    set APPL_Config(PROJECT_Name)           "Template $APPL_Env(TemplateType)"
 
 
-		# --------------------------------------------
-		#    check startup parameters
-	if {$argc == 1} {
-		set startupProject  [lindex $argv 0]
-		puts "\n"
-		puts " ====== startup   F I L E ========================"
-		puts "        ... [file normalize $startupProject]\n"
-		lib_file::openProject_xml [file tail $startupProject] $startupProject	
-	}
-	
+        # --------------------------------------------
+        #    check startup parameters
+    if {$argc == 1} {
+        set startupProject  [lindex $argv 0]
+        puts "\n"
+        puts " ====== startup   F I L E ========================"
+        puts "        ... [file normalize $startupProject]\n"
+        lib_file::openProject_xml [file tail $startupProject] $startupProject    
+    }
+    
 
 
- 		# --------------------------------------------
-		#    finalize
+         # --------------------------------------------
+        #    finalize
    
-	update 
-	wm minsize . [winfo width  .]   [winfo height  .]
+    update 
+    wm minsize . [winfo width  .]   [winfo height  .]
  
-		# -- keyboard bindings -----------------------
+        # -- keyboard bindings -----------------------
     lib_gui::global_kb_Binding ab
     
-     	# -- window binding -----------------------
+         # -- window binding -----------------------
     bind . <Configure> [list lib_gui::check_windowSize]
 
-		# -- window title ----------------------------
-	set_window_title 				$APPL_Config(PROJECT_Name)
-		
+        # -- window title ----------------------------
+    set_window_title                 $APPL_Config(PROJECT_Name)
+        
         # -- open config panel -----------------------
-	# lib_config::create . .cfg
+    # lib_config::create . .cfg
 
-	
+    
   ###########################################################################
   #
   #                 R  -  U  -  N  -  T  -  I  -  M  -  E 
   #
   ###########################################################################
 
-		puts "\n\n ====== R U N T I M E ============================ \n\n"
-		
-		
-		# -- destroy intro - image ----
-	after  200 destroy .intro
+        puts "\n\n ====== R U N T I M E ============================ \n\n"
+        
+        
+        # -- destroy intro - image ----
+    after  200 destroy .intro
 
-		# -- keep on top --------------
-	wm deiconify .
+        # -- keep on top --------------
+    wm deiconify .
     
 
     
