@@ -456,9 +456,9 @@
 
                                 # -- exception if Tube is shorter than taper length
                                 set tube_length         [ vectormath::length {0 0} $pt_00 ]
-                                    if { [expr $tube_length - $ChainStay(TaperLength) -10] < 0 } {
+                                    if { [expr $tube_length - $ChainStay(TaperLength) -110] < 0 } {
                                         puts "         ... exception:  ChainStay TaperLength ... $tube_length / $ChainStay(TaperLength)"
-                                        set taper_length    [ expr $tube_length -10 ]
+                                        set taper_length    [ expr $tube_length -110 ]
                                         puts "                         -> $taper_length"
                                     } else {
                                         set taper_length    $ChainStay(TaperLength)

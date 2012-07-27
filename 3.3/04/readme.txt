@@ -1,6 +1,18 @@
+
+3.3.04.10   - 2012.07.22 
+-------------------------------------------------------------------------------
+    feature:
+        ... components:
+          ... children saddle
+          ... suspension fork 20"
+    bugfix:
+        ... file save
+          
+          
 3.3.04.09   - 2012.07.22 
 -------------------------------------------------------------------------------
-    bugfix:
+     feature:
+        ... resize stage on update if window size has changed   bugfix:
         ... open Config Panel
           ... config Panel crashes in 3.3.04.08
                 

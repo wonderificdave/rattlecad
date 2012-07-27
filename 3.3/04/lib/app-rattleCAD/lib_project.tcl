@@ -86,8 +86,9 @@
                 puts "\n\n"
                 puts "   --<trace>--------------------------"
                 puts "    trace_ProjectConfig"
-                puts "       varname:         $var"
+                puts "       varname:         $varname"
                 puts "       key:             $key"
+                puts "       var:             $var"
                 puts "       operation:       $operation"
                 
                 # tk_messageBox -message "trace_ProjectConfig: \n     varname:         $var \n     key:             $key \n     operation:       $operation"

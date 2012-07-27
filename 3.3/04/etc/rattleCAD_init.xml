@@ -133,6 +133,15 @@
 				</Visualization>
 			</Composite>
 						
+			<Suspension_20>
+				<Geometry>
+					<Rake>40.00</Rake>
+				</Geometry>
+				<DropOut>
+					<File>fork/_suspension/suspension_bridge_20.svg</File>
+				</DropOut>
+			</Suspension_20>
+			
 			<Suspension_26>
 				<Geometry>
 					<Rake>40.00</Rake>

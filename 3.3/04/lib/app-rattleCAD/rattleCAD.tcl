@@ -85,6 +85,7 @@
                         VECTOR_Font         {}
                         Language            {english}
                         PROJECT_Name        {}
+                        PROJECT_File        {}
                         WINDOW_Title        {}
                         FILE_List           {}
                      }   
@@ -318,7 +319,7 @@
         set  prj_name  [file tail $filename]
 
         set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision) - $prj_name"
-        set  APPL_Config(PROJECT_Name)  "$filename"
+        set  APPL_Config(PROJECT_Name)  "$prj_name"
         
             # Debug  t  "   $filename " 1      
         wm title . $APPL_Config(WINDOW_Title)

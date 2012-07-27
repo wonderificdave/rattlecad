@@ -445,9 +445,9 @@
             set timeDiff    [expr $timeEnd - $timeStart]
             
             
-            puts "\n     ... time to update:"
-            puts   "          ... [format "%9.3f" $timeDiff] milliseconds"
-            puts   "          ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
+            puts "\n       ... time to update:"
+            puts   "           ... [format "%9.3f" $timeDiff] milliseconds"
+            puts   "           ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
             
             if {$updateDone == {done}} {
                 set canvasUpdate($varName) [ clock milliseconds ]
@@ -928,13 +928,13 @@
     proc open_configPanel {{mode {}}} {
             switch $mode {
                 {refresh} {
-                            puts "    ... open_configPanel $mode"
+                            puts "      ... open_configPanel $mode"
                             if {[winfo exists .cfg]} {
                                 catch {lib_config::create . .cfg refresh}
                             }
                         }
                 default {
-                            puts "    ... open_configPanel $mode"
+                            puts "      ... open_configPanel $mode"
                             lib_config::create . .cfg
                         }
             }

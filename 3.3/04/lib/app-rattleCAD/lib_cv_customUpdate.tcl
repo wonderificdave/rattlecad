@@ -57,7 +57,7 @@
                     set xy          [ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]
                     $cv_Name        clean_StageContent
                         #
-                    update_cv_Parameter                             $cv_Name $xy
+                    update_cv_Parameter                         $cv_Name $xy
                         #
                     frame_visualisation::createBaseline         $cv_Name $xy
                         #
@@ -74,7 +74,7 @@
                         #
                     update_renderCenterline                     $cv_Name
                         #
-                    createWaterMark                             $cv_Name        $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    createWaterMark                             $cv_Name        $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
                         #
                 }
             lib_gui::cv_Custom01 {
@@ -130,7 +130,7 @@
                         #
                     update_renderCanvas                         $cv_Name
                         #
-                    createWaterMark                             $cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    createWaterMark                             $cv_Name        $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
                         #
                     lib_gui::notebook_createButton              $cv_Name        TubingCheckAngles
                         #
@@ -148,7 +148,7 @@
                         #
                     update_cv_Parameter                         $cv_Name $xy
                         #
-                    createDraftingFrame                             $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    createDraftingFrame                         $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
                         #
                     frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Rep
@@ -229,7 +229,7 @@
                         #
                     update_renderCanvas                     $cv_Name
                         #
-                    createWaterMark                         $cv_Name        $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    createWaterMark                         $cv_Name        $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
                         #
                     lib_gui::notebook_createButton          $cv_Name        changeFormatScale   format
                         #
@@ -264,7 +264,7 @@
                         #
                     update_renderCanvas                     $cv_Name
                         #
-                    createWaterMark                         $cv_Name        $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    createWaterMark                         $cv_Name        $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
                         #
                 }
             lib_gui::cv_Custom07 {
@@ -305,7 +305,7 @@
                         #
                     update_renderCanvas                         $cv_Name
                         #
-                    createWaterMark                             $cv_Name $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    createWaterMark                             $cv_Name $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
                         #
                 }
             lib_gui::cv_Custom04 {
@@ -369,7 +369,7 @@
                     frame_visualisation::createDecoration   $cv_Name $xy    DerailleurFront    editable   ;# $updateCommand
                     frame_visualisation::createDecoration   $cv_Name $xy    CrankSet           editable   ;# $updateCommand
                         #
-                    createWaterMark                         $cv_Name         $::APPL_Config(PROJECT_Name)    [frame_geometry::project_attribute modified]
+                    createWaterMark                         $cv_Name         $::APPL_Config(PROJECT_File)    [frame_geometry::project_attribute modified]
                         #
                 }
 

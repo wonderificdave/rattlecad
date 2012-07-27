@@ -41,6 +41,354 @@
 
 
     #-------------------------------------------------------------------------
+        #  save File Type: xml
+        #
+    proc newProject_xml {} {
+                # --- select File
+            set types {
+                    {{Project Files 3.x }       {.xml}  }
+                }
+
+                # set userDir        [check_user_dir rattleCAD]
+            set fileName     [tk_getSaveFile -initialdir $::APPL_Env(USER_Dir) -initialfile {new_Project.xml} -filetypes $types]
+
+            if {$fileName == {}} return
+            if {! [string equal [file extension $fileName] {.xml}]} {
+                set fileName [format "%s.%s" $fileName xml]
+            }
+
+                # -- read from domConfig
+            set domConfig  [ lib_file::openFile_xml     [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad_default) ] ]
+                    # 20111229 ...
+
+                # --- set xml-File Attributes
+            [ $domConfig selectNodes /root/Project/Name/text()              ]   nodeValue   [ file tail $fileName ]
+            [ $domConfig selectNodes /root/Project/modified/text()          ]   nodeValue   [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+
+            # maybe new
+                set project::Project(Name)              [ file tail $fileName ]
+                set project::Project(modified)          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+                set project::Project(rattleCADVersion)  "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+
+                # -- open File for writing
+            set fp [open $fileName w]
+            puts $fp [$domConfig  asXML]
+            close $fp
+                puts "           ... write $fileName "
+                puts "                   ... done"
+
+                # -- read new File
+            set ::APPL_Env(root_ProjectDOM) [lib_file::openFile_xml $fileName show]
+                #
+            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
+            set_window_title $fileName
+                #
+            lib_gui::notebook_updateCanvas
+                #
+            lib_gui::open_configPanel  refresh
+
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  open File Type: xml
+        #
+    proc openProject_xml { {windowTitle {}} {fileName {}} } {
+
+            puts "\n\n  ====== o p e n   F I L E ========================\n"
+            puts "         ... fileName:        $fileName"
+            puts "         ... windowTitle:     $windowTitle"
+            puts ""
+
+            set types {
+                    {{Project Files 3.x }       {.xml}  }
+                }
+                # set userDir       $::APPL_Env(USER_Dir)
+                # puts "   openProject_xml - types      $types"
+            if {$fileName == {}} {
+                set fileName    [tk_getOpenFile -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
+            }
+
+                # puts "   openProject_xml - fileName:   $fileName"
+            if { [file readable $fileName ] } {
+                    
+                    set ::APPL_Env(root_ProjectDOM)    [lib_file::openFile_xml $fileName show]
+                    set rattleCAD_Version [[$::APPL_Env(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
+                    set ::APPL_Config(PROJECT_File) $fileName
+                    
+                    puts "\n"
+                    puts "  ====== o p e n   F I L E ========================"
+                    puts ""
+                    puts "         ... file:       $fileName"
+                    puts "         ... version:    $rattleCAD_Version"
+
+                    set postUpdate [ project::update_Project ]
+
+
+                    # set debugFile  [file join $::APPL_Env(USER_Dir) debug.xml]
+                    # puts "   -> $debugFile"
+                    # set fp [open $debugFile w]
+                    # puts $fp [$::APPL_Env(root_ProjectDOM)  asXML]
+                    # close $fp
+
+
+                        #
+                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                        #
+                    foreach key [dict keys $postUpdate] {
+                              # puts " -> $key"
+                            set valueDict   [dict get $postUpdate $key]
+                            foreach valueKey [dict keys $valueDict] {
+                                puts "\n      -------------------------------"
+                                puts "          postUpdate:   $key - $valueKey [dict get $valueDict $valueKey]"
+                                frame_geometry::set_projectValue $key/$valueKey [dict get $valueDict $valueKey] update
+                            }
+                                # project::pdict $valueDict
+                    }
+
+
+                        # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
+                    if {$windowTitle == {}} {
+                        set_window_title $fileName
+                    } else {
+                        set_window_title $windowTitle
+                    }
+                        #
+                    lib_gui::notebook_updateCanvas
+                    
+            }
+                #
+            lib_gui::open_configPanel  refresh
+            
+                #
+            puts "\n"
+            puts "    ------------------------"
+            puts "    openProject_xml"   
+            puts "            $::APPL_Config(PROJECT_File)"
+            puts "            $::APPL_Config(PROJECT_Name)"
+            puts "        ... done"             
+            puts "\n  ====== o p e n  F I L E =========================\n\n"
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  save File Type: xml
+        #
+    proc saveProject_xml { {mode {save}} {type {Road}} } {
+
+                # --- select File
+            set types {
+                    {{Project Files 3.x }       {.xml}  }
+                }
+
+
+
+            puts "\n\n  ====== s a v e  F I L E =========================\n"
+
+
+                # set userDir       [check_user_dir rattleCAD]
+            if  {$::APPL_Config(PROJECT_File) != {}} {
+                set initialFile [file tail      $::APPL_Config(PROJECT_File)]
+                set initialDir  [file dirname   $::APPL_Config(PROJECT_File)]
+            } else {
+                set initialFile "... empty"
+                set initialDir  "... empty"
+            }
+                puts "       ... saveProject_xml - mode:            \"$mode\""
+                puts "       ... saveProject_xml - USER_Dir:        \"$::APPL_Env(USER_Dir)\""
+                puts "       ... saveProject_xml - PROJECT_Name:    \"$::APPL_Config(PROJECT_Name)\""
+                puts "       ... saveProject_xml - ... initialFile:     \"$initialFile\""
+                puts "       ... saveProject_xml - ... initialDir:      \"$initialDir\""
+
+                # default - values
+
+            switch -exact $mode {
+                {save}          {   set windowTitle     $initialFile
+                                    set requestTemplate {no}
+                                    switch -exact $initialFile {
+                                        {Template Road} {   set requestTemplate    {yes}
+                                                            set initialFile        [format "%s%s.xml" $::APPL_Env(USER_InitString) Road]
+                                                        }
+                                        {Template MTB}  {   set requestTemplate    {yes}
+                                                            set initialFile        [format "%s%s.xml" $::APPL_Env(USER_InitString) MTB ]
+                                                        }
+                                        default            {}
+                                    }
+                                    if {$requestTemplate == "yes"} {
+                                        set retValue [tk_messageBox -title   "Save Project" -icon question \
+                                                                    -message "Save Project as Template?" \
+                                                                    -default cancel \
+                                                                    -type    yesnocancel]
+                                        puts "\n  $retValue\n"
+
+                                        switch $retValue {
+                                            yes     {}
+                                            no      {   set mode        saveAs
+                                                        set initialFile {new_Project.xml}
+                                                    }
+                                            cancel  {   return }
+                                        }
+
+                                    }
+                                }
+
+
+                default            {
+                                    switch -exact $initialFile {
+                                        {Template Road} -
+                                        {Template MTB}  {   set mode         saveAs
+                                                            set initialFile {new_Project.xml}
+                                                        }
+                                        default         {}
+                                    }
+                                }
+            }
+
+                puts "       ---------------------------"
+                puts "       ... saveProject_xml - mode:            \"$mode\""
+                puts "       ... saveProject_xml - ... initialFile:     \"$initialFile\""
+
+
+                # -- read from domConfig
+                # set domConfig $::APPL_Env(root_ProjectDOM)
+
+            switch $mode {
+                {save}        {
+                                # set fileName    [file join $::APPL_Env(USER_Dir) $initialFile]
+                                set fileName    [file normalize $::APPL_Config(PROJECT_File)]
+                            }
+                {saveAs}    {
+                                set fileName    [tk_getSaveFile -initialdir $::APPL_Env(USER_Dir) -initialfile $initialFile -filetypes $types]
+                                    puts "       ... saveProject_xml - fileName:        $fileName"
+                                    # -- $fileName is not empty
+                                if {$fileName == {} } return
+                                    # -- $fileName has extension xml
+                                        # puts " [file extension $fileName] "
+                                if {! [string equal [file extension $fileName] {.xml}]} {
+                                    set fileName [format "%s.%s" $fileName xml]
+                                    puts "           ... new $fileName"
+                                }
+
+                                    # --- set runtime Attributes
+                                set ::APPL_Config(PROJECT_File) [file normalize $fileName]
+                                set ::APPL_Config(PROJECT_Name) [file tail      $fileName]
+                                
+                                    # --- set xml-File Attributes
+                                set project::Project(Name)     [ file tail $fileName ]
+                                    # [ $domConfig selectNodes /root/Project/Name/text()              ]     nodeValue     [ file tail $fileName ]
+
+
+                                    # --- set window Title
+                                set windowTitle    $fileName
+                            }
+                default     {    return}
+            }
+
+            # --- set xml-File Attributes
+            set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            set project::Project(rattleCADVersion)     "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+                # [ $domConfig selectNodes /root/Project/modified/text()             ]     nodeValue     [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+                # [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]     nodeValue     "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+
+                # -- read from domConfig
+            project::runTime_2_dom $::APPL_Env(root_ProjectDOM)
+            set domConfig $::APPL_Env(root_ProjectDOM)
+
+
+                # -- open File for writing
+            if {[file exist $fileName]} {
+                if {[file writable $fileName]} {
+                    set fp [open $fileName w]
+                    puts $fp [$domConfig  asXML]
+                    close $fp
+                    puts ""
+                    puts "         ------------------------"
+                    puts "           ... write:"   
+                    puts "                       $fileName"
+                    puts "                   ... done"
+                } else {
+                tk_messageBox -icon error -message "File: \n   $fileName\n  ... not writeable!"
+                saveProject_xml saveAs
+                }
+            } else {
+                    set fp [open $fileName w]
+                    puts $fp [$domConfig  asXML]
+                    close $fp
+                    puts ""
+                    puts "         ------------------------"
+                    puts "           ... write:"  
+                    puts "                       $fileName "
+                    puts "                   ... done"
+            }
+
+
+                #
+                # set ::APPL_Env(root_ProjectDOM) $domConfig
+                #
+            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
+            set_window_title $windowTitle
+                #
+            lib_gui::notebook_updateCanvas
+            
+                #
+            puts "\n"
+            puts "    ------------------------"
+            puts "    saveProject_xml"     
+            puts "            $::APPL_Config(PROJECT_File)"
+            puts "        ... done"
+
+            puts "\n  ====== s a v e  F I L E =========================\n\n"
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  open Template File Type: xml
+        #
+    proc openTemplate_xml {type} {
+            puts "\n"
+            puts "  ====== o p e n   T E M P L A T E ================"
+            puts "         ... type:    $type"
+            puts ""
+            set template_file    [ getTemplateFile $type ]
+            puts "         ... template_file:   $template_file"
+            if { [file readable $template_file ] } {
+                    set ::APPL_Env(root_ProjectDOM)    [lib_file::openFile_xml $template_file show]
+                        #
+                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                        # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
+                    set_window_title "Template $type"
+                        #
+                    lib_gui::notebook_updateCanvas
+            } else {
+                tk_messageBox -message "... could not load template: $window_title"
+            }
+
+                #
+            lib_gui::open_configPanel  refresh
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  open a File, containing just a subset of a Project-xml
+        #
+    proc opemProject_Subset_xml {{fileName {}}} {
+            set types {
+                {{Project Files 3.x }       {.xml}  }
+            }
+            if {$fileName == {}} {
+                set fileName    [tk_getOpenFile -title "Import" -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
+            } else {
+                return
+            }
+            set root [lib_file::openFile_xml $fileName]
+            project::import_ProjectSubset $root
+    }
+
+
+    #-------------------------------------------------------------------------
         #  open File Selection
         #
     proc openFile_Selection {{mode default}} {
@@ -270,324 +618,6 @@
 
             return $appCmd
 
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  save File Type: xml
-        #
-    proc newProject_xml {} {
-                # --- select File
-            set types {
-                    {{Project Files 3.x }       {.xml}  }
-                }
-
-                # set userDir        [check_user_dir rattleCAD]
-            set fileName     [tk_getSaveFile -initialdir $::APPL_Env(USER_Dir) -initialfile {new_Project.xml} -filetypes $types]
-
-            if {$fileName == {}} return
-            if {! [string equal [file extension $fileName] {.xml}]} {
-                set fileName [format "%s.%s" $fileName xml]
-            }
-
-                # -- read from domConfig
-            set domConfig  [ lib_file::openFile_xml     [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad_default) ] ]
-                    # 20111229 ...
-
-                # --- set xml-File Attributes
-            [ $domConfig selectNodes /root/Project/Name/text()              ]   nodeValue   [ file tail $fileName ]
-            [ $domConfig selectNodes /root/Project/modified/text()          ]   nodeValue   [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
-
-            # maybe new
-                set project::Project(Name)              [ file tail $fileName ]
-                set project::Project(modified)          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-                set project::Project(rattleCADVersion)  "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
-
-                # -- open File for writing
-            set fp [open $fileName w]
-            puts $fp [$domConfig  asXML]
-            close $fp
-                puts "           ... write $fileName "
-                puts "                   ... done"
-
-                # -- read new File
-            set ::APPL_Env(root_ProjectDOM) [lib_file::openFile_xml $fileName show]
-                #
-            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
-                # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-            set_window_title $fileName
-                #
-            lib_gui::notebook_updateCanvas
-                #
-            lib_gui::open_configPanel  refresh
-
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  save File Type: xml
-        #
-    proc saveProject_xml { {mode {save}} {type {Road}} } {
-
-                # --- select File
-            set types {
-                    {{Project Files 3.x }       {.xml}  }
-                }
-
-
-            puts "\n"
-            puts "  ====== s a v e  F I L E ========================="
-
-
-                # set userDir       [check_user_dir rattleCAD]
-            set initialFile [file tail $::APPL_Config(PROJECT_Name)]
-                puts "       ... saveProject_xml - mode:            \"$mode\""
-                puts "       ... saveProject_xml - USER_Dir:        \"$::APPL_Env(USER_Dir)\""
-                puts "       ... saveProject_xml - PROJECT_Name:    \"$::APPL_Config(PROJECT_Name)\""
-                puts "       ... saveProject_xml - initialFile:     \"$initialFile\""
-
-                # default - values
-
-            switch -exact $mode {
-                {save}          {   set windowTitle     $initialFile
-                                    set requestTemplate {no}
-                                    switch -exact $initialFile {
-                                        {Template Road} {   set requestTemplate    {yes}
-                                                            set initialFile        [format "%s%s.xml" $::APPL_Env(USER_InitString) Road]
-                                                        }
-                                        {Template MTB}  {   set requestTemplate    {yes}
-                                                            set initialFile        [format "%s%s.xml" $::APPL_Env(USER_InitString) MTB ]
-                                                        }
-                                        default            {}
-                                    }
-                                    if {$requestTemplate == "yes"} {
-                                        set retValue [tk_messageBox -title   "Save Project" -icon question \
-                                                                    -message "Save Project as Template?" \
-                                                                    -default cancel \
-                                                                    -type    yesnocancel]
-                                        puts "\n  $retValue\n"
-
-                                        switch $retValue {
-                                            yes     {}
-                                            no      {   set mode        saveAs
-                                                        set initialFile {new_Project.xml}
-                                                    }
-                                            cancel    {    return }
-                                        }
-
-                                    }
-                                }
-
-
-                default            {
-                                    switch -exact $initialFile {
-                                        {Template Road} -
-                                        {Template MTB}  {   set mode         saveAs
-                                                            set initialFile {new_Project.xml}
-                                                        }
-                                        default            {}
-                                    }
-                                }
-            }
-                puts ""
-                puts "       ... saveProject_xml - mode:            \"$mode\""
-                puts "       ... saveProject_xml - initialFile:     \"$initialFile\""
-
-                # -- read from domConfig
-                # set domConfig $::APPL_Env(root_ProjectDOM)
-
-            switch $mode {
-                {save}        {
-                                # set fileName    [file join $::APPL_Env(USER_Dir) $initialFile]
-                                set fileName    $::APPL_Config(PROJECT_Name)
-                            }
-                {saveAs}    {
-                                set fileName    [tk_getSaveFile -initialdir $::APPL_Env(USER_Dir) -initialfile $initialFile -filetypes $types]
-                                    puts "   saveProject_xml - fileName:        $fileName"
-                                    # -- $fileName is not empty
-                                if {$fileName == {} } return
-                                    # -- $fileName has extension xml
-                                        # puts " [file extension $fileName] "
-                                if {! [string equal [file extension $fileName] {.xml}]} {
-                                    set fileName [format "%s.%s" $fileName xml]
-                                    puts "   new $fileName"
-                                }
-
-                                    # --- set xml-File Attributes
-                                set ::APPL_Config(PROJECT_Name) $fileName
-                                
-                                    # --- set xml-File Attributes
-                                set project::Project(Name)     [ file tail $fileName ]
-                                    # [ $domConfig selectNodes /root/Project/Name/text()              ]     nodeValue     [ file tail $fileName ]
-
-
-                                    # --- set window Title
-                                set windowTitle    $fileName
-                            }
-                default     {    return}
-            }
-
-                # --- set xml-File Attributes
-            set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            set project::Project(rattleCADVersion)     "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
-                # [ $domConfig selectNodes /root/Project/modified/text()             ]     nodeValue     [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-                # [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]     nodeValue     "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
-
-                # -- read from domConfig
-            project::runTime_2_dom $::APPL_Env(root_ProjectDOM)
-            set domConfig $::APPL_Env(root_ProjectDOM)
-
-
-                # -- open File for writing
-            if {[file exist $fileName]} {
-                if {[file writable $fileName]} {
-                    set fp [open $fileName w]
-                    puts $fp [$domConfig  asXML]
-                    close $fp
-                    puts ""
-                    puts "         ------------------------"
-                    puts "           ... write $fileName "
-                    puts "                   ... done"
-                } else {
-                tk_messageBox -icon error -message "File: \n   $fileName\n  ... not writeable!"
-                saveProject_xml saveAs
-                }
-            } else {
-                set fp [open $fileName w]
-                puts $fp [$domConfig  asXML]
-                close $fp
-                puts ""
-                puts "         ------------------------"
-                puts "           ... write $fileName "
-                puts "                 ... done"
-            }
-
-
-                #
-                # set ::APPL_Env(root_ProjectDOM) $domConfig
-                #
-            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
-                # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-            set_window_title $windowTitle
-                #
-            lib_gui::notebook_updateCanvas
-
-            puts "  ====== s a v e  F I L E ========================="
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  open File Type: xml
-        #
-    proc openProject_xml { {windowTitle {}} {fileName {}} } {
-            puts "\n"
-            puts "  ====== o p e n   F I L E ========================"
-            puts "         ... fileName:        $fileName"
-            puts "         ... windowTitle:     $windowTitle"
-            puts ""
-
-            set types {
-                    {{Project Files 3.x }       {.xml}  }
-                }
-                # set userDir       $::APPL_Env(USER_Dir)
-                # puts "   openProject_xml - types      $types"
-            if {$fileName == {}} {
-                set fileName    [tk_getOpenFile -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
-            }
-
-                # puts "   openProject_xml - fileName:   $fileName"
-            if { [file readable $fileName ] } {
-                    set ::APPL_Env(root_ProjectDOM)    [lib_file::openFile_xml $fileName show]
-                    set rattleCAD_Version [[$::APPL_Env(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
-
-                    puts "\n"
-                    puts "  ====== o p e n   F I L E ========================"
-                    puts ""
-                    puts "         ... version:    $rattleCAD_Version"
-
-                    set postUpdate [ project::update_Project ]
-
-
-                    # set debugFile  [file join $::APPL_Env(USER_Dir) debug.xml]
-                    # puts "   -> $debugFile"
-                    # set fp [open $debugFile w]
-                    # puts $fp [$::APPL_Env(root_ProjectDOM)  asXML]
-                    # close $fp
-
-
-                        #
-                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
-                        #
-                    foreach key [dict keys $postUpdate] {
-                              # puts " -> $key"
-                            set valueDict   [dict get $postUpdate $key]
-                            foreach valueKey [dict keys $valueDict] {
-                                puts "\n      -------------------------------"
-                                puts "          postUpdate:   $key - $valueKey [dict get $valueDict $valueKey]"
-                                frame_geometry::set_projectValue $key/$valueKey [dict get $valueDict $valueKey] update
-                            }
-                                # project::pdict $valueDict
-                    }
-
-
-                        # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-                    if {$windowTitle == {}} {
-                        set_window_title $fileName
-                    } else {
-                        set_window_title $windowTitle
-                    }
-                        #
-                    lib_gui::notebook_updateCanvas
-            }
-                #
-            puts "         ... openProject_xml - PROJECT_Name:      $::APPL_Config(PROJECT_Name)\n"
-                #
-            lib_gui::open_configPanel  refresh
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  open Template File Type: xml
-        #
-    proc openTemplate_xml {type} {
-            puts "\n"
-            puts "  ====== o p e n   T E M P L A T E ================"
-            puts "         ... type:    $type"
-            puts ""
-            set template_file    [ getTemplateFile $type ]
-            puts "         ... template_file:   $template_file"
-            if { [file readable $template_file ] } {
-                    set ::APPL_Env(root_ProjectDOM)    [lib_file::openFile_xml $template_file show]
-                        #
-                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
-                        # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-                    set_window_title "Template $type"
-                        #
-                    lib_gui::notebook_updateCanvas
-            } else {
-                tk_messageBox -message "... could not load template: $window_title"
-            }
-
-                #
-            lib_gui::open_configPanel  refresh
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  open a File, containing just a subset of a Project-xml
-        #
-    proc opemProject_Subset_xml {{fileName {}}} {
-            set types {
-                {{Project Files 3.x }       {.xml}  }
-            }
-            if {$fileName == {}} {
-                set fileName    [tk_getOpenFile -title "Import" -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
-            } else {
-                return
-            }
-            set root [lib_file::openFile_xml $fileName]
-            project::import_ProjectSubset $root
     }
 
 
