@@ -1232,7 +1232,7 @@
                                     $parentNode removeChild $node
                                     $node delete                                    
                             } 
-                            set templateRoot    [ lib_file::openFile_xml $::APPL_Env(TemplateInit)]
+                            set templateRoot    [ lib_file::get_XMLContent $::APPL_Env(TemplateInit)]
                             set resultNode      [ $templateRoot selectNode /root/Result]
                                 # puts "[$resultNode asXML]"
                             foreach child       [ $resultNode childNodes ] {

@@ -58,7 +58,7 @@
             }
 
                 # -- read from domConfig
-            set domConfig  [ lib_file::openFile_xml     [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad_default) ] ]
+            set domConfig  [ lib_file::get_XMLContent     [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad_default) ] ]
                     # 20111229 ...
 
                 # --- set xml-File Attributes
@@ -79,7 +79,7 @@
                 puts "                   ... done"
 
                 # -- read new File
-            set ::APPL_Env(root_ProjectDOM) [lib_file::openFile_xml $fileName show]
+            set ::APPL_Env(root_ProjectDOM) [lib_file::get_XMLContent $fileName show]
                 #
             frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -114,7 +114,7 @@
                 # puts "   openProject_xml - fileName:   $fileName"
             if { [file readable $fileName ] } {
                     
-                    set ::APPL_Env(root_ProjectDOM)    [lib_file::openFile_xml $fileName show]
+                    set ::APPL_Env(root_ProjectDOM)    [lib_file::get_XMLContent $fileName show]
                     set rattleCAD_Version [[$::APPL_Env(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
                     set ::APPL_Config(PROJECT_File) $fileName
                     
@@ -174,6 +174,37 @@
 
 
     #-------------------------------------------------------------------------
+        #  open Template File Type: xml
+        #
+    proc openTemplate_xml {type} {
+            puts "\n"
+            puts "  ====== o p e n   T E M P L A T E ================"
+            puts "         ... type:    $type"
+            set template_file    [ getTemplateFile $type ]
+            puts "         ... template_file:   $template_file"
+            if { [file readable $template_file ] } {
+                    set ::APPL_Env(root_ProjectDOM)     [lib_file::get_XMLContent $template_file show]
+                        #
+                    set ::APPL_Config(PROJECT_Name)     "Template $type"
+                    set ::APPL_Config(PROJECT_File)     "Template $type"                    
+                        # puts " <D> -> \$::APPL_Config(PROJECT_Name)  $::APPL_Config(PROJECT_Name)"
+                        # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
+                        #
+                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                        #
+                    set_window_title $::APPL_Config(PROJECT_Name)
+                        #
+                    lib_gui::notebook_updateCanvas
+            } else {
+                tk_messageBox -message "... could not load template: $window_title"
+            }
+
+                #
+            lib_gui::open_configPanel  refresh
+    }
+
+
+    #-------------------------------------------------------------------------
         #  save File Type: xml
         #
     proc saveProject_xml { {mode {save}} {type {Road}} } {
@@ -218,13 +249,14 @@
                                     }
                                     if {$requestTemplate == "yes"} {
                                         set retValue [tk_messageBox -title   "Save Project" -icon question \
-                                                                    -message "Save Project as Template?" \
+                                                                    -message "Save Project as Template: $initialFile?" \
                                                                     -default cancel \
                                                                     -type    yesnocancel]
                                         puts "\n  $retValue\n"
 
                                         switch $retValue {
-                                            yes     {}
+                                            yes     {   set ::APPL_Config(PROJECT_File) [file join $::APPL_Env(USER_Dir) $initialFile]                                             
+                                                    }
                                             no      {   set mode        saveAs
                                                         set initialFile {new_Project.xml}
                                                     }
@@ -248,7 +280,7 @@
 
                 puts "       ---------------------------"
                 puts "       ... saveProject_xml - mode:            \"$mode\""
-                puts "       ... saveProject_xml - ... initialFile:     \"$initialFile\""
+                puts "       ... saveProject_xml - ... initialFile: \"$initialFile\""
 
 
                 # -- read from domConfig
@@ -345,33 +377,6 @@
 
 
     #-------------------------------------------------------------------------
-        #  open Template File Type: xml
-        #
-    proc openTemplate_xml {type} {
-            puts "\n"
-            puts "  ====== o p e n   T E M P L A T E ================"
-            puts "         ... type:    $type"
-            puts ""
-            set template_file    [ getTemplateFile $type ]
-            puts "         ... template_file:   $template_file"
-            if { [file readable $template_file ] } {
-                    set ::APPL_Env(root_ProjectDOM)    [lib_file::openFile_xml $template_file show]
-                        #
-                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
-                        # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-                    set_window_title "Template $type"
-                        #
-                    lib_gui::notebook_updateCanvas
-            } else {
-                tk_messageBox -message "... could not load template: $window_title"
-            }
-
-                #
-            lib_gui::open_configPanel  refresh
-    }
-
-
-    #-------------------------------------------------------------------------
         #  open a File, containing just a subset of a Project-xml
         #
     proc opemProject_Subset_xml {{fileName {}}} {
@@ -383,83 +388,58 @@
             } else {
                 return
             }
-            set root [lib_file::openFile_xml $fileName]
+            set root [lib_file::get_XMLContent $fileName]
             project::import_ProjectSubset $root
     }
 
 
     #-------------------------------------------------------------------------
-        #  open File Selection
+        #  ... renamed from openFile_xml to get_XMLContent  2012.07.29
         #
-    proc openFile_Selection {{mode default}} {
+    proc get_XMLContent {{file {}} {show {}}} {
 
-              variable CURRENT_Config
-              variable USER_Dir
-              variable current_filename
-              variable filetypes
-
-            check_user_dir rattleCAD
-
-            while {true} {
-                set fileName [tk_getOpenFile  -initialdir $USER_Dir  -filetypes  $filetypes ]
-                if {[string length $fileName] == 0} {
-                    break
-                } elseif {[file exists $fileName] && [file readable $fileName]} {
-
-                    control::openFile $fileName
-                    control::update_filelist $fileName
-
-                    set current_filename      $fileName
-
-                        puts  "File: $current_filename"
-                    return
-                } else {
-                    tk_messageBox -icon error -title "Read ERROR" \
-                      -message "File «$fileName» is not readable"
-                    puts  "File «$fileName» is not readable"
+            set types {
+                    {{xml }       {.xml}  }
                 }
+            if {$file == {} } {
+                set file [tk_getOpenFile -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
+            }
+                # -- $fileName is not empty
+            if {$file == {} } return
+
+            set fp [open $file]
+
+            fconfigure    $fp -encoding utf-8
+            set xml [read $fp]
+            close         $fp
+
+            set doc  [dom parse  $xml]
+            set root [$doc documentElement]
+
+                #
+                # -- fill tree
+                #
+            if {$show != {}} {
+                lib_cfg_report::fillTree "$root" root
             }
 
+                #
+                # -- return root  document
+                #
+            return $root
     }
 
 
     #-------------------------------------------------------------------------
-        #  open File by name
-        #
-    proc openFile_FileList {} {
-            variable  FILE_List_Widget
-            variable  USER_Dir
-            variable  current_filename
+       #  open web URL
+       #
+    proc open_URL {url} {
+            puts ""
+            puts "   -------------------------------"
+            puts "    lib_file::open_URL"
+            puts "            url:        $url"
 
-            set fileName [ $FILE_List_Widget get ]
-            set fileName [ file join $USER_Dir $fileName]
-
-            control::openFile         $fileName
-            control::update_filelist  $fileName
-
-            set current_filename      $fileName
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  open File
-        #
-    proc openFile {fileName} {
-
-            variable CURRENT_Config
-
-            array unset CURRENT_Config
-
-            control::read_configfile $fileName
-
-            control::check_init_values
-            control::update_parameter  {force}
-            control::switch_canvas     {config}
-
-            set current_filename $fileName
-            ::set_window_title "File: $current_filename ($CURRENT_Config(_rattleCAD_Version))"
-            control::toggle_lock_attribute  {new_file}
-            config::update_cfg_values
+            eval exec [auto_execok start] \"\" [list $url] &
     }
 
 
@@ -483,14 +463,6 @@
             }
 
             eval exec [auto_execok start] \"\" [list $fileName] &
-    }
-    proc open_URL {url} {
-            puts ""
-            puts "   -------------------------------"
-            puts "    lib_file::open_URL"
-            puts "            url:        $url"
-
-            eval exec [auto_execok start] \"\" [list $url] &
     }
 
 
@@ -668,46 +640,9 @@
     #-------------------------------------------------------------------------
         #  ...
         #
-    proc openFile_xml {{file {}} {show {}}} {
-
-            set types {
-                    {{xml }       {.xml}  }
-                }
-            if {$file == {} } {
-                set file [tk_getOpenFile -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
-            }
-                # -- $fileName is not empty
-            if {$file == {} } return
-
-            set fp [open $file]
-
-            fconfigure    $fp -encoding utf-8
-            set xml [read $fp]
-            close         $fp
-
-            set doc  [dom parse  $xml]
-            set root [$doc documentElement]
-
-                #
-                # -- fill tree
-                #
-            if {$show != {}} {
-                lib_cfg_report::fillTree "$root" root
-            }
-
-                #
-                # -- return root  document
-                #
-            return $root
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  ...
-        #
     proc getTemplateFile {type} {
 
-            set TemplateRoad     [file join $::APPL_Env(USER_Dir) [format "%s%s.xml" $::APPL_Env(USER_InitString) Road] ]
+            set TemplateRoad    [file join $::APPL_Env(USER_Dir) [format "%s%s.xml" $::APPL_Env(USER_InitString) Road] ]
             set TemplateMTB     [file join $::APPL_Env(USER_Dir) [format "%s%s.xml" $::APPL_Env(USER_InitString) MTB ] ]
 
             switch -exact $type {
@@ -809,5 +744,78 @@
     }
 
 
+    #-------------------------------------------------------------------------
+        #  open File Selection
+        #     ... unused ... to be removed
+    proc openFile_Selection__to_be_removed {{mode default}} {
+
+              variable CURRENT_Config
+              variable USER_Dir
+              variable current_filename
+              variable filetypes
+
+            check_user_dir rattleCAD
+
+            while {true} {
+                set fileName [tk_getOpenFile  -initialdir $USER_Dir  -filetypes  $filetypes ]
+                if {[string length $fileName] == 0} {
+                    break
+                } elseif {[file exists $fileName] && [file readable $fileName]} {
+
+                    control::openFile $fileName
+                    control::update_filelist $fileName
+
+                    set current_filename      $fileName
+
+                        puts  "File: $current_filename"
+                    return
+                } else {
+                    tk_messageBox -icon error -title "Read ERROR" \
+                      -message "File «$fileName» is not readable"
+                    puts  "File «$fileName» is not readable"
+                }
+            }
+
+    }
+    
+    
+    #-------------------------------------------------------------------------
+        #  open File by name
+        #
+    proc openFile_FileList__to_be_removed {} {
+            variable  FILE_List_Widget
+            variable  USER_Dir
+            variable  current_filename
+
+            set fileName [ $FILE_List_Widget get ]
+            set fileName [ file join $USER_Dir $fileName]
+
+            control::openFile         $fileName
+            control::update_filelist  $fileName
+
+            set current_filename      $fileName
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  open File
+        #
+    proc openFile__to_be_removed {fileName} {
+
+            variable CURRENT_Config
+
+            array unset CURRENT_Config
+
+            control::read_configfile $fileName
+
+            control::check_init_values
+            control::update_parameter  {force}
+            control::switch_canvas     {config}
+
+            set current_filename $fileName
+            ::set_window_title "File: $current_filename ($CURRENT_Config(_rattleCAD_Version))"
+            control::toggle_lock_attribute  {new_file}
+            config::update_cfg_values
+    }
 }
 

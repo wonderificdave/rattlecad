@@ -104,25 +104,25 @@
     proc create_ButtonBar {tb_frame } {    
             variable iconArray
         
-            Button    $tb_frame.open      -image  $iconArray(open)         -helptext "open ..."                -command { lib_file::openProject_xml }  
-            Button    $tb_frame.save      -image  $iconArray(save)         -helptext "save ..."                -command { lib_file::saveProject_xml } 
-            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)     -helptext "print Postscript"        -command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }          
-            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"                -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }          
-            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"                -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }          
+            Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { lib_file::openProject_xml }  
+            Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { lib_file::saveProject_xml } 
+            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }          
+            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }          
+            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }          
                                                          
-            Button    $tb_frame.set_rd    -image  $iconArray(reset_r)         -helptext "a roadbike Template"    -command { lib_gui::load_Template  Road }  
-            Button    $tb_frame.set_mb    -image  $iconArray(reset_o)         -helptext "a offroad Template"        -command { lib_gui::load_Template  MTB  }  
+            Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { lib_gui::load_Template  Road }  
+            Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { lib_gui::load_Template  MTB  }  
               
-            Button    $tb_frame.clear        -image  $iconArray(clear)         -helptext "clear Canvas..."        -command { lib_gui::notebook_cleanCanvas} 
-            Button    $tb_frame.render    -image  $iconArray(update)         -helptext "update Canvas..."        -command { lib_gui::notebook_updateCanvas force}  
+            Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { lib_gui::notebook_cleanCanvas} 
+            Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { lib_gui::notebook_updateCanvas force}  
               
 
-            Button    $tb_frame.scale_p    -image  $iconArray(scale_p)         -helptext "scale plus"                -command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
-            Button    $tb_frame.scale_m    -image  $iconArray(scale_m)         -helptext "scale minus"            -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
-            Button    $tb_frame.resize    -image  $iconArray(resize)         -helptext "resize"                    -command { lib_gui::notebook_refitCanvas }  
+            Button    $tb_frame.scale_p  -image  $iconArray(scale_p)        -helptext "scale plus"              -command { lib_gui::notebook_scaleCanvas  [expr 3.0/2] }  
+            Button    $tb_frame.scale_m  -image  $iconArray(scale_m)        -helptext "scale minus"             -command { lib_gui::notebook_scaleCanvas  [expr 2.0/3] }  
+            Button    $tb_frame.resize   -image  $iconArray(resize)         -helptext "resize"                  -command { lib_gui::notebook_refitCanvas }  
             
-            Button    $tb_frame.cfg        -image  $iconArray(cfg_panel)    -helptext "open config Panel"      -command { lib_gui::open_configPanel } 
-            Button    $tb_frame.exit        -image  $iconArray(exit)         -command { exit }
+            Button    $tb_frame.cfg      -image  $iconArray(cfg_panel)      -helptext "open config Panel"       -command { lib_gui::open_configPanel } 
+            Button    $tb_frame.exit     -image  $iconArray(exit)           -command { exit }
               
             label   $tb_frame.sp0      -text   " "
             label   $tb_frame.sp1      -text   " "
@@ -169,14 +169,14 @@
                 pack $noteBook_top -expand yes  -fill both  
             
                 # ---     create and register any canvasCAD - canvas in lib_gui::notebookCanvas
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "  A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Frame Details  "    A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "    A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "       A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "           A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom07  "  Rear Mockup  "    A2  1.0  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "        A4  1.0  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "    A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Frame Details  "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "     A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "           A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "             A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom07  "  Rear Mockup  "        A2  1.0  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "         A4  1.0  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "        A4  0.2  25  -bd 2  -bg white  -relief sunken
             
             $noteBook_top add [frame $noteBook_top.components]     -text "... Components" 
             $noteBook_top add [frame $noteBook_top.report]         -text "... info" 
@@ -903,22 +903,6 @@
             variable noteBook_top
 
             lib_file::openTemplate_xml $type
-            return
-            
-            set userTemplateFile    [format "%s%s.xml" $::APPL_Env(USER_InitString) $type]
-            set userTemplateFile    [file join $::APPL_Env(USER_Dir)    $userTemplateFile]
-            if {[file exists $userTemplateFile ]} {
-                lib_file::openProject_xml "Template $type" $userTemplateFile
-            }
-            return
-            
-            switch $type {
-                    Road {    set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad_default) ] }
-                    MTB  {    set template_File [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB_default) ] }
-                    
-                    default { return }
-            }        
-            lib_file::openTemplate_xml "Template $type" $template_File
             return
     }
 

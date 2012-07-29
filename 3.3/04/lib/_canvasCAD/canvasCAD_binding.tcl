@@ -93,10 +93,10 @@
 			set CANVAS_Point(x0) [$w canvasx $x]
 			set CANVAS_Point(y0) [$w canvasy $y]
 			switch $type {
-				move { $w create line      $x $y $x $y -fill red       -tag {__PointerBBox__} 
+				move { $w create line      $x $y $x $y -fill red        -tag {__PointerBBox__} 
 					   $w configure -cursor hand2
 					 }
-				zoom { $w create rectangle $x $y $x $y -outline black  -tag {__PointerBBox__} 
+				zoom { $w create rectangle $x $y $x $y -outline red     -tag {__PointerBBox__} 
 					   $w configure -cursor sizing
 					 }
 			}

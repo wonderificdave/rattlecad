@@ -63,7 +63,7 @@ exec wish "$0" "$@"
     lappend auto_path           [file join $BASE_Dir lib]
     
     package require   rattleCAD  3.3 
-    package require   canvasCAD  0.23
+    package require   canvasCAD  0.25
     package require   extSummary 0.1
 
 
@@ -166,7 +166,7 @@ exec wish "$0" "$@"
 
 
         # -- init Parameters  ----
-    set APPL_Env(root_InitDOM)  [ lib_file::openFile_xml     [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml ] ]
+    set APPL_Env(root_InitDOM)  [ lib_file::get_XMLContent     [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml ] ]
         puts "     ... root_InitDOM      [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml]"
 
 
@@ -178,7 +178,7 @@ exec wish "$0" "$@"
         puts "     ... TemplateInit      $APPL_Env(TemplateInit)"
         
     
-    set APPL_Env(root_ProjectDOM)    [ lib_file::openFile_xml     $APPL_Env(TemplateInit) ]
+    set APPL_Env(root_ProjectDOM)    [ lib_file::get_XMLContent     $APPL_Env(TemplateInit) ]
 
     
         # -- status messages --------
