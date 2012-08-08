@@ -146,6 +146,28 @@
 
 
         ;# =======================================================================
+          ;# -- version_changelog ---------
+          ;#
+        set version_changelog  [ $INFO_Notebook insert end changelog \
+                                           -text      "ChangeLog" ]
+             ;# -- text -----------------
+        pack [set sw_chng      [ ScrolledWindow $version_changelog.sw] ] -fill both  -expand 1 
+
+        set chng_text          [ text $sw_chng.text \
+                                    -width       40 \
+                                    -height      10 \
+                                    -relief      sunken \
+                                    -wrap        none \
+                                    -background  white \
+                                    -font        $widget_font
+                               ]
+      
+             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
+        $sw_chng setwidget $sw_chng.text
+
+
+
+        ;# =======================================================================
           ;# -- version_exclusion ---------
           ;#
         set version_exclusion    [ $INFO_Notebook insert end exclusion \
@@ -255,6 +277,26 @@
         
 
         ;# =======================================================================
+          ;# -- insert into version_changelog ---------
+          ;#
+        $chng_text  insert end "\n\n"
+        $chng_text  insert end "  ====================================================\n"
+        $chng_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $chng_text  insert end "  ====================================================\n"
+        $chng_text  insert end ""
+        
+        set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] readme.txt] r]
+        while {![eof $fd]} {
+             set line [gets $fd]
+             $chng_text  insert end "    $line\n"
+        }
+        close $fd
+
+        $chng_text  insert end "\n\n"
+
+        
+
+        ;# =======================================================================
           ;# -- insert into exclusion ---------
           ;#
         $excl_text  insert end "\n\n"
@@ -278,6 +320,7 @@
         $version_help           configure  -borderwidth 2 
         $version_env            configure  -borderwidth 2 
         $version_license        configure  -borderwidth 2 
+        $version_changelog      configure  -borderwidth 2 
         $version_exclusion      configure  -borderwidth 2 
 
         $INFO_Notebook          compute_size

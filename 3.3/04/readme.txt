@@ -1,10 +1,16 @@
 
+3.3.04.12   - 2012.08.06 
+-------------------------------------------------------------------------------
+    feature:
+        ... change log in Info Panel 
+
+
 3.3.04.11   - 2012.07.29 
 -------------------------------------------------------------------------------
     bugfix:
         ... file save ... after load template
-          
-          
+
+
 3.3.04.10   - 2012.07.22 
 -------------------------------------------------------------------------------
     feature:
@@ -13,49 +19,49 @@
           ... suspension fork 20"
     bugfix:
         ... file save
-          
-          
+
+
 3.3.04.09   - 2012.07.22 
 -------------------------------------------------------------------------------
      feature:
         ... resize stage on update if window size has changed   bugfix:
         ... open Config Panel
           ... config Panel crashes in 3.3.04.08
-                
-               
-33.3.04.08   - 2012.07.22 
+
+
+3.3.04.08   - 2012.07.22 
 -------------------------------------------------------------------------------
     bugfix:
         ... File -> Save
           ... a file located in an other directory than USER_Dir was
                 nevertheless  saved in USER_Dir
-                
-               
+
+
 3.3.04.06   - 2012.07.18
 -------------------------------------------------------------------------------
     bugfix:
         ... File -> Rendering
         ... File -> Import
-       
+
 
 3.3.04.05   - 2012.07.16
 -------------------------------------------------------------------------------
     bugfix:
         ... resize stage on update if window size has changed
-       
+
 
 3.3.04.04   - 2012.07.15
 -------------------------------------------------------------------------------
     feature:
         ... resize stage on update if window size has changed
-       
+
 
 3.3.04.03   - 2012.07.14
 -------------------------------------------------------------------------------
     bugfix:
         ... etc/template_mtb_3.3.xml 
            ... add: /root/Component/Logo/File
-       
+
 
 3.3.04.02   - 2012.07.13
 -------------------------------------------------------------------------------
@@ -65,21 +71,21 @@
     bugfix:
         ... cv_custom::update: centerlines for RearDeraileur 
            ... change: RearDerailleur_ctr to DerailleurRear_ctr
-       
+
 
 3.3.04.01   - 2012.07.12
 -------------------------------------------------------------------------------
     feature:
         ... rattleCAD Logo on DownTube
         ... extend FileFormat: ... /root/Component/Logo/File
-        
+
 
 3.3.04.00   - 2012.07.12
 -------------------------------------------------------------------------------
     feature:
         ... SeatTube offset
         ... extend FileFormat: ... /root/Custom/SeatTube/OffsetBB
-    
+
 
 3.3.03.08   - 2012.07.22 
 -------------------------------------------------------------------------------
@@ -87,8 +93,8 @@
         ... File -> Save
           ... a file located in an other directory than USER_Dir was
                 nevertheless  saved in USER_Dir
-                
-               
+
+
 3.3.03.07   - 2012.07.02
 -------------------------------------------------------------------------------
     feature:
@@ -97,7 +103,7 @@
           ... allows defining templates of Tubesets
           ... allows importing personal paramaters for saddle & handlebar
           ... 
-          
+
 
 3.3.03.06   - 2012.07.01 
 -------------------------------------------------------------------------------
