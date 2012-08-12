@@ -356,9 +356,10 @@
                 cline_framejig {
                                 set help_fk             [ vectormath::intersectPoint                $Steerer(Fork)        $Steerer(Stem)   $FrontWheel(Position) $RearWheel(Position) ]
 
-                            $cv_Name create circle        $HeadTube(Fork)        -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
-                            $cv_Name create circle        $FrameJig(HeadTube)    -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
-                            $cv_Name create circle        $FrameJig(SeatTube)    -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $HeadTube(Fork)       -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $FrameJig(HeadTube)   -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $FrameJig(SeatTube)   -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $help_fk              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
                             $cv_Name create centerline  [ project::flatten_nestedList $FrameJig(HeadTube) $RearWheel(Position)] \
                                                                                     -fill darkred   -width 0.25     -tags __CenterLine__
                             $cv_Name create centerline  [ project::flatten_nestedList $RearWheel(Position) $help_fk] \
