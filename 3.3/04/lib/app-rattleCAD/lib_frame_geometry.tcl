@@ -388,19 +388,19 @@
 
                                 # puts "   ..     \$HeadTube(Angle)    $HeadTube(Angle)"
 
-                            set vect_01     [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]
-                            set vect_03  [ expr $vect_01 / sin($HeadTube(Angle) * $vectormath::CONST_PI / 180) ]
+                            set vect_01 [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]
+                            set vect_03 [ expr $vect_01 / sin($HeadTube(Angle) * $vectormath::CONST_PI / 180) ]
 
-                            set Steerer(Handlebar)      [ list    [expr [lindex $HandleBar(Position) 0] - $vect_03]  [lindex $HandleBar(Position) 1] ]
+                            set Steerer(Handlebar)      [ list  [expr [lindex $HandleBar(Position) 0] - $vect_03]  [lindex $HandleBar(Position) 1] ]
 
-                            set help_04  [ vectormath::rotateLine       $Steerer(Handlebar)     100    [expr 180 - $HeadTube(Angle)]    ]
-                            set help_03  [ vectormath::rotateLine       $HandleBar(Position)    100    [expr  90 - $HeadTube(Angle) + $Stem(Angle)]    ]
+                            set help_04 [ vectormath::rotateLine       $Steerer(Handlebar)     100    [expr 180 - $HeadTube(Angle)]    ]
+                            set help_03 [ vectormath::rotateLine       $HandleBar(Position)    100    [expr  90 - $HeadTube(Angle) + $Stem(Angle)]    ]
 
                             set Steerer(Stem)           [ vectormath::intersectPoint    $HandleBar(Position)  $help_03 $Steerer(Handlebar) $help_04 ]
 
-                            set vect_04  [ vectormath::parallel         $Steerer(Stem)      $help_04    $Fork(Rake) ]
-                            set help_05  [ lindex $vect_04 0 ]
-                            set help_06  [ lindex $vect_04 1 ]
+                            set vect_04 [ vectormath::parallel         $Steerer(Stem)      $help_04    $Fork(Rake) ]
+                            set help_05 [ lindex $vect_04 0 ]
+                            set help_06 [ lindex $vect_04 1 ]
 
                             set FrontWheel(Position)    [ vectormath::intersectPoint    $help_05  $help_06 [list 0 $FrontWheel(Distance_Y)] [list 200 $FrontWheel(Distance_Y)] ]
                             set FrontWheel(Distance_X)  [ lindex $FrontWheel(Position) 0]

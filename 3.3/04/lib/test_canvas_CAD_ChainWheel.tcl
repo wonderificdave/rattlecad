@@ -67,24 +67,20 @@
 		variable myCanvas
 		
 			# defaults
-		variable start_angle         20
-		variable start_length        80
+		variable start_angle        20
+		variable start_length       80
 		variable teethCount          53
-		variable crankLength        170
-		variable crankArmCount       4
-        variable visualization      chainwheel
-		variable boltCircleDiameter 130
-		variable end_length          65
-		variable dim_size             5
-		variable dim_dist            30
-		variable dim_offset           0
+		variable end_length         65
+		variable dim_size            5
+		variable dim_dist           30
+		variable dim_offset          0
 		variable dim_type_select    aligned
 		variable dim_font_select    vector
-		variable std_fnt_scl          1
+		variable std_fnt_scl         1
 		variable font_colour		black
 		variable demo_type			dimension
-		variable drw_scale		      0.8
-		variable cv_scale		      1
+		variable drw_scale		     0.8
+		variable cv_scale		     1
 				
 		proc createStage {cv_path cv_width cv_height st_width st_height unit st_scale args} {
 			variable myCanvas
@@ -182,115 +178,14 @@
 				$myCanvas scaleToCenter $cv_scale
 		}
 		
-		
-        proc draw_chainWheel {{bolts {bolts}}} {
-				variable  myCanvas
-				variable  teethCount
-               
-				set toothWith 			12.7
-				set toothWithAngle 		[expr 2*$vectormath::CONST_PI/$teethCount]
-				set chainWheelRadius	[expr 0.5*$toothWith/sin([expr 0.5*$toothWithAngle])]
-                
-                    # -----------------------------    
-                    #   toothProfile
-                    set pt_00 {2 5}									    ; foreach {x0 y0} $pt_00 break
-                    set pt_01 [vectormath::rotateLine {0 0} 3.8 100]	; foreach {x1 y1} $pt_01 break
-                    set pt_02 [vectormath::rotateLine {0 0} 3.8 125]	; foreach {x2 y2} $pt_02 break
-                    set pt_03 [vectormath::rotateLine {0 0} 3.8 150]	; foreach {x3 y3} $pt_03 break
-                    set pt_04 [vectormath::rotateLine {0 0} 3.8 170]	; foreach {x4 y4} $pt_04 break
-                set toothProfile [list $x0 -$y0    $x1 -$y1    $x2 -$y2    $x3 -$y3    $x4 -$y4    $x4 $y4    $x3 $y3    $x2 $y2    $x1 $y1    $x0 $y0]
-                
-                
-                    # -----------------------------    
-                    #    chainwheel profile outside
-                set index 0 ;# start her for symetriy purpose
-				set outsideProfile {}
-				while { $index < $teethCount } {
-					set currentAngle [expr $index * [vectormath::grad $toothWithAngle]]
-					set pos [vectormath::rotateLine {0 0} $chainWheelRadius $currentAngle ]
-					if {$bolts == {bolts}} {
-                        $myCanvas addtag {__ChainWheel__} withtag  [$myCanvas  create   circle  $pos -radius 3.8]
-                    }
-					
-					set tmpList_01 {}
-					foreach {x y} $toothProfile {
-						set pt_xy [list $x $y]
-						set pt_xy [vectormath::rotatePoint {0 0} $pt_xy $currentAngle]
-						set pt_xy [vectormath::addVector $pos $pt_xy]
-						set tmpList_01 [lappend tmpList_01 [canvasCAD::flatten_nestedList $pt_xy] ]
-					}
-					set outsideProfile [lappend teethProfile [canvasCAD::flatten_nestedList $tmpList_01]]
-					incr index 
-				}
-                set chainWheelProfile [canvasCAD::flatten_nestedList $outsideProfile]
-                set chainWheelPolygon [$myCanvas  create polygon $chainWheelProfile -fill orange -outline black]
-                $myCanvas addtag {__ChainWheel__} withtag  $chainWheelPolygon			
-                
- 				$::f_report.text delete 1.0  end 
-				$::f_report.text insert end "<polygon class=\"fil0 str0\" points=\""
-				foreach {x y} $outsideProfile {
-					$::f_report.text insert end "$x,$y  "
-				}
-				$::f_report.text insert end "\"/>"               
-                
-                
-        }
-        proc draw_crankArm {} {
-				variable  myCanvas
-				variable  crankLength 
-
-                    # -----------------------------    
-                    #    crank arm
-                set index 0
-				set crankArmProfile {{10 -19} {0 -19}}
-                    # puts "\n"
-                    # puts "  ----- 001 ---"
-                    # puts "  $crankArmProfile"
-                set point [lindex $crankArmProfile 1]
-                set angle 270
-                    # puts "  ----- 002 ---"  
-                while {$angle > 90} {
-                    incr angle -5
-                    set point [vectormath::rotatePoint {0 0} $point -5]
-                        # puts "         -> \$angle $angle  -- \$point $point"
-                    lappend crankArmProfile $point
-                }
-                    # puts "  ----- 003 ---"
-                lappend crankArmProfile {10 19}
-                    # puts "  $crankArmProfile"
-                lappend crankArmProfile [list [expr $crankLength -30] 14] [list $crankLength 14] 
-                    # puts "  ----- 004 ---"
-                set point [lindex $crankArmProfile end]
-                set angle 90
-                while {$angle > -90} {
-                    incr angle -5
-                    set point [vectormath::rotatePoint [list $crankLength 0] $point -5]
-                        # puts "         -> \$angle $angle  -- \$point $point"
-                    lappend crankArmProfile $point
-                }
-                lappend crankArmProfile [list [expr $crankLength -30] -14]
-				set crankArmProfile [canvasCAD::flatten_nestedList $crankArmProfile]
-				set crankSetPolygon [$myCanvas  create polygon $crankArmProfile -fill white -outline black]
-				$myCanvas addtag {__ChainWheel__} withtag  $crankSetPolygon	
-                
-                set crank_pedalMount    [$myCanvas  create circle   [list $crankLength  0] -radius 6 -fill white -outline black]
-                set crank_axle          [$myCanvas  create circle   [list 0  0] -radius 10 -fill white -outline black]
-                $myCanvas addtag {__ChainWheel__} withtag  $crank_pedalMount	
-                $myCanvas addtag {__ChainWheel__} withtag  $crank_axle	
-                
-        }
-        
-        proc update_board {{value {0}}} {
+		proc update_board {{value {0}}} {
 			
 				variable  myCanvas
 				
 				variable  start_angle 
 				variable  start_length
 				variable  teethCount
-				variable  crankLength 
-                variable  crankArmCount 
-                variable  boltCircleDiameter 
-                variable  end_length
+				variable  end_length
 				variable  dim_size
 				variable  dim_dist
 				variable  dim_offset
@@ -300,7 +195,6 @@
 				variable  font_colour
 				variable  demo_type
 				variable  drw_scale 
-                variable  visualization
 				
 				puts "\n  -> update_board:   $myCanvas"
 				
@@ -342,204 +236,41 @@
 
 				$myCanvas addtag {__ChainWheel__} withtag  [$myCanvas  create   line [list  0 0  [lindex $p_end 0]  [lindex $p_end 1] ] -tags dimension  -fill blue ]
 				
-				
-                
-                switch $visualization {
-                    {chainwheel} {   
-                                draw_chainWheel {bolts}
-                                sketchboard::moveto_StageCenter {__ChainWheel__}
-                                return
-                            }
-                    {crankset} {   
-                                draw_chainWheel {}
-                                draw_crankArm
-                                sketchboard::moveto_StageCenter {__ChainWheel__}
-                                return
-                            }
-                    {default} {}
-                }
-                
-                    # ------ create circle as chain-representation
+				# ------ create circle as chain-representation
 				set toothWith 			12.7
 				set toothWithAngle 		[expr 2*$vectormath::CONST_PI/$teethCount]
 				set chainWheelRadius	[expr 0.5*$toothWith/sin([expr 0.5*$toothWithAngle])]
 						# =0,5*H6/SIN(D13)
-                    
-                    # -----------------------------    
-                    #   toothProfile
-                    set pt_00 {2 5}									    ; foreach {x0 y0} $pt_00 break
-                    set pt_01 [vectormath::rotateLine {0 0} 3.8 100]	; foreach {x1 y1} $pt_01 break
-                    set pt_02 [vectormath::rotateLine {0 0} 3.8 125]	; foreach {x2 y2} $pt_02 break
-                    set pt_03 [vectormath::rotateLine {0 0} 3.8 150]	; foreach {x3 y3} $pt_03 break
-                    set pt_04 [vectormath::rotateLine {0 0} 3.8 170]	; foreach {x4 y4} $pt_04 break
-                set toothProfile [list $x0 -$y0    $x1 -$y1    $x2 -$y2    $x3 -$y3    $x4 -$y4    $x4 $y4    $x3 $y3    $x2 $y2    $x1 $y1    $x0 $y0]
-
-                    # -----------------------------    
-                    #    connection Point: crankArm / chainWheel
-                set connectionPoint [list 8 [expr 0.5*$boltCircleDiameter - 8]]   
-
-                    # -----------------------------    
-                    #    chainwheel profile outside
-                set index 1 ;# start her for symetriy purpose
-				set outsideProfile {}
+				set index 0
+				set toothProfileList {}
 				while { $index < $teethCount } {
 					set currentAngle [expr $index * [vectormath::grad $toothWithAngle]]
 					set pos [vectormath::rotateLine {0 0} $chainWheelRadius $currentAngle ]
 					$myCanvas addtag {__ChainWheel__} withtag  [$myCanvas  create   circle  $pos -radius 3.8]  
 					
+					set pt_00 {2 5}									; foreach {x0 y0} $pt_00 break
+					set pt_01 [vectormath::rotateLine {0 0} 3.8 100]	; foreach {x1 y1} $pt_01 break
+					set pt_02 [vectormath::rotateLine {0 0} 3.8 125]	; foreach {x2 y2} $pt_02 break
+					set pt_03 [vectormath::rotateLine {0 0} 3.8 150]	; foreach {x3 y3} $pt_03 break
+					set pt_04 [vectormath::rotateLine {0 0} 3.8 170]	; foreach {x4 y4} $pt_04 break
+					set tmpList_00 [list $x0 -$y0    $x1 -$y1    $x2 -$y2    $x3 -$y3    $x4 -$y4    $x4 $y4    $x3 $y3    $x2 $y2    $x1 $y1    $x0 $y0]
 					set tmpList_01 {}
-					foreach {x y} $toothProfile {
+					foreach {x y} $tmpList_00 {
 						set pt_xy [list $x $y]
 						set pt_xy [vectormath::rotatePoint {0 0} $pt_xy $currentAngle]
 						set pt_xy [vectormath::addVector $pos $pt_xy]
 						set tmpList_01 [lappend tmpList_01 [canvasCAD::flatten_nestedList $pt_xy] ]
 					}
-					set outsideProfile [lappend teethProfile [canvasCAD::flatten_nestedList $tmpList_01]]
-					incr index 
+					set toothProfileList [lappend toothProfileList [canvasCAD::flatten_nestedList $tmpList_01]]
+					set index [expr $index + 1]
 				}
-                                        
-                    # -----------------------------    
-                    #    chainwheel profile inside
-                set insideRadius    [expr $chainWheelRadius -12]
-                set armAngle        [expr (360/$crankArmCount)]
-                set endAngle        [expr -0.5 * $armAngle]
-                    #   compute inside segement
-                set insideSegment   {}
-                set point           $connectionPoint                                    ;   lappend insideSegment $point
-                if {$insideRadius > [expr 0.5 * $boltCircleDiameter + 8]} {
-                    set point       [vectormath::addVector   $point {0 8}]              ;   lappend insideSegment $point
-                    set point       [vectormath::addVector   $point {1 5}]              ;   lappend insideSegment $point
-                }
-                    
-                    # -----------------------------    
-                    #    segemnt arc inside
-                    set pointRadius [vectormath::length      {0 0} $point]
-                    set deltaRadius [expr $insideRadius - $pointRadius]
-                    set point       [vectormath::rotatePoint {0 0} $point -2]
-                set point           [vectormath::unifyVector {0 0} $point  [expr [vectormath::length {0 0} $point] + 0.4*$deltaRadius]] ;   lappend insideSegment $point               
-                    set point       [vectormath::rotatePoint {0 0} $point -3]
-                set point           [vectormath::unifyVector {0 0} $point  [expr [vectormath::length {0 0} $point] + 0.3*$deltaRadius]] ;   lappend insideSegment $point               
-                    set point       [vectormath::rotatePoint {0 0} $point -4]
-                set point           [vectormath::unifyVector {0 0} $point  [expr [vectormath::length {0 0} $point] + 0.2*$deltaRadius]] ;   lappend insideSegment $point               
-                    set point       [vectormath::rotatePoint {0 0} $point -5]
-                set point           [vectormath::unifyVector {0 0} $point  [expr [vectormath::length {0 0} $point] + 0.1*$deltaRadius]] ;   lappend insideSegment $point               
-                    set point       [vectormath::rotatePoint {0 0} $point -6]
-                set point           [vectormath::unifyVector {0 0} $point  $insideRadius]   ;   lappend insideSegment $point 
-                    set pointAngle  [vectormath::dirAngle    {0 0} $point]
-                
-                puts " \n \$pointAngle  $pointAngle"
-                puts " \n \$armAngle    $armAngle  "
-                puts " \n \$endAngle    $endAngle  "
-                    
-                set diffAngle 5
-                while {$pointAngle > [expr 90 - 0.5 * $armAngle + $diffAngle]} {
-                    set pointAngle  [expr $pointAngle - $diffAngle]
-                    set point       [vectormath::rotatePoint {0 0} $point [expr -1.0 * $diffAngle] ] 
-                    lappend insideSegment $point  
-                }
-                
-                    # -----------------------------    
-                    #    segemnt arc inside - opposite
-                set mirrorSegment   {}
-                set index           [llength $insideSegment]
-                puts "\$index  $index"
-                while {$index > 0} {
-                    incr index -1
-                    set point [lindex $insideSegment $index]
-                    foreach {x y} $point break
-                    lappend mirrorSegment [list [expr -1*$x] $y]
-                }
-                set insideSegment   [canvasCAD::flatten_nestedList  $mirrorSegment $insideSegment]
-                   
-                    # -----------------------------    
-                    #    complete inside
-                set index 0
-                set insideProfile {}
-                set boltPosition {}
-                while {$index < $crankArmCount} {
-                    set startAngle  [expr -90 + $armAngle * ($index)]
-                    set startAngle  [expr -90 + $armAngle * (-0.5-$index)]
-                    set pointList   [vectormath::rotatePointList {0 0} [canvasCAD::flatten_nestedList $insideSegment] $startAngle]
-                    lappend insideProfile $pointList
-                    set startAngle  [expr $armAngle * (-0.5-$index)]
-                    set position    [vectormath::rotatePoint {0 0} [list [expr 0.5*$boltCircleDiameter] 0] $startAngle]
-                    lappend boltPosition $position
-                    incr index
-                }               
-                set chainWheelProfile [canvasCAD::flatten_nestedList $outsideProfile $insideProfile]
-                set chainWheelPolygon [$myCanvas  create polygon $chainWheelProfile -fill orange -outline black]
-                $myCanvas addtag {__ChainWheel__} withtag  $chainWheelPolygon			
-                
-                foreach position $boltPosition {
-                    puts "  -> $position"
-                    set bolt    [$myCanvas  create circle   $position -radius 5 -fill white -outline black]
-                    $myCanvas addtag {__ChainWheel__} withtag  $bolt	
-                }
-
-                    # -----------------------------    
-                    #    crank star
-                set index 0
-                set crankStar {}
-                foreach {x y} $connectionPoint break;
-                set armProfile [list  20 13   28 11    $y $x   $y [expr -1*$x]   28 -11   20 -13]
-                    # puts "   -> \$armProfile  $armProfile"
-
-                
-                while {$index < $crankArmCount} {
-                    set loopProfile [vectormath::rotatePointList {0 0} $armProfile [expr (360/$crankArmCount)*(0.5-$index)]]
-                    lappend crankStar $loopProfile
-                    incr index
-                }
-                set crankStar [canvasCAD::flatten_nestedList $crankStar]
-				set crankStarPolygon [$myCanvas  create polygon $crankStar -fill gray -outline black]
-				$myCanvas addtag {__ChainWheel__} withtag  $crankStarPolygon	
-                		
-
-                
-                    # -----------------------------    
-                    #    crank arm
-                set index 0
-				set crankArmProfile {{10 -19} {0 -19}}
-                puts "\n"
-                puts "  ----- 001 ---"
-                puts "  $crankArmProfile"
-                set point [lindex $crankArmProfile 1]
-                set angle 270
-                    # puts "  ----- 002 ---"  
-                while {$angle > 90} {
-                    incr angle -5
-                    set point [vectormath::rotatePoint {0 0} $point -5]
-                        # puts "         -> \$angle $angle  -- \$point $point"
-                    lappend crankArmProfile $point
-                }
-                    # puts "  ----- 003 ---"
-                lappend crankArmProfile {10 19}
-                    # puts "  $crankArmProfile"
-                lappend crankArmProfile [list [expr $crankLength -30] 14] [list $crankLength 14] 
-                    # puts "  ----- 004 ---"
-                set point [lindex $crankArmProfile end]
-                set angle 90
-                while {$angle > -90} {
-                    incr angle -5
-                    set point [vectormath::rotatePoint [list $crankLength 0] $point -5]
-                        # puts "         -> \$angle $angle  -- \$point $point"
-                    lappend crankArmProfile $point
-                }
-                lappend crankArmProfile [list [expr $crankLength -30] -14]
-				set crankArmProfile [canvasCAD::flatten_nestedList $crankArmProfile]
-				set crankSetPolygon [$myCanvas  create polygon $crankArmProfile -fill white -outline black]
-				$myCanvas addtag {__ChainWheel__} withtag  $crankSetPolygon	
-                
-                
-                
-                set crank_pedalMount    [$myCanvas  create circle   [list $crankLength  0] -radius 6 -fill white -outline black]
-                set crank_axle          [$myCanvas  create circle   [list 0  0] -radius 10 -fill white -outline black]
-                $myCanvas addtag {__ChainWheel__} withtag  $crank_pedalMount	
-                $myCanvas addtag {__ChainWheel__} withtag  $crank_axle	
-                
+				set toothProfileList [canvasCAD::flatten_nestedList $toothProfileList]
+				set chainWheelProfile [$myCanvas  create polygon $toothProfileList -fill white -outline black]
+				$myCanvas addtag {__ChainWheel__} withtag  $chainWheelProfile			
+					
 				$::f_report.text delete 1.0  end 
 				$::f_report.text insert end "<polygon class=\"fil0 str0\" points=\""
-				foreach {x y} $outsideProfile {
+				foreach {x y} $toothProfileList {
 					$::f_report.text insert end "$x,$y  "
 				}
 				$::f_report.text insert end "\"/>"
@@ -579,7 +310,6 @@
 	set f_settings  [labelframe .f0.f_config.f_settings  -text "Test - Settings" ]
 		
 				labelframe  $f_settings.settings  	-text settings
-				labelframe  $f_settings.style   	-text style
 				labelframe  $f_settings.angle   	-text angle
 				labelframe  $f_settings.radius  	-text radius
 				labelframe  $f_settings.length  	-text length
@@ -588,7 +318,6 @@
 				labelframe  $f_settings.scale   	-text scale
 
 				pack        $f_settings.settings	\
-							$f_settings.style	    \
 							$f_settings.angle		\
 							$f_settings.radius		\
 							$f_settings.length		\
@@ -596,29 +325,8 @@
 							$f_settings.demo		\
 							$f_settings.scale   -fill x -side top 
 
-				create_config_line $f_settings.settings.teeth     "teeth (count):"	sketchboard::teethCount          10  60
-				create_config_line $f_settings.settings.bcd       "BCD :"	        sketchboard::boltCircleDiameter  90 150
-                create_config_line $f_settings.settings.arms      "arm (count):"	sketchboard::crankArmCount        1   6
-				create_config_line $f_settings.settings.length    "crank (length):"	sketchboard::crankLength        100 200
-                
+				create_config_line $f_settings.settings.teeth     "teeth (count):"	sketchboard::teethCount     10  60
 				
-				radiobutton        $f_settings.style.chainwheel \
-											-text      "chainwheel   " \
-											-variable  "sketchboard::visualization" \
-											-value     "chainwheel" \
-											-command   "sketchboard::update_board"
-				radiobutton        $f_settings.style.crankset \
-											-text      "crankset   " \
-											-variable  "sketchboard::visualization" \
-											-value     "crankset" \
-											-command   "sketchboard::update_board"
-                                            
-				radiobutton        $f_settings.style.crankset_detailed \
-											-text      "crankset (detailed)  " \
-											-variable  "sketchboard::visualization" \
-											-value     "detailed" \
-											-command   "sketchboard::update_board"
-                                            
 				radiobutton        $f_settings.length.aligned \
 											-text      "aligned   " \
 											-variable  "sketchboard::dim_type_select" \
@@ -634,12 +342,6 @@
 				button  		   $f_settings.scale.refit		-text "refit"      -command {sketchboard::refit_board}
 				
 				pack  	$f_settings.settings.teeth \
-						$f_settings.settings.bcd \
-						$f_settings.settings.arms \
-						$f_settings.settings.length \
-						$f_settings.style.chainwheel \
-						$f_settings.style.crankset \
-						$f_settings.style.crankset_detailed \
 						$f_settings.length.aligned \
 						$f_settings.scale.drw_scale \
 						$f_settings.scale.cv_scale \

@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.25
+package provide canvasCAD 0.27
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -406,12 +406,12 @@ package require tdom
                 # puts " ObjectMethods  $name  $method  $argList"
             switch -exact -- $method {
                     # ------------------------            
-                exists {             set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                exists {            set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     puts "     ... $canvasDOMNode still existing!"
                                     return 0
                                 }
-                destroy {             set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-                                    set cv                 [getNodeAttribute $canvasDOMNode Canvas path]
+                destroy {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    set cv              [getNodeAttribute $canvasDOMNode Canvas path]
                                         # puts "      .... $name"
                                         # puts "      .... $cv"
                                     $canvasDOMNode delete
@@ -419,70 +419,59 @@ package require tdom
                                     return 0
                                 }
                     # ------------------------            
-                create {             set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-                                    set type             [lindex $argList 0]
-                                    set CoordList        [lindex $argList 1]
-                                    set argList            [lrange $argList 2 end]
+                create {            set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    set type            [lindex $argList 0]
+                                    set CoordList       [lindex $argList 1]
+                                    set argList         [lrange $argList 2 end]
                                     return [ create     $type $canvasDOMNode $CoordList $argList ]
                                     # return [ create     $type $cv_Object $CoordList $argList ]
                                 }
                     # ------------------------            
-                dimension {         set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-                                    set type             [lindex $argList 0]
-                                    set CoordList        [lindex $argList 1]
-                                    set argList            [lrange $argList 2 end]
-                                    return [ dimension     $type $canvasDOMNode $CoordList $argList ]
+                dimension {         set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    set type            [lindex $argList 0]
+                                    set CoordList       [lindex $argList 1]
+                                    set argList         [lrange $argList 2 end]
+                                    return [ dimension  $type $canvasDOMNode $CoordList $argList ]
                                 }
                     # ------------------------            
-                scaleToCenter {        set scale             [lindex $argList 0]
+                scaleToCenter {     set scale           [lindex $argList 0]
                                     return [ scaleToCenter     $name $scale ] 
                                 }
                     # ------------------------            
-                refitStage {        return [ refitStage     $name ]
+                refitStage {        return [ refitStage $name ]
                                 }
-                fit2Stage {            set tagList        [lindex $argList 0]
-                                    return [ fit2Stage         $name $tagList] 
+                fit2Stage {         set tagList         [lindex $argList 0]
+                                    return [ fit2Stage  $name $tagList] 
                                 }
                     # ------------------------            
-                centerContent {        set offSet        [lindex $argList 0]
-                                    set tagList        [lindex $argList 1]
-                                    return [ centerContent     $name $offSet $tagList] 
+                centerContent {     set offSet          [lindex $argList 0]
+                                    set tagList         [lindex $argList 1]
+                                    return [ centerContent  $name $offSet $tagList] 
                                 }        
                     # ------------------------            
                 repositionToCanvasCenter { return [ repositionToCanvasCenter $name ] 
                                 }
                     # ------------------------        
-                        __rotateItem {         # has to be fixed with for relativ position
-                                            set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-                                            set cv                 [getNodeAttribute $canvasDOMNode Canvas path]
-                                            set objectTag         [lindex $argList 0]
-                                            set rotationPoint    [lindex $argList 1]
-                                            set rotationAngle    [lindex $argList 2]
-                                            puts "rotateItem $cv  $objectTag  [lindex $rotationPoint 0] [lindex $rotationPoint 1]  $rotationAngle" 
-                                            puts "[$cv gettags $objectTag]"
-                                            rotateItem $cv  $objectTag  [lindex $rotationPoint 0] [lindex $rotationPoint 1]  $rotationAngle
-                                        }
-                    # ------------------------        
-                setNodeAttr {        set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                setNodeAttr {       set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     return [ setNodeAttribute $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ]
                                 }
-                getNodeAttr {         set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                getNodeAttr {       set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                         # puts "[$canvasDOMNode asXML]"
                                     return [ getNodeAttribute $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ]
                                 }
-                getNode {             set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                getNode {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     return [ getNode $canvasDOMNode [lindex $argList 0] ]
                                 }
                     # ------------------------        
-                getFormatSize {        set formatKey         [lindex $argList 0]
+                getFormatSize {     set formatKey       [lindex $argList 0]
                                     return [getFormatSize $formatKey]                                    
                                 }
-                formatCanvas {        set format             [lindex $argList 0]
-                                    set scale             [lindex $argList 1]
+                formatCanvas {      set format          [lindex $argList 0]
+                                    set scale           [lindex $argList 1]
                                     return [ formatCanvas     $name $format $scale ] 
                                 }                            
-                moveCanvas {        set x         [lindex $argList 0]
-                                    set y         [lindex $argList 1]
+                moveCanvas {        set x               [lindex $argList 0]
+                                    set y               [lindex $argList 1]
                                     return [ moveCanvas     $name $x $y] 
                                 }                            
                     # ------------------------        
@@ -491,29 +480,29 @@ package require tdom
                 reportXMLRoot {     eval "$method" 
                                 }
                     # ------------------------            
-                readSVG {            set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                readSVG {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     switch [llength $argList] {
                                         2 {    return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ] }
                                         3 {    return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
                                         4 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
                                     }
                                 }
-                exportSVG {            set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                exportSVG {         set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     exportSVG $canvasDOMNode [lindex $argList 0]
                                 }
-                exportDXF {            set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                exportDXF {         set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     exportDXF $canvasDOMNode [lindex $argList 0]
                                 }
                     # ------------------------            
-                print {                set printFile         [lindex $argList 0]
+                print {             set printFile       [lindex $argList 0]
                                     printPostScript $name $printFile }
                     # ------------------------            
-                clean_StageContent {set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-                                    set cv                 [getNodeAttribute $canvasDOMNode Canvas path]
-                                    clean_StageContent $cv }
+                clean_StageContent {set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    set cv              [getNodeAttribute $canvasDOMNode Canvas path]
+                                    clean_StageContent  $cv }
                     # ------------------------            
-                default {             set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
-                                    set cv                 [getNodeAttribute $canvasDOMNode Canvas path]
+                default {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    set cv              [getNodeAttribute $canvasDOMNode Canvas path]
                                     eval $cv $method $argList
                                     # return -code error  "\"$name $method\" is not defined" 
                                 }
@@ -594,9 +583,9 @@ package require tdom
                             set args        {}
                             for {set x 0} {$x<[llength $new_args]} {incr x} {
                                 switch [lindex $new_args $x] {
-                                    {-size}        {    set fontSize [lindex $new_args $x+1] ; incr x }
-                                    {-text}        {     set myText      [lindex $new_args $x+1] ; incr x }
-                                    default     {     set args [lappend args [lindex $new_args $x] ] }                                    
+                                    {-size} { set fontSize  [lindex $new_args $x+1] ; incr x }
+                                    {-text} { set myText    [lindex $new_args $x+1] ; incr x }
+                                    default { set args      [lappend args [lindex $new_args $x] ] }                                    
                                 }
                             }
                             set fontSize    [ expr round($fontSize * 10 * $stageScale / 2.8) ]
@@ -604,23 +593,23 @@ package require tdom
                             set CoordList   [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]]
                         }
                 vectortext {    
-                            vectorfont::setalign    "sw"        ;# standard text alignment
-                            vectorfont::setangle    0            ;# standard orientation
-                            vectorfont::setcolor    black        ;# standard colour
-                            vectorfont::setline     1            ;# standard line width
+                            vectorfont::setalign    "sw"    ;# standard text alignment
+                            vectorfont::setangle    0       ;# standard orientation
+                            vectorfont::setcolor    black   ;# standard colour
+                            vectorfont::setline     1       ;# standard line width
                             vectorfont::setscale    [expr  $stageScale / (8 * $unitScale) ]     ;# standard font size
                                 
                             set new_args     [ flatten_nestedList $args ]
                             set args        {}
                             for {set x 0} {$x<[llength $new_args]} {incr x} {
                                 switch [lindex $new_args $x] {
-                                    {-text}        {     set myText [lindex $new_args $x+1] ; incr x }
-                                    {-anchor}    {   vectorfont::setalign  [lindex $new_args $x+1] ; incr x }
-                                    {-angle}    {   vectorfont::setangle  [lindex $new_args $x+1] ; incr x }
-                                    {-fill}        {   vectorfont::setcolor  [lindex $new_args $x+1] ; incr x }
-                                    {-width}    {   vectorfont::setline   [lindex $new_args $x+1] ; incr x }
-                                    {-size}        {   set fontSize            [lindex $new_args $x+1] ; incr x }
-                                    default     {     set args [lappend args [lindex $new_args $x] ] }                                    
+                                    {-text}     { set myText [lindex $new_args $x+1] ; incr x }
+                                    {-anchor}   { vectorfont::setalign  [lindex $new_args $x+1] ; incr x }
+                                    {-angle}    { vectorfont::setangle  [lindex $new_args $x+1] ; incr x }
+                                    {-fill}     { vectorfont::setcolor  [lindex $new_args $x+1] ; incr x }
+                                    {-width}    { vectorfont::setline   [lindex $new_args $x+1] ; incr x }
+                                    {-size}     { set fontSize          [lindex $new_args $x+1] ; incr x }
+                                    default     { set args [lappend args [lindex $new_args $x] ] }                                    
                                 }                                
                             }
                                 # vectorfont: 8mm -> std :   8 * [get_unitRefScale m]
@@ -641,14 +630,14 @@ package require tdom
                             set args        {}
                             for {set x 0} {$x<[llength $new_args]} {incr x} {
                                 switch [lindex $new_args $x] {
-                                    {-text}        {     set myText [lindex $new_args $x+1] ; incr x }
-                                    {-anchor}    {   vectorfont::setalign  [lindex $new_args $x+1] ; incr x }
-                                    {-angle}    {   vectorfont::setangle  [lindex $new_args $x+1] ; incr x }
-                                    {-fill}        {   vectorfont::setcolor  [lindex $new_args $x+1] ; incr x }
-                                    {-size}        {   set fontSize            [expr [lindex $new_args $x+1] * $wScale ]
-                                                    vectorfont::setline   [expr  $fontSize / (10 * $wScale * $stageScale * $unitScale)]
+                                    {-text}     { set myText [lindex $new_args $x+1] ; incr x }
+                                    {-anchor}   { vectorfont::setalign  [lindex $new_args $x+1] ; incr x }
+                                    {-angle}    { vectorfont::setangle  [lindex $new_args $x+1] ; incr x }
+                                    {-fill}     { vectorfont::setcolor  [lindex $new_args $x+1] ; incr x }
+                                    {-size}     { set fontSize          [expr [lindex $new_args $x+1] * $wScale ]
+                                                  vectorfont::setline   [expr  $fontSize / (10 * $wScale * $stageScale * $unitScale)]
                                                                                                     incr x }
-                                    default     {     set args [lappend args [lindex $new_args $x] ] }                                    
+                                    default     { set args [lappend args [lindex $new_args $x] ] }                                    
                                 }                                
                             }
                                 # vectorfont: 8mm -> std :   8 * [get_unitRefScale m]
@@ -796,10 +785,21 @@ package require tdom
         }
         
         
+    
+        #-------------------------------------------------------------------------
+            #  
+        proc characterList {} {     
+            # puts "  -- characterList_Vector"
+            return [vectorfont::get_characterList]
+        }
+
+    
+    
+    
     } ;# end of namespace
 
 
     # --------------------------------------------
         # import dog to namespacd ::
-    namespace import canvasCAD::newCanvas    
+    namespace import canvasCAD::newCanvas  
     

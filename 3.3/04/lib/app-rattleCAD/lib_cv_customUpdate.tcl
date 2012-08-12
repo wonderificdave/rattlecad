@@ -336,6 +336,8 @@
                     createDimension                             $cv_Name $xy    cline_framejig
                     createDimension                             $cv_Name $xy    frameJig_bg
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
+                    createParameterTable                        $cv_Name $stageScale
+                        # 
                         #
                     $cv_Name         centerContent             {0  15}        {__Frame__  __Decoration__  __CenterLine__  __Dimension__}
                         #

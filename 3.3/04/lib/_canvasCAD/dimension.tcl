@@ -146,7 +146,7 @@ namespace eval dimension {
 		#-------------------------------------------------------------------------
 			#  	create_Text   $w  $cv_Config  $cv_Dimension  $dimText  $textOrient  $textPosition  $textPosAngle 
 			#	create_Text   $w  $cv_Config  $cv_Dimension  $dimText  $textPosition  $textPosAngle $textOrient  
-	proc create_Text {canvasDOMNode dimValue p dimAngle colour } {
+	proc create_Text {canvasDOMNode dimValue format p dimAngle colour } {
 		
 			set w		 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Canvas 	path 		]			
 			set stageUnit 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Stage	unit 		]			
@@ -164,9 +164,8 @@ namespace eval dimension {
 				# format text
 			if { $fontColour != $colour } { set fontColour 	$colour }
 			if { $dimValue < 0 } {set dimValue [expr -1*$dimValue]	}
-			set text_1	[ format "%.1f" $dimValue	]
+			set text_1	[ format "%.1f%s" $dimValue	$format]
             set text 	[ string map {. ,} $text_1	]
-                # set text_2	[ format "%.2f" $dimValue	]
 			
 			# -------------------------------
 				# geometric definitions			
@@ -359,7 +358,7 @@ namespace eval dimension {
 
         #  ---------------------------------------------
 				# create text
-			set myText [ create_Text   $canvasDOMNode  $absAngle  $textPosition  $textPosAngle  $colour ]
+			set myText [ create_Text   $canvasDOMNode  $absAngle  {°}  $textPosition  $textPosAngle  $colour ]
 				$w addtag $tagListName withtag $myText
 					# set myBase [ create_Point  $w  $cv_Config  $cv_Dimension  $textPosition  5  red]
 
@@ -544,7 +543,7 @@ namespace eval dimension {
 			
 			#  ---------------------------------------------
 				# create text
-			set myText [ create_Text   $canvasDOMNode  $dimLength  $textPosition  $textPosAngle  $colour ]
+			set myText [ create_Text   $canvasDOMNode  $dimLength  {}  $textPosition  $textPosAngle  $colour ]
 				$w addtag $tagListName withtag $myText
 
 			# -------------------------------
@@ -756,7 +755,7 @@ namespace eval dimension {
 			
 		#  ---------------------------------------------
 				# create text
-			set myText [ create_Text   $canvasDOMNode  $dimLength  $textPosition  $textPosAngle  $colour ]
+			set myText [ create_Text   $canvasDOMNode  $dimLength  {}  $textPosition  $textPosAngle  $colour ]
 				$w addtag $tagListName withtag $myText
 
 		# -------------------------------

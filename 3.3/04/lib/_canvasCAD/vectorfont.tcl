@@ -37,7 +37,10 @@
  # ---------------------------------------------------------------------------
  #
  # 
-
+ #  176 °   Degree_Sign
+ #  177 ±   Plus_Or_Minus_Sign
+ #  216 Ø   Diameter_Symbol
+ #            
 
 set debug_level 0
 proc debug {msg} {
@@ -266,7 +269,7 @@ namespace eval vectorfont {
 				debug "draw_error $canv $id"
 				set x1 $glb_state($fid,xcoo)
 				set space "$fid,32" ; ### SPACE should exist in all fonts
-				compile $canv $space
+				compileChar $canv $space
 				set x2 $glb_state($fid,xcoo)
 				set y1 [expr {$glb_state($fid,ycoo)-$glb_state($fid,sfact)*$glb_state($fid,above)}]
 				set y2 [expr {$glb_state($fid,ycoo)+$glb_state($fid,sfact)*$glb_state($fid,below)}]
@@ -274,14 +277,14 @@ namespace eval vectorfont {
 									 -outline $error_col -width 2
 		}
 
-		proc compile { canv id } {
+		proc compileChar { canv id } {
 			variable fid
 			variable shape 
 			variable glb_shp
 			variable glb_state 
 			variable glb_datalen 
 
-				# debug "compile $inp"
+				# debug "compileChar $inp"
 				# debug "cidx=$cidx code=$code"
 			if {![info exist shape($id)]} {
 			  draw_error $canv $id
@@ -372,7 +375,7 @@ namespace eval vectorfont {
 							set shape_id [next_byte]
 							set shape_name [lindex [split $id ","] 0]
 							debug "DRAW $shape_name,$shape_id"
-							compile $canv "$shape_name,$shape_id"
+							compileChar $canv "$shape_name,$shape_id"
 						}
 					 8 	{
 							### single X/Y offset 
@@ -588,8 +591,14 @@ namespace eval vectorfont {
 			set y2 [expr {$fact*$glb_state($fid,below)}]
 			foreach ch [split $txt ""] {
 				scan $ch %c asc
-				debug "compile $canv $fid,$asc"
-				compile $canv "$fid,$asc"
+                switch -exact $asc {
+                    {176} {set asc Degree_Sign}
+                    {177} {set asc Plus_Or_Minus_Sign}
+                    {216} {set asc Diameter_Symbol}
+                    default {}
+                }             
+				debug "compileChar $canv $fid,$asc"
+				compileChar $canv "$fid,$asc"
 			}
 			set hnd "vtext$texthandle"
 			set dx [expr {$glb_state($fid,xcoo)-$ox}]
@@ -610,6 +619,22 @@ namespace eval vectorfont {
 				RotateItem $canv $hnd $ox $oy $glb_state($fid,angle) 
 			}
 			return $hnd
+		}
+		proc get_characterList {} {
+			variable shape      
+            set charList {}
+            foreach charIndex [array names shape] {
+                set charID  [lindex [split $charIndex ,] 1]
+                switch -exact $charID {
+                    {Degree_Sign}           {set charID  176}
+                    {Plus_Or_Minus_Sign}    {set charID  177}
+                    {Diameter_Symbol}       {set charID  216}
+                    {}                      continue
+                    default {}
+                }             
+                lappend charList $charID
+            }
+            return [lsort -integer $charList]
 		}
 # 
 #  End user functions
