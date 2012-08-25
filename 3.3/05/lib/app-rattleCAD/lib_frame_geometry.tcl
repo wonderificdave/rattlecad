@@ -272,6 +272,8 @@
 
                 #
                 # --- get RearDropOut ----------------------
+            set RearDrop(Direction)         $project::Lugs(RearDropOut/Direction)
+            set RearDrop(RotationOffset)    $project::Lugs(RearDropOut/RotationOffset)
             set RearDrop(OffsetCS)          $project::Lugs(RearDropOut/ChainStay/Offset)
             set RearDrop(OffsetCSPerp)      $project::Lugs(RearDropOut/ChainStay/OffsetPerp)
             set RearDrop(OffsetSS)          $project::Lugs(RearDropOut/SeatStay/Offset)
@@ -361,7 +363,7 @@
             project::setValue Result(Position/SeatTubeSaddle)       position    [ vectormath::intersectPoint [list 0 [lindex $Saddle(Position) 1] ] [list 100 [lindex $Saddle(Position) 1]] {0 0} $SeatPost(SeatTube) ]
 
             project::setValue Result(Lugs/Dropout/Rear/Position)    position     [expr -1*$RearWheel(Distance_X)]    $project::Custom(BottomBracket/Depth)
-            project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
+                # project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
 
                 # project::setValue /root/Result/Lugs/Dropout/Front/Position    position     $FrontWheel(Distance_X)    [expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
                 # project::setValue /root/Result/Position/RearWheel         position    $RearWheel(Position)
@@ -446,23 +448,34 @@
                     variable ChainStay
                     variable RearWheel
 
-                            set vct_00      [ vectormath::parallel        $RearWheel(Position)      {0 0}   $RearDrop(OffsetCSPerp) left]
-                            set pt_00       [ lindex $vct_00 0 ]
+                            set vct_angle   [ vectormath::dirAngle      $RearWheel(Position)  {0 0}]
+                            set vct_xy      [ list $RearDrop(OffsetCS) [expr -1.0 * $RearDrop(OffsetCSPerp)]]
+                            set do_angle    [ expr $vct_angle - $RearDrop(RotationOffset)]
+                            set vct_CS      [ vectormath::rotatePoint   {0 0}  $vct_xy  $do_angle]
+                            set pt_00       [ vectormath::addVector     $RearWheel(Position)  $vct_CS]
 
                             set ChainStay(Direction)            [ vectormath::unifyVector {0 0} $pt_00 ]
                     project::setValue Result(Tubes/ChainStay/Direction) direction   $pt_00
 
-                            set pt_00       [ vectormath::addVector         $pt_00  $ChainStay(Direction)  -$RearDrop(OffsetCS) ]
+                    
+                                # -- position of Rear Derailleur Mount
+                            set vct_xy      [ list [expr -1 * $RearDrop(Derailleur_x)]  [expr -1 * $RearDrop(Derailleur_y)]]
+                            set vct_mount   [ vectormath::rotatePoint   {0 0}  $vct_xy  $do_angle]
+                            set pt_mount    [ vectormath::addVector     $RearWheel(Position)  $vct_mount]
+                    project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  $vct_mount ]
+                    # project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
 
+                    
+                    
                                 # -- exception if Tube is shorter than taper length
-                                set tube_length         [ vectormath::length {0 0} $pt_00 ]
-                                    if { [expr $tube_length - $ChainStay(TaperLength) -110] < 0 } {
-                                        puts "         ... exception:  ChainStay TaperLength ... $tube_length / $ChainStay(TaperLength)"
-                                        set taper_length    [ expr $tube_length -110 ]
-                                        puts "                         -> $taper_length"
-                                    } else {
-                                        set taper_length    $ChainStay(TaperLength)
-                                    }
+                            set tube_length         [ vectormath::length {0 0} $pt_00 ]
+                                if { [expr $tube_length - $ChainStay(TaperLength) -110] < 0 } {
+                                    puts "         ... exception:  ChainStay TaperLength ... $tube_length / $ChainStay(TaperLength)"
+                                    set taper_length    [ expr $tube_length -110 ]
+                                    puts "                         -> $taper_length"
+                                } else {
+                                    set taper_length    $ChainStay(TaperLength)
+                                }
 
                             set pt_01       [ vectormath::addVector         $pt_00  $ChainStay(Direction)  -$taper_length ]
                             set pt_02       [ vectormath::addVector         {0 0}   $ChainStay(Direction)  70 ]
@@ -1403,12 +1416,12 @@
                     set TubeMiter(SeatStay_02)      [ tube_miter    $SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)      $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]
                     set TubeMiter(Reference)             { -50 0  50 0  50 10  -50 10 }
 
-                    project::setValue Result(TubeMiter/TopTube_Head)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Head)     ]
-                    project::setValue Result(TubeMiter/TopTube_Seat)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Seat)        ]
-                    project::setValue Result(TubeMiter/DownTube_Head)       polygon     [ project::flatten_nestedList $TubeMiter(DownTube_Head)    ] ;#
-                    project::setValue Result(TubeMiter/SeatStay_01)         polygon     [ project::flatten_nestedList $TubeMiter(SeatStay_01)        ]
-                    project::setValue Result(TubeMiter/SeatStay_02)         polygon     [ project::flatten_nestedList $TubeMiter(SeatStay_02)        ]
-                    project::setValue Result(TubeMiter/Reference)           polygon     [ project::flatten_nestedList $TubeMiter(Reference)         ]
+                    project::setValue Result(TubeMiter/TopTube_Head)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Head)  ]
+                    project::setValue Result(TubeMiter/TopTube_Seat)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Seat)  ]
+                    project::setValue Result(TubeMiter/DownTube_Head)       polygon     [ project::flatten_nestedList $TubeMiter(DownTube_Head) ]
+                    project::setValue Result(TubeMiter/SeatStay_01)         polygon     [ project::flatten_nestedList $TubeMiter(SeatStay_01)   ]
+                    project::setValue Result(TubeMiter/SeatStay_02)         polygon     [ project::flatten_nestedList $TubeMiter(SeatStay_02)   ]
+                    project::setValue Result(TubeMiter/Reference)           polygon     [ project::flatten_nestedList $TubeMiter(Reference)     ]
 
             }
             get_TubeMiter
@@ -1931,7 +1944,7 @@
                             }
                         #
                         # --- define bindings ---
-                            bind $cvLabel   <ButtonPress-1>         [list [namespace current]::dragStart         %X %Y]
+                            bind $cvLabel   <ButtonPress-1>         [list [namespace current]::dragStart        %X %Y]
                             bind $cvLabel   <B1-Motion>             [list [namespace current]::drag             %X %Y $cv $cvEdit]
                             bind $cvEntry   <MouseWheel>            [list [namespace current]::bind_MouseWheel  [namespace current]::_updateValue($key)  %D]
                             bind $cvEntry   <Return>                [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
@@ -1993,7 +2006,7 @@
                                             puts "         ... $entry"
                                         }
                                     }
-                                {SELECT_Rims} {
+                                {SELECT_Rim} {
                                         set listBoxContent {}
                                         puts "     currentValue: $currentValue"
                                         set listBoxContent $::APPL_Env(list_Rims)
@@ -2001,7 +2014,7 @@
                                             puts "         ... $entry"
                                         }
                                     }
-                                {SELECT_ForkTypes} {
+                                {SELECT_ForkType} {
                                         set listBoxContent {}
                                         puts "     currentValue: $currentValue"
                                         set listBoxContent $::APPL_Env(list_ForkTypes)
@@ -2009,7 +2022,15 @@
                                             puts "         ... $entry"
                                         }
                                     }
-                                {SELECT_BrakeTypes} {
+                                {SELECT_DropOutDirection} {
+                                        set listBoxContent {}
+                                        puts "     currentValue: $currentValue"
+                                        set listBoxContent $::APPL_Env(list_DropOutDirections)
+                                        foreach entry $listBoxContent {
+                                            puts "         ... $entry"
+                                        }
+                                    }
+                                {SELECT_BrakeType} {
                                         set listBoxContent {}
                                         puts "     currentValue: $currentValue"
                                         set listBoxContent $::APPL_Env(list_BrakeTypes)
@@ -2037,8 +2058,8 @@
                         }
                         #
                         # --- create cvLabel, cvEntry, Select ---
-                            set cvFrame        [ frame         $cvContentFrame.frame_${index} ]
-                            set      cvLabel    [ label        $cvFrame.label   -text "${labelText} : "]
+                            set cvFrame        [ frame      $cvContentFrame.frame_${index} ]
+                            set     cvLabel    [ label      $cvFrame.label   -text "${labelText} : "]
                             set      cvCBox    [ ttk::combobox $cvFrame.cb \
                                                     -textvariable [namespace current]::_updateValue($key) \
                                                     -values $listBoxContent    \
@@ -2052,12 +2073,12 @@
                             if {$index == {oneLine}} {
                                     set    cvClose [ button         $cvFrame.close   -image $lib_gui::iconArray(iconClose) -command [list [namespace current]::closeEdit $cv $cvEdit]]
                                     grid    $cvLabel $cvCBox $cvClose   -sticky news
-                                    grid     $cvFrame                   -sticky news    -padx 1
+                                    grid    $cvFrame                    -sticky news    -padx 1
                             } else {
                                     grid    $cvLabel $cvCBox            -sticky news
-                                    grid     configure $cvLabel         -sticky nws     -padx 2
+                                    grid    configure $cvLabel          -sticky nws     -padx 2
                                     grid    columnconfigure     $cvFrame 1      -weight 1
-                                    grid     $cvFrame  -sticky news -padx 1     -columnspan 3
+                                    grid    $cvFrame                    -sticky news    -padx 1     -columnspan 3
                             }
                         #
                         # --- define bindings ---
@@ -2121,7 +2142,7 @@
                                     set _nameInfo   [split $_name {@} ]
                                     set _name       [lindex $_nameInfo 0]
                                     set listName    [lindex $_nameInfo 1]
-
+                                    
                                     eval set value  [format "$%s::%s(%s)" project $_array $_name]
                                     set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
                                     set key         [format "%s/%s" $_array $_name]
@@ -2204,6 +2225,7 @@
                                         # puts "   ... $_array $_nameInfo"
                                     set _name       [lindex $_nameInfo 0]
                                     set listName    [lindex $_nameInfo 1]
+
                                     eval set value  [format "$%s::%s(%s)" project $_array $_name]
                                         # replaced by 3.2.70;# set value    [ [ $domProject selectNodes /root/$xpath  ]    asText ]
                                         # set _updateValue($xpath) $value
@@ -2380,9 +2402,18 @@
             }
 
 
-                # --- exception on int list values like defined
+                # --- exceptions without any format-checks
+                    # on int list values like defined
                     # puts "<D> $xpath"
             switch $xpath {
+                    {Component/Wheel/Rear/RimDiameter} -
+                    {Component/Wheel/Front/RimDiameter} -
+                    {Lugs/RearDropOut/Direction} {
+                                set newValue    $value
+                                project::setValue [format "%s(%s)" $_array $_name] value $newValue
+                                return $newValue
+                            }
+
                     {Component/CrankSet/ChainRings} -
                     {Component/Wheel/Rear/FirstSprocket} {
                                 set newValue [ string map {, .} $value]
@@ -2390,10 +2421,9 @@
                                 if {$mode == {update}} {
                                     project::setValue [format "%s(%s)" $_array $_name] value $newValue
                                 }
-
                                 return $newValue
+                            }                         
 
-                            }
                     default { }
             }
 

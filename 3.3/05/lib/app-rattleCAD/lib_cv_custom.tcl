@@ -670,8 +670,8 @@
                                     $cv_Name bind $_dim_Stem_Angle      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Stem/Angle) ]
                                     $cv_Name bind $_dim_Fork_Rake       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Fork/Rake) ]
                                     $cv_Name bind $_dim_Fork_Height     <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Fork/Height) ]
-                                    $cv_Name bind $_dim_RW_Radius       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Rear/RimDiameter@SELECT_Rims) Component(Wheel/Rear/TyreHeight)} {Rear Wheel Parameter} ]
-                                    $cv_Name bind $_dim_FW_Radius       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Front/RimDiameter@SELECT_Rims) Component(Wheel/Front/TyreHeight)} {Front Wheel Parameter} ]
+                                    $cv_Name bind $_dim_RW_Radius       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Rear/RimDiameter@SELECT_Rim) Component(Wheel/Rear/TyreHeight)} {Rear Wheel Parameter} ]
+                                    $cv_Name bind $_dim_FW_Radius       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Front/RimDiameter@SELECT_Rim) Component(Wheel/Front/TyreHeight)} {Front Wheel Parameter} ]
                                     $cv_Name bind $_dim_CR_Length       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
 
                                     $cv_Name bind $_dim_ST_Angle        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Angle/SeatTube/Direction) ]
@@ -1517,7 +1517,7 @@
                                     }
                         }
                 ForkHeight {
-                            set dimension       [ $cv_Name dimension  length            [ project::flatten_nestedList            $Steerer(vct_Bottom) $FrontWheel(Position) ] \
+                            set dimension       [ $cv_Name dimension  length    [ project::flatten_nestedList            $Steerer(vct_Bottom) $FrontWheel(Position) ] \
                                                                                     perpendicular [expr  (-110 + 0.5 * $HeadSet(Diameter)) * $stageScale]    [expr  -80 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
@@ -1528,7 +1528,7 @@
                                     }
                         }
                 HeadSet_Bottom {
-                            set dimension       [ $cv_Name dimension  length            [ project::flatten_nestedList $HeadSet(vct_Bottom)  [lindex $HeadTube(vct_Bottom) 1]] \
+                            set dimension       [ $cv_Name dimension  length    [ project::flatten_nestedList $HeadSet(vct_Bottom)  [lindex $HeadTube(vct_Bottom) 1]] \
                                                                                     perpendicular    [expr  (150 - 0.5 * $HeadSet(Diameter)) * $stageScale]   [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
@@ -1576,13 +1576,13 @@
                                                 set pt_05       [ vectormath::addVector    $frame_geometry::FrontBrake(Definition) $BB_Position ]
                                                 set pt_06       [ vectormath::addVector    $frame_geometry::FrontBrake(Mount)      $BB_Position ]
 
-                                            set dimension_00    [ $cv_Name dimension  length            [ project::flatten_nestedList             $HeadSet(vct_Bottom) $pt_06 ] \
+                                            set dimension_00    [ $cv_Name dimension  length    [ project::flatten_nestedList             $HeadSet(vct_Bottom) $pt_06 ] \
                                                                                                     perpendicular [expr -40 * $stageScale]  [expr   40 * $stageScale] \
                                                                                                     gray50 ]        ;# distance Brake Mount Hole
-                                            set dimension_01    [ $cv_Name dimension  length            [ project::flatten_nestedList            $pt_03  $pt_05 ] \
+                                            set dimension_01    [ $cv_Name dimension  length    [ project::flatten_nestedList            $pt_03  $pt_05 ] \
                                                                                                     aligned            [expr  -50 * $stageScale]    [expr  -70 * $stageScale] \
                                                                                                     darkred ]    ;# Component(Brake/Rear/Offset)
-                                            set dimension_02    [ $cv_Name dimension  length            [ project::flatten_nestedList            $pt_03  $pt_04 ] \
+                                            set dimension_02    [ $cv_Name dimension  length    [ project::flatten_nestedList            $pt_03  $pt_04 ] \
                                                                                                     aligned            [expr   20 * $stageScale]    [expr   40 * $stageScale] \
                                                                                                     darkred ]    ;# Component(Brake/Rear/LeverLength)
 
@@ -1646,8 +1646,8 @@
                                                     }
                             }
                             if {$Rendering(BottleCage_DT_L) != {off}} {
-                                            set pt_01           [ frame_geometry::object_values    DownTube/BottleCage_Lower/Offset    position    $BB_Position ]
-                                            set pt_02           [ frame_geometry::object_values    DownTube/BottleCage_Lower/Base        position    $BB_Position ]
+                                            set pt_01           [ frame_geometry::object_values    DownTube/BottleCage_Lower/Offset position    $BB_Position ]
+                                            set pt_02           [ frame_geometry::object_values    DownTube/BottleCage_Lower/Base   position    $BB_Position ]
                                             set pt_03           [ vectormath::addVector    $pt_02    $dt_direction    [expr -1.0 * $frame_geometry::BottleCage(DownTube_Lower) ] ]
 
                                             set dimension       [ $cv_Name dimension  length            [ project::flatten_nestedList            $pt_01  $pt_02 ] \
@@ -1664,15 +1664,51 @@
                                                     }
                             }
                         }
+                DerailleurMount {
+                            set pt_01   [ frame_geometry::object_values     RearWheel    position    $BB_Position  ]
+                            set pt_02   [ frame_geometry::object_values     Lugs/Dropout/Rear/Derailleur  position  $BB_Position]
+                            set pt_03   [ vectormath::rotatePoint   $pt_01  $BB_Position 90]
+                                #puts "\n ----------"
+                                #puts "   \$pt_01  $pt_01"
+                                #puts "   \$pt_02  $pt_02"
+                                #puts "   \$pt_03  $pt_03"
+                                #puts " ----------\n"
+                            set dimension_01    [ $cv_Name dimension  length    [ project::flatten_nestedList   $pt_03 $pt_01 $pt_02 ] \
+                                                                                    perpendicular [expr -80 * $stageScale]    [expr   50 * $stageScale] \
+                                                                                    gray50 ]
+                            set dimension_02    [ $cv_Name dimension  length    [ project::flatten_nestedList   $BB_Position $pt_01 $pt_02 ] \
+                                                                                    perpendicular [expr  60 * $stageScale]    [expr  -50 * $stageScale] \
+                                                                                    gray50 ]
+                            if {$updateCommand != {}} { 
+                                                $cv_Name    bind    $dimension_01    <Double-ButtonPress-1>  \
+                                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                {   Lugs(RearDropOut/Derailleur/x) \
+                                                                                    Lugs(RearDropOut/Derailleur/y) \
+                                                                                }  {RearDropOut Derailleur}]
+                                                 $cv_Name    bind    $dimension_02    <Double-ButtonPress-1>  \
+                                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                {   Lugs(RearDropOut/Derailleur/x) \
+                                                                                    Lugs(RearDropOut/Derailleur/y) \
+                                                                                }  {RearDropOut Derailleur}]
+                                                lib_gui::object_CursorBinding        $cv_Name    $dimension_01
+                                                lib_gui::object_CursorBinding        $cv_Name    $dimension_02
+                            }
+                            
+                            #            project::setValue Result(Lugs/Dropout/Rear/Derailleur)    position ]     [expr -1*$RearWheel(Distance_X)]    $project::Custom(BottomBracket/Depth)
+                            # project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
+
+                            
+                            
+                        }
                 RearWheel_Clearance {
-                            set RimDiameter            $project::Component(Wheel/Rear/RimDiameter)
-                            set TyreHeight              $project::Component(Wheel/Rear/TyreHeight)
-                            set WheelRadius             [ expr 0.5 * $RimDiameter + $TyreHeight ]
-                            set pt_03                   [ frame_geometry::object_values        RearWheel    position    $BB_Position  ]
-                            set pt_06                   [ frame_geometry::coords_get_xy $SeatTube(polygon) 6 ]
-                            set pt_07                   [ frame_geometry::coords_get_xy $SeatTube(polygon) 7 ]
-                            set pt_is                   [ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
-                            set pt_rw                   [ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]
+                            set RimDiameter         $project::Component(Wheel/Rear/RimDiameter)
+                            set TyreHeight          $project::Component(Wheel/Rear/TyreHeight)
+                            set WheelRadius         [ expr 0.5 * $RimDiameter + $TyreHeight ]
+                            set pt_03               [ frame_geometry::object_values        RearWheel    position    $BB_Position  ]
+                            set pt_06               [ frame_geometry::coords_get_xy $SeatTube(polygon) 6 ]
+                            set pt_07               [ frame_geometry::coords_get_xy $SeatTube(polygon) 7 ]
+                            set pt_is               [ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
+                            set pt_rw               [ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]
                             set dimension           [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_rw $pt_is] ] \
                                                                                     aligned    [expr -70 * $stageScale]  [expr 50 * $stageScale] \
                                                                                     gray50 ]

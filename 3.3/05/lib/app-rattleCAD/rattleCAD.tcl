@@ -241,7 +241,7 @@
                     } else {
                         set value [format "%s ; %s %s" $value_02 $value_01 $value_03]
                     }
-                set APPL_Env(list_Rims) [lappend APPL_Env(list_Rims)  $value]
+                lappend APPL_Env(list_Rims)  $value
             }
         }
 
@@ -254,7 +254,20 @@
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                 if {[string index [$childNode nodeName] 0 ] == {_}} continue
                 # puts "  childNode ->   [$childNode nodeName]  "
-                set APPL_Env(list_ForkTypes) [lappend APPL_Env(list_ForkTypes)  [$childNode nodeName]]
+                #set APPL_Env(list_ForkTypes) [lappend APPL_Env(list_ForkTypes)  [$childNode nodeName]]
+               lappend APPL_Env(list_ForkTypes)  [$childNode nodeName]
+            }
+        }
+
+            
+            # --- fill ListBox Values   APPL_DropoutDirection
+            #
+        set APPL_Env(list_DropOutDirections) {}
+        set node_DropOutDirections [ $root_InitDOM selectNodes /root/Options/DropOutDirection ]
+        foreach childNode [ $node_DropOutDirections childNodes ] {
+            if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                    # puts "  childNode ->   [$childNode nodeName]  "
+                lappend APPL_Env(list_DropOutDirections)  [$childNode nodeName]
             }
         }
 
@@ -266,7 +279,7 @@
         foreach childNode [ $node_BrakeTypes childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                     # puts "  childNode ->   [$childNode nodeName]  "
-                set APPL_Env(list_BrakeTypes) [lappend APPL_Env(list_BrakeTypes)  [$childNode nodeName]]
+                lappend APPL_Env(list_BrakeTypes)  [$childNode nodeName]
             }
         }
         
@@ -277,7 +290,7 @@
         foreach childNode [ $node_BottleCage childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                     # puts "  childNode ->   [$childNode nodeName]  "
-                set APPL_Env(list_BottleCage) [lappend APPL_Env(list_BottleCage)  [$childNode nodeName]]
+                lappend APPL_Env(list_BottleCage)  [$childNode nodeName]
             }
         }
         
@@ -288,7 +301,7 @@
         foreach childNode [ $node_Binary_OnOff childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                     # puts "  childNode ->   [$childNode nodeName]  "
-                set APPL_Env(list_Binary_OnOff) [lappend APPL_Env(list_Binary_OnOff)  [$childNode nodeName]]
+                lappend APPL_Env(list_Binary_OnOff)  [$childNode nodeName]
             }
         }
         

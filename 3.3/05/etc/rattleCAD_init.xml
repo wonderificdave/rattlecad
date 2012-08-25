@@ -67,6 +67,11 @@
 			<off/>
 		</Brake>
 
+		<DropOutDirection>
+			<Chainstay/>
+			<horizontal/>
+		</DropOutDirection>
+
 		<BottleCage>
 			<BrazeOn/>
 			<Cage/>

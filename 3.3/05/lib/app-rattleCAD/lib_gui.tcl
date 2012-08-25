@@ -853,11 +853,11 @@
                 # puts "   ... $cv_Name"
         
             switch $type {
-                    Fork    { set listDefinition list://Rendering(Fork@SELECT_ForkTypes) }
-                    Brake   { set listDefinition list://Rendering(Brake/Front@SELECT_BrakeTypes) }
-                    default { set listDefinition {    list://Rendering(Fork@SELECT_ForkTypes)
-                                                    list://Rendering(Brake/Front@SELECT_BrakeTypes)
-                                                    list://Rendering(Brake/Rear@SELECT_BrakeTypes)
+                    Fork    { set listDefinition list://Rendering(Fork@SELECT_ForkType) }
+                    Brake   { set listDefinition list://Rendering(Brake/Front@SELECT_BrakeType) }
+                    default { set listDefinition {    list://Rendering(Fork@SELECT_ForkType)
+                                                    list://Rendering(Brake/Front@SELECT_BrakeType)
+                                                    list://Rendering(Brake/Rear@SELECT_BrakeType)
                                                     list://Rendering(BottleCage/SeatTube@SELECT_BottleCage)
                                                     list://Rendering(BottleCage/DownTube@SELECT_BottleCage)
                                                     list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) }

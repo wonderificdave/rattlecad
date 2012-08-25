@@ -152,19 +152,21 @@
                 <value>55.00</value>
                 <plus_minus>1.00</plus_minus>
             </Angle>
-            <File>etc:dropout/rear_dropout_01.svg</File>
+            <File>etc:dropout/dropout_02.svg</File>
+            <Direction>Chainstay</Direction>
+            <RotationOffset>0.00</RotationOffset>
             <ChainStay>
                 <Offset>33.00</Offset>
-                <OffsetPerp>-5.80</OffsetPerp>
+                <OffsetPerp>1</OffsetPerp>
                 <Offset_TopView>5.00</Offset_TopView>
             </ChainStay>
             <SeatStay>
                 <Offset>35.00</Offset>
-                <OffsetPerp>-2.80</OffsetPerp>
+                <OffsetPerp>-7.10</OffsetPerp>
             </SeatStay>
             <Derailleur>
-                <x>-10.00</x>
-                <y>-24.00</y>
+                <x>6.00</x>
+                <y>25.00</y>
             </Derailleur>
         </RearDropOut>
     </Lugs>

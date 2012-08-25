@@ -212,7 +212,7 @@
                                                                           $cv_Name addtag  __Decoration__ withtag $RearBrake(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $RearBrake(object)    <Double-ButtonPress-1> \
                                                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                                                    {  list://Rendering(Brake/Rear@SELECT_BrakeTypes) \
+                                                                                                    {  list://Rendering(Brake/Rear@SELECT_BrakeType) \
                                                                                                         file://Component(Brake/Rear/File)    \
                                                                                                         Component(Brake/Rear/LeverLength)    \
                                                                                                         Component(Brake/Rear/Offset)    \
@@ -240,11 +240,11 @@
                                                                           $cv_Name addtag  __Decoration__ withtag $FrontBrake(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $FrontBrake(object)    <Double-ButtonPress-1> \
                                                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                                                    {     list://Rendering(Brake/Front@SELECT_BrakeTypes) \
+                                                                                                    {   list://Rendering(Brake/Front@SELECT_BrakeType) \
                                                                                                         file://Component(Brake/Front/File)    \
                                                                                                         Component(Brake/Front/LeverLength)    \
                                                                                                         Component(Brake/Front/Offset)    \
-                                                                                                    }     {FrontBrake Parameter} \
+                                                                                                    }   {FrontBrake Parameter} \
                                                                                     ]
                                                                           lib_gui::object_CursorBinding     $cv_Name    $FrontBrake(object)
                                                     }
@@ -358,9 +358,9 @@
                             set HeadSet(object)         [ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
                             if {$updateCommand != {}}   { $cv_Name bind $HeadSet(object)    <Double-ButtonPress-1> \
                                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                                    {     Component(HeadSet/Height/Bottom)\
+                                                                                    {   Component(HeadSet/Height/Bottom)\
                                                                                         Component(HeadSet/Diameter)        \
-                                                                                    }     {HeadSet Parameter} \
+                                                                                    }  {HeadSet Parameter} \
                                                                     ]
                                                           lib_gui::object_CursorBinding     $cv_Name    $HeadSet(object)
                                     }
@@ -395,11 +395,11 @@
                             set RimHeight               $frame_geometry::RearWheel(RimHeight)
                             set TyreHeight              $frame_geometry::RearWheel(TyreHeight)
                                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight]     -tags {__Decoration__ __Tyre__}     -fill white
-                                                            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]                 -tags {__Decoration__ __Rim_01__}   -fill white
-                            set my_Rim                  [   $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]                 -tags {__Decoration__ __Rim_02__}   -fill white ]
-                                                            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]     -tags {__Decoration__ __Rim_03__}   -fill white
-                                                            $cv_Name create circle  $Hub(position)  -radius 45                                            -tags {__Decoration__ __Hub__}      -fill white
-                                                            $cv_Name create circle  $Hub(position)  -radius 23                                            -tags {__Decoration__}              -fill white
+                                                            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]               -tags {__Decoration__ __Rim_01__}   -fill white
+                            set my_Rim                  [   $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]               -tags {__Decoration__ __Rim_02__}   -fill white ]
+                                                            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]  -tags {__Decoration__ __Rim_03__}   -fill white
+                                                            $cv_Name create circle  $Hub(position)  -radius 45                                          -tags {__Decoration__ __Hub__}      -fill white
+                                                            $cv_Name create circle  $Hub(position)  -radius 23                                          -tags {__Decoration__}              -fill white
                             if {$updateCommand != {}}   { $cv_Name bind $my_Rim <Double-ButtonPress-1> \
                                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                                                     {     Component(Wheel/Rear/RimHeight)        \
@@ -414,7 +414,7 @@
                             set RimHeight               $frame_geometry::FrontWheel(RimHeight)
                             set TyreHeight              $frame_geometry::FrontWheel(TyreHeight)
                                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight]     -tags {__Decoration__ __Tyre__}     -fill white
-                                                            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]                -tags {__Decoration__ __Rim_01__}   -fill white
+                                                            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]               -tags {__Decoration__ __Rim_01__}   -fill white
                             set my_Rim                  [   $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]               -tags {__Decoration__ __Rim_02__}   -fill white ]
                                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]  -tags {__Decoration__ __Rim_03__}   -fill white
                                                             $cv_Name create circle  $Hub(position)  -radius 20                                          -tags {__Decoration__ __Hub__}      -fill white
@@ -433,7 +433,7 @@
                             set RimHeight               $frame_geometry::RearWheel(RimHeight)
                             set TyreHeight              $frame_geometry::RearWheel(TyreHeight)
                             set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start -20  -extent 105 -style arc -outline gray60  -tags __Decoration__]
-                            set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter ]                -start -25  -extent 100 -style arc -outline gray60  -tags __Decoration__  -width 0.35]
+                            set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter ]              -start -25  -extent 100 -style arc -outline gray60  -tags __Decoration__  -width 0.35]
                             }
                     FrontWheel_Rep    {
                             set Hub(position)       [ frame_geometry::object_values        FrontWheel  position    $BB_Position ]
@@ -441,7 +441,15 @@
                             set RimHeight               $frame_geometry::FrontWheel(RimHeight)
                             set TyreHeight              $frame_geometry::FrontWheel(TyreHeight)
                             set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start  95  -extent  85 -style arc -outline gray60 -tags __Decoration__]
-                            set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter ]                -start  90  -extent  80 -style arc -outline gray60  -tags __Decoration__  -width 0.35  ]
+                            set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter ]              -start  90  -extent  80 -style arc -outline gray60  -tags __Decoration__  -width 0.35  ]
+                            }
+                    RearWheel_Pos {
+                                # --- create RearDerailleur --------
+                            set Hub(position)       [ frame_geometry::object_values        RearWheel  position        $BB_Position ]
+                            foreach {x y} $Hub(position) break
+                            set x1    [expr $x + 15];        set x2    [expr $x - 15];     set y1    [expr $y + 15];     set y2    [expr $y - 15]
+                            $cv_Name create line  [list $x1 $y $x2 $y]   -fill darkred  -tags __Decoration__
+                            $cv_Name create line  [list $x $y1 $x $y2]   -fill darkred  -tags __Decoration__
                             }
                     LegClearance_Rep {
                             set LegClearance(position)  [ vectormath::addVector $frame_geometry::LegClearance(Position)  $BB_Position ]
@@ -509,18 +517,25 @@
             # --- create Rear Dropout ----------------
         set RearWheel(position)     [ frame_geometry::object_values        RearWheel    position    $BB_Position]
         set RearDropout(file)       [ checkFileString $project::Lugs(RearDropOut/File) ]
-                                    #[$cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Decoration__ ]
-        set RearDropout(object)     [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  0  __RearDropout__]
+        set RearDropout(Rotation)   $frame_geometry::RearDrop(RotationOffset)
+        set RearDropout(Direction)  $frame_geometry::RearDrop(Direction) 
+            switch -exact $RearDropout(Direction) {
+                Chainstay { set do_angle [expr 180 - $RearDropout(Rotation) + $project::Result(Tubes/ChainStay/Direction/degree)]}              
+                default   { set do_angle   0}
+            }
+        set RearDropout(object)     [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  $do_angle  __RearDropout__]
                                       $cv_Name addtag  __Frame__ withtag $RearDropout(object)
                             if {$updateCommand != {}}   { $cv_Name bind     $RearDropout(object)    <Double-ButtonPress-1> \
                                                         [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                                     {   file://Lugs(RearDropOut/File)            \
-                                                                        Lugs(RearDropOut/ChainStay/Offset)     \
-                                                                        Lugs(RearDropOut/ChainStay/OffsetPerp)    \
-                                                                        Lugs(RearDropOut/SeatStay/Offset)      \
+                                                                        list://Lugs(RearDropOut/Direction@SELECT_DropOutDirection)  \
+                                                                        Lugs(RearDropOut/RotationOffset)    \
+                                                                        Lugs(RearDropOut/Derailleur/x)  \
+                                                                        Lugs(RearDropOut/Derailleur/y)  \
                                                                         Lugs(RearDropOut/SeatStay/OffsetPerp)  \
-                                                                        Lugs(RearDropOut/Derailleur/x)           \
-                                                                        Lugs(RearDropOut/Derailleur/y)           \
+                                                                        Lugs(RearDropOut/SeatStay/Offset)   \
+                                                                        Lugs(RearDropOut/ChainStay/OffsetPerp)  \
+                                                                        Lugs(RearDropOut/ChainStay/Offset)  \
                                                                     }  {RearDropout Parameter} \
                                                         ]
                                       lib_gui::object_CursorBinding     $cv_Name    $RearDropout(object)
@@ -588,9 +603,11 @@
         if {$updateCommand != {}}   { $cv_Name bind    $ChainStay(object)    <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                                     {   FrameTubes(ChainStay/DiameterSS)    \
-                                                                        FrameTubes(ChainStay/Height)        \
-                                                                        FrameTubes(ChainStay/HeightBB)        \
-                                                                        FrameTubes(ChainStay/TaperLength)    \
+                                                                        FrameTubes(ChainStay/Height)    \
+                                                                        FrameTubes(ChainStay/HeightBB)  \
+                                                                        FrameTubes(ChainStay/TaperLength)   \
+                                                                        Lugs(RearDropOut/ChainStay/OffsetPerp)  \
+                                                                        Lugs(RearDropOut/ChainStay/Offset)  \
                                                                     }  {Chainstay Parameter}
                                                     ]
                                       lib_gui::object_CursorBinding    $cv_Name    $ChainStay(object)
@@ -605,7 +622,9 @@
                                                                     {   FrameTubes(SeatStay/DiameterST)   \
                                                                         FrameTubes(SeatStay/DiameterCS)   \
                                                                         FrameTubes(SeatStay/TaperLength)  \
-                                                                        Custom(SeatStay/OffsetTT)     \
+                                                                        Custom(SeatStay/OffsetTT)   \
+                                                                        Lugs(RearDropOut/SeatStay/OffsetPerp)   \
+                                                                        Lugs(RearDropOut/SeatStay/Offset)   \
                                                                     }  {SeatStay Parameter}
                                                     ]
                                       lib_gui::object_CursorBinding    $cv_Name    $SeatStay(object)
@@ -822,7 +841,7 @@
                                       $cv_Name addtag  __Frame__ withtag $ForkBlade(object)
         if {$updateCommand != {}}   { $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                    {   list://Rendering(Fork@SELECT_ForkTypes) \
+                                                                    {   list://Rendering(Fork@SELECT_ForkType) \
                                                                         Component(Fork/Blade/Width)            \
                                                                         Component(Fork/Blade/DiameterDO)    \
                                                                         Component(Fork/Blade/TaperLength)    \
@@ -840,7 +859,7 @@
                                       $cv_Name addtag  __Frame__ withtag $ForkCrown(object)
         if {$updateCommand != {}}   { $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                    {   list://Rendering(Fork@SELECT_ForkTypes) \
+                                                                    {   list://Rendering(Fork@SELECT_ForkType) \
                                                                         file://Component(Fork/Crown/File)    \
                                                                         Component(Fork/Crown/Brake/Angle)     \
                                                                         Component(Fork/Crown/Brake/Offset)     \

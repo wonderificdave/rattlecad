@@ -466,6 +466,7 @@
                     project::update_ProjectVersion {3.3.02}
                     project::update_ProjectVersion {3.3.03}
                     project::update_ProjectVersion {3.3.04}
+                    project::update_ProjectVersion {3.3.05}
                     
                     # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
                     frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
@@ -1360,6 +1361,39 @@
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
                             # frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
                         
+                        }                            
+                {3.3.05} {    
+                                #
+                                # -- /root/Lugs/RearDropOut/Direction
+                                #
+                            set parentNode [$domProject selectNode /root/Lugs/RearDropOut]
+                            
+                            set node {}
+                            set node [$domProject selectNode /root/Lugs/RearDropOut/Direction]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Lugs/RearDropOut/Direction"
+                                    $parentNode appendXML "<Direction>horizontal</Direction>"
+                            }
+                            set node {}
+                            set node [$domProject selectNode /root/Lugs/RearDropOut/RotationOffset]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Lugs/RearDropOut/RotationOffset"
+                                    $parentNode appendXML "<RotationOffset>0.00</RotationOffset>"
+                            }
+
+                            set node {}
+                            set node [$domProject selectNode /root/Lugs/RearDropOut/Derailleur/x/text()]
+                            if {$node != {}} {
+                                    puts "                           ... update File ... /root/Lugs/RearDropOut/Derailleur/x"
+                                    set value [$node nodeValue]
+                                    $node nodeValue  [expr abs($value)]
+                            }
+                            set node [$domProject selectNode /root/Lugs/RearDropOut/Derailleur/y/text()]
+                            if {$node != {}} {
+                                    puts "                           ... update File ... /root/Lugs/RearDropOut/Derailleur/y"
+                                    set value [$node nodeValue]
+                                    $node nodeValue  [expr abs($value)]
+                            }
                         }                            
                 {ab-xy} {	set node {}
                             set node [$domProject selectNode /root/Project/rattleCADVersion/text()]

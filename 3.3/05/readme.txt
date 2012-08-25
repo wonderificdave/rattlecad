@@ -1,5 +1,21 @@
 
-3.3.04.14   - 2012.08.06 
+3.3.05.02   - 2012.08.25 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... fix incompatiblity to derailleur display 
+                ... /root/Lugs/RearDropOut/Derailleur/x
+                ... /root/Lugs/RearDropOut/Derailleur/y 
+            ... are now positive values and has to be updated
+            
+
+3.3.05.01   - 2012.08.25 
+-------------------------------------------------------------------------------
+    feature:
+        ... modified handling of rear dropout
+        ... visualization is currently not compatible to 3.3.04.xx
+
+
+3.3.04.14   - 2012.08.12 
 -------------------------------------------------------------------------------
     feature:
         ... add ° to angular dimensions

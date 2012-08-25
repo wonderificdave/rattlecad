@@ -96,6 +96,7 @@
                     frame_visualisation::createFrame_Tubes      $cv_Name $xy    editable   ;# $updateCommand
                         #
                     frame_visualisation::createDecoration       $cv_Name $xy    Logo
+                    frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Pos
                     frame_visualisation::createDecoration       $cv_Name $xy    DerailleurRear_ctr      editable   ;# $updateCommand
                     frame_visualisation::createDecoration       $cv_Name $xy    Saddle                  editable   ;# $updateCommand
                     frame_visualisation::createDecoration       $cv_Name $xy    HeadSet                 editable   ;# $updateCommand
@@ -111,6 +112,7 @@
                         #
                     createDimensionType                         $cv_Name $xy    RearWheel_Clearance
                     createDimensionType                         $cv_Name $xy    LegClearance
+                    createDimensionType                         $cv_Name $xy    DerailleurMount
                     createDimensionType                         $cv_Name $xy    HeadTube_Length         editable   ;# $updateCommand
                     createDimensionType                         $cv_Name $xy    SeatTube_Extension      editable   ;# $updateCommand
                     createDimensionType                         $cv_Name $xy    SeatStay_Offset         editable   ;# $updateCommand
@@ -158,8 +160,9 @@
                     frame_visualisation::createFrame_Tubes      $cv_Name $xy
                         #
                     frame_visualisation::createDecoration       $cv_Name $xy    Logo
-                    frame_visualisation::createDecoration       $cv_Name $xy    BottleCage
+                    frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Pos
                     frame_visualisation::createDecoration       $cv_Name $xy    DerailleurRear_ctr
+                    frame_visualisation::createDecoration       $cv_Name $xy    BottleCage
                     frame_visualisation::createDecoration       $cv_Name $xy    LegClearance_Rep
                         #
                     createCenterline                            $cv_Name $xy
