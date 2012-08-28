@@ -855,7 +855,7 @@
             switch $type {
                     Fork    { set listDefinition list://Rendering(Fork@SELECT_ForkType) }
                     Brake   { set listDefinition list://Rendering(Brake/Front@SELECT_BrakeType) }
-                    default { set listDefinition {    list://Rendering(Fork@SELECT_ForkType)
+                    default { set listDefinition {  list://Rendering(Fork@SELECT_ForkType)
                                                     list://Rendering(Brake/Front@SELECT_BrakeType)
                                                     list://Rendering(Brake/Rear@SELECT_BrakeType)
                                                     list://Rendering(BottleCage/SeatTube@SELECT_BottleCage)

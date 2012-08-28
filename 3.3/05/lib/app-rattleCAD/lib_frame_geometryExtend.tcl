@@ -39,90 +39,11 @@
 
 
  namespace eval frame_geometry_extend {
-        # package require tdom
 
-            #-------------------------------------------------------------------------
-                #  current Project Values
-
-            #-------------------------------------------------------------------------
-                #  store createEdit-widgets position
-            variable _drag
-                    array set _drag {}
-            #-------------------------------------------------------------------------
-
+     #-------------------------------------------------------------------------
+        #  current Project Values
 
     namespace export *
-
-
-
-     #-------------------------------------------------------------------------
-        #  add vector to list of coordinates
-     proc coords_addVector {coordlist vector} {
-            set returnList {}
-            set vector_x [lindex $vector 0]
-            set vector_y [lindex $vector 1]
-            foreach {x y} $coordlist {
-                set new_x [expr $x + $vector_x]
-                set new_y [expr $y + $vector_y]
-                set returnList [lappend returnList $new_x $new_y]
-            }
-                # puts " .... frame_geometry::coords_addVector"
-            return $returnList
-    }
-
-     #-------------------------------------------------------------------------
-        #  close ProjectEdit Widget
-    proc closeEdit {cv cvEdit} {
-            $cv delete $cvEdit
-            destroy $cvEdit
-            catch [ destroy .__select_box ]
-    }
-
-     #-------------------------------------------------------------------------
-        #  binding: dragStart
-    proc dragStart {x y} {
-            variable _drag
-            set [namespace current]::_drag(lastx) $x
-            set [namespace current]::_drag(lasty) $y
-            puts "$x $y"
-    }
-
-     #-------------------------------------------------------------------------
-        #  binding: drag
-    proc drag {x y cv id} {
-            variable _drag
-            set dx [expr {$x - $_drag(lastx)}]
-            set dy [expr {$y - $_drag(lasty)}]
-            set cv_width  [ winfo width  $cv ]
-            set cv_height [ winfo height $cv ]
-            set id_bbox   [ $cv bbox $id ]
-            if {[lindex $id_bbox 0] < 4} {set dx  1}
-            if {[lindex $id_bbox 1] < 4} {set dy  1}
-            if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
-            if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
-
-            $cv move $id $dx $dy
-            set _drag(lastx) $x
-            set _drag(lasty) $y
-    }
-
-     #-------------------------------------------------------------------------
-        #  create createSelectBox
-
-    proc bind_parent_move {toplevel_widget parent} {
-            if {![winfo exists $toplevel_widget]} return
-            set toplevel_x    [winfo rootx $parent]
-            set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
-            wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
-            wm  deiconify     $toplevel_widget
-    }
-
-     #-------------------------------------------------------------------------
-        #  return project attributes
-    proc project_attribute {attribute } {
-            variable Project
-            return $Project($attribute)
-    }
 
      #-------------------------------------------------------------------------
         #  add vector to list of coordinates
