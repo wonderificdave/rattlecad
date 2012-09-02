@@ -38,16 +38,12 @@
  #
 
 
- namespace eval frame_geometry_extend {
-
      #-------------------------------------------------------------------------
         #  current Project Values
 
-    namespace export *
-
      #-------------------------------------------------------------------------
         #  add vector to list of coordinates
-     proc coords_flip_y {coordlist} {
+     proc frame_geometry::coords_flip_y {coordlist} {
             set returnList {}
             foreach {x y} $coordlist {
                 set new_y [expr -$y]
@@ -58,7 +54,7 @@
 
      #-------------------------------------------------------------------------
         #  get xy in a flat list of coordinates, start with    0, 1, 2, 3, ...
-     proc coords_get_xy {coordlist index} {
+     proc frame_geometry::coords_get_xy {coordlist index} {
             if {$index == {end}} {
                 set index_y [expr [llength $coordlist] -1]
                 set index_x [expr [llength $coordlist] -2]
@@ -70,5 +66,5 @@
             return [list [lindex $coordlist $index_x] [lindex $coordlist $index_y] ]
     }
 
- }
+
 

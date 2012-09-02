@@ -87,20 +87,6 @@
             #-------------------------------------------------------------------------
                 #  dataprovider of create_selectbox
             variable _listBoxValues
-
-
-        namespace import ::frame_geometry_extend::coords_addVector  ;#  add vector to list of coordinates
-        namespace import ::frame_geometry_extend::coords_flip_y
-        namespace import ::frame_geometry_extend::coords_get_xy     ;#  get xy in a flat list of coordinates, start with    0, 1, 2, 3, ...
-
-        namespace import ::frame_geometry_update::createEdit        ;#  create ProjectEdit Widget
-        namespace import ::frame_geometry_update::closeEdit         ;#  close ProjectEdit Widget
-        namespace import ::frame_geometry_update::dragStart         ;#  binding: dragStart
-        namespace import ::frame_geometry_update::drag              ;#  binding: drag
-        namespace import ::frame_geometry_update::bind_parent_move
-        namespace import ::frame_geometry_update::updateConfig      ;#  update Value in ConfigWidget
-        namespace import ::frame_geometry_update::check_listBoxValue;#  check Values of Listbox selections
-        namespace import ::frame_geometry_update::set_projectValue  ;#  set parameter in project::
         
 
     #-------------------------------------------------------------------------

@@ -37,20 +37,16 @@
  #
  #
 
- namespace eval frame_geometry_update {
  
      #-------------------------------------------------------------------------
         #  store createEdit-widgets position
     variable  _drag
     array set _drag {}
-    
-     #-------------------------------------------------------------------------
-    namespace export *
  
      #-------------------------------------------------------------------------
         #  create ProjectEdit Widget
         # proc createEdit { x y cv_Name updateCommand _arrayNameList {title {Edit:}}}
-    proc createEdit { x y cv_Name _arrayNameList {title {Edit:}}} {
+    proc frame_geometry::createEdit { x y cv_Name _arrayNameList {title {Edit:}}} {
             variable _update
             variable _updateValue
 
@@ -441,14 +437,14 @@
     }
      #-------------------------------------------------------------------------
         #  close ProjectEdit Widget
-    proc closeEdit {cv cvEdit} {
+    proc frame_geometry::closeEdit {cv cvEdit} {
             $cv delete $cvEdit
             destroy $cvEdit
             catch [ destroy .__select_box ]
     }
      #-------------------------------------------------------------------------
         #  binding: dragStart
-    proc dragStart {x y} {
+    proc frame_geometry::dragStart {x y} {
             variable _drag
             set [namespace current]::_drag(lastx) $x
             set [namespace current]::_drag(lasty) $y
@@ -456,7 +452,7 @@
     }
      #-------------------------------------------------------------------------
         #  binding: drag
-    proc drag {x y cv id} {
+    proc frame_geometry::drag {x y cv id} {
             variable _drag
             set dx [expr {$x - $_drag(lastx)}]
             set dy [expr {$y - $_drag(lasty)}]
@@ -475,16 +471,16 @@
      #-------------------------------------------------------------------------
         #  create createSelectBox
 
-    proc bind_parent_move {toplevel_widget parent} {
+    proc frame_geometry::bind_parent_move {toplevel_widget parent} {
             if {![winfo exists $toplevel_widget]} return
             set toplevel_x    [winfo rootx $parent]
             set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
             wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
             wm  deiconify     $toplevel_widget
     }    
-    #-------------------------------------------------------------------------
+     #-------------------------------------------------------------------------
         #  update Project
-    proc updateConfig {cv_Name xpath {cvEntry {}}} {
+    proc frame_geometry::updateConfig {cv_Name xpath {cvEntry {}}} {
 
             variable _updateValue
 
@@ -523,7 +519,7 @@
     }
      #-------------------------------------------------------------------------
         #  check comments in listbox
-    proc check_listBoxValue { w cv_Name xPath args} {
+    proc frame_geometry::check_listBoxValue { w cv_Name xPath args} {
 
             variable _updateValue
             variable oldValue
@@ -557,7 +553,7 @@
     }
      #-------------------------------------------------------------------------
         #  sets and format Value
-    proc set_projectValue {xpath value {mode {update}}} {
+    proc frame_geometry::set_projectValue {xpath value {mode {update}}} {
 
             # xpath: e.g.:Custom/BottomBracket/Depth
             variable         _updateValue
@@ -666,7 +662,7 @@
     }
      #-------------------------------------------------------------------------
         #  handle modification on /root/Result/... values
-    proc set_resulting_Parameters {_array _name value} {
+    proc frame_geometry::set_resulting_Parameters {_array _name value} {
 
             variable         _updateValue
 
@@ -964,10 +960,9 @@
             }
 
     }
-
      #-------------------------------------------------------------------------
         #  trace/update Project
-    proc trace_Project {varname key operation} {
+    proc frame_geometry::trace_Project {varname key operation} {
             if {$key != ""} {
                     set varname ${varname}($key)
                     }
@@ -976,7 +971,3 @@
             # value is 889 (operation r)
             puts "trace_Prototype: (operation: $operation) $varname is $var "
     }
-
-
- }
-

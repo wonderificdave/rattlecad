@@ -1,9 +1,17 @@
             
+3.3.05.04   - 2012.09.02 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... e.g.: can't read "HandleBar(Distance)": no such variable
+                ... refer procedures directly in namespace
+
+
+            
 3.3.05.03   - 2012.08.28 
 -------------------------------------------------------------------------------
     update:
         ... reorganize lib_frame_geometry.tcl
-            
+
 
 3.3.05.02   - 2012.08.25 
 -------------------------------------------------------------------------------
@@ -12,7 +20,7 @@
                 ... /root/Lugs/RearDropOut/Derailleur/x
                 ... /root/Lugs/RearDropOut/Derailleur/y 
             ... are now positive values and has to be updated
-            
+
 
 3.3.05.01   - 2012.08.25 
 -------------------------------------------------------------------------------
