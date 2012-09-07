@@ -240,7 +240,7 @@
             set DownTube(polygon)       [ frame_geometry::object_values DownTube polygon $BB_Position ]
 
                 # --- help points for virtual horizontal HeadTube -----
-            set TopTube(SeatVirtual)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(Steerer) 1]] $TopTube(Steerer)  $BottomBracket(Position) $SeatPost(SeatTube) ]
+            set TopTube(SeatVirtual)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(Steerer) 1]] $TopTube(Steerer)  $SeatTube(BBracket) $SeatPost(SeatTube) ]
 
 
                 # --- set values -------------------------
@@ -400,9 +400,6 @@
                             set _dim_ST_Length          [ $cv_Name dimension  length            [ project::flatten_nestedList   $Position(help_93) $Saddle(Position) ] \
                                                                 aligned        [expr -160 * $stageScale]    [expr -230 * $stageScale]  \
                                                                 gray50 ]
-
-
-
                 }
                     # -----------------------
                 geometry_fg {

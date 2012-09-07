@@ -1,10 +1,30 @@
             
+3.3.05.08   - 2012.09.06 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... lib_frame_geometry -> SeatTubeAngle on SeatTube/OffsetBB <> 0
+        ... lib_cv_custom      -> SeatTubeAngle on SeatTube/OffsetBB <> 0
+                ... Virtual TopTube Length
+ 
+           
+3.3.05.06   - 2012.09.05 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... lib_frame_geometry -> base_geomatry -> SeatTubeAngle
+ 
+ 
+3.3.05.05   - 2012.09.04 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... ETRTO - European Tire and Rim Technical Organisation
+               ... in .../etc/rattleCAD_init.xml
+
+               
 3.3.05.04   - 2012.09.02 
 -------------------------------------------------------------------------------
     bugfix:
         ... e.g.: can't read "HandleBar(Distance)": no such variable
                 ... refer procedures directly in namespace
-
 
             
 3.3.05.03   - 2012.08.28 

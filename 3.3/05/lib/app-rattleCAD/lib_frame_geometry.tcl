@@ -292,8 +292,9 @@
                 set vct_01              [ vectormath:::parallel {0 0} $hlp_01 $SeatTube(OffsetBB)]
             set SeatPost(SeatTube)      [ lindex $vct_01 1]
             set SeatTube(BottomBracket) [ lindex $vct_01 0]
-            set SeatTube(Angle)         [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) {-200 0} ]
-            #set SeatTube(Angle)        [ vectormath::angle $SeatPost(SeatTube) [ {-200 0} ]
+            set SeatTube(Angle)         [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) [list -100 [lindex $SeatTube(BottomBracket) 1]]]
+              # set SeatTube(Angle)        [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) {-200 0} ]
+              # set SeatTube(Angle)        [ vectormath::angle $SeatPost(SeatTube) [ {-200 0} ]
 
                 #
                 # --- get LegClearance - Position
@@ -348,7 +349,7 @@
             project::setValue Result(Position/SaddleNose)           position    $Saddle(Nose)
             project::setValue Result(Position/LegClearance)         position    $TopTube(PivotPosition)     [expr $LegClearance(Length) - ($RearWheel(Radius) - $project::Custom(BottomBracket/Depth)) ]
             project::setValue Result(Position/BottomBracketGround)  position    0     [expr - $RearWheel(Radius) + $project::Custom(BottomBracket/Depth) ] ;# Point on the Ground perp. to BB
-            project::setValue Result(Position/SeatTubeSaddle)       position    [ vectormath::intersectPoint [list 0 [lindex $Saddle(Position) 1] ] [list 100 [lindex $Saddle(Position) 1]] {0 0} $SeatPost(SeatTube) ]
+            project::setValue Result(Position/SeatTubeSaddle)       position    [ vectormath::intersectPoint [list 0 [lindex $Saddle(Position) 1] ] [list 100 [lindex $Saddle(Position) 1]] $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
 
             project::setValue Result(Lugs/Dropout/Rear/Position)    position     [expr -1*$RearWheel(Distance_X)]    $project::Custom(BottomBracket/Depth)
                 # project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
@@ -1059,7 +1060,7 @@
 
                             # --- SeatTube/Angle ------------------------------
                             #
-                    set angle [ vectormath::angle $SeatPost(SeatTube) {0 0} {-200 0} ]
+                    set angle [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) [list -200 [lindex $SeatTube(BottomBracket) 1]] ]
                     set angle [ format "%.3f" $angle ]
                     project::setValue Result(Angle/SeatTube/Direction) value $angle
 
@@ -1078,8 +1079,8 @@
 
                         # --- VirtualTopTube ----------------------------------
                         #
-                    set SeatTube(VirtualTopTube)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]   $TopTube(HeadTube)  {0 0} $SeatPost(SeatTube) ]
-                     project::setValue Result(Position/SeatTubeVirtualTopTube)    position    $SeatTube(VirtualTopTube)        ;# Point on the SeatTube of virtual TopTube
+                    set SeatTube(VirtualTopTube)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]  $TopTube(HeadTube)  $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
+                    project::setValue Result(Position/SeatTubeVirtualTopTube)    position    $SeatTube(VirtualTopTube)        ;# Point on the SeatTube of virtual TopTube
 
                             # --- TopTube/VirtualLength -----------------------
                             #

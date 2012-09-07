@@ -188,19 +188,19 @@
 		</Fork>
 		
 		<Rim>
-			<rim inch="28&#8221;" metric="622" standard="ertro-road" />
-			<rim inch="26&#8221;" metric="559" standard="ertro-mtb"  />
-			<rim inch="26&#8221;" metric="571" standard="ertro-tria" />
+			<rim inch="28&#8221;" metric="622" standard="ETRTO-Road" />
+			<rim inch="26&#8221;" metric="559" standard="ETRTO-MTB"  />
+			<rim inch="26&#8221;" metric="571" standard="ETRTO-Tria" />
 			<separator/>
-			<rim inch="26&#8221;" metric="590" standard="ertro" />
-			<rim inch="24&#8221;" metric="507" standard="ertro" />
-			<rim inch="20&#8221;" metric="451" standard="ertro" />
-			<rim inch="20&#8221;" metric="406" standard="ertro" />
-			<rim inch="18&#8221;" metric="355" standard="ertro" />
-			<rim inch="18&#8221;" metric="349" standard="ertro" />
-			<rim inch="18&#8221;" metric="340" standard="ertro" />
-			<rim inch="16&#8221;" metric="330" standard="ertro" />
-			<rim inch="16&#8221;" metric="305" standard="ertro" />
+			<rim inch="26&#8221;" metric="590" standard="ETRTO" />
+			<rim inch="24&#8221;" metric="507" standard="ETRTO" />
+			<rim inch="20&#8221;" metric="451" standard="ETRTO" />
+			<rim inch="20&#8221;" metric="406" standard="ETRTO" />
+			<rim inch="18&#8221;" metric="355" standard="ETRTO" />
+			<rim inch="18&#8221;" metric="349" standard="ETRTO" />
+			<rim inch="18&#8221;" metric="340" standard="ETRTO" />
+			<rim inch="16&#8221;" metric="330" standard="ETRTO" />
+			<rim inch="16&#8221;" metric="305" standard="ETRTO" />
 			<separator/>	
 			<rim inch="28&#8221;" metric="635" standard="french" />
 			<rim inch="27&#8221;" metric="630" standard="english" />
