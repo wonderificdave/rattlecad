@@ -767,7 +767,7 @@
 
                                 # HeadTube Offset - horizontal
                                 #
-                            set deltaHeadTube           [expr [lindex $offsetSeatTube 1] * sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+                            set deltaHeadTube           [expr [lindex $offsetSeatTube 1] / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
                             set offsetHeadTube_x        [expr [lindex $offsetSeatTube 1] / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
 
                                 # HeadTube Offset - horizontal
