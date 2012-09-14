@@ -13,18 +13,24 @@ What is the aim of this program?
             You can edit parameters by doubleclicking the measured value
             on the coloured dimensions. 
  
-                
+
     Tube Details (Frame Tubing):
     -----------------------------------
         ... detail your geometry to define all tube parameters
             Editing like in Personal Tab
-                
+
+
+    ChainStay Details
+    -----------------------------------
+        ... check collision of chainstays with cranks and tyre
+
+
     Summary / Frame Drafting / Frame - Jig:
     -----------------------------------
         ... summaries for the workshop
             There are no editable dimensions here.
 
-    Mockup (Assembly):
+    Clear Mockup (Assembly):
     -----------------------------------
         ... take your frame and assemble it with components
             There are no dimensions to edit but you can exchange 

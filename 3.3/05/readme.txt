@@ -1,4 +1,13 @@
             
+3.3.05.10   - 2012.09.14 
+-------------------------------------------------------------------------------
+    usability:
+        ... new order to the tabs
+                ... rename "Rear Mockup" to "ChainStay Details"
+                ... repoition "Chainstay Details" after "Frame Details"
+
+
+            
 3.3.05.09   - 2012.09.09 
 -------------------------------------------------------------------------------
     bugfix:
