@@ -540,6 +540,7 @@
             <DownTube>Cage</DownTube>
             <DownTube_Lower>off</DownTube_Lower>
         </BottleCage>
+        <RearDropOut>behind</RearDropOut>
         <ChainStay>s-bent</ChainStay>    
         <RearMockup>
             <TyreClearance>5.00</TyreClearance>

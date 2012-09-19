@@ -514,33 +514,6 @@
 
 
 
-            # --- create Rear Dropout ----------------
-        set RearWheel(position)     [ frame_geometry::object_values        RearWheel    position    $BB_Position]
-        set RearDropout(file)       [ checkFileString $project::Lugs(RearDropOut/File) ]
-        set RearDropout(Rotation)   $frame_geometry::RearDrop(RotationOffset)
-        set RearDropout(Direction)  $frame_geometry::RearDrop(Direction) 
-            switch -exact $RearDropout(Direction) {
-                Chainstay { set do_angle [expr 180 - $RearDropout(Rotation) + $project::Result(Tubes/ChainStay/Direction/degree)]}              
-                default   { set do_angle   0}
-            }
-        set RearDropout(object)     [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  $do_angle  __RearDropout__]
-                                      $cv_Name addtag  __Frame__ withtag $RearDropout(object)
-                            if {$updateCommand != {}}   { $cv_Name bind     $RearDropout(object)    <Double-ButtonPress-1> \
-                                                        [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                    {   file://Lugs(RearDropOut/File)            \
-                                                                        list://Lugs(RearDropOut/Direction@SELECT_DropOutDirection)  \
-                                                                        Lugs(RearDropOut/RotationOffset)    \
-                                                                        Lugs(RearDropOut/Derailleur/x)  \
-                                                                        Lugs(RearDropOut/Derailleur/y)  \
-                                                                        Lugs(RearDropOut/SeatStay/OffsetPerp)  \
-                                                                        Lugs(RearDropOut/SeatStay/Offset)   \
-                                                                        Lugs(RearDropOut/ChainStay/OffsetPerp)  \
-                                                                        Lugs(RearDropOut/ChainStay/Offset)  \
-                                                                    }  {RearDropout Parameter} \
-                                                        ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $RearDropout(object)
-                }
-
             # --- create HeadTube --------------------
         set HeadTube(polygon)       [ frame_geometry::object_values HeadTube polygon $BB_Position  ]
         set HeadTube(object)        [ $cv_Name create polygon $HeadTube(polygon) -fill $tubeColour -outline black  -tags __HeadTube__]
@@ -596,6 +569,22 @@
                                       lib_gui::object_CursorBinding    $cv_Name    $DownTube(object)
                 }
 
+            # --- create Rear Dropout ----------------
+        set RearWheel(position)     [ frame_geometry::object_values        RearWheel    position    $BB_Position]
+        set RearDropout(file)       [ checkFileString $project::Lugs(RearDropOut/File) ]
+        set RearDropout(Rotation)   $frame_geometry::RearDrop(RotationOffset)
+        set RearDropout(Direction)  $frame_geometry::RearDrop(Direction) 
+        set Rendering(RearDropOut)  $project::Rendering(RearDropOut)
+            switch -exact $RearDropout(Direction) {
+                Chainstay { set do_angle [expr 180 - $RearDropout(Rotation) + $project::Result(Tubes/ChainStay/Direction/degree)]}              
+                default   { set do_angle   0}
+            }
+            # --- Rear Dropout behind Chain- and SeatStay 
+        if {$Rendering(RearDropOut) != {front}} {
+            set RearDropout(object) [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  $do_angle  __RearDropout__]
+        }
+
+
             # --- create ChainStay -------------------
         set ChainStay(polygon)      [ frame_geometry::object_values ChainStay polygon $BB_Position  ]
         set ChainStay(object)       [ $cv_Name create polygon $ChainStay(polygon) -fill $tubeColour -outline black  -tags __ChainStay__]
@@ -629,6 +618,32 @@
                                                     ]
                                       lib_gui::object_CursorBinding    $cv_Name    $SeatStay(object)
                 }
+                
+            # --- Rear Dropout in front of Chain- and SeatStay 
+        if {$Rendering(RearDropOut) == {front}} {
+            set RearDropout(object) [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  $do_angle  __RearDropout__]
+        }
+            # --- handle Rear Dropout - properties ---
+                                      $cv_Name addtag  __Frame__ withtag $RearDropout(object)
+                            if {$updateCommand != {}}   { $cv_Name bind     $RearDropout(object)    <Double-ButtonPress-1> \
+                                                        [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                    {   file://Lugs(RearDropOut/File)            \
+                                                                        list://Lugs(RearDropOut/Direction@SELECT_DropOutDirection)  \
+                                                                        list://Rendering(RearDropOut@SELECT_DropOutPosition)    \
+                                                                        Lugs(RearDropOut/RotationOffset)    \
+                                                                        Lugs(RearDropOut/Derailleur/x)  \
+                                                                        Lugs(RearDropOut/Derailleur/y)  \
+                                                                        Lugs(RearDropOut/SeatStay/OffsetPerp)  \
+                                                                        Lugs(RearDropOut/SeatStay/Offset)   \
+                                                                        Lugs(RearDropOut/ChainStay/OffsetPerp)  \
+                                                                        Lugs(RearDropOut/ChainStay/Offset)  \
+                                                                    }  {RearDropout Parameter} \
+                                                        ]
+                                      lib_gui::object_CursorBinding     $cv_Name    $RearDropout(object)
+                }                
+                
+                
+                
 
             # --- create BottomBracket ---------------
         set BottomBracket(outerDiameter)    $project::Lugs(BottomBracket/Diameter/outside)

@@ -1,4 +1,27 @@
             
+3.3.05.14   - 2012.09.15 
+-------------------------------------------------------------------------------
+    components:
+        ... add dropout: LLEWELLYN 70° from http://www.llewellynbikes.com
+    feature:
+        ... handling different types of reardropouts, position them
+                in front or behind of chain- & seatstays
+
+            
+3.3.05.12   - 2012.09.15 
+-------------------------------------------------------------------------------
+    components:
+        ... add dropout: DR1008 from http://www.paragonmachineworks.com
+
+            
+3.3.05.11   - 2012.09.14 
+-------------------------------------------------------------------------------
+    file format:
+        ... when open an existing project-file, remove the existing
+              <Result> tag, replace it with the <Result> tag of the template
+              and fill during runtime
+
+
 3.3.05.10   - 2012.09.14 
 -------------------------------------------------------------------------------
     usability:
@@ -7,7 +30,6 @@
                 ... repoition "Chainstay Details" after "Frame Details"
 
 
-            
 3.3.05.09   - 2012.09.09 
 -------------------------------------------------------------------------------
     bugfix:

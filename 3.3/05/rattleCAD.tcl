@@ -82,7 +82,7 @@ exec wish "$0" "$@"
     }
     # parray strinfo
     
-     set APPL_Env(RELEASE_Version)    $strinfo(ProductVersion)      ;#{3.2}
+    set APPL_Env(RELEASE_Version)    $strinfo(ProductVersion)       ;#{3.2}
     set APPL_Env(RELEASE_Revision)    $strinfo(FileVersion)         ;#{66}
     set APPL_Env(RELEASE_Date)        $strinfo(FileDate)            ;#{18. Dec. 2011}
     

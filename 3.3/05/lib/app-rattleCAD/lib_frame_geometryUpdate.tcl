@@ -89,6 +89,7 @@
                                 {SELECT_Rim} {              set listBoxContent $::APPL_Env(list_Rims) }
                                 {SELECT_ForkType} {         set listBoxContent $::APPL_Env(list_ForkTypes) }
                                 {SELECT_DropOutDirection} { set listBoxContent $::APPL_Env(list_DropOutDirections) }
+                                {SELECT_DropOutPosition}  { set listBoxContent $::APPL_Env(list_DropOutPositions) }
                                 {SELECT_BrakeType} {        set listBoxContent $::APPL_Env(list_BrakeTypes) }
                                 {SELECT_BottleCage} {       set listBoxContent $::APPL_Env(list_BottleCage) }
                                 {SELECT_Binary_OnOff} {     set listBoxContent $::APPL_Env(list_Binary_OnOff) }

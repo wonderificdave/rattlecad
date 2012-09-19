@@ -272,6 +272,18 @@
         }
 
             
+            # --- fill ListBox Values   APPL_DropoutPosition
+            #
+        set APPL_Env(list_DropOutPositions) {}
+        set node_DropOutPositions [ $root_InitDOM selectNodes /root/Options/DropOutPosition ]
+        foreach childNode [ $node_DropOutPositions childNodes ] {
+            if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                    # puts "  childNode ->   [$childNode nodeName]  "
+                lappend APPL_Env(list_DropOutPositions)  [$childNode nodeName]
+            }
+        }
+
+            
             # --- fill ListBox Values   APPL_BrakeTypes
             #
         set APPL_Env(list_BrakeTypes) {}

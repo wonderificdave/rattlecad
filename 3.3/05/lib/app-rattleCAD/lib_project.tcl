@@ -471,11 +471,37 @@
                     # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
                     frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
             }
-
+            
+              # -- replace old result-Definition of projectXML with the newer one
+            update_resultArea
+            
             return $postUpdate
     }               
 
 
+    #-------------------------------------------------------------------------
+        #  replace <Result> tag with definition of templates
+        #    
+    proc update_resultArea {} {
+            variable postUpdate
+            set domProject    $::APPL_Env(root_ProjectDOM)
+            set domTemplate   [lib_file::get_XMLContent $::APPL_Env(TemplateInit)]
+            #puts [$templDOM asXML]
+            set oldNode [$domProject selectNode /root/Result]
+            if {$oldNode != {}} {
+              puts "                           ... update File ... /root/Result"
+              set parentNode [$oldNode parentNode]
+                # --remove old ResultNode
+              $parentNode removeChild $oldNode 
+              $oldNode delete
+                # -- add new ResultNode
+              set newNode [$domTemplate selectNode /root/Result]
+              $parentNode appendXML [$newNode asXML]
+            }
+            # puts [$::APPL_Env(root_ProjectDOM) asXML]
+            # exit
+    }
+    
     #-------------------------------------------------------------------------
         #  check File Version 3.1 -> 3.2
         #    
@@ -1363,6 +1389,17 @@
                         
                         }                            
                 {3.3.05} {    
+                                #
+                                # -- /root/Lugs/RearDropOut/Direction
+                                #
+                            set parentNode [$domProject selectNode /root/Rendering]
+                            
+                            set node {}
+                            set node [$domProject selectNode /root/Rendering/RearDropOut]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Rendering/RearDropOut"
+                                    $parentNode appendXML "<RearDropOut>behind</RearDropOut>"
+                            }                            
                                 #
                                 # -- /root/Lugs/RearDropOut/Direction
                                 #

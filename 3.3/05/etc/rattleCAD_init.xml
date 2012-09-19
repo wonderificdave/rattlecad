@@ -72,6 +72,11 @@
 			<horizontal/>
 		</DropOutDirection>
 
+		<DropOutPosition>
+			<front/>
+			<behind/>
+		</DropOutPosition>
+
 		<BottleCage>
 			<BrazeOn/>
 			<Cage/>
