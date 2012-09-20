@@ -1,5 +1,12 @@
             
-3.3.05.14   - 2012.09.15 
+3.3.05.15   - 2012.09.20 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... ChainStay Details -> BottomBracket ChainStay Offset_TopView
+                ... parameter was not editable
+
+            
+3.3.05.14   - 2012.09.19 
 -------------------------------------------------------------------------------
     components:
         ... add dropout: LLEWELLYN 70° from http://www.llewellynbikes.com

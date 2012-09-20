@@ -703,21 +703,21 @@
                             $cv_Name create circle      $Center(ChainStay_BB)       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
                             
                             
-                            set _dim_00_Offset         [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(ChainStay_DO) $Center(DIM_Base_00_Ref) ] \
+                            set _dim_00_Offset      [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(ChainStay_DO) $Center(DIM_Base_00_Ref) ] \
                                                                             aligned        [expr -65 * $stageScale]    [expr   0 * $stageScale]  \
                                                                             $Colour(third) ]
                             set _dim_00_OffsetPerp  [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(DIM_Base_00_Ref) $Center(DIM_Base_00) ] \
                                                                             aligned        [expr -20 * $stageScale]    [expr -30 * $stageScale]  \
                                                                             $Colour(third) ]
                                                                             
-                            set _dim_DO_Offset         [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(DIM_Base_00) $Center(DIM_Base_DO_Ref) ] \
+                            set _dim_DO_Offset      [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(DIM_Base_00) $Center(DIM_Base_DO_Ref) ] \
                                                                             aligned        [expr  50 * $stageScale]    [expr   0 * $stageScale]  \
                                                                             $Colour(third) ]
                             set _dim_DO_OffsetPerp  [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(DIM_Base_DO_Ref) $Center(DIM_Base_DO) ] \
                                                                             aligned        [expr  20 * $stageScale]    [expr  30 * $stageScale]  \
                                                                             $Colour(third) ]
                                                                             
-                            set _dim_BB_Offset         [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(DIM_Base_00) $Center(DIM_Base_BB_Ref) ] \
+                            set _dim_BB_Offset      [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(DIM_Base_00) $Center(DIM_Base_BB_Ref) ] \
                                                                             aligned        [expr -50 * $stageScale]    [expr   0 * $stageScale]  \
                                                                             $Colour(third) ]
                             set _dim_BB_OffsetPerp  [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(DIM_Base_BB_Ref) $Center(DIM_Base_BB) ] \
@@ -797,27 +797,27 @@
             set _dim_BB_Width           [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_BBWidth_01) $Center(Dim_BBWidth_02) ] \
                                                                     vertical        [expr  35 * $stageScale]    [expr -10 * $stageScale]  \
                                                                     $Colour(primary) ] 
-            set _dim_CS_BB_Offset         [ $cv_Name dimension  length      [ project::flatten_nestedList   $ChainStay(93) $ChainStay(94) ] \
+            set _dim_CS_BB_Offset       [ $cv_Name dimension  length      [ project::flatten_nestedList   $ChainStay(93) $ChainStay(94) ] \
                                                                     vertical        [expr -60 * $stageScale]   [expr  15 * $stageScale]  \
                                                                     $Colour(primary) ] 
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_BB_Diam_inside       
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_BB_Diam_outside       
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_BB_Width       
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_CS_BB_Offset       
-                    $cv_Name bind $_dim_BB_Diam_inside     <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/inside) ]
+                    $cv_Name bind $_dim_BB_Diam_inside  <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/inside) ]
                     $cv_Name bind $_dim_BB_Diam_outside <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/outside) ]
                     $cv_Name bind $_dim_BB_Width        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Width) ]
-                    $cv_Name bind $_dim_CS_BB_Offset....<Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/ChainStay/Offset_TopView) ]
+                    $cv_Name bind $_dim_CS_BB_Offset    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/ChainStay/Offset_TopView) ]
 
                     
                 # -- RearHub
-            set _dim_Hub_Width           [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_RearHub_01) $Center(Dim_RearHub_02) ] \
+            set _dim_Hub_Width          [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_RearHub_01) $Center(Dim_RearHub_02) ] \
                                                                     vertical        [expr  35 * $stageScale]    [expr -10 * $stageScale]  \
                                                                     $Colour(primary) ] 
-            set _dim_CS_DO_Distance        [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_RearHub_02) $ChainStay(95) ] \
+            set _dim_CS_DO_Distance     [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_RearHub_02) $ChainStay(95) ] \
                                                                     horizontal        [expr  35 * $stageScale]    0  \
                                                                     $Colour(primary) ] 
-            set _dim_CS_DO_Offset         [ $cv_Name dimension  length      [ project::flatten_nestedList   $ChainStay(92) $ChainStay(95) ] \
+            set _dim_CS_DO_Offset       [ $cv_Name dimension  length      [ project::flatten_nestedList   $ChainStay(92) $ChainStay(95) ] \
                                                                     vertical        [expr -55 * $stageScale]    [expr -30 * $stageScale]  \
                                                                     $Colour(primary) ] 
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_Hub_Width            
