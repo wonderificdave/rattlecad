@@ -244,13 +244,16 @@
                 puts " ......... save File before exit"
                 puts "        project read:   $::APPL_Config(PROJECT_Read)"
                 puts "        project change: $::APPL_Env(canvasCAD_Update)"
-                set decission [tk_messageBox  -type yesno \
+                set decission [tk_messageBox  -type yesnocancel \
                                               -icon warning \
                                               -title  "Save before EXIT" \
                                               -message "Do you want to save current File before EXIT"]
                 puts "      ... save Project: $decission\n"
-                if {$decission == {yes}} {
-                  lib_file::saveProject_xml
+                switch  -exact -- $decission {
+                  {yes}     {lib_file::saveProject_xml}
+                  {no}      {}
+                  {cancel}  {return}
+                  default   {}
                 }
             }
             exit
