@@ -116,7 +116,6 @@
                     
                     set ::APPL_Env(root_ProjectDOM)    [lib_file::get_XMLContent $fileName show]
                     set rattleCAD_Version [[$::APPL_Env(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
-                    set ::APPL_Config(PROJECT_File) $fileName
                     
                     puts "\n"
                     puts "  ====== o p e n   F I L E ========================"
@@ -147,6 +146,9 @@
                             }
                                 # project::pdict $valueDict
                     }
+                        #
+                    set ::APPL_Config(PROJECT_File) $fileName
+                    set ::APPL_Config(PROJECT_Read) [clock milliseconds]
 
 
                         # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -185,12 +187,13 @@
             if { [file readable $template_file ] } {
                     set ::APPL_Env(root_ProjectDOM)     [lib_file::get_XMLContent $template_file show]
                         #
+                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                        #
                     set ::APPL_Config(PROJECT_Name)     "Template $type"
-                    set ::APPL_Config(PROJECT_File)     "Template $type"                    
+                    set ::APPL_Config(PROJECT_File)     "Template $type"  
+                    set ::APPL_Config(PROJECT_File)     [expr 2 * [clock milliseconds]]                    
                         # puts " <D> -> \$::APPL_Config(PROJECT_Name)  $::APPL_Config(PROJECT_Name)"
                         # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
-                        #
-                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
                         #
                     set_window_title $::APPL_Config(PROJECT_Name)
                         #
@@ -379,7 +382,7 @@
     #-------------------------------------------------------------------------
         #  open a File, containing just a subset of a Project-xml
         #
-    proc opemProject_Subset_xml {{fileName {}}} {
+    proc openProject_Subset_xml {{fileName {}}} {
             set types {
                 {{Project Files 3.x }       {.xml}  }
             }
@@ -744,78 +747,5 @@
     }
 
 
-    #-------------------------------------------------------------------------
-        #  open File Selection
-        #     ... unused ... to be removed
-    proc openFile_Selection__to_be_removed {{mode default}} {
-
-              variable CURRENT_Config
-              variable USER_Dir
-              variable current_filename
-              variable filetypes
-
-            check_user_dir rattleCAD
-
-            while {true} {
-                set fileName [tk_getOpenFile  -initialdir $USER_Dir  -filetypes  $filetypes ]
-                if {[string length $fileName] == 0} {
-                    break
-                } elseif {[file exists $fileName] && [file readable $fileName]} {
-
-                    control::openFile $fileName
-                    control::update_filelist $fileName
-
-                    set current_filename      $fileName
-
-                        puts  "File: $current_filename"
-                    return
-                } else {
-                    tk_messageBox -icon error -title "Read ERROR" \
-                      -message "File «$fileName» is not readable"
-                    puts  "File «$fileName» is not readable"
-                }
-            }
-
-    }
-    
-    
-    #-------------------------------------------------------------------------
-        #  open File by name
-        #
-    proc openFile_FileList__to_be_removed {} {
-            variable  FILE_List_Widget
-            variable  USER_Dir
-            variable  current_filename
-
-            set fileName [ $FILE_List_Widget get ]
-            set fileName [ file join $USER_Dir $fileName]
-
-            control::openFile         $fileName
-            control::update_filelist  $fileName
-
-            set current_filename      $fileName
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  open File
-        #
-    proc openFile__to_be_removed {fileName} {
-
-            variable CURRENT_Config
-
-            array unset CURRENT_Config
-
-            control::read_configfile $fileName
-
-            control::check_init_values
-            control::update_parameter  {force}
-            control::switch_canvas     {config}
-
-            set current_filename $fileName
-            ::set_window_title "File: $current_filename ($CURRENT_Config(_rattleCAD_Version))"
-            control::toggle_lock_attribute  {new_file}
-            config::update_cfg_values
-    }
 }
 

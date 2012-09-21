@@ -270,11 +270,11 @@ exec wish "$0" "$@"
   
   
          # ---     create Mainframe  -----
-    set    mainframe    [ lib_gui::create_MainFrame ]
+    set    mainframe  [ lib_gui::create_MainFrame ]
         pack $mainframe  -fill both  -expand yes  -side top 
-    set    indicator    [$mainframe addindicator -textvariable "::APPL_Config(PROJECT_Name)"  -anchor w]
+    set    indicator  [$mainframe addindicator -textvariable "::APPL_Config(PROJECT_Name)"  -anchor w]
         $indicator  configure -relief flat
-    set frame        [$mainframe getframe]
+    set frame         [$mainframe getframe]
 
 
         # ---     Button-bar frame  --------
@@ -301,6 +301,7 @@ exec wish "$0" "$@"
         #    set APPL_Config(PROJECT_Name)        
     set APPL_Config(PROJECT_Name)           "Template $APPL_Env(TemplateType)"
     set APPL_Config(PROJECT_File)           "Template $APPL_Env(TemplateType)"
+    set APPL_Config(PROJECT_Read)           [clock milliseconds]
 
 
         # --------------------------------------------
@@ -326,6 +327,16 @@ exec wish "$0" "$@"
     
          # -- window binding -----------------------
     bind . <Configure> [list lib_gui::check_windowSize]
+    bind . <Destroy> {
+        # http://www.tek-tips.com/viewthread.cfm?qid=339303
+        # Test if the toplevel (in this case ".")
+        # received the event.
+          # puts "         check: bind . <DESTROY> %W"
+        if {[string equal %W "."]} {
+            lib_gui::exit_rattleCAD
+        }
+    } 
+
 
         # -- window title ----------------------------
     set_window_title                 $APPL_Config(PROJECT_Name)
@@ -348,7 +359,7 @@ exec wish "$0" "$@"
 
         # -- keep on top --------------
     wm deiconify .
-    
+
 
     
 

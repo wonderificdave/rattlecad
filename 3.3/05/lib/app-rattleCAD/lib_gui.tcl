@@ -64,13 +64,13 @@
             
             set mainframe_Menue {
                 "&File"   all file 0 {
-                        {command "&New"             {}      "New Project File"       {Ctrl n}   -command { lib_file::newProject_xml }     }
+                        {command "&New"             {}      "New Project File"      {Ctrl n}    -command { lib_file::newProject_xml }     }
                         {command "&Open"            {}      "0pen Project File"     {Ctrl o}    -command { lib_file::openProject_xml }     }
                         {command "&Save"            {}      "Save Project File"     {Ctrl s}    -command { lib_file::saveProject_xml }    }
                         {command "Save &As ..."     {}      "Save Project File As"  {Ctrl a}    -command { lib_file::saveProject_xml saveAs} }
                         {separator}
                         {command "&Rendering"       {}      "Rendering Settings"    {}          -command { lib_gui::set_RenderingSettings } }
-                        {command "Impo&rt"          {}      "import Parameter"      {Ctrl i}    -command { lib_file::opemProject_Subset_xml }    }
+                        {command "Impo&rt"          {}      "import Parameter"      {Ctrl i}    -command { lib_file::openProject_Subset_xml }    }
                         {separator}
                         {command "&Config Panel"    {}      "open Config Panel"     {Ctrl m}    -command { lib_gui::open_configPanel }    }
                         {command "&Update"          {}      "update Configuration"  {Ctrl u}    -command { lib_gui::notebook_updateCanvas force } }
@@ -81,7 +81,7 @@
                         {separator}
                         {command "Intro-Image"      {}      "Show Intro Window"     {}          -command { create_intro .intro } }
                         {separator}
-                        {command "E&xit"            {}      "Exit rattle_CAD"       {Ctrl x}    -command { exit } }
+                        {command "E&xit"            {}      "Exit rattle_CAD"       {Ctrl x}    -command { lib_gui::exit_rattleCAD } }
                 }
                 "Info"   all info 0 {
                         {command "&Info"            {}      "Information"           {Ctrl w}    -command { version_info::create  .v_info 0} }
@@ -122,7 +122,7 @@
             Button    $tb_frame.resize   -image  $iconArray(resize)         -helptext "resize"                  -command { lib_gui::notebook_refitCanvas }  
             
             Button    $tb_frame.cfg      -image  $iconArray(cfg_panel)      -helptext "open config Panel"       -command { lib_gui::open_configPanel } 
-            Button    $tb_frame.exit     -image  $iconArray(exit)           -command { exit }
+            Button    $tb_frame.exit     -image  $iconArray(exit)                                               -command { lib_gui::exit_rattleCAD }
               
             label   $tb_frame.sp0      -text   " "
             label   $tb_frame.sp1      -text   " "
@@ -228,8 +228,35 @@
             # puts "canvasCAD::newCanvas $varname  $notebookCanvas($varname) \"$title\" $canvasGeometry(width) $canvasGeometry(height)  $stageFormat $stageScale $stageBorder $args"
     }
 
-    
-    
+
+    #-------------------------------------------------------------------------
+        #  get current canvasCAD   
+        #
+    proc exit_rattleCAD {} {   
+                puts "\n"
+                puts "  ====== e x i t   r a t t l e C A D =============="
+                puts ""
+                puts "         ... file:       $::APPL_Config(PROJECT_File)"
+                puts "           ... read:     $::APPL_Config(PROJECT_Read)"
+                puts "           ... modified: $::APPL_Env(canvasCAD_Update)"
+
+            if { $::APPL_Config(PROJECT_Read) < $::APPL_Env(canvasCAD_Update) } {
+                puts " ......... save File before exit"
+                puts "        project read:   $::APPL_Config(PROJECT_Read)"
+                puts "        project change: $::APPL_Env(canvasCAD_Update)"
+                set decission [tk_messageBox  -type yesno \
+                                              -icon warning \
+                                              -title  "Save before EXIT" \
+                                              -message "Do you want to save current File before EXIT"]
+                puts "      ... save Project: $decission\n"
+                if {$decission == {yes}} {
+                  lib_file::saveProject_xml
+                }
+            }
+            exit
+    }
+
+
     #-------------------------------------------------------------------------
         #  get current canvasCAD   
         #
@@ -304,7 +331,7 @@
             }
     }
 
-    
+
     #-------------------------------------------------------------------------
        #  get notebook window    
        #
@@ -318,8 +345,6 @@
                 }
             }
     }
-
-    
     #-------------------------------------------------------------------------
        #  get notebook window    
        #
@@ -347,7 +372,7 @@
             }
     }
 
-    
+
     #-------------------------------------------------------------------------
        #  register external canvasCAD-Widgets
        #
@@ -358,7 +383,7 @@
             puts   "                                         [$cvID getNodeAttr Canvas path]"
      }
 
-    
+
     #-------------------------------------------------------------------------
        #  scale canvasCAD in current notebook-Tab  
        #
@@ -455,7 +480,7 @@
                         
     }
 
-    
+
     #-------------------------------------------------------------------------
        #  refit notebookCanvas in current notebook-Tab  
        #
@@ -489,7 +514,7 @@
             $varName clean_StageContent
     }
 
-    
+
     #-------------------------------------------------------------------------
        #  print canvasCAD from current notebook-Tab  
        #
@@ -626,7 +651,7 @@
                 # lib_file::openFile_byExtension $exportFile .dxf
     }
 
-    
+
     #-------------------------------------------------------------------------
        #  create a Button inside a canvas of notebookCanvas
        #
@@ -714,7 +739,7 @@
             }
     }
 
-    
+
     #-------------------------------------------------------------------------
        #  update Personal Geometry with parameters of Reference Geometry 
        #
@@ -866,7 +891,8 @@
             frame_geometry::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}                
             # frame_geometry::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}                
     }
-    
+
+
     #-------------------------------------------------------------------------
        #  change canvasCAD Format and Scale
        #
@@ -894,7 +920,7 @@
             notebook_refitCanvas
             notebook_updateCanvas force
     }
-    
+
     #-------------------------------------------------------------------------
        #  load Template from File
        #
@@ -923,7 +949,6 @@
                         }
             }
     }
-
 
     proc global_kb_Binding {ab} {
             variable noteBook_top
