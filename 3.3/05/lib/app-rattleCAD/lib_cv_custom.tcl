@@ -229,12 +229,16 @@
                 set   pt_02                 [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr  0.5 * $Steerer(Diameter)] ]
             set Steerer(vct_Bottom)     [ list $pt_01 $pt_02 ]
             set Steerer(Start)          [ frame_geometry::object_values            Steerer/Start    position    $BB_Position  ]
-            set Steerer(End)            [ frame_geometry::object_values            Steerer/End        position    $BB_Position  ]
+            set Steerer(End)            [ frame_geometry::object_values            Steerer/End      position    $BB_Position  ]
 
             set HeadSet(Diameter)       $frame_geometry::HeadSet(Diameter)
+            set HeadSet(polygon)            [ frame_geometry::object_values HeadSet/Top polygon $BB_Position ]
                 set   pt_01             [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr -0.5 * $HeadSet(Diameter)] ]
                 set   pt_02             [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr  0.5 * $HeadSet(Diameter)] ]
             set HeadSet(vct_Bottom)     [ list $pt_01 $pt_02 ]
+                set   pt_01                 [ frame_geometry::coords_get_xy $HeadSet(polygon) 0 ]
+                set   pt_02                 [ frame_geometry::coords_get_xy $HeadSet(polygon) 7 ]
+            set HeadSet(vct_Top)        [ list $pt_01 $pt_02 ]
 
             set TopTube(polygon)        [ frame_geometry::object_values TopTube  polygon $BB_Position ]
             set DownTube(polygon)       [ frame_geometry::object_values DownTube polygon $BB_Position ]
@@ -266,6 +270,7 @@
             variable    FrontWheel
             variable    HandleBar
             variable    HeadTube
+            variable    HeadSet
             variable    LegClearance
             variable    RearBrake
             variable    RearDrop
@@ -710,46 +715,56 @@
 
                             #$cv_Name create circle  [lindex $SeatTube(vct_Top) 0]        -radius 15  -outline red    -width 1        -tags __CenterLine__
                             #$cv_Name create circle  [lindex $SeatTube(vct_Top) 1]            -radius 15  -outline blue   -width 1        -tags __CenterLine__
+                            
+                            # puts "  $HeadSet(vct_Top)"
+                            ##$cv_Name create circle  [lindex $HeadSet(vct_Top) 0]            -radius 12  -outline blue   -width 1        -tags __CenterLine__
+                            #$cv_Name create circle  [lindex $HeadSet(vct_Top) 1]            -radius 15  -outline blue   -width 1        -tags __CenterLine__
+                            #$cv_Name create circle  $Steerer(Stem)            -radius 10  -outline blue   -width 1        -tags __CenterLine__
 
 
 
 
                                 # -- Dimensions ------------------------
                                 #
-                            set _dim_ST_Length_01       [ $cv_Name dimension  length            [ project::flatten_nestedList   $SeatTube(vct_Top) $SeatTube(BBracket) ] \
-                                                                perpendicular     [expr  -100 * $stageScale]    0 \
+                            set _dim_ST_Length_01       [ $cv_Name dimension  length            [ project::flatten_nestedList   $SeatTube(vct_Top)    $SeatTube(BBracket) ] \
+                                                                perpendicular   [expr  -100 * $stageScale]  0 \
                                                                 gray50 ]
-                            set _dim_ST_Length_02       [ $cv_Name dimension  length            [ project::flatten_nestedList   $SeatTube(BBracket)    $TopTube(SeatTube) ] \
-                                                                aligned     [expr   75 * $stageScale]    [expr  -100 * $stageScale] \
+                            set _dim_ST_Length_02       [ $cv_Name dimension  length            [ project::flatten_nestedList   $SeatTube(BBracket)   $TopTube(SeatTube) ] \
+                                                                aligned         [expr   75 * $stageScale]   [expr  -100 * $stageScale] \
                                                                 gray50 ]
-                            set _dim_HT_Reach_X         [ $cv_Name dimension  length            [ project::flatten_nestedList   $HeadTube(Stem)             $BottomBracket(Position) ] \
-                                                                horizontal  [expr -110 * $stageScale]    0 \
+                            set _dim_HT_Reach_X         [ $cv_Name dimension  length            [ project::flatten_nestedList   $HeadTube(Stem)       $BottomBracket(Position) ] \
+                                                                horizontal      [expr -110 * $stageScale]   0 \
                                                                 gray50 ]
-                            set _dim_HT_Stack_Y         [ $cv_Name dimension  length            [ project::flatten_nestedList            $HeadTube(Stem)             $BottomBracket(Position) ] \
-                                                                vertical    [expr  110 * $stageScale]    [expr  120 * $stageScale]  \
-                                                                gray50 ]
-
-                            set _dim_RearBrake          [ $cv_Name dimension  length            [ project::flatten_nestedList   $RearWheel(Position)        $RearBrake(Mount) ] \
-                                                                aligned     [expr  -85 * $stageScale]    0  \
+                            set _dim_HT_Stack_Y         [ $cv_Name dimension  length            [ project::flatten_nestedList   $HeadTube(Stem)       $BottomBracket(Position) ] \
+                                                                vertical        [expr  110 * $stageScale]   [expr  120 * $stageScale]  \
                                                                 gray50 ]
 
-                            set _dim_Head_Down_Angle    [ $cv_Name dimension  angle            [ project::flatten_nestedList [list $DownTube(Steerer) $DownTube(BBracket) $Steerer(Ground)] ] \
+                            set _dim_HS_Stem            [ $cv_Name dimension  length            [ project::flatten_nestedList   $HeadSet(vct_Top)     $Steerer(Stem)] \
+                                                                perpendicular   [expr   50 * $stageScale]   [expr -70 * $stageScale] \
+                                                                gray50 ]
+                                                                # $HeadSet(Diameter)
+                            
+                            set _dim_RearBrake          [ $cv_Name dimension  length            [ project::flatten_nestedList   $RearWheel(Position)  $RearBrake(Mount) ] \
+                                                                aligned         [expr  -85 * $stageScale]   0  \
+                                                                gray50 ]
+
+                            set _dim_Head_Down_Angle    [ $cv_Name dimension  angle             [ project::flatten_nestedList [list $DownTube(Steerer) $DownTube(BBracket) $Steerer(Ground)] ] \
                                                                 180   0 \
                                                                 gray50 ]
-                            set _dim_Seat_Top_Angle     [ $cv_Name dimension  angle            [ project::flatten_nestedList [list $TopTube(SeatTube) $BottomBracket(Position) $TopTube(Steerer)] ] \
+                            set _dim_Seat_Top_Angle     [ $cv_Name dimension  angle             [ project::flatten_nestedList [list $TopTube(SeatTube) $BottomBracket(Position) $TopTube(Steerer)] ] \
                                                                 110  10 \
                                                                 gray50 ]
-                            set _dim_Down_Seat_Angle    [ $cv_Name dimension  angle            [ project::flatten_nestedList [list $SeatTube(BBracket) $DownTube(Steerer) $TopTube(SeatTube) ] ] \
+                            set _dim_Down_Seat_Angle    [ $cv_Name dimension  angle             [ project::flatten_nestedList [list $SeatTube(BBracket) $DownTube(Steerer) $TopTube(SeatTube) ] ] \
                                                                 110   0 \
                                                                 gray50 ]
-                            set _dim_Seat_SS_Angle      [ $cv_Name dimension  angle            [ project::flatten_nestedList [list $SeatStay(SeatTube) $Position(IS_ChainSt_SeatSt) $BottomBracket(Position) ] ] \
+                            set _dim_Seat_SS_Angle      [ $cv_Name dimension  angle             [ project::flatten_nestedList [list $SeatStay(SeatTube) $Position(IS_ChainSt_SeatSt) $BottomBracket(Position) ] ] \
                                                                 110   0 \
                                                                 gray50 ]
                                             set pt_base [ vectormath::intersectPoint  $SeatTube(BBracket) $TopTube(SeatTube)  $BottomBracket(Position) $Position(IS_ChainSt_SeatSt) ]
-                            set _dim_ST_CS_Angle        [ $cv_Name dimension  angle            [ project::flatten_nestedList [list $pt_base $TopTube(SeatTube) $Position(IS_ChainSt_SeatSt)] ] \
+                            set _dim_ST_CS_Angle        [ $cv_Name dimension  angle             [ project::flatten_nestedList [list $pt_base $TopTube(SeatTube) $Position(IS_ChainSt_SeatSt)] ] \
                                                                 110   0 \
                                                                 gray50 ]
-                            set _dim_Dropout_Angle  [ $cv_Name dimension  angle            [ project::flatten_nestedList [list $Position(IS_ChainSt_SeatSt) $BottomBracket(Position) $SeatStay(SeatTube) ] ] \
+                            set _dim_Dropout_Angle  [ $cv_Name dimension  angle                 [ project::flatten_nestedList [list $Position(IS_ChainSt_SeatSt) $BottomBracket(Position) $SeatStay(SeatTube) ] ] \
                                                                 110   0 \
                                                                 gray50 ]
 
@@ -1521,6 +1536,17 @@
                                                                             [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(Fork/Height) \
                                                                                         }    {Fork Height}]
+                                                        lib_gui::object_CursorBinding        $cv_Name    $dimension
+                                    }
+                        }
+                HeadSet_Top {
+                            set dimension       [ $cv_Name dimension  length    [ project::flatten_nestedList $HeadSet(vct_Top)  [lindex $HeadTube(vct_Top) 1]] \
+                                                                                    perpendicular    [expr  (-150 + 0.5 * $HeadTube(Diameter)) * $stageScale]   [expr -50 * $stageScale] \
+                                                                                    darkred ]
+                            if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
+                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                        {    Component(HeadSet/Height/Top) \
+                                                                                        }    {HeadSet Top Height}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                         }

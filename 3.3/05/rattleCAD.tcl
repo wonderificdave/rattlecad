@@ -301,7 +301,7 @@ exec wish "$0" "$@"
         #    set APPL_Config(PROJECT_Name)        
     set APPL_Config(PROJECT_Name)           "Template $APPL_Env(TemplateType)"
     set APPL_Config(PROJECT_File)           "Template $APPL_Env(TemplateType)"
-    set APPL_Config(PROJECT_Read)           [clock milliseconds]
+    set APPL_Config(PROJECT_Save)           [clock milliseconds]
 
 
         # --------------------------------------------

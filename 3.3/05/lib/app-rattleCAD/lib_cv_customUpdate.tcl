@@ -121,6 +121,7 @@
                     createDimensionType                         $cv_Name $xy    DownTube_Offset         editable   ;# $updateCommand
                     createDimensionType                         $cv_Name $xy    SeatTube_Offset         editable   ;# $updateCommand
                     createDimensionType                         $cv_Name $xy    TopTube_Angle           editable   ;# $updateCommand
+                    createDimensionType                         $cv_Name $xy    HeadSet_Top             editable   ;# $updateCommand
                     createDimensionType                         $cv_Name $xy    HeadSet_Bottom          editable   ;# $updateCommand
                     createDimensionType                         $cv_Name $xy    ForkHeight              editable   ;# $updateCommand
                     createDimensionType                         $cv_Name $xy    Brake_Rear              editable   ;# $updateCommand
