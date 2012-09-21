@@ -251,7 +251,7 @@
                 puts "      ... save Project: $decission\n"
                 switch  -exact -- $decission {
                   {yes}     {lib_file::saveProject_xml}
-                  {no}      {}
+                  {no}      {exit}
                   {cancel}  {return}
                   default   {}
                 }
