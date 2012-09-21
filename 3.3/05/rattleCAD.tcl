@@ -333,7 +333,7 @@ exec wish "$0" "$@"
         # received the event.
           # puts "         check: bind . <DESTROY> %W"
         if {[string equal %W "."]} {
-            lib_gui::exit_rattleCAD
+            lib_gui::exit_rattleCAD yesno
         }
     } 
 

@@ -148,7 +148,7 @@
                     }
                         #
                     set ::APPL_Config(PROJECT_File) $fileName
-                    set ::APPL_Config(PROJECT_Read) [clock milliseconds]
+                    set ::APPL_Config(PROJECT_Save) [clock milliseconds]
 
 
                         # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -258,7 +258,7 @@
                                         puts "\n  $retValue\n"
 
                                         switch $retValue {
-                                            yes     {   set ::APPL_Config(PROJECT_File) [file join $::APPL_Env(USER_Dir) $initialFile]                                             
+                                            yes     {   set ::APPL_Config(PROJECT_File) [file join $::APPL_Env(USER_Dir) $initialFile] 
                                                     }
                                             no      {   set mode        saveAs
                                                         set initialFile {new_Project.xml}
@@ -363,6 +363,8 @@
                 # set ::APPL_Env(root_ProjectDOM) $domConfig
                 #
             frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                #
+            set ::APPL_Config(PROJECT_Save) [clock milliseconds]                                            
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             set_window_title $windowTitle
                 #

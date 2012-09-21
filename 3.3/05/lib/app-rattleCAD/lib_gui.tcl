@@ -232,22 +232,22 @@
     #-------------------------------------------------------------------------
         #  get current canvasCAD   
         #
-    proc exit_rattleCAD {} {   
+    proc exit_rattleCAD {{type {yesnocancel}}} {   
                 puts "\n"
                 puts "  ====== e x i t   r a t t l e C A D =============="
                 puts ""
                 puts "         ... file:       $::APPL_Config(PROJECT_File)"
-                puts "           ... read:     $::APPL_Config(PROJECT_Read)"
+                puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
                 puts "           ... modified: $::APPL_Env(canvasCAD_Update)"
 
-            if { $::APPL_Config(PROJECT_Read) < $::APPL_Env(canvasCAD_Update) } {
+            if { $::APPL_Config(PROJECT_Save) < $::APPL_Env(canvasCAD_Update) } {
                 puts " ......... save File before exit"
-                puts "        project read:   $::APPL_Config(PROJECT_Read)"
+                puts "        project read:   $::APPL_Config(PROJECT_Save)"
                 puts "        project change: $::APPL_Env(canvasCAD_Update)"
-                set decission [tk_messageBox  -type yesnocancel \
+                set decission [tk_messageBox  -type $type \
                                               -icon warning \
-                                              -title  "Save before EXIT" \
-                                              -message "Do you want to save current File before EXIT"]
+                                              -title  "exit rattleCAD" \
+                                              -message "Save current Project before EXIT"]
                 puts "      ... save Project: $decission\n"
                 switch  -exact -- $decission {
                   {yes}     {lib_file::saveProject_xml}

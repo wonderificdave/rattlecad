@@ -86,7 +86,7 @@
                         Language            {english}
                         PROJECT_Name        {}
                         PROJECT_File        {}
-                        PROJECT_Read        {0}
+                        PROJECT_Save        {0}
                         WINDOW_Title        {}
                         FILE_List           {}
                      }   
