@@ -2,7 +2,7 @@
 3.3.05.16   - 2012.09.21 
 -------------------------------------------------------------------------------
     feature:
-        ... check modification before exit and request "File Save"
+        ... check for modification before exit and request "File Save"
 
             
 3.3.05.15   - 2012.09.20 
