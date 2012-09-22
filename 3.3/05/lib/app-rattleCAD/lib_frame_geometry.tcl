@@ -139,7 +139,7 @@
 
                 #
                 # --- increase global update timestamp
-            set ::APPL_Env(canvasCAD_Update)    [ clock milliseconds ]
+            set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
 
 
                 #
@@ -1640,7 +1640,7 @@
         #  Fork Blade Polygon for composite Fork
     proc set_compositeFork {} {
 
-            set domInit $::APPL_Env(root_InitDOM)
+            set domInit $::APPL_Config(root_InitDOM)
             set FrontWheel(position)    [ frame_geometry::object_values        FrontWheel        position    {0 0}]
             set Steerer_Fork(position)  [ frame_geometry::object_values        Steerer/Start    position    {0 0}]
             set ht_direction            [ frame_geometry::object_values        HeadTube        direction ]
@@ -1694,7 +1694,7 @@
         #  Fork Blade Polygon for suspension Fork
     proc set_suspensionFork {} {
 
-            set domInit $::APPL_Env(root_InitDOM)
+            set domInit $::APPL_Config(root_InitDOM)
             set FrontWheel(position)    [ frame_geometry::object_values        FrontWheel        position    {0 0}]
             set Steerer_Fork(position)  [ frame_geometry::object_values        Steerer/Start    position    {0 0}]
             set ht_direction            [ frame_geometry::object_values        HeadTube        direction ]

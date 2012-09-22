@@ -75,9 +75,9 @@
                         {command "&Config Panel"    {}      "open Config Panel"     {Ctrl m}    -command { lib_gui::open_configPanel }    }
                         {command "&Update"          {}      "update Configuration"  {Ctrl u}    -command { lib_gui::notebook_updateCanvas force } }
                         {separator}
-                        {command "&Print"           {}      "Print current Graphic" {Ctrl p}    -command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) } }
-                        {command "&Export SVG"      {}      "Export to SVG"         {Ctrl f}    -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) } }
-                        {command "&Export DXF"      {}      "Export to DXF"         {Ctrl d}    -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) } }
+                        {command "&Print"           {}      "Print current Graphic" {Ctrl p}    -command { lib_gui::notebook_printCanvas $APPL_Config(EXPORT_Dir) } }
+                        {command "&Export SVG"      {}      "Export to SVG"         {Ctrl f}    -command { lib_gui::notebook_exportSVG   $APPL_Config(EXPORT_Dir) } }
+                        {command "&Export DXF"      {}      "Export to DXF"         {Ctrl d}    -command { lib_gui::notebook_exportDXF   $APPL_Config(EXPORT_Dir) } }
                         {separator}
                         {command "Intro-Image"      {}      "Show Intro Window"     {}          -command { create_intro .intro } }
                         {separator}
@@ -106,9 +106,9 @@
         
             Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { lib_file::openProject_xml }  
             Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { lib_file::saveProject_xml } 
-            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { lib_gui::notebook_printCanvas $APPL_Env(EXPORT_Dir) }          
-            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { lib_gui::notebook_exportDXF   $APPL_Env(EXPORT_Dir) }          
-            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { lib_gui::notebook_exportSVG   $APPL_Env(EXPORT_Dir) }          
+            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { lib_gui::notebook_printCanvas $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { lib_gui::notebook_exportDXF   $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { lib_gui::notebook_exportSVG   $APPL_Config(EXPORT_Dir) }          
                                                          
             Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { lib_gui::load_Template  Road }  
             Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { lib_gui::load_Template  MTB  }  
@@ -232,29 +232,37 @@
     #-------------------------------------------------------------------------
         #  get current canvasCAD   
         #
-    proc exit_rattleCAD {{type {yesnocancel}}} {   
+    proc exit_rattleCAD {{type {yesnocancel}} {exitMode {}}} {   
                 puts "\n"
                 puts "  ====== e x i t   r a t t l e C A D =============="
                 puts ""
                 puts "         ... file:       $::APPL_Config(PROJECT_File)"
                 puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
-                puts "           ... modified: $::APPL_Env(canvasCAD_Update)"
+                puts "           ... modified: $::APPL_Config(canvasCAD_Update)"
 
-            if { $::APPL_Config(PROJECT_Save) < $::APPL_Env(canvasCAD_Update) } {
+               
+            if { $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update) } {
                 puts " ......... save File before exit"
-                puts "        project read:   $::APPL_Config(PROJECT_Save)"
-                puts "        project change: $::APPL_Env(canvasCAD_Update)"
+                puts "        project save:   $::APPL_Config(PROJECT_Save)"
+                puts "        project change: $::APPL_Config(canvasCAD_Update)"
+
                 set decission [tk_messageBox  -type $type \
                                               -icon warning \
                                               -title  "exit rattleCAD" \
                                               -message "Save current Project before EXIT"]
                 puts "      ... save Project: $decission\n"
                 switch  -exact -- $decission {
-                  {yes}     {lib_file::saveProject_xml}
-                  {no}      {exit}
+                  {yes}     { lib_file::saveProject_xml }
+                  {no}      {
+                              # even if saved or not, because of handling of bind of <Destroy>
+                              puts "      ... project exit by Command followed by  \"bind <Destroy\""
+                              set ::APPL_Config(PROJECT_Save) [clock milliseconds] 
+                              exit
+                            }
                   {cancel}  {return}
                   default   {}
                 }
+ 
             }
             exit
     }
@@ -412,12 +420,12 @@
        #  get sizeinfo:  http://www2.tcl.tk/8423
        #
     proc check_windowSize {} {
-            # puts "<D>   APPL_Env(window_Size):    $::APPL_Env(window_Size)"
+            # puts "<D>   APPL_Config(window_Size):    $::APPL_Config(window_Size)"
         set newSize [lindex [split [wm geometry .] +] 0]
-        if {![string equal $newSize $::APPL_Env(window_Size)]} {
-                set ::APPL_Env(window_Size) $newSize
-                set ::APPL_Env(window_Update) [ clock milliseconds ]
-                puts "     ... update WindowSize: $::APPL_Env(window_Update)"
+        if {![string equal $newSize $::APPL_Config(window_Size)]} {
+                set ::APPL_Config(window_Size) $newSize
+                set ::APPL_Config(window_Update) [ clock milliseconds ]
+                puts "     ... update WindowSize: $::APPL_Config(window_Update)"
         }
     }
 
@@ -437,16 +445,16 @@
 
             
             if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
-                 set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
+                 set canvasUpdate($varName) [ expr $::APPL_Config(canvasCAD_Update) -1 ]
             }
             
             set timeStart     [clock milliseconds]
        
             
                 # -- update stage content if parameters changed
-                    # puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Env(canvasCAD_Update)\n"
+                    # puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Config(canvasCAD_Update)\n"
             if { $mode == {} } {
-                    if { $canvasUpdate($varName) < $::APPL_Env(canvasCAD_Update) } {
+                    if { $canvasUpdate($varName) < $::APPL_Config(canvasCAD_Update) } {
                         puts "\n       ... notebook_updateCanvas ... update $varName\n"
                         fill_canvasCAD $varName
                         set updateDone  {done}
@@ -461,7 +469,7 @@
             
 
                 # -- refit stage if window size changed
-            if { $canvasUpdate($varName) < $::APPL_Env(window_Update) } {
+            if { $canvasUpdate($varName) < $::APPL_Config(window_Update) } {
                         puts "\n       ... notebook_updateCanvas ... refitStage ........ $varName\n"
                         update
                         catch {$varName refitStage}
@@ -525,7 +533,7 @@
             variable noteBook_top
             
                 ## -- read from domConfig
-            # remove 3.2.70 ;# set domConfig $::APPL_Env(root_ProjectDOM)
+            # remove 3.2.70 ;# set domConfig $::APPL_Config(root_ProjectDOM)
 
                 # --- get currentTab
             set currentTab     [ $noteBook_top select ]
@@ -578,7 +586,7 @@
             variable noteBook_top
             
                 ## -- read from domConfig
-            # remove 3.2.70 ;# set domConfig $::APPL_Env(root_ProjectDOM)
+            # remove 3.2.70 ;# set domConfig $::APPL_Config(root_ProjectDOM)
 
                 # --- get currentTab
             set currentTab     [ $noteBook_top select ]
@@ -621,7 +629,7 @@
             variable noteBook_top
             
                 ## -- read from domConfig
-            # remove 3.2.70 ;# set domConfig $::APPL_Env(root_ProjectDOM)
+            # remove 3.2.70 ;# set domConfig $::APPL_Config(root_ProjectDOM)
 
                 # --- get currentTab
             set currentTab     [ $noteBook_top select ]
@@ -853,7 +861,7 @@
                 
             switch $answer {
                 cancel    return                
-                ok        {    frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Env(root_ProjectDOM)
+                ok        {    frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Config(root_ProjectDOM)
                             lib_gui::fill_canvasCAD cv_Custom00 
                         }
             }
@@ -918,7 +926,7 @@
             }
                             
             $varName formatCanvas $stageFormat $stageScale
-            set canvasUpdate($varName) [ expr $::APPL_Env(canvasCAD_Update) -1 ]
+            set canvasUpdate($varName) [ expr $::APPL_Config(canvasCAD_Update) -1 ]
             notebook_updateCanvas force
             notebook_refitCanvas
             notebook_updateCanvas force

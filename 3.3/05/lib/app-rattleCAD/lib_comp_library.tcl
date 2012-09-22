@@ -193,8 +193,8 @@
             set compList_System {}
             set compList_Custom {}
         } else {
-            set compList_System [lib_file::findFiles [ file join $::APPL_Env(CONFIG_Dir) components ] *.svg]
-            set compList_Custom [lib_file::findFiles [ file join $::APPL_Env(USER_Dir)   components ] *.svg]
+            set compList_System [lib_file::findFiles [ file join $::APPL_Config(CONFIG_Dir) components ] *.svg]
+            set compList_Custom [lib_file::findFiles [ file join $::APPL_Config(USER_Dir)   components ] *.svg]
         }
     }
 

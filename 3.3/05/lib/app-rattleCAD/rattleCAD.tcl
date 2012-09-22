@@ -45,7 +45,7 @@
 
                    
     # -- default Parameters  ----
-    # source  [file join $APPL_Env(CONFIG_Dir) init_parameters.tcl]   
+    # source  [file join $APPL_Config(CONFIG_Dir) init_parameters.tcl]   
   
   ###########################################################################
   #
@@ -53,11 +53,23 @@
   #
   ###########################################################################
     
-    array set APPL_Env { 
+    array set APPL_Config { 
                         RELEASE_Version     {3.3}  
                         RELEASE_Revision    {tbd}
                         RELEASE_Date        {01. May. 2012}
+                        
+                        GUI_Font            {Arial 8}
+                        VECTOR_Font         {}
+                        Language            {english}
     
+                        USER_InitString     {_init_Template}        
+                        WINDOW_Title        {}
+                        FILE_List           {}
+
+                        PROJECT_Name        {}
+                        PROJECT_File        {}
+                        PROJECT_Save        {0}
+
                         BASE_Dir            {}
                         ROOT_Dir            {}
                         CONFIG_Dir          {}
@@ -75,20 +87,7 @@
                         list_ForkTypes      {}
                         list_BrakeTypes     {}
                         list_Binary_OnOff   {}
-                        list_Rims           {}
-                        
-                        USER_InitString     {_init_Template}        
-                    }    
-
-    array set APPL_Config { 
-                        GUI_Font            {Arial 8}
-                        VECTOR_Font         {}
-                        Language            {english}
-                        PROJECT_Name        {}
-                        PROJECT_File        {}
-                        PROJECT_Save        {0}
-                        WINDOW_Title        {}
-                        FILE_List           {}
+                        list_Rims           {}  
                      }   
 
     array set APPL_CompLocation {}
@@ -113,18 +112,17 @@
        #
     proc create_intro {w {type toplevel} {cv_border 0} } {
 
-        variable APPL_Env
-        #global APPL_Env
+        variable APPL_Config
         
         puts "\n"
-        puts "  create_intro: \$APPL_Env(IMAGE_Dir)  $APPL_Env(IMAGE_Dir)"
+        puts "  create_intro: \$APPL_Config(IMAGE_Dir)  $APPL_Config(IMAGE_Dir)"
 
         
         proc intro_content {w cv_border} {
       
-            global APPL_Env
+            global APPL_Config
 
-            set start_image     [image create  photo  -file $APPL_Env(IMAGE_Dir)/start_image.gif ]
+            set start_image     [image create  photo  -file $APPL_Config(IMAGE_Dir)/start_image.gif ]
             set  start_image_w  [image width   $start_image]
             set  start_image_h  [image height  $start_image]
       
@@ -145,10 +143,10 @@
             set y [expr 0.5*$start_image_h]
       
              # $w.cv create text  [expr $x+ 65]  [expr $y+155]  -font "Swiss 18"  -text "Version"                  -fill white
-             # $w.cv create text  [expr $x+155]  [expr $y+155]  -font "Swiss 18"  -text "$APPL_Env(RELEASE_Version)"  -fill white 
-             # $w.cv create text  [expr $x+210]  [expr $y+156]  -font "Swiss 14"  -text "$APPL_Env(RELEASE_Revision)"  -fill white 
-            $w.cv create text  [expr $x+155]  [expr $y+150]  -font "Swiss 12"  -text "Version: $APPL_Env(RELEASE_Version) - $APPL_Env(RELEASE_Revision)"  -fill white -justify left
-            #$w.cv create text  [expr $x+150]  [expr $y+156]  -font "Swiss 14"  -text "$APPL_Env(RELEASE_Version) - $APPL_Env(RELEASE_Revision)"  -fill white 
+             # $w.cv create text  [expr $x+155]  [expr $y+155]  -font "Swiss 18"  -text "$APPL_Config(RELEASE_Version)"  -fill white 
+             # $w.cv create text  [expr $x+210]  [expr $y+156]  -font "Swiss 14"  -text "$APPL_Config(RELEASE_Revision)"  -fill white 
+            $w.cv create text  [expr $x+155]  [expr $y+150]  -font "Swiss 12"  -text "Version: $APPL_Config(RELEASE_Version) - $APPL_Config(RELEASE_Revision)"  -fill white -justify left
+            #$w.cv create text  [expr $x+150]  [expr $y+156]  -font "Swiss 14"  -text "$APPL_Config(RELEASE_Version) - $APPL_Config(RELEASE_Revision)"  -fill white 
       
                 ;# --- beautify --- but i dont know the reason, why to center manually
             $w.cv move   all   1 1            
@@ -185,8 +183,8 @@
        #
     proc initValues {} {
         
-        variable APPL_Env
-        set root_InitDOM     $APPL_Env(root_InitDOM)
+        variable APPL_Config
+        set root_InitDOM     $APPL_Config(root_InitDOM)
         
         
             # --- fill ICON - Array
@@ -196,9 +194,9 @@
             set name    [ $child getAttribute {name} ]
             set source    [ $child getAttribute {src} ]
                 # puts "   $name  $source"
-            set lib_gui::iconArray($name) [ image create photo -file $APPL_Env(IMAGE_Dir)/$source ]
+            set lib_gui::iconArray($name) [ image create photo -file $APPL_Config(IMAGE_Dir)/$source ]
         }
-            set ::cfg_panel [image create photo -file $APPL_Env(IMAGE_Dir)/cfg_panel.gif]
+            set ::cfg_panel [image create photo -file $APPL_Config(IMAGE_Dir)/cfg_panel.gif]
 
         
             # --- fill CANVAS - Array
@@ -211,26 +209,26 @@
             # --- get TemplateFile - Names
             #
         set node    [ $root_InitDOM selectNodes /root/Template/Road ]
-            set APPL_Env(TemplateRoad_default)  [file join $APPL_Env(CONFIG_Dir) [$node asText] ]
+            set APPL_Config(TemplateRoad_default)  [file join $APPL_Config(CONFIG_Dir) [$node asText] ]
         set node    [ $root_InitDOM selectNodes /root/Template/MTB ]
-            set APPL_Env(TemplateMTB_default)   [file join $APPL_Env(CONFIG_Dir) [$node asText] ]
+            set APPL_Config(TemplateMTB_default)   [file join $APPL_Config(CONFIG_Dir) [$node asText] ]
                 
                 
             # --- get Template - Type to load
             #
         set node    [ $root_InitDOM selectNodes /root/Startup/TemplateFile ]
-            set APPL_Env(TemplateType) [$node asText]
+            set APPL_Config(TemplateType) [$node asText]
             
             
             # --- get Template - File to load
             #
-        set APPL_Env(TemplateInit) [lib_file::getTemplateFile   $APPL_Env(TemplateType)]
+        set APPL_Config(TemplateInit) [lib_file::getTemplateFile   $APPL_Config(TemplateType)]
             
             
         
             # --- fill ListBox Values   APPL_RimList
             #
-        set APPL_Env(list_Rims) {}
+        set APPL_Config(list_Rims) {}
         set node_Rims [ $root_InitDOM selectNodes /root/Options/Rim ]
         foreach childNode [ $node_Rims childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
@@ -242,79 +240,79 @@
                     } else {
                         set value [format "%s ; %s %s" $value_02 $value_01 $value_03]
                     }
-                lappend APPL_Env(list_Rims)  $value
+                lappend APPL_Config(list_Rims)  $value
             }
         }
 
         
             # --- fill ListBox Values   APPL_ForkTypes
             #
-        set APPL_Env(list_ForkTypes) {}
+        set APPL_Config(list_ForkTypes) {}
         set node_ForkTypes [ $root_InitDOM selectNodes /root/Options/Fork ]
         foreach childNode [ $node_ForkTypes childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                 if {[string index [$childNode nodeName] 0 ] == {_}} continue
                 # puts "  childNode ->   [$childNode nodeName]  "
-                #set APPL_Env(list_ForkTypes) [lappend APPL_Env(list_ForkTypes)  [$childNode nodeName]]
-               lappend APPL_Env(list_ForkTypes)  [$childNode nodeName]
+                #set APPL_Config(list_ForkTypes) [lappend APPL_Config(list_ForkTypes)  [$childNode nodeName]]
+               lappend APPL_Config(list_ForkTypes)  [$childNode nodeName]
             }
         }
 
             
             # --- fill ListBox Values   APPL_DropoutDirection
             #
-        set APPL_Env(list_DropOutDirections) {}
+        set APPL_Config(list_DropOutDirections) {}
         set node_DropOutDirections [ $root_InitDOM selectNodes /root/Options/DropOutDirection ]
         foreach childNode [ $node_DropOutDirections childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                     # puts "  childNode ->   [$childNode nodeName]  "
-                lappend APPL_Env(list_DropOutDirections)  [$childNode nodeName]
+                lappend APPL_Config(list_DropOutDirections)  [$childNode nodeName]
             }
         }
 
             
             # --- fill ListBox Values   APPL_DropoutPosition
             #
-        set APPL_Env(list_DropOutPositions) {}
+        set APPL_Config(list_DropOutPositions) {}
         set node_DropOutPositions [ $root_InitDOM selectNodes /root/Options/DropOutPosition ]
         foreach childNode [ $node_DropOutPositions childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                     # puts "  childNode ->   [$childNode nodeName]  "
-                lappend APPL_Env(list_DropOutPositions)  [$childNode nodeName]
+                lappend APPL_Config(list_DropOutPositions)  [$childNode nodeName]
             }
         }
 
             
             # --- fill ListBox Values   APPL_BrakeTypes
             #
-        set APPL_Env(list_BrakeTypes) {}
+        set APPL_Config(list_BrakeTypes) {}
         set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/Brake ]
         foreach childNode [ $node_BrakeTypes childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                     # puts "  childNode ->   [$childNode nodeName]  "
-                lappend APPL_Env(list_BrakeTypes)  [$childNode nodeName]
+                lappend APPL_Config(list_BrakeTypes)  [$childNode nodeName]
             }
         }
         
             # --- fill ListBox Values   APPL_BottleCage
             #
-        set APPL_Env(list_BottleCage) {}
+        set APPL_Config(list_BottleCage) {}
         set node_BottleCage [ $root_InitDOM selectNodes /root/Options/BottleCage ]
         foreach childNode [ $node_BottleCage childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                     # puts "  childNode ->   [$childNode nodeName]  "
-                lappend APPL_Env(list_BottleCage)  [$childNode nodeName]
+                lappend APPL_Config(list_BottleCage)  [$childNode nodeName]
             }
         }
         
             # --- fill ListBox Values   APPL_Binary_OnOff
             #
-        set APPL_Env(list_Binary_OnOff) {}
+        set APPL_Config(list_Binary_OnOff) {}
         set node_Binary_OnOff [ $root_InitDOM selectNodes /root/Options/Binary_OnOff ]
         foreach childNode [ $node_Binary_OnOff childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                     # puts "  childNode ->   [$childNode nodeName]  "
-                lappend APPL_Env(list_Binary_OnOff)  [$childNode nodeName]
+                lappend APPL_Config(list_Binary_OnOff)  [$childNode nodeName]
             }
         }
         
@@ -340,11 +338,11 @@
     proc set_window_title { {filename {}} } {
       
             # Debug  p     
-        global APPL_Config APPL_Env
+        global APPL_Config
       
         set  prj_name  [file tail $filename]
 
-        set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision) - $prj_name"
+        set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision) - $prj_name"
         set  APPL_Config(PROJECT_Name)  "$prj_name"
         
             # Debug  t  "   $filename " 1      

@@ -86,14 +86,14 @@
             # --- check existance of File --- regarding on user/etc
             proc checkFileString {fileString} {
                 switch -glob $fileString {
-                        user:*  {   set svgFile [file join $::APPL_Env(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
-                        etc:*   {   set svgFile [file join $::APPL_Env(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
-                        default {   set svgFile [file join $::APPL_Env(CONFIG_Dir)/components $fileString ]}
+                        user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
+                        etc:*   {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
+                        default {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components $fileString ]}
                     }
                     # puts "            ... createDecoration::checkFileString $svgFile"
                 if {![file exists $svgFile]} {
                             # puts "           ... does not exist, therfore .."
-                        set svgFile [file join $::APPL_Env(CONFIG_Dir)/components default_exception.svg]
+                        set svgFile [file join $::APPL_Config(CONFIG_Dir)/components default_exception.svg]
                 }
                     # puts "            ... createDecoration::checkFileString $svgFile"
                 return $svgFile
@@ -259,9 +259,9 @@
                                 if {$Rendering(BottleCage_ST) != {off}} {
                                                 # puts "   ... \$Rendering(BottleCage_ST) $Rendering(BottleCage_ST)"
                                             switch $Rendering(BottleCage_ST) {
-                                                BrazeOn { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg ] }
-                                                Cage    { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg ] }
-                                                Bottle  { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
+                                                BrazeOn { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg ] }
+                                                Cage    { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg ] }
+                                                Bottle  { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
                                             }
                                                 # puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
                                             set st_direction    [ frame_geometry::object_values SeatTube direction ]
@@ -283,9 +283,9 @@
                                 if {$Rendering(BottleCage_DT) != {off}} {
                                                 # puts "   ... \$Rendering(BottleCage_DT) $Rendering(BottleCage_DT)"
                                             switch $Rendering(BottleCage_DT) {
-                                                BrazeOn { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/brazeOn.svg ] }
-                                                Cage    { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottleCage.svg ] }
-                                                Bottle  { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/right/bottle_Large.svg ] }
+                                                BrazeOn { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/right/brazeOn.svg ] }
+                                                Cage    { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/right/bottleCage.svg ] }
+                                                Bottle  { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/right/bottle_Large.svg ] }
                                             }
                                                 # puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
                                             set dt_direction    [ frame_geometry::object_values DownTube direction ]
@@ -306,9 +306,9 @@
                                 if {$Rendering(BottleCage_DT_L) != {off}} {
                                                 # puts "   ... \$Rendering(BottleCage_DT_L) $Rendering(BottleCage_DT_L)"
                                             switch $Rendering(BottleCage_DT_L) {
-                                                BrazeOn { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg ] }
-                                                Cage    { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg ] }
-                                                Bottle  { set BottleCage(file)      [ file join $::APPL_Env(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
+                                                BrazeOn { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/left/brazeOn.svg ] }
+                                                Cage    { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/left/bottleCage.svg ] }
+                                                Bottle  { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
                                             }
                                                 # puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
                                             set dt_direction    [ frame_geometry::object_values DownTube direction ]
@@ -487,7 +487,7 @@
 
     proc createFrame_Tubes {cv_Name BB_Position {updateCommand {}}} {
 
-        set domInit     $::APPL_Env(root_InitDOM)
+        set domInit     $::APPL_Config(root_InitDOM)
 
             # --- get stageScale
         set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]
@@ -499,14 +499,14 @@
             # --- check existance of File --- regarding on user/etc
         proc checkFileString {fileString} {
             switch -glob $fileString {
-                    user:*  {   set svgFile [file join $::APPL_Env(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
-                    etc:*   {   set svgFile [file join $::APPL_Env(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
-                    default {   set svgFile [file join $::APPL_Env(CONFIG_Dir)/components $fileString ]}
+                    user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
+                    etc:*   {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
+                    default {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components $fileString ]}
                 }
                 # puts "            ... createDecoration::checkFileString $svgFile"
             if {![file exists $svgFile]} {
                         # puts "           ... does not exist, therfore .."
-                    set svgFile [file join $::APPL_Env(CONFIG_Dir)/components default_exception.svg]
+                    set svgFile [file join $::APPL_Config(CONFIG_Dir)/components default_exception.svg]
             }
                 # puts "            ... createDecoration::checkFileString $svgFile"
             return $svgFile
@@ -581,7 +581,7 @@
             }
             # --- Rear Dropout behind Chain- and SeatStay 
         if {$Rendering(RearDropOut) != {front}} {
-            set RearDropout(object) [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  $do_angle  __RearDropout__]
+            set RearDropout(object) [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  $do_angle  __RearDropout__]
         }
 
 
@@ -621,7 +621,7 @@
                 
             # --- Rear Dropout in front of Chain- and SeatStay 
         if {$Rendering(RearDropOut) == {front}} {
-            set RearDropout(object) [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  $do_angle  __RearDropout__]
+            set RearDropout(object) [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $RearDropout(file)] $RearWheel(position)  $do_angle  __RearDropout__]
         }
             # --- handle Rear Dropout - properties ---
                                       $cv_Name addtag  __Frame__ withtag $RearDropout(object)
@@ -771,7 +771,7 @@
 
     proc createFork_Rep {cv_Name BB_Position {updateCommand {}} } {
 
-        set domInit     $::APPL_Env(root_InitDOM)
+        set domInit     $::APPL_Config(root_InitDOM)
 
             # --- get stageScale
         set stageScale  [ $cv_Name  getNodeAttr  Stage  scale ]
@@ -786,14 +786,14 @@
             # --- check existance of File --- regarding on user/etc
         proc checkFileString {fileString} {
             switch -glob $fileString {
-                    user:*  {   set svgFile [file join $::APPL_Env(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
-                    etc:*   {   set svgFile [file join $::APPL_Env(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
-                    default {   set svgFile [file join $::APPL_Env(CONFIG_Dir)/components $fileString ]}
+                    user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
+                    etc:*   {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
+                    default {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components $fileString ]}
                 }
                 # puts "            ... createDecoration::checkFileString $svgFile"
             if {![file exists $svgFile]} {
                         # puts "           ... does not exist, therfore .."
-                    set svgFile [file join $::APPL_Env(CONFIG_Dir)/components default_exception.svg]
+                    set svgFile [file join $::APPL_Config(CONFIG_Dir)/components default_exception.svg]
             }
                 # puts "            ... createDecoration::checkFileString $svgFile"
             return $svgFile
@@ -870,7 +870,7 @@
                 set ht_direction    [ frame_geometry::object_values     Lugs/ForkCrown direction ]
                 set ht_angle        [expr [ vectormath::dirAngle         {0 0}     $ht_direction ] -90 ]
         set ForkCrown(position)     [ frame_geometry::object_values        Lugs/ForkCrown        position    $BB_Position ]
-        set ForkCrown(object)       [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __ForkCrown__ ]
+        set ForkCrown(object)       [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __ForkCrown__ ]
                                       $cv_Name addtag  __Frame__ withtag $ForkCrown(object)
         if {$updateCommand != {}}   { $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
@@ -886,7 +886,7 @@
                 }
 
             # --- create Fork Dropout ---------------
-        set ForkDropout(object)     [ $cv_Name readSVG [file join $::APPL_Env(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __ForkDropout__]
+        set ForkDropout(object)     [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __ForkDropout__]
                                       $cv_Name addtag  __Frame__ withtag $ForkDropout(object)
         if {$updateCommand != {}}   { $cv_Name bind $ForkDropout(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \

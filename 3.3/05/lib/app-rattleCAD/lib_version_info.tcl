@@ -45,7 +45,7 @@
        #
    proc create { w {tab 0}} {
         
-         global APPL_Env APPL_Config
+         global APPL_Config
 
 
         if {[winfo exists $w]} {
@@ -57,7 +57,7 @@
         set widget_font {-*-Courier-Medium-R-Normal--*-120-*-*-*-*-*-*}
 
         toplevel       $w
-        wm  title      $w  "Info Panel:    rattleCAD  $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)"
+        wm  title      $w  "Info Panel:    rattleCAD  $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)"
           ;# wm  transient  $w  .
  
         set   INFO_Notebook     [ NoteBook    $w.nb]
@@ -194,7 +194,7 @@
           ;#
         $env_text  insert end "\n\n"
         $env_text  insert end "  ====================================================\n"
-        $env_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $env_text  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
         $env_text  insert end "  ====================================================\n"
         $env_text  insert end "\n\n"
         $env_text  insert end "   Runtime:\n"
@@ -210,29 +210,36 @@
         $env_text  insert end "\n\n"
         $env_text  insert end "   Version:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "     Version:        $APPL_Env(RELEASE_Version)\n"
-        $env_text  insert end "     Revision:       $APPL_Env(RELEASE_Revision)\n"
-        $env_text  insert end "     Release Date:   $APPL_Env(RELEASE_Date)\n"
+        $env_text  insert end "     Version:        $APPL_Config(RELEASE_Version)\n"
+        $env_text  insert end "     Revision:       $APPL_Config(RELEASE_Revision)\n"
+        $env_text  insert end "     Release Date:   $APPL_Config(RELEASE_Date)\n"
         $env_text  insert end "\n\n"
         $env_text  insert end "   Environment:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
         $env_text  insert end "\n"
-        $env_text  insert end "     APPL_Env(ROOT_Dir):      $APPL_Env(ROOT_Dir)\n"
-        $env_text  insert end "     APPL_Env(BASE_Dir):      $APPL_Env(BASE_Dir)\n"
-        $env_text  insert end "     APPL_Env(CONFIG_Dir):    $APPL_Env(CONFIG_Dir)\n"
-        $env_text  insert end "     APPL_Env(IMAGE_Dir):     $APPL_Env(IMAGE_Dir)\n"
-        $env_text  insert end "     APPL_Env(USER_Dir):      $APPL_Env(USER_Dir)\n"
+        $env_text  insert end "     APPL_Config(ROOT_Dir):      $APPL_Config(ROOT_Dir)\n"
+        $env_text  insert end "     APPL_Config(BASE_Dir):      $APPL_Config(BASE_Dir)\n"
+        $env_text  insert end "     APPL_Config(CONFIG_Dir):    $APPL_Config(CONFIG_Dir)\n"
+        $env_text  insert end "     APPL_Config(IMAGE_Dir):     $APPL_Config(IMAGE_Dir)\n"
+        $env_text  insert end "     APPL_Config(USER_Dir):      $APPL_Config(USER_Dir)\n"
         $env_text  insert end "\n"
-        # $env_text  insert end "     APPL_Env(USER_Init):     $APPL_Env(USER_Init)\n"
+        # $env_text  insert end "     APPL_Config(USER_Init):     $APPL_Config(USER_Init)\n"
         $env_text  insert end "\n\n"
         $env_text  insert end "   Packages:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
         $env_text  insert end "\n"
         $env_text  insert end "     \$::vectorfont::font_dir  $::vectorfont::font_dir  "
         $env_text  insert end "\n\n\n\n"
+        $env_text  insert end "   APPL_Config:\n"
+        $env_text  insert end "  ----------------------------------------------------\n"
+        $env_text  insert end "\n"
+        foreach name [lsort [array names ::APPL_Config]] {
+        $env_text  insert end [format "     %-35s%s\n" APPL_Config($name): $::APPL_Config($name)]
+        }
+        $env_text  insert end "\n\n\n"
         $env_text  insert end "   others:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "\n\n\n"
+        $env_text  insert end "\n"
         
         
 
@@ -241,11 +248,11 @@
           ;#
         $help_text  insert end "\n\n"
         $help_text  insert end "  ====================================================\n"
-        $help_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $help_text  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
         $help_text  insert end "  ====================================================\n"
         $help_text  insert end ""
         
-        set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] help.txt] r]
+        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] help.txt] r]
         while {![eof $fd]} {
              set line [gets $fd]
              $help_text  insert end "    $line\n"
@@ -261,11 +268,11 @@
           ;#
         $lic_text   insert end "\n\n"
         $lic_text   insert end "  ====================================================\n"
-        $lic_text   insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $lic_text   insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
         $lic_text   insert end "  ====================================================\n"
         $lic_text   insert end ""
         
-        set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] license.txt] r]
+        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] license.txt] r]
         while {![eof $fd]} {
              set line [gets $fd]
              $lic_text  insert end "    $line\n"
@@ -281,11 +288,11 @@
           ;#
         $chng_text  insert end "\n\n"
         $chng_text  insert end "  ====================================================\n"
-        $chng_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $chng_text  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
         $chng_text  insert end "  ====================================================\n"
         $chng_text  insert end ""
         
-        set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] readme.txt] r]
+        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] readme.txt] r]
         while {![eof $fd]} {
              set line [gets $fd]
              $chng_text  insert end "    $line\n"
@@ -301,11 +308,11 @@
           ;#
         $excl_text  insert end "\n\n"
         $excl_text  insert end "  ====================================================\n"
-        $excl_text  insert end "   rattleCAD       $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)\n"
+        $excl_text  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
         $excl_text  insert end "  ====================================================\n"
         $excl_text  insert end ""
         
-        set fd [open [file join [file dirname $::APPL_Env(CONFIG_Dir)] exclusion.txt] r]
+        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] exclusion.txt] r]
         while {![eof $fd]} {
              set line [gets $fd]
              $excl_text  insert end "    $line\n"

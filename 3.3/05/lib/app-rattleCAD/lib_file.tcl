@@ -50,7 +50,7 @@
                 }
 
                 # set userDir        [check_user_dir rattleCAD]
-            set fileName     [tk_getSaveFile -initialdir $::APPL_Env(USER_Dir) -initialfile {new_Project.xml} -filetypes $types]
+            set fileName     [tk_getSaveFile -initialdir $::APPL_Config(USER_Dir) -initialfile {new_Project.xml} -filetypes $types]
 
             if {$fileName == {}} return
             if {! [string equal [file extension $fileName] {.xml}]} {
@@ -58,18 +58,18 @@
             }
 
                 # -- read from domConfig
-            set domConfig  [ lib_file::get_XMLContent     [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad_default) ] ]
+            set domConfig  [ lib_file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad_default) ] ]
                     # 20111229 ...
 
                 # --- set xml-File Attributes
             [ $domConfig selectNodes /root/Project/Name/text()              ]   nodeValue   [ file tail $fileName ]
             [ $domConfig selectNodes /root/Project/modified/text()          ]   nodeValue   [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+            [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
             # maybe new
                 set project::Project(Name)              [ file tail $fileName ]
                 set project::Project(modified)          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-                set project::Project(rattleCADVersion)  "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+                set project::Project(rattleCADVersion)  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
                 # -- open File for writing
             set fp [open $fileName w]
@@ -79,9 +79,9 @@
                 puts "                   ... done"
 
                 # -- read new File
-            set ::APPL_Env(root_ProjectDOM) [lib_file::get_XMLContent $fileName show]
+            set ::APPL_Config(root_ProjectDOM) [lib_file::get_XMLContent $fileName show]
                 #
-            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+            frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             set_window_title $fileName
                 #
@@ -105,17 +105,17 @@
             set types {
                     {{Project Files 3.x }       {.xml}  }
                 }
-                # set userDir       $::APPL_Env(USER_Dir)
+                # set userDir       $::APPL_Config(USER_Dir)
                 # puts "   openProject_xml - types      $types"
             if {$fileName == {}} {
-                set fileName    [tk_getOpenFile -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
+                set fileName    [tk_getOpenFile -initialdir $::APPL_Config(USER_Dir) -filetypes $types]
             }
 
                 # puts "   openProject_xml - fileName:   $fileName"
             if { [file readable $fileName ] } {
                     
-                    set ::APPL_Env(root_ProjectDOM)    [lib_file::get_XMLContent $fileName show]
-                    set rattleCAD_Version [[$::APPL_Env(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
+                    set ::APPL_Config(root_ProjectDOM)    [lib_file::get_XMLContent $fileName show]
+                    set rattleCAD_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
                     
                     puts "\n"
                     puts "  ====== o p e n   F I L E ========================"
@@ -126,15 +126,15 @@
                     set postUpdate [ project::update_Project ]
 
 
-                    # set debugFile  [file join $::APPL_Env(USER_Dir) debug.xml]
+                    # set debugFile  [file join $::APPL_Config(USER_Dir) debug.xml]
                     # puts "   -> $debugFile"
                     # set fp [open $debugFile w]
-                    # puts $fp [$::APPL_Env(root_ProjectDOM)  asXML]
+                    # puts $fp [$::APPL_Config(root_ProjectDOM)  asXML]
                     # close $fp
 
 
                         #
-                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                    frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         #
                     foreach key [dict keys $postUpdate] {
                               # puts " -> $key"
@@ -185,9 +185,9 @@
             set template_file    [ getTemplateFile $type ]
             puts "         ... template_file:   $template_file"
             if { [file readable $template_file ] } {
-                    set ::APPL_Env(root_ProjectDOM)     [lib_file::get_XMLContent $template_file show]
+                    set ::APPL_Config(root_ProjectDOM)     [lib_file::get_XMLContent $template_file show]
                         #
-                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                    frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         #
                     set ::APPL_Config(PROJECT_Name)     "Template $type"
                     set ::APPL_Config(PROJECT_File)     "Template $type"  
@@ -231,7 +231,7 @@
                 set initialDir  "... empty"
             }
                 puts "       ... saveProject_xml - mode:            \"$mode\""
-                puts "       ... saveProject_xml - USER_Dir:        \"$::APPL_Env(USER_Dir)\""
+                puts "       ... saveProject_xml - USER_Dir:        \"$::APPL_Config(USER_Dir)\""
                 puts "       ... saveProject_xml - PROJECT_Name:    \"$::APPL_Config(PROJECT_Name)\""
                 puts "       ... saveProject_xml - ... initialFile:     \"$initialFile\""
                 puts "       ... saveProject_xml - ... initialDir:      \"$initialDir\""
@@ -243,10 +243,10 @@
                                     set requestTemplate {no}
                                     switch -exact $initialFile {
                                         {Template Road} {   set requestTemplate    {yes}
-                                                            set initialFile        [format "%s%s.xml" $::APPL_Env(USER_InitString) Road]
+                                                            set initialFile        [format "%s%s.xml" $::APPL_Config(USER_InitString) Road]
                                                         }
                                         {Template MTB}  {   set requestTemplate    {yes}
-                                                            set initialFile        [format "%s%s.xml" $::APPL_Env(USER_InitString) MTB ]
+                                                            set initialFile        [format "%s%s.xml" $::APPL_Config(USER_InitString) MTB ]
                                                         }
                                         default            {}
                                     }
@@ -258,7 +258,7 @@
                                         puts "\n  $retValue\n"
 
                                         switch $retValue {
-                                            yes     {   set ::APPL_Config(PROJECT_File) [file join $::APPL_Env(USER_Dir) $initialFile] 
+                                            yes     {   set ::APPL_Config(PROJECT_File) [file join $::APPL_Config(USER_Dir) $initialFile] 
                                                     }
                                             no      {   set mode        saveAs
                                                         set initialFile {new_Project.xml}
@@ -287,15 +287,15 @@
 
 
                 # -- read from domConfig
-                # set domConfig $::APPL_Env(root_ProjectDOM)
+                # set domConfig $::APPL_Config(root_ProjectDOM)
 
             switch $mode {
                 {save}        {
-                                # set fileName    [file join $::APPL_Env(USER_Dir) $initialFile]
+                                # set fileName    [file join $::APPL_Config(USER_Dir) $initialFile]
                                 set fileName    [file normalize $::APPL_Config(PROJECT_File)]
                             }
                 {saveAs}    {
-                                set fileName    [tk_getSaveFile -initialdir $::APPL_Env(USER_Dir) -initialfile $initialFile -filetypes $types]
+                                set fileName    [tk_getSaveFile -initialdir $::APPL_Config(USER_Dir) -initialfile $initialFile -filetypes $types]
                                     puts "       ... saveProject_xml - fileName:        $fileName"
                                     # -- $fileName is not empty
                                 if {$fileName == {} } return
@@ -323,13 +323,13 @@
 
             # --- set xml-File Attributes
             set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            set project::Project(rattleCADVersion)     "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+            set project::Project(rattleCADVersion)     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
                 # [ $domConfig selectNodes /root/Project/modified/text()             ]     nodeValue     [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-                # [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]     nodeValue     "$::APPL_Env(RELEASE_Version).$::APPL_Env(RELEASE_Revision)"
+                # [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]     nodeValue     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
                 # -- read from domConfig
-            project::runTime_2_dom $::APPL_Env(root_ProjectDOM)
-            set domConfig $::APPL_Env(root_ProjectDOM)
+            project::runTime_2_dom $::APPL_Config(root_ProjectDOM)
+            set domConfig $::APPL_Config(root_ProjectDOM)
 
 
                 # -- open File for writing
@@ -360,9 +360,9 @@
 
 
                 #
-                # set ::APPL_Env(root_ProjectDOM) $domConfig
+                # set ::APPL_Config(root_ProjectDOM) $domConfig
                 #
-            frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+            frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                 #
             set ::APPL_Config(PROJECT_Save) [clock milliseconds]                                            
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
@@ -389,7 +389,7 @@
                 {{Project Files 3.x }       {.xml}  }
             }
             if {$fileName == {}} {
-                set fileName    [tk_getOpenFile -title "Import" -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
+                set fileName    [tk_getOpenFile -title "Import" -initialdir $::APPL_Config(USER_Dir) -filetypes $types]
             } else {
                 return
             }
@@ -407,7 +407,7 @@
                     {{xml }       {.xml}  }
                 }
             if {$file == {} } {
-                set file [tk_getOpenFile -initialdir $::APPL_Env(USER_Dir) -filetypes $types]
+                set file [tk_getOpenFile -initialdir $::APPL_Config(USER_Dir) -filetypes $types]
             }
                 # -- $fileName is not empty
             if {$file == {} } return
@@ -647,20 +647,20 @@
         #
     proc getTemplateFile {type} {
 
-            set TemplateRoad    [file join $::APPL_Env(USER_Dir) [format "%s%s.xml" $::APPL_Env(USER_InitString) Road] ]
-            set TemplateMTB     [file join $::APPL_Env(USER_Dir) [format "%s%s.xml" $::APPL_Env(USER_InitString) MTB ] ]
+            set TemplateRoad    [file join $::APPL_Config(USER_Dir) [format "%s%s.xml" $::APPL_Config(USER_InitString) Road] ]
+            set TemplateMTB     [file join $::APPL_Config(USER_Dir) [format "%s%s.xml" $::APPL_Config(USER_InitString) MTB ] ]
 
             switch -exact $type {
                     {Road} {    if {[file exists $TemplateRoad ]} {
                                     return $TemplateRoad
                                 } else {
-                                    return $::APPL_Env(TemplateRoad_default)
+                                    return $::APPL_Config(TemplateRoad_default)
                                 }
                             }
                     {MTB} {     if {[file exists $TemplateMTB ]} {
                                     return $TemplateMTB
                                 } else {
-                                    return $::APPL_Env(TemplateMTB_default)
+                                    return $::APPL_Config(TemplateMTB_default)
                                 }
                             }
                     default {   return {}
@@ -716,8 +716,8 @@
                 return {}
             }
 
-            set userDir     [ file join $::APPL_Env(USER_Dir)   $directory ]
-            set etcDir      [ file join $::APPL_Env(CONFIG_Dir) $directory ]
+            set userDir     [ file join $::APPL_Config(USER_Dir)   $directory ]
+            set etcDir      [ file join $::APPL_Config(CONFIG_Dir) $directory ]
                         # puts "            user: $userDir"
                         # puts "            etc:  $etcDir"
 
@@ -725,13 +725,13 @@
             catch {
                 foreach file [ glob -directory $userDir  *.svg ] {
                         # puts "     ... fileList: $file"
-                    set fileString [ string map [list $::APPL_Env(USER_Dir)/components/ {user:} ] $file ]
+                    set fileString [ string map [list $::APPL_Config(USER_Dir)/components/ {user:} ] $file ]
                     set listAlternative   [ lappend listAlternative $fileString]
                 }
             }
             foreach file [ glob -directory $etcDir  *.svg ] {
                         # puts "  ... fileList: $file"
-                set fileString [ string map [list $::APPL_Env(CONFIG_Dir)/components/ {etc:} ] $file ]
+                set fileString [ string map [list $::APPL_Config(CONFIG_Dir)/components/ {etc:} ] $file ]
                 set listAlternative   [ lappend listAlternative $fileString]
             }
 

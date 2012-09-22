@@ -90,9 +90,9 @@
             wm title    $w "Configuration Panel"
                 # create iconBitmap  -----
             if {$::tcl_platform(platform) == {windows}} {
-                wm iconbitmap $w [file join $::APPL_Env(BASE_Dir) tclkit.ico]
+                wm iconbitmap $w [file join $::APPL_Config(BASE_Dir) tclkit.ico]
             } else {
-                wm iconphoto  $w [image create photo .ico1 -format gif -file [file join $::APPL_Env(BASE_Dir)  icon16.gif] ]
+                wm iconphoto  $w [image create photo .ico1 -format gif -file [file join $::APPL_Config(BASE_Dir)  icon16.gif] ]
             }
                 # puts "    geometry:  [wm geometry .]"
             wm geometry    $w +[expr $root_x+8+$root_w]+[expr $root_y]
@@ -232,9 +232,9 @@
             ttk::labelframe $menueFrame.sf.lf_04        -text "Wheels"
                 pack $menueFrame.sf.lf_04               -side top  -fill x  -pady 2
 
-                    create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Rear/RimDiameter)     $::APPL_Env(list_Rims)
+                    create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Rear/RimDiameter)     $::APPL_Config(list_Rims)
                     create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Rear/TyreHeight)     0.20
-                    create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)  $::APPL_Env(list_Rims)
+                    create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)  $::APPL_Config(list_Rims)
                     create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Front/TyreHeight)     0.20
 
 
@@ -252,7 +252,7 @@
        #
     proc add_FrameDetails {w} {
 
-            variable APPL_Env
+            variable APPL_Config
             variable componentList
             variable configValue
             variable frameCanvas
@@ -334,7 +334,7 @@
        #
     proc add_FrameCheck {w} {
 
-            variable APPL_Env
+            variable APPL_Config
             variable componentList
             variable configValue
             variable frameCanvas
@@ -389,7 +389,7 @@
        #
     proc add_BikeComponents {w} {
 
-            variable APPL_Env
+            variable APPL_Config
             variable componentList
             variable configValue
             variable compCanvas
@@ -468,7 +468,7 @@
                     set optionFrame [frame $menueFrame.sf.lf_02.f___$i]
                     label $optionFrame.lb -text "  $label"
                     ttk::combobox $optionFrame.cb   -textvariable [format "%s::%s(%s)" project Rendering $type] \
-                                                    -values $::APPL_Env($name)        -width 30
+                                                    -values $::APPL_Config($name)        -width 30
                         pack $optionFrame -fill x -expand yes  -pady 2
                         pack $optionFrame.cb -side right
                         pack $optionFrame.lb -side left
@@ -526,8 +526,8 @@
                 puts "       compFile:       $compFile"
 
             switch -glob $compFile {
-                etc:*  {  set compFile  [file join $::APPL_Env(CONFIG_Dir) components [lindex [split $compFile {:}] 1] ] }
-                user:* {  set compFile  [file join $::APPL_Env(USER_Dir)   components [lindex [split $compFile {:}] 1] ] }
+                etc:*  {  set compFile  [file join $::APPL_Config(CONFIG_Dir) components [lindex [split $compFile {:}] 1] ] }
+                user:* {  set compFile  [file join $::APPL_Config(USER_Dir)   components [lindex [split $compFile {:}] 1] ] }
                 default {}
             }
                 puts "       compFile:       $compFile"
@@ -674,7 +674,7 @@
                     }
                 }
             }
-            recurseInsert   [$::APPL_Env(root_ProjectDOM) selectNodes /root]  {/}
+            recurseInsert   [$::APPL_Config(root_ProjectDOM) selectNodes /root]  {/}
 
             # parray [namespace current]::configValue
             #foreach file $componentList {
@@ -918,7 +918,7 @@
             set xPath       [format "%s/%s" $_array $_name]
             eval set configValue($xPath)    [format "$%s::%s(%s)" project $_array $_name]
             set labelString $_name
-                # set node      [$::APPL_Env(root_ProjectDOM) selectNodes $xPath]
+                # set node      [$::APPL_Config(root_ProjectDOM) selectNodes $xPath]
                 # set childNode [$node childNodes]
                 # set value    .... [$childNode asText]
                 # set labelString   [string map "{/} { / }" [string map "$labelCut {}" $xPath] ]
@@ -1037,7 +1037,7 @@
                 set varName     [ lib_gui::notebook_getVarName $cv ]
                 if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 
-                set refValue            [ [ $::APPL_Env(root_ProjectDOM) selectNodes /root/$xPath ]  asText ]
+                set refValue            [ [ $::APPL_Config(root_ProjectDOM) selectNodes /root/$xPath ]  asText ]
                 set configValue($xPath) [ frame_geometry::set_projectValue $xPath $configValue($xPath) format]
 
                     # -----------------------------

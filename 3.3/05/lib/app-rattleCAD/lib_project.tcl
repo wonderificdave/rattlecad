@@ -210,7 +210,7 @@
                     default     {}
             }
             
-                # set domProject $::APPL_Env(root_ProjectDOM)            
+                # set domProject $::APPL_Config(root_ProjectDOM)            
                 # set node    [$domProject selectNodes /root/$_array/$_name/text()]
                 # puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
             set check_name [array names [namespace current]::$_array $_name]
@@ -322,7 +322,7 @@
                                 }
             }
 
-                # set domProject $::APPL_Env(root_ProjectDOM)            
+                # set domProject $::APPL_Config(root_ProjectDOM)            
                 # set node	[$domProject selectNodes /root/$_array/$_name/text()]
                 # puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
             set check_name [array names [namespace current]::$_array $_name]
@@ -427,14 +427,14 @@
                 dict unset $postUpdate $key ;   # clear the dict
             }
             
-            set domProject      $::APPL_Env(root_ProjectDOM)
-            set project_Version [[$::APPL_Env(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
+            set domProject      $::APPL_Config(root_ProjectDOM)
+            set project_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
             
                     puts "\n"
                     puts "    -------------------------------"
                     puts "    project::update_Project"
-                    puts "       RELEASE_Version:  $::APPL_Env(RELEASE_Version)"
-                    puts "       RELEASE_Revision: $::APPL_Env(RELEASE_Revision)"
+                    puts "       RELEASE_Version:  $::APPL_Config(RELEASE_Version)"
+                    puts "       RELEASE_Revision: $::APPL_Config(RELEASE_Revision)"
                     puts ""
                     puts "       project_Version:  $project_Version \n"
             
@@ -469,7 +469,7 @@
                     project::update_ProjectVersion {3.3.05}
                     
                     # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                    frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                    frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
             }
             
               # -- replace old result-Definition of projectXML with the newer one
@@ -484,8 +484,8 @@
         #    
     proc update_resultArea {} {
             variable postUpdate
-            set domProject    $::APPL_Env(root_ProjectDOM)
-            set domTemplate   [lib_file::get_XMLContent $::APPL_Env(TemplateInit)]
+            set domProject    $::APPL_Config(root_ProjectDOM)
+            set domTemplate   [lib_file::get_XMLContent $::APPL_Config(TemplateInit)]
             #puts [$templDOM asXML]
             set oldNode [$domProject selectNode /root/Result]
             if {$oldNode != {}} {
@@ -498,7 +498,7 @@
               set newNode [$domTemplate selectNode /root/Result]
               $parentNode appendXML [$newNode asXML]
             }
-            # puts [$::APPL_Env(root_ProjectDOM) asXML]
+            # puts [$::APPL_Config(root_ProjectDOM) asXML]
             # exit
     }
     
@@ -508,7 +508,7 @@
     proc update_ProjectVersion {Version} {
     
             variable postUpdate
-            set domProject $::APPL_Env(root_ProjectDOM)
+            set domProject $::APPL_Config(root_ProjectDOM)
             
                     puts "\n"
                     puts "       -------------------------------"
@@ -1259,7 +1259,7 @@
                                     $parentNode removeChild $node
                                     $node delete                                    
                             } 
-                            set templateRoot    [ lib_file::get_XMLContent $::APPL_Env(TemplateInit)]
+                            set templateRoot    [ lib_file::get_XMLContent $::APPL_Config(TemplateInit)]
                             set resultNode      [ $templateRoot selectNode /root/Result]
                                 # puts "[$resultNode asXML]"
                             foreach child       [ $resultNode childNodes ] {
@@ -1270,7 +1270,7 @@
                                 #
                                 # -- update values
                                 #
-                            # frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                            # frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                             dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
                         
                         }
@@ -1318,7 +1318,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                            # frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.03} {
@@ -1351,7 +1351,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                            # frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.04} {    
@@ -1385,7 +1385,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frame_geometry::set_base_Parameters $::APPL_Env(root_ProjectDOM)
+                            # frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.05} {    
@@ -1436,7 +1436,7 @@
                             set node [$domProject selectNode /root/Project/rattleCADVersion/text()]
                             puts " ... [$node nodeValue] .."
                             puts " ... [$node asText] .."
-                            $node nodeValue [format "%s.%s" $::APPL_Env(RELEASE_Version) $::APPL_Env(RELEASE_Revision)] 
+                            $node nodeValue [format "%s.%s" $::APPL_Config(RELEASE_Version) $::APPL_Config(RELEASE_Revision)] 
                             return
                         }
 

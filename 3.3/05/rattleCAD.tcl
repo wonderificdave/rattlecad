@@ -46,7 +46,7 @@ exec wish "$0" "$@"
 
         puts "\n\n ====== I N I T ============================ \n\n"
         
-        # -- APPL_Env(BASE_Dir)  ------
+        # -- APPL_Config(BASE_Dir)  ------
     set BASE_Dir  [file dirname [file normalize $::argv0] ]
  
         # -- redefine on Starkit  -----
@@ -68,9 +68,9 @@ exec wish "$0" "$@"
 
 
     # -- Version Info  ----------------------
-    if {[file exists [file join $APPL_Env(ROOT_Dir) tclkit.inf]]} {
+    if {[file exists [file join $APPL_Config(ROOT_Dir) tclkit.inf]]} {
         # puts " customizing strings in executable"
-        set fd [open [file join $APPL_Env(ROOT_Dir) tclkit.inf]]
+        set fd [open [file join $APPL_Config(ROOT_Dir) tclkit.inf]]
         array set strinfo [read $fd]
         close $fd
     } else {
@@ -82,23 +82,23 @@ exec wish "$0" "$@"
     }
     # parray strinfo
     
-    set APPL_Env(RELEASE_Version)    $strinfo(ProductVersion)       ;#{3.2}
-    set APPL_Env(RELEASE_Revision)    $strinfo(FileVersion)         ;#{66}
-    set APPL_Env(RELEASE_Date)        $strinfo(FileDate)            ;#{18. Dec. 2011}
+    set APPL_Config(RELEASE_Version)    $strinfo(ProductVersion)       ;#{3.2}
+    set APPL_Config(RELEASE_Revision)    $strinfo(FileVersion)         ;#{66}
+    set APPL_Config(RELEASE_Date)        $strinfo(FileDate)            ;#{18. Dec. 2011}
     
          # -- Application Directories  -----------
-    set APPL_Env(BASE_Dir)      $BASE_Dir
-    set APPL_Env(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
-    set APPL_Env(IMAGE_Dir)     [file join    $BASE_Dir image ]
-    set APPL_Env(ROOT_Dir)      [file dirname $BASE_Dir]
-    set APPL_Env(USER_Dir)      [lib_file::check_user_dir rattleCAD]    
-    set APPL_Env(EXPORT_Dir)    [lib_file::check_user_dir rattleCAD/export]
+    set APPL_Config(BASE_Dir)      $BASE_Dir
+    set APPL_Config(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
+    set APPL_Config(IMAGE_Dir)     [file join    $BASE_Dir image ]
+    set APPL_Config(ROOT_Dir)      [file dirname $BASE_Dir]
+    set APPL_Config(USER_Dir)      [lib_file::check_user_dir rattleCAD]    
+    set APPL_Config(EXPORT_Dir)    [lib_file::check_user_dir rattleCAD/export]
 
 
         # -- Version Info Summary  ---------------
         puts "  ----------------------------------------------"
-        puts "  rattleCAD      $APPL_Env(RELEASE_Version).$APPL_Env(RELEASE_Revision)"
-        puts "                             $APPL_Env(RELEASE_Date)"
+        puts "  rattleCAD      $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)"
+        puts "                             $APPL_Config(RELEASE_Date)"
         puts "  ----------------------------------------------"
 
 
@@ -113,12 +113,12 @@ exec wish "$0" "$@"
         puts "    canvasCAD:   [package require canvasCAD]"
         puts "    extSummary:  [package require extSummary]"
         puts "  ----------------------------------------------"
-        puts "    APPL_Env(ROOT_Dir)   $APPL_Env(ROOT_Dir)"
-        puts "    APPL_Env(BASE_Dir)   $APPL_Env(BASE_Dir)"
-        puts "    APPL_Env(CONFIG_Dir) $APPL_Env(CONFIG_Dir)"
-        puts "    APPL_Env(IMAGE_Dir)  $APPL_Env(IMAGE_Dir)"
-        puts "    APPL_Env(USER_Dir)   $APPL_Env(USER_Dir)"
-        puts "    APPL_Env(EXPORT_Dir) $APPL_Env(EXPORT_Dir)"
+        puts "    APPL_Config(ROOT_Dir)   $APPL_Config(ROOT_Dir)"
+        puts "    APPL_Config(BASE_Dir)   $APPL_Config(BASE_Dir)"
+        puts "    APPL_Config(CONFIG_Dir) $APPL_Config(CONFIG_Dir)"
+        puts "    APPL_Config(IMAGE_Dir)  $APPL_Config(IMAGE_Dir)"
+        puts "    APPL_Config(USER_Dir)   $APPL_Config(USER_Dir)"
+        puts "    APPL_Config(EXPORT_Dir) $APPL_Config(EXPORT_Dir)"
         puts "  ----------------------------------------------"
         puts ""
 
@@ -128,15 +128,15 @@ exec wish "$0" "$@"
   #                 W  -  A  -  R  -  N  -  I  -  N  -  G
   #
   ###########################################################################
-    # set APPL_Env(USER_Dir) $APPL_Env(BASE_Dir)
+    # set APPL_Config(USER_Dir) $APPL_Config(BASE_Dir)
     proc check_BASE_Dir {} {
-            if {$::APPL_Env(BASE_Dir) eq $::APPL_Env(USER_Dir)} {
+            if {$::APPL_Config(BASE_Dir) eq $::APPL_Config(USER_Dir)} {
                 set     message "Dear User!\n"
                 append  message "\n  ...  since rattleCAD Version 3.2.78.03"
                 append  message "\n        there is a new definition of the user-Directory."
                 append  message "\n"
                 append  message "\n  ... your new user-Directory is defined as:"
-                append  message "\n        $::APPL_Env(USER_Dir)"
+                append  message "\n        $::APPL_Config(USER_Dir)"
                 append  message "\n"
                 append  message "\n  ... please install rattleCAD in an other Directory"
                 append  message "\n"
@@ -166,39 +166,39 @@ exec wish "$0" "$@"
 
 
         # -- init Parameters  ----
-    set APPL_Env(root_InitDOM)  [ lib_file::get_XMLContent     [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml ] ]
-        puts "     ... root_InitDOM      [file join $APPL_Env(CONFIG_Dir) rattleCAD_init.xml]"
+    set APPL_Config(root_InitDOM)  [ lib_file::get_XMLContent     [file join $APPL_Config(CONFIG_Dir) rattleCAD_init.xml ] ]
+        puts "     ... root_InitDOM      [file join $APPL_Config(CONFIG_Dir) rattleCAD_init.xml]"
 
 
     initValues
         
         
         # -- load template ----------
-        puts "     ... TemplateType      $APPL_Env(TemplateType)"
-        puts "     ... TemplateInit      $APPL_Env(TemplateInit)"
+        puts "     ... TemplateType      $APPL_Config(TemplateType)"
+        puts "     ... TemplateInit      $APPL_Config(TemplateInit)"
         
     
-    set APPL_Env(root_ProjectDOM)    [ lib_file::get_XMLContent     $APPL_Env(TemplateInit) ]
+    set APPL_Config(root_ProjectDOM)    [ lib_file::get_XMLContent     $APPL_Config(TemplateInit) ]
 
     
         # -- status messages --------
-    puts "\n     APPL_Env(list_ForkTypes)"
-    foreach entry $APPL_Env(list_ForkTypes) {
+    puts "\n     APPL_Config(list_ForkTypes)"
+    foreach entry $APPL_Config(list_ForkTypes) {
         puts "        -> $entry"
     }
 
-    puts "\n     APPL_Env(list_BrakeTypes)"
-    foreach entry $APPL_Env(list_BrakeTypes) {
+    puts "\n     APPL_Config(list_BrakeTypes)"
+    foreach entry $APPL_Config(list_BrakeTypes) {
         puts "        -> $entry"
     }
     
-    puts "\n     APPL_Env(list_BottleCage)"
-    foreach entry $APPL_Env(list_BottleCage) {
+    puts "\n     APPL_Config(list_BottleCage)"
+    foreach entry $APPL_Config(list_BottleCage) {
         puts "        -> $entry"
     }
     
-    puts "\n     APPL_Env(list_Rims)"
-    foreach entry $APPL_Env(list_Rims) {
+    puts "\n     APPL_Config(list_Rims)"
+    foreach entry $APPL_Config(list_Rims) {
         puts "        -> $entry"
     }
     
@@ -263,9 +263,9 @@ exec wish "$0" "$@"
         # ---     create iconBitmap  -----
             #puts " \$tcl_platform(os)  $tcl_platform(os) $tcl_platform(platform)"    
     if {$tcl_platform(platform) == {windows}} {
-        wm iconbitmap . [file join $APPL_Env(BASE_Dir) tclkit.ico]      
+        wm iconbitmap . [file join $APPL_Config(BASE_Dir) tclkit.ico]      
     } else {
-        wm iconphoto  . [image create photo .ico1 -format gif -file [file join $APPL_Env(BASE_Dir)  icon16.gif] ]
+        wm iconphoto  . [image create photo .ico1 -format gif -file [file join $APPL_Config(BASE_Dir)  icon16.gif] ]
     } 
   
   
@@ -294,13 +294,13 @@ exec wish "$0" "$@"
     
         # --------------------------------------------
         #    create custom base Parameters
-    frame_geometry::set_base_Parameters $APPL_Env(root_ProjectDOM)
+    frame_geometry::set_base_Parameters $APPL_Config(root_ProjectDOM)
 
 
         # --------------------------------------------
         #    set APPL_Config(PROJECT_Name)        
-    set APPL_Config(PROJECT_Name)           "Template $APPL_Env(TemplateType)"
-    set APPL_Config(PROJECT_File)           "Template $APPL_Env(TemplateType)"
+    set APPL_Config(PROJECT_Name)           "Template $APPL_Config(TemplateType)"
+    set APPL_Config(PROJECT_File)           "Template $APPL_Config(TemplateType)"
     set APPL_Config(PROJECT_Save)           [clock milliseconds]
 
 
@@ -333,7 +333,7 @@ exec wish "$0" "$@"
         # received the event.
           # puts "         check: bind . <DESTROY> %W"
         if {[string equal %W "."]} {
-            lib_gui::exit_rattleCAD yesno
+            lib_gui::exit_rattleCAD yesno bind_Destroy
         }
     } 
 

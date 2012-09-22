@@ -40,7 +40,7 @@
 
  namespace eval lib_cfg_report {
 
-    global      APPL_Env
+    global      APPL_Config
 
     variable    treeWidget  {}
     variable    menueFrame  {}
@@ -51,7 +51,7 @@
     proc createReport {w} {
         variable treeWidget
         variable menueFrame
-        variable APPL_Env
+        variable APPL_Config
 
             # --- ttk::style - treeview ---
             #
@@ -70,15 +70,15 @@
 
         button  $menueFrame.open    -text {Open xml-File}                   -width 30   -command { lib_file::get_XMLContent {}    visualize}
         button  $menueFrame.bt01    -text {canvasCAD}                       -width 30   -command { lib_cfg_report::fillTree_Variable $canvasCAD::__packageRoot    }
-        button  $menueFrame.bt02    -text {rattleCAD_init.xml}              -width 30   -command { lib_cfg_report::fillTree_Variable $APPL_Env(root_InitDOM) }
+        button  $menueFrame.bt02    -text {rattleCAD_init.xml}              -width 30   -command { lib_cfg_report::fillTree_Variable $APPL_Config(root_InitDOM) }
         button  $menueFrame.bt03    -text {Template Road}                   -width 30   -command { lib_file::get_XMLContent [lib_file::getTemplateFile Road]     visualize}
         button  $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { lib_file::get_XMLContent [lib_file::getTemplateFile MTB ]     visualize}
-        #button     $menueFrame.bt03    -text {Template Road}               -width 30   -command { lib_file::get_XMLContent [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateRoad)]     visualize}
-        #button     $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { lib_file::get_XMLContent [file join $::APPL_Env(CONFIG_Dir) $::APPL_Env(TemplateMTB) ]     visualize}
+        #button     $menueFrame.bt03    -text {Template Road}               -width 30   -command { lib_file::get_XMLContent [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad)]     visualize}
+        #button     $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { lib_file::get_XMLContent [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateMTB) ]     visualize}
 
 
         button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { lib_cfg_report::fillTree_Variable $frame_geometry::domFrame    }
-        button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { project::runTime_2_dom $::APPL_Env(root_ProjectDOM); lib_cfg_report::fillTree_Variable $::APPL_Env(root_ProjectDOM)}
+        button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { project::runTime_2_dom $::APPL_Config(root_ProjectDOM); lib_cfg_report::fillTree_Variable $::APPL_Config(root_ProjectDOM)}
         button  $menueFrame.clear   -text {clear Tree}                      -width 30   -command { lib_cfg_report::cleanupTree }
         pack    $menueFrame.open \
                 $menueFrame.bt01 \
@@ -90,7 +90,7 @@
                 -side top
 
 
-            #    [lib_file::getTemplateFile    $::APPL_Env(TemplateType)]
+            #    [lib_file::getTemplateFile    $::APPL_Config(TemplateType)]
 
         set treeWidget  [ ttk::treeview $treeFrame.tree \
                                                     -columns "value" \

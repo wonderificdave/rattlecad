@@ -1,4 +1,13 @@
             
+3.3.05.21   - 2012.09.22 
+-------------------------------------------------------------------------------
+    bugfix:
+        ... check for modification before exit and request "File Save"
+    architecture:
+        ... move $::APPL_Env(...) to $::APPL_Config(...) 
+                ... remove $::APPL_Env(...) completely
+
+            
 3.3.05.20   - 2012.09.21 
 -------------------------------------------------------------------------------
     feature:

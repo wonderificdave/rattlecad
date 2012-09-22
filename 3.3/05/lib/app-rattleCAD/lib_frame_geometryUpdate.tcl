@@ -86,13 +86,13 @@
                         set listBoxContent {}
                         switch -exact $type {
                                 {SELECT_File} {             set listBoxContent [lib_file::get_componentAlternatives  $key] }
-                                {SELECT_Rim} {              set listBoxContent $::APPL_Env(list_Rims) }
-                                {SELECT_ForkType} {         set listBoxContent $::APPL_Env(list_ForkTypes) }
-                                {SELECT_DropOutDirection} { set listBoxContent $::APPL_Env(list_DropOutDirections) }
-                                {SELECT_DropOutPosition}  { set listBoxContent $::APPL_Env(list_DropOutPositions) }
-                                {SELECT_BrakeType} {        set listBoxContent $::APPL_Env(list_BrakeTypes) }
-                                {SELECT_BottleCage} {       set listBoxContent $::APPL_Env(list_BottleCage) }
-                                {SELECT_Binary_OnOff} {     set listBoxContent $::APPL_Env(list_Binary_OnOff) }
+                                {SELECT_Rim} {              set listBoxContent $::APPL_Config(list_Rims) }
+                                {SELECT_ForkType} {         set listBoxContent $::APPL_Config(list_ForkTypes) }
+                                {SELECT_DropOutDirection} { set listBoxContent $::APPL_Config(list_DropOutDirections) }
+                                {SELECT_DropOutPosition}  { set listBoxContent $::APPL_Config(list_DropOutPositions) }
+                                {SELECT_BrakeType} {        set listBoxContent $::APPL_Config(list_BrakeTypes) }
+                                {SELECT_BottleCage} {       set listBoxContent $::APPL_Config(list_BottleCage) }
+                                {SELECT_Binary_OnOff} {     set listBoxContent $::APPL_Config(list_Binary_OnOff) }
                         }
                         return $listBoxContent
                 } 
@@ -234,7 +234,7 @@
 
 
             set x_offset 20
-            set domProject $::APPL_Env(root_ProjectDOM)
+            set domProject $::APPL_Config(root_ProjectDOM)
             set cv      [ $cv_Name getNodeAttr Canvas path]
             if { [catch { set cvEdit [frame $cv.f_edit -bd 2 -relief raised] } errorID ] } {
                     closeEdit $cv $cv.f_edit
