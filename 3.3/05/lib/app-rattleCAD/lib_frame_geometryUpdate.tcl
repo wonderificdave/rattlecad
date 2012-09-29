@@ -679,6 +679,7 @@
                 variable Saddle
                 variable SeatPost
                 variable SeatTube
+                variable HeadTube
                 variable FrontWheel
                 variable Fork
                 variable Stem
@@ -771,19 +772,17 @@
                             set deltaHeadTube           [expr [lindex $offsetSeatTube 1] / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
                             set offsetHeadTube_x        [expr [lindex $offsetSeatTube 1] / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
 
-                                # HeadTube Offset - horizontal
+                                # HeadTube Offset - horizontal & length
                                 #
-                            project::remove_tracing ; #because of setting two parameters at once
+                            project::remove_tracing ; #because of setting more then one parameter at once
+                                #
                             set xpath                   Personal/HandleBar_Distance
                             set newValue                [expr $HandleBar(Distance)    + $offsetHeadTube_x + $offsetSeatTube_x]
                             set_projectValue $xpath     $newValue
-
-                                # HeadTube Offset - TopTube
                                 #
-                            set xpath                   Custom/TopTube/OffsetHT
-                            set oldValue                $project::Custom(TopTube/OffsetHT)
-                            set newValue                [expr $oldValue - $deltaHeadTube ]
-                            set newValue                [set_projectValue $xpath  $newValue format]
+                            set xpath                   FrameTubes/HeadTube/Length
+                            set newValue                [expr $HeadTube(Length)    + $deltaHeadTube]
+                            set_projectValue $xpath     $newValue
                                 #
                             project::add_tracing
                             set_projectValue $xpath      $newValue

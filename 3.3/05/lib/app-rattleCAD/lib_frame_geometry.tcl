@@ -628,17 +628,17 @@
                             set polygon     [ lappend polygon [lindex $vct_22 0] [lindex $vct_11 1]]
                     project::setValue Result(Tubes/TopTube)                polygon     [project::flatten_nestedList $polygon]
 
-                            set pt_00        [ vectormath::intersectPerp     $SeatTube(BottomBracket) $SeatPost(SeatTube)   $pt_st ]
-                            set pt_01        [ vectormath::addVector         $pt_00   $SeatTube(Direction)  $SeatTube(Extension) ]
-                            set length        [ vectormath::length           $SeatTube(BottomBracket) $pt_01 ]
-                            set pt_10         $SeatTube(BottomBracket)
-                            set pt_11         [ vectormath::addVector        $pt_10  $SeatTube(Direction)  [expr 0.5*($length - $SeatTube(TaperLength)) ] ]
-                            set pt_12         [ vectormath::addVector        $pt_11  $SeatTube(Direction)  $SeatTube(TaperLength) ]
-                            set pt_13         $pt_01
-                            set vct_10        [ vectormath::parallel         $pt_10 $pt_11 [expr 0.5*$SeatTube(DiameterBB)] right ]
-                            set vct_11        [ vectormath::parallel         $pt_10 $pt_11 [expr 0.5*$SeatTube(DiameterBB)] left  ]
-                            set vct_21        [ vectormath::parallel         $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] right ]
-                            set vct_22        [ vectormath::parallel         $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] left  ]
+                            set pt_00       [ vectormath::intersectPerp     $SeatTube(BottomBracket) $SeatPost(SeatTube)   $pt_st ]
+                            set pt_01       [ vectormath::addVector         $pt_00   $SeatTube(Direction)  $SeatTube(Extension) ]
+                            set length      [ vectormath::length           $SeatTube(BottomBracket) $pt_01 ]
+                            set pt_10       $SeatTube(BottomBracket)
+                            set pt_11       [ vectormath::addVector        $pt_10  $SeatTube(Direction)  [expr 0.5*($length - $SeatTube(TaperLength)) ] ]
+                            set pt_12       [ vectormath::addVector        $pt_11  $SeatTube(Direction)  $SeatTube(TaperLength) ]
+                            set pt_13       $pt_01
+                            set vct_10      [ vectormath::parallel         $pt_10 $pt_11 [expr 0.5*$SeatTube(DiameterBB)] right ]
+                            set vct_11      [ vectormath::parallel         $pt_10 $pt_11 [expr 0.5*$SeatTube(DiameterBB)] left  ]
+                            set vct_21      [ vectormath::parallel         $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] right ]
+                            set vct_22      [ vectormath::parallel         $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] left  ]
 
                             set SeatTube(TopTube)        $pt_01
                             #set SeatTube(BottomBracket)    {0 0}
@@ -1079,13 +1079,14 @@
 
                         # --- VirtualTopTube ----------------------------------
                         #
-                    set SeatTube(VirtualTopTube)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]  $TopTube(HeadTube)  $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
+                    set SeatTube(VirtualTopTube)    [ vectormath::intersectPoint [list -500 [lindex $HeadTube(Stem) 1]]  $HeadTube(Stem)  $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
+                    #set SeatTube(VirtualTopTube)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(HeadTube) 1]]  $TopTube(HeadTube)  $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
                     project::setValue Result(Position/SeatTubeVirtualTopTube)    position    $SeatTube(VirtualTopTube)        ;# Point on the SeatTube of virtual TopTube
 
                             # --- TopTube/VirtualLength -----------------------
                             #
                             # puts "                  ... $value"
-                        set value       [ format "%.3f" [expr [lindex $TopTube(HeadTube) 0] - [lindex $SeatTube(VirtualTopTube) 0] ] ]
+                        set value       [ format "%.3f" [expr [lindex $HeadTube(Stem) 0] - [lindex $SeatTube(VirtualTopTube) 0] ] ]
                         project::setValue Result(Length/TopTube/VirtualLength) value $value
 
                             # --- SeatTube/VirtualLength ----------------------
@@ -1168,14 +1169,14 @@
                             return $angle_ext
             }
                     set BB_Position             {0 0}
-                    set SeatStay(SeatTube)      [ frame_geometry::object_values        SeatStay/End           position    ]
-                    set TopTube(SeatTube)       [ frame_geometry::object_values        TopTube/Start           position    ]
-                    set TopTube(Steerer)        [ frame_geometry::object_values        TopTube/End               position    ]
-                    set Steerer(Stem)           [ frame_geometry::object_values        Steerer/End               position    ]
-                    set Steerer(Fork)           [ frame_geometry::object_values      Steerer/Start           position    ]
-                    set DownTube(Steerer)       [ frame_geometry::object_values      DownTube/End           position    ]
-                    set DownTube(BBracket)      [ frame_geometry::object_values        DownTube/Start           position ]
-                    set ChainSt_SeatSt_IS       [ frame_geometry::object_values      ChainStay/SeatStay_IS  position ]
+                    set SeatStay(SeatTube)      [ frame_geometry::object_values     SeatStay/End            position ]
+                    set TopTube(SeatTube)       [ frame_geometry::object_values     TopTube/Start           position ]
+                    set TopTube(Steerer)        [ frame_geometry::object_values     TopTube/End             position ]
+                    set Steerer(Stem)           [ frame_geometry::object_values     Steerer/End             position ]
+                    set Steerer(Fork)           [ frame_geometry::object_values     Steerer/Start           position ]
+                    set DownTube(Steerer)       [ frame_geometry::object_values     DownTube/End            position ]
+                    set DownTube(BBracket)      [ frame_geometry::object_values     DownTube/Start          position ]
+                    set ChainSt_SeatSt_IS       [ frame_geometry::object_values     ChainStay/SeatStay_IS   position ]
 
                     project::setValue Result(Angle/HeadTube/TopTube)        value    [ get_resultAngle $TopTube(Steerer)      $Steerer(Stem)      $TopTube(SeatTube)  ]
                     project::setValue Result(Angle/HeadTube/DownTube)       value    [ get_resultAngle $DownTube(Steerer)     $BB_Position        $Steerer(Fork)      ]
@@ -1567,6 +1568,7 @@
                                 BottomBracketGround -
                                 SteererGround -
                                 SeatTubeGround -
+                                SeatTubeVirtualTopTube -
                                 SeatTubeSaddle -
                                 BrakeFront -
                                 BrakeRear -
@@ -1574,7 +1576,7 @@
                                 SummarySize {
                                             set branch "Position/$object"
                                         }
-
+                                
                                 Lugs/Dropout/Rear/Derailleur {
                                             set branch "$object"
                                         }

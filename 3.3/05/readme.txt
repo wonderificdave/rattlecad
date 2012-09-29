@@ -1,4 +1,11 @@
             
+3.3.05.23/24   - 2012.09.24 
+-------------------------------------------------------------------------------
+    feature:
+        ... BaseConcept: refer virtual TopTube position to top of HeadTube
+                instead of section of HeadTube/TopTube
+
+            
 3.3.05.22   - 2012.09.24 
 -------------------------------------------------------------------------------
     feature:

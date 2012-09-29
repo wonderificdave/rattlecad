@@ -243,8 +243,10 @@
             set TopTube(polygon)        [ frame_geometry::object_values TopTube  polygon $BB_Position ]
             set DownTube(polygon)       [ frame_geometry::object_values DownTube polygon $BB_Position ]
 
-                # --- help points for virtual horizontal HeadTube -----
-            set TopTube(SeatVirtual)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(Steerer) 1]] $TopTube(Steerer)  $SeatTube(BBracket) $SeatPost(SeatTube) ]
+                # --- help points for virtual horizontal TopTube -----
+                # set TopTube(SeatVirtual)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(Steerer) 1]] $TopTube(Steerer)  $SeatTube(BBracket) $SeatPost(SeatTube) ]
+            set TopTube(SeatVirtual)   [ frame_geometry::object_values             SeatTubeVirtualTopTube    position $BB_Position ]
+                # puts "\n \$TopTube(SeatVirtual)  $TopTube(SeatVirtual)"
 
 
                 # --- set values -------------------------
@@ -321,7 +323,7 @@
                             $cv_Name create circle        $HeadTube(Stem)           -radius  4  -outline gray       -width 1.0  -tags __CenterLine__
                         }
                 cline_frame {
-                            $cv_Name create centerline        [ project::flatten_nestedList $TopTube(Steerer) $TopTube(SeatVirtual) ] \
+                            $cv_Name create centerline        [ project::flatten_nestedList $HeadTube(Stem) $TopTube(SeatVirtual) ] \
                                                                                     -fill darkorange    -width 2.0  -tags __CenterLine__
 
 
@@ -462,7 +464,10 @@
                             set _dim_CS_LengthX     [ $cv_Name dimension  length            [ project::flatten_nestedList            $RearWheel(Ground)  $Position(BaseCenter) ] \
                                                                 horizontal  [expr   70 * $stageScale]   0 \
                                                                 $colour(result) ]
-                            set _dim_TT_Virtual     [ $cv_Name dimension  length            [ project::flatten_nestedList  $TopTube(SeatVirtual)  $TopTube(Steerer)] \
+                            set _dim_TT_Virtual     [ $cv_Name dimension  length            [ project::flatten_nestedList  $TopTube(SeatVirtual)  $HeadTube(Stem)] \
+                                                                aligned     [expr   80 * $stageScale]   [expr  -80 * $stageScale] \
+                                                                $colour(result) ]
+                            # set _dim_TT_Virtual     [ $cv_Name dimension  length            [ project::flatten_nestedList  $TopTube(SeatVirtual)  $TopTube(Steerer)] \
                                                                 aligned     [expr   80 * $stageScale]   [expr  -80 * $stageScale] \
                                                                 $colour(result) ]
                             set _dim_ST_Virtual     [ $cv_Name dimension  length            [ project::flatten_nestedList  $BottomBracket(Position) $TopTube(SeatVirtual) ] \
@@ -661,7 +666,7 @@
 
                                     $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Saddle/Height) ]
                                     $cv_Name bind $_dim_SP_SetBack      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(SeatPost/Setback) ]
-                                    $cv_Name bind $_dim_HT_Length       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Custom(TopTube/OffsetHT) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
+                                    $cv_Name bind $_dim_HT_Length       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
                                     $cv_Name bind $_dim_LC_Position_x   <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(TopTube/PivotPosition) ]
                                     $cv_Name bind $_dim_LC_Position_y   <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Personal(InnerLeg_Length) ]
                                     $cv_Name bind $_dim_SN_Position_x   <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_Nose) ]
