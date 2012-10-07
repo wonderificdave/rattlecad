@@ -63,8 +63,8 @@
         set   INFO_Notebook     [ NoteBook    $w.nb]
         pack $INFO_Notebook     -expand true -fill both 
         
-        bind .  <Control-c> [list destroy $w]
-        bind $w <Control-c> [list destroy $w]
+        bind .  <Escape> [list destroy $w]
+        bind $w <Escape> [list destroy $w]
         
 
         ;# =======================================================================
