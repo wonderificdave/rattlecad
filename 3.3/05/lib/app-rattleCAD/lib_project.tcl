@@ -1431,6 +1431,51 @@
                                     set value [$node nodeValue]
                                     $node nodeValue  [expr abs($value)]
                             }
+                                #
+                                # -- /root/FrameTubes/ChainStay
+                                #
+                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay]
+                            set node [$domProject selectNode /root/FrameTubes/ChainStay/Bent]
+                            if {$node != {}} {
+                                    puts "                           ... update File ... /root/FrameTubes/ChainStay/Bent"
+                                    $parentNode removeChild $node 
+                                    $node delete
+                            }
+                            set node [$domProject selectNode /root/FrameTubes/ChainStay/CenterLine]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine"
+                                    $parentNode appendXML  "<CenterLine>
+                                                              <length_01>150.00</length_01>
+                                                              <length_02>140.00</length_02>
+                                                              <length_03>85.00</length_03>
+                                                              <angle_01>9.00</angle_01>
+                                                              <angle_02>-5.00</angle_02>
+                                                              <radius_01>320.00</radius_01>
+                                                              <radius_02>320.00</radius_02>
+                                                            </CenterLine>"
+                            }
+                            set node [$domProject selectNode /root/FrameTubes/ChainStay/Profile]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... selectNode /root/FrameTubes/ChainStay/Profile"
+                                    $parentNode appendXML  "<Profile>              
+                                                              <p00> 
+                                                                <x>0.00</x>
+                                                                <y>12.50</y>
+                                                              </p00>
+                                                              <p01>
+                                                                <x>150.00</x>
+                                                                <y>18.00</y>
+                                                              </p01>
+                                                              <p02> 
+                                                                <x>140.00</x>
+                                                                <y>18.00</y>
+                                                              </p02>
+                                                              <p03> 
+                                                                <x>75.00</x>
+                                                                <y>24.00</y> 
+                                                              </p03>
+                                                            </Profile>"
+                            }
                         }                            
                 {ab-xy} {	set node {}
                             set node [$domProject selectNode /root/Project/rattleCADVersion/text()]

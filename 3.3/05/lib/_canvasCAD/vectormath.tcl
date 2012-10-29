@@ -52,7 +52,7 @@
 			}
 			return $newList
 	}
-    proc addVectorPointList {v  p_list {scaling 1}} {
+  proc addVectorPointList {v  p_list {scaling 1}} {
 			set newList {}
             foreach {x1 y1} $v break
             foreach {xl yl} $p_list { 
@@ -173,7 +173,7 @@
             return $vector
     }
     
-    proc unifyVector { p1 p2 {length {1.0}}} {
+  proc unifyVector { p1 p2 {length {1.0}}} {
 			# return vector with length 1 as default
 			set vector 		[ addVector $p2 $p1 -1 ] 
 			set vctLength 	[ expr hypot([lindex $vector 0],[lindex $vector 1]) ]

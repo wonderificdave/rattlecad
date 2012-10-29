@@ -244,7 +244,121 @@
                     set ext_ChainStay(polygon)  [ project::flatten_nestedList   [ list  [lindex $vct_01 0]  [lindex $vct_02 0]  [lindex $vct_02 1]  [lindex $vct_03 0]  $pt_99  \
                                                                                         [lindex $vct_04 1]  [lindex $vct_04 0]  [lindex $vct_05 1]  [lindex $vct_05 0]  [lindex $vct_06 0]  ]]
             }            
-            proc get_ChainStay_bent {} {   
+            proc get_ChainStay {{type {bent}}} {   
+                    upvar  1 cv_Name    ext_cvName
+                    upvar  1 stageScale ext_stageScale
+                    
+                    upvar  1 Length     ext_Length
+                    upvar  1 Center     ext_Center
+                    upvar  1 ChainStay  ext_ChainStay
+                    
+                    upvar  1 Colour     ext_Colour
+                    
+                    
+                    # puts "  -> get_ChainStay $type: \$ext_Length"
+                    # parray  ext_Length
+                    # puts "  -> get_ChainStay $type: \$ext_Center"
+                    # parray ext_Center
+                    # puts "  -> get_ChainStay $type: \$ext_ChainStay"
+                    # parray ext_ChainStay
+
+                    # puts "   \$ext_Center(ChainStay_DO)  $ext_Center(ChainStay_DO)"
+                    # puts "   \$ext_Length(03)            $ext_Length(03)"
+                    # puts "   \$ext_Length(01)            $ext_Length(01)"
+                       
+                set p_CS_BB [list [expr -1.0 * $ext_Length(01)] $ext_Length(03)]                   
+                    # puts "   \$p_CS_BB                   $p_CS_BB"
+ 
+
+                    # -- tube profile
+                set profile_x00   $project::FrameTubes(ChainStay/Profile/p00/x)
+                set profile_y00   $project::FrameTubes(ChainStay/Profile/p00/y)
+                set profile_x01   $project::FrameTubes(ChainStay/Profile/p01/x)
+                set profile_y01   $project::FrameTubes(ChainStay/Profile/p01/y)
+                set profile_x02   $project::FrameTubes(ChainStay/Profile/p02/x)
+                set profile_y02   $project::FrameTubes(ChainStay/Profile/p02/y)
+                set profile_x03   $project::FrameTubes(ChainStay/Profile/p03/x)
+                set profile_y03   $project::FrameTubes(ChainStay/Profile/p03/y)
+
+                set profileDef {}
+                  lappend profileDef [list $profile_x00 $profile_y00]
+                  lappend profileDef [list $profile_x01 $profile_y01]
+                  lappend profileDef [list $profile_x02 $profile_y02]
+                  lappend profileDef [list $profile_x03 $profile_y03]        
+                    # puts "  -> \$profileDef $profileDef"
+                
+                    # -- set profile of straight, unbent tubeprofile
+                set tubeProfile [lib_tube::init_tubeProfile $profileDef]                                    
+                    # puts "  -> \$tubeProfile $tubeProfile"
+
+
+                    # -- tube centerline
+                switch -exact $type {
+                  {straight} {
+                        set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
+                        set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
+                        set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
+                        set S01_angle      0
+                        set S02_angle      0
+                        set S01_radius   320
+                        set S02_radius   320
+                        set lib_tube::arcPrecission 50
+                      }
+                  default {
+                          # -- bent                                                
+                        set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
+                        set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
+                        set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
+                        set S01_angle    $project::FrameTubes(ChainStay/CenterLine/angle_01)
+                        set S02_angle    $project::FrameTubes(ChainStay/CenterLine/angle_02)
+                        set S01_radius   $project::FrameTubes(ChainStay/CenterLine/radius_01)
+                        set S02_radius   $project::FrameTubes(ChainStay/CenterLine/radius_02)
+                        set lib_tube::arcPrecission 5
+                      }
+                }
+                
+                set orient_select  left
+                set centerLineDef [list $S01_length $S02_length $S03_length \
+                                        $S01_angle  $S02_angle \
+                                        $S01_radius $S02_radius]
+                                        
+                    # -- get smooth centerLine
+                set centerLine            [lib_tube::init_centerLine $centerLineDef] 
+                    # puts "  -> \$centerLine $centerLine"
+                    # -- get shape of tube
+                set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
+                set outLineRight  [lib_tube::get_tubeShape    $centerLine $tubeProfile right ]
+                set outLine       [canvasCAD::flatten_nestedList $outLineLeft $outLineRight]
+                    # puts "\n    -> \$outLineLeft   $outLineLeft"
+                    # puts "\n    -> \$outLineRight  $outLineRight"
+                    # puts "\n    -> \$outLine       $outLine "
+                
+                
+                    # get orientation of tube
+                set length    [vectormath::length   $ext_Center(ChainStay_DO) $p_CS_BB]
+                set angle     [vectormath::dirAngle $ext_Center(ChainStay_DO) $p_CS_BB]
+                      # puts "  -> \$length $length"
+                      # puts "  -> \$angle $angle"
+                set point_IS  [lib_tube::get_shapeInterSection $outLineLeft $length]       
+                set angleIS   [vectormath::dirAngle {0 0} $point_IS]
+                set angleRotation [expr $angle - $angleIS]
+                      # puts "  -> \$point_IS $point_IS"
+                      # puts "  -> \$angleIS $angleIS"
+                      # puts "  -> \$angleRotation $angleRotation"
+                    # -- prepare $outLine for exprot 
+                set outLine     [vectormath::rotatePointList {0 0} $outLine $angleRotation]    
+                set outLine     [vectormath::addVectorPointList $ext_Center(ChainStay_DO) $outLine]
+                      # $ext_cvName  create   polygon $outLine    -tags __Tube__  -fill lightgray
+                   
+                # -- prepare $centerLine for exprot 
+                set centerLine  [canvasCAD::flatten_nestedList $centerLine]
+                set centerLine  [vectormath::rotatePointList {0 0} $centerLine $angleRotation]    
+                set centerLine  [vectormath::addVectorPointList $ext_Center(ChainStay_DO) $centerLine]
+                    # $ext_cvName  create   line    $centerLine -tags __CenterLine__  -fill blue
+                
+                return [list $centerLine $outLine]
+            }
+            proc get_ChainStay_bent_2 {} {   
                     upvar  1 cv_Name    ext_cvName
                     upvar  1 stageScale ext_stageScale
                     
@@ -622,13 +736,7 @@
             
 
             
-                # -- ChainStay Type
-            switch $project::Rendering(ChainStay) {
-                   {straight}   { get_ChainStay_straight }
-                   {s-bent}     { get_ChainStay_bent }
-                   default      { set ChainStay(polygon) {} }
-            }
-                
+  
                 # -- create CrankArm & RearHub
             create_CrankArm
             create_RearHub
@@ -639,42 +747,72 @@
                 # -- create DropOuts
             create_DropOut
 
-                # -- create ChainStays
+               # -- create BottomBracket
+            create_BottomBracket
+
+                # -- ChainStay Type
+            switch $project::Rendering(ChainStay) {
+                   {straight}   { set retValues [get_ChainStay straight] }
+                   {s-bent}     { set retValues [get_ChainStay bent]}
+                   default      { puts "\n  <W> ... not defined in createRearMockup\n"
+                                  # return
+                                }
+            }
             switch $project::Rendering(ChainStay) {
                    {straight}   -
-                   {s-bent}     { 
-                                set tube_CS_left    [ $cv_Name create polygon     $ChainStay(polygon)   -fill gray -outline black  -tags __Tube__ ]
-                                    set polygon_opposite {}
-                                    foreach {x y}  $ChainStay(polygon) {
-                                            lappend polygon_opposite $x [expr -1.0 * $y]
-                                    }  
-                                set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite     -fill gray -outline black  -tags __Tube__ ]
+                   {s-bent}     { set ChainStay(centerLine) [lindex $retValues 0]
+                                  set ChainStay(polygon)    [lindex $retValues 1]
+                                  set tube_CS_left    [ $cv_Name create polygon     $ChainStay(polygon)      -fill gray   -outline black  -tags __Tube__ ]
+                                  set tube_CS_CLine   [ $cv_Name create line        $ChainStay(centerLine)   -fill orange                 -tags __CenterLine__ ]
+                                      set polygon_opposite {}
+                                      foreach {x y}  $ChainStay(polygon) {
+                                              lappend polygon_opposite $x [expr -1.0 * $y]
+                                      }  
+                                  set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite     -fill gray -outline black  -tags __Tube__ ]
 
-                                lib_gui::object_CursorBinding   $cv_Name    $tube_CS_left
-                                lib_gui::object_CursorBinding   $cv_Name    $tube_CS_right
-                                 
-                                $cv_Name bind   $tube_CS_left    <Double-ButtonPress-1> \
-                                                [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                            {   FrameTubes(ChainStay/WidthBB) \
-                                                                FrameTubes(ChainStay/Width) \
-                                                                FrameTubes(ChainStay/DiameterSS) \
-                                                                FrameTubes(ChainStay/TaperLength) }            {Chainstay:  Profile}]
-                                                                
-                                $cv_Name bind   $tube_CS_right   <Double-ButtonPress-1> \
-                                                [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                            {   FrameTubes(ChainStay/WidthBB) \
-                                                                FrameTubes(ChainStay/Width) \
-                                                                FrameTubes(ChainStay/DiameterSS) \
-                                                                FrameTubes(ChainStay/TaperLength) }            {Chainstay:  Profile}]
+                                      #$ext_cvName  create   polygon $outLine    -tags __Tube__         -fill lightgray
+                                      #$ext_cvName  create   line    $centerLine -tags __CenterLine__   -fill blue
+                                    
+                                  lib_gui::object_CursorBinding   $cv_Name    $tube_CS_CLine
+                                  lib_gui::object_CursorBinding   $cv_Name    $tube_CS_right
+                                   
+                                  $cv_Name bind   $tube_CS_CLine    <Double-ButtonPress-1> \
+                                                  [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                              {   FrameTubes(ChainStay/CenterLine/length_01) \
+                                                                  FrameTubes(ChainStay/CenterLine/length_02) \
+                                                                  FrameTubes(ChainStay/CenterLine/length_03) \
+                                                                  FrameTubes(ChainStay/CenterLine/angle_01) \
+                                                                  FrameTubes(ChainStay/CenterLine/angle_02) \
+                                                                  FrameTubes(ChainStay/CenterLine/radius_01) \
+                                                                  FrameTubes(ChainStay/CenterLine/radius_02) } {Chainstay:  CenterLine}]
+                                                                  
+                                  $cv_Name bind   $tube_CS_left   <Double-ButtonPress-1> \
+                                                  [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                              {   FrameTubes(ChainStay/Profile/p00/x) \
+                                                                  FrameTubes(ChainStay/Profile/p00/y) \
+                                                                  FrameTubes(ChainStay/Profile/p01/x) \
+                                                                  FrameTubes(ChainStay/Profile/p01/y) \
+                                                                  FrameTubes(ChainStay/Profile/p02/x) \
+                                                                  FrameTubes(ChainStay/Profile/p02/y) \
+                                                                  FrameTubes(ChainStay/Profile/p03/x) \
+                                                                  FrameTubes(ChainStay/Profile/p03/y) }  {Chainstay:  Profile}]
+                                 $cv_Name bind   $tube_CS_right   <Double-ButtonPress-1> \
+                                                  [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                              {   FrameTubes(ChainStay/Profile/p00/x) \
+                                                                  FrameTubes(ChainStay/Profile/p00/y) \
+                                                                  FrameTubes(ChainStay/Profile/p01/x) \
+                                                                  FrameTubes(ChainStay/Profile/p01/y) \
+                                                                  FrameTubes(ChainStay/Profile/p02/x) \
+                                                                  FrameTubes(ChainStay/Profile/p02/y) \
+                                                                  FrameTubes(ChainStay/Profile/p03/x) \
+                                                                  FrameTubes(ChainStay/Profile/p03/y) }  {Chainstay:  Profile}]
+
                                 }
-                   default      { }
+                   default      { set ChainStay(polygon) {} }
             }
 
 
-                # -- create BottomBracket
-            create_BottomBracket
-
-                # -- create control Curves
+                 # -- create control Curves
             create_ControlCurves            
    
                 # -- centerlines
@@ -688,7 +826,7 @@
 
                 # -- specific dimensions for s-bent ChainStays 
             switch $project::Rendering(ChainStay) {
-                   {s-bent} { 
+                   {s-bent2} { 
                             $cv_Name create centerline     [ project::flatten_nestedList $Center(ChainStay_DO)  $Center(DIM_Base_DO)  $Center(DIM_Base_00)  $Center(DIM_Base_BB)  $Center(ChainStay_BB) ] \
                                                                                                -fill gray50         -width 0.25     -tags __CenterLine__
                             $cv_Name create centerline     [ project::flatten_nestedList $Center(ChainStay_DO)  $Center(DIM_Base_00)  $Center(ChainStay_BB) ] \

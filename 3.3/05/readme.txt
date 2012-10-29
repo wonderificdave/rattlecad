@@ -1,24 +1,30 @@
             
+3.3.05.26   - 2012.10.22 
+-------------------------------------------------------------------------------
+    feature:
+        ... add new type of chainstay-display
+
+
 3.3.05.25   - 2012.10.07 
 -------------------------------------------------------------------------------
     feature:
         ... allow <Control-c> to copy text in Help/Info - Panel
         ... bind  <Escape> to close Help/Info - Panel
 
-            
+
 3.3.05.23/24   - 2012.09.24 
 -------------------------------------------------------------------------------
     feature:
         ... BaseConcept: refer virtual TopTube position to top of HeadTube
                 instead of section of HeadTube/TopTube
 
-            
+
 3.3.05.22   - 2012.09.24 
 -------------------------------------------------------------------------------
     feature:
         ... RearDerailleur: campagnolo_2011_UltraShift.svg
 
-            
+
 3.3.05.21   - 2012.09.22 
 -------------------------------------------------------------------------------
     bugfix:
@@ -27,13 +33,13 @@
         ... move $::APPL_Env(...) to $::APPL_Config(...) 
                 ... remove $::APPL_Env(...) completely
 
-            
+
 3.3.05.20   - 2012.09.21 
 -------------------------------------------------------------------------------
     feature:
         ... LLEWELLYN dropouts 64, 68 & 72°
 
-            
+
 3.3.05.19   - 2012.09.21 
 -------------------------------------------------------------------------------
     feature:
@@ -41,20 +47,20 @@
     debug:
         ... check for modification before exit and request "File Save"
 
-            
+
 3.3.05.16/17   - 2012.09.21 
 -------------------------------------------------------------------------------
     feature:
         ... check for modification before exit and request "File Save"
 
-            
+
 3.3.05.15   - 2012.09.20 
 -------------------------------------------------------------------------------
     bugfix:
         ... ChainStay Details -> BottomBracket ChainStay Offset_TopView
                 ... parameter was not editable
 
-            
+
 3.3.05.14   - 2012.09.19 
 -------------------------------------------------------------------------------
     components:
@@ -63,13 +69,13 @@
         ... handling different types of reardropouts, position them
                 in front or behind of chain- & seatstays
 
-            
+
 3.3.05.12   - 2012.09.15 
 -------------------------------------------------------------------------------
     components:
         ... add dropout: DR1008 from http://www.paragonmachineworks.com
 
-            
+
 3.3.05.11   - 2012.09.14 
 -------------------------------------------------------------------------------
     file format:

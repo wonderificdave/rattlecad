@@ -79,20 +79,33 @@
             <TaperLength>280.00</TaperLength>
             <Width>18.00</Width>
             <WidthBB>22.20</WidthBB>
-            <Bent>
-                <Base_00>
-                    <Offset>120.00</Offset>
-                    <OffsetPerp>0.00</OffsetPerp>
-                </Base_00>
-                <Base_DO>
-                    <Offset>60.00</Offset>
-                    <OffsetPerp>-7.00</OffsetPerp>
-                </Base_DO>
-                <Base_BB>
-                    <Offset>90.00</Offset>
-                    <OffsetPerp>5.00</OffsetPerp>
-                </Base_BB>
-            </Bent>
+            <CenterLine>
+              <length_01>150.00</length_01>
+              <length_02>160.00</length_02>
+              <length_03>57.00</length_03>
+              <angle_01>9.00</angle_01>
+              <angle_02>-5.00</angle_02>
+              <radius_01>320.00</radius_01>
+              <radius_02>320.00</radius_02>
+            </CenterLine>
+            <Profile>              
+              <p00> 
+                <x>0.00</x>
+                <y>12.50</y>
+              </p00>
+              <p01>
+                <x>150.00</x>
+                <y>18.00</y>
+              </p01>
+              <p02> 
+                <x>150.00</x>
+                <y>18.00</y>
+              </p02>
+              <p03> 
+                <x>75.00</x>
+                <y>24.00</y> 
+              </p03>
+            </Profile>
         </ChainStay>
     </FrameTubes>
     
