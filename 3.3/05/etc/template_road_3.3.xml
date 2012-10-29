@@ -557,6 +557,8 @@
         <RearDropOut>behind</RearDropOut>
         <ChainStay>straight</ChainStay>
         <RearMockup>
+            <DiscDiameter>160.00</DiscDiameter>
+            <DiscClearance>5.00</DiscClearance>
             <TyreClearance>5.00</TyreClearance>
             <CrankClearance>5.00</CrankClearance>
             <ChainWheelClearance>5.00</ChainWheelClearance>

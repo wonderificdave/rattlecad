@@ -1476,6 +1476,21 @@
                                                               </p03>
                                                             </Profile>"
                             }
+                                #
+                                # -- /root/Rendering/RearMockup
+                                #
+                            set parentNode [$domProject selectNode /root/Rendering/RearMockup]
+                            set node [$domProject selectNode /root/Rendering/RearMockup/DiscDiameter]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscDiameter"
+                                    $parentNode appendXML  "<DiscDiameter>160.00</DiscDiameter>"
+                            }
+                            set node [$domProject selectNode /root/Rendering/RearMockup/DiscClearance]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscClearance"
+                                    $parentNode appendXML  "<DiscClearance>5.00</DiscClearance>"
+                            }
+                            
                         }                            
                 {ab-xy} {	set node {}
                             set node [$domProject selectNode /root/Project/rattleCADVersion/text()]
