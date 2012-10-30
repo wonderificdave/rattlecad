@@ -556,6 +556,8 @@
         <RearDropOut>behind</RearDropOut>
         <ChainStay>s-bent</ChainStay>    
         <RearMockup>
+            <DiscOffset>15.30</DiscOffset>
+            <DiscWidth>2.00</DiscWidth>
             <DiscDiameter>160.00</DiscDiameter>
             <DiscClearance>5.00</DiscClearance>
             <TyreClearance>5.00</TyreClearance>

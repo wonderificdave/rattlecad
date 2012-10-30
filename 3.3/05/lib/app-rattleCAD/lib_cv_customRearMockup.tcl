@@ -215,8 +215,8 @@
                   set pos_00 [list [expr -1 * $ext_Length(ChainStay)] $ext_Length(04)]
                     # puts "  \$pos_00     $pos_00"
                   
-                  set disc_Offset         15.3
-                  set disc_Width           2.0
+                  set disc_Offset         $project::Rendering(RearMockup/DiscOffset)
+                  set disc_Width          $project::Rendering(RearMockup/DiscWidth)
                   set disc_DiameterDisc   $project::Rendering(RearMockup/DiscDiameter)
                   set clearanceRadius     $project::Rendering(RearMockup/DiscClearance)
                   
@@ -238,6 +238,7 @@
                   $ext_cvName create arc         $p_01      -radius $clearanceRadius -start 310  -extent 190 -style arc -outline red  -tags __CenterLine__
 
                   set ext_Center(p_brakeDisc_01)  $p_01
+                  set ext_Center(p_brakeDisc_02)  $p_02
 
                   return $object
             }
@@ -660,6 +661,7 @@
                                     
                                   lib_gui::object_CursorBinding   $cv_Name    $tube_CS_CLine
                                   lib_gui::object_CursorBinding   $cv_Name    $tube_CS_right
+                                  lib_gui::object_CursorBinding   $cv_Name    $tube_CS_left
                                    
                                   $cv_Name bind   $tube_CS_CLine    <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
@@ -673,8 +675,7 @@
                                                                   
                                   $cv_Name bind   $tube_CS_left   <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                              {   FrameTubes(ChainStay/Profile/p00/x) \
-                                                                  FrameTubes(ChainStay/Profile/p00/y) \
+                                                              {   FrameTubes(ChainStay/Profile/p00/y) \
                                                                   FrameTubes(ChainStay/Profile/p01/x) \
                                                                   FrameTubes(ChainStay/Profile/p01/y) \
                                                                   FrameTubes(ChainStay/Profile/p02/x) \
@@ -683,8 +684,7 @@
                                                                   FrameTubes(ChainStay/Profile/p03/y) }  {Chainstay:  Profile}]
                                  $cv_Name bind   $tube_CS_right   <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                              {   FrameTubes(ChainStay/Profile/p00/x) \
-                                                                  FrameTubes(ChainStay/Profile/p00/y) \
+                                                              {   FrameTubes(ChainStay/Profile/p00/y) \
                                                                   FrameTubes(ChainStay/Profile/p01/x) \
                                                                   FrameTubes(ChainStay/Profile/p01/y) \
                                                                   FrameTubes(ChainStay/Profile/p02/x) \
@@ -703,6 +703,7 @@
             $cv_Name bind   $brakeDisc    <Double-ButtonPress-1> \
                       [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                   {   Rendering(RearMockup/DiscDiameter) \
+                                                      Rendering(RearMockup/DiscWidth) \
                                                       Rendering(RearMockup/DiscClearance) } {DiscBrake Details}]
 
                # -- create control Curves
@@ -794,10 +795,10 @@
 
                 # -- Wheel radius
             set _dim_Wh_Radius          [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(CL_RearHub_01) $Center(Dim_WheelRadius) ] \
-                                                                    horizontal        [expr   65 * $stageScale]   [expr  0 * $stageScale]  \
+                                                                    horizontal        [expr   45 * $stageScale]   [expr  0 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Tyre_Width         [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_Tyre_01) $Center(Dim_Tyre_02) ] \
-                                                                    vertical        [expr   40 * $stageScale]   [expr  0 * $stageScale]  \
+                                                                    vertical        [expr   30 * $stageScale]   [expr  0 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Sprocket_CL        [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_RearHub_02) $Center(SprocketClearance) ] \
                                                                     horizontal        [expr  -35 * $stageScale]   [expr -5 * $stageScale]  \
@@ -812,7 +813,7 @@
 
                 # -- ChainStay length
             set _dim_CS_Length             [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(CL_RearHub_02) $Center(CL_BB_02) ] \
-                                                                    horizontal        [expr  -25 * $stageScale]   [expr 0 * $stageScale]  \
+                                                                    horizontal        [expr  -30 * $stageScale]   [expr 0 * $stageScale]  \
                                                                     $Colour(result) ] 
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_CS_Length
                     $cv_Name bind $_dim_CS_Length        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
@@ -842,12 +843,17 @@
 
                     
                 # -- BrakeDisc
-            set _dim_BrakeDisc_Distance [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(p_brakeDisc_01) $Center(Dim_RearHub_01) ] \
-                                                                    vertical        [expr  25 * $stageScale]    [expr -20 * $stageScale]  \
+            set _dim_BrakeDisc_Dist_Hub [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(p_brakeDisc_02) $Center(Dim_RearHub_01) ] \
+                                                                    vertical        [expr  28 * $stageScale]    [expr  20 * $stageScale]  \
+                                                                    $Colour(primary) ] 
+            set _dim_BrakeDisc_Dist_DO  [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(p_brakeDisc_01) $Center(Dim_RearHub_01) ] \
+                                                                    vertical        [expr  15 * $stageScale]    [expr -20 * $stageScale]  \
                                                                     $Colour(result) ] 
             set _dim_BrakeDisc_Diameter [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(CL_RearHub_02)  $Center(p_brakeDisc_01) ] \
                                                                     horizontal      [expr -15 * $stageScale]    0 \
                                                                     $Colour(result) ] 
+                    lib_gui::object_CursorBinding     $cv_Name    $_dim_BrakeDisc_Dist_Hub       
+                    $cv_Name bind $_dim_BrakeDisc_Dist_Hub  <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Rendering(RearMockup/DiscOffset) ]
 
 
                 # -- RearHub

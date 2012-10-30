@@ -1480,6 +1480,16 @@
                                 # -- /root/Rendering/RearMockup
                                 #
                             set parentNode [$domProject selectNode /root/Rendering/RearMockup]
+                            set node [$domProject selectNode /root/Rendering/RearMockup/DiscOffset]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscOffset"
+                                    $parentNode appendXML  "<DiscOffset>15.30</DiscOffset>"
+                            }
+                            set node [$domProject selectNode /root/Rendering/RearMockup/DiscWidth]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscWidth"
+                                    $parentNode appendXML  "<DiscWidth>2.00</DiscWidth>"
+                            }
                             set node [$domProject selectNode /root/Rendering/RearMockup/DiscDiameter]
                             if {$node == {}} {
                                     puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscDiameter"
