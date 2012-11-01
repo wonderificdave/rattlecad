@@ -270,17 +270,17 @@
  
 
                     # -- tube profile
-                set profile_x00   $project::FrameTubes(ChainStay/Profile/p00/x)
-                set profile_y00   $project::FrameTubes(ChainStay/Profile/p00/y)
-                set profile_x01   $project::FrameTubes(ChainStay/Profile/p01/x)
-                set profile_y01   $project::FrameTubes(ChainStay/Profile/p01/y)
-                set profile_x02   $project::FrameTubes(ChainStay/Profile/p02/x)
-                set profile_y02   $project::FrameTubes(ChainStay/Profile/p02/y)
-                set profile_x03   $project::FrameTubes(ChainStay/Profile/p03/x)
-                set profile_y03   $project::FrameTubes(ChainStay/Profile/p03/y)
+                set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
+                set profile_x01   $project::FrameTubes(ChainStay/Profile/length_01)
+                set profile_y01   $project::FrameTubes(ChainStay/Profile/width_01)
+                set profile_x02   $project::FrameTubes(ChainStay/Profile/length_02)
+                set profile_y02   $project::FrameTubes(ChainStay/Profile/width_02)
+                set profile_x03   $project::FrameTubes(ChainStay/Profile/length_03)
+                set profile_y03   $project::FrameTubes(ChainStay/Profile/width_03)
+
 
                 set profileDef {}
-                  lappend profileDef [list $profile_x00 $profile_y00]
+                  lappend profileDef [list 0            $profile_y00]
                   lappend profileDef [list $profile_x01 $profile_y01]
                   lappend profileDef [list $profile_x02 $profile_y02]
                   lappend profileDef [list $profile_x03 $profile_y03]        
@@ -573,7 +573,8 @@
                     lib_gui::object_CursorBinding    $ext_cvName $chainstayArea
                     $ext_cvName bind   $chainstayArea    <Double-ButtonPress-1> \
                                        [list frame_geometry::createEdit  %x %y  $ext_cvName  \
-                                                    {   Rendering(RearMockup/TyreClearance) \
+                                                    {   list://Rendering(ChainStay@SELECT_ChainStay) \
+                                                        Rendering(RearMockup/TyreClearance) \
                                                         Rendering(RearMockup/ChainWheelClearance) \
                                                         Rendering(RearMockup/CrankClearance) \
                                                         Rendering(RearMockup/CassetteClearance) }            {ChainStay:  Area}]                    
@@ -639,14 +640,15 @@
                 # -- ChainStay Type
             switch $project::Rendering(ChainStay) {
                    {straight}   { set retValues [get_ChainStay straight] }
-                   {s-bent}     { set retValues [get_ChainStay bent]}
-                   default      { puts "\n  <W> ... not defined in createRearMockup\n"
+                   {bent}     { set retValues [get_ChainStay bent]}
+                   {off}        {}
+                   default      { puts "\n  <W> ... not defined in createRearMockup: $project::Rendering(ChainStay)\n"
                                   # return
                                 }
             }
             switch $project::Rendering(ChainStay) {
                    {straight}   -
-                   {s-bent}     { set ChainStay(centerLine) [lindex $retValues 0]
+                   {bent}     { set ChainStay(centerLine) [lindex $retValues 0]
                                   set ChainStay(polygon)    [lindex $retValues 1]
                                   set tube_CS_left    [ $cv_Name create polygon     $ChainStay(polygon)      -fill gray   -outline black  -tags __Tube__ ]
                                   set tube_CS_CLine   [ $cv_Name create line        $ChainStay(centerLine)   -fill orange                 -tags __CenterLine__ ]
@@ -665,7 +667,8 @@
                                    
                                   $cv_Name bind   $tube_CS_CLine    <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                              {   FrameTubes(ChainStay/CenterLine/length_01) \
+                                                              {   list://Rendering(ChainStay@SELECT_ChainStay)    \
+                                                                  FrameTubes(ChainStay/CenterLine/length_01) \
                                                                   FrameTubes(ChainStay/CenterLine/length_02) \
                                                                   FrameTubes(ChainStay/CenterLine/length_03) \
                                                                   FrameTubes(ChainStay/CenterLine/angle_01) \
@@ -675,22 +678,22 @@
                                                                   
                                   $cv_Name bind   $tube_CS_left   <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                              {   FrameTubes(ChainStay/Profile/p00/y) \
-                                                                  FrameTubes(ChainStay/Profile/p01/x) \
-                                                                  FrameTubes(ChainStay/Profile/p01/y) \
-                                                                  FrameTubes(ChainStay/Profile/p02/x) \
-                                                                  FrameTubes(ChainStay/Profile/p02/y) \
-                                                                  FrameTubes(ChainStay/Profile/p03/x) \
-                                                                  FrameTubes(ChainStay/Profile/p03/y) }  {Chainstay:  Profile}]
+                                                              {   FrameTubes(ChainStay/Profile/width_00)  \
+                                                                  FrameTubes(ChainStay/Profile/length_01) \
+                                                                  FrameTubes(ChainStay/Profile/width_01)  \
+                                                                  FrameTubes(ChainStay/Profile/length_02) \
+                                                                  FrameTubes(ChainStay/Profile/width_02)  \
+                                                                  FrameTubes(ChainStay/Profile/length_03) \
+                                                                  FrameTubes(ChainStay/Profile/width_03)  }  {Chainstay:  Profile}]
                                  $cv_Name bind   $tube_CS_right   <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                              {   FrameTubes(ChainStay/Profile/p00/y) \
-                                                                  FrameTubes(ChainStay/Profile/p01/x) \
-                                                                  FrameTubes(ChainStay/Profile/p01/y) \
-                                                                  FrameTubes(ChainStay/Profile/p02/x) \
-                                                                  FrameTubes(ChainStay/Profile/p02/y) \
-                                                                  FrameTubes(ChainStay/Profile/p03/x) \
-                                                                  FrameTubes(ChainStay/Profile/p03/y) }  {Chainstay:  Profile}]
+                                                              {   FrameTubes(ChainStay/Profile/width_00)  \
+                                                                  FrameTubes(ChainStay/Profile/length_01) \
+                                                                  FrameTubes(ChainStay/Profile/width_01)  \
+                                                                  FrameTubes(ChainStay/Profile/length_02) \
+                                                                  FrameTubes(ChainStay/Profile/width_02)  \
+                                                                  FrameTubes(ChainStay/Profile/length_03) \
+                                                                  FrameTubes(ChainStay/Profile/width_03)  }  {Chainstay:  Profile}]
 
                                 }
                    default      { set ChainStay(polygon) {} }

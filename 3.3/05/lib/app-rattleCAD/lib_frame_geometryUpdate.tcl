@@ -89,7 +89,8 @@
                                 {SELECT_Rim} {              set listBoxContent $::APPL_Config(list_Rims) }
                                 {SELECT_ForkType} {         set listBoxContent $::APPL_Config(list_ForkTypes) }
                                 {SELECT_DropOutDirection} { set listBoxContent $::APPL_Config(list_DropOutDirections) }
-                                {SELECT_DropOutPosition}  { set listBoxContent $::APPL_Config(list_DropOutPositions) }
+                                {SELECT_DropOutPosition} {  set listBoxContent $::APPL_Config(list_DropOutPositions) }
+                                {SELECT_ChainStay} {        set listBoxContent $::APPL_Config(list_ChainStay) }
                                 {SELECT_BrakeType} {        set listBoxContent $::APPL_Config(list_BrakeTypes) }
                                 {SELECT_BottleCage} {       set listBoxContent $::APPL_Config(list_BottleCage) }
                                 {SELECT_Binary_OnOff} {     set listBoxContent $::APPL_Config(list_Binary_OnOff) }

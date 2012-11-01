@@ -138,6 +138,28 @@
                     lib_gui::notebook_createButton              $cv_Name        TubingCheckAngles
                         #
                 }
+            lib_gui::cv_Custom07 {
+                        #
+                        # -- rear - mockup
+                        #
+                    set stageScale  [$cv_Name getNodeAttr Stage scale]
+                    set stageFormat [$cv_Name getNodeAttr Stage format]
+                        #
+                    set xy          [ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
+                        #
+                    $cv_Name        clean_StageContent
+                        #
+                    update_cv_Parameter                         $cv_Name $xy
+                        #
+                    createDraftingFrame                         $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                        #
+                    createRearMockup                            $cv_Name
+                        #
+                    $cv_Name            centerContent           { 0  25}         {__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
+                        #
+                    lib_gui::notebook_createButton              $cv_Name         {changeFormatScale}
+                        #
+                }
             lib_gui::cv_Custom03 {
                         #
                         # -- frame - drafting
@@ -269,28 +291,6 @@
                     update_renderCanvas                     $cv_Name
                         #
                     createWaterMark                         $cv_Name        $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
-                        #
-                }
-            lib_gui::cv_Custom07 {
-                        #
-                        # -- rear - mockup
-                        #
-                    set stageScale  [$cv_Name getNodeAttr Stage scale]
-                    set stageFormat [$cv_Name getNodeAttr Stage format]
-                        #
-                    set xy          [ frame_geometry::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
-                        #
-                    $cv_Name        clean_StageContent
-                        #
-                    update_cv_Parameter                         $cv_Name $xy
-                        #
-                    createDraftingFrame                         $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
-                        #
-                    createRearMockup                            $cv_Name
-                        #
-                    $cv_Name            centerContent           { 0  25}         {__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
-                        #
-                    lib_gui::notebook_createButton              $cv_Name         {ChainStayRendering changeFormatScale}
                         #
                 }
             lib_gui::cv_Custom05 {

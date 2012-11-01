@@ -1454,26 +1454,24 @@
                                                               <radius_02>320.00</radius_02>
                                                             </CenterLine>"
                             }
+                            set node [$domProject selectNode /root/FrameTubes/ChainStay/Profile/p01]
+                            if {$node != {}} {
+                                    puts "                           ... update File ... selectNode /root/FrameTubes/ChainStay/Profile"
+                                    set removeNode [$domProject selectNode /root/FrameTubes/ChainStay/Profile]
+                                    $parentNode removeChild $removeNode 
+                                    $removeNode delete
+                            }
                             set node [$domProject selectNode /root/FrameTubes/ChainStay/Profile]
                             if {$node == {}} {
                                     puts "                           ... update File ... selectNode /root/FrameTubes/ChainStay/Profile"
                                     $parentNode appendXML  "<Profile>              
-                                                              <p00> 
-                                                                <x>0.00</x>
-                                                                <y>12.50</y>
-                                                              </p00>
-                                                              <p01>
-                                                                <x>150.00</x>
-                                                                <y>18.00</y>
-                                                              </p01>
-                                                              <p02> 
-                                                                <x>140.00</x>
-                                                                <y>18.00</y>
-                                                              </p02>
-                                                              <p03> 
-                                                                <x>75.00</x>
-                                                                <y>24.00</y> 
-                                                              </p03>
+                                                              <width_00>12.50</width_00>
+                                                              <length_01>150.00</length_01>
+                                                              <width_01>18.00</width_01>
+                                                              <length_02>150.00</length_02>
+                                                              <width_02>18.00</width_02>
+                                                              <length_03>75.00</length_03>
+                                                              <width_03>24.00</width_03>
                                                             </Profile>"
                             }
                                 #

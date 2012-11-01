@@ -701,7 +701,7 @@
                                     }
                                     # -- create a Button to change Format and Scale of Stage
                                     catch { destroy $cv.button_FormatScale }
-                                    catch {    button  $cv.button_FormatScale \
+                                    catch { button  $cv.button_FormatScale \
                                                     -text $buttonText \
                                                     -command [format {lib_gui::change_FormatScale %s %s %s} $cv $y_Position $type ]                                
                                             $cv create window $x_Position $y_Position \
@@ -713,7 +713,7 @@
                         TubingCheckAngles {
                                     # -- create a Button to execute tubing_checkAngles
                                     catch { destroy $cv.button_TCA }
-                                    catch {    button  $cv.button_TCA \
+                                    catch { button  $cv.button_TCA \
                                                     -text "check Frame Angles" \
                                                     -command [format {lib_gui::tubing_checkAngles %s} $cv]                                
                                             $cv create window $x_Position $y_Position \
@@ -725,7 +725,7 @@
                         ChainStayRendering {
                                     # -- create a Button to set ChainStayRendering
                                     catch { destroy $cv.button_CSR }
-                                    catch {    button  $cv.button_CSR \
+                                    catch { button  $cv.button_CSR \
                                                     -text "switch: straight/bent/off" \
                                                     -command [format {lib_gui::rendering_ChainStay %s} $cv]                                
                                             $cv create window $x_Position $y_Position \
@@ -737,7 +737,7 @@
                         Reference2Custom {
                                     # -- create a Button to execute geometry_reference2personal
                                     catch { destroy $cv.button_R2C }
-                                    catch {    button  $cv.button_R2C \
+                                    catch { button  $cv.button_R2C \
                                                     -text "copy settings to Base Geometry" \
                                                     -command lib_gui::geometry_reference2personal                                
                                             $cv create window $x_Position $y_Position \
@@ -760,23 +760,6 @@
                 set lib_gui::checkAngles {on}
             } else {
                 set lib_gui::checkAngles {off}         
-            }
-            cv_custom::update [lib_gui::current_canvasCAD]
-            return
-    }
-
-
-    #-------------------------------------------------------------------------
-       #  update Personal Geometry with parameters of Reference Geometry 
-       #
-    proc rendering_ChainStay {cv {type {default}}} {
-        
-            switch $project::Rendering(ChainStay) {
-                {straight}  { project::setValue Rendering(ChainStay)        value    {off-nb} }
-                {off-nb}    { project::setValue Rendering(ChainStay)        value    {s-bent} }       
-                {s-bent}    { project::setValue Rendering(ChainStay)        value    {off-ns} }
-                {off-ns}    { project::setValue Rendering(ChainStay)        value    {straight} }
-                default     { project::setValue Rendering(ChainStay)        value    {straight} }
             }
             cv_custom::update [lib_gui::current_canvasCAD]
             return

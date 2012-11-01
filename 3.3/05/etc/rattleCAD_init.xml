@@ -84,6 +84,12 @@
 			<off/>
 		</BottleCage>
 
+		<ChainStay>
+			<straight/>
+			<bent/>
+			<off/>
+		</ChainStay>
+
 		<Binary_OnOff>
 			<on/>
 			<off/>

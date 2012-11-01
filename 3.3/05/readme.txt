@@ -1,10 +1,17 @@
             
+3.3.05.29   - 2012.11.01 
+-------------------------------------------------------------------------------
+    bugfix & feature:
+        ... improve usability in switch straight/bent/off ChainStays
+        ... change naming of ChainStay-Profile parameters
+
+
 3.3.05.28   - 2012.10.30 
 -------------------------------------------------------------------------------
     bugfix & feature:
         ... editable DiscWith and offset to dropout
 
-            
+
 3.3.05.27   - 2012.10.29 
 -------------------------------------------------------------------------------
     feature:

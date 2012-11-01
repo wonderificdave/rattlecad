@@ -283,6 +283,18 @@
         }
 
             
+            # --- fill ListBox Values   APPL_ChainStay
+            #
+        set APPL_Config(list_ChainStay) {}
+        set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/ChainStay ]
+        foreach childNode [ $node_BrakeTypes childNodes ] {
+            if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                    # puts "  childNode ->   [$childNode nodeName]  "
+                lappend APPL_Config(list_ChainStay)  [$childNode nodeName]
+            }
+        }
+
+            
             # --- fill ListBox Values   APPL_BrakeTypes
             #
         set APPL_Config(list_BrakeTypes) {}
