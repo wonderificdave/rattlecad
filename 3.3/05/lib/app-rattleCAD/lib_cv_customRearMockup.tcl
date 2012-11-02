@@ -127,23 +127,10 @@
             set ChainStay(93)           [ list [expr -1.0 * $Length(01)] [expr -1 * $Length(03)] ]          ;# dimension: Chainstay outside BB
             set ChainStay(94)           [ list $Length(00)               [expr -1 * $Length(02)] ]          ;# dimension: Corner BB
             set ChainStay(95)           [ list [expr -1.0 * ($Length(ChainStay) - $project::Lugs(RearDropOut/ChainStay/Offset))] [expr -1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
+            set ChainStay(96)           [ list [expr -1.0 * ($Length(ChainStay) - $project::Lugs(RearDropOut/ChainStay/Offset))] [expr  1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
                         
                     
 
-            proc create_BottomBracket {} {   
-                    upvar  1 cv_Name    ext_cvName              
-                    upvar  1 Length     ext_Length
-                    upvar  1 Center     ext_Center
-                    
-                        set length03            [ expr 0.5 * $project::Lugs(BottomBracket/Diameter/outside) ]
-                        set length04            [ expr 0.5 * $project::Lugs(BottomBracket/Width) ]
-                        set pointList           [ list [expr -1*$length03] [expr -1*$length04] $length03 $length04 ]
-                    $ext_cvName create rectangle   $pointList      -outline blue     -fill white  -width 1.0  -tags __Lug__
-                    
-                        set pointList           [ list [expr -1*$ext_Length(01)] [expr -1*$ext_Length(02)] $ext_Length(01) $ext_Length(02) ]
-                    $ext_cvName create rectangle   $pointList      -outline blue     -fill white  -width 1.0  -tags __Lug__
-                    return
-            }      
             proc create_RearHub {} {   
                     upvar  1 cv_Name        ext_cvName              
                     upvar  1 Length         ext_Length
@@ -187,18 +174,18 @@
                         set y2                  [ expr $ext_Length(04) + 6 ]
                         
                         set pointList           [ list $x1 $y1 $x2 $y2 ]
-                    $ext_cvName create rectangle   $pointList            -outline blue     -fill white  -width 1.0  -tags __Lug__
+                    $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
                         set pointList           [ list $x1 [expr -1*$y1] $x2 [expr -1*$y2] ]
-                    $ext_cvName create rectangle   $pointList            -outline blue     -fill white  -width 1.0  -tags __Lug__
+                    $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
                     
                         set x1                  [ expr [lindex $ext_Center(RearHub) 0] -14 ]
                         set x2                  [ expr [lindex $ext_Center(RearHub) 0] +40 ]
                         set y1                  [ expr $ext_Length(04) + 1 ]
                         set y2                  [ expr $ext_Length(04) + 5 ]
                         set pointList           [ list $x1 $y1 $x2 $y2 ]
-                    $ext_cvName create rectangle   $pointList            -outline blue     -fill white  -width 1.0  -tags __Lug__
+                    $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
                         set pointList           [ list $x1 [expr -1*$y1] $x2 [expr -1*$y2] ]
-                    $ext_cvName create rectangle   $pointList            -outline blue     -fill white  -width 1.0  -tags __Lug__
+                    $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
             }
             proc create_BrakeDisc {} {
                   upvar  1 cv_Name    ext_cvName              
@@ -225,164 +212,30 @@
                     # $ext_cvName create circle      $pos_00       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
                     # $ext_cvName create circle      $pos_01       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
                   
-                  set p_00    [vectormath::rotateLine $pos_01 30 180]
-                  set p_01    [vectormath::rotateLine $pos_01 [expr 0.5 * $disc_DiameterDisc] 0]
+                  set p_00    [vectormath::addVector $pos_01 {-37 0}]
+                  set p_01    [vectormath::addVector $pos_01 [list [expr 0.5 * $disc_DiameterDisc] 0]]
                   set vct_00  [vectormath::parallel   $p_00 $p_01 $disc_Width]
                   foreach {p_03 p_02}  $vct_00 break
                   set pointList [list $p_00 $p_02]
+                  set p_04    [vectormath::addVector  $p_03 {7 0}]
+                  set p_05    [vectormath::addVector  $p_04 {0 0.7}]
+                  
                     # puts "    \$pointList: $pointList"
+                  set pointList [project::flatten_nestedList $p_00 $p_01 $p_02 $p_04 $p_05]
                     
                     # -- draw brake disc
-                  set object [$ext_cvName create rectangle   $pointList -outline black     -fill gray  -width 1.0  -tags __Component__]
+                  set object [$ext_cvName create polygon   $pointList -outline black     -fill gray  -width 1.0  -tags __Component__]
+                  #set object [$ext_cvName create rectangle   $pointList -outline black     -fill gray  -width 1.0  -tags __Component__]
                     # -- draw clearance arc
                   $ext_cvName create arc         $p_01      -radius $clearanceRadius -start 310  -extent 190 -style arc -outline red  -tags __CenterLine__
 
                   set ext_Center(p_brakeDisc_01)  $p_01
                   set ext_Center(p_brakeDisc_02)  $p_02
+                  set ext_Center(p_brakeDisc_03)  $p_04
 
                   return $object
             }
            
-            proc get_ChainStay {{type {bent}}} {   
-                  upvar  1 cv_Name    ext_cvName
-                  upvar  1 stageScale ext_stageScale
-                  
-                  upvar  1 Length     ext_Length
-                  upvar  1 Center     ext_Center
-                  upvar  1 ChainStay  ext_ChainStay
-                  
-                  upvar  1 Colour     ext_Colour
-                    
-                    
-                    # puts "  -> get_ChainStay $type: \$ext_Length"
-                    # parray  ext_Length
-                    # puts "  -> get_ChainStay $type: \$ext_Center"
-                    # parray ext_Center
-                    # puts "  -> get_ChainStay $type: \$ext_ChainStay"
-                    # parray ext_ChainStay
-
-                    # puts "   \$ext_Center(ChainStay_DO)  $ext_Center(ChainStay_DO)"
-                    # puts "   \$ext_Length(03)            $ext_Length(03)"
-                    # puts "   \$ext_Length(01)            $ext_Length(01)"
-                       
-                set p_CS_BB [list [expr -1.0 * $ext_Length(01)] $ext_Length(03)]                   
-                    # puts "   \$p_CS_BB                   $p_CS_BB"
- 
-
-                    # -- tube profile
-                set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
-                set profile_x01   $project::FrameTubes(ChainStay/Profile/length_01)
-                set profile_y01   $project::FrameTubes(ChainStay/Profile/width_01)
-                set profile_x02   $project::FrameTubes(ChainStay/Profile/length_02)
-                set profile_y02   $project::FrameTubes(ChainStay/Profile/width_02)
-                set profile_x03   $project::FrameTubes(ChainStay/Profile/length_03)
-                set profile_y03   $project::FrameTubes(ChainStay/Profile/width_03)
-
-
-                set profileDef {}
-                  lappend profileDef [list 0            $profile_y00]
-                  lappend profileDef [list $profile_x01 $profile_y01]
-                  lappend profileDef [list $profile_x02 $profile_y02]
-                  lappend profileDef [list $profile_x03 $profile_y03]        
-                    # puts "  -> \$profileDef $profileDef"
-                
-                    # -- set profile of straight, unbent tubeprofile
-                set tubeProfile [lib_tube::init_tubeProfile $profileDef]                                    
-                    # puts "  -> \$tubeProfile $tubeProfile"
-
-
-                    # -- tube centerline
-                switch -exact $type {
-                  {straight} {
-                        set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
-                        set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
-                        set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
-                        set S01_angle      0
-                        set S02_angle      0
-                        set S01_radius   320
-                        set S02_radius   320
-                        set lib_tube::arcPrecission 50
-                      }
-                  default {
-                          # -- bent                                                
-                        set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
-                        set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
-                        set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
-                        set S01_angle    $project::FrameTubes(ChainStay/CenterLine/angle_01)
-                        set S02_angle    $project::FrameTubes(ChainStay/CenterLine/angle_02)
-                        set S01_radius   $project::FrameTubes(ChainStay/CenterLine/radius_01)
-                        set S02_radius   $project::FrameTubes(ChainStay/CenterLine/radius_02)
-                        set lib_tube::arcPrecission 5
-                      }
-                }
-                
-                set orient_select  left
-                set centerLineDef [list $S01_length $S02_length $S03_length \
-                                        $S01_angle  $S02_angle \
-                                        $S01_radius $S02_radius]
-                                        
-                    # -- get smooth centerLine
-                set centerLine            [lib_tube::init_centerLine $centerLineDef] 
-                    # puts "  -> \$centerLine $centerLine"
-                    # -- get shape of tube
-                set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
-                set outLineRight  [lib_tube::get_tubeShape    $centerLine $tubeProfile right ]
-                set outLine       [canvasCAD::flatten_nestedList $outLineLeft $outLineRight]
-                    # puts "\n    -> \$outLineLeft   $outLineLeft"
-                    # puts "\n    -> \$outLineRight  $outLineRight"
-                    # puts "\n    -> \$outLine       $outLine "
-                
-                
-                    # get orientation of tube
-                set length    [vectormath::length   $ext_Center(ChainStay_DO) $p_CS_BB]
-                set angle     [vectormath::dirAngle $ext_Center(ChainStay_DO) $p_CS_BB]
-                      # puts "  -> \$length $length"
-                      # puts "  -> \$angle $angle"
-                set point_IS  [lib_tube::get_shapeInterSection $outLineLeft $length]       
-                set angleIS   [vectormath::dirAngle {0 0} $point_IS]
-                set angleRotation [expr $angle - $angleIS]
-                      # puts "  -> \$point_IS $point_IS"
-                      # puts "  -> \$angleIS $angleIS"
-                      # puts "  -> \$angleRotation $angleRotation"
-                    # -- prepare $outLine for exprot 
-                set outLine     [vectormath::rotatePointList {0 0} $outLine $angleRotation]    
-                set outLine     [vectormath::addVectorPointList $ext_Center(ChainStay_DO) $outLine]
-                      # $ext_cvName  create   polygon $outLine    -tags __Tube__  -fill lightgray
-                   
-                # -- prepare $centerLine for exprot 
-                set centerLine  [canvasCAD::flatten_nestedList $centerLine]
-                set centerLine  [vectormath::rotatePointList {0 0} $centerLine $angleRotation]    
-                set centerLine  [vectormath::addVectorPointList $ext_Center(ChainStay_DO) $centerLine]
-                    # $ext_cvName  create   line    $centerLine -tags __CenterLine__  -fill blue
-                
-                return [list $centerLine $outLine]
-            }
-            proc get_ChainWheel {z w position} {                    
-                    set cw_Diameter_TK  [ expr 12.7 / sin ($vectormath::CONST_PI/$z)  ]
-                    set cw_Diameter     [ expr $cw_Diameter_TK + 4 ]
-                    set cw_Width        $w
-                    
-                        # puts "   \$cw_Diameter_TK  $cw_Diameter_TK"
-                    
-                    set pt_01           [ list [ expr -0.5 * $cw_Diameter    ] [expr  0.5 * ($cw_Width - 0.5)] ]
-                    set pt_02           [ list [ expr -0.5 * $cw_Diameter_TK ] [expr  0.5 * $cw_Width] ]
-                    set pt_03           [ list [ expr  0.5 * $cw_Diameter_TK ] [expr  0.5 * $cw_Width] ]
-                    set pt_04           [ list [ expr  0.5 * $cw_Diameter    ] [expr  0.5 * ($cw_Width - 0.5)] ]
-                    
-                    set pt_05           [ list [ expr  0.5 * $cw_Diameter    ] [expr -0.5 * ($cw_Width - 0.5)] ]
-                    set pt_06           [ list [ expr  0.5 * $cw_Diameter_TK ] [expr -0.5 * $cw_Width] ]
-                    set pt_07           [ list [ expr -0.5 * $cw_Diameter_TK ] [expr -0.5 * $cw_Width] ]
-                    set pt_08           [ list [ expr -0.5 * $cw_Diameter    ] [expr -0.5 * ($cw_Width - 0.5)] ]
-                    
-                    set position        [ list [lindex $position 0] [expr -1 * [lindex $position 1]] ]
-                    set pt_Clearance_l  [ vectormath::addVector [ list [ expr -0.5 * $cw_Diameter ] 0]  $position  ]
-                    set pt_Clearance_r  [ vectormath::addVector [ list [ expr  0.5 * $cw_Diameter ] 0]  $position  ]
-                    
-                    set polygon         [ project::flatten_nestedList       [ list  $pt_01  $pt_02  $pt_03  $pt_04  \
-                                                                                    $pt_05  $pt_06  $pt_07  $pt_08 ] ]
-                    set polygon         [ vectormath::addVectorPointList    $position $polygon ]                                                            
-                    return [list $pt_Clearance_l $polygon $pt_Clearance_r]
-            }
             proc create_CrankArm {} {
                     upvar  1 cv_Name            ext_cvName
                     upvar  1 stageScale         ext_stageScale
@@ -623,6 +476,370 @@
 
             
   
+            proc create_tubeProfile_Edit {offset} {
+                  upvar  1 cv_Name    ext_cvName 
+                  upvar  1 stageScale ext_stageScale
+                  
+                  upvar  1 Length     ext_Length
+                  upvar  1 Center     ext_Center
+                  upvar  1 ChainStay  ext_ChainStay
+                  
+                  upvar  1 Colour     ext_Colour
+                  
+                    # puts "  -> get_ChainStay: \$ext_Length"
+                    # parray  ext_Length
+                    # puts "  -> get_ChainStay: \$ext_Center"
+                    # parray ext_Center
+                    # puts "  -> get_ChainStay: \$ext_ChainStay"
+                    # parray ext_ChainStay
+                    
+                set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
+                set profile_x01   $project::FrameTubes(ChainStay/Profile/length_01)
+                set profile_y01   $project::FrameTubes(ChainStay/Profile/width_01)
+                set profile_x02   $project::FrameTubes(ChainStay/Profile/length_02)
+                set profile_y02   $project::FrameTubes(ChainStay/Profile/width_02)
+                set profile_x03   $project::FrameTubes(ChainStay/Profile/length_03)
+                set profile_y03   $project::FrameTubes(ChainStay/Profile/width_03)    
+                    
+                set length  [expr $profile_x01 + $profile_x02 + $profile_x03]
+                set profile_x04   [expr $ext_Length(ChainStay) - $length + 15]
+                
+                # set p00  [list [expr -1 * $ext_Length(ChainStay)] 0]
+                set p0  [vectormath::addVector $ext_Center(ChainStay_DO)  $offset]
+                set p1  [vectormath::addVector $p0  [list $profile_x01 0]]
+                set p2  [vectormath::addVector $p1  [list $profile_x02 0]]
+                set p3  [vectormath::addVector $p2  [list $profile_x03 0]]
+                set p4  [vectormath::addVector $p3  [list $profile_x04 0]]
+                
+                set p00 [vectormath::addVector $p0  [list 0 [expr  0.5 * $profile_y00]]]
+                set p01 [vectormath::addVector $p1  [list 0 [expr  0.5 * $profile_y01]]]
+                set p02 [vectormath::addVector $p2  [list 0 [expr  0.5 * $profile_y02]]]
+                set p03 [vectormath::addVector $p3  [list 0 [expr  0.5 * $profile_y03]]]
+                set p04 [vectormath::addVector $p4  [list 0 [expr  0.5 * $profile_y03]]]
+                
+                set p14 [vectormath::addVector $p4  [list 0 [expr -0.5 * $profile_y03]]]
+                set p13 [vectormath::addVector $p3  [list 0 [expr -0.5 * $profile_y03]]]
+                set p12 [vectormath::addVector $p2  [list 0 [expr -0.5 * $profile_y02]]]
+                set p11 [vectormath::addVector $p1  [list 0 [expr -0.5 * $profile_y01]]]
+                set p10 [vectormath::addVector $p0  [list 0 [expr -0.5 * $profile_y00]]]
+                
+                set pointList [project::flatten_nestedList $p00 $p01 $p02 $p03 $p04   $p14 $p13 $p12 $p11 $p10]   
+                
+                $ext_cvName  create   polygon $pointList                              -tags __CenterLine__   -outline black  -fill white
+                $ext_cvName  create   centerline    [project::flatten_nestedList $p0 $p4] -tags __CenterLine__   -fill gray
+                
+                set textPosition [vectormath::addVector $p0  [list -70 -2.5]]
+                set item  [$ext_cvName create draftText $textPosition -text "ChainStay Profile" -size [expr 5/$ext_stageScale]]
+                $ext_cvName    addtag __CenterLine__ withtag  $item
+                  
+                  
+                  # $ext_cvName create circle     $p0       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
+                  # $ext_cvName create circle     $p1       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
+                  # $ext_cvName create circle     $p2       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
+                  # $ext_cvName create circle     $p3       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
+                
+                $ext_cvName create circle     $p00       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
+                $ext_cvName create circle     $p01       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
+                $ext_cvName create circle     $p02       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
+                $ext_cvName create circle     $p03       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
+                $ext_cvName create circle     $p10       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
+                $ext_cvName create circle     $p11       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
+                $ext_cvName create circle     $p12       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
+                $ext_cvName create circle     $p13       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
+                
+                                                                                    
+                set _dim_x1          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p0 $p1 ] \
+                                                                        horizontal    [expr -25 * $ext_stageScale]   0 \
+                                                                        $ext_Colour(result) ]
+                set _dim_x2          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p1 $p2 ] \
+                                                                        horizontal    [expr -25 * $ext_stageScale]   0 \
+                                                                        $ext_Colour(result) ]
+                set _dim_x3          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p2 $p3 ] \
+                                                                        horizontal    [expr -25 * $ext_stageScale]   0 \
+                                                                        $ext_Colour(result) ]
+
+                set _dim_w0          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p00 $p10 ] \
+                                                                        vertical      [expr  15 * $ext_stageScale]    0 \
+                                                                        $ext_Colour(result) ]
+                set _dim_w1          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p01 $p11 ] \
+                                                                        vertical      [expr  15 * $ext_stageScale]    0 \
+                                                                        $ext_Colour(result) ]
+                set _dim_w2          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p02 $p12 ] \
+                                                                        vertical      [expr  15 * $ext_stageScale]    0 \
+                                                                        $ext_Colour(result) ]
+                set _dim_w3          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p03 $p13 ] \
+                                                                        vertical      [expr -15 * $ext_stageScale]    0 \
+                                                                        $ext_Colour(result) ]
+
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_x1
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_x2
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_x3
+                
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_w0
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_w1
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_w2
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_w3
+                
+                $ext_cvName bind  $_dim_x1    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_01) ]
+                $ext_cvName bind  $_dim_x2    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_02) ]
+                $ext_cvName bind  $_dim_x3    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_03) ]
+                
+                $ext_cvName bind  $_dim_w0    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_00) ]
+                $ext_cvName bind  $_dim_w1    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_01) ]
+                $ext_cvName bind  $_dim_w2    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_02) ]
+                $ext_cvName bind  $_dim_w3    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_03) ]
+            }
+            proc create_centerLine_Edit {ctrLines offset} {
+                  upvar  1 cv_Name    ext_cvName 
+                  upvar  1 stageScale ext_stageScale
+                  
+                  upvar  1 Length     ext_Length
+                  upvar  1 Center     ext_Center
+                  upvar  1 ChainStay  ext_ChainStay
+                  
+                  upvar  1 Colour     ext_Colour
+                  
+                    #puts "  -> get_ChainStay: \$ext_Length"
+                    #parray  ext_Length
+                    #puts "  -> get_ChainStay: \$ext_Center"
+                    #parray ext_Center
+                    #puts "  -> get_ChainStay: \$ext_ChainStay"
+                    #parray ext_ChainStay
+                    
+
+                set offset  [vectormath::addVector $ext_Center(ChainStay_DO)  $offset]
+                
+                set textPosition [vectormath::addVector $offset  [list -70 -2.5]]
+                set item  [$ext_cvName create draftText $textPosition -text "ChainStay CenterLine" -size [expr 5/$ext_stageScale]]
+                $ext_cvName    addtag __CenterLine__ withtag  $item
+
+
+                    # -- get control Line - Points
+                set i 0
+                foreach {x y} $ctrLines {
+                    set p$i [vectormath::addVector [list $x $y] $offset]
+                    incr i
+                }
+                
+                    # -- draw control Lines
+                set _obj_line_01  [$ext_cvName  create   line [project::flatten_nestedList $p0 $p1]   -tags __CenterLine__   -fill orange]
+                set _obj_line_02  [$ext_cvName  create   line [project::flatten_nestedList $p2 $p3]   -tags __CenterLine__   -fill orange]
+                set _obj_line_03  [$ext_cvName  create   line [project::flatten_nestedList $p4 $p5]   -tags __CenterLine__   -fill orange]
+                
+                set _dim_length_01          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p0 $p1 ] \
+                                                    aligned    [expr -15 * $ext_stageScale]   0 \
+                                                    $ext_Colour(result) ]
+                set _dim_length_02          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p2 $p3 ] \
+                                                    aligned    [expr -15 * $ext_stageScale]   0 \
+                                                    $ext_Colour(result) ]
+                set _dim_length_03          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p4 $p5 ] \
+                                                    aligned    [expr -15 * $ext_stageScale]   0 \
+                                                    $ext_Colour(result) ]
+                
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_length_01
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_length_02
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_length_03
+                lib_gui::object_CursorBinding     $ext_cvName    $_obj_line_01
+                lib_gui::object_CursorBinding     $ext_cvName    $_obj_line_02
+                lib_gui::object_CursorBinding     $ext_cvName    $_obj_line_03
+                
+                $ext_cvName bind  $_dim_length_01    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                            {   FrameTubes(ChainStay/CenterLine/length_01) \
+                                                FrameTubes(ChainStay/CenterLine/angle_01) \
+                                                FrameTubes(ChainStay/CenterLine/radius_01) } {Chainstay:  CenterLine}]
+                
+                $ext_cvName bind  $_dim_length_02    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                                FrameTubes(ChainStay/CenterLine/length_02)]
+                                                
+                $ext_cvName bind  $_dim_length_03    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                            {   FrameTubes(ChainStay/CenterLine/length_03) \
+                                                FrameTubes(ChainStay/CenterLine/angle_02) \
+                                                FrameTubes(ChainStay/CenterLine/radius_02) } {Chainstay:  CenterLine}]
+                                                
+                                                
+                $ext_cvName bind  $_obj_line_01    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                            {   FrameTubes(ChainStay/CenterLine/length_01) \
+                                                FrameTubes(ChainStay/CenterLine/angle_01) \
+                                                FrameTubes(ChainStay/CenterLine/radius_01) } {Chainstay:  CenterLine}]
+                
+                $ext_cvName bind  $_obj_line_02    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                                FrameTubes(ChainStay/CenterLine/length_02)]
+                                                
+                $ext_cvName bind  $_obj_line_03    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                            {   FrameTubes(ChainStay/CenterLine/length_03) \
+                                                FrameTubes(ChainStay/CenterLine/angle_02) \
+                                                FrameTubes(ChainStay/CenterLine/radius_02) } {Chainstay:  CenterLine}]
+            }
+
+            proc get_ChainWheel {z w position} {                    
+                    set cw_Diameter_TK  [ expr 12.7 / sin ($vectormath::CONST_PI/$z)  ]
+                    set cw_Diameter     [ expr $cw_Diameter_TK + 4 ]
+                    set cw_Width        $w
+                    
+                        # puts "   \$cw_Diameter_TK  $cw_Diameter_TK"
+                    
+                    set pt_01           [ list [ expr -0.5 * $cw_Diameter    ] [expr  0.5 * ($cw_Width - 0.5)] ]
+                    set pt_02           [ list [ expr -0.5 * $cw_Diameter_TK ] [expr  0.5 * $cw_Width] ]
+                    set pt_03           [ list [ expr  0.5 * $cw_Diameter_TK ] [expr  0.5 * $cw_Width] ]
+                    set pt_04           [ list [ expr  0.5 * $cw_Diameter    ] [expr  0.5 * ($cw_Width - 0.5)] ]
+                    
+                    set pt_05           [ list [ expr  0.5 * $cw_Diameter    ] [expr -0.5 * ($cw_Width - 0.5)] ]
+                    set pt_06           [ list [ expr  0.5 * $cw_Diameter_TK ] [expr -0.5 * $cw_Width] ]
+                    set pt_07           [ list [ expr -0.5 * $cw_Diameter_TK ] [expr -0.5 * $cw_Width] ]
+                    set pt_08           [ list [ expr -0.5 * $cw_Diameter    ] [expr -0.5 * ($cw_Width - 0.5)] ]
+                    
+                    set position        [ list [lindex $position 0] [expr -1 * [lindex $position 1]] ]
+                    set pt_Clearance_l  [ vectormath::addVector [ list [ expr -0.5 * $cw_Diameter ] 0]  $position  ]
+                    set pt_Clearance_r  [ vectormath::addVector [ list [ expr  0.5 * $cw_Diameter ] 0]  $position  ]
+                    
+                    set polygon         [ project::flatten_nestedList       [ list  $pt_01  $pt_02  $pt_03  $pt_04  \
+                                                                                    $pt_05  $pt_06  $pt_07  $pt_08 ] ]
+                    set polygon         [ vectormath::addVectorPointList    $position $polygon ]                                                            
+                    return [list $pt_Clearance_l $polygon $pt_Clearance_r]
+            }
+            proc get_BottomBracket {} {   
+                    upvar  1 cv_Name    ext_cvName              
+                    upvar  1 Length     ext_Length
+                    upvar  1 Center     ext_Center
+                    
+                    set length03            [ expr 0.5 * $project::Lugs(BottomBracket/Diameter/outside) ]
+                    set length04            [ expr 0.5 * $project::Lugs(BottomBracket/Width) ]
+                    
+                    set pointList_OutSide   [ list [expr -1*$length03] [expr -1*$length04] $length03 $length04 ]
+                    set pointList_InSide    [ list [expr -1*$ext_Length(01)] [expr -1*$ext_Length(02)] $ext_Length(01) $ext_Length(02) ]
+                    
+                    return [list $pointList_OutSide $pointList_InSide]
+            }      
+            proc get_ChainStay {{type {bent}}} {   
+                  upvar  1 cv_Name    ext_cvName
+                  upvar  1 stageScale ext_stageScale
+                  
+                  upvar  1 Length     ext_Length
+                  upvar  1 Center     ext_Center
+                  upvar  1 ChainStay  ext_ChainStay
+                  
+                  upvar  1 Colour     ext_Colour
+                    
+                    
+                     puts "  -> get_ChainStay $type: \$ext_Length"
+                     parray  ext_Length
+                     puts "  -> get_ChainStay $type: \$ext_Center"
+                     parray ext_Center
+                     puts "  -> get_ChainStay $type: \$ext_ChainStay"
+                     parray ext_ChainStay
+
+                    # puts "   \$ext_Center(ChainStay_DO)  $ext_Center(ChainStay_DO)"
+                    # puts "   \$ext_Length(03)            $ext_Length(03)"
+                    # puts "   \$ext_Length(01)            $ext_Length(01)"
+                       
+                set p_CS_BB [list [expr -1.0 * $ext_Length(01)] $ext_Length(03)]                   
+                    # puts "   \$p_CS_BB                   $p_CS_BB"
+ 
+
+                    # -- tube profile
+                set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
+                set profile_x01   $project::FrameTubes(ChainStay/Profile/length_01)
+                set profile_y01   $project::FrameTubes(ChainStay/Profile/width_01)
+                set profile_x02   $project::FrameTubes(ChainStay/Profile/length_02)
+                set profile_y02   $project::FrameTubes(ChainStay/Profile/width_02)
+                set profile_x03   $project::FrameTubes(ChainStay/Profile/length_03)
+                set profile_y03   $project::FrameTubes(ChainStay/Profile/width_03)
+
+
+                set profileDef {}
+                  lappend profileDef [list 0            $profile_y00]
+                  lappend profileDef [list $profile_x01 $profile_y01]
+                  lappend profileDef [list $profile_x02 $profile_y02]
+                  lappend profileDef [list $profile_x03 $profile_y03]        
+                    # puts "  -> \$profileDef $profileDef"
+                
+                    # -- set profile of straight, unbent tubeprofile
+                set tubeProfile [lib_tube::init_tubeProfile $profileDef]                                    
+                    # puts "  -> \$tubeProfile $tubeProfile"
+
+
+                    # -- tube centerline
+                switch -exact $type {
+                  {straight} {
+                        set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
+                        set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
+                        set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
+                        set S01_angle      0
+                        set S02_angle      0
+                        set S01_radius   320
+                        set S02_radius   320
+                        set lib_tube::arcPrecission 50
+                      }
+                  default {
+                          # -- bent                                                
+                        set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
+                        set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
+                        set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
+                        set S01_angle    $project::FrameTubes(ChainStay/CenterLine/angle_01)
+                        set S02_angle    $project::FrameTubes(ChainStay/CenterLine/angle_02)
+                        set S01_radius   $project::FrameTubes(ChainStay/CenterLine/radius_01)
+                        set S02_radius   $project::FrameTubes(ChainStay/CenterLine/radius_02)
+                        set lib_tube::arcPrecission 5
+                      }
+                }
+                
+                set orient_select  left
+                set centerLineDef [list $S01_length $S02_length $S03_length \
+                                        $S01_angle  $S02_angle \
+                                        $S01_radius $S02_radius]
+                                        
+                    # -- get smooth centerLine
+                set retValues [lib_tube::init_centerLine $centerLineDef] 
+                set centerLine  [lindex $retValues 0]
+                set ctrLines    [lindex $retValues 1]
+                     # puts "  -> \$centerLine $centerLine"
+                     # exit
+                    # -- get shape of tube
+                set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
+                set outLineRight  [lib_tube::get_tubeShape    $centerLine $tubeProfile right ]
+                set outLine       [project::flatten_nestedList $outLineLeft $outLineRight]
+                    # puts "\n    -> \$outLineLeft   $outLineLeft"
+                    # puts "\n    -> \$outLineRight  $outLineRight"
+                    # puts "\n    -> \$outLine       $outLine "
+                
+                
+                    # get orientation of tube
+                set length    [vectormath::length   $ext_Center(ChainStay_DO) $p_CS_BB]
+                set angle     [vectormath::dirAngle $ext_Center(ChainStay_DO) $p_CS_BB]
+                      # puts "  -> \$length $length"
+                      # puts "  -> \$angle $angle"
+                set point_IS  [lib_tube::get_shapeInterSection $outLineLeft $length]       
+                set angleIS   [vectormath::dirAngle {0 0} $point_IS]
+                set angleRotation [expr $angle - $angleIS]
+                      # puts "  -> \$point_IS $point_IS"
+                      # puts "  -> \$angleIS $angleIS"
+                      # puts "  -> \$angleRotation $angleRotation"
+                    # -- prepare $outLine for exprot 
+                set outLine     [vectormath::rotatePointList {0 0} $outLine $angleRotation]    
+                set outLine     [vectormath::addVectorPointList $ext_Center(ChainStay_DO) $outLine]
+                      # $ext_cvName  create   polygon $outLine    -tags __Tube__  -fill lightgray
+                   
+                    # -- prepare $centerLine for export 
+                set centerLine  [project::flatten_nestedList $centerLine]
+                set centerLine  [vectormath::rotatePointList {0 0} $centerLine $angleRotation]    
+                set centerLine  [vectormath::addVectorPointList $ext_Center(ChainStay_DO) $centerLine]
+                    # $ext_cvName  create   line    $centerLine -tags __CenterLine__  -fill blue
+                 
+                    # -- prepare $ctrLines for export 
+                set ctrLines    [project::flatten_nestedList $ctrLines]
+                set ctrLines    [vectormath::rotatePointList {0 0} $ctrLines $angleRotation]    
+
+                    # $ext_cvName  create   line    $centerLine -tags __CenterLine__  -fill blue
+                
+                return [list $centerLine $outLine $ctrLines]
+            }
+            
                 # -- create CrankArm & RearHub
             create_CrankArm
             create_RearHub
@@ -633,14 +850,16 @@
                 # -- create DropOuts
             create_DropOut
 
-               # -- create BottomBracket
-            create_BottomBracket
-            
+               # -- create Bottom Bracket - Outer Shell
+            set retValues [get_BottomBracket]
+            set  BB_OutSide [lindex $retValues 0]
+            set  BB_InSide  [lindex $retValues 1]
+            $cv_Name create rectangle   $BB_OutSide   -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
 
                 # -- ChainStay Type
             switch $project::Rendering(ChainStay) {
                    {straight}   { set retValues [get_ChainStay straight] }
-                   {bent}     { set retValues [get_ChainStay bent]}
+                   {bent}       { set retValues [get_ChainStay bent]}
                    {off}        {}
                    default      { puts "\n  <W> ... not defined in createRearMockup: $project::Rendering(ChainStay)\n"
                                   # return
@@ -648,8 +867,10 @@
             }
             switch $project::Rendering(ChainStay) {
                    {straight}   -
-                   {bent}     { set ChainStay(centerLine) [lindex $retValues 0]
+                   {bent}       { set ChainStay(centerLine) [lindex $retValues 0]
                                   set ChainStay(polygon)    [lindex $retValues 1]
+                                  set ChainStay(ctrLines)   [lindex $retValues 2]
+                                    # puts "\n --> \$ChainStay(ctrLines) $ChainStay(ctrLines)"
                                   set tube_CS_left    [ $cv_Name create polygon     $ChainStay(polygon)      -fill gray   -outline black  -tags __Tube__ ]
                                   set tube_CS_CLine   [ $cv_Name create line        $ChainStay(centerLine)   -fill orange                 -tags __CenterLine__ ]
                                       set polygon_opposite {}
@@ -662,43 +883,24 @@
                                       #$ext_cvName  create   line    $centerLine -tags __CenterLine__   -fill blue
                                     
                                   lib_gui::object_CursorBinding   $cv_Name    $tube_CS_CLine
-                                  lib_gui::object_CursorBinding   $cv_Name    $tube_CS_right
                                   lib_gui::object_CursorBinding   $cv_Name    $tube_CS_left
+                                  lib_gui::object_CursorBinding   $cv_Name    $tube_CS_right
                                    
                                   $cv_Name bind   $tube_CS_CLine    <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                              {   list://Rendering(ChainStay@SELECT_ChainStay)    \
-                                                                  FrameTubes(ChainStay/CenterLine/length_01) \
-                                                                  FrameTubes(ChainStay/CenterLine/length_02) \
-                                                                  FrameTubes(ChainStay/CenterLine/length_03) \
-                                                                  FrameTubes(ChainStay/CenterLine/angle_01) \
-                                                                  FrameTubes(ChainStay/CenterLine/angle_02) \
-                                                                  FrameTubes(ChainStay/CenterLine/radius_01) \
-                                                                  FrameTubes(ChainStay/CenterLine/radius_02) } {Chainstay:  CenterLine}]
-                                                                  
-                                  $cv_Name bind   $tube_CS_left   <Double-ButtonPress-1> \
+                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  CenterLine}]                               
+                                  $cv_Name bind   $tube_CS_left    <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                              {   FrameTubes(ChainStay/Profile/width_00)  \
-                                                                  FrameTubes(ChainStay/Profile/length_01) \
-                                                                  FrameTubes(ChainStay/Profile/width_01)  \
-                                                                  FrameTubes(ChainStay/Profile/length_02) \
-                                                                  FrameTubes(ChainStay/Profile/width_02)  \
-                                                                  FrameTubes(ChainStay/Profile/length_03) \
-                                                                  FrameTubes(ChainStay/Profile/width_03)  }  {Chainstay:  Profile}]
-                                 $cv_Name bind   $tube_CS_right   <Double-ButtonPress-1> \
+                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  Type}]
+                                  $cv_Name bind   $tube_CS_right   <Double-ButtonPress-1> \
                                                   [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                              {   FrameTubes(ChainStay/Profile/width_00)  \
-                                                                  FrameTubes(ChainStay/Profile/length_01) \
-                                                                  FrameTubes(ChainStay/Profile/width_01)  \
-                                                                  FrameTubes(ChainStay/Profile/length_02) \
-                                                                  FrameTubes(ChainStay/Profile/width_02)  \
-                                                                  FrameTubes(ChainStay/Profile/length_03) \
-                                                                  FrameTubes(ChainStay/Profile/width_03)  }  {Chainstay:  Profile}]
-
+                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  Type}]
                                 }
                    default      { set ChainStay(polygon) {} }
             }
 
+               # -- finisch Bottom Bracket  - Inner Shell
+            $cv_Name create rectangle   $BB_InSide   -outline blue     -fill white  -width 1.0  -tags __Lug__
 
                # -- create BrakeDisc
             set brakeDisc [create_BrakeDisc]
@@ -710,7 +912,16 @@
                                                       Rendering(RearMockup/DiscClearance) } {DiscBrake Details}]
 
                # -- create control Curves
-            create_ControlCurves            
+            create_ControlCurves      
+
+               # -- create tubeProfile Edit
+            create_tubeProfile_Edit  {0 115}
+
+               # -- create centerLine Edit
+            switch -exact $project::Rendering(ChainStay) {
+                   {bent}   {create_centerLine_Edit   $ChainStay(ctrLines) {0 75}}
+                   default {}
+            }
    
                 # -- centerlines
             $cv_Name create centerline     [ project::flatten_nestedList $Center(CL_BB_01)         $Center(CL_BB_02) ] \
@@ -779,6 +990,7 @@
 
 
                 # -- mark positions of dimensions
+            $cv_Name create circle      $ChainStay(96)          -radius 2   -outline red         -width 1.0        -tags __CenterLine__
             $cv_Name create circle      $ChainStay(95)          -radius 2   -outline red         -width 1.0        -tags __CenterLine__
             $cv_Name create circle      $ChainStay(93)          -radius 2   -outline red         -width 1.0        -tags __CenterLine__
             $cv_Name create circle      $Center(Dim_RearHub_01) -radius 2   -outline red         -width 1.0        -tags __CenterLine__
@@ -798,25 +1010,22 @@
 
                 # -- Wheel radius
             set _dim_Wh_Radius          [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(CL_RearHub_01) $Center(Dim_WheelRadius) ] \
-                                                                    horizontal        [expr   45 * $stageScale]   [expr  0 * $stageScale]  \
+                                                                    horizontal      [expr   45 * $stageScale]   [expr  0 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Tyre_Width         [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_Tyre_01) $Center(Dim_Tyre_02) ] \
                                                                     vertical        [expr   30 * $stageScale]   [expr  0 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Sprocket_CL        [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_RearHub_02) $Center(SprocketClearance) ] \
-                                                                    horizontal        [expr  -35 * $stageScale]   [expr -5 * $stageScale]  \
+                                                                    horizontal      [expr  -25 * $stageScale]   [expr -5 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Tyre_CL            [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Tyre) $Center(TyreClearance) ] \
                                                                     vertical        [expr   65 * $stageScale]   [expr 20 * $stageScale]  \
                                                                     gray50 ]
                                                                                                                                    
 
-                # -- dimensions & bindings
-                #
-
                 # -- ChainStay length
-            set _dim_CS_Length             [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(CL_RearHub_02) $Center(CL_BB_02) ] \
-                                                                    horizontal        [expr  -30 * $stageScale]   [expr 0 * $stageScale]  \
+            set _dim_CS_Length             [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(CL_RearHub_01) $Center(CL_BB_01) ] \
+                                                                    horizontal        [expr  60 * $stageScale]   [expr 0 * $stageScale]  \
                                                                     $Colour(result) ] 
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_CS_Length
                     $cv_Name bind $_dim_CS_Length        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
@@ -846,8 +1055,8 @@
 
                     
                 # -- BrakeDisc
-            set _dim_BrakeDisc_Dist_Hub [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(p_brakeDisc_02) $Center(Dim_RearHub_01) ] \
-                                                                    vertical        [expr  28 * $stageScale]    [expr  20 * $stageScale]  \
+            set _dim_BrakeDisc_Dist_Hub [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(p_brakeDisc_03) $Center(Dim_RearHub_01) ] \
+                                                                    vertical        [expr   2 * $stageScale]    [expr  20 * $stageScale]  \
                                                                     $Colour(primary) ] 
             set _dim_BrakeDisc_Dist_DO  [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(p_brakeDisc_01) $Center(Dim_RearHub_01) ] \
                                                                     vertical        [expr  15 * $stageScale]    [expr -20 * $stageScale]  \
@@ -861,10 +1070,10 @@
 
                 # -- RearHub
             set _dim_Hub_Width          [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_RearHub_01) $Center(Dim_RearHub_02) ] \
-                                                                    vertical        [expr  35 * $stageScale]    [expr -10 * $stageScale]  \
+                                                                    vertical        [expr  40 * $stageScale]    [expr -10 * $stageScale]  \
                                                                     $Colour(primary) ] 
-            set _dim_CS_DO_Distance     [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(Dim_RearHub_02) $ChainStay(95) ] \
-                                                                    horizontal      [expr  35 * $stageScale]    0  \
+            set _dim_CS_DO_Distance     [ $cv_Name dimension  length      [ project::flatten_nestedList   $Center(CL_RearHub_01) $ChainStay(95) ] \
+                                                                    horizontal      [expr  25 * $stageScale]    0  \
                                                                     $Colour(primary) ] 
             set _dim_CS_DO_Offset       [ $cv_Name dimension  length      [ project::flatten_nestedList   $ChainStay(92) $ChainStay(95) ] \
                                                                     vertical        [expr -55 * $stageScale]    [expr -30 * $stageScale]  \

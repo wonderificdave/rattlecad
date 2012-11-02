@@ -161,7 +161,19 @@ namespace eval lib_tube {
         }
         lappend basePoints $p_S03
         
-        return $basePoints
+        
+          # -- define controlLines
+        set ctrlPoint_00_b [vectormath::addVector $p_S00 [list  $S01_length 0]]
+        
+        set ctrlPoint_01_a [vectormath::addVector $p_S01_b [vectormath::rotateLine {0 0} $offset_01 [expr 180 + $angle_01]]]
+        set ctrlPoint_01_b [vectormath::addVector $p_S02_a [vectormath::rotateLine {0 0} $offset_02 $angle_01]]
+        
+        set ctrlPoint_02_a [vectormath::addVector $p_S02_b [vectormath::rotateLine {0 0} $offset_02 [expr 180 + $angle_02]]]
+        
+        set controlPoints   [list $p_S00 $ctrlPoint_00_b  $ctrlPoint_01_a $ctrlPoint_01_b $ctrlPoint_02_a $p_S03]
+
+        
+        return [list $basePoints $controlPoints]
     }
 
 
