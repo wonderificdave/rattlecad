@@ -46,22 +46,27 @@ namespace eval lib_tube {
         
         variable arcPrecission
         
-        foreach {S01_length S02_length S03_length \
-                 S01_angle S02_angle \
-                 S01_radius S02_radius} $centerLineDef break
+        foreach {S01_length S02_length S03_length S04_length \
+                 S01_angle  S02_angle  S03_angle \
+                 S01_radius S02_radius S03_radius} $centerLineDef break
 
         set angle_00    0
         set angle_01    [expr $angle_00 + $S01_angle]
         set angle_02    [expr $angle_01 + $S02_angle]
+        set angle_03    [expr $angle_02 + $S03_angle]
         set segment_01  [expr $S01_radius * $S01_angle * $vectormath::CONST_PI / 180]
         set segment_02  [expr $S02_radius * $S02_angle * $vectormath::CONST_PI / 180]
+        set segment_03  [expr $S03_radius * $S03_angle * $vectormath::CONST_PI / 180]
         set offset_01   [expr abs(0.5 * $segment_01)]
         set offset_02   [expr abs(0.5 * $segment_02)]
+        set offset_03   [expr abs(0.5 * $segment_03)]
 
         set p_S00       {0 0}
         set p_End       $p_S00
         lappend basePoints  $p_End
         
+          # ============================================
+          # start-Segment
         set p_S01 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S01_length $angle_00]]
         
           # ============================================
@@ -77,11 +82,11 @@ namespace eval lib_tube {
             lappend basePoints $p_End
         } else {
             if {$S01_angle > 0} {
-                set p_End  [vectormath::addVector $p_S01  [vectormath::rotateLine {0 0} [expr -1.0 * $offset_01] $angle_00]] 
+                set p_End    [vectormath::addVector $p_S01  [vectormath::rotateLine {0 0} [expr -1.0 * $offset_01] $angle_00]] 
                 set p_S01_ct [vectormath::addVector $p_End  [vectormath::rotateLine {0 0} $S01_radius  90]]
                 lappend basePoints $p_End
             } else {
-                set p_End  [vectormath::addVector $p_S01  [vectormath::rotateLine {0 0} [expr -1.0 * $offset_01] $angle_00]] 
+                set p_End    [vectormath::addVector $p_S01  [vectormath::rotateLine {0 0} [expr -1.0 * $offset_01] $angle_00]] 
                 set p_S01_ct [vectormath::addVector $p_End  [vectormath::rotateLine {0 0} $S01_radius -90]]
                 lappend basePoints $p_End
             }
@@ -105,7 +110,8 @@ namespace eval lib_tube {
             }
             set p_S01_b  $p_End
         }
-        
+
+
           # ============================================
           # 2nd bent-Segment
         if {$S01_angle == 0} { 
@@ -113,8 +119,7 @@ namespace eval lib_tube {
         } else {
             set length_02 [expr $S02_length - $offset_01]
             set p_S02 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_02 $angle_01]]
-        }
-        
+        } 
         if {$S02_angle == 0} {
             set angle_02    $angle_01
             set segment_02  0
@@ -126,10 +131,10 @@ namespace eval lib_tube {
             lappend basePoints $p_End
         } else {
             if {$S02_angle < 0} {
-                set p_End  [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_02] $angle_01]]   
+                set p_End    [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_02] $angle_01]]   
                 set p_S02_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S02_radius [expr -1.0*(90 - $angle_01)]]]
             } else {
-                set p_End  [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_02] $angle_01]]   
+                set p_End    [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_02] $angle_01]]   
                 set p_S02_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S02_radius [expr (90 + $angle_01)]]]
             }
             set p_S02_a  $p_End
@@ -152,14 +157,64 @@ namespace eval lib_tube {
             }
             set p_S02_b  $p_End
         }
-        
-        if {$offset_02 == 0} { 
-          set p_S03 [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} $S03_length $angle_02]]
+
+
+          # ============================================
+          # 3rd bent-Segment
+        if {$S02_angle == 0} { 
+            set p_S03 [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} $S03_length $angle_02]]
         } else {
-          set length_03 [expr $S03_length - $offset_02]
-          set p_S03 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_03 $angle_02]]
+            set length_03 [expr $S03_length - $offset_02]
+            set p_S03 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_03 $angle_02]]
         }
-        lappend basePoints $p_S03
+        if {$S03_angle == 0} {
+            set angle_03    $angle_02
+            set segment_03  0
+            set offset_03   0        
+            set p_S03_a     $p_S03
+            set p_S03_b     $p_S03
+            set p_S03_ct    $p_S03
+            set p_End       $p_S03
+            lappend basePoints $p_End
+        } else {
+            if {$S03_angle > 0} {
+                set p_End  [vectormath::addVector $p_S03 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_03] $angle_02]]   
+                set p_S03_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S03_radius [expr (90 + $angle_02)]]]
+            } else {
+                set p_End  [vectormath::addVector $p_S03 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_03] $angle_02]]   
+                set p_S03_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S03_radius [expr -1.0*(90 - $angle_02)]]]
+            }
+            set p_S03_a  $p_End
+            
+            set nrSegments  [expr abs(round($segment_03/$arcPrecission))]
+            if {$nrSegments < 1} {
+                # puts "    -> nrSegments: $nrSegments"
+              set nrSegments 1
+            }
+            set deltaAngle  [expr 1.0*$S03_angle/$nrSegments]
+              # puts "  ->  Segments/Angle: $nrSegments $deltaAngle"
+            set pStart  $p_End
+            set i 0
+            while {$i < $nrSegments} {
+              set p_End  [vectormath::rotatePoint $p_S03_ct $pStart $deltaAngle]
+              lappend basePoints $p_End
+                # puts "  -> i/p_End:  $i  $p_End"
+              set pStart $p_End
+              incr i
+            }
+            set p_S03_b  $p_End
+        }
+        
+          
+          # ============================================
+          # last-Segment
+        if {$offset_03 == 0} { 
+            set p_S04 [vectormath::addVector $p_S03 [vectormath::rotateLine {0 0} $S04_length $angle_03]]
+        } else {
+            set length_04 [expr $S04_length - $offset_03]
+            set p_S04 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_04 $angle_03]]
+        }
+        lappend basePoints $p_S04
         
         
           # -- define controlLines
@@ -169,8 +224,11 @@ namespace eval lib_tube {
         set ctrlPoint_01_b [vectormath::addVector $p_S02_a [vectormath::rotateLine {0 0} $offset_02 $angle_01]]
         
         set ctrlPoint_02_a [vectormath::addVector $p_S02_b [vectormath::rotateLine {0 0} $offset_02 [expr 180 + $angle_02]]]
+        set ctrlPoint_02_b [vectormath::addVector $p_S03_a [vectormath::rotateLine {0 0} $offset_03 $angle_02]]
         
-        set controlPoints   [list $p_S00 $ctrlPoint_00_b  $ctrlPoint_01_a $ctrlPoint_01_b $ctrlPoint_02_a $p_S03]
+        set ctrlPoint_03_a [vectormath::addVector $p_S03_b [vectormath::rotateLine {0 0} $offset_03 [expr 180 + $angle_03]]]
+        
+        set controlPoints  [list $p_S00 $ctrlPoint_00_b  $ctrlPoint_01_a $ctrlPoint_01_b $ctrlPoint_02_a $ctrlPoint_02_b $ctrlPoint_03_a $p_S04]
 
         
         return [list $basePoints $controlPoints]

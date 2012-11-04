@@ -82,11 +82,14 @@
             <CenterLine>
               <length_01>150.00</length_01>
               <length_02>140.00</length_02>
-              <length_03>85.00</length_03>
+              <length_03>78.00</length_03>
+              <length_04>10.00</length_04>
               <angle_01>9.00</angle_01>
               <angle_02>-9.00</angle_02>
+              <angle_03>0.00</angle_03>
               <radius_01>320.00</radius_01>
               <radius_02>320.00</radius_02>
+              <radius_03>320.00</radius_03>
             </CenterLine>
             <Profile>              
                 <width_00>12.50</width_00>

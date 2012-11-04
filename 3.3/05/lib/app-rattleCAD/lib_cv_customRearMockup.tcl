@@ -486,11 +486,11 @@
                   
                   upvar  1 Colour     ext_Colour
                   
-                    # puts "  -> get_ChainStay: \$ext_Length"
+                    # puts "  -> create_tubeProfile_Edit: \$ext_Length"
                     # parray  ext_Length
-                    # puts "  -> get_ChainStay: \$ext_Center"
+                    # puts "  -> create_tubeProfile_Edit: \$ext_Center"
                     # parray ext_Center
-                    # puts "  -> get_ChainStay: \$ext_ChainStay"
+                    # puts "  -> create_tubeProfile_Edit: \$ext_ChainStay"
                     # parray ext_ChainStay
                     
                 set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
@@ -599,11 +599,11 @@
                   
                   upvar  1 Colour     ext_Colour
                   
-                    #puts "  -> get_ChainStay: \$ext_Length"
+                    #puts "  -> create_centerLine_Edit: \$ext_Length"
                     #parray  ext_Length
-                    #puts "  -> get_ChainStay: \$ext_Center"
+                    #puts "  -> create_centerLine_Edit: \$ext_Center"
                     #parray ext_Center
-                    #puts "  -> get_ChainStay: \$ext_ChainStay"
+                    #puts "  -> create_centerLine_Edit: \$ext_ChainStay"
                     #parray ext_ChainStay
                     
 
@@ -621,10 +621,16 @@
                     incr i
                 }
                 
+                    # -- draw control areas
+                set ctrlArea_01 [$ext_cvName create circle     $p1    -radius 10    -outline orange    -fill lightgray   -width 1.0   -tags __CenterLine__]
+                set ctrlArea_02 [$ext_cvName create circle     $p3    -radius 10    -outline orange    -fill lightgray   -width 1.0   -tags __CenterLine__]
+                set ctrlArea_03 [$ext_cvName create circle     $p5    -radius 10    -outline orange    -fill lightgray   -width 1.0   -tags __CenterLine__]
+                    
                     # -- draw control Lines
                 set _obj_line_01  [$ext_cvName  create   line [project::flatten_nestedList $p0 $p1]   -tags __CenterLine__   -fill orange]
                 set _obj_line_02  [$ext_cvName  create   line [project::flatten_nestedList $p2 $p3]   -tags __CenterLine__   -fill orange]
                 set _obj_line_03  [$ext_cvName  create   line [project::flatten_nestedList $p4 $p5]   -tags __CenterLine__   -fill orange]
+                set _obj_line_04  [$ext_cvName  create   line [project::flatten_nestedList $p6 $p7]   -tags __CenterLine__   -fill orange]
                 
                 set _dim_length_01          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p0 $p1 ] \
                                                     aligned    [expr -15 * $ext_stageScale]   0 \
@@ -635,46 +641,66 @@
                 set _dim_length_03          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p4 $p5 ] \
                                                     aligned    [expr -15 * $ext_stageScale]   0 \
                                                     $ext_Colour(result) ]
+                set _dim_length_04          [ $ext_cvName dimension  length      [ project::flatten_nestedList   $p6 $p7 ] \
+                                                    aligned    [expr -15 * $ext_stageScale]   0 \
+                                                    $ext_Colour(result) ]
                 
                 lib_gui::object_CursorBinding     $ext_cvName    $_dim_length_01
                 lib_gui::object_CursorBinding     $ext_cvName    $_dim_length_02
                 lib_gui::object_CursorBinding     $ext_cvName    $_dim_length_03
+                lib_gui::object_CursorBinding     $ext_cvName    $_dim_length_04
+                
                 lib_gui::object_CursorBinding     $ext_cvName    $_obj_line_01
                 lib_gui::object_CursorBinding     $ext_cvName    $_obj_line_02
                 lib_gui::object_CursorBinding     $ext_cvName    $_obj_line_03
+                lib_gui::object_CursorBinding     $ext_cvName    $_obj_line_04
+                
+                lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_01
+                lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_02
+                lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_03
+
                 
                 $ext_cvName bind  $_dim_length_01    <Double-ButtonPress-1>  \
                                 [list frame_geometry::createEdit  %x %y  $ext_cvName  \
-                                            {   FrameTubes(ChainStay/CenterLine/length_01) \
-                                                FrameTubes(ChainStay/CenterLine/angle_01) \
-                                                FrameTubes(ChainStay/CenterLine/radius_01) } {Chainstay:  CenterLine}]
-                
+                                                FrameTubes(ChainStay/CenterLine/length_01)]
                 $ext_cvName bind  $_dim_length_02    <Double-ButtonPress-1>  \
                                 [list frame_geometry::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_02)]
-                                                
                 $ext_cvName bind  $_dim_length_03    <Double-ButtonPress-1>  \
                                 [list frame_geometry::createEdit  %x %y  $ext_cvName  \
-                                            {   FrameTubes(ChainStay/CenterLine/length_03) \
-                                                FrameTubes(ChainStay/CenterLine/angle_02) \
-                                                FrameTubes(ChainStay/CenterLine/radius_02) } {Chainstay:  CenterLine}]
-                                                
-                                                
+                                                FrameTubes(ChainStay/CenterLine/length_03)]
+                $ext_cvName bind  $_dim_length_04    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                                FrameTubes(ChainStay/CenterLine/length_04)]
+
                 $ext_cvName bind  $_obj_line_01    <Double-ButtonPress-1>  \
                                 [list frame_geometry::createEdit  %x %y  $ext_cvName  \
-                                            {   FrameTubes(ChainStay/CenterLine/length_01) \
-                                                FrameTubes(ChainStay/CenterLine/angle_01) \
-                                                FrameTubes(ChainStay/CenterLine/radius_01) } {Chainstay:  CenterLine}]
-                
+                                                FrameTubes(ChainStay/CenterLine/length_01)]
                 $ext_cvName bind  $_obj_line_02    <Double-ButtonPress-1>  \
                                 [list frame_geometry::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_02)]
-                                                
                 $ext_cvName bind  $_obj_line_03    <Double-ButtonPress-1>  \
                                 [list frame_geometry::createEdit  %x %y  $ext_cvName  \
-                                            {   FrameTubes(ChainStay/CenterLine/length_03) \
-                                                FrameTubes(ChainStay/CenterLine/angle_02) \
-                                                FrameTubes(ChainStay/CenterLine/radius_02) } {Chainstay:  CenterLine}]
+                                                FrameTubes(ChainStay/CenterLine/length_03)]
+                $ext_cvName bind  $_obj_line_04    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                                FrameTubes(ChainStay/CenterLine/length_04)]
+                                                
+                $ext_cvName bind  $ctrlArea_01    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                            {   FrameTubes(ChainStay/CenterLine/angle_01) \
+                                                FrameTubes(ChainStay/CenterLine/radius_01) }     {Chainstay:  Bent 01}]
+                $ext_cvName bind  $ctrlArea_02    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                            {   FrameTubes(ChainStay/CenterLine/angle_02) \
+                                                FrameTubes(ChainStay/CenterLine/radius_02) }     {Chainstay:  Bent 02}]
+                $ext_cvName bind  $ctrlArea_03    <Double-ButtonPress-1>  \
+                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                            {   FrameTubes(ChainStay/CenterLine/angle_03) \
+                                                FrameTubes(ChainStay/CenterLine/radius_03) }     {Chainstay:  Bent 03}]
+        
+                 
+                                                
             }
 
             proc get_ChainWheel {z w position} {                    
@@ -727,12 +753,12 @@
                   upvar  1 Colour     ext_Colour
                     
                     
-                     puts "  -> get_ChainStay $type: \$ext_Length"
-                     parray  ext_Length
-                     puts "  -> get_ChainStay $type: \$ext_Center"
-                     parray ext_Center
-                     puts "  -> get_ChainStay $type: \$ext_ChainStay"
-                     parray ext_ChainStay
+                     # puts "  -> get_ChainStay $type: \$ext_Length"
+                     # parray  ext_Length
+                     # puts "  -> get_ChainStay $type: \$ext_Center"
+                     # parray ext_Center
+                     # puts "  -> get_ChainStay $type: \$ext_ChainStay"
+                     # parray ext_ChainStay
 
                     # puts "   \$ext_Center(ChainStay_DO)  $ext_Center(ChainStay_DO)"
                     # puts "   \$ext_Length(03)            $ext_Length(03)"
@@ -770,10 +796,13 @@
                         set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
                         set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
                         set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
+                        set S04_length   $project::FrameTubes(ChainStay/CenterLine/length_04)
                         set S01_angle      0
                         set S02_angle      0
+                        set S03_angle      0
                         set S01_radius   320
                         set S02_radius   320
+                        set S03_radius   320
                         set lib_tube::arcPrecission 50
                       }
                   default {
@@ -781,18 +810,21 @@
                         set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
                         set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
                         set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
+                        set S04_length   $project::FrameTubes(ChainStay/CenterLine/length_04)
                         set S01_angle    $project::FrameTubes(ChainStay/CenterLine/angle_01)
                         set S02_angle    $project::FrameTubes(ChainStay/CenterLine/angle_02)
+                        set S03_angle    $project::FrameTubes(ChainStay/CenterLine/angle_03)
                         set S01_radius   $project::FrameTubes(ChainStay/CenterLine/radius_01)
                         set S02_radius   $project::FrameTubes(ChainStay/CenterLine/radius_02)
+                        set S03_radius   $project::FrameTubes(ChainStay/CenterLine/radius_03)
                         set lib_tube::arcPrecission 5
                       }
                 }
                 
                 set orient_select  left
-                set centerLineDef [list $S01_length $S02_length $S03_length \
-                                        $S01_angle  $S02_angle \
-                                        $S01_radius $S02_radius]
+                set centerLineDef [list $S01_length $S02_length $S03_length $S04_length \
+                                        $S01_angle  $S02_angle  $S03_angle \
+                                        $S01_radius $S02_radius $S03_radius]
                                         
                     # -- get smooth centerLine
                 set retValues [lib_tube::init_centerLine $centerLineDef] 

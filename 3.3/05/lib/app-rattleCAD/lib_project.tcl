@@ -1441,19 +1441,39 @@
                                     $parentNode removeChild $node 
                                     $node delete
                             }
+                                #
+                                # -- /root/FrameTubes/ChainStay/CenterLine
+                                #
+                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay]
                             set node [$domProject selectNode /root/FrameTubes/ChainStay/CenterLine]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine"
                                     $parentNode appendXML  "<CenterLine>
                                                               <length_01>150.00</length_01>
                                                               <length_02>140.00</length_02>
-                                                              <length_03>85.00</length_03>
+                                                              <length_03>75.00</length_03>
+                                                              <length_04>10.00</length_04>
                                                               <angle_01>9.00</angle_01>
                                                               <angle_02>-5.00</angle_02>
+                                                              <angle_03>0.00</angle_03>
                                                               <radius_01>320.00</radius_01>
                                                               <radius_02>320.00</radius_02>
+                                                              <radius_03>320.00</radius_03>
                                                             </CenterLine>"
                             }
+                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay/CenterLine]
+                            set node [$domProject selectNode /root/FrameTubes/ChainStay/CenterLine/length_04]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine"
+                                    $parentNode appendXML  "<length_04>10.00</length_04>"
+                                    $parentNode appendXML  "<angle_03>0.00</angle_03>"
+                                    $parentNode appendXML  "<radius_03>320.00</radius_03>"
+                            }
+                            
+                                #
+                                # -- /root/FrameTubes/ChainStay/Profile
+                                #
+                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay]
                             set node [$domProject selectNode /root/FrameTubes/ChainStay/Profile/p01]
                             if {$node != {}} {
                                     puts "                           ... update File ... selectNode /root/FrameTubes/ChainStay/Profile"
