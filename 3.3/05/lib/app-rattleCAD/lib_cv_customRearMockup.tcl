@@ -529,7 +529,7 @@
                 $ext_cvName  create   centerline    [project::flatten_nestedList $p0 $p4] -tags __CenterLine__   -fill gray
                 
                 set textPosition [vectormath::addVector $p0  [list -70 -2.5]]
-                set item  [$ext_cvName create draftText $textPosition -text "ChainStay Profile" -size [expr 5/$ext_stageScale]]
+                set item  [$ext_cvName create draftText $textPosition -text "ChainStay Profile" -size [expr 5*$ext_stageScale]]
                 $ext_cvName    addtag __CenterLine__ withtag  $item
                   
                   
