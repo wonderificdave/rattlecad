@@ -783,12 +783,15 @@
                                     }
                             Composite     {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_compositeFork ]
-                                        set pt_60  [ vectormath::rotateLine $pt_00  22.5 [expr  90 - $HeadTube(Angle)]]
+                                        set pt_60  [ vectormath::rotateLine $pt_00  20.5 [expr  90 - $HeadTube(Angle)]]
                                         set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $HeadTube(Angle)]]
                                         set Fork(BrakeOffsetDef) [project::flatten_nestedList $pt_61 $pt_60 ]
                                     }
                             Suspension* {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_suspensionFork ]
+                                        set pt_60  [ vectormath::rotateLine $pt_00  40.0 [expr  90 - $HeadTube(Angle)]]
+                                        set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $HeadTube(Angle)]]
+                                        set Fork(BrakeOffsetDef) [project::flatten_nestedList $pt_61 $pt_60 ]
                                     }
                     }
 

@@ -1,4 +1,17 @@
 
+3.3.06.01   - 2012.11.28 
+-------------------------------------------------------------------------------
+    feature:
+        ... new fork dropouts
+    bugfix:
+        ... update positioning of front brake to standard of 3.3.05
+    attention: 
+        ... llewelyn rear dropouts renamed
+            ... llewelyn_64.svg  ...  llewellyn_LRD_64.svg
+            ... llewelyn_68.svg  ...  llewellyn_LRD_68.svg
+            ... llewelyn_72.svg  ...  llewellyn_LRD_72.svg
+
+
 3.3.06.00   - 2012.11.27 
 -------------------------------------------------------------------------------
     feature:
