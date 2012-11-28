@@ -207,10 +207,11 @@
                 </Blade>
             </Crown>
             <Blade>
-                <Width>36.00</Width>
-                <DiameterDO>14.00</DiameterDO>
+                <Width>28.60</Width>
+                <DiameterDO>13.00</DiameterDO>
                 <TaperLength>250.00</TaperLength>
-                <Offset>6.00</Offset>
+                <BendRadius>350.00</BendRadius>
+                <EndLength>10.00</EndLength>
             </Blade>
             <DropOut>
                 <File>etc:fork/dropout/dropout_14.svg</File>
@@ -538,6 +539,7 @@
     <Rendering>
         <!-- rendering information -->
         <Fork>Suspension</Fork>
+        <ForkBlade>MAX</ForkBlade>
         <Brake>
             <Front>Rim</Front>
             <Rear>Rim</Rear>

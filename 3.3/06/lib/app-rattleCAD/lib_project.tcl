@@ -467,6 +467,7 @@
                     project::update_ProjectVersion {3.3.03}
                     project::update_ProjectVersion {3.3.04}
                     project::update_ProjectVersion {3.3.05}
+                    project::update_ProjectVersion {3.3.06}
                     
                     # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
                     frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
@@ -1520,6 +1521,48 @@
                             }
                             
                         }                            
+                {3.3.06} {
+                                # -- get Fork Type
+                                    puts "                           ... update File ... /root/Rendering/ForkBlade"
+                                    puts "                                           ... /root/Component/Fork/Blade"
+                            set node [$domProject selectNode /root/Rendering/Fork/text()]
+                            puts [$node asXML]
+                            if {$node != {}} {
+                              set forkRendering [$node nodeValue]
+                              puts "                                           ... $forkRendering"
+                              set node_Crown      [$domProject selectNode /root/Component/Fork/Crown/File/text()]
+                              set node_Rendering  [$domProject selectNode /root/Rendering]
+                              set node_Blade      [$domProject selectNode /root/Component/Fork/Blade]
+
+                                # -- update ForkBlade default Parameter
+                              $node_Blade appendXML  "<BendRadius>350.0</BendRadius>"
+                              $node_Blade appendXML  "<EndLength>10.0</EndLength>"
+                              set node [$domProject selectNode /root/Component/Fork/Blade/Offset]
+                              if {$node != {}} {
+                                      $node_Blade removeChild $node 
+                                      $node delete 
+                              }                              
+                              
+                              switch -exact $forkRendering {
+                                  SteelLugged {
+                                        set forkCrown [file tail [$node_Crown nodeValue]]
+                                            puts "                                           ... $forkCrown"
+                                        switch -exact $forkCrown {
+                                          longshen_max_36_5.svg {
+                                                    $node_Rendering appendXML  "<ForkBlade>MAX</ForkBlade>"
+                                                  }
+                                          default {
+                                                    $node_Rendering appendXML  "<ForkBlade>straight</ForkBlade>"
+                                                  }
+                                        }
+                                      }
+                                  default {
+                                      $node_Rendering appendXML "<ForkBlade>straight</ForkBlade>"
+                                  }
+                            }
+                          }
+                         
+                        }
                 {ab-xy} {	set node {}
                             set node [$domProject selectNode /root/Project/rattleCADVersion/text()]
                             puts " ... [$node nodeValue] .."

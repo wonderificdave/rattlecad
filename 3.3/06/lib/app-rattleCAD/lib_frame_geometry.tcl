@@ -198,7 +198,9 @@
             set Fork(BladeWith)             $project::Component(Fork/Blade/Width)
             set Fork(BladeDiameterDO)       $project::Component(Fork/Blade/DiameterDO)
             set Fork(BladeTaperLength)      $project::Component(Fork/Blade/TaperLength)
-            set Fork(BladeOffset)           $project::Component(Fork/Blade/Offset)
+            set Fork(BladeBendRadius)       $project::Component(Fork/Blade/BendRadius)
+            set Fork(BladeEndLength)        $project::Component(Fork/Blade/EndLength)
+            # set Fork(BladeOffset)           $project::Component(Fork/Blade/Offset)
             set Fork(BladeOffsetCrown)      $project::Component(Fork/Crown/Blade/Offset)
             set Fork(BladeOffsetCrownPerp)  $project::Component(Fork/Crown/Blade/OffsetPerp)
             set Fork(BladeOffsetDO)         $project::Component(Fork/DropOut/Offset)
@@ -723,65 +725,67 @@
                     variable HeadTube
                     variable FrontWheel
 
+                    
                             set pt_00       $Steerer(Fork)
                             set pt_99       $FrontWheel(Position)
                             set pt_01       [ vectormath::addVector $pt_00 $HeadTube(Direction) -$Fork(BladeOffsetCrown) ]
                             set pt_02       [ lindex [ vectormath::parallel  $pt_00  $pt_01  $Fork(BladeOffsetCrownPerp) left ] 1] ;# centerpoint of Blade in ForkCrown
 
-                                # -- exception if Blade is shorter than taper length
-                                set forkblade_length            [ vectormath::length $pt_02 $pt_99 ]
-                                    if { [expr $forkblade_length - $Fork(BladeTaperLength) -50] < 0 } {
-                                        puts "         ... exception:  Forkblade TaperLength ... $forkblade_length / $Fork(BladeTaperLength)"
-                                        set taper_length    [ expr $forkblade_length -50 ]
-                                        puts "                         -> $taper_length"
-                                    } else {
-                                        set taper_length    $Fork(BladeTaperLength)
-                                    }
-
-                                set hlp_00      {0 0}                                           ;# point where Taper begins
-                                set hlp_01      [ list $taper_length    $Fork(BladeOffset) ]    ;# point where Taper ends
-                                set vct_taper   [ vectormath::unifyVector   $hlp_00 $hlp_01 ]   ;# direction caused by taper offset
-                                set hlp_02      [ vectormath::addVector     $hlp_01 [vectormath::scalePointList {0 0} $vct_taper $Fork(BladeOffsetDO) ] ]
-                                set vct_dropout [ vectormath::parallel      $hlp_00 $hlp_02     $Fork(BladeOffsetDOPerp) left]
-                                set hlp_03      [ lindex $vct_dropout 1 ]                               ;# location of Dropout in reference to point where Taper begins
-                            set offsetDO        [ expr [ lindex $hlp_03 0] - $taper_length ]
-                            set offsetDO_Perp   [ lindex $hlp_03 1]
-                            set pt_03           [ vectormath::cathetusPoint $pt_02  $pt_99  $offsetDO_Perp  opposite ] ;# point on direction of untapered area of ForkBlade perp through FrontWheel
-
-                            set ForkBlade(Direction)    [ vectormath::unifyVector $pt_03 $pt_02 ]
-                    project::setValue Result(Tubes/ForkBlade/Direction)    direction    $ForkBlade(Direction)    ;# direction vector of ForkBlade
-
-                            set pt_04           [ vectormath::addVector        $pt_03  [vectormath::scalePointList {0 0} $ForkBlade(Direction) $offsetDO ] ]    ;# point on direction of untapered area of ForkBlade perp through Blade Tip
-                                set vct_offset  [ vectormath::parallel        $pt_02  $pt_04  $Fork(BladeOffset) left]    ;
-                            set pt_10       $pt_99                        ;# Dropout
-                            set pt_11       [ lindex $vct_offset 1 ]    ;# Fork Blade Tip
-                            set pt_12       [ vectormath::addVector     $pt_04    [vectormath::scalePointList {0 0} $ForkBlade(Direction) $taper_length ] ] ;# point on direction of untapered area where tapering starts
-                                                                        ;# Fork Blade taper start
-                            set pt_13       $pt_02                      ;# Crown Fork Blade center
-                    project::setValue Result(Tubes/ForkBlade/Start)     position    $pt_13
-                    project::setValue Result(Tubes/ForkBlade/End)       position    $pt_11
-
 
                     switch -glob $project::Rendering(Fork) {
                             SteelLugged {
-                                        set vct_10      [ vectormath::parallel $pt_11 $pt_12 [expr 0.5*$Fork(BladeDiameterDO)] ]
-                                        set vct_11      [ vectormath::parallel $pt_12 $pt_13 [expr 0.5*$Fork(BladeWith)] ]
-                                        set vct_12      [ vectormath::parallel $pt_12 $pt_13 [expr 0.5*$Fork(BladeWith)] left]
-                                        set vct_13      [ vectormath::parallel $pt_11 $pt_12 [expr 0.5*$Fork(BladeDiameterDO)] left ]
 
-                                        #set polygon    [format "%s %s %s %s %s %s" \
-                                                        [lindex $vct_10 0]  [lindex $vct_11 0] [lindex $vct_11 1]  \
-                                                        [lindex $vct_12 1]  [lindex $vct_12 0] [lindex $vct_13 0] ]
-                                        set polygon [format "%s %s %s %s %s %s" \
-                                                        [lindex $vct_11 1]  [lindex $vct_11 0] [lindex $vct_10 0]  \
-                                                        [lindex $vct_13 0]  [lindex $vct_12 0] [lindex $vct_12 1] ]
-                                        project::setValue Result(Tubes/ForkBlade)       polygon     $polygon
-
-                                        set Fork(DropoutDirection)    [ vectormath::unifyVector $pt_12 $pt_11 ]
-                                        project::setValue Result(Lugs/Dropout/Front/Direction)    direction    $Fork(DropoutDirection)
+                                        dict create dict_ForkBlade {}
+                                        dict append dict_ForkBlade env \
+                                                [list dropOutPosition $FrontWheel(Position) \
+                                                      forkHeight      $Fork(Height)   \
+                                                      forkRake        $Fork(Rake)     \
+                                                      crownOffset     $Fork(BladeOffsetCrown)     \
+                                                      crownPerp       $Fork(BladeOffsetCrownPerp) \
+                                                      dropOutOffset   $Fork(BladeOffsetDO)        \
+                                                      dropOutPerp     $Fork(BladeOffsetDOPerp)    \
+                                                      headTubeAngle   $HeadTube(Angle) \
+                                                ]
+                                        dict append dict_ForkBlade blade \
+                                                [list type            $project::Rendering(ForkBlade)  \
+                                                      endLength       $Fork(BladeEndLength) \
+                                                      bendRadius      $Fork(BladeBendRadius) \
+                                                ]
+                                        dict append dict_ForkBlade profile \
+                                                [list [list 0                       $Fork(BladeDiameterDO)] \
+                                                      [list $Fork(BladeTaperLength) $Fork(BladeWith)] \
+                                                      [list 200                     $Fork(BladeWith)] \
+                                                      [list 500                     $Fork(BladeWith)] \
+                                                ]
+            
+                                        set retValue [lib_tube::get_ForkBlade $dict_ForkBlade]
+                                        
+                                        set outLine         [lindex $retValue 0]
+                                        set centerLine      [lindex $retValue 1]
+                                        set brakeDefLine    [lindex $retValue 2]
+                                        set dropOutAngle    [lindex $retValue 3]
+                                        
+                                        set dropOutPos      $FrontWheel(Position) 
+                                        
+                                          # puts "  -> \$outLine       $outLine"
+                                          # puts "  -> \$dropOutPos    $dropOutPos"
+                                          # puts "  -> \$dropOutAngle  $dropOutAngle"
+                                        
+                                        set Fork(BrakeOffsetDef)      $brakeDefLine
+                                        set Fork(DropoutDirection)    [ vectormath::unifyVector $dropOutPos [vectormath::rotateLine $dropOutPos 10 [expr 180 + $dropOutAngle]] 1]
+                                          # puts "  -> \$Fork(DropoutDirection)  $Fork(DropoutDirection)"
+                                        
+                                        
+                                        project::setValue Result(Tubes/ForkBlade)                 polygon     $outLine
+                                        project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)                                        
+                                        
+                                        
                                     }
                             Composite     {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_compositeFork ]
+                                        set pt_60  [ vectormath::rotateLine $pt_00  22.5 [expr  90 - $HeadTube(Angle)]]
+                                        set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $HeadTube(Angle)]]
+                                        set Fork(BrakeOffsetDef) [project::flatten_nestedList $pt_61 $pt_60 ]
                                     }
                             Suspension* {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_suspensionFork ]
@@ -1266,15 +1270,29 @@
                     set RimBrakeRadius    [ expr 0.5 * $FrontWheel(RimDiameter) ]
 
                     set pt_00           $FrontWheel(Position)
-                    set pt_01           [split [ project::getValue Result(Tubes/Steerer/Start)    position ] , ]
+                    set pt_01           [split [ project::getValue Result(Tubes/Steerer/Start)  position ] , ]
                     set pt_02           [split [ project::getValue Result(Tubes/Steerer/End)    position ] , ]
-                    set pt_03           [split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon    1] , ]
-                    set pt_04           [split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon    0] , ]
+                    
+                    #set pt_03           [split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon    1] , ]
+                    #set pt_04           [split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon    0] , ]
+                    #puts "  -> \$pt_03  $pt_03"
+                    #puts "  -> \$pt_04  $pt_04"                    
+                    
+                      # puts "   -> \$Fork(BrakeOffsetDef) $Fork(BrakeOffsetDef)"
+                    set pt_04           [lrange $Fork(BrakeOffsetDef) 0 1]
+                    set pt_03           [lrange $Fork(BrakeOffsetDef) 2 3]
+
+                      # puts "  -> \$pt_03  $pt_03"
+                      # puts "  -> \$pt_04  $pt_04"
+                    
                     set pt_05           [ vectormath::intersectPerp    $pt_04 $pt_03 $pt_00 ]    ;# point on Forkblade perpendicular through FrontWheel
+                      # puts "  -> \$pt_05  $pt_05"
                     set vct_01          [ vectormath::parallel $pt_03 $pt_05 $FrontBrake(Offset) left]
                     set pt_06           [ lindex $vct_01 1 ]
 
                     set dist_00         [ vectormath::length $pt_00 $pt_06 ]
+                      # puts "expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2))"
+                    
                     set dist_00_Ortho   [ expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2)) ]
 
                     set pt_10           [ vectormath::addVector    $pt_06 [ vectormath::unifyVector $pt_03 $pt_04 $dist_00_Ortho] ]            ;# FrontBrake(Shoe)

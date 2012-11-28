@@ -456,6 +456,7 @@
                 # -----------------
                 #   Rendering
                 set entryList { {Fork Type}         Fork                      list_ForkTypes  \
+                                {Fork Blade Type}   ForkBlade                 list_ForkBladeTypes  \
                                 {Brake Type Front}  Brake/Front               list_BrakeTypes \
                                 {Brake Type Rear}   Brake/Rear                list_BrakeTypes \
                                 {BottleCage ST}     BottleCage/SeatTube       list_BottleCage \

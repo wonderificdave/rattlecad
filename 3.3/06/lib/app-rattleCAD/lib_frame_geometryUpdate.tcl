@@ -88,6 +88,7 @@
                                 {SELECT_File} {             set listBoxContent [lib_file::get_componentAlternatives  $key] }
                                 {SELECT_Rim} {              set listBoxContent $::APPL_Config(list_Rims) }
                                 {SELECT_ForkType} {         set listBoxContent $::APPL_Config(list_ForkTypes) }
+                                {SELECT_ForkBladeType} {    set listBoxContent $::APPL_Config(list_ForkBladeTypes) }
                                 {SELECT_DropOutDirection} { set listBoxContent $::APPL_Config(list_DropOutDirections) }
                                 {SELECT_DropOutPosition} {  set listBoxContent $::APPL_Config(list_DropOutPositions) }
                                 {SELECT_ChainStay} {        set listBoxContent $::APPL_Config(list_ChainStay) }

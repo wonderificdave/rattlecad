@@ -135,7 +135,7 @@
 
             # -- Button
         button  $menueFrame.bf.update.l_clear    -text {clear List}            -width 20    -command [list [namespace current]::update_compList {clear} ]
-        button  $menueFrame.bf.update.l_update    -text {update List}            -width 20    -command [list [namespace current]::update_compList {} ]
+        button  $menueFrame.bf.update.l_update    -text {update List}          -width 20    -command [list [namespace current]::update_compList {} ]
         button  $menueFrame.bf.update.c_update    -text {update Canvas}        -width 20    -command [list [namespace current]::updateCanvas]
         pack    $menueFrame.bf.update.l_clear \
                 $menueFrame.bf.update.l_update \
@@ -145,7 +145,7 @@
             # -- Scale
         create_config_line $menueFrame.bf.scale.off_x    "Offset x"    [namespace current]::configValue(compOffset_X)  -180 0.0 180     1      [list [namespace current]::updateCanvas]
         create_config_line $menueFrame.bf.scale.off_y    "Offset y"    [namespace current]::configValue(compOffset_y)  -180 0.0 180     1      [list [namespace current]::updateCanvas]
-        create_config_line $menueFrame.bf.scale.angle    "Angle"         [namespace current]::configValue(compAngle)     -180 0.0 180     1      [list [namespace current]::updateCanvas]
+        create_config_line $menueFrame.bf.scale.angle    "Angle"       [namespace current]::configValue(compAngle)     -180 0.0 180     1      [list [namespace current]::updateCanvas]
         pack    $menueFrame.bf.scale.off_x \
                 $menueFrame.bf.scale.off_y \
                 $menueFrame.bf.scale.angle \

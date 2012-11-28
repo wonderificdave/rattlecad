@@ -95,6 +95,12 @@
 			<off/>
 		</Binary_OnOff>
 
+		<ForkBlade>
+			<straight/>
+			<bent/>
+			<MAX/>
+		</ForkBlade>
+      
 		<Fork>
 			<SteelLugged>
 				<Visualization>
@@ -111,7 +117,7 @@
 						</Blade>
 					</Crown>
 					<Blade>
-						<Width>36.00</Width>
+            <Width>36.00</Width>
 						<DiameterDO>14.00</DiameterDO>
 						<TaperLength>250.00</TaperLength>
 						<Offset>6.00</Offset>

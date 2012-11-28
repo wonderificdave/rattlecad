@@ -872,15 +872,17 @@
                 # puts "   ... $cv_Name"
         
             switch $type {
-                    Fork    { set listDefinition list://Rendering(Fork@SELECT_ForkType) }
-                    Brake   { set listDefinition list://Rendering(Brake/Front@SELECT_BrakeType) }
-                    default { set listDefinition {  list://Rendering(Fork@SELECT_ForkType)
-                                                    list://Rendering(Brake/Front@SELECT_BrakeType)
-                                                    list://Rendering(Brake/Rear@SELECT_BrakeType)
-                                                    list://Rendering(BottleCage/SeatTube@SELECT_BottleCage)
-                                                    list://Rendering(BottleCage/DownTube@SELECT_BottleCage)
-                                                    list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) }
-                            }
+                    Fork      { set listDefinition    list://Rendering(Fork@SELECT_ForkType) }
+                    ForkBlade { set listDefinition    list://Rendering(ForkBlade@SELECT_ForkBladeType) }
+                    Brake     { set listDefinition    list://Rendering(Brake/Front@SELECT_BrakeType) }
+                    
+                    default   { set listDefinition {  list://Rendering(Fork@SELECT_ForkType)
+                                                      list://Rendering(Brake/Front@SELECT_BrakeType)
+                                                      list://Rendering(Brake/Rear@SELECT_BrakeType)
+                                                      list://Rendering(BottleCage/SeatTube@SELECT_BottleCage)
+                                                      list://Rendering(BottleCage/DownTube@SELECT_BottleCage)
+                                                      list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) }
+                              }
             } 
             frame_geometry::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}                
             # frame_geometry::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}                

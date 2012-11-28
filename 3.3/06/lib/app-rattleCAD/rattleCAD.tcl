@@ -226,7 +226,7 @@
             
             
         
-            # --- fill ListBox Values   APPL_RimList
+            # --- fill ListBox Values   list_Rims
             #
         set APPL_Config(list_Rims) {}
         set node_Rims [ $root_InitDOM selectNodes /root/Options/Rim ]
@@ -245,21 +245,31 @@
         }
 
         
-            # --- fill ListBox Values   APPL_ForkTypes
+            # --- fill ListBox Values   list_ForkTypes
             #
         set APPL_Config(list_ForkTypes) {}
         set node_ForkTypes [ $root_InitDOM selectNodes /root/Options/Fork ]
         foreach childNode [ $node_ForkTypes childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                 if {[string index [$childNode nodeName] 0 ] == {_}} continue
-                # puts "  childNode ->   [$childNode nodeName]  "
-                #set APPL_Config(list_ForkTypes) [lappend APPL_Config(list_ForkTypes)  [$childNode nodeName]]
                lappend APPL_Config(list_ForkTypes)  [$childNode nodeName]
             }
         }
 
-            
-            # --- fill ListBox Values   APPL_DropoutDirection
+
+            # --- fill ListBox Values   list_ForkBladeTypes
+            #
+        set APPL_Config(list_ForkBladeTypes) {}
+        set node_ForkBladeTypes [ $root_InitDOM selectNodes /root/Options/ForkBlade ]
+        foreach childNode [ $node_ForkBladeTypes childNodes ] {
+            if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                if {[string index [$childNode nodeName] 0 ] == {_}} continue
+               lappend APPL_Config(list_ForkBladeTypes)  [$childNode nodeName]
+            }
+        }
+
+
+            # --- fill ListBox Values   list_DropOutDirections
             #
         set APPL_Config(list_DropOutDirections) {}
         set node_DropOutDirections [ $root_InitDOM selectNodes /root/Options/DropOutDirection ]
@@ -271,7 +281,7 @@
         }
 
             
-            # --- fill ListBox Values   APPL_DropoutPosition
+            # --- fill ListBox Values   list_DropOutPositions
             #
         set APPL_Config(list_DropOutPositions) {}
         set node_DropOutPositions [ $root_InitDOM selectNodes /root/Options/DropOutPosition ]
@@ -283,7 +293,7 @@
         }
 
             
-            # --- fill ListBox Values   APPL_ChainStay
+            # --- fill ListBox Values   list_ChainStay
             #
         set APPL_Config(list_ChainStay) {}
         set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/ChainStay ]
@@ -295,7 +305,7 @@
         }
 
             
-            # --- fill ListBox Values   APPL_BrakeTypes
+            # --- fill ListBox Values   list_BrakeTypes
             #
         set APPL_Config(list_BrakeTypes) {}
         set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/Brake ]
@@ -306,7 +316,7 @@
             }
         }
         
-            # --- fill ListBox Values   APPL_BottleCage
+            # --- fill ListBox Values   list_BottleCage
             #
         set APPL_Config(list_BottleCage) {}
         set node_BottleCage [ $root_InitDOM selectNodes /root/Options/BottleCage ]
@@ -317,7 +327,7 @@
             }
         }
         
-            # --- fill ListBox Values   APPL_Binary_OnOff
+            # --- fill ListBox Values   list_Binary_OnOff
             #
         set APPL_Config(list_Binary_OnOff) {}
         set node_Binary_OnOff [ $root_InitDOM selectNodes /root/Options/Binary_OnOff ]

@@ -781,7 +781,8 @@
         set tubeColour      "white"
 
             # --- get Rendering Style
-        set Rendering(Fork)     $project::Rendering(Fork)
+        set Rendering(Fork)         $project::Rendering(Fork)
+        set Rendering(ForkBlade)    $project::Rendering(ForkBlade)
 
             # --- check existance of File --- regarding on user/etc
         proc checkFileString {fileString} {
@@ -854,17 +855,34 @@
             # --- create Fork Blade -----------------
         set ForkBlade(object)       [ $cv_Name create polygon $ForkBlade(polygon) -fill $tubeColour  -outline black -tags __ForkBlade__]
                                       $cv_Name addtag  __Frame__ withtag $ForkBlade(object)
-        if {$updateCommand != {}}   { $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
+
+        switch -glob $Rendering(ForkBlade) {
+            MAX {
+                     if {$updateCommand != {}}   { $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                    {   list://Rendering(Fork@SELECT_ForkType) \
-                                                                        Component(Fork/Blade/Width)            \
-                                                                        Component(Fork/Blade/DiameterDO)    \
-                                                                        Component(Fork/Blade/TaperLength)    \
-                                                                        Component(Fork/Blade/Offset)        \
+                                                                    {   list://Rendering(ForkBlade@SELECT_ForkBladeType) \
                                                                     }  {ForkBlade Parameter} \
                                                     ]
                                       lib_gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
+                      }
                 }
+            default {
+                     if {$updateCommand != {}}   { $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
+                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                    {   list://Rendering(ForkBlade@SELECT_ForkBladeType) \
+                                                                        Component(Fork/Blade/Width)            \
+                                                                        Component(Fork/Blade/DiameterDO)    \
+                                                                        Component(Fork/Blade/TaperLength)    \
+                                                                        Component(Fork/Blade/BendRadius)    \
+                                                                        Component(Fork/Blade/EndLength)    \
+                                                                    }  {ForkBlade Parameter} \
+                                                    ]
+                                      lib_gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
+                      }
+            }
+        }                                                   
+                                                    
+
 
             # --- create ForkCrowh -------------------
                 set ht_direction    [ frame_geometry::object_values     Lugs/ForkCrown direction ]
@@ -901,11 +919,11 @@
 
             # --- check bindings and remove ----------
         switch $Rendering(Fork) {
-            Composite         -
-            Suspension         -
+            Composite        -
+            Suspension       -
             Suspension_26    -
             Suspension_28    -
-            Suspension_29     {}
+            Suspension_29   {}
             default         {}
         }
 
