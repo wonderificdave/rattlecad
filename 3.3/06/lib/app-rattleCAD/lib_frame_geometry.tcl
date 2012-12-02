@@ -71,6 +71,8 @@
             variable BottleCage     ; array set BottleCage      {}
             variable FrameJig       ; array set FrameJig        {}
             variable TubeMiter      ; array set TubeMiter       {}
+            
+            variable myFork         ; array set myFork          {}
 
             variable DEBUG_Geometry ; array set DEBUG_Geometry    {}
 
@@ -724,17 +726,23 @@
                     variable Steerer
                     variable HeadTube
                     variable FrontWheel
+                    variable FrontBrake
+                            
+                    variable myFork
+                    set     domInit $::APPL_Config(root_InitDOM)
 
                     
                             set pt_00       $Steerer(Fork)
                             set pt_99       $FrontWheel(Position)
                             set pt_01       [ vectormath::addVector $pt_00 $HeadTube(Direction) -$Fork(BladeOffsetCrown) ]
                             set pt_02       [ lindex [ vectormath::parallel  $pt_00  $pt_01  $Fork(BladeOffsetCrownPerp) left ] 1] ;# centerpoint of Blade in ForkCrown
-
-
+    
+                            
                     switch -glob $project::Rendering(Fork) {
                             SteelLugged {
 
+                                        variable myFork
+                                        
                                         dict create dict_ForkBlade {}
                                         dict append dict_ForkBlade env \
                                                 [list dropOutPosition $FrontWheel(Position) \
@@ -777,21 +785,122 @@
                                         
                                         
                                         project::setValue Result(Tubes/ForkBlade)                 polygon     $outLine
-                                        project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)                                        
+                                        project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)   
+    
+                                        set myFork(CrownFile)         $project::Component(Fork/Crown/File)                                     
+                                        set myFork(DropOutFile)       $project::Component(Fork/DropOut/File)
                                         
+                                        #set myFork(BrakeOffset)       $project::Component(Fork/Crown/Brake/Offset) 
+                                        #set myFork(BrakeOffsetPerp)   $project::Component(Fork/Crown/Brake/OffsetPerp) 
+                                        set myFork(BrakeAngle)        $project::Component(Fork/Crown/Brake/Angle)
                                         
+                                          # set myFork(BrakeOffset)  $project::Component(Brake/Front/Offset)
+                                        set myFork(BrakeOffset)       $FrontBrake(Offset)
                                     }
-                            Composite     {
+                                    
+                            SteelLuggedMAX  {
+
+                                        set myFork(CrownOffset)       [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Blade/Offset     ]  asText ]
+                                        set myFork(CrownOffsetPerp)   [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Blade/OffsetPerp ]  asText ]
+
+                                        set myFork(BladeWith)         [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/Width            ]  asText ]
+                                        set myFork(BladeDiameterDO)   [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/DiameterDO       ]  asText ]
+                                        set myFork(BladeTaperLength)  [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/TaperLength      ]  asText ]
+                                        set myFork(BladeBendRadius)   [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/BendRadius       ]  asText ]
+                                        set myFork(BladeEndLength)    [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/EndLength        ]  asText ]
+                                        
+                                        set myFork(DropOutOffset)     [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/DropOut/Offset         ]  asText ]
+                                        set myFork(DropOutOffsetPerp) [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/DropOut/OffsetPerp     ]  asText ]
+                                        
+  
+                                        dict create dict_ForkBlade {}
+                                        dict append dict_ForkBlade env \
+                                                [list dropOutPosition   $FrontWheel(Position) \
+                                                      forkHeight        $Fork(Height)   \
+                                                      forkRake          $Fork(Rake)     \
+                                                      crownOffset       $myFork(CrownOffset)     \
+                                                      crownPerp         $myFork(CrownOffsetPerp) \
+                                                      dropOutOffset     $myFork(DropOutOffset)        \
+                                                      dropOutPerp       $myFork(DropOutOffsetPerp)    \
+                                                      headTubeAngle     $HeadTube(Angle) \
+                                                ]
+                                        dict append dict_ForkBlade blade \
+                                                [list type              MAX  \
+                                                      endLength         $myFork(BladeEndLength) \
+                                                      bendRadius        $myFork(BladeBendRadius) \
+                                                ]
+                                        dict append dict_ForkBlade profile \
+                                                [list [list 0                         $myFork(BladeDiameterDO)] \
+                                                      [list $myFork(BladeTaperLength) $myFork(BladeWith)] \
+                                                      [list 200                       $myFork(BladeWith)] \
+                                                      [list 500                       $myFork(BladeWith)] \
+                                                ]
+            
+                                        set retValue [lib_tube::get_ForkBlade $dict_ForkBlade]
+                                        
+                                        set outLine         [lindex $retValue 0]
+                                        set centerLine      [lindex $retValue 1]
+                                        set brakeDefLine    [lindex $retValue 2]
+                                        set dropOutAngle    [lindex $retValue 3]
+                                        
+                                        set dropOutPos      $FrontWheel(Position) 
+                                        
+                                          # puts "  -> \$outLine       $outLine"
+                                          # puts "  -> \$dropOutPos    $dropOutPos"
+                                          # puts "  -> \$dropOutAngle  $dropOutAngle"
+                                        
+                                        set Fork(BrakeOffsetDef)      $brakeDefLine
+                                        set Fork(DropoutDirection)    [ vectormath::unifyVector $dropOutPos [vectormath::rotateLine $dropOutPos 10 [expr 180 + $dropOutAngle]] 1]
+                                          # puts "  -> \$Fork(DropoutDirection)  $Fork(DropoutDirection)"
+                                        
+                                        project::setValue Result(Tubes/ForkBlade)                 polygon     $outLine
+                                        project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)
+                                        
+                                        set myFork(CrownFile)         [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/File             ]  asText ]
+                                        set myFork(DropOutFile)       [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/DropOut/File           ]  asText ]
+                                        
+                                        #set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Brake/Offset     ]  asText ]
+                                        #set myFork(BrakeOffsetPerp)   [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Brake/OffsetPerp ]  asText ]
+                                        set myFork(BrakeAngle)        [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Brake/Angle      ]  asText ]
+
+                                        set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Brake/Offset]  asText ]                                        
+ 
+                                    }
+                            Composite   {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_compositeFork ]
+                                        
                                         set pt_60  [ vectormath::rotateLine $pt_00  20.5 [expr  90 - $HeadTube(Angle)]]
                                         set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $HeadTube(Angle)]]
                                         set Fork(BrakeOffsetDef) [project::flatten_nestedList $pt_61 $pt_60 ]
-                                    }
+                                        
+                                        set myFork(CrownFile)         [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/File ]    asText ]                           
+                                        set myFork(DropOutFile)       [[ $domInit selectNodes /root/Options/Fork/Composite/DropOut/File ]  asText ]
+                                        
+                                        set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/Brake/Offset     ]  asText ]
+                                        set myFork(BrakeOffsetPerp)   [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/Brake/OffsetPerp ]  asText ]
+                                        set myFork(BrakeAngle)        [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/Brake/Angle      ]  asText ]
+                                        
+                                        set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/Composite/Brake/Offset ]  asText ]  
+                                   }
                             Suspension* {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_suspensionFork ]
+                                        
+                                        set forkSize  $project::Rendering(Fork)
+                                        puts "  -> $forkSize"
+                                        puts "  -> $project::Rendering(Fork)"
+                                        
                                         set pt_60  [ vectormath::rotateLine $pt_00  40.0 [expr  90 - $HeadTube(Angle)]]
                                         set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $HeadTube(Angle)]]
                                         set Fork(BrakeOffsetDef) [project::flatten_nestedList $pt_61 $pt_60 ]
+
+                                        set myFork(CrownFile)         [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/File ] asText ]
+                                        set myFork(DropOutFile)       [[ $domInit selectNodes /root/Options/Fork/$forkSize/DropOut/File ] asText ]                    
+                                        
+                                        #set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/Brake/Offset     ]  asText ]
+                                        #set myFork(BrakeOffsetPerp)   [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/Brake/OffsetPerp ]  asText ]
+                                        set myFork(BrakeAngle)        [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/Brake/Angle      ]  asText ]
+                                        
+                                        set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/$forkSize/Brake/Offset]  asText ]  
                                     }
                     }
 
@@ -1264,6 +1373,7 @@
                     variable FrontBrake
                     variable FrontWheel
                     variable Fork
+                    variable myFork
 
                     # -- ceck Parameter
                     if {$FrontBrake(LeverLength) < 10} {
@@ -1290,7 +1400,7 @@
                     
                     set pt_05           [ vectormath::intersectPerp    $pt_04 $pt_03 $pt_00 ]    ;# point on Forkblade perpendicular through FrontWheel
                       # puts "  -> \$pt_05  $pt_05"
-                    set vct_01          [ vectormath::parallel $pt_03 $pt_05 $FrontBrake(Offset) left]
+                    set vct_01          [ vectormath::parallel $pt_03 $pt_05 $myFork(BrakeOffset) left]
                     set pt_06           [ lindex $vct_01 1 ]
 
                     set dist_00         [ vectormath::length $pt_00 $pt_06 ]
@@ -1303,7 +1413,8 @@
                     set pt_12           [ vectormath::rotatePoint    $pt_10    $pt_11    $Fork(BrakeAngle) ]                                        ;# FrontBrake(Help)
                     set pt_13           [ vectormath::intersectPerp $pt_04 $pt_03 $pt_10 ]
 
-                    set vct_02          [ vectormath::parallel $pt_01 $pt_02 $Fork(BrakeOffset)]
+
+                    set vct_02          [ vectormath::parallel $pt_01 $pt_02 $myFork(BrakeOffset)]
                     set pt_15           [ vectormath::rotatePoint    $pt_12    $pt_10    -90 ]
                     set pt_16           [ vectormath::intersectPoint  [lindex $vct_02 0] [lindex $vct_02 1] $pt_12 $pt_15 ]
 
@@ -1661,6 +1772,132 @@
 
     #-------------------------------------------------------------------------
         #  Fork Blade Polygon for composite Fork
+    proc set_columbusMAXFork {} {
+    
+            variable FrontWheel
+            variable Fork
+            
+            set domInit $::APPL_Config(root_InitDOM)
+            set FrontWheel(position)    [ frame_geometry::object_values        FrontWheel        position    {0 0}]
+            set Steerer_Fork(position)  [ frame_geometry::object_values        Steerer/Start    position    {0 0}]
+            set ht_direction            [ frame_geometry::object_values        HeadTube        direction ]
+
+            set Fork(BladeWith)             [ [ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/Width            ]  asText ]
+            set Fork(BladeDiameterDO)       [ [ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/DiameterDO       ]  asText ]
+            set Fork(BladeBendRadius)       [ [ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/BendRadius       ]  asText ]
+            set Fork(BladeEndLength)        [ [ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Blade/EndLength        ]  asText ]
+            set Fork(BladeOffsetCrown)      [ [ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Blade/Offset     ]  asText ]
+            set Fork(BladeOffsetCrownPerp)  [ [ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Blade/OffsetPerp ]  asText ]
+            set Fork(BladeOffsetDO)         [ [ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/DropOut/Offset         ]  asText ]
+    
+
+
+            dict create dict_ForkBlade {}
+            dict append dict_ForkBlade env \
+                    [list dropOutPosition $FrontWheel(Position) \
+                          forkHeight      $Fork(Height)   \
+                          forkRake        $Fork(Rake)     \
+                          crownOffset     $Fork(BladeOffsetCrown)     \
+                          crownPerp       $Fork(BladeOffsetCrownPerp) \
+                          dropOutOffset   $Fork(BladeOffsetDO)        \
+                          dropOutPerp     $Fork(BladeOffsetDOPerp)    \
+                          headTubeAngle   $HeadTube(Angle) \
+                    ]
+            dict append dict_ForkBlade blade \
+                    [list type            $project::Rendering(ForkBlade)  \
+                          endLength       $Fork(BladeEndLength) \
+                          bendRadius      $Fork(BladeBendRadius) \
+                    ]
+            dict append dict_ForkBlade profile \
+                    [list [list 0                       $Fork(BladeDiameterDO)] \
+                          [list $Fork(BladeTaperLength) $Fork(BladeWith)] \
+                          [list 200                     $Fork(BladeWith)] \
+                          [list 500                     $Fork(BladeWith)] \
+                    ]
+
+            set retValue [lib_tube::get_ForkBlade $dict_ForkBlade]
+            
+            set outLine         [lindex $retValue 0]
+            set centerLine      [lindex $retValue 1]
+            set brakeDefLine    [lindex $retValue 2]
+            set dropOutAngle    [lindex $retValue 3]
+            
+            set dropOutPos      $FrontWheel(Position) 
+                                        
+              # puts "  -> \$outLine       $outLine"
+              # puts "  -> \$dropOutPos    $dropOutPos"
+              # puts "  -> \$dropOutAngle  $dropOutAngle"
+            
+            set Fork(BrakeOffsetDef)      $brakeDefLine
+            set Fork(DropoutDirection)    [ vectormath::unifyVector $dropOutPos [vectormath::rotateLine $dropOutPos 10 [expr 180 + $dropOutAngle]] 1]
+              # puts "  -> \$Fork(DropoutDirection)  $Fork(DropoutDirection)"
+            
+            
+            project::setValue Result(Tubes/ForkBlade)                 polygon     $outLine
+            project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)                                        
+ 
+   
+            set do_direction    [ vectormath::unifyVector $FrontWheel(position) $pt_03 ]
+            project::setValue Result(Lugs/Dropout/Front/Direction)    direction    $do_direction
+
+            return $polygon    
+    
+    
+    
+    
+
+                        set domInit $::APPL_Config(root_InitDOM)
+                        set FrontWheel(position)    [ frame_geometry::object_values        FrontWheel        position    {0 0}]
+                        set Steerer_Fork(position)  [ frame_geometry::object_values        Steerer/Start    position    {0 0}]
+                        set ht_direction            [ frame_geometry::object_values        HeadTube        direction ]
+
+                        set Fork(BladeWith)             [ [ $domInit selectNodes /root/Options/Fork/Composite/Blade/Width            ]  asText ]
+                        set Fork(BladeDiameterDO)       [ [ $domInit selectNodes /root/Options/Fork/Composite/Blade/DiameterDO    ]  asText ]
+                        set Fork(BladeOffsetCrown)      [ [ $domInit selectNodes /root/Options/Fork/Composite/Crown/Blade/Offset        ]  asText ]
+                        set Fork(BladeOffsetCrownPerp)  [ [ $domInit selectNodes /root/Options/Fork/Composite/Crown/Blade/OffsetPerp    ]  asText ]
+                        set Fork(BladeOffsetDO)         [ [ $domInit selectNodes /root/Options/Fork/Composite/DropOut/Offset        ]  asText ]
+
+                        set ht_angle            [ vectormath::angle {0 1} {0 0} $ht_direction ]
+                        set pt_00               [list $Fork(BladeOffsetCrownPerp) [expr -1.0*$Fork(BladeOffsetCrown)] ]
+                        set pt_01               [ vectormath::addVector $pt_00 {0  -5} ]
+                        set pt_02               [ vectormath::addVector $pt_00 {0 -15} ]
+
+                        set pt_00               [ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_00 $ht_angle ]]
+                        set pt_01               [ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_01 $ht_angle ]]
+                        set pt_02               [ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_02 $ht_angle ]]
+                                # puts "     ... \$ht_angle  $ht_angle"
+                                # puts "   -> pt_00  $pt_00"
+                                # puts "   -> pt_01  $pt_01"
+
+                        set vct_10                [ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(BladeWith)] left]
+                        set vct_19                [ vectormath::parallel $pt_00 $pt_02 [expr 0.5*$Fork(BladeWith)] ]
+                                # puts "   -> pt_00  $pt_00"
+                                # puts "   -> vct_10  $vct_10"
+                                # puts "   -> vct_19  $vct_19"
+
+                            set help_02                    [ list 0 [lindex  $FrontWheel(position) 1] ]
+                            set do_angle                [ expr 90 - [ vectormath::angle $pt_01 $FrontWheel(position) $help_02  ] ]
+                            set vct_05                    [ list $Fork(BladeOffsetDO) 0 ]
+                            set vct_06                    [ vectormath::rotatePoint {0 0} $vct_05 [expr 90 + $do_angle] ]
+                        set pt_03               [ vectormath::addVector $FrontWheel(position)  $vct_06 ]
+
+                            set vct_11          [ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] left]
+                            set vct_18          [ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] ]
+
+                        set polygon         [format "%s %s %s %s %s %s" \
+                                                [lindex $vct_10 0] [lindex $vct_10 1] \
+                                                [lindex $vct_11 1] [lindex $vct_18 1] \
+                                                [lindex $vct_19 1] [lindex $vct_19 0] ]
+
+                        set do_direction    [ vectormath::unifyVector $FrontWheel(position) $pt_03 ]
+                        project::setValue Result(Lugs/Dropout/Front/Direction)    direction    $do_direction
+
+                        return $polygon
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  Fork Blade Polygon for composite Fork
     proc set_compositeFork {} {
 
             set domInit $::APPL_Config(root_InitDOM)
@@ -1668,11 +1905,11 @@
             set Steerer_Fork(position)  [ frame_geometry::object_values        Steerer/Start    position    {0 0}]
             set ht_direction            [ frame_geometry::object_values        HeadTube        direction ]
 
-            set Fork(BladeWith)             [ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Blade/Width            ]  asText ]
-            set Fork(BladeDiameterDO)       [ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Blade/DiameterDO    ]  asText ]
-            set Fork(BladeOffsetCrown)      [ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Crown/Blade/Offset        ]  asText ]
-            set Fork(BladeOffsetCrownPerp)  [ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/Crown/Blade/OffsetPerp    ]  asText ]
-            set Fork(BladeOffsetDO)         [ [ $domInit selectNodes /root/Options/Fork/Composite/Visualization/DropOut/Offset        ]  asText ]
+            set Fork(BladeWith)             [ [ $domInit selectNodes /root/Options/Fork/Composite/Blade/Width            ]  asText ]
+            set Fork(BladeDiameterDO)       [ [ $domInit selectNodes /root/Options/Fork/Composite/Blade/DiameterDO    ]  asText ]
+            set Fork(BladeOffsetCrown)      [ [ $domInit selectNodes /root/Options/Fork/Composite/Crown/Blade/Offset        ]  asText ]
+            set Fork(BladeOffsetCrownPerp)  [ [ $domInit selectNodes /root/Options/Fork/Composite/Crown/Blade/OffsetPerp    ]  asText ]
+            set Fork(BladeOffsetDO)         [ [ $domInit selectNodes /root/Options/Fork/Composite/DropOut/Offset        ]  asText ]
 
             set ht_angle            [ vectormath::angle {0 1} {0 0} $ht_direction ]
             set pt_00               [list $Fork(BladeOffsetCrownPerp) [expr -1.0*$Fork(BladeOffsetCrown)] ]

@@ -814,16 +814,24 @@
         switch -glob $Rendering(Fork) {
             SteelLugged {
                         set ForkBlade(polygon)      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-                        set ForkCrown(file)         [ checkFileString $project::Component(Fork/Crown/File) ]
-                        set ForkDropout(file)       [ checkFileString $project::Component(Fork/DropOut/File) ]
+                        set ForkCrown(file)         [ checkFileString $frame_geometry::myFork(CrownFile) ]
+                        set ForkDropout(file)       [ checkFileString $frame_geometry::myFork(DropOutFile) ]
+                        set ForkDropout(position)   [ frame_geometry::object_values     FrontWheel  position    $BB_Position ]
+                        set do_direction            [ frame_geometry::object_values     Lugs/Dropout/Front     direction ]
+                        set do_angle                [ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
+                        }
+            SteelLuggedMAX {
+                        set ForkBlade(polygon)      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
+                        set ForkCrown(file)         [ checkFileString $frame_geometry::myFork(CrownFile) ]
+                        set ForkDropout(file)       [ checkFileString $frame_geometry::myFork(DropOutFile) ]
                         set ForkDropout(position)   [ frame_geometry::object_values     FrontWheel  position    $BB_Position ]
                         set do_direction            [ frame_geometry::object_values     Lugs/Dropout/Front     direction ]
                         set do_angle                [ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
                         }
             Composite     {
                         set ForkBlade(polygon)      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-                        set ForkCrown(file)         [ checkFileString [ [ $domInit      selectNodes /root/Options/Fork/Composite/Visualization/Crown/File ] asText ] ]
-                        set ForkDropout(file)       [ checkFileString [ [ $domInit      selectNodes /root/Options/Fork/Composite/Visualization/DropOut/File ]  asText ] ]
+                        set ForkCrown(file)         [ checkFileString $frame_geometry::myFork(CrownFile) ]
+                        set ForkDropout(file)       [ checkFileString $frame_geometry::myFork(DropOutFile) ]
                         set ForkDropout(position)   [ frame_geometry::object_values     FrontWheel  position    $BB_Position ]
                         set Steerer_Fork(position)  [ frame_geometry::object_values     Lugs/ForkCrown        position    $BB_Position]
                         set ht_direction            [ frame_geometry::object_values     HeadTube direction ]
@@ -839,8 +847,8 @@
                             if {$forkSize == {} } { set forkSize "26" }
                             puts "             ... \$forkSize  $forkSize"
                         set ForkBlade(polygon)      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-                        set ForkCrown(file)         [ checkFileString [ [ $domInit      selectNodes /root/Options/Fork/_Suspension/Crown/File ] asText ] ]
-                        set ForkDropout(file)       [ checkFileString [ [ $domInit      selectNodes /root/Options/Fork/Suspension_$forkSize/DropOut/File ]  asText ] ]
+                        set ForkCrown(file)         [ checkFileString $frame_geometry::myFork(CrownFile) ]
+                        set ForkDropout(file)       [ checkFileString $frame_geometry::myFork(DropOutFile) ]
                         set Suspension_ForkRake     [[ $domInit     selectNodes /root/Options/Fork/Suspension_$forkSize/Geometry/Rake ]  asText ]
                         set Project_ForkRake        $project::Component(Fork/Rake)
                         set do_direction            [ frame_geometry::object_values     HeadTube    direction ]
@@ -856,18 +864,12 @@
         set ForkBlade(object)       [ $cv_Name create polygon $ForkBlade(polygon) -fill $tubeColour  -outline black -tags __ForkBlade__]
                                       $cv_Name addtag  __Frame__ withtag $ForkBlade(object)
 
-        switch -glob $Rendering(ForkBlade) {
-            MAX {
-                     if {$updateCommand != {}}   { $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
-                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
-                                                                    {   list://Rendering(ForkBlade@SELECT_ForkBladeType) \
-                                                                    }  {ForkBlade Parameter} \
-                                                    ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
-                      }
-                }
-            default {
-                     if {$updateCommand != {}}   { $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
+        switch -exact $updateCommand {
+            editable {
+
+                      switch -glob $Rendering(Fork) {
+                          SteelLugged {
+                                    $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                                     {   list://Rendering(ForkBlade@SELECT_ForkBladeType) \
                                                                         Component(Fork/Blade/Width)            \
@@ -878,19 +880,28 @@
                                                                     }  {ForkBlade Parameter} \
                                                     ]
                                       lib_gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
+                          }
+                          default {}
                       }
-            }
+                }
+            selectable {            $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
+                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                    {   list://Rendering(Fork@SELECT_ForkType) \
+                                                                    }  {ForkType Select} \
+                                                    ]
+                                      lib_gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
+                }            default {}
         }                                                   
-                                                    
 
 
-            # --- create ForkCrowh -------------------
+            # --- create ForkCrown -------------------
                 set ht_direction    [ frame_geometry::object_values     Lugs/ForkCrown direction ]
                 set ht_angle        [expr [ vectormath::dirAngle         {0 0}     $ht_direction ] -90 ]
         set ForkCrown(position)     [ frame_geometry::object_values        Lugs/ForkCrown        position    $BB_Position ]
         set ForkCrown(object)       [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __ForkCrown__ ]
                                       $cv_Name addtag  __Frame__ withtag $ForkCrown(object)
-        if {$updateCommand != {}}   { $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
+        switch -exact $updateCommand {
+            editable {              $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                                     {   list://Rendering(Fork@SELECT_ForkType) \
                                                                         file://Component(Fork/Crown/File)    \
@@ -901,12 +912,23 @@
                                                                     }  {ForkCrown Parameter} \
                                                     ]
                                       lib_gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
+                }      
+            selectable {            $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
+                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                    {   list://Rendering(Fork@SELECT_ForkType) \
+                                                                    }  {ForkType Select} \
+                                                    ]
+                                      lib_gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
                 }
+            default {}
+        }
 
             # --- create Fork Dropout ---------------
         set ForkDropout(object)     [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __ForkDropout__]
                                       $cv_Name addtag  __Frame__ withtag $ForkDropout(object)
-        if {$updateCommand != {}}   { $cv_Name bind $ForkDropout(object)  <Double-ButtonPress-1> \
+       
+        switch -exact $updateCommand {
+            editable {              $cv_Name bind $ForkDropout(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                                     {   file://Component(Fork/DropOut/File)    \
                                                                         Component(Fork/DropOut/Offset)     \
@@ -915,6 +937,8 @@
                                                     ]
                                       lib_gui::object_CursorBinding     $cv_Name    $ForkDropout(object)
                 }
+            default {}
+        }
 
 
             # --- check bindings and remove ----------

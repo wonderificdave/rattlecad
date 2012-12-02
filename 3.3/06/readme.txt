@@ -1,4 +1,14 @@
 
+3.3.06.04   - 2012.12.02 
+-------------------------------------------------------------------------------
+    feature:
+        ... new fork select options
+            ... editable in FrameDetails: 
+                  SteelLugged(straight,bent), SteelLuggedMAX, Composite, ...
+            ... selectable in Summary & Mockup: 
+                  SteelLugged, SteelLuggedMAX, Composite, ...
+
+
 3.3.06.01   - 2012.11.28 
 -------------------------------------------------------------------------------
     feature:

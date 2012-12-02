@@ -232,7 +232,7 @@
                     frame_visualisation::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
                     frame_visualisation::createDecoration   $cv_Name $xy    SeatPost
                         #
-                    frame_visualisation::createFork_Rep     $cv_Name $xy    editable                   ;# $updateCommand
+                    frame_visualisation::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
                     frame_visualisation::createFrame_Tubes  $cv_Name $xy
                         #
                     frame_visualisation::createDecoration   $cv_Name $xy    Logo
@@ -275,7 +275,7 @@
                     frame_visualisation::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
                     frame_visualisation::createDecoration   $cv_Name $xy    SeatPost
                         #
-                    frame_visualisation::createFork_Rep     $cv_Name $xy    editable                   ;# $updateCommand
+                    frame_visualisation::createFork_Rep     $cv_Name $xy    selectable                  ;# $updateCommand
                     frame_visualisation::createFrame_Tubes  $cv_Name $xy
                     frame_visualisation::createDecoration   $cv_Name $xy    Logo
                     frame_visualisation::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand

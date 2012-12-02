@@ -193,12 +193,13 @@
         <Fork>
             <Height>465.0</Height>
             <Rake>40.0</Rake>
-            <BladeWidth>29.00</BladeWidth>
-            <CrownDiameter>43.00</CrownDiameter>
+            <!--BladeWidth>29.00</BladeWidth-->
+            <!--CrownDiameter>43.00</CrownDiameter-->
             <Crown>
                 <File>etc:fork/crown/longshen_max_36_5.svg</File>
                 <Brake>
                     <Offset>0.00</Offset>
+                     <OffsetPerp>9.00</OffsetPerp>
                     <Angle>0.00</Angle>
                 </Brake>
                 <Blade>
@@ -538,8 +539,8 @@
 
     <Rendering>
         <!-- rendering information -->
-        <Fork>Suspension</Fork>
-        <ForkBlade>MAX</ForkBlade>
+        <Fork>Suspension_26</Fork>
+        <ForkBlade>straight</ForkBlade>
         <Brake>
             <Front>Rim</Front>
             <Rear>Rim</Rear>
