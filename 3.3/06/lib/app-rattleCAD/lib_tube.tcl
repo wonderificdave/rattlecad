@@ -40,7 +40,7 @@
  
 namespace eval lib_tube {
 
-    variable arcPrecission 5
+    variable arcPrecission 2
     
     proc init_centerLine {centerLineDef} {
         
