@@ -40,11 +40,12 @@
  
 namespace eval lib_tube {
 
-    variable arcPrecission 2
+    variable arcPrecission 5 ;# number of segments per arc
     
     proc init_centerLine {centerLineDef} {
         
         variable arcPrecission
+        # puts "  -> $arcPrecission"
         
         foreach {S01_length S02_length S03_length S04_length \
                  S01_angle  S02_angle  S03_angle \

@@ -107,7 +107,6 @@
 						<File>fork/crown/longshen_max_36_5.svg</File>
 						<Brake>
 							<Offset>20.00</Offset>
-							<OffsetPerp>8.00</OffsetPerp>
 							<Angle>0.00</Angle>
 						</Brake>
 						<Blade>
@@ -139,7 +138,6 @@
 						<File>fork/_composite/fork_crown.svg</File>
 						<Brake>
 							<Offset>20.00</Offset>
-							<OffsetPerp>8.00</OffsetPerp>
 							<Angle>0.00</Angle>
 						</Brake>
 						<Blade>
@@ -165,7 +163,6 @@
 					<File>fork/_suspension/fork_crown.svg</File>
           <Brake>
             <Offset>20.00</Offset>
-            <OffsetPerp>8.00</OffsetPerp>
             <Angle>0.00</Angle>
           </Brake>
 				</Crown>

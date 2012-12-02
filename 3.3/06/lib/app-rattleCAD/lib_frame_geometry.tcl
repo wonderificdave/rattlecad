@@ -790,12 +790,10 @@
                                         set myFork(CrownFile)         $project::Component(Fork/Crown/File)                                     
                                         set myFork(DropOutFile)       $project::Component(Fork/DropOut/File)
                                         
-                                        #set myFork(BrakeOffset)       $project::Component(Fork/Crown/Brake/Offset) 
-                                        #set myFork(BrakeOffsetPerp)   $project::Component(Fork/Crown/Brake/OffsetPerp) 
-                                        set myFork(BrakeAngle)        $project::Component(Fork/Crown/Brake/Angle)
-                                        
-                                          # set myFork(BrakeOffset)  $project::Component(Brake/Front/Offset)
-                                        set myFork(BrakeOffset)       $FrontBrake(Offset)
+                                        set myFork(CrownBrakeOffset)  $project::Component(Fork/Crown/Brake/Offset) 
+                                        set myFork(CrownBrakeAngle)   $project::Component(Fork/Crown/Brake/Angle)
+ 
+                                        set myFork(BladeBrakeOffset)  $FrontBrake(Offset)
                                     }
                                     
                             SteelLuggedMAX  {
@@ -859,11 +857,10 @@
                                         set myFork(CrownFile)         [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/File             ]  asText ]
                                         set myFork(DropOutFile)       [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/DropOut/File           ]  asText ]
                                         
-                                        #set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Brake/Offset     ]  asText ]
-                                        #set myFork(BrakeOffsetPerp)   [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Brake/OffsetPerp ]  asText ]
-                                        set myFork(BrakeAngle)        [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Brake/Angle      ]  asText ]
+                                        set myFork(CrownBrakeOffset)  [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Brake/Offset     ]  asText ]
+                                        set myFork(CrownBrakeAngle)   [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Brake/Angle      ]  asText ]
 
-                                        set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Brake/Offset]  asText ]                                        
+                                        set myFork(BladeBrakeOffset)  [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Brake/Offset]  asText ]                                        
  
                                     }
                             Composite   {
@@ -876,18 +873,15 @@
                                         set myFork(CrownFile)         [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/File ]    asText ]                           
                                         set myFork(DropOutFile)       [[ $domInit selectNodes /root/Options/Fork/Composite/DropOut/File ]  asText ]
                                         
-                                        set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/Brake/Offset     ]  asText ]
-                                        set myFork(BrakeOffsetPerp)   [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/Brake/OffsetPerp ]  asText ]
-                                        set myFork(BrakeAngle)        [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/Brake/Angle      ]  asText ]
+                                        set myFork(CrownBrakeOffset)  [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/Brake/Offset     ]  asText ]
+                                        set myFork(CrownBrakeAngle)   [[ $domInit selectNodes /root/Options/Fork/Composite/Crown/Brake/Angle      ]  asText ]
                                         
-                                        set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/Composite/Brake/Offset ]  asText ]  
+                                        set myFork(BladeBrakeOffset)  [[ $domInit selectNodes /root/Options/Fork/Composite/Brake/Offset ]  asText ]  
                                    }
                             Suspension* {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_suspensionFork ]
                                         
                                         set forkSize  $project::Rendering(Fork)
-                                        puts "  -> $forkSize"
-                                        puts "  -> $project::Rendering(Fork)"
                                         
                                         set pt_60  [ vectormath::rotateLine $pt_00  40.0 [expr  90 - $HeadTube(Angle)]]
                                         set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $HeadTube(Angle)]]
@@ -896,11 +890,10 @@
                                         set myFork(CrownFile)         [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/File ] asText ]
                                         set myFork(DropOutFile)       [[ $domInit selectNodes /root/Options/Fork/$forkSize/DropOut/File ] asText ]                    
                                         
-                                        #set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/Brake/Offset     ]  asText ]
-                                        #set myFork(BrakeOffsetPerp)   [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/Brake/OffsetPerp ]  asText ]
-                                        set myFork(BrakeAngle)        [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/Brake/Angle      ]  asText ]
+                                        set myFork(CrownBrakeOffset)  [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/Brake/Offset     ]  asText ]
+                                        set myFork(CrownBrakeAngle)   [[ $domInit selectNodes /root/Options/Fork/_Suspension/Crown/Brake/Angle      ]  asText ]
                                         
-                                        set myFork(BrakeOffset)       [[ $domInit selectNodes /root/Options/Fork/$forkSize/Brake/Offset]  asText ]  
+                                        set myFork(BladeBrakeOffset)  [[ $domInit selectNodes /root/Options/Fork/$forkSize/Brake/Offset]  asText ]  
                                     }
                     }
 
@@ -1400,7 +1393,7 @@
                     
                     set pt_05           [ vectormath::intersectPerp    $pt_04 $pt_03 $pt_00 ]    ;# point on Forkblade perpendicular through FrontWheel
                       # puts "  -> \$pt_05  $pt_05"
-                    set vct_01          [ vectormath::parallel $pt_03 $pt_05 $myFork(BrakeOffset) left]
+                    set vct_01          [ vectormath::parallel $pt_03 $pt_05 $myFork(BladeBrakeOffset) left]
                     set pt_06           [ lindex $vct_01 1 ]
 
                     set dist_00         [ vectormath::length $pt_00 $pt_06 ]
@@ -1410,11 +1403,11 @@
 
                     set pt_10           [ vectormath::addVector    $pt_06 [ vectormath::unifyVector $pt_03 $pt_04 $dist_00_Ortho] ]            ;# FrontBrake(Shoe)
                     set pt_11           [ vectormath::addVector    $pt_10 [ vectormath::unifyVector {0 0} $HeadTube(Direction) $FrontBrake(LeverLength)] ]
-                    set pt_12           [ vectormath::rotatePoint    $pt_10    $pt_11    $Fork(BrakeAngle) ]                                        ;# FrontBrake(Help)
+                    set pt_12           [ vectormath::rotatePoint    $pt_10    $pt_11    $myFork(CrownBrakeAngle) ]                                        ;# FrontBrake(Help)
                     set pt_13           [ vectormath::intersectPerp $pt_04 $pt_03 $pt_10 ]
 
 
-                    set vct_02          [ vectormath::parallel $pt_01 $pt_02 $myFork(BrakeOffset)]
+                    set vct_02          [ vectormath::parallel $pt_01 $pt_02 $myFork(CrownBrakeOffset)]
                     set pt_15           [ vectormath::rotatePoint    $pt_12    $pt_10    -90 ]
                     set pt_16           [ vectormath::intersectPoint  [lindex $vct_02 0] [lindex $vct_02 1] $pt_12 $pt_15 ]
 

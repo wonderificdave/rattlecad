@@ -901,7 +901,10 @@
         set ForkCrown(object)       [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __ForkCrown__ ]
                                       $cv_Name addtag  __Frame__ withtag $ForkCrown(object)
         switch -exact $updateCommand {
-            editable {              $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
+            editable {              
+                       switch $Rendering(Fork) {
+                            SteelLugged {            
+                                    $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \
                                                                     {   list://Rendering(Fork@SELECT_ForkType) \
                                                                         file://Component(Fork/Crown/File)    \
@@ -911,7 +914,17 @@
                                                                         Component(Fork/Crown/Blade/OffsetPerp) \
                                                                     }  {ForkCrown Parameter} \
                                                     ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
+                                  }
+                            default {            
+                                    $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
+                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                    {   list://Rendering(Fork@SELECT_ForkType) \
+                                                                    }  {ForkCrown Parameter} \
+                                                    ]
+                                  }
+                        }
+                        lib_gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
+                        
                 }      
             selectable {            $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
                                                     [list frame_geometry::createEdit  %x %y  $cv_Name  \

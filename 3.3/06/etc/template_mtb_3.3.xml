@@ -196,15 +196,14 @@
             <!--BladeWidth>29.00</BladeWidth-->
             <!--CrownDiameter>43.00</CrownDiameter-->
             <Crown>
-                <File>etc:fork/crown/longshen_max_36_5.svg</File>
+                <File>etc:fork/crown/longshen_17.svg</File>
                 <Brake>
                     <Offset>0.00</Offset>
-                     <OffsetPerp>9.00</OffsetPerp>
                     <Angle>0.00</Angle>
                 </Brake>
                 <Blade>
                     <Offset>35.00</Offset>
-                    <OffsetPerp>3.50</OffsetPerp>
+                    <OffsetPerp>0.00</OffsetPerp>
                 </Blade>
             </Crown>
             <Blade>
@@ -540,7 +539,7 @@
     <Rendering>
         <!-- rendering information -->
         <Fork>Suspension_26</Fork>
-        <ForkBlade>straight</ForkBlade>
+        <ForkBlade>bent</ForkBlade>
         <Brake>
             <Front>Rim</Front>
             <Rear>Rim</Rear>

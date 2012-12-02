@@ -803,7 +803,7 @@
                         set S01_radius   320
                         set S02_radius   320
                         set S03_radius   320
-                        set lib_tube::arcPrecission 50
+                        # set lib_tube::arcPrecission 50
                       }
                   default {
                           # -- bent                                                
@@ -817,7 +817,7 @@
                         set S01_radius   $project::FrameTubes(ChainStay/CenterLine/radius_01)
                         set S02_radius   $project::FrameTubes(ChainStay/CenterLine/radius_02)
                         set S03_radius   $project::FrameTubes(ChainStay/CenterLine/radius_03)
-                        set lib_tube::arcPrecission 5
+                        # set lib_tube::arcPrecission 5
                       }
                 }
                 
@@ -831,6 +831,7 @@
                 set centerLine  [lindex $retValues 0]
                 set ctrLines    [lindex $retValues 1]
                      # puts "  -> \$centerLine $centerLine"
+                     # puts "  -> \$centerLine [llength $centerLine]"
                      # exit
                     # -- get shape of tube
                 set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
