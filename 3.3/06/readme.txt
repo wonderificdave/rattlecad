@@ -1,4 +1,18 @@
 
+3.3.06.10   - 2012.12.12 
+-------------------------------------------------------------------------------
+    debug:
+        ... File Save on reloades templates saves Files as ... ?
+            ... e.g. 2710688435738 ... can not ever find a file like this ..
+
+
+3.3.06.09   - 2012.12.12 
+-------------------------------------------------------------------------------
+    debug:
+        ... older rattleCAD-Files just defines "Suspension" as Fork-Rendering
+            ... if so set "Suspension_26" as default
+
+
 3.3.06.07   - 2012.12.06 
 -------------------------------------------------------------------------------
     feature:

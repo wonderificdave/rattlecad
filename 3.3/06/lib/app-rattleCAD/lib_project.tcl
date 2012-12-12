@@ -1526,10 +1526,16 @@
                                     puts "                           ... update File ... /root/Rendering/ForkBlade"
                                     puts "                                           ... /root/Component/Fork/Blade"
                             set node [$domProject selectNode /root/Rendering/Fork/text()]
-                            puts [$node asXML]
+                                # puts [$node asXML]
                             if {$node != {}} {
                               set forkRendering [$node nodeValue]
                               puts "                                           ... $forkRendering"
+                                # -- older rattleCAD-Files just defines "Suspension" as Fork-Rendering
+                              if {$forkRendering == "Suspension"} {
+                                set forkRendering "Suspension_26"
+                                $node nodeValue $forkRendering
+                              }
+                              
                               set node_Crown      [$domProject selectNode /root/Component/Fork/Crown/File/text()]
                               set node_Rendering  [$domProject selectNode /root/Rendering]
                               set node_Blade      [$domProject selectNode /root/Component/Fork/Blade]

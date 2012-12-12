@@ -191,7 +191,7 @@
                         #
                     set ::APPL_Config(PROJECT_Name)     "Template $type"
                     set ::APPL_Config(PROJECT_File)     "Template $type"  
-                    set ::APPL_Config(PROJECT_File)     [expr 2 * [clock milliseconds]]                    
+                    set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
                         # puts " <D> -> \$::APPL_Config(PROJECT_Name)  $::APPL_Config(PROJECT_Name)"
                         # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
                         #
