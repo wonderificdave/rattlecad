@@ -1,4 +1,11 @@
 
+   ... repository update
+-------------------------------------------------------------------------------
+    sourcecode:
+      http://svn.code.sf.net/p/rattlecad/code/3.3/06
+      svn+ssh://fredstmk@svn.code.sf.net/p/rattlecad/code/3.3/06
+      svn+ssh://fredstmk@svn.code.sf.net/p/rattlecad/code/trunk
+
 3.3.06.10   - 2012.12.12 
 -------------------------------------------------------------------------------
     debug:
