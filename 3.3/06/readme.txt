@@ -1,10 +1,18 @@
 
+3.3.06.12   - 2012.12.19 
+-------------------------------------------------------------------------------
+    feature:
+        ... additional rear dropout: richardsachs_PiccoliGioielli_68.svg
+        ... additional fork dropout: richardsachs_PiccoliGioielli.svg
+
+        
 3.3.06.10   - 2012.12.12    ... repository update
 -------------------------------------------------------------------------------
     svn.code.sf.net
         http://svn.code.sf.net/p/rattlecad/code/3.3/06
         svn+ssh://username@svn.code.sf.net/p/rattlecad/code/3.3/06
         svn+ssh://username@svn.code.sf.net/p/rattlecad/code/trunk
+
 
 3.3.06.10   - 2012.12.12 
 -------------------------------------------------------------------------------
