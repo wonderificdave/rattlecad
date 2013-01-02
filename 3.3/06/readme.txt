@@ -1,9 +1,15 @@
 
+3.3.06.16   - 2013.01.02 
+-------------------------------------------------------------------------------
+    debug:
+        ... correct visualistion of dimension of headtube - downtube offset
+
+
 3.3.06.15   - 2013.01.02 
 -------------------------------------------------------------------------------
     debug:
-        ... correct Result(Tubes/SeatTube/Direction) and dimension of
-            bottle-cage-mount
+        ... correct value: Result(Tubes/SeatTube/Direction) and 
+            visualistion of dimension of bottle-cage-mount
 
 
 3.3.06.14   - 2013.01.01 

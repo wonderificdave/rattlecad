@@ -1205,7 +1205,7 @@
                                 set HeadTube(polygon)   [ frame_geometry::object_values HeadTube polygon $BB_Position  ]
                                 set pt_01               [ frame_geometry::coords_get_xy $HeadTube(polygon) 3 ]
                                 set DownTube(polygon)   [ frame_geometry::object_values DownTube polygon $BB_Position  ]
-                                set pt_02               [ frame_geometry::coords_get_xy $DownTube(polygon) 3 ]
+                                set pt_02               [ frame_geometry::coords_get_xy $DownTube(polygon) 2 ]
                             set _dim_HeadTube_OffsetDT  [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                         aligned    [expr -50 * $stageScale] [expr 50 * $stageScale] \
                                                                                         gray30 ]
@@ -1419,7 +1419,7 @@
                             }
                 HeadTube_OffsetDT {
                             set pt_01           [ frame_geometry::coords_get_xy $HeadTube(polygon) 3 ]
-                            set pt_02           [ frame_geometry::coords_get_xy $DownTube(polygon) 3 ]
+                            set pt_02           [ frame_geometry::coords_get_xy $DownTube(polygon) 2 ]
                             set dimension       [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                     aligned    [expr -70 * $stageScale] [expr 50 * $stageScale] \
                                                                                     darkred ]
