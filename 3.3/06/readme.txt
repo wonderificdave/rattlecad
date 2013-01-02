@@ -1,4 +1,11 @@
 
+3.3.06.14   - 2013.01.01 
+-------------------------------------------------------------------------------
+    feature:
+        ... change behaviour on seat- and downtube by 
+            bottombracket/seattube offset
+
+
 3.3.06.12   - 2012.12.19 
 -------------------------------------------------------------------------------
     feature:
@@ -17,7 +24,7 @@
 3.3.06.10   - 2012.12.12 
 -------------------------------------------------------------------------------
     debug:
-        ... File Save on reloades templates saves Files as ... ?
+        ... File Save on reloaded templates - > saves Files as ... ?
             ... e.g. 2710688435738 ... can not ever find a file like this ..
 
 

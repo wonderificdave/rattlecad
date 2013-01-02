@@ -218,8 +218,8 @@
 
             set SeatTube(Diameter)      $frame_geometry::SeatTube(DiameterTT)
             set SeatTube(polygon)       [ frame_geometry::object_values SeatTube polygon $BB_Position  ]
-                set pt_01                   [ frame_geometry::coords_get_xy $SeatTube(polygon) 4 ]
-                set pt_02                   [ frame_geometry::coords_get_xy $SeatTube(polygon) 3 ]
+                set pt_01                   [ frame_geometry::coords_get_xy $SeatTube(polygon) 3 ]
+                set pt_02                   [ frame_geometry::coords_get_xy $SeatTube(polygon) 2 ]
             set SeatTube(vct_Top)       [ list $pt_01 $pt_02 ]
 
             set Steerer(Diameter)       30.0
@@ -906,8 +906,8 @@
                             proc dim_RearWheel_Clearance {cv_Name BB_Position WheelRadius stageScale} {
                                         set pt_03                [ frame_geometry::object_values        RearWheel   position    $BB_Position  ]
                                         set SeatTube(polygon)    [ frame_geometry::object_values        SeatTube    polygon     $BB_Position  ]
-                                        set pt_06                [ frame_geometry::coords_get_xy $SeatTube(polygon) 6 ]
-                                        set pt_07                [ frame_geometry::coords_get_xy $SeatTube(polygon) 7 ]
+                                        set pt_06                [ frame_geometry::coords_get_xy $SeatTube(polygon) 5 ]
+                                        set pt_07                [ frame_geometry::coords_get_xy $SeatTube(polygon) 6 ]
                                         set pt_is                [ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
                                         set pt_rw                [ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]
                                         set dimension            [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_rw $pt_is] ] \
@@ -915,7 +915,7 @@
                                                                                                 gray50 ]
                                     }
                             dim_RearWheel_Clearance  $cv_Name $BottomBracket(Position) $RearWheel(Radius) $stageScale
-
+                            
                         }
                     # -----------------------
                 frameDrafting_bg {
@@ -931,10 +931,11 @@
 
                                 set DownTube(polygon)   [ frame_geometry::object_values DownTube polygon        $BB_Position  ]
 
-                                set help_fk             [ vectormath::addVector                $Steerer(Fork)        [ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
+                                set help_fk             [ vectormath::addVector         $Steerer(Fork)                  [ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
                                 set help_rw_rim         [ vectormath::rotateLine        $RearWheel(Position)            [expr 0.5 * $RearWheel(RimDiameter) ] 70 ]
                                 set help_tt_c1          [ vectormath::rotateLine        $RearWheel(Position)            [expr 0.5 * $RearWheel(RimDiameter) ] 70 ]
-                                set help_st_dt          [ frame_geometry::coords_get_xy $DownTube(polygon) 15 ]
+                                set help_st_dt          [ frame_geometry::coords_get_xy $SeatTube(polygon) end]
+                                # set help_st_dt          [ frame_geometry::coords_get_xy $DownTube(polygon) 15 ]
                                 # set pt_49                    [ frame_geometry::coords_get_xy $DownTube(polygon) 15 ]
 
                                 # -- Dimensions ------------------------
@@ -1086,10 +1087,12 @@
                                 # -- Bottle Cage Mount ------------------
                             if {$Rendering(BottleCage_ST) != {off}} {
                                             set st_direction            [ frame_geometry::object_values SeatTube        direction ]
-                                            set pt_01                   [ frame_geometry::object_values    SeatTube/BottleCage/Offset    position    $BB_Position]
-                                            set pt_02                   [ frame_geometry::object_values    SeatTube/BottleCage/Base    position    $BB_Position]
+                                            set pt_01                   [ frame_geometry::object_values    SeatTube/BottleCage/Offset   position    $BB_Position]
+                                            set pt_02                   [ frame_geometry::object_values    SeatTube/BottleCage/Base     position    $BB_Position]
                                             set pt_03                   [ vectormath::addVector    $pt_02    $st_direction    [expr -1.0 * $frame_geometry::BottleCage(SeatTube)] ]
-                                            set pt_04                   [ frame_geometry::coords_get_xy $SeatTube(polygon)  0 ]
+                                            set pt_04                  [ vectormath::intersectPerp         $pt_01 $pt_02 $BB_Position ]
+                                            #set pt_04                   $BB_Position
+                                              # set pt_04                   [ frame_geometry::coords_get_xy $SeatTube(polygon)  0 ]
 
                                             set dimension        [ $cv_Name dimension  length            [ project::flatten_nestedList            $pt_01  $pt_02 ] \
                                                                                                     aligned        [expr  90 * $stageScale]    [expr    0 * $stageScale] \
@@ -1111,13 +1114,13 @@
                             }
 
                             if {$Rendering(BottleCage_DT) != {off}} {
-                                            set dt_direction            [ frame_geometry::object_values DownTube        direction ]
-                                            set pt_01                   [ frame_geometry::object_values    DownTube/BottleCage/Offset    position    $BB_Position ]
-                                            set pt_02                   [ frame_geometry::object_values    DownTube/BottleCage/Base    position    $BB_Position ]
+                                            set dt_direction            [ frame_geometry::object_values     DownTube        direction ]
+                                            set pt_01                   [ frame_geometry::object_values     DownTube/BottleCage/Offset    position    $BB_Position ]
+                                            set pt_02                   [ frame_geometry::object_values     DownTube/BottleCage/Base    position    $BB_Position ]
                                             set pt_03                   [ vectormath::addVector    $pt_02    $dt_direction    [expr -1.0 * $frame_geometry::BottleCage(DownTube)] ]
-                                            set pt_04h                  [ vectormath::intersectPerp     $DownTube(BBracket) $DownTube(Steerer) $help_st_dt ]
-                                            set vct_04h                 [ vectormath::subVector         $help_st_dt $pt_04h ]
-                                            set pt_04                   [ vectormath::addVector            $DownTube(BBracket) $vct_04h ]
+                                            set pt_04h                  [ vectormath::intersectPerp         $DownTube(BBracket) $DownTube(Steerer) $help_st_dt ]
+                                            set vct_04h                 [ vectormath::subVector             $help_st_dt $pt_04h ]
+                                            set pt_04                   [ vectormath::addVector             $DownTube(BBracket) $vct_04h ]
 
                                             if { $Rendering(BottleCage_DT_L) != {off}} { set addDist 40 } else { set addDist 0}
 
@@ -1166,18 +1169,18 @@
                                 set TopTube(polygon)    [ frame_geometry::object_values TopTube polygon $BB_Position  ]
                                 set pt_01               [ frame_geometry::coords_get_xy $TopTube(polygon)  8 ]
                                 set pt_02               [ frame_geometry::coords_get_xy $TopTube(polygon) 11 ]
-                                set pt_03               [ frame_geometry::coords_get_xy $TopTube(polygon) 3 ]
+                                set pt_03               [ frame_geometry::coords_get_xy $TopTube(polygon)  3 ]
                             set _dim_TopTube_CutLength  [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                         aligned    [expr 110 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
                                 set DownTube(polygon)   [ frame_geometry::object_values DownTube polygon $BB_Position  ]
-                                set pt_01               [ frame_geometry::coords_get_xy $DownTube(polygon)  3 ]
-                            set _dim_DownTube_CutLength [ $cv_Name dimension  length            [ project::flatten_nestedList [list $BB_Position $pt_01] ] \
+                                set pt_04               [ frame_geometry::coords_get_xy $DownTube(polygon)  2 ]
+                            set _dim_DownTube_CutLength [ $cv_Name dimension  length            [ project::flatten_nestedList [list $BB_Position $pt_04] ] \
                                                                                         aligned    [expr  70 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
                                 set SeatTube(polygon)   [ frame_geometry::object_values SeatTube polygon $BB_Position  ]
-                                set pt_01               [ frame_geometry::coords_get_xy $SeatTube(polygon)  3 ]
-                            set _dim_SeatTube_CutLength [ $cv_Name dimension  length            [ project::flatten_nestedList [list $help_st_dt $pt_01] ] \
+                                set pt_05               [ frame_geometry::coords_get_xy $SeatTube(polygon)  2 ]
+                            set _dim_SeatTube_CutLength [ $cv_Name dimension  length            [ project::flatten_nestedList [list $help_st_dt $pt_05] ] \
                                                                                         aligned    [expr   90 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
 
@@ -1210,7 +1213,7 @@
                                 set TopTube(polygon)    [ frame_geometry::object_values TopTube polygon $BB_Position  ]
                                 set pt_01               [ frame_geometry::coords_get_xy $TopTube(polygon) 11 ]
                                 set SeatTube(polygon)   [ frame_geometry::object_values SeatTube polygon $BB_Position  ]
-                                set pt_02               [ frame_geometry::coords_get_xy $SeatTube(polygon) 3 ]
+                                set pt_02               [ frame_geometry::coords_get_xy $SeatTube(polygon) 2 ]
                             set _dim_SeatTube_Extension [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                         aligned    [expr 65 * $stageScale] [expr -50 * $stageScale] \
                                                                                         gray30 ]
@@ -1275,10 +1278,10 @@
                                 set RimDiameter         $project::Component(Wheel/Rear/RimDiameter)
                                 set TyreHeight          $project::Component(Wheel/Rear/TyreHeight)
                                 set WheelRadius         [ expr 0.5 * $RimDiameter + $TyreHeight ]
-                                set pt_03               [ frame_geometry::object_values        RearWheel    position    $BB_Position  ]
-                                set SeatTube(polygon)   [ frame_geometry::object_values        SeatTube        polygon    $BB_Position  ]
-                                set pt_06               [ frame_geometry::coords_get_xy $SeatTube(polygon) 6 ]
-                                set pt_07               [ frame_geometry::coords_get_xy $SeatTube(polygon) 7 ]
+                                set pt_03               [ frame_geometry::object_values        RearWheel    position  $BB_Position  ]
+                                set SeatTube(polygon)   [ frame_geometry::object_values        SeatTube     polygon   $BB_Position  ]
+                                set pt_06               [ frame_geometry::coords_get_xy $SeatTube(polygon) 5 ]
+                                set pt_07               [ frame_geometry::coords_get_xy $SeatTube(polygon) 6 ]
                                 set pt_is               [ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
                                 set pt_rw               [ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]
                             set _dim_RearWheel_Clear    [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_rw $pt_is] ] \
@@ -1429,7 +1432,7 @@
                             }
                 SeatTube_Extension {
                             set pt_01           [ frame_geometry::coords_get_xy $TopTube(polygon) 11 ]
-                            set pt_02           [ frame_geometry::coords_get_xy $SeatTube(polygon) 3 ]
+                            set pt_02           [ frame_geometry::coords_get_xy $SeatTube(polygon) 2 ]
                             set dimension       [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                     aligned    [expr 50 * $stageScale] [expr -50 * $stageScale] \
                                                                                     darkred ]
@@ -1733,12 +1736,12 @@
                             set TyreHeight          $project::Component(Wheel/Rear/TyreHeight)
                             set WheelRadius         [ expr 0.5 * $RimDiameter + $TyreHeight ]
                             set pt_03               [ frame_geometry::object_values        RearWheel    position    $BB_Position  ]
-                            set pt_06               [ frame_geometry::coords_get_xy $SeatTube(polygon) 6 ]
-                            set pt_07               [ frame_geometry::coords_get_xy $SeatTube(polygon) 7 ]
+                            set pt_06               [ frame_geometry::coords_get_xy $SeatTube(polygon) 5 ]
+                            set pt_07               [ frame_geometry::coords_get_xy $SeatTube(polygon) 6 ]
                             set pt_is               [ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
                             set pt_rw               [ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]
                             set dimension           [ $cv_Name dimension  length            [ project::flatten_nestedList [list $pt_rw $pt_is] ] \
-                                                                                    aligned    [expr -70 * $stageScale]  [expr 50 * $stageScale] \
+                                                                                    aligned    [expr -90 * $stageScale]  [expr 50 * $stageScale] \
                                                                                     gray50 ]
                         }
                 LegClearance {
