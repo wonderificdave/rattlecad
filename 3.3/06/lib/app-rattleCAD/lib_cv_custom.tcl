@@ -1638,8 +1638,8 @@
                                 set st_direction    [ frame_geometry::object_values SeatTube direction ]
 
                             if {$Rendering(BottleCage_ST) != {off}} {
-                                            set pt_01           [ frame_geometry::object_values    SeatTube/BottleCage/Offset    position    $BB_Position]
-                                            set pt_02           [ frame_geometry::object_values    SeatTube/BottleCage/Base    position    $BB_Position]
+                                            set pt_01           [ frame_geometry::object_values    SeatTube/BottleCage/Offset   position    $BB_Position]
+                                            set pt_02           [ frame_geometry::object_values    SeatTube/BottleCage/Base     position    $BB_Position]
                                             set pt_03           [ vectormath::addVector    $pt_02    $st_direction    [expr -1.0 * $frame_geometry::BottleCage(SeatTube)] ]
 
                                             set dimension       [ $cv_Name dimension  length            [ project::flatten_nestedList            $pt_01  $pt_02 ] \
@@ -1654,11 +1654,15 @@
                                                                                                         }    {BottleCage SeatTube Offset}]
                                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
                                                     }
+                                                    
+                                            # $cv_Name create circle $pt_01    -radius 15  -outline red    -width 1        -tags __CenterLine__
+                                            # $cv_Name create circle $pt_02    -radius 15  -outline red    -width 1        -tags __CenterLine__
+                                            # $cv_Name create circle $pt_03    -radius 15  -outline red    -width 1        -tags __CenterLine__
                             }
 
                             if {$Rendering(BottleCage_DT) != {off}} {
-                                            set pt_01           [ frame_geometry::object_values    DownTube/BottleCage/Offset    position    $BB_Position]
-                                            set pt_02           [ frame_geometry::object_values    DownTube/BottleCage/Base    position    $BB_Position]
+                                            set pt_01           [ frame_geometry::object_values    DownTube/BottleCage/Offset   position    $BB_Position]
+                                            set pt_02           [ frame_geometry::object_values    DownTube/BottleCage/Base     position    $BB_Position]
                                             set pt_03           [ vectormath::addVector    $pt_02    $dt_direction    [expr -1.0 * $frame_geometry::BottleCage(DownTube)] ]
 
                                             if { $Rendering(BottleCage_DT_L) != {off}} { set addDist 50 } else { set addDist 0}

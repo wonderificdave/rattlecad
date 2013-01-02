@@ -297,8 +297,7 @@
             set SeatPost(SeatTube)      [ lindex $vct_01 1]
             set SeatTube(BottomBracket) [ lindex $vct_01 0]
             set SeatTube(Angle)         [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) [list -100 [lindex $SeatTube(BottomBracket) 1]]]
-              # set SeatTube(Angle)        [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) {-200 0} ]
-              # set SeatTube(Angle)        [ vectormath::angle $SeatPost(SeatTube) [ {-200 0} ]
+            set SeatTube(Direction)     [ vectormath::unifyVector $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
 
                 #
                 # --- get LegClearance - Position
@@ -535,8 +534,7 @@
 
                             set vct_st      [ vectormath::parallel          $SeatTube(BottomBracket) $SeatPost(SeatTube) [expr 0.5*$SeatTube(DiameterTT)] ]
 
-                            set SeatTube(Direction)        [ vectormath::unifyVector $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
-                    project::setValue Result(Tubes/SeatTube/Direction)    direction     $SeatPost(SeatTube)     ;# direction vector of SeatTube
+                    project::setValue Result(Tubes/SeatTube/Direction)    direction     $SeatTube(Direction)     ;# direction vector of SeatTube
 
                             set vct_ht      [ vectormath::parallel          $HeadTube(Stem) $HeadTube(Fork) [expr 0.5*$HeadTube(Diameter)] ]
                             set pt_00       [lindex $vct_ht 0]
