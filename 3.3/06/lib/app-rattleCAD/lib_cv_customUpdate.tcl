@@ -77,7 +77,7 @@
                     createWaterMark                             $cv_Name        $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
                         #
                 }
-            lib_gui::cv_Custom01 {
+            lib_gui::cv_Custom10 {
                         #
                         # -- frame - details
                         #
@@ -138,7 +138,7 @@
                     lib_gui::notebook_createButton              $cv_Name        TubingCheckAngles
                         #
                 }
-            lib_gui::cv_Custom07 {
+            lib_gui::cv_Custom20 {
                         #
                         # -- rear - mockup
                         #
@@ -160,7 +160,7 @@
                     lib_gui::notebook_createButton              $cv_Name         {changeFormatScale}
                         #
                 }
-            lib_gui::cv_Custom03 {
+            lib_gui::cv_Custom40 {
                         #
                         # -- frame - drafting
                         #
@@ -200,7 +200,7 @@
                     lib_gui::notebook_createButton              $cv_Name        changeFormatScale
                         #
                 }
-            lib_gui::cv_Custom02 {
+            lib_gui::cv_Custom30 {
                         #
                         # -- dimension summary
                         #
@@ -260,7 +260,7 @@
                     lib_gui::notebook_createButton          $cv_Name        changeFormatScale   format
                         #
                 }
-            lib_gui::cv_Custom06 {
+            lib_gui::cv_Custom50 {
                         #
                         # -- assembly
                         #
@@ -293,7 +293,7 @@
                     createWaterMark                         $cv_Name        $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
                         #
                 }
-            lib_gui::cv_Custom05 {
+            lib_gui::cv_Custom60 {
                         #
                         # -- tubemiter
                         #
@@ -312,7 +312,7 @@
                     createWaterMark                             $cv_Name $::APPL_Config(PROJECT_File)  [frame_geometry::project_attribute modified]
                         #
                 }
-            lib_gui::cv_Custom04 {
+            lib_gui::cv_Custom70 {
                         #
                         # -- drafting - framejig
                         #

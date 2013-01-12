@@ -2094,7 +2094,7 @@
                                             
                 # puts "  -> $cv_Name"
             switch -exact $cv_Name {
-                lib_gui::cv_Custom04 {    
+                lib_gui::cv_Custom70 {    
                         #    set help_fk             [ vectormath::intersectPoint                $Steerer(Fork)        $Steerer(Stem)   $FrontWheel(Position) $RearWheel(Position) ]
 
                         set angle_SeatTubeJig       [ vectormath::angle $RearWheel(Position) $FrameJig(SeatTube) $BottomBracket(Position)]

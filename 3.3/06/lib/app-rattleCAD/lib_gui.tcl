@@ -170,13 +170,13 @@
             
                 # ---     create and register any canvasCAD - canvas in lib_gui::notebookCanvas
             lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  Frame Details  "      A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom07  "  ChainStay Details  "  A2  1.0  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Summary   "           A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom03  "  Frame Drafting  "     A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom06  "  Mockup  "             A4  0.2  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom05  "  Tube Miter  "         A4  1.0  25  -bd 2  -bg white  -relief sunken
-            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom04  "  Frame - Jig  "        A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom10  "  Frame Details  "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom20  "  ChainStay Details  "  A2  1.0  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom30  "  Summary   "           A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom40  "  Frame Drafting  "     A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom50  "  Mockup  "             A4  0.2  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom60  "  Tube Miter  "         A4  1.0  25  -bd 2  -bg white  -relief sunken
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom70  "  Frame - Jig  "        A4  0.2  25  -bd 2  -bg white  -relief sunken
             
             $noteBook_top add [frame $noteBook_top.components]     -text "... Components" 
             $noteBook_top add [frame $noteBook_top.report]         -text "... info" 
@@ -196,11 +196,11 @@
             ttk::notebook::enableTraversal $noteBook_top
 
                 # ---     select and update following Tab
-            # $noteBook_top select $noteBook_top.cv_Custom02
+            # $noteBook_top select $noteBook_top.cv_Custom30
             # $noteBook_top select $noteBook_top.cv_Custom00
-            # $noteBook_top select $noteBook_top.cv_Custom07
+            # $noteBook_top select $noteBook_top.cv_Custom20
             
-            $noteBook_top select $noteBook_top.cv_Custom02
+            $noteBook_top select $noteBook_top.cv_Custom30
 
                 # ---     return
             return $noteBook_top
@@ -211,7 +211,7 @@
         #  register notebookCanvas in notebook - Tabs   
         #
     proc create_canvasCAD {notebook varname title stageFormat stageScale stageBorder args} {
-            # lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
+            # lib_gui::create_canvasCAD  $noteBook_top  cv_Custom30  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
         variable canvasGeometry
         variable notebookCanvas
         
@@ -317,13 +317,13 @@
             
             switch -exact -- $varName {
                 cv_Custom00 -
-                cv_Custom01 -
-                cv_Custom02 -
-                cv_Custom03 -
-                cv_Custom04 -
-                cv_Custom05 -
-                cv_Custom06 -
-                cv_Custom07 {
+                cv_Custom10 -
+                cv_Custom20 -
+                cv_Custom30 -
+                cv_Custom40 -
+                cv_Custom50 -
+                cv_Custom60 -
+                cv_Custom70 {
                         $noteBook_top select $noteBook_top.$varName
                         cv_custom::update     lib_gui::$varName 
                         # lib_gui::notebook_refitCanvas
@@ -361,7 +361,7 @@
        #
     proc notebook_getVarName {tabID} {
                 # tabID:      [$noteBook_top select]
-                #            .mainframe.frame.f2.nb.cv_Custom02
+                #            .mainframe.frame.f2.nb.cv_Custom30
             variable notebookCanvas
             variable external_canvasCAD
 

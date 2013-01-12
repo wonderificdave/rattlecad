@@ -962,7 +962,7 @@
 
     proc tubing_checkAngles {} {
         set lib_gui::checkAngles {on}
-        lib_gui::select_canvasCAD   cv_Custom01
+        lib_gui::select_canvasCAD   cv_Custom10
         cv_custom::update           [lib_gui::current_canvasCAD]
     }
 

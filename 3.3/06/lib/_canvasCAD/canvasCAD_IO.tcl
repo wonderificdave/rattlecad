@@ -414,13 +414,13 @@
 					
 						# --- get attributes
 					catch {set lineColour 	[format_xColor [$cv itemcget $cvItem -outline]]}	{set lineColour 	gray50}
-					catch {set lineWidth	[$cv itemcget $cvItem -width]}						{set lineWidth 		0.1}
-					catch {set lineDash 	[$cv itemcget $cvItem -dash]}						{set lineDash 		{}}
-					catch {set itemFill 	[format_xColor [$cv itemcget $cvItem -fill]]}		{set itemFill 		gray50}
+					catch {set lineWidth	[$cv itemcget $cvItem -width]}						          {set lineWidth 		0.1}
+					catch {set lineDash 	[$cv itemcget $cvItem -dash]}						            {set lineDash 		{none}}
+					catch {set itemFill 	[format_xColor [$cv itemcget $cvItem -fill]]}		    {set itemFill 		gray50}
 					
 						# --- preformat attribues
-					set lineDash	[string map {{ } {,}} $lineDash]
-					
+					if {$lineDash == ""} {set lineDash 		{none}}
+          set lineDash	[string map {{ } {,}} $lineDash]					
 						# --- get coords
 					foreach {x0 y0 x1 y1} \
 						[string map {".0 " " "} "[$cv coords $cvItem] "] break
@@ -478,7 +478,7 @@
 									append svgAtts 		[format_itemAttribute fill   "none"    "none"]
 									append svgAtts 		[format_itemAttribute stroke $itemFill "#000000"]
 									append svgAtts 		[format_itemAttribute stroke-width $lineWidth 0.1]
-									append svgAtts 		[format_itemAttribute stroke-dasharray $lineDash {15,1,1,1}]
+									append svgAtts 		[format_itemAttribute stroke-dasharray $lineDash {12,1,1,1}]
 							}
 							polygon {
 									set    svgType 		polygon
@@ -838,13 +838,13 @@
 					
 						# --- get attributes
 					catch {set lineColour 	[format_xColor [$cv itemcget $cvItem -outline]]}	{set lineColour 	gray50}
-					catch {set lineWidth	[$cv itemcget $cvItem -width]}						{set lineWidth 		0.1}
-					catch {set lineDash 	[$cv itemcget $cvItem -dash]}						{set lineDash 		{}}
-					catch {set itemFill 	[format_xColor [$cv itemcget $cvItem -fill]]}		{set itemFill 		gray50}
+					catch {set lineWidth	[$cv itemcget $cvItem -width]}						          {set lineWidth 		0.1}
+					catch {set lineDash 	[$cv itemcget $cvItem -dash]}						            {set lineDash 		{none}}
+					catch {set itemFill 	[format_xColor [$cv itemcget $cvItem -fill]]}		    {set itemFill 		gray50}
 					
 						# --- preformat attribues
-					set lineDash	[string map {{ } {,}} $lineDash]
-					
+					if {$lineDash == ""} {set lineDash 		{none}}
+          set lineDash	[string map {{ } {,}} $lineDash]					
 						# --- get coords
 					foreach {x0 y0 x1 y1} \
 						[string map {".0 " " "} "[$cv coords $cvItem] "] break
