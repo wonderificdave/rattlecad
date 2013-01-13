@@ -75,7 +75,7 @@
                         {command "&Config Panel"    {}      "open Config Panel"     {Ctrl m}    -command { lib_gui::open_configPanel }    }
                         {command "&Update"          {}      "update Configuration"  {Ctrl u}    -command { lib_gui::notebook_updateCanvas force } }
                         {separator}
-                        {command "&Print"           {}      "Print current Graphic" {Ctrl p}    -command { lib_gui::notebook_printCanvas $APPL_Config(EXPORT_Dir) } }
+                        {command "&Print"           {}      "Print current Graphic" {Ctrl p}    -command { lib_gui::notebook_exportPS $APPL_Config(EXPORT_Dir) } }
                         {command "&Export SVG"      {}      "Export to SVG"         {Ctrl f}    -command { lib_gui::notebook_exportSVG   $APPL_Config(EXPORT_Dir) } }
                         {command "&Export DXF"      {}      "Export to DXF"         {Ctrl d}    -command { lib_gui::notebook_exportDXF   $APPL_Config(EXPORT_Dir) } }
                         {separator}
@@ -106,7 +106,7 @@
         
             Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { lib_file::openProject_xml }  
             Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { lib_file::saveProject_xml } 
-            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { lib_gui::notebook_printCanvas $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { lib_gui::notebook_exportPS    $APPL_Config(EXPORT_Dir) }          
             Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { lib_gui::notebook_exportDXF   $APPL_Config(EXPORT_Dir) }          
             Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { lib_gui::notebook_exportSVG   $APPL_Config(EXPORT_Dir) }          
                                                          
@@ -576,6 +576,62 @@
             puts "      ... open $printFile "
             
             lib_file::openFile_byExtension $printFile                            
+    }
+
+
+    #-------------------------------------------------------------------------
+       #  print canvasCAD from current notebook-Tab  
+       #
+    proc notebook_exportPS {printDir} {
+            variable noteBook_top
+            
+                ## -- read from domConfig
+            # remove 3.2.70 ;# set domConfig $::APPL_Config(root_ProjectDOM)
+
+                # --- get currentTab
+            set currentTab     [ $noteBook_top select ]
+            set cv_Name        [ notebook_getVarName $currentTab]
+            if { $cv_Name == {} } {
+                    puts "   notebook_exportPS::cv_Name: $cv_Name"
+                    return
+            }
+
+                # --- get stageScale
+            set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]    
+            set scaleFactor    [ expr round([ expr 1 / $stageScale ]) ]
+
+                # --- set timeStamp
+            set timeString     [ format "printed: %s" [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ] ]
+            set textPos        [ vectormath::scalePointList {0 0} {10 7} $scaleFactor ]
+            set timeStamp    [ $cv_Name create draftText $textPos  -text $timeString -size 2.5 -anchor sw ]
+
+                # --- set exportFile
+            set stageTitle    [ $cv_Name  getNodeAttr  Stage  title ]
+            set fileName      [ winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ] ]
+            set exportFile    [ file join $printDir ${fileName}.ps ]
+            set exportFile    [ file normalize $exportFile]
+                # set exportFile [ file join $printDir [winfo name   $currentTab].svg ]
+
+                # --- export content to File
+            puts "    ------------------------------------------------"
+            puts "      export PS - Content to    $exportFile \n"
+            puts "      notebook_exportPS   $currentTab "
+            puts "             currentTabp-Parent  [winfo parent $currentTab]  "
+            puts "             currentTabp-Parent  [winfo name   $currentTab]  "
+            puts "             canvasCAD Object    $cv_Name  "
+
+            
+                # $cv_Name print $exportFile
+            set exportFile [$cv_Name print $exportFile]
+                
+                # --- delete timeStamp
+            catch [ $cv_Name delete $timeStamp ]
+                                
+            
+            puts "    ------------------------------------------------"
+            puts "      ... open $exportFile "
+            
+            lib_file::openFile_byExtension $exportFile                            
     }
 
 

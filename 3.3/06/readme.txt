@@ -1,5 +1,13 @@
 
-3.3.06.18   - 2013.01.09 
+3.3.06.19   - 2013.01.14 
+-------------------------------------------------------------------------------
+    debug:
+        ... canvasCAD 0.29: canvasCAD_print.tcl/printPostScript:
+            ... handle fileExtension
+        ... export Postscript on Windows
+
+
+3.3.06.18   - 2013.01.13 
 -------------------------------------------------------------------------------
     debug:
         ... canvasCAD 0.28: canvasCAD_IO.tcl/polyline: stroke-dasharray

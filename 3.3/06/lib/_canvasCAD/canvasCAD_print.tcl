@@ -41,57 +41,62 @@
 
 	proc canvasCAD::printPostScript { cv_name printFile} {
 			
-			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_name] ]
-									
-			set w			[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	path   ]			
-			set wScale		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	scale  ]			
-			set Unit		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	unit   ]
-			set Format		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	format ]			
-			set FormatSize  [ $cv_name getFormatSize $Format]
-			
-			puts "\n"
- 			puts "         printPostScript:"
- 			puts "       ---------------------------------------------"
- 			puts "               $cv_name"
- 			puts "               $printFile"
- 			puts "            ----------------------------------------"
-			puts ""
-  			puts "               w           $w			"
- 			puts "               wScale      $wScale	"
- 			puts "               Unit        $Unit		"
- 			puts "               Format      $Format	"
- 			puts "               FormatSize  $FormatSize"
- 			puts ""
-  	     
-        set pageWidth   [lindex $FormatSize 0]
-        set pageHeight  [lindex $FormatSize 1]
-        
-  			puts "               pageWidth   $pageWidth	"
- 			puts "               pageHeight  $pageHeight"
- 			puts ""
+		set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $cv_name] ]
+								
+		set w			[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	path   ]			
+		set wScale		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	scale  ]			
+		set Unit		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	unit   ]
+		set Format		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	format ]			
+		set FormatSize  [ $cv_name getFormatSize $Format]
+		
+		puts "\n"
+ 		puts "         printPostScript:"
+ 		puts "       ---------------------------------------------"
+ 		puts "               $cv_name"
+ 		puts "               $printFile"
+ 		puts "            ----------------------------------------"
+		puts ""
+  	puts "               w           $w			"
+ 		puts "               wScale      $wScale	"
+ 		puts "               Unit        $Unit		"
+ 		puts "               Format      $Format	"
+ 		puts "               FormatSize  $FormatSize"
+ 		puts ""
+  	   
+    set pageWidth   [lindex $FormatSize 0]
+    set pageHeight  [lindex $FormatSize 1]
+      
+  	puts "               pageWidth   $pageWidth	"
+ 		puts "               pageHeight  $pageHeight"
+ 		puts ""
 
-			# tk_messageBox -message " print_postscript"
-		set printBorder	50
-        set coords		[$w coords __Stage__]
-		set stageSize	[get_BBoxInfo  size  $coords ]
-        set stageWidth	[lindex $stageSize 0]
-        set stageHeight	[lindex $stageSize 1]
-		set stage_x		[lindex $coords 0]
-		set stage_y		[lindex $coords 1]
-        
-  			puts "               coords         $coords	"
-  			puts "               stageWidth   $stageWidth"
-  			puts "               stageHeight  $stageHeight"
-  			puts "               stage_x      $stage_x"
-  			puts "               stage_y      $stage_y"
-  			puts "               printBorder  $printBorder"
- 			puts ""
+		# tk_messageBox -message " print_postscript"
+    set printBorder	50
+    set coords		  [$w coords __Stage__]
+    set stageSize	  [get_BBoxInfo  size  $coords ]
+    set stageWidth	[lindex $stageSize 0]
+    set stageHeight	[lindex $stageSize 1]
+    set stage_x		  [lindex $coords 0]
+    set stage_y		  [lindex $coords 1]
+      
+  	puts "               coords         $coords	"
+  	puts "               stageWidth   $stageWidth"
+  	puts "               stageHeight  $stageHeight"
+  	puts "               stage_x      $stage_x"
+  	puts "               stage_y      $stage_y"
+  	puts "               printBorder  $printBorder"
+ 		puts ""
 
 		set w_name          [winfo name $w]
-		set printFile		$printFile.ps
+		
+    set fileExtension [file extension $printFile]
+      # puts "\n\n  -> \$fileExtension $fileExtension\n\n"
+    if {$fileExtension != {.ps}} {
+        set printFile		$printFile.ps
+    }
   			
- 			puts "               printFile   $printFile"
- 			puts ""
+ 		puts "               printFile   $printFile"
+ 		puts ""
         
         $w postscript	-file        $printFile \
 						-rotate      1         \

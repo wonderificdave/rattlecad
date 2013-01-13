@@ -63,7 +63,7 @@ exec wish "$0" "$@"
     lappend auto_path           [file join $BASE_Dir lib]
     
     package require   rattleCAD  3.3 
-    package require   canvasCAD  0.28
+    package require   canvasCAD  0.29
     package require   extSummary 0.1
 
 
