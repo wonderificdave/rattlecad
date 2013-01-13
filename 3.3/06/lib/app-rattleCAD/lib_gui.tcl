@@ -527,60 +527,7 @@
 
 
     #-------------------------------------------------------------------------
-       #  print canvasCAD from current notebook-Tab  
-       #
-    proc notebook_printCanvas {printDir} {
-            variable noteBook_top
-            
-                ## -- read from domConfig
-            # remove 3.2.70 ;# set domConfig $::APPL_Config(root_ProjectDOM)
-
-                # --- get currentTab
-            set currentTab     [ $noteBook_top select ]
-            set cv_Name        [ notebook_getVarName $currentTab]
-            if { $cv_Name == {} } {
-                    puts "   notebook_printCanvas::cv_Name: $cv_Name"
-                    return
-            }
-
-                # --- set printFile
-            set stageTitle    [ $cv_Name  getNodeAttr  Stage  title ]
-            set fileName     [winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ]]
-            set printFile    [file join $printDir $fileName]
-            
-                # --- get stageScale
-            set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]    
-            set scaleFactor    [ expr round([ expr 1 / $stageScale ]) ]
-
-                # --- set timeStamp
-            set timeString     [ format "printed: %s" [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ] ]
-            set textPos        [ vectormath::scalePointList {0 0} {10 7} $scaleFactor ]
-            set timeStamp    [ $cv_Name create draftText $textPos  -text $timeString -size 2.5 -anchor sw ]
-                
-                # --- print content to File
-            puts "    ------------------------------------------------"
-            puts "      print  $printFile \n"
-            puts "      notebook_exportSVG   $currentTab "
-            puts "             currentTabp-Parent  [winfo parent $currentTab]  "
-            puts "             currentTabp-Parent  [winfo name   $currentTab]  "
-            puts "             canvasCAD Object    $cv_Name  "
-            
-                # $cv_Name print $printFile
-            set printFile [$cv_Name print $printFile]
-                
-                # --- delete timeStamp
-            catch [ $cv_Name delete $timeStamp ]
-                                
-            
-            puts "    ------------------------------------------------"
-            puts "      ... open $printFile "
-            
-            lib_file::openFile_byExtension $printFile                            
-    }
-
-
-    #-------------------------------------------------------------------------
-       #  print canvasCAD from current notebook-Tab  
+       #  print canvasCAD from current notebook-Tab as PostScript 
        #
     proc notebook_exportPS {printDir} {
             variable noteBook_top
@@ -636,7 +583,7 @@
 
 
     #-------------------------------------------------------------------------
-       #  export canvasCAD from current notebook-Tab as SVG Graphic
+       #  export canvasCAD from current notebook-Tab as Standard Vector Graphic
        #
     proc notebook_exportSVG {printDir} {
             variable noteBook_top
