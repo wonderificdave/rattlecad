@@ -82,17 +82,18 @@ exec wish "$0" "$@"
     }
     # parray strinfo
     
-    set APPL_Config(RELEASE_Version)    $strinfo(ProductVersion)       ;#{3.2}
-    set APPL_Config(RELEASE_Revision)    $strinfo(FileVersion)         ;#{66}
-    set APPL_Config(RELEASE_Date)        $strinfo(FileDate)            ;#{18. Dec. 2011}
+    set APPL_Config(RELEASE_Version)  $strinfo(ProductVersion)    ;#{3.2}
+    set APPL_Config(RELEASE_Revision) $strinfo(FileVersion)       ;#{66}
+    set APPL_Config(RELEASE_Date)     $strinfo(FileDate)          ;#{18. Dec. 2011}
     
          # -- Application Directories  -----------
-    set APPL_Config(BASE_Dir)      $BASE_Dir
-    set APPL_Config(CONFIG_Dir)    [file join    $BASE_Dir etc   ]
-    set APPL_Config(IMAGE_Dir)     [file join    $BASE_Dir image ]
-    set APPL_Config(ROOT_Dir)      [file dirname $BASE_Dir]
-    set APPL_Config(USER_Dir)      [lib_file::check_user_dir rattleCAD]    
-    set APPL_Config(EXPORT_Dir)    [lib_file::check_user_dir rattleCAD/export]
+    set APPL_Config(BASE_Dir)         $BASE_Dir
+    set APPL_Config(CONFIG_Dir)       [file join    $BASE_Dir etc   ]
+    set APPL_Config(IMAGE_Dir)        [file join    $BASE_Dir image ]
+    set APPL_Config(ROOT_Dir)         [file dirname $BASE_Dir]
+    set APPL_Config(USER_Dir)         [lib_file::check_user_dir rattleCAD]    
+    set APPL_Config(EXPORT_Dir)       [lib_file::check_user_dir rattleCAD/export]
+    set APPL_Config(EXPORT_HTML)      [lib_file::check_user_dir rattleCAD/html]
 
 
         # -- Version Info Summary  ---------------
@@ -113,12 +114,13 @@ exec wish "$0" "$@"
         puts "    canvasCAD:   [package require canvasCAD]"
         puts "    extSummary:  [package require extSummary]"
         puts "  ----------------------------------------------"
-        puts "    APPL_Config(ROOT_Dir)   $APPL_Config(ROOT_Dir)"
-        puts "    APPL_Config(BASE_Dir)   $APPL_Config(BASE_Dir)"
-        puts "    APPL_Config(CONFIG_Dir) $APPL_Config(CONFIG_Dir)"
-        puts "    APPL_Config(IMAGE_Dir)  $APPL_Config(IMAGE_Dir)"
-        puts "    APPL_Config(USER_Dir)   $APPL_Config(USER_Dir)"
-        puts "    APPL_Config(EXPORT_Dir) $APPL_Config(EXPORT_Dir)"
+        puts "    APPL_Config(ROOT_Dir)     $APPL_Config(ROOT_Dir)"
+        puts "    APPL_Config(BASE_Dir)     $APPL_Config(BASE_Dir)"
+        puts "    APPL_Config(CONFIG_Dir)   $APPL_Config(CONFIG_Dir)"
+        puts "    APPL_Config(IMAGE_Dir)    $APPL_Config(IMAGE_Dir)"
+        puts "    APPL_Config(USER_Dir)     $APPL_Config(USER_Dir)"
+        puts "    APPL_Config(EXPORT_Dir)   $APPL_Config(EXPORT_Dir)"
+        puts "    APPL_Config(EXPORT_HTML)  $APPL_Config(EXPORT_HTML)"
         puts "  ----------------------------------------------"
         puts ""
 

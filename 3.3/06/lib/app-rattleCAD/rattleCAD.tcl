@@ -76,6 +76,7 @@
                         IMAGE_Dir           {}
                         USER_Dir            {}
                         EXPORT_Dir          {}
+                        EXPORT_HTML         {}
                         
                         root_InitDOM        {}
                         root_ProjectDOM     {}

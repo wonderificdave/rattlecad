@@ -64,33 +64,35 @@
             
             set mainframe_Menue {
                 "&File"   all file 0 {
-                        {command "&New"             {}      "New Project File"      {Ctrl n}    -command { lib_file::newProject_xml }     }
-                        {command "&Open"            {}      "0pen Project File"     {Ctrl o}    -command { lib_file::openProject_xml }     }
-                        {command "&Save"            {}      "Save Project File"     {Ctrl s}    -command { lib_file::saveProject_xml }    }
-                        {command "Save &As ..."     {}      "Save Project File As"  {Ctrl a}    -command { lib_file::saveProject_xml saveAs} }
+                        {command "&New"             {}      "New Project File"      {Ctrl n}      -command { lib_file::newProject_xml } }
+                        {command "&Open"            {}      "0pen Project File"     {Ctrl o}      -command { lib_file::openProject_xml } }
+                        {command "&Save"            {}      "Save Project File"     {Ctrl s}      -command { lib_file::saveProject_xml } }
+                        {command "Save &As ..."     {}      "Save Project File As"  {CtrlAlt s}   -command { lib_file::saveProject_xml saveAs} }
                         {separator}
-                        {command "&Rendering"       {}      "Rendering Settings"    {}          -command { lib_gui::set_RenderingSettings } }
-                        {command "Impo&rt"          {}      "import Parameter"      {Ctrl i}    -command { lib_file::openProject_Subset_xml }    }
+                        {command "&Rendering"       {}      "Rendering Settings"    {}            -command { lib_gui::set_RenderingSettings } }
+                        {command "Impo&rt"          {}      "import Parameter"      {Ctrl i}      -command { lib_file::openProject_Subset_xml } }
                         {separator}
-                        {command "&Config Panel"    {}      "open Config Panel"     {Ctrl m}    -command { lib_gui::open_configPanel }    }
-                        {command "&Update"          {}      "update Configuration"  {Ctrl u}    -command { lib_gui::notebook_updateCanvas force } }
+                        {command "&Config Panel"    {}      "open Config Panel"     {Ctrl m}      -command { lib_gui::open_configPanel } }
+                        {command "&Update"          {}      "update Configuration"  {Ctrl u}      -command { lib_gui::notebook_updateCanvas force } }
                         {separator}
-                        {command "&Print"           {}      "Print current Graphic" {Ctrl p}    -command { lib_gui::notebook_exportPS $APPL_Config(EXPORT_Dir) } }
-                        {command "&Export SVG"      {}      "Export to SVG"         {Ctrl f}    -command { lib_gui::notebook_exportSVG   $APPL_Config(EXPORT_Dir) } }
-                        {command "&Export DXF"      {}      "Export to DXF"         {Ctrl d}    -command { lib_gui::notebook_exportDXF   $APPL_Config(EXPORT_Dir) } }
+                        {command "&Export PS"       {}      "Export to PostScript"  {Ctrl p}      -command { lib_gui::notebook_exportPS $APPL_Config(EXPORT_Dir) } }
+                        {command "&Export SVG"      {}      "Export to SVG"         {Ctrl f}      -command { lib_gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
+                        {command "&Export DXF"      {}      "Export to DXF"         {Ctrl d}      -command { lib_gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
+                        {command "&Export HTML"     {}      "Export HTML-Report"    {Ctrl e}      -command { lib_gui::export_Project      $APPL_Config(EXPORT_HTML) } }
+                        
                         {separator}
-                        {command "Intro-Image"      {}      "Show Intro Window"     {}          -command { create_intro .intro } }
+                        {command "Intro-Image"      {}      "Show Intro Window"     {}            -command { create_intro .intro } }
                         {separator}
-                        {command "E&xit"            {}      "Exit rattle_CAD"       {Ctrl x}    -command { lib_gui::exit_rattleCAD } }
+                        {command "E&xit"            {}      "Exit rattle_CAD"       {Ctrl x}      -command { lib_gui::exit_rattleCAD } }
                 }
                 "Info"   all info 0 {
-                        {command "&Info"            {}      "Information"           {Ctrl w}    -command { version_info::create  .v_info 0} }
-                        {command "&Help"            {}      "Help"                  {Ctrl h}    -command { version_info::create  .v_info 1} }
+                        {command "&Info"            {}      "Information"           {Ctrl w}      -command { version_info::create  .v_info 0} }
+                        {command "&Help"            {}      "Help"                  {Ctrl h}      -command { version_info::create  .v_info 1} }
                 }
                 "rattleCAD-Project"   all info 0 {
-                        {command "rattleCAD WebSite"    {}  "about rattleCAD"       {}          -command { lib_file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
-                        {command "project@sourceforge"  {}  "sourceforge.net"       {}          -command { lib_file::open_URL {http://sourceforge.net/projects/rattlecad/index.html} } }
-                        {command "like rattleCAD"       {}  "donate"                {}          -command { lib_file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
+                        {command "rattleCAD WebSite"    {}  "about rattleCAD"       {}            -command { lib_file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
+                        {command "project@sourceforge"  {}  "sourceforge.net"       {}            -command { lib_file::open_URL {http://sourceforge.net/projects/rattlecad/index.html} } }
+                        {command "like rattleCAD"       {}  "donate"                {}            -command { lib_file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
                 }
             }
         
@@ -106,9 +108,10 @@
         
             Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { lib_file::openProject_xml }  
             Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { lib_file::saveProject_xml } 
-            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { lib_gui::notebook_exportPS    $APPL_Config(EXPORT_Dir) }          
-            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { lib_gui::notebook_exportDXF   $APPL_Config(EXPORT_Dir) }          
-            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { lib_gui::notebook_exportSVG   $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { lib_gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { lib_gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { lib_gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_htm -image  $iconArray(print_html)    -helptext "export HTML"             -command { lib_gui::export_Project      $APPL_Config(EXPORT_HTML) }          
                                                          
             Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { lib_gui::load_Template  Road }  
             Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { lib_gui::load_Template  MTB  }  
@@ -127,10 +130,11 @@
             label   $tb_frame.sp0      -text   " "
             label   $tb_frame.sp1      -text   " "
             label   $tb_frame.sp2      -text   " "
-            label   $tb_frame.sp3      -text   "      "
-            label   $tb_frame.sp4      -text   " "
+            label   $tb_frame.sp3      -text   " "
+            label   $tb_frame.sp4      -text   "      "
             label   $tb_frame.sp5      -text   " "
             label   $tb_frame.sp6      -text   " "
+            label   $tb_frame.sp7      -text   " "
               
               
                 # pack    $tb_frame.open     $tb_frame.save     $tb_frame.clear    $tb_frame.print    $tb_frame.sp0  \
@@ -138,17 +142,18 @@
                 #        $tb_frame.render   $tb_frame.sp3  \
                 #
             pack    $tb_frame.open       $tb_frame.save         $tb_frame.sp0  \
-                    $tb_frame.print_ps   $tb_frame.print_dxf    $tb_frame.print_svg     $tb_frame.sp1  \
-                    $tb_frame.set_rd     $tb_frame.set_mb       $tb_frame.sp2  \
-                    $tb_frame.clear      $tb_frame.render       $tb_frame.sp3  \
+                    $tb_frame.print_ps   $tb_frame.print_dxf    $tb_frame.print_svg     $tb_frame.sp1 \
+                    $tb_frame.print_htm  $tb_frame.sp2  \
+                    $tb_frame.set_rd     $tb_frame.set_mb       $tb_frame.sp3  \
+                    $tb_frame.clear      $tb_frame.render       $tb_frame.sp4  \
                 -side left -fill y
                        
                 # pack    $tb_frame.exit   $tb_frame.sp6  \
                 #        $tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
                 #
-            pack    $tb_frame.exit      $tb_frame.sp5       \
+            pack    $tb_frame.exit      $tb_frame.sp6       \
                     $tb_frame.resize    $tb_frame.scale_p   $tb_frame.scale_m   \
-                    $tb_frame.sp6       $tb_frame.cfg       \
+                    $tb_frame.sp7       $tb_frame.cfg       \
                 -side right 
     }
 
@@ -285,11 +290,13 @@
     proc select_canvasCAD {cv} {
             variable noteBook_top        
             
+                # puts " ... select_canvasCAD $cv"
+            
             set cvID    [format "lib_gui::%s" $cv]
             set cvPath  [$cvID getNodeAttr Canvas path]
             set noteBook   [winfo parent [winfo parent $cvPath]] 
-                # puts "         $noteBook"
-                # puts "         [winfo exists [winfo parent $cvPath]]"
+                 puts "         $noteBook"
+                 puts "         [winfo exists [winfo parent $cvPath]]"
             if {[winfo exists $cvPath]} {
                 $noteBook select  [winfo parent $cvPath]   
                 return [$noteBook select]
@@ -583,9 +590,79 @@
 
 
     #-------------------------------------------------------------------------
+       #  export canvasCAD from every notebook-Tab
+       #
+    proc export_Project {exportDir {type {html}}} {
+            variable noteBook_top
+            variable notebookCanvas     
+            
+
+                 # --- get currentTab
+            set currentTab     [ $noteBook_top select ]
+            set cv_Name        [notebook_getVarName $currentTab]           
+            set cv_ID          [lindex [string map {:: { }} $cv_Name] 1]
+                # puts "\n\n"
+                # puts "   notebook_exportSVG::cv_Name: $cv_Name"
+                # tk_messageBox -message  "   notebook_exportSVG::cv_Name: $cv_Name"
+              
+                # --- export content to HTML
+                # puts "    ------------------------------------------------"
+            puts "\n\n  ====== e x p o r t  P R O J E C T ==============="                         
+            puts "      export project to -> $type \n"
+            puts "      export_Project   $currentTab / $cv_Name / $cv_ID"
+            puts "             currentTabp-Parent  [winfo parent $currentTab]  "
+            puts "             currentTabp-Parent  [winfo name   $currentTab]  "
+            puts "             canvasCAD Object    $cv_Name  "
+
+                # ---
+            # tk_messageBox -message "export_Project \n$exportDir \n $type"
+            
+
+
+                # --- prepare export directory
+            set contents [glob -directory $exportDir *]
+    
+            puts "Directory contents are:"
+            foreach item $contents {
+                puts $item
+                catch {file delete $item}
+            }
+            
+            set indexHTML [file join $::APPL_Config(EXPORT_HTML) index.html]
+            file copy -force [file join $::APPL_Config(CONFIG_Dir) html/index.html]     $indexHTML
+            file copy -force [file join $::APPL_Config(CONFIG_Dir) html/rattleCAD.ico]  $::APPL_Config(EXPORT_HTML)
+            
+                # --- save project file 
+                # lib_file::saveProject_xml
+            catch {file copy -force $::APPL_Config(PROJECT_File) [file join $::APPL_Config(EXPORT_HTML) project.xml]}
+            
+                # --- loop through content
+                # puts "[lsort [array names notebookCanvas]]"
+            foreach cadCanv [lsort [array names notebookCanvas]] {
+                # puts "   -> $cadCanv"
+                select_canvasCAD $cadCanv
+                update
+                notebook_exportSVG $exportDir noOpen
+            }
+            select_canvasCAD $cv_ID 
+
+
+            
+                # --- open index.html
+            puts "    ------------------------------------------------"
+            puts "      ... open $indexHTML "
+            
+            lib_file::open_localFile $indexHTML
+
+            return
+
+    }
+
+
+    #-------------------------------------------------------------------------
        #  export canvasCAD from current notebook-Tab as Standard Vector Graphic
        #
-    proc notebook_exportSVG {printDir} {
+    proc notebook_exportSVG {printDir {postEvent {open}}} {
             variable noteBook_top
             
                 ## -- read from domConfig
@@ -595,8 +672,8 @@
             set currentTab     [ $noteBook_top select ]
             set cv_Name        [ notebook_getVarName $currentTab]
             if { $cv_Name == {} } {
-                    puts "   notebook_exportSVG::cv_Name: $cv_Name"
-                    return
+                puts "   notebook_exportSVG::cv_Name: $cv_Name"
+                return
             }
             
                 # --- set exportFile
@@ -615,10 +692,12 @@
             
             set exportFile [$cv_Name exportSVG $exportFile]
             
-            puts "    ------------------------------------------------"
-            puts "      ... open $exportFile "
-            
-            lib_file::open_localFile $exportFile
+            if {$postEvent == {open}} {
+                puts "    ------------------------------------------------"
+                puts "      ... open $exportFile "
+                
+                lib_file::open_localFile $exportFile
+            }
             
                 # lib_file::openFile_byExtension $exportFile
                 # lib_file::openFile_byExtension $exportFile .htm

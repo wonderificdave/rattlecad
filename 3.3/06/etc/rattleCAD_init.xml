@@ -17,6 +17,7 @@
 			<image name="print_ps"		  src="print_ps.gif" />
 			<image name="print_svg"		  src="print_svg.gif" />
 			<image name="print_dxf"		  src="print_dxf.gif" />
+			<image name="print_html"		src="print_html.gif" />
 			<image name="clear"			    src="clean.gif" />
 			<image name="update"		    src="update.gif" />
 			<image name="reset_r"		    src="reset_road.gif" />
