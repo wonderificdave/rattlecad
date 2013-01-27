@@ -75,7 +75,7 @@
                         {command "&Config Panel"    {}      "open Config Panel"     {Ctrl m}      -command { lib_gui::open_configPanel } }
                         {command "&Update"          {}      "update Configuration"  {Ctrl u}      -command { lib_gui::notebook_updateCanvas force } }
                         {separator}
-                        {command "&Export PS"       {}      "Export to PostScript"  {Ctrl p}      -command { lib_gui::notebook_exportPS $APPL_Config(EXPORT_Dir) } }
+                        {command "&Export PS"       {}      "Export to PostScript"  {Ctrl p}      -command { lib_gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
                         {command "&Export SVG"      {}      "Export to SVG"         {Ctrl f}      -command { lib_gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
                         {command "&Export DXF"      {}      "Export to DXF"         {Ctrl d}      -command { lib_gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
                         {command "&Export HTML"     {}      "Export HTML-Report"    {Ctrl e}      -command { lib_gui::export_Project      $APPL_Config(EXPORT_HTML) } }
@@ -596,58 +596,69 @@
             variable noteBook_top
             variable notebookCanvas     
             
-
                  # --- get currentTab
             set currentTab     [ $noteBook_top select ]
             set cv_Name        [notebook_getVarName $currentTab]           
             set cv_ID          [lindex [string map {:: { }} $cv_Name] 1]
-                # puts "\n\n"
-                # puts "   notebook_exportSVG::cv_Name: $cv_Name"
-                # tk_messageBox -message  "   notebook_exportSVG::cv_Name: $cv_Name"
+                  # puts "\n\n"
+                  # puts "   notebook_exportSVG::cv_Name: $cv_Name"
+                  # tk_messageBox -message  "   notebook_exportSVG::cv_Name: $cv_Name"
               
                 # --- export content to HTML
-                # puts "    ------------------------------------------------"
             puts "\n\n  ====== e x p o r t  P R O J E C T ==============="                         
             puts "      export project to -> $type \n"
             puts "      export_Project   $currentTab / $cv_Name / $cv_ID"
             puts "             currentTabp-Parent  [winfo parent $currentTab]  "
             puts "             currentTabp-Parent  [winfo name   $currentTab]  "
             puts "             canvasCAD Object    $cv_Name  "
+            puts ""
 
                 # ---
             # tk_messageBox -message "export_Project \n$exportDir \n $type"
             
-
-
-                # --- prepare export directory
+                # --- cleanup export directory
             set contents [glob -directory $exportDir *]
     
-            puts "Directory contents are:"
+                  # puts "Directory contents are:"
             foreach item $contents {
-                puts $item
+                  # puts $item
                 catch {file delete $item}
             }
             
+                # --- prepare export directory
             set indexHTML [file join $::APPL_Config(EXPORT_HTML) index.html]
-            file copy -force [file join $::APPL_Config(CONFIG_Dir) html/index.html]     $indexHTML
+            file copy -force [file join $::APPL_Config(CONFIG_Dir) html/index.html]     $::APPL_Config(EXPORT_HTML)
+            file copy -force [file join $::APPL_Config(CONFIG_Dir) html/style.css]      $::APPL_Config(EXPORT_HTML)
             file copy -force [file join $::APPL_Config(CONFIG_Dir) html/rattleCAD.ico]  $::APPL_Config(EXPORT_HTML)
             
-                # --- save project file 
-                # lib_file::saveProject_xml
-            catch {file copy -force $::APPL_Config(PROJECT_File) [file join $::APPL_Config(EXPORT_HTML) project.xml]}
+                  # lib_file::saveProject_xml
+                  # puts "    \$APPL_Config(PROJECT_File):         Template Road"
+                  # puts "    \$APPL_Config(PROJECT_File):      -> $::APPL_Config(PROJECT_File)"
+                  # puts "    \$APPL_Config(TemplateInit):      -> $::APPL_Config(TemplateInit)"
+                  
+                # --- get project file 
+            if {[file exists $::APPL_Config(PROJECT_File)] == 1} {
+                  # file exists
+                puts "             ... $::APPL_Config(PROJECT_File)"
+                set sourceFile  $::APPL_Config(PROJECT_File)
+            } else {
+                  # file does not exists
+                puts "             ... $::APPL_Config(TemplateInit)"
+                set sourceFile  $::APPL_Config(TemplateInit)
+            }
+            
+            catch {file copy -force $sourceFile [file join $::APPL_Config(EXPORT_HTML) project.xml]}
             
                 # --- loop through content
-                # puts "[lsort [array names notebookCanvas]]"
+                  # puts "[lsort [array names notebookCanvas]]"
             foreach cadCanv [lsort [array names notebookCanvas]] {
-                # puts "   -> $cadCanv"
+                  # puts "   -> $cadCanv"
                 select_canvasCAD $cadCanv
                 update
                 notebook_exportSVG $exportDir noOpen
             }
             select_canvasCAD $cv_ID 
 
-
-            
                 # --- open index.html
             puts "    ------------------------------------------------"
             puts "      ... open $indexHTML "
@@ -1007,6 +1018,13 @@
             variable noteBook_top
 
             lib_file::openTemplate_xml $type
+            
+            switch -exact $type {
+                Road { set ::APPL_Config(TemplateInit) $::APPL_Config(TemplateRoad_default) }
+                MTB  { set ::APPL_Config(TemplateInit) $::APPL_Config(TemplateMTB_default) }
+            }
+              # puts "\n\  -> \$type:  $type"
+              # puts "\n\  -> \$::APPL_Config(TemplateInit):  $::APPL_Config(TemplateInit)"
             return
     }
 
