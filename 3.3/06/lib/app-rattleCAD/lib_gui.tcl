@@ -612,12 +612,11 @@
             puts "             currentTabp-Parent  [winfo name   $currentTab]  "
             puts "             canvasCAD Object    $cv_Name  "
             puts ""
-
-                # ---
-            # tk_messageBox -message "export_Project \n$exportDir \n $type"
             
                 # --- cleanup export directory
-            set contents [glob -directory $exportDir *]
+            if { [catch {set contents [glob -directory $exportDir *]} fid] } {
+                set contents {}
+            }
     
                   # puts "Directory contents are:"
             foreach item $contents {
