@@ -36,7 +36,8 @@
 	
 	<Startup>
 		<TemplateFile>Road</TemplateFile>
-	</Startup>
+    <FrameJigType>rattleCAD</FrameJigType>
+  </Startup>
 	
 	<Template>
 		<Road>template_road_3.3.xml</Road>
@@ -62,6 +63,21 @@
 			<component key="Component/Label"	                        dir="components/label" 	         />
 		</ComponentLocation>
 		
+		<TemplateType>
+			<Road/>
+			<MTB/>
+		</TemplateType>
+    
+		<FrameJigType>
+			<rattleCAD/>
+			<vienna/>
+			<nuremberg/>
+			<concept_1/>
+			<!--rattleCAD/>
+			<selberbruzzler/>
+			<vogeltanz/-->
+		</FrameJigType>
+    
 		<Brake>
 			<Rim/>
 			<Disc/>

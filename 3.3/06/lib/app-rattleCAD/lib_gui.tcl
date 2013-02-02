@@ -761,7 +761,7 @@
     proc notebook_createButton {nb_Canvas cv_ButtonList    {type {default}}} {
             
             puts "       notebook_createButton:  $cv_ButtonList"
-            set cv_Name     [lindex [split $nb_Canvas :] end]
+            set cv_Name [lindex [split $nb_Canvas :] end]
             set cv      [lib_gui::notebook_getWidget  $cv_Name]
             
                 # puts [$cv find withtag __NB_Button__]
@@ -826,6 +826,19 @@
                                                     -tags {__Button__CSR__ __NB_Button__}
                                     }
                                 }
+                        changeFrameJigVariant {
+                                    # -- create a Button to set FrameJigVersion
+                                    catch { destroy $cv.button_CSR }
+                                    catch { button  $cv.button_CSR \
+                                                    -text "FrameJig" \
+                                                    -command [format {lib_gui::change_FrameJig %s %s} $cv $y_Position ]
+                                                    # -command [format {lib_gui::change_FrameJig %s} $cv]                                
+                                            $cv create window $x_Position $y_Position \
+                                                    -window $cv.button_CSR \
+                                                    -anchor w \
+                                                    -tags {__Button__FJV__ __NB_Button__}
+                                    }
+                                }
                         Reference2Custom {
                                     # -- create a Button to execute geometry_reference2personal
                                     catch { destroy $cv.button_R2C }
@@ -883,7 +896,7 @@
                             }
             } else {
                     $cv delete     __Select__Format_Scale__
-                    $cv dtag     __Select__Format_Scale__
+                    $cv dtag       __Select__Format_Scale__
                     destroy        .f_format_$cv_Name
                     #$cv.f_format destroy
                     return
@@ -892,7 +905,7 @@
             
             set f_DIN_Format    [frame $baseFrame.select.din_Format]
                     radiobutton $f_DIN_Format.a4 -text A4 -value A4    -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
-                    radiobutton $f_DIN_Format.a3 -text A3 -value A3 -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
+                    radiobutton $f_DIN_Format.a3 -text A3 -value A3    -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
                     radiobutton $f_DIN_Format.a2 -text A2 -value A2    -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
                     radiobutton $f_DIN_Format.a1 -text A1 -value A1    -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
                     radiobutton $f_DIN_Format.a0 -text A0 -value A0    -variable lib_gui::stageFormat  -command {puts $lib_gui::stageFormat}
@@ -916,11 +929,84 @@
                      $f_Scale.s050 \
                      $f_Scale.s100
             }
+            
             pack $f_DIN_Format $f_Scale -side left
             
             button     $baseFrame.update \
                         -text "update" \
                         -command {lib_gui::notebook_formatCanvas  $lib_gui::stageFormat  $lib_gui::stageScale}
+            pack $baseFrame.update -expand yes -fill x            
+    }
+
+
+        #-------------------------------------------------------------------------
+           #  change FrameJig Version 
+           #
+        proc EXPIRE_change_FrameJig_EXPIRE  {{type {}}}  {
+                variable noteBook_top
+
+                set currentTab [$noteBook_top select]
+                set varName    [notebook_getVarName $currentTab]
+                set cv_Name    [notebook_getWidget  $varName]
+                    # puts "  notebook_refitCanvas: varName: $varName"
+                if { $varName == {} } {
+                        puts "     change_FrameJig::varName: $varName ... undefined"
+                        return
+                }
+                
+                puts "\n -------------------------"
+                puts " <D> $::APPL_Config(FrameJigType)"
+                set myList [ project::flatten_nestedList $::APPL_Config(list_FrameJigTypes) $::APPL_Config(list_FrameJigTypes)]
+                puts " <D> $myList"
+                set index [lsearch $myList $::APPL_Config(FrameJigType)]
+                puts " <D> $index"
+                if {$index <= 0} {
+                  puts "    ... $type   [lindex $myList $index] [lindex $myList $index+1] "
+                }
+                set ::APPL_Config(FrameJigType) [lindex $myList $index+1]
+                puts " <D> $::APPL_Config(FrameJigType) "
+                set canvasUpdate($varName) [ expr $::APPL_Config(canvasCAD_Update) -1 ]
+                notebook_updateCanvas force
+        }
+
+
+    #-------------------------------------------------------------------------
+       #  create menue to change change FrameJig Version 
+       #
+    proc change_FrameJig {cv y}  {
+            variable noteBook_top
+            
+            set cv_Name [lindex [split $cv .] end-1]
+              # puts "   ... \$cv $cv"
+              # puts "   ... \$cv_Name $cv_Name"
+            
+            if {[ $cv find withtag __Select__FrameJig__ ] == {} } {
+                    catch     {  set baseFrame [frame .f_jig_$cv_Name  -relief raised -border 1]
+                                $cv create window 27 [expr $y+16] \
+                                        -window $baseFrame \
+                                        -anchor nw \
+                                        -tags __Select__FrameJig__
+                                frame $baseFrame.select
+                                pack  $baseFrame.select
+                            }
+            } else {
+                    $cv delete     __Select__FrameJig__
+                    $cv dtag       __Select__FrameJig__
+                    destroy        .f_jig_$cv_Name
+                    return
+            }
+            
+            set f_FrameJig    [frame $baseFrame.select.jigType ]
+            foreach jig $::APPL_Config(list_FrameJigTypes) {
+                radiobutton     $f_FrameJig.$jig -text $jig -value $jig  -anchor w  -variable ::APPL_Config(FrameJigType)  -command {}
+                pack $f_FrameJig.$jig -expand yes -fill x -side top
+            }
+            pack $f_FrameJig -side left
+            
+            button  $baseFrame.update \
+                        -text "update" \
+                        -command { lib_gui::updateFrameJig }
+
             pack $baseFrame.update -expand yes -fill x            
     }
 
@@ -936,9 +1022,9 @@
                 
             switch $answer {
                 cancel    return                
-                ok        {    frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Config(root_ProjectDOM)
+                ok        { frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Config(root_ProjectDOM)
                             lib_gui::fill_canvasCAD cv_Custom00 
-                        }
+                          }
             }
     }
 
@@ -1009,6 +1095,22 @@
             notebook_updateCanvas force
     }
 
+    #-------------------------------------------------------------------------
+       #  change type of Frame Jig dimensioning
+       #
+    proc updateFrameJig {} {
+            variable noteBook_top
+            
+            set currentTab [$noteBook_top select]
+            set varName    [notebook_getVarName $currentTab]
+            set cv_Name    [notebook_getWidget  $varName]
+            puts "   ... \$varName $varName"
+            puts "   ... \$cv_Name $cv_Name"   
+
+            set canvasUpdate($varName) [ expr $::APPL_Config(canvasCAD_Update) -1 ]
+            lib_gui::notebook_updateCanvas force
+    }
+    
     #-------------------------------------------------------------------------
        #  load Template from File
        #

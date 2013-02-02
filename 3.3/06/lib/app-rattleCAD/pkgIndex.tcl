@@ -24,6 +24,7 @@ package ifneeded   rattleCAD  3.3 "\
         [list source  [file join $dir lib_tube.tcl]]; \
         [list source  [file join $dir lib_cv_custom.tcl]]; \
         [list source  [file join $dir lib_cv_customRearMockup.tcl]]; \
+        [list source  [file join $dir lib_cv_customFrameJig.tcl]]; \
         [list source  [file join $dir lib_cv_customUpdate.tcl]]; \
    "
 

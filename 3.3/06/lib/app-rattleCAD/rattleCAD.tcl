@@ -69,6 +69,9 @@
                         PROJECT_Name        {}
                         PROJECT_File        {}
                         PROJECT_Save        {0}
+                        
+                        TemplateType        {}
+                        FrameJigType        {}
 
                         BASE_Dir            {}
                         ROOT_Dir            {}
@@ -78,12 +81,16 @@
                         EXPORT_Dir          {}
                         EXPORT_HTML         {}
                         
+                        user_InitDOM        {}
                         root_InitDOM        {}
                         root_ProjectDOM     {}
                         
                         canvasCAD_Update    {0}
                         window_Size         {0}
                         window_Update       {0}
+                        
+                        list_FrameJigTypes  {}
+                        list_TemplateTypes  {}
                         
                         list_ForkTypes      {}
                         list_BrakeTypes     {}
@@ -186,6 +193,7 @@
         
         variable APPL_Config
         set root_InitDOM     $APPL_Config(root_InitDOM)
+        set user_InitDOM    {}
         
         
             # --- fill ICON - Array
@@ -206,19 +214,43 @@
             set lib_gui::canvasGeometry(width)     [ $node getAttribute {width} ]
             set lib_gui::canvasGeometry(height)    [ $node getAttribute {height} ]    
 
+
+    
             
             # --- get TemplateFile - Names
             #
         set node    [ $root_InitDOM selectNodes /root/Template/Road ]
-            set APPL_Config(TemplateRoad_default)  [file join $APPL_Config(CONFIG_Dir) [$node asText] ]
+        set APPL_Config(TemplateRoad_default)  [file join $APPL_Config(CONFIG_Dir) [$node asText] ]
         set node    [ $root_InitDOM selectNodes /root/Template/MTB ]
-            set APPL_Config(TemplateMTB_default)   [file join $APPL_Config(CONFIG_Dir) [$node asText] ]
-                
-                
+        set APPL_Config(TemplateMTB_default)   [file join $APPL_Config(CONFIG_Dir) [$node asText] ]
+        
+        
             # --- get Template - Type to load
             #
         set node    [ $root_InitDOM selectNodes /root/Startup/TemplateFile ]
-            set APPL_Config(TemplateType) [$node asText]
+        set APPL_Config(TemplateType) [$node asText]
+        
+        
+            # --- get FrameJig - Type to load
+            #
+        set node    [ $root_InitDOM selectNodes /root/Startup/FrameJigType ]
+        set APPL_Config(FrameJigType) [$node asText]
+        
+        
+            # -- check user settings in $::APPL_Config(USER_Dir)/rattleCAD_init.xml  ----
+            #
+        if {[file exists [file join $::APPL_Config(USER_Dir) rattleCAD_init.xml ] ]} {
+              set ::APPL_Config(user_InitDOM)  [ lib_file::get_XMLContent     [file join $::APPL_Config(USER_Dir) rattleCAD_init.xml ] ]
+              puts ""
+              puts "     ... user_InitDOM      [file join $::APPL_Config(USER_Dir) rattleCAD_init.xml]"
+                # puts "[$::APPL_Config(user_InitDOM) asXML]"
+              catch {set ::APPL_Config(TemplateType) [[$::APPL_Config(user_InitDOM) selectNodes /root/TemplateFile/text()] asXML]}
+              catch {set ::APPL_Config(FrameJigType) [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameJigType/text()] asXML]}
+              
+              puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
+              puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
+              puts ""
+        }
             
             
             # --- get Template - File to load
@@ -226,7 +258,30 @@
         set APPL_Config(TemplateInit) [lib_file::getTemplateFile   $APPL_Config(TemplateType)]
             
             
-        
+            # --- fill ListBox Values   list_TemplateTypes
+            #
+        set APPL_Config(list_TemplateTypes) {}
+        set node_TemplateTypes [ $root_InitDOM selectNodes /root/Options/TemplateType ]
+        foreach childNode [ $node_TemplateTypes childNodes ] {
+            if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                if {[string index [$childNode nodeName] 0 ] == {_}} continue
+                lappend APPL_Config(list_TemplateTypes)  [$childNode nodeName]
+            }
+        }
+
+
+            # --- fill ListBox Values   list_FrameJigTypes
+            #
+        set APPL_Config(list_FrameJigTypes) {}
+        set node_FrameJigTypes [ $root_InitDOM selectNodes /root/Options/FrameJigType ]
+        foreach childNode [ $node_FrameJigTypes childNodes ] {
+            if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                if {[string index [$childNode nodeName] 0 ] == {_}} continue
+                lappend APPL_Config(list_FrameJigTypes)  [$childNode nodeName]
+            }
+        }
+
+
             # --- fill ListBox Values   list_Rims
             #
         set APPL_Config(list_Rims) {}
@@ -245,7 +300,7 @@
             }
         }
 
-        
+
             # --- fill ListBox Values   list_ForkTypes
             #
         set APPL_Config(list_ForkTypes) {}
@@ -253,7 +308,7 @@
         foreach childNode [ $node_ForkTypes childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                 if {[string index [$childNode nodeName] 0 ] == {_}} continue
-               lappend APPL_Config(list_ForkTypes)  [$childNode nodeName]
+                lappend APPL_Config(list_ForkTypes)  [$childNode nodeName]
             }
         }
 
@@ -265,7 +320,7 @@
         foreach childNode [ $node_ForkBladeTypes childNodes ] {
             if {[$childNode nodeType] == {ELEMENT_NODE}} {
                 if {[string index [$childNode nodeName] 0 ] == {_}} continue
-               lappend APPL_Config(list_ForkBladeTypes)  [$childNode nodeName]
+                lappend APPL_Config(list_ForkBladeTypes)  [$childNode nodeName]
             }
         }
 

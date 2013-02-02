@@ -325,27 +325,14 @@
                         #
                     update_cv_Parameter                         $cv_Name $xy
                         #
-                    createDraftingFrame                         $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [frame_geometry::project_attribute modified]
+                    set drawingTitle    "<- $::APPL_Config(FrameJigType) ->    $::APPL_Config(PROJECT_Name)"
+                    createDraftingFrame                         $cv_Name        $stageFormat    [expr 1/$stageScale]    "$drawingTitle"  [frame_geometry::project_attribute modified]
                         #
-                    frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Rep
-                    frame_visualisation::createDecoration       $cv_Name $xy    FrontWheel_Rep
+                    createFrameJig                              $cv_Name $xy    $stageScale   $::APPL_Config(FrameJigType)
                         #
-                    frame_visualisation::createFrame_Tubes      $cv_Name $xy
+                    $cv_Name         centerContent              {0  15}         {__Frame__  __Decoration__  __CenterLine__  __Dimension__}
                         #
-                    frame_visualisation::createDecoration       $cv_Name $xy    DerailleurRear_ctr
-                        #
-                    createCenterline                            $cv_Name $xy
-                        #
-                    createDimension                             $cv_Name $xy    cline_brake
-                    createDimension                             $cv_Name $xy    cline_framejig
-                    createDimension                             $cv_Name $xy    frameJig_bg
-                        # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
-                    createParameterTable                        $cv_Name $stageScale
-                        # 
-                        #
-                    $cv_Name         centerContent             {0  15}        {__Frame__  __Decoration__  __CenterLine__  __Dimension__}
-                        #
-                    lib_gui::notebook_createButton              $cv_Name        changeFormatScale
+                    lib_gui::notebook_createButton              $cv_Name        {changeFormatScale changeFrameJigVariant}
                         #
                 }
             lib_gui::cv_Custom99 {

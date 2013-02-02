@@ -173,7 +173,9 @@ exec wish "$0" "$@"
 
 
     initValues
-        
+
+    
+
         
         # -- load template ----------
         puts "     ... TemplateType      $APPL_Config(TemplateType)"
@@ -184,6 +186,16 @@ exec wish "$0" "$@"
 
     
         # -- status messages --------
+    puts "\n     APPL_Config(list_TemplateTypes)"
+    foreach entry $APPL_Config(list_TemplateTypes) {
+        puts "        -> $entry"
+    }
+
+    puts "\n     APPL_Config(list_FrameJigTypes)"
+    foreach entry $APPL_Config(list_FrameJigTypes) {
+        puts "        -> $entry"
+    }
+
     puts "\n     APPL_Config(list_ForkTypes)"
     foreach entry $APPL_Config(list_ForkTypes) {
         puts "        -> $entry"
