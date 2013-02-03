@@ -566,11 +566,9 @@
             puts  "               tcl_platform  $::tcl_platform(platform)"
 
             set appCmd {} ;# set as default
-
             switch $::tcl_platform(platform) {
                 "windows" {
                         package require registry 1.1
-
                         set root HKEY_CLASSES_ROOT
 
                             # Get the application key for HTML files
@@ -586,17 +584,44 @@
                                     return
                         }
                         puts  "               appCmd  $appCmd"
-
                 }
             }
-
-                # puts  "               appCmd:"
-                # puts "                         $appCmd"
-
             return $appCmd
-
     }
 
+    #-------------------------------------------------------------------------
+       #  get ghostscript Installation
+       #    http://wiki.tcl.tk/557
+       #
+    proc init_ghostScript {} {  
+    
+        switch $::tcl_platform(platform) {
+            "windows" {
+                    package require registry 1.1
+
+                    set root "HKEY_LOCAL_MACHINE\\SOFTWARE\\GPL Ghostscript"
+                    set appKeys [registry keys $root]
+                    set appKey  [lindex [lsort -decreasing $appKeys] 0]
+                      # puts  "               appKeys  $appKeys"
+                    puts  "               appKey   $appKey"
+                   
+                        # Get the command for opening HTML files
+                    if { [catch {     set appPATH [registry get $root\\$appKey GS_LIB]      } errMsg] } {
+                                puts  "         --<E>----------------------------------------------------"
+                                puts  "           <E> ... search for: $root\\$appKey\\GS_LIB"
+                                puts  "           <E> could not find ghostscript Installation"
+                                puts  "         --<E>----------------------------------------------------"
+                                return {}
+                    }
+                      # puts  "               appPATH  $appPATH"              
+                      # puts  "               env(PATH) $::env(PATH)"
+                    set ::env(PATH) $appPATH\;$::env(PATH)
+                      # puts  "               env(PATH) $::env(PATH)"
+                    return $appPATH
+                }
+            default {}
+        }
+    }
 
     #-------------------------------------------------------------------------
         #  get user project directory
@@ -641,6 +666,143 @@
             return $checkDir
     }
 
+    #-------------------------------------------------------------------------
+       #  summ up ps-Files and create pdf
+       #
+    proc create_summaryPDF {exportDir {postEvent {open}}} {
+            puts "\n"
+            puts  "    ------------------------------------------------"
+            puts  "      create_summaryPDF: "
+            puts  "         ... $exportDir"
+            puts  ""
+
+            set ps_Dict   [dict create directory $exportDir fileFormat {}]
+          
+              #-------------------------------------------------------------------------
+                # check ghostscript installation
+                #
+            init_ghostScript
+            set ghostScript   "gswin32c.exe"
+        
+              #-------------------------------------------------------------------------
+                # get_file_Info
+                #
+            set psFiles [glob -directory $exportDir *.ps]
+            foreach psFile $psFiles {
+                # puts "\n ------------------------"
+                puts "            ... $psFile"
+                  # puts "         ... [file tail $psFile]"
+                set fp [open $psFile r]
+                set file_data [read $fp]
+                close $fp
+                
+                     # Process data file
+                set data [split $file_data "\n"]
+                foreach line $data {
+                    set searchString {%%BoundingBox: }
+                    if {[string equal  -length [string length $searchString] $line $searchString] } {
+                          # puts "   ... $searchString [string length $searchString]"
+                          # puts "   ... $line"
+                        set values [split [string range  $line [string length $searchString] end] ]
+                          # puts "      -> $values"
+                        foreach {y0 x0 y1 x1} $values break
+                          # puts "        -> $x0 $y0"
+                          # puts "        -> $x1 $y1"
+                        set pageWidth     [expr $x1 - $x0]
+                        set pageHeight    [expr $y1 - $y0]
+                        set formatString  [format "%s_%s" $pageWidth $pageHeight]
+                          # puts "        -> $pageWidth x $pageHeight"
+                          # puts "\n"
+                    }
+                    
+                    if {[string equal  $line {%%EndComments}]} break
+                }
+                
+                set keyName   [file rootname [file tail $psFile]]
+                set attrList  [list x0 $x0 \
+                                    y0 $y0 \
+                                    x1 $x1 \
+                                    y1 $y1 \
+                                    pageWidth $pageWidth \
+                                    pageHeight $pageHeight ]
+
+                if {![dict exists $ps_Dict fileFormat $formatString]} {
+                      # puts "   ... $formatString missing"
+                    dict set ps_Dict fileFormat $formatString [dict create $keyName $attrList]
+                } else {
+                      # puts "   ... $formatString exists"
+                    dict set ps_Dict fileFormat  $formatString $keyName $attrList
+                }
+                #project::pdict  $ps_Dict 
+                                 
+            }
+                #
+            project::pdict  $ps_Dict   
+                # 
+            set pdf_fileList {}            
+            foreach fileFormat [dict keys [dict get $ps_Dict fileFormat]] {
+                puts "\n"
+                puts " -------------------------"
+                puts "     ... $fileFormat"
+                
+                set fileString {}
+                foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
+                      puts "         ... $fileKey"   
+                      set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
+                      append fileString " " \"$inputFile\"
+                }        
+                
+
+                foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
+                        # puts "         ... $fileKey"
+                      set x0          [dict get $ps_Dict fileFormat $fileFormat $fileKey x0]
+                      set y0          [dict get $ps_Dict fileFormat $fileFormat $fileKey y0]
+                      set pageWidth   [dict get $ps_Dict fileFormat $fileFormat $fileKey pageWidth]
+                      set pageHeight  [dict get $ps_Dict fileFormat $fileFormat $fileKey pageHeight]
+                      set offSet_X    [expr int (-1 * $x0)]
+                      set offSet_Y    [expr int (-1 * $y0)]
+                        # puts "       ... \$pageWidth  $pageWidth"
+                        # puts "       ... \$pageHeight $pageHeight"
+                        # puts "       ... \$offSet_X   $offSet_X"
+                        # puts "       ... \$offSet_Y   $offSet_Y"
+                      set pg_Format   [format "%sx%s"                                   [expr 10 * $pageHeight] [expr 10 * $pageWidth]]
+                      set pg_Offset   [format "<</PageOffset \[%i %i\]>> setpagedevice" $offSet_Y $offSet_X]
+                }
+                
+                set outputFile  [file nativename [file join $exportDir summary_$fileFormat.pdf]]
+                set batchFile   [file join $exportDir summary_$fileFormat.bat]
+
+                
+                set fileId [open $batchFile "w"]
+                      puts -nonewline $fileId $ghostScript
+                      puts -nonewline $fileId " -dNOPAUSE "
+                      puts -nonewline $fileId " -sDEVICE=pdfwrite "
+                      puts -nonewline $fileId " -g$pg_Format "
+                      puts -nonewline $fileId " -sOutputFile=\"$outputFile\" "
+                      puts -nonewline $fileId " -c \"$pg_Offset\" "
+                      puts -nonewline $fileId " -dBATCH $fileString "
+                close $fileId
+
+                exec $batchFile
+                
+                lappend pdf_fileList [file normalize $outputFile]            
+            }        
+            
+            
+        
+            if {$postEvent == {open}} {
+                puts "\n\n\n"
+                puts "    ------------------------------------------------"
+                foreach pdfFile $pdf_fileList {
+                    puts "      ... open $pdfFile"
+                    catch {lib_file::openFile_byExtension "$pdfFile"}
+                }
+            }
+            puts "    ------------------------------------------------"
+            puts ""
+                          
+    }
+    
     
     
     #-------------------------------------------------------------------------

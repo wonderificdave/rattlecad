@@ -79,6 +79,7 @@
                         IMAGE_Dir           {}
                         USER_Dir            {}
                         EXPORT_Dir          {}
+                        EXPORT_PDF          {}
                         EXPORT_HTML         {}
                         
                         user_InitDOM        {}

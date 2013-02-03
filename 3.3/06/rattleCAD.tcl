@@ -63,7 +63,7 @@ exec wish "$0" "$@"
     lappend auto_path           [file join $BASE_Dir lib]
     
     package require   rattleCAD  3.3 
-    package require   canvasCAD  0.29
+    package require   canvasCAD  0.30
     package require   extSummary 0.1
 
 
@@ -94,6 +94,7 @@ exec wish "$0" "$@"
     set APPL_Config(USER_Dir)         [lib_file::check_user_dir rattleCAD]    
     set APPL_Config(EXPORT_Dir)       [lib_file::check_user_dir rattleCAD/export]
     set APPL_Config(EXPORT_HTML)      [lib_file::check_user_dir rattleCAD/html]
+    set APPL_Config(EXPORT_PDF)       [lib_file::check_user_dir rattleCAD/pdf]
 
 
         # -- Version Info Summary  ---------------
@@ -121,6 +122,7 @@ exec wish "$0" "$@"
         puts "    APPL_Config(USER_Dir)     $APPL_Config(USER_Dir)"
         puts "    APPL_Config(EXPORT_Dir)   $APPL_Config(EXPORT_Dir)"
         puts "    APPL_Config(EXPORT_HTML)  $APPL_Config(EXPORT_HTML)"
+        puts "    APPL_Config(EXPORT_PDF)   $APPL_Config(EXPORT_PDF)"
         puts "  ----------------------------------------------"
         puts ""
 

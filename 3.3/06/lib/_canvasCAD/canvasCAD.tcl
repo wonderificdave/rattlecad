@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.29
+package provide canvasCAD 0.30
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -482,8 +482,8 @@ package require tdom
                     # ------------------------            
                 readSVG {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     switch [llength $argList] {
-                                        2 {    return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ] }
-                                        3 {    return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
+                                        2 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ] }
+                                        3 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
                                         4 { return [ readSVG $canvasDOMNode [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
                                     }
                                 }
