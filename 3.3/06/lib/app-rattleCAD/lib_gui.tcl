@@ -627,12 +627,16 @@
                             select_canvasCAD $cadCanv
                             set w			[$cadCanv getNodeAttr	Canvas	path]			
                               # puts "   ->    $w"
-                            $w lower {__NB_Button__} all
-                            $w lower {__cvEdit__}    all
+                            update
+                            $w lower {__NB_Button__}        all
+                            $w lower {__cvEdit__}           all
+                            $w lower {__Select__SubMenue__} all
                             update
                             notebook_exportPS $exportDir noOpen
-                            $w raise {__NB_Button__} all
-                            $w raise {__cvEdit__}    all
+                            $w raise {__NB_Button__}        all
+                            $w raise {__cvEdit__}           all
+                            $w raise {__Select__SubMenue__} all
+                            update
                         }
                         lib_file::create_summaryPDF $exportDir
                     }
@@ -660,13 +664,16 @@
             }
 
                 # --- get stageScale
-            set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]    
-            set scaleFactor    [ expr round([ expr 1 / $stageScale ]) ]
+            set stageScale    [ $cv_Name  getNodeAttr  Stage    scale ]    
+            set scaleFactor   [ expr round([ expr 1 / $stageScale ]) ]
+                
+                # --- get stageHeight
+            set stageHeight   [ $cv_Name  getNodeAttr  Stage    height ]    
 
                 # --- set timeStamp
-            set timeString     [ format "printed: %s" [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ] ]
-            set textPos        [ vectormath::scalePointList {0 0} {10 7} $scaleFactor ]
-            set timeStamp    [ $cv_Name create draftText $textPos  -text $timeString -size 2.5 -anchor sw ]
+            set timeString    [ format "timestamp: %s" [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ] ]
+            set textPos       [ vectormath::scalePointList {0 0} [list 10 [expr $stageHeight - 10]] $scaleFactor ]
+            set timeStamp     [ $cv_Name create draftText $textPos  -text $timeString -size 2.5 -anchor sw ]
 
                 # --- set exportFile
             set stageTitle    [ $cv_Name  getNodeAttr  Stage  title ]
@@ -678,10 +685,11 @@
                 # --- export content to File
             puts "    ------------------------------------------------"
             puts "      export PS - Content to    $exportFile \n"
-            puts "      notebook_exportPS   $currentTab "
-            puts "             currentTab-Parent  [winfo parent $currentTab]  "
+            puts "         notebook_exportPS      $currentTab "
             puts "             currentTab-Parent  [winfo name   $currentTab]  "
-            puts "             canvasCAD Object   $cv_Name  "
+            puts "             currentTab-Parent  [winfo parent $currentTab]  "
+            puts "             canvasCAD Object   [$cv_Name getNodeAttr	Canvas	path]"
+            puts "                          ...   $cv_Name"
             
                 # $cv_Name print $exportFile
             set exportFile [$cv_Name print $exportFile]
@@ -728,10 +736,11 @@
                 # --- export content to File
             puts "    ------------------------------------------------"
             puts "      export SVG - Content to    $exportFile \n"
-            puts "      notebook_exportSVG   $currentTab "
-            puts "             currentTabp-Parent  [winfo parent $currentTab]  "
-            puts "             currentTabp-Parent  [winfo name   $currentTab]  "
-            puts "             canvasCAD Object    $cv_Name  "
+            puts "         notebook_exportSVG     $currentTab "
+            puts "             currentTab-Parent  [winfo name   $currentTab]  "
+            puts "             currentTab-Parent  [winfo parent $currentTab]  "
+            puts "             canvasCAD Object   [$cv_Name getNodeAttr	Canvas	path]"
+            puts "                          ...   $cv_Name"
             
             set exportFile [$cv_Name exportSVG $exportFile]
             
@@ -772,10 +781,11 @@
                 # --- export content to File
             puts "    ------------------------------------------------"
             puts "      export DXF - Content to    $exportFile \n"
-            puts "      notebook_exportDXF   $currentTab "
-            puts "             currentTabp-Parent  [winfo parent $currentTab]  "
-            puts "             currentTabp-Parent  [winfo name   $currentTab]  "
-            puts "             canvasCAD Object    $cv_Name  "
+            puts "         notebook_exportDXF     $currentTab "
+            puts "             currentTab-Parent  [winfo name   $currentTab]  "
+            puts "             currentTab-Parent  [winfo parent $currentTab]  "
+            puts "             canvasCAD Object   [$cv_Name getNodeAttr	Canvas	path]"
+            puts "                          ...   $cv_Name"
             
             set exportFile [$cv_Name exportDXF $exportFile]
             
@@ -917,20 +927,19 @@
             set     lib_gui::stageFormat    A4
             set     lib_gui::stageScale        0.20        
             
-            if {[ $cv find withtag __Select__Format_Scale__ ] == {} } {
-                    catch     {    set baseFrame [frame .f_format_$cv_Name  -relief raised -border 1]
-                                $cv create window 27 [expr $y+16] \
-                                        -window $baseFrame \
-                                        -anchor nw \
-                                        -tags __Select__Format_Scale__
-                                frame $baseFrame.select
-                                pack  $baseFrame.select
-                                        
-                            }
+            if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
+                    catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
+                            $cv create window 27 [expr $y+16] \
+                                    -window $baseFrame \
+                                    -anchor nw \
+                                    -tags __Select__SubMenue__
+                            frame $baseFrame.select
+                            pack  $baseFrame.select
+                          }
             } else {
-                    $cv delete     __Select__Format_Scale__
-                    $cv dtag       __Select__Format_Scale__
-                    destroy        .f_format_$cv_Name
+                    $cv delete     __Select__SubMenue__
+                    $cv dtag       __Select__SubMenue__
+                    destroy        .f_subMenue_$cv_Name
                     #$cv.f_format destroy
                     return
             }
@@ -965,10 +974,10 @@
             
             pack $f_DIN_Format $f_Scale -side left
             
-            button     $baseFrame.update \
+            button  $baseFrame.update \
                         -text "update" \
                         -command {lib_gui::notebook_formatCanvas  $lib_gui::stageFormat  $lib_gui::stageScale}
-            pack $baseFrame.update -expand yes -fill x            
+            pack    $baseFrame.update -expand yes -fill x            
     }
 
 
@@ -982,19 +991,19 @@
               # puts "   ... \$cv $cv"
               # puts "   ... \$cv_Name $cv_Name"
             
-            if {[ $cv find withtag __Select__FrameJig__ ] == {} } {
-                    catch     {  set baseFrame [frame .f_jig_$cv_Name  -relief raised -border 1]
-                                $cv create window 27 [expr $y+16] \
-                                        -window $baseFrame \
-                                        -anchor nw \
-                                        -tags __Select__FrameJig__
-                                frame $baseFrame.select
-                                pack  $baseFrame.select
-                            }
+            if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
+                    catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
+                            $cv create window 27 [expr $y+16] \
+                                    -window $baseFrame \
+                                    -anchor nw \
+                                    -tags __Select__SubMenue__
+                            frame $baseFrame.select
+                            pack  $baseFrame.select
+                          }
             } else {
-                    $cv delete     __Select__FrameJig__
-                    $cv dtag       __Select__FrameJig__
-                    destroy        .f_jig_$cv_Name
+                    $cv delete     __Select__SubMenue__
+                    $cv dtag       __Select__SubMenue__
+                    destroy        .f_subMenue_$cv_Name
                     return
             }
             

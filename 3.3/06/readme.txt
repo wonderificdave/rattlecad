@@ -1,4 +1,12 @@
 
+3.3.06.28   - 2013.02.03 
+-------------------------------------------------------------------------------
+    feature:
+        ... export pdf, cleanup menue frames
+        ... export ps,  move timestamp to top right corner
+        ... update chainstay details 
+
+
 3.3.06.27   - 2013.02.03 
 -------------------------------------------------------------------------------
     feature:

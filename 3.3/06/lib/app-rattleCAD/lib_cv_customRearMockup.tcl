@@ -948,11 +948,11 @@
             create_ControlCurves      
 
                # -- create tubeProfile Edit
-            create_tubeProfile_Edit  {0 115}
+            create_tubeProfile_Edit  {0 100}
 
                # -- create centerLine Edit
             switch -exact $project::Rendering(ChainStay) {
-                   {bent}   {create_centerLine_Edit   $ChainStay(ctrLines) {0 75}}
+                   {bent}   {create_centerLine_Edit   $ChainStay(ctrLines) {0 70}}
                    default {}
             }
    
