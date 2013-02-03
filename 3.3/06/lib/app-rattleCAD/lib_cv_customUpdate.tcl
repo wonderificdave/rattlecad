@@ -155,7 +155,7 @@
                         #
                     createRearMockup                            $cv_Name
                         #
-                    $cv_Name            centerContent           { 0  25}         {__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
+                    $cv_Name            centerContent           { 0  5}          {__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
                         #
                     lib_gui::notebook_createButton              $cv_Name         {changeFormatScale}
                         #
