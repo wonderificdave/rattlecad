@@ -115,9 +115,9 @@
 			return {_noFile_}
 		}
 	}
-   
+
+
 	proc canvasCAD::start_psview {ps_file} {
-          
      
 			set postsript_ext   [file extension $ps_file]
 	  
@@ -195,4 +195,124 @@
 			}
 			return
 	}
+
+
+  proc round {number {digits 0}} {
+      if { $digits} {
+          return [expr {round(pow(10,$digits)*$number)/pow(10,$digits)}]
+      } else {
+          return [ format "%.0f" [expr {round(pow(10,$digits)*$number)/pow(10,$digits)}]]
+      }
+  }
+
+
+  proc canvasCAD::get_DIN_Length {length} {
+      variable DIN_Format
+      
+      set DIN_Lengths [dict keys [dict get $DIN_Format ps]]
+        # puts "                -> $DIN_Lengths"
+      set lengthTop     [expr 1.02 * $length]
+      set lengthBottom  [expr 0.98 * $length]
+      foreach DIN_Length $DIN_Lengths {
+          if {$lengthTop > $DIN_Length} {
+                # puts "         -> $lengthTop > $DIN_Length > $lengthBottom"
+              if {$lengthBottom < $DIN_Length} {
+                  # puts "    got it:  $length -> $DIN_Length"
+                  return $DIN_Length
+              } else {
+                  # puts "    exception:  $length -> $DIN_Length"
+                  return $length
+              }
+          }
+      }
+     return 
+  }
+
+
+  proc canvasCAD::init_DIN_Format {} {
+      variable DIN_Format
+      set DIN_Format \
+            [dict create mm  \
+                            [list \
+                                4A0 	2378 \
+                                2A0 	1682 \
+                                A0 	  1189 \
+                                A1 	   841 \
+                                A2 	   594 \
+                                A3 	   420 \
+                                A4 	   297 \
+                                A5 	   210 \
+                                A6 	   148 \
+                                A7 	   105 \
+                                A8 	    74 \
+                                A9 	    52 \
+                                A10 	  37 \
+                            ]     
+                        ]
+      set psValues {}
+      foreach landscapeKey [dict keys [dict get $DIN_Format mm]] {
+          set landscapeWidth    [dict get $DIN_Format mm $landscapeKey]
+          set landscapeWidthPS  [expr  10 * [round [expr 72 * 1.0 * $landscapeWidth / 25.4]]]
+            # puts "          ... $landscapeKey - $landscapeWidth -> $landscapeWidthPS"
+          append psValues "$landscapeWidthPS $landscapeKey "
+      }
+      dict set DIN_Format ps $psValues
+  }
   
+  proc canvasCAD::init_ghostScript {} {  
+      variable ghostScriptExec
+      
+      switch $::tcl_platform(platform) {
+          "windows" {
+                  package require registry 1.1
+
+                  set root "HKEY_LOCAL_MACHINE\\SOFTWARE\\GPL Ghostscript"
+                  if { [catch {     set appKeys [registry keys $root]      } errMsg] } {
+                        puts  "         --<E>----------------------------------------------------"
+                        puts  "           <E> ... search for: $root"
+                        puts  "           <E>    ... could not get ghostscript Installation"
+                        puts  "         --<E>----------------------------------------------------"
+                        return {}
+                  } else {
+                        set appKey  [lindex [lsort -decreasing $appKeys] 0]
+                        puts  "               appKey   $appKey"
+                          # puts  "               appKeys  $appKeys"
+                  }
+                 
+                      # Get the command for opening HTML files
+                  if { [catch {     set appPATH [registry get $root\\$appKey GS_LIB]      } errMsg] } {
+                        puts  "         --<E>----------------------------------------------------"
+                        puts  "           <E> ... search for: $root\\$appKey\\GS_LIB"
+                        puts  "           <E>    ... could not get ghostscript Installation"
+                        puts  "         --<E>----------------------------------------------------"
+                        return {}
+                  }
+                  
+                  # init_ghostScript
+                  set ghostScriptName   "gswin32c.exe"
+                  
+                  # -------------
+                  foreach directory [split $appPATH \;] {
+                      set executable [file join $directory $ghostScriptName]
+                        # puts "$executable"
+                      if {[file executable $executable]} {
+                          set ghostScriptExec $executable
+                          # puts "          ... \$ghostScriptExec $ghostScriptExec"
+                          return $ghostScriptExec
+                      }
+
+                  }
+                  exit
+                    # puts  "               appPATH  $appPATH"              
+                    # puts  "               env(PATH) $::env(PATH)"
+                  set ::env(PATH) $appPATH\;$::env(PATH)
+                    # puts  "               env(PATH) $::env(PATH)"
+                  return $appPATH
+              }
+          default {}
+      }
+  } 
+  
+  
+  canvasCAD::init_ghostScript
+  canvasCAD::init_DIN_Format

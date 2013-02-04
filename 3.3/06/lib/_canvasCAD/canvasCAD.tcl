@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.30
+package provide canvasCAD 0.31
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -76,6 +76,9 @@ package require tdom
                 fconfigure    $fp -encoding utf-8
             set __packageXML [read $fp]
                 close         $fp
+                
+            variable DIN_Format {}
+            variable ghostScriptExec {}            
             
             set __packageDoc  [dom parse $__packageXML]
             set __packageRoot [$__packageDoc documentElement]
@@ -794,12 +797,11 @@ package require tdom
         }
 
     
-    
-    
     } ;# end of namespace
 
 
     # --------------------------------------------
-        # import dog to namespacd ::
+        # import newCanvas to namespace ::
     namespace import canvasCAD::newCanvas  
+
     

@@ -589,39 +589,7 @@
             return $appCmd
     }
 
-    #-------------------------------------------------------------------------
-       #  get ghostscript Installation
-       #    http://wiki.tcl.tk/557
-       #
-    proc init_ghostScript {} {  
-    
-        switch $::tcl_platform(platform) {
-            "windows" {
-                    package require registry 1.1
 
-                    set root "HKEY_LOCAL_MACHINE\\SOFTWARE\\GPL Ghostscript"
-                    set appKeys [registry keys $root]
-                    set appKey  [lindex [lsort -decreasing $appKeys] 0]
-                      # puts  "               appKeys  $appKeys"
-                    puts  "               appKey   $appKey"
-                   
-                        # Get the command for opening HTML files
-                    if { [catch {     set appPATH [registry get $root\\$appKey GS_LIB]      } errMsg] } {
-                                puts  "         --<E>----------------------------------------------------"
-                                puts  "           <E> ... search for: $root\\$appKey\\GS_LIB"
-                                puts  "           <E> could not find ghostscript Installation"
-                                puts  "         --<E>----------------------------------------------------"
-                                return {}
-                    }
-                      # puts  "               appPATH  $appPATH"              
-                      # puts  "               env(PATH) $::env(PATH)"
-                    set ::env(PATH) $appPATH\;$::env(PATH)
-                      # puts  "               env(PATH) $::env(PATH)"
-                    return $appPATH
-                }
-            default {}
-        }
-    }
 
     #-------------------------------------------------------------------------
         #  get user project directory
@@ -681,8 +649,14 @@
               #-------------------------------------------------------------------------
                 # check ghostscript installation
                 #
-            init_ghostScript
-            set ghostScript   "gswin32c.exe"
+            # init_ghostScript
+            if {$canvasCAD::ghostScriptExec != {}} {
+                set ghostScript $canvasCAD::ghostScriptExec  
+                puts  "         ... $ghostScript"
+            } else {
+                tk_messageBox -title "PDF Export" -message "Ghostscript Error:\n     ... could not initialize ghostScript instalation" -icon warning
+                return
+            }
         
               #-------------------------------------------------------------------------
                 # get_file_Info
@@ -710,7 +684,9 @@
                           # puts "        -> $x1 $y1"
                         set pageWidth     [expr $x1 - $x0]
                         set pageHeight    [expr $y1 - $y0]
-                        set formatString  [format "%s_%s" $pageWidth $pageHeight]
+                          # set pageWidth     [canvasCAD::get_DIN_Length $pageWidth]
+                          # set pageHeight    [canvasCAD::get_DIN_Length $pageHeight]
+                        set formatString  [format "%s_%s" [canvasCAD::get_DIN_Length [expr 10 * $pageWidth]] [canvasCAD::get_DIN_Length [expr 10 * $pageHeight]]]
                           # puts "        -> $pageWidth x $pageHeight"
                           # puts "\n"
                     }
