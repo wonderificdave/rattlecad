@@ -686,7 +686,7 @@
                         set pageHeight    [expr $y1 - $y0]
                           # set pageWidth     [canvasCAD::get_DIN_Length $pageWidth]
                           # set pageHeight    [canvasCAD::get_DIN_Length $pageHeight]
-                        set formatString  [format "%s_%s" [canvasCAD::get_DIN_Length [expr 10 * $pageWidth]] [canvasCAD::get_DIN_Length [expr 10 * $pageHeight]]]
+                        set formatString  [format "%s_%s" [canvasCAD::get_DIN_Length $pageWidth] [canvasCAD::get_DIN_Length $pageHeight]]
                           # puts "        -> $pageWidth x $pageHeight"
                           # puts "\n"
                     }
@@ -749,7 +749,7 @@
 
                 
                 set fileId [open $batchFile "w"]
-                      puts -nonewline $fileId $ghostScript
+                      puts -nonewline $fileId "\"[file nativename $ghostScript]\""
                       puts -nonewline $fileId " -dNOPAUSE "
                       puts -nonewline $fileId " -sDEVICE=pdfwrite "
                       puts -nonewline $fileId " -g$pg_Format "

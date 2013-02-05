@@ -74,10 +74,10 @@
                         createJigDimension    $cv_Name $xy    bg_rattleCAD 
                     }
 
-                concept_1 -
+                geldersheim -
                 default {         
-                        createJigDimension    $cv_Name $xy    cline_concept_1
-                        createJigDimension    $cv_Name $xy    bg_concept_1 
+                        createJigDimension    $cv_Name $xy    cline_geldersheim
+                        createJigDimension    $cv_Name $xy    bg_geldersheim 
                     }
             }
                 #
@@ -128,7 +128,7 @@
                           # puts "\n"
                     }
                     
-                concept_1 {                          
+                geldersheim {                          
                         set FrameJig(HeadTube)  [ vectormath::intersectPerp       $Steerer(Stem)  $Steerer(Fork)  $BottomBracket(Position) ]
                         set FrameJig(SeatTube)  $BottomBracket(Position)
                         
@@ -140,7 +140,7 @@
                         set angle_SeatChain     [ vectormath::angle $RearWheel(Position) $BottomBracket(Position) $help_bb]                        
                         set angle_HeadTube      [ vectormath::angle $BottomBracket(Position) $help_fk $Steerer(Stem)]                        
                         set FrameJig(Angles)    [list $angle_SeatTube $angle_SeatChain $angle_HeadTube]
-                          # puts "\n   ... concept_1"
+                          # puts "\n   ... geldersheim"
                           # puts "   ... \$FrameJig(HeadTube) $FrameJig(HeadTube)"
                           # puts "   ... \$FrameJig(SeatTube) $FrameJig(SeatTube)"
                           # puts "\n"
@@ -235,7 +235,7 @@
                               # $cv_Name create centerline  [ project::flatten_nestedList $FrameJig(HeadTube) $RearWheel(Position)] \
                                                                                       -fill darkred   -width 0.25     -tags __CenterLine__
                         }
-                cline_concept_1 {
+                cline_geldersheim {
                               set help_bb             [ vectormath::intersectPerp      $FrameJig(HeadTube)    $FrameJig(SeatTube)  $RearWheel(Position) ]
                               set help_fk             [ vectormath::intersectPerp      $Steerer(Stem)  $Steerer(Fork)  $BottomBracket(Position) ]
 
@@ -320,7 +320,7 @@
                                                                                         gray30 ]
                         }
                     # -----------------------
-                bg_concept_1 {
+                bg_geldersheim {
                               # puts "   <D>    ... createJigDimension::bg_rattleCAD ($type)"
                             
                               set help_bb             [ vectormath::intersectPerp       $FrameJig(HeadTube)    $FrameJig(SeatTube)  $RearWheel(Position) ]

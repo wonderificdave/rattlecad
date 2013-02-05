@@ -211,8 +211,8 @@
       
       set DIN_Lengths [dict keys [dict get $DIN_Format ps]]
         # puts "                -> $DIN_Lengths"
-      set lengthTop     [expr 1.02 * $length]
-      set lengthBottom  [expr 0.98 * $length]
+      set lengthTop     [expr 1.01 * $length]
+      set lengthBottom  [expr 0.99 * $length]
       foreach DIN_Length $DIN_Lengths {
           if {$lengthTop > $DIN_Length} {
                 # puts "         -> $lengthTop > $DIN_Length > $lengthBottom"
@@ -252,7 +252,7 @@
       set psValues {}
       foreach landscapeKey [dict keys [dict get $DIN_Format mm]] {
           set landscapeWidth    [dict get $DIN_Format mm $landscapeKey]
-          set landscapeWidthPS  [expr  10 * [round [expr 72 * 1.0 * $landscapeWidth / 25.4]]]
+          set landscapeWidthPS  [round [expr 72 * 1.0 * $landscapeWidth / 25.4]]
             # puts "          ... $landscapeKey - $landscapeWidth -> $landscapeWidthPS"
           append psValues "$landscapeWidthPS $landscapeKey "
       }
