@@ -610,7 +610,8 @@
                 set offset  [vectormath::addVector $ext_Center(ChainStay_DO)  $offset]
                 
                 set textPosition [vectormath::addVector $offset  [list -70 -2.5]]
-                set item  [$ext_cvName create draftText $textPosition -text "ChainStay CenterLine" -size [expr 5/$ext_stageScale]]
+                set item  [$ext_cvName create draftText $textPosition -text "ChainStay CenterLine" -size [expr 5*$ext_stageScale]]
+                # set item  [$ext_cvName create draftText $textPosition -text "ChainStay Profile" -size [expr 5*$ext_stageScale]]
                 $ext_cvName    addtag __CenterLine__ withtag  $item
 
 

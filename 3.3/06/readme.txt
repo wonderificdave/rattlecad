@@ -3,6 +3,8 @@
 -------------------------------------------------------------------------------
     feature:
         ... give exported pdf name of project and ad DIn Format to name
+    debug:
+        ... handle size of label "ChainStay Centerline" on different scales
 
 
 3.3.06.31   - 2013.02.05 
