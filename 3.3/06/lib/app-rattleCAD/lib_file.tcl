@@ -686,7 +686,8 @@
                         set pageHeight    [expr $y1 - $y0]
                           # set pageWidth     [canvasCAD::get_DIN_Length $pageWidth]
                           # set pageHeight    [canvasCAD::get_DIN_Length $pageHeight]
-                        set formatString  [format "%s_%s" [canvasCAD::get_DIN_Length $pageWidth] [canvasCAD::get_DIN_Length $pageHeight]]
+                          # set formatString  [format "%s_%s" [canvasCAD::get_DIN_Length $pageWidth] [canvasCAD::get_DIN_Length $pageHeight]]
+                        set formatString  [canvasCAD::get_DIN_Format $pageWidth  $pageHeight]
                           # puts "        -> $pageWidth x $pageHeight"
                           # puts "\n"
                     }
@@ -717,8 +718,8 @@
             set pdf_fileList {}            
             foreach fileFormat [dict keys [dict get $ps_Dict fileFormat]] {
                 puts "\n"
-                puts " -------------------------"
-                puts "     ... $fileFormat"
+                puts "    ------------------------------------------------"
+                puts "        ... $fileFormat"
                 
                 set fileString {}
                 foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
@@ -744,7 +745,12 @@
                       set pg_Offset   [format "<</PageOffset \[%i %i\]>> setpagedevice" $offSet_Y $offSet_X]
                 }
                 
-                set outputFile  [file nativename [file join $exportDir summary_$fileFormat.pdf]]
+                set fileName  [string map {{ } _ {.xml} {}} $::APPL_Config(PROJECT_Name)]
+                set fileName  [format "%s_%s.pdf" $fileName $fileFormat]
+                set outputFile  [file nativename [file join $exportDir $fileName]]
+                
+                #set outputFile  [file nativename [file join $exportDir summary_$fileFormat.pdf]]
+                
                 set batchFile   [file join $exportDir summary_$fileFormat.bat]
 
                 
@@ -769,6 +775,7 @@
                 puts "\n\n\n"
                 puts "    ------------------------------------------------"
                 foreach pdfFile $pdf_fileList {
+                    puts "\n"
                     puts "      ... open $pdfFile"
                     catch {lib_file::openFile_byExtension "$pdfFile"}
                 }

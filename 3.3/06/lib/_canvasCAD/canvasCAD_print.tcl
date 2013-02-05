@@ -229,6 +229,66 @@
   }
 
 
+  proc canvasCAD::get_DIN_Format {width height} {
+      variable DIN_Format
+      
+      set DIN_Lengths [dict keys [dict get $DIN_Format ps]]
+        # puts "                -> $DIN_Lengths"
+      set widthTop      [expr 1.01 * $width]
+      set widthBottom   [expr 0.99 * $width]
+      set heightTop     [expr 1.01 * $height]
+      set heightBottom  [expr 0.99 * $height]
+      
+      set indexWidth    {}
+      set indexHeight   {}
+      set resultWidth   {}
+      set resultHeight  {}
+      
+      foreach DIN_Length $DIN_Lengths {
+          if {$widthTop > $DIN_Length} {
+              if {$widthBottom < $DIN_Length} {
+                  set indexWidth [dict get $DIN_Format ps $DIN_Length]
+                  break
+              } else {
+                  set resultWidth $width
+                  break
+              }
+          }
+      }
+      
+      foreach DIN_Length $DIN_Lengths {
+          if {$heightTop > $DIN_Length} {
+              if {$heightBottom < $DIN_Length} {
+                  set indexHeight [dict get $DIN_Format ps $DIN_Length]
+                  break
+              } else {
+                  set resultHeight $height
+                  break
+              }
+          }
+      }
+
+      puts "                 ... $width $height "
+      puts "                 ... $indexWidth $indexHeight "
+      puts "                 ... $resultWidth $resultHeight "
+      
+      if {$indexWidth != {}} {
+          if {$indexHeight != {}} {
+              if {$indexWidth < $indexHeight} {
+                  return [format "%s_landscape" $indexWidth]
+              } else {
+                  return [format "%s_portrait" $indexHeight]
+              }
+          } else {
+                  return [format "%s_%s" $iwidth $height]         
+          }
+      } else {
+        return [format "%s_%s" $iwidth $height]
+      }
+
+  }
+
+
   proc canvasCAD::init_DIN_Format {} {
       variable DIN_Format
       set DIN_Format \

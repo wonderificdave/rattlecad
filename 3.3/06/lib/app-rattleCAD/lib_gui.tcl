@@ -298,7 +298,7 @@
             set cvPath  [$cvID getNodeAttr Canvas path]
             set noteBook   [winfo parent [winfo parent $cvPath]] 
                  puts "         $noteBook"
-                 puts "         [winfo exists [winfo parent $cvPath]]"
+                 puts "            exists: [winfo exists [winfo parent $cvPath]]"
             if {[winfo exists $cvPath]} {
                 $noteBook select  [winfo parent $cvPath]   
                 return [$noteBook select]
@@ -572,11 +572,12 @@
             }
     
                   # puts "Directory contents are:"
+            puts ""
             foreach item $contents {
-                  # puts $item
-                catch {file delete -force$item}
+                puts "             ... cleanup $item"
+                catch {file delete -force $item}
             }
-            
+            puts "\n"            
             
                 # --- prepare export directory
             switch -exact $type {
@@ -640,8 +641,7 @@
                         }
                         lib_file::create_summaryPDF $exportDir
                     }
-                    
-                    
+
                 default {}
             }
 
@@ -696,10 +696,11 @@
                 
                 # --- delete timeStamp
             catch [ $cv_Name delete $timeStamp ]
-                                
-            
+
             if {$postEvent == {open}} {
+                puts "\n"
                 puts "    ------------------------------------------------"
+                puts ""
                 puts "      ... open $exportFile "
                 
                 lib_file::openFile_byExtension $exportFile 
@@ -745,7 +746,9 @@
             set exportFile [$cv_Name exportSVG $exportFile]
             
             if {$postEvent == {open}} {
+                puts "\n"
                 puts "    ------------------------------------------------"
+                puts ""
                 puts "      ... open $exportFile "
                 
                 lib_file::open_localFile $exportFile
@@ -759,7 +762,7 @@
     #-------------------------------------------------------------------------
        #  export canvasCAD from current notebook-Tab as SVG Graphic
        #
-    proc notebook_exportDXF {printDir} {
+    proc notebook_exportDXF {printDir {postEvent {open}}} {
             variable noteBook_top
             
                 ## -- read from domConfig
@@ -789,12 +792,16 @@
             
             set exportFile [$cv_Name exportDXF $exportFile]
             
-            puts "    ------------------------------------------------"
-            puts "      ... open $exportFile "
-            
-            lib_file::open_localFile $exportFile
-
-                # lib_file::openFile_byExtension $exportFile .dxf
+            if {$postEvent == {open}} {
+                puts "\n"
+                puts "    ------------------------------------------------"
+                puts ""
+                puts "      ... open $exportFile "
+                
+                lib_file::open_localFile $exportFile
+            }            
+              # lib_file::open_localFile $exportFile
+              # lib_file::openFile_byExtension $exportFile .dxf
     }
 
 
