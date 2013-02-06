@@ -197,6 +197,7 @@
                 # --- get Fork -----------------------------
             set Fork(Height)                $project::Component(Fork/Height)
             set Fork(Rake)                  $project::Component(Fork/Rake)
+#            set Fork(Rendering)             $project::Rendering(ForkBlade)
             set Fork(BladeWith)             $project::Component(Fork/Blade/Width)
             set Fork(BladeDiameterDO)       $project::Component(Fork/Blade/DiameterDO)
             set Fork(BladeTaperLength)      $project::Component(Fork/Blade/TaperLength)
@@ -742,7 +743,12 @@
                             
                     switch -glob $project::Rendering(Fork) {
                             SteelLugged {
-
+                                        #puts "SteelLugged"
+                                        #puts "$project::Rendering(ForkBlade)"
+                                        #puts "$Fork(Rendering)"
+                                        #puts "[$::APPL_Config(root_ProjectDOM) asXML]"
+                                        #puts "[[$::APPL_Config(root_ProjectDOM) selectNode /root/Rendering] asXML]"
+                                        
                                         variable myFork
                                         
                                         dict create dict_ForkBlade {}
@@ -799,7 +805,6 @@
                                     }
                                     
                             SteelLuggedMAX  {
-
                                         set myFork(CrownOffset)       [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Blade/Offset     ]  asText ]
                                         set myFork(CrownOffsetPerp)   [[ $domInit selectNodes /root/Options/Fork/SteelLuggedMAX/Crown/Blade/OffsetPerp ]  asText ]
 

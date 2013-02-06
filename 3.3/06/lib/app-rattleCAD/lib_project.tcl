@@ -468,7 +468,7 @@
                     project::update_ProjectVersion {3.3.04}
                     project::update_ProjectVersion {3.3.05}
                     project::update_ProjectVersion {3.3.06}
-                    
+                    # puts "[[$::APPL_Config(root_ProjectDOM) selectNode /root/Rendering] asXML]"
                     # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
                     frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
             }
@@ -1536,34 +1536,45 @@
                                 $node nodeValue $forkRendering
                               }
                               
-                              set node_Crown      [$domProject selectNode /root/Component/Fork/Crown/File/text()]
-                              set node_Rendering  [$domProject selectNode /root/Rendering]
-                              set node_Blade      [$domProject selectNode /root/Component/Fork/Blade]
-
                                 # -- update ForkBlade default Parameter
+                              set node_Blade      [$domProject selectNode /root/Component/Fork/Blade]
+                                #
                               $node_Blade appendXML  "<BendRadius>350.0</BendRadius>"
                               $node_Blade appendXML  "<EndLength>10.0</EndLength>"
                               set node [$domProject selectNode /root/Component/Fork/Blade/Offset]
                               if {$node != {}} {
                                       $node_Blade removeChild $node 
                                       $node delete 
-                              }                              
+                              }
                               
+                              
+                                # -- update ForkBlade Rendering
+                              set node_Crown      [$domProject selectNode /root/Component/Fork/Crown/File/text()]
+                              set node_Rendering  [$domProject selectNode /root/Rendering]
+                              set node_Blade      [$domProject selectNode /root/Rendering/ForkBlade]
+                                #
+                              if {$node_Blade == {}} {
+                                  $node_Rendering appendXML "<ForkBlade>straight</ForkBlade>"
+                              }
+                                # puts " -- 02 ----- [[$domProject selectNode /root/Rendering/ForkBlade] asXML]"
                               switch -exact $forkRendering {
                                   SteelLugged {
-                                        set forkCrown [file tail [$node_Crown nodeValue]]
+                                        set forkCrown       [file tail [$node_Crown nodeValue]]
+                                        set bladeRendering  [$domProject selectNode /root/Rendering/ForkBlade/text()]
+                                        set forkBlade [$bladeRendering nodeValue]
                                             puts "                                           ... $forkCrown"
+                                            puts "                                           ... $forkBlade"
                                         switch -exact $forkCrown {
                                           longshen_max_36_5.svg {
-                                                    $node_Rendering appendXML  "<ForkBlade>MAX</ForkBlade>"
+                                                    $bladeRendering nodeValue "MAX"
                                                   }
                                           default {
-                                                    $node_Rendering appendXML  "<ForkBlade>straight</ForkBlade>"
+                                                    #
                                                   }
                                         }
                                       }
                                   default {
-                                      $node_Rendering appendXML "<ForkBlade>straight</ForkBlade>"
+                                      # $node_Blade appendXML "<ForkBlade>straight</ForkBlade>"
                                   }
                             }
                           }
