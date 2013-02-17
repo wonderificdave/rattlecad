@@ -1,0 +1,31 @@
+/*
+    Template: rattleCAD Style Sheet
+    Author: Hannes Fritz
+    Date: 20120228
+
+*/
+
+body {
+    font: 80% Verdana,Geneva,Arial,Helvetica,sans-serif;
+    margin: 5;
+}
+div {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+p {
+    font-size: 12px;
+    padding-bottom: 5px;
+}
+li {
+  font: 120% Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+embed {
+  border:1px solid black;
+}
+#container {
+    clear: both;
+    margin: 0;
+    padding: 0;
+}

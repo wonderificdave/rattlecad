@@ -1,0 +1,22 @@
+ Datentr„ger in Laufwerk E: ist Dateien
+ Volumeseriennummer: F087-924F
+
+ Verzeichnis von E:\manfred\_profile\workspace\rattleCAD_4.0\___test\sample
+
+16.02.2013  01:18    <DIR>          .
+16.02.2013  01:18    <DIR>          ..
+16.02.2013  01:18                 0 a.txt
+04.10.2012  21:19            31.487 columbus_max.xml
+28.08.2012  21:21            28.798 focus_cayo_expert_2010__L_56.xml
+28.08.2012  21:20            28.803 focus_cayo_expert_2010__M_54.xml
+28.08.2012  21:19            28.808 focus_cayo_expert_2010__XL_58.xml
+29.04.2012  21:09            26.731 _template_3.2.78.xml
+11.12.2012  23:50            26.629 _template_3.2.78_offroad.xml
+01.05.2012  15:27            31.071 _template_3.3.00.xml
+24.06.2012  13:52            31.162 _template_3.3.02.xml
+24.06.2012  13:51            31.303 _template_3.3.03.xml
+27.07.2012  23:00            31.371 _template_3.3.04.xml
+27.11.2012  22:04            32.421 _template_3.3.05.35.xml
+11.12.2012  22:24            34.795 _template_3.3.06.xml
+              13 Datei(en)        363.379 Bytes
+               2 Verzeichnis(se),    176.541.696 Bytes frei
