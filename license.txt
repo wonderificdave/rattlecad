@@ -50,7 +50,7 @@
                
                     tree-operations:
                             http://wiki.tcl.tk/ ...
-            
+
        tdom
       ------------------------------------------
             Version: 0.8.3  
@@ -59,7 +59,7 @@
               
                     xml-operations:
                             http://wiki.tcl.tk/ ...
-            
+
        canvasCAD
       ------------------------------------------
             ... by Manfred ROSENBERGER
@@ -82,17 +82,31 @@
                             John Roll 2009-03-18
                             Writing DXF
                             http://www2.tcl.tk/22794     
-                          
+
        vectorfont
       ------------------------------------------
             ... based on Code from 
                     Gerhard REITHOFER   [www.tech-edv.co.at]  
                     Johann  OBERDORFER
-                          
+
        rdial
       ------------------------------------------
             ... based on Code from 
                     Gerhard REITHOFER   [www.tech-edv.co.at]  
             ... see http://wiki.tcl.tk/26357
-            
 
+       check_user_dir
+      ------------------------------------------
+            ... based on Code from 
+                    ???
+            ... see http://wiki.tcl.tk/3834
+
+
+
+... uses following svg - components:
+----------------------------------------
+
+       crankset/shimano_hollowtech_II.svg
+            ... iges by Simon Weishaupt
+       dropout/rear_dropout_ss_wild_lilies_grow.svg
+            ... dxf  by Michael Wiedemann

@@ -7,25 +7,31 @@ What is the aim of this program?
     during definition of a bicycle frame represented in tabs:
 
     Base Concept (Base Geometry):
-	-----------------------------------
+    -----------------------------------
         ... define riders parameter
         ... define the main geometry parameters
             You can edit parameters by doubleclicking the measured value
             on the coloured dimensions. 
  
-                
+
     Tube Details (Frame Tubing):
-	-----------------------------------
+    -----------------------------------
         ... detail your geometry to define all tube parameters
             Editing like in Personal Tab
-                
+
+
+    ChainStay Details
+    -----------------------------------
+        ... check collision of chainstays with cranks and tyre
+
+
     Summary / Frame Drafting / Frame - Jig:
-	-----------------------------------
+    -----------------------------------
         ... summaries for the workshop
             There are no editable dimensions here.
 
-    Mockup (Assembly):
-	-----------------------------------
+    Clear Mockup (Assembly):
+    -----------------------------------
         ... take your frame and assemble it with components
             There are no dimensions to edit but you can exchange 
             components if still defined for rattleCAD. The library 
@@ -33,13 +39,13 @@ What is the aim of this program?
             rattleCAD supports to use a personal component library.
             This library has to have the same structure es in the
             applications etc directory.
-			
-		... also use the ".cfg"-Button in the menu-bar. By pressing 
-		    this button configuration Panel appears. Go to the 
-			"Mockup"-Tab
+            
+        ... also use the ".cfg"-Button in the menu-bar. By pressing 
+            this button configuration Panel appears. Go to the 
+            "Mockup"-Tab
 
     Tube Mitter:
-	-----------------------------------
+    -----------------------------------
         ... mittering of main tubes and seat stays
         ... seat stay mittering is an approximate mittering as 
             tangential to seat tube.
@@ -48,19 +54,23 @@ What is the aim of this program?
 
 Directory Structure of rattleCAD
 -----------------------------------------------------------------
-        .../rattleCAD/
+        C:\Programme (x86)\rattleCAD
+        /opt/rattleCAD/       
                     ./3.2.06a           
                     ./3.2.14
                     ./3.2.15
                     ./...                  ... Version Directories 
                     ./rattleCAD.tcl
                     ./rattleCAD.bat        ... batch files to start
-                    ./user/
-                         ./components      ... users components Library
-                         ./__file__.xml    ... project Files
-                    ./export/     
-                           ./__file__.ps   ... print postscript
-                           ./__file__.svg  ... export SVG
+                    
+         C:\Eigene Dateien\rattleCAD
+         /home/~/rattleCAD/                   
+                     ./components      ... users components Library
+                     ./__file__.xml    ... project Files
+                     ./...
+                     ./export/     
+                            ./__file__.ps   ... print postscript
+                            ./__file__.svg  ... export SVG
     
     
     
@@ -71,8 +81,8 @@ How to edit parameters
     You can edit parameters by doubleclicking the measured value
     on the coloured dimensions. Inactive dimensions are mostly gray
     coloured.
-	Also use the ".cfg"-Button in the menu-bar. By pressing this button
-	a configuration Panel appears.
+    Also use the ".cfg"-Button in the menu-bar. By pressing this button
+    a configuration Panel appears.
 
 
 
@@ -98,15 +108,16 @@ How to move the zoomed area
     Press the left mouse button on the graphic area, drag the mouse 
     over the screen and release it. During dragging a red line appears
     and shows you the direction of dragging.
-    
 
-  
-How to print  .ps / .svg
+
+
+How to print  .ps / .dxf / .svg
 -----------------------------------------------------------------
 
     rattleCAD is able to export canvas content as 
         .ps     Postscript
-        .svg    StandardVectorGraphic.
+        .dxf    Drawing Interchange File 
+        .svg    Standard Vector Graphic.
     
     rattleCAD prints via postscript and does not directly send content
     to a printer. Postscript requires a postscript viewer to print 
@@ -139,16 +150,30 @@ How to print  .ps / .svg
     
     .ps and .svg-Files are exporte to the "export" directory which 
         resides:
-        .../rattleCAD/
-                    ./3.2.06a
-                    ./3.2.14
-                    ./3.2.15
-                    ./rattleCAD.tcl
-                    ./rattleCAD.bat
-                    ./user
+        $HOME/rattleCAD/
                     ./export/     <---
                            ./__file__.ps
+                           ./__file__.dxf
                            ./__file__.svg
+
+
+
+Mouse and Keyboard bindings
+-----------------------------------------------------------------
+
+    <F1> .................  help
+    <F3> .................  scale view  <minus>
+    <F4> .................  scale view  <plus>
+    <F5> .................  fit to canvas
+    <F6> .................  recompute project
     
+    <Key-Up> .............  move view  <up>
+    <Key-Down> ...........  move view  <down>
+    <Key-Left> ...........  move view  <left>
+    <Key-Right> ..........  move view  <right>
+    
+    <MouseWheel> .........  move view  <up>/<down>
+    <Ctrl-MouseWheel> ....  scale view  <minus>/<plus>
+    <Shift-MouseWheel> ...  move view  <left>/<right>
 
     
