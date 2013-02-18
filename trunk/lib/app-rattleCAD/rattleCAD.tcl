@@ -76,8 +76,9 @@
                         BASE_Dir            {}
                         ROOT_Dir            {}
                         CONFIG_Dir          {}
-                        IMAGE_Dir           {}
-                        USER_Dir            {}
+			IMAGE_Dir           {}
+			TEST_Dir            {}
+			USER_Dir            {}
                         EXPORT_Dir          {}
                         EXPORT_PDF          {}
                         EXPORT_HTML         {}
@@ -147,9 +148,11 @@
 	    
             # -- Application Directories  -----------
 	set ::APPL_Config(BASE_Dir)         $baseDir
+	set ::APPL_Config(ROOT_Dir)         [file dirname $baseDir]
 	set ::APPL_Config(CONFIG_Dir)       [file join    $baseDir etc   ]
 	set ::APPL_Config(IMAGE_Dir)        [file join    $baseDir image ]
-	set ::APPL_Config(ROOT_Dir)         [file dirname $baseDir]
+	set ::APPL_Config(SAMPLE_Dir)       [file join    $baseDir sample]
+	set ::APPL_Config(TEST_Dir)         [file join    $baseDir _test]
 	set ::APPL_Config(USER_Dir)         [lib_file::check_user_dir rattleCAD]    
 	set ::APPL_Config(EXPORT_Dir)       [lib_file::check_user_dir rattleCAD/export]
 	set ::APPL_Config(EXPORT_HTML)      [lib_file::check_user_dir rattleCAD/html]

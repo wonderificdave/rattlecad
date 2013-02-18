@@ -79,7 +79,7 @@
                     
 		    {separator}
 		    
-		    {command "Samples"          {}  "Show Samples"          {}            -command { rattleCAD_Test::testControl {} loopSamples } }
+		    {command "Samples"          {}  "Show Samples"          {}            -command { rattleCAD_Test::testControl loopSamples } }
 		    
 		    {separator}
                     
@@ -92,7 +92,7 @@
                     
                     {separator}
                     
-		    {command "Integration Test" {}  "Integration Test"      {CtrlAlt f}   -command { rattleCAD_Test::testControl $TEST_Dir integrationTest_00} }
+		    {command "Integration Test" {}  "Integration Test"      {CtrlAlt f}   -command { rattleCAD_Test::testControl integrationTest_00} }
 		    {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
 		    {command "&Update"          {}  "update Configuration"  {Ctrl u}      -command { lib_gui::notebook_updateCanvas force } }
 																	    															                    

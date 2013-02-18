@@ -8,4 +8,4 @@ echo on
 rem echo "%1 %2 %3 %4" >> debug.txt
 
 cd %~dp0\%Version%
-rattleCAD.exe %1
+rattleCAD.exe %1 %2 %3 %4 %5 %6 %7 %8 %9
