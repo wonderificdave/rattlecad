@@ -4,49 +4,51 @@ exec wish "$0" "$@"
 
   set Version __versionKey__
   
+  variable outFile      [file join [file dirname [file normalize $argv0]] logFile.txt]
   variable debugWrite 
   variable fp
   
   set debugWrite {write}
-  set debugWrite {}
+  # set debugWrite {}
   
   if {$debugWrite ne {}} {
-        variable fp
-        set outfile [file join [file dirname [file normalize $argv0]] logFile.txt]
-        set fp [open $outfile w]
+	variable outFile
+	variable fp
+	set fp [open $outFile w]
   }
   
   proc debugOut {message} {
-        variable debugWrite
-        variable fp
-        puts "$message"
-        if {$debugWrite ne {}} {
-            puts $fp  "$message"
-        }
+	variable debugWrite
+	variable fp
+	puts "$message"
+	if {$debugWrite ne {}} {
+	    puts $fp  "$message"
+	}
   }
-  debugOut " ... start rattleCAD $Version"
-  debugOut "  script: [file normalize $argv0]"
-  debugOut "  file:   [file normalize [lindex $argv 0]]"
-  debugOut "     [pwd]"
-        
-  if {$argc == 1} {
-        set projectFile [file normalize [lindex $argv 0]]
-                debugOut "     [pwd]"
-        cd $Version
-                debugOut "     [pwd]"
-                debugOut "     ./rattleCAD.tcl $projectFile"
-        eval exec tclsh  ./rattleCAD.tcl $projectFile
+  debugOut "\n"
+  debugOut " ... start rattleCAD $Version\n"
+  debugOut "     ... logging: $outFile\n"
+ 
+  if {$argc > 0} {
+		debugOut "     [pwd]"
+	cd $Version
+		debugOut "     [pwd]"
+		debugOut ""
+		debugOut "     ./rattleCAD.tcl $argv"
+	eval exec tclsh  ./rattleCAD.tcl $argv
   } else {
-                debugOut "     [pwd]"
-        cd $Version    
-                debugOut "     [pwd]"
-                debugOut "     ./rattleCAD.tcl"
-        eval exec tclsh  ./rattleCAD.tcl
+		debugOut "     [pwd]"
+	cd $Version    
+		debugOut "     [pwd]"
+		debugOut ""
+		debugOut "     ./rattleCAD.tcl"
+	eval exec tclsh  ./rattleCAD.tcl
   }
   
+  
   if {$debugWrite ne {}} {
-        variable fp
-        close $fp
+	variable fp
+	close $fp
   }
 
-  exit
+  exit  

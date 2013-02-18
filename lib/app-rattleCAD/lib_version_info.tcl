@@ -222,6 +222,8 @@
         $env_text  insert end "     APPL_Config(BASE_Dir):  \n                   ... $APPL_Config(BASE_Dir)\n"
         $env_text  insert end "     APPL_Config(CONFIG_Dir):\n                   ... $APPL_Config(CONFIG_Dir)\n"
         $env_text  insert end "     APPL_Config(IMAGE_Dir): \n                   ... $APPL_Config(IMAGE_Dir)\n"
+	$env_text  insert end "     APPL_Config(SAMPLE_Dir):\n                   ... $APPL_Config(SAMPLE_Dir)\n"
+	$env_text  insert end "     APPL_Config(TEST_Dir):  \n                   ... $APPL_Config(TEST_Dir)\n"   
         $env_text  insert end "     APPL_Config(USER_Dir):  \n                   ... $APPL_Config(USER_Dir)\n"
         $env_text  insert end "\n"
         # $env_text  insert end "     APPL_Config(USER_Init):     $APPL_Config(USER_Init)\n"

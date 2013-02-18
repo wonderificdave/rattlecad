@@ -39,14 +39,14 @@
  namespace eval rattleCAD_Test {
  
    
-    proc testControl {testDir {testProcedure {}}} {
+    proc testControl {{testProcedure {}}} {
         if {$testProcedure == {}} {
 	   set testProcedure   integrationTest_00     
         }  
         switch -exact $testProcedure {
 	    integrationTest_00    {
 		   tk_messageBox -title "integration Test" -message "... start integrationTest 00"
-		   integrationTest_00 $testDir
+		   integrationTest_00 
 		   tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
 	    }
 	    loopSamples {
@@ -61,9 +61,9 @@
     #-------------------------------------------------------------------------
         #  integrationTest_00
         #
-    proc integrationTest_00 {testDir} {
+    proc integrationTest_00 {args} {
 	      
-       set TEST_Dir $testDir 
+       set TEST_Dir $::APPL_Config(TEST_Dir) 
        puts "\n\n ====== integrationComplete ================ \n\n"
        puts "   -> TEST_Dir: $TEST_Dir\n"  
        
@@ -147,14 +147,14 @@
         #	 
     proc loopSamples {args} {
         set currentFile $::APPL_Config(PROJECT_File)
-	set SAMPLE_Dir 	[file join $::APPL_Config(BASE_Dir) sample]    
+	set SAMPLE_Dir 	$::APPL_Config(SAMPLE_Dir)
 
         puts "\n\n  ====== l o o p   S A M P L E   F i l e s ========\n"                         
         puts "      currentFile  ... $currentFile"
         puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
 	puts "" 
 
-	lib_file::saveProject_xml saveAs    
+	# lib_file::saveProject_xml saveAs    
 	    
         foreach fileName [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml] {
     	    puts "\n     open Sample File:"

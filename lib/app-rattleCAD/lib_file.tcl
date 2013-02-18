@@ -604,10 +604,13 @@
             if { [expr [string compare "$::tcl_platform(platform)" "windows" ] == 0] } {
                     package require registry 1.1
                     set homeDir_Request [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders} {Personal}]
-                    set homeDir [file normalize $homeDir_Request]
-		    # puts "  ... -> \$homeDir_Request $homeDir_Request"
-		    # puts "  ... -> \$homeDir $homeDir"
-		    # exit
+		    set stringMapping [list {%USERPROFILE%} $::env(USERPROFILE)]
+		    set homeDir_Request [string map $stringMapping $homeDir_Request]
+		    	# puts "  ... -> \$homeDir_Request $homeDir_Request"
+		    set homeDir [file normalize $homeDir_Request]
+		    	# puts "  ... -> \$homeDir $homeDir"
+		    	# tk_messageBox -message "  ... -> \$homeDir $homeDir"
+		    	# puts "  ... -> \$homeDir $homeDir"
             } else {
                     set homeDir $::env(HOME)
             }

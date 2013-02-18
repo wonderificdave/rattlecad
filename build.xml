@@ -15,7 +15,7 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.00.06" />
+	<property name = "rattleCAD_Version" 	value = "3.4.00.08" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
@@ -64,6 +64,13 @@
 			<echo> </echo>
 
 
+			<copy todir="${build.dir}/${rattleCAD_Version}/sample">
+	        <fileset dir="./sample"/>
+			</copy>
+			<echo>     ... content of folder ./sample was copied.</echo>
+			<echo> </echo>
+
+
 			<copy todir="${build.dir}/${rattleCAD_Version}/_style">
 	        <fileset dir="./_style"/>
 			</copy>
@@ -71,10 +78,10 @@
 			<echo> </echo>
 
 
-			<copy todir="${build.dir}/${rattleCAD_Version}/___test">
-	        <fileset dir="./___test"/>
+			<copy todir="${build.dir}/${rattleCAD_Version}/_test">
+	        <fileset dir="./_test"/>
 			</copy>
-			<echo>     ... content of folder ./___test was copied.</echo>
+			<echo>     ... content of folder ./_test was copied.</echo>
 			<echo> </echo>
 
 

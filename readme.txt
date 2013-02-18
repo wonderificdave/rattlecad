@@ -1,4 +1,18 @@
 
+3.4.00.08   - 2013.02.18 
+-------------------------------------------------------------------------------
+    feature:
+        ... run integrated test per commandLind
+            ... -test loopSamples integrationTest_00 (others will follow)
+
+
+3.4.00.07   - 2013.02.18 
+-------------------------------------------------------------------------------
+    debug:
+        ... copy sample directory to zip-File
+        ... check creation of %USERDIR% directory in APP-Directory on Windows7
+
+
 3.4.00.06   - 2013.02.17 
 -------------------------------------------------------------------------------
     feature:
