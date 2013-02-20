@@ -39,20 +39,25 @@
  namespace eval rattleCAD_Test {
  
    
-    proc testControl {{testProcedure {}}} {
+    proc controlDemo {{testProcedure {}}} {
         if {$testProcedure == {}} {
 	   set testProcedure   integrationTest_00     
         }  
         switch -exact $testProcedure {
 	    integrationTest_00    {
 		   tk_messageBox -title "integration Test" -message "... start integrationTest 00"
-		   integrationTest_00 
+		   [namespace current]::integrationTest_00 
 		   tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
 	    }
 	    loopSamples {
 		     # tk_messageBox -title "loop Samples" -message "... start loopSamples"
-		   loopSamples
+		   [namespace current]::loopSamples
 		   tk_messageBox -title "loop Samples" -message "... rattleCAD Samples!"
+	    }    
+	    demo_01 {
+		   tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
+		   [namespace current]::demo_01
+		   tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
 	    }    
 	    default {}       
         }	   
@@ -156,7 +161,7 @@
 
 	# lib_file::saveProject_xml saveAs    
 	    
-        foreach fileName [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml] {
+        foreach fileName [lsort [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml]] {
     	    puts "\n     open Sample File:"
 	    puts "          .... $fileName\n"
             lib_file::openProject_xml   $fileName
@@ -180,6 +185,86 @@
           # tk_messageBox -title "loop Samples" -message "... $SAMPLE_Dir!"   
     }	 
 	 
+	 
+    #-------------------------------------------------------------------------
+	#  demo 01
+	#	 
+    proc demo_01 {args} {
+	set currentFile $::APPL_Config(PROJECT_File)
+	set SAMPLE_Dir 	$::APPL_Config(SAMPLE_Dir)
+                   
+	puts "\n\n  ====== D E M O N ST R A T I O N   0 1 ===========\n"                         
+	puts "      currentFile  ... $currentFile"
+	puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
+	puts "" 
+ 
+	
+	set values [[namespace current]::demoValues 30 -3 5 2]  
+	puts " ... \$values .. $values" 
+	set values [[namespace current]::demoValues 30 5 -3 2]  
+	puts " ... \$values .. $values" 
+	
+	# proc setValue {arrayName type args}
+	# proc getValue {arrayName type args}
+	
+	# lib_gui::select_canvasCAD   cv_Custom00
+	
+	updateGeometryValue Personal(HandleBar_Distance) -15  20   5
+        updateGeometryValue Personal(HandleBar_Height)   -15  20   5
+	updateGeometryValue Component(Fork/Rake)          15 -10   5
+	updateGeometryValue Custom(HeadTube/Angle)        2   -1   1  
+	      
+	updateGeometryValue Personal(Saddle_Distance)    -15  10   5
+        updateGeometryValue Personal(Saddle_Height)      -35  25   5
+
+	updateGeometryValue FrameTubes(HeadTube/Length)  -20  15 -15
+	updateGeometryValue Custom(WheelPosition/Rear)    25 -10  10
+
+        updateGeometryValue Custom(BottomBracket/Depth)  -10  15   5
+		        
+        return
+
+    }	 
+
+	  # -------------------------------------------------------------------------
+	  #  updateGeometryValue
+	  #
+    proc updateGeometryValue {arrayName left right end} {
+      
+        puts "   ... $arrayName"
+        set _array [lindex [split $arrayName (]  0]
+        set _name  [lindex [split $arrayName ()] 1]
+        puts "   ... $_array $_name"
+        set xPath   [format "%s/%s" $_array $_name]
+	puts "   ... $xPath"
+	            
+        set currentValue  [project::getValue $arrayName value]
+        set valueList     [[namespace current]::demoValues $currentValue $left $right $end]
+    	  # puts " ... project::getValue Personal(HandleBar_Distance)  [project::getValue Personal(HandleBar_Distance) value]"
+    	  # puts " ... \$currentValue $currentValue"
+    	  # puts " ... \$valueList    $valueList"
+        foreach newValue $valueList {
+    	  frame_geometry::set_projectValue $xPath $newValue
+    	  lib_gui::notebook_updateCanvas 
+        }
+    }	  
+	 
+    # -------------------------------------------------------------------------
+    	#  deliver demo Values
+    	#
+    proc demoValues {base left right end} {
+    	
+    	set leftValue  [ expr $base + $left]
+	set rightValue [ expr $base + $right]
+	set endValue   [ expr $base + $end]
+	return [list [expr 0.5*($leftValue+$base)]        $leftValue \
+		     [expr 0.5*($leftValue+$base)]        $base \
+		     [expr 0.5*($rightValue+$base)]       $rightValue \
+		     [expr 0.5*($rightValue+$endValue)]   $endValue ]
+    }	 
+	 
+
+
      #-------------------------------------------------------------------------
      #
      #  end  namespace eval rattleCAD_Test 

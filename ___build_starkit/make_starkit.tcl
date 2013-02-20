@@ -77,7 +77,9 @@ puts "\n ========================\n"
 puts "         check Version"
 if {$appVersion != $trunkVersion} {
     puts "\n           ... $appVersion != $trunkVersion"
-    exit
+    # throwError     ; #" ... $appVersion != $trunkVersion" 
+    exit -1
+    return -level 2; #" ... $appVersion != $trunkVersion" 
 }
 
 

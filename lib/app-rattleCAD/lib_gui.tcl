@@ -79,8 +79,9 @@
                     
 		    {separator}
 		    
-		    {command "Samples"          {}  "Show Samples"          {}            -command { rattleCAD_Test::testControl loopSamples } }
-		    
+		    {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD_Test::controlDemo demo_01 } }
+		    {command "Samples"          {}  "rattleCAD Samples"     {}            -command { rattleCAD_Test::controlDemo loopSamples } }
+							    		    
 		    {separator}
                     
 		    {command "Impo&rt"          {}  "import Parameter"      {Ctrl i}      -command { lib_file::openProject_Subset_xml } }
@@ -92,7 +93,7 @@
                     
                     {separator}
                     
-		    {command "Integration Test" {}  "Integration Test"      {CtrlAlt f}   -command { rattleCAD_Test::testControl integrationTest_00} }
+		    {command "Integration Test" {}  "Integration Test"      {CtrlAlt f}   -command { rattleCAD_Test::controlDemo integrationTest_00} }
 		    {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
 		    {command "&Update"          {}  "update Configuration"  {Ctrl u}      -command { lib_gui::notebook_updateCanvas force } }
 																	    															                    
