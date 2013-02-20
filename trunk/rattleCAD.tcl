@@ -71,7 +71,7 @@ exec wish "$0" "$@"
     
     package require   rattleCAD     3.4 
     package require   canvasCAD     0.35
-    package require   bikeGeometry  0.3
+    package require   bikeGeometry  0.4
     package require   extSummary    0.3
 
     

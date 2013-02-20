@@ -755,13 +755,20 @@
 
                 
                 set fileId [open $batchFile "w"]
-                      puts -nonewline $fileId "\"[file nativename $ghostScript]\""
-                      puts -nonewline $fileId " -dNOPAUSE "
-                      puts -nonewline $fileId " -sDEVICE=pdfwrite "
-                      puts -nonewline $fileId " -g$pg_Format "
-                      puts -nonewline $fileId " -sOutputFile=\"$outputFile\" "
-                      puts -nonewline $fileId " -c \"$pg_Offset\" "
-                      puts -nonewline $fileId " -dBATCH $fileString "
+                      puts $fileId "\"[file nativename $ghostScript]\" ^"
+                      puts $fileId " -dNOPAUSE ^"
+                      puts $fileId " -sDEVICE=pdfwrite ^"
+                      puts $fileId " -g$pg_Format ^"
+                      puts $fileId " -sOutputFile=\"$outputFile\" ^"
+		      puts $fileId " -c \"$pg_Offset\" ^"
+		      puts $fileId " -dBATCH ^"
+		      foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
+			      # puts "         ... $fileKey"   
+			    set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
+			      # append fileString " " \"$inputFile\"
+			    puts $fileId "       \"$inputFile\" ^"
+		      }
+                      	# puts -nonewline $fileId " -dBATCH $fileString "
                 close $fileId
 
                 

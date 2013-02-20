@@ -45,7 +45,7 @@
         }  
         switch -exact $testProcedure {
 	    integrationTest_00    {
-		   tk_messageBox -title "integration Test" -message "... start integrationTest 00"
+		     # tk_messageBox -title "integration Test" -message "... start integrationTest 00"
 		   [namespace current]::integrationTest_00 
 		   tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
 	    }
@@ -209,19 +209,20 @@
 	
 	# lib_gui::select_canvasCAD   cv_Custom00
 	
-	updateGeometryValue Personal(HandleBar_Distance) -15  20   5
+        set cv_custom::stageRefit no
+        updateGeometryValue Personal(HandleBar_Distance) -15  20   5
         updateGeometryValue Personal(HandleBar_Height)   -15  20   5
-	updateGeometryValue Component(Fork/Rake)          15 -10   5
-	updateGeometryValue Custom(HeadTube/Angle)        2   -1   1  
-	      
-	updateGeometryValue Personal(Saddle_Distance)    -15  10   5
+        updateGeometryValue Component(Fork/Rake)          15 -10   5
+        updateGeometryValue Custom(HeadTube/Angle)        2   -1   1  
+
+        updateGeometryValue Personal(Saddle_Distance)    -15  10   5
         updateGeometryValue Personal(Saddle_Height)      -35  25   5
 
-	updateGeometryValue FrameTubes(HeadTube/Length)  -20  15 -15
-	updateGeometryValue Custom(WheelPosition/Rear)    25 -10  10
+        updateGeometryValue FrameTubes(HeadTube/Length)  -20  15 -15
+        updateGeometryValue Custom(WheelPosition/Rear)    25 -10  10
 
         updateGeometryValue Custom(BottomBracket/Depth)  -10  15   5
-		        
+        set cv_custom::stageRefit yes
         return
 
     }	 
@@ -236,16 +237,16 @@
         set _name  [lindex [split $arrayName ()] 1]
         puts "   ... $_array $_name"
         set xPath   [format "%s/%s" $_array $_name]
-	puts "   ... $xPath"
+        puts "   ... $xPath"
 	            
         set currentValue  [project::getValue $arrayName value]
         set valueList     [[namespace current]::demoValues $currentValue $left $right $end]
-    	  # puts " ... project::getValue Personal(HandleBar_Distance)  [project::getValue Personal(HandleBar_Distance) value]"
-    	  # puts " ... \$currentValue $currentValue"
-    	  # puts " ... \$valueList    $valueList"
+          # puts " ... project::getValue Personal(HandleBar_Distance)  [project::getValue Personal(HandleBar_Distance) value]"
+          # puts " ... \$currentValue $currentValue"
+          # puts " ... \$valueList    $valueList"
         foreach newValue $valueList {
-    	  frame_geometry::set_projectValue $xPath $newValue
-    	  lib_gui::notebook_updateCanvas 
+            frame_geometry::set_projectValue $xPath $newValue
+            # lib_gui::notebook_updateCanvas 
         }
     }	  
 	 
