@@ -1,4 +1,18 @@
 
+3.4.00.12   - 2013.02.20 
+-------------------------------------------------------------------------------
+    feature:
+        ... prevent content from reposition after update canvas
+               cv_custom::update $cv_Name [default:reset/keep]
+
+
+3.4.00.11   - 2013.02.20 
+-------------------------------------------------------------------------------
+    feature:
+        ... creates .bat file to create summary-pdf in create_summaryPDF 
+               more readable 
+
+
 3.4.00.10   - 2013.02.19 
 -------------------------------------------------------------------------------
     feature:

@@ -449,7 +449,7 @@
         if {![string equal $newSize $::APPL_Config(window_Size)]} {
                 set ::APPL_Config(window_Size) $newSize
                 set ::APPL_Config(window_Update) [ clock milliseconds ]
-                puts "     ... update WindowSize: $::APPL_Config(window_Update)"
+                puts "     ... update WindowSize: $::APPL_Config(window_Update) / $::APPL_Config(window_Size)"
         }
     }
 

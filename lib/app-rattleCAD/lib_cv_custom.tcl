@@ -41,6 +41,7 @@
 
             variable    bottomCanvasBorder  30
             variable    stageScale          1.0
+            variable    stageRefit          yes
 
             variable    baseLine        ;  array set baseLine       {}
 
