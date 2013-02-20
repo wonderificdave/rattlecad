@@ -37,7 +37,7 @@
  #
  # 
 
- package provide bikeGeometry 0.3
+ package provide bikeGeometry 0.4
  
  namespace eval project {
 
