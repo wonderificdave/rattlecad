@@ -116,6 +116,6 @@ exec wish "$0" "$@"
     wm deiconify .
    
         # -- test: integrationComplete --------------    
-    rattleCAD_Test::testControl integrationTest_00
+    rattleCAD_Test::controlDemo integrationTest_00
     	# rattleCAD_Test::integrationComplete $TEST_Dir
     

@@ -1,8 +1,22 @@
 
+3.4.00.10   - 2013.02.19 
+-------------------------------------------------------------------------------
+    feature:
+        ... demo mode: File -> Demo
+
+
+3.4.00.09   - 2013.02.19 
+-------------------------------------------------------------------------------
+    update:
+        ... build procedure
+        ... commandLine routine
+        ... rename procedure testContro to controlDemo
+
+
 3.4.00.08   - 2013.02.18 
 -------------------------------------------------------------------------------
     feature:
-        ... run integrated test per commandLind
+        ... run integrated test per commandLine
             ... -test loopSamples integrationTest_00 (others will follow)
 
 

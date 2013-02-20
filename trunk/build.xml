@@ -15,7 +15,7 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.00.08" />
+	<property name = "rattleCAD_Version" 	value = "3.4.00.10" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
@@ -164,10 +164,10 @@
 			<echo> </echo>
 			<echo>     ... execute rattleCAD ${build.dir}/${rattleCAD_Version}/main.tcl</echo>
 			<echo> </echo>
-			<exec executable = "${tcl_8.5}"   dir = "${build.dir}/${rattleCAD_Version}">    
+			<exec executable = "${tcl_8.5}"   dir = "${build.dir}/${rattleCAD_Version}"   failonerror = "false"   resultproperty = "return.code">    
 				<arg value = "main.tcl" />
 			</exec>
-		
+
 	</target>
 	
 	<target   name = "rattleCAD_exec_8.6">
@@ -189,7 +189,12 @@
 			<exec executable = "${tcl_8.5}"   dir = "./___build_starkit">    
 				<arg value = "make_starkit.tcl" />
 			</exec>
-		
+	    
+	    <!-- Test if a ${build.dir}/rattleCAD.vfs/rattleCAD.exe exists -->
+		  <available type = "dir"   file = "${build.dir}/rattleCAD.vfs"   property = "isDirAvailable"/>
+		  <fail unless = "isDirAvailable"   message = "     ... ERROR - starkit could not be build">
+		  </fail>
+
 	</target>
 	
 	<target   name = "test_starkit">

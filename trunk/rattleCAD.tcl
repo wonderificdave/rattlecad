@@ -139,26 +139,29 @@ exec wish "$0" "$@"
         }
           # parray argValues
           # puts "\n ... <D>  [array names argValues {-test}]"
-        if {[array names argValues {-test}] == {-test}} {
-    	puts "\n =============================================="    
-    	puts "      ... CommandLine Argument: -test $argValues(-test)\n"    
-    	puts "      ... run some tests\n"    
-    	set testCommands $argValues(-test)
-    	foreach command $testCommands {
-    	    puts "\n         ... $command"
-	    rattleCAD_Test::testControl $command
-    	}
-        }
-    
+	    
+	    
         if {[array names argValues {-file}] == {-file}} {
-    	puts "\n =============================================="    
-    	puts "      ... CommandLine Argument: -file $argValues(-file)\n"    
-    	set openFile [lindex $argValues(-file) 0]
-    	if {$openFile != {}} {
-            puts "          ... $openFile\n"
-    	    lib_file::openProject_xml   $openFile
-    	}    
+            puts "\n =============================================="    
+            puts "      ... CommandLine Argument: -file $argValues(-file)\n"    
+            set openFile [lindex $argValues(-file) 0]
+            if {$openFile != {}} {
+        	puts "          ... $openFile\n"
+    	        lib_file::openProject_xml   $openFile
+    	    }    
+        }	    
+	    
+        if {[array names argValues {-test}] == {-test}} {
+    	    puts "\n =============================================="    
+    	    puts "      ... CommandLine Argument: -test $argValues(-test)\n"    
+    	    puts "      ... run some tests\n"    
+    	    set testCommands $argValues(-test)
+    	    foreach command $testCommands {
+    	        puts "\n         ... $command"
+	        rattleCAD_Test::controlDemo $command
+    	   }
         }
+
 	    
     }
     
