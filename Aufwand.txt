@@ -415,3 +415,4 @@
 
 2013.02.17  00:00   00:00    30:00   3.4.00 ... 05 ... migrate to ECLIPSE, refactor code, build starkit with ANT 
 2013.02.17  20:00   22:00    02:00   3.4.00 ... 06 ... add samples to rattleCAD and loop through them 
+2013.02.22  00:00   002:00   20:00   3.4.00 ... 14 ... refactoring bikeGeometry and rattleCAD package 

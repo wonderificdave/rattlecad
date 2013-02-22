@@ -3,8 +3,11 @@
 	<name>rattleCAD_3.4</name>
 	<comment></comment>
 	<projects>
-		<project>rattleCAD_Geometry</project>
-		<project>vectormath</project>
+		<project>appUtil</project>
+		<project>bikeGeometry</project>
+		<project>canvasCAD</project>
+		<project>extSummary</project>
+		<project>vectorMath</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

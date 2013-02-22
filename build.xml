@@ -15,7 +15,7 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.00.13" />
+	<property name = "rattleCAD_Version" 	value = "3.4.00.14" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
@@ -24,7 +24,8 @@
 	<property name = "vectorMath_home"   	location = "../vectorMath" />
 	<property name = "canvasCAD_home"    	location = "../canvasCAD" />
 	<property name = "bikeGeometry_home" 	location = "../bikeGeometry" />
-	<property name = "extSummary_home"   	location = "../extSummary" />
+  <property name = "extSummary_home"    location = "../extSummary" />
+  <property name = "appUtil_home"       location = "../appUtil" />
 	
 	<property name = "rattleCAD_fileList" value = "main.tcl, rattleCAD.tcl, help.txt, readme.txt, license.txt, exclusion.txt, icon16.gif, tclkit.ico, tclkit.inf" />
 			        
@@ -144,6 +145,21 @@
 			
 			<echo> </echo>
 			
+  
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil">
+          <filelist dir = "${appUtil_home}" files = "pkgIndex.tcl"/>
+      </copy>
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil/lib">
+          <fileset dir = "${appUtil_home}/lib"/>
+      </copy>   
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil/test">
+          <fileset dir = "${appUtil_home}/test"/>
+      </copy>   
+      <echo>     ... content of folder ${appUtil_home} was copied.</echo>
+      
+      <echo> </echo>
+
+
 			
 			<copy todir="${build.dir}/${rattleCAD_Version}">
 			    <filelist dir = "."   files="${rattleCAD_fileList}"/>  	
