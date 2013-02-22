@@ -39,7 +39,7 @@
 
 
 
-    proc cv_custom::update {cv_Name} {
+    proc cv_custom::update {cv_Name {keepPosition {reset}}} {
 
         variable     bottomCanvasBorder
 
@@ -48,14 +48,13 @@
             puts "    cv_custom::update"
             puts "       cv_Name:         $cv_Name"
 
-        # appUtil::get_procHierarchy
 
         switch $cv_Name {
             lib_gui::cv_Custom00 {
                         #
                         # -- base geometry
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]
+                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                     $cv_Name        clean_StageContent
                         #
                     update_cv_Parameter                         $cv_Name $xy
@@ -82,7 +81,7 @@
                         #
                         # -- frame - details
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame ]
+                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame ]
                     $cv_Name        clean_StageContent
                         #
                     update_cv_Parameter                         $cv_Name $xy
@@ -146,7 +145,7 @@
                     set stageScale  [$cv_Name getNodeAttr Stage scale]
                     set stageFormat [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
+                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -168,7 +167,7 @@
                     set stageScale  [$cv_Name getNodeAttr Stage scale]
                     set stageFormat [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
+                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -211,7 +210,7 @@
                         #   puts "\n\n"
                         #   puts "   \$stageFormat: $stageFormat"
                         #   puts "   \$factor:      $factor"
-                    set xy             [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]
+                    set xy             [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                         #
                         #   puts "   \$xy:          $xy"
                     foreach {x y} $xy break
@@ -265,7 +264,7 @@
                         #
                         # -- assembly
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]
+                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -320,7 +319,7 @@
                     set stageScale      [$cv_Name getNodeAttr Stage scale]
                     set stageFormat     [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy              [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder frame $stageScale]
+                    set xy              [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
                         #
                     $cv_Name            clean_StageContent
                         #
@@ -340,7 +339,7 @@
                         #
                         # -- component in ConfigPanel
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder bicycle ]
+                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -370,14 +369,15 @@
         }
 
         ::update    ; #for sure otherwise confuse location of canvasCad Stage
-
+        # puts "  .... $xy"
+        
     }
 
 
 
      #-------------------------------------------------------------------------
 	     #  return BottomBracket coords
-    proc cv_custom::get_BottomBracket_Position {cv_Name bottomCanvasBorder {option {bicycle}} {stageScale {}}} {
+    proc cv_custom::get_BottomBracket_Position {cv_Name bottomCanvasBorder {keepPosition {reset}} {option {bicycle}} {stageScale {}}} {
 	    
 	    variable  Position
 	    
@@ -386,22 +386,46 @@
 	    array set RearWheel      {}
 	    array set BottomBracket  {}
 	    
-	    set FrontWheel(Position)      [project::getValue Result(Position/FrontWheel)         position]
-	    set FrontWheel(RimDiameter)   [project::getValue Component(Wheel/Front/RimDiameter)  value]
-      set FrontWheel(TyreHeight)    [project::getValue Component(Wheel/Front/TyreHeight)   value]
-	    set FrontWheel(Radius)        [expr 0.5 * $FrontWheel(RimDiameter) + $FrontWheel(TyreHeight)] 
-				    
-	    set RearWheel(Position)       [project::getValue Result(Position/RearWheel)          position]
-	    set RearWheel(RimDiameter)    [project::getValue Component(Wheel/Rear/RimDiameter)   value]
-	    set RearWheel(TyreHeight)     [project::getValue Component(Wheel/Front/TyreHeight)   value]
-	    set RearWheel(Radius)         [expr 0.5 * $RearWheel(RimDiameter) + $RearWheel(TyreHeight)] 
-	    set RearWheel(Distance_X)     [project::getValue Result(Length/RearWheel/horizontal) value]
-	    
-	    set BottomBracketDepth        [project::getValue Custom(BottomBracket/Depth)         value]
-	    set FrameSize          [split [project::getValue Result(Position/SummarySize)            position] ,]
-	    set SummaryLength             [lindex $FrameSize 0]
+        set FrontWheel(Position)      [project::getValue Result(Position/FrontWheel)         position]
+        set FrontWheel(RimDiameter)   [project::getValue Component(Wheel/Front/RimDiameter)  value]
+        set FrontWheel(TyreHeight)    [project::getValue Component(Wheel/Front/TyreHeight)   value]
+        set FrontWheel(Radius)        [expr 0.5 * $FrontWheel(RimDiameter) + $FrontWheel(TyreHeight)] 
+                    
+        set RearWheel(Position)       [project::getValue Result(Position/RearWheel)          position]
+        set RearWheel(RimDiameter)    [project::getValue Component(Wheel/Rear/RimDiameter)   value]
+        set RearWheel(TyreHeight)     [project::getValue Component(Wheel/Front/TyreHeight)   value]
+        set RearWheel(Radius)         [expr 0.5 * $RearWheel(RimDiameter) + $RearWheel(TyreHeight)] 
+        set RearWheel(Distance_X)     [project::getValue Result(Length/RearWheel/horizontal) value]
+        
+        set BottomBracketDepth        [project::getValue Custom(BottomBracket/Depth)         value]
+        set BottomBracketHeight       [expr $RearWheel(Radius) - $BottomBracketDepth]
+        set FrameSize          [split [project::getValue Result(Position/SummarySize)        position] ,]
+        set SummaryLength             [lindex $FrameSize 0]
+        
+        
+        if {$keepPosition != {reset}} {
+                # puts "       <I> ... "
+                # puts "       <I> ...    $bottomCanvasBorder"
+                # puts "       <I> ... last value:$Position($cv_Name)"
+            set Stage(scale_curr)   [ eval $cv_Name getNodeAttr Stage  scale ]
+            set lastPos_x              [lindex $Position($cv_Name) 0]
+            set lastPos_y              [lindex $Position($cv_Name) 1]
+            set lastPosition  [list $lastPos_x $lastPos_y ]
+            
+            set lastHeight             [lindex $Position($cv_Name) 2]
+                # puts "       <I> .......... lastHeight: $lastHeight"
+                set newHeight              [expr $RearWheel(Radius) - $BottomBracketDepth ]
+                # puts "       <I> ........... newHeight:  $newHeight"
+            set diffHeight             [expr $lastHeight - $newHeight] 
+                # puts "       <I> .......... diffHeight: $diffHeight"
+                     
+            set newPosition [list $lastPos_x [expr $lastPos_y - $diffHeight] ]
+                # puts "       <I> ........ newPosition:  $newPosition"
+            return $newPosition
+        }	    
+
 	      
-              # puts "     ... \$FrontWheel(Position)     $FrontWheel(Position)"
+          # puts "     ... \$FrontWheel(Position)     $FrontWheel(Position)"
 	      # puts "     ... \$FrontWheel(RimDiameter)  $FrontWheel(RimDiameter)"
 	      # puts "     ... \$FrontWheel(TyreHeight)   $FrontWheel(TyreHeight)"
 	      # puts "     ... \$FrontWheel(Radius)       $FrontWheel(Radius)"
@@ -414,12 +438,11 @@
 	      # puts ""
 	      # puts "     ... \$BottomBracketDepth       $BottomBracketDepth"
 	      # puts "     ... \$FrameSize                $FrameSize"
-	    
 
 	    set SummaryLength        [ lindex $FrameSize 0 ]
 	    if {$option == {bicycle}} {
-        set SummaryLength    [ expr $SummaryLength + 2 * $RearWheel(Radius) ]
-	    }
+            set SummaryLength    [ expr $SummaryLength + 2 * $RearWheel(Radius) ]
+    	}
 
         #
         # --- debug
@@ -441,9 +464,9 @@
 		    set Stage(scale)        [ expr 0.75 * $Stage(width) / $SummaryLength ]
 	    }
 	    set Stage(scale_fmt)    [ format "%.4f" $Stage(scale) ]
-        # puts ""
-        # puts "        \$SummaryLength         $SummaryLength"
-        # puts "        \$Stage(scale_fmt)      $Stage(scale_fmt)"
+            # puts ""
+            # puts "        \$SummaryLength         $SummaryLength"
+            # puts "        \$Stage(scale_fmt)      $Stage(scale_fmt)"
 
 
         #
@@ -453,35 +476,36 @@
         #
         # ---  get unscaled width of Stage
 	    set Stage(unscaled)     [ expr ($Stage(width))/$Stage(scale_fmt) ]
-        # puts "        \$Stage(unscaled)       $Stage(unscaled)"
+            # puts "        \$Stage(unscaled)       $Stage(unscaled)"
 
         #
         # ---  get border outside content to Stage
 	    set border              [ expr  0.5 *( $Stage(unscaled) - $SummaryLength ) ]
-        # puts "        \$border                $border"
+            # puts "        \$border                $border"
 
         #
         # ---  get left/right/bottom border outside content to Stage
 	    set cvBorder            [ expr $bottomCanvasBorder/$Stage(scale_fmt) ]
-        # puts "        \$cvBorder              $cvBorder"
+            # puts "        \$cvBorder              $cvBorder"
 
         #
         # ---  get baseLine Coordinates
 	    if {$option == {bicycle}} {
-        set BtmBracket_x        [ expr $border + $RearWheel(Radius) + $RearWheel(Distance_X) ]
-        set BtmBracket_y        [ expr $cvBorder + $RearWheel(Radius) - $BottomBracketDepth ]
-            # puts "\n -> get_BottomBracket_Position:  $cvBorder + $RearWheel(Radius) - $project::Custom(BottomBracket/Depth) "
-            # puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n"
+            set BtmBracket_x        [ expr $border + $RearWheel(Radius) + $RearWheel(Distance_X) ]
+            set BtmBracket_y        [ expr $cvBorder + $BottomBracketHeight ]
+                # puts "\n -> get_BottomBracket_Position:  $cvBorder + $RearWheel(Radius) - $project::Custom(BottomBracket/Depth) "
+                # puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n"
 	    } else {
             # puts "        \$option                $option"
-        set BtmBracket_x        [ expr $border + $RearWheel(Distance_X) ]
-        set BtmBracket_y        $cvBorder
-            # set BtmBracket_y      [ expr $bottomCanvasBorder + 50 ]
-            # puts "\n -> get_BottomBracket_Position:  $cvBorder "
-            # puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n"
+            set BtmBracket_x        [ expr $border + $RearWheel(Distance_X) ]
+            set BtmBracket_y        $cvBorder
+                # set BtmBracket_y      [ expr $bottomCanvasBorder + 50 ]
+                # puts "\n -> get_BottomBracket_Position:  $cvBorder "
+                # puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n"
 	    }
 
             # puts "       $BtmBracket_x $BtmBracket_y"
-	    return [list $BtmBracket_x $BtmBracket_y]
+        set Position($cv_Name) [list $BtmBracket_x $BtmBracket_y $BottomBracketHeight]
+	    return [lrange $Position($cv_Name) 0 1]
     }
 

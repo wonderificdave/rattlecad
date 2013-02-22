@@ -412,7 +412,7 @@
             # received the event.
               # puts "         check: bind . <DESTROY> %W"
             if {[string equal %W "."]} {
-          lib_gui::exit_rattleCAD yesno bind_Destroy
+               lib_gui::exit_rattleCAD yesno bind_Destroy
             }
         } 
           
