@@ -55,7 +55,7 @@
 		   tk_messageBox -title "loop Samples" -message "... rattleCAD Samples!"
 	    }    
 	    demo_01 {
-		   tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
+		     # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
 		   [namespace current]::demo_01
 		   tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
 	    }    
@@ -152,14 +152,14 @@
         #	 
     proc loopSamples {args} {
         set currentFile $::APPL_Config(PROJECT_File)
-	set SAMPLE_Dir 	$::APPL_Config(SAMPLE_Dir)
+	    set SAMPLE_Dir 	$::APPL_Config(SAMPLE_Dir)
 
         puts "\n\n  ====== l o o p   S A M P L E   F i l e s ========\n"                         
         puts "      currentFile  ... $currentFile"
         puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
-	puts "" 
+	    puts "" 
 
-	# lib_file::saveProject_xml saveAs    
+	    # lib_file::saveProject_xml saveAs    
 	    
         foreach fileName [lsort [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml]] {
     	    puts "\n     open Sample File:"
@@ -167,20 +167,20 @@
             lib_file::openProject_xml   $fileName
 	    after 100
         }
-	  # -- open previous opened File   
-	puts "\n      ... open previous opened file:"
-	puts "\n            ... $currentFile"
-	switch -exact $currentFile {
-	    {Template Road} {
-		lib_gui::load_Template  Road
-	    }	    
-	    {Template MTB} {
-		lib_gui::load_Template  MTB
-	    }
-	    default {
-    		lib_file::openProject_xml   $currentFile    
-	    }
-	}	
+    	  # -- open previous opened File   
+    	puts "\n      ... open previous opened file:"
+    	puts "\n            ... $currentFile"
+    	switch -exact $currentFile {
+    	    {Template Road} {
+    		lib_gui::load_Template  Road
+    	    }	    
+    	    {Template MTB} {
+    		lib_gui::load_Template  MTB
+    	    }
+    	    default {
+        		lib_file::openProject_xml   $currentFile    
+    	    }
+    	}	
 	
           # tk_messageBox -title "loop Samples" -message "... $SAMPLE_Dir!"   
     }	 
@@ -190,39 +190,51 @@
 	#  demo 01
 	#	 
     proc demo_01 {args} {
-	set currentFile $::APPL_Config(PROJECT_File)
-	set SAMPLE_Dir 	$::APPL_Config(SAMPLE_Dir)
-                   
-	puts "\n\n  ====== D E M O N ST R A T I O N   0 1 ===========\n"                         
-	puts "      currentFile  ... $currentFile"
-	puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
-	puts "" 
- 
+    	set currentFile $::APPL_Config(PROJECT_File)
+    	set SAMPLE_Dir 	$::APPL_Config(SAMPLE_Dir)
+                       
+    	puts "\n\n  ====== D E M O N ST R A T I O N   0 1 ===========\n"                         
+    	puts "      currentFile  ... $currentFile"
+    	puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
+    	puts "" 
+     
+    	
+    	set values [[namespace current]::demoValues 30 -3 5 2]  
+    	puts " ... \$values .. $values" 
+    	set values [[namespace current]::demoValues 30 5 -3 2]  
+    	puts " ... \$values .. $values" 
+    	
+        	# proc setValue {arrayName type args}
+        	# proc getValue {arrayName type args}
+        	
+        # lib_gui::select_canvasCAD   cv_Custom00
+        
+        cv_custom::update [lib_gui::current_canvasCAD]
 	
-	set values [[namespace current]::demoValues 30 -3 5 2]  
-	puts " ... \$values .. $values" 
-	set values [[namespace current]::demoValues 30 5 -3 2]  
-	puts " ... \$values .. $values" 
-	
-	# proc setValue {arrayName type args}
-	# proc getValue {arrayName type args}
-	
-	# lib_gui::select_canvasCAD   cv_Custom00
-	
-        set cv_custom::stageRefit no
-        updateGeometryValue Personal(HandleBar_Distance) -15  20   5
-        updateGeometryValue Personal(HandleBar_Height)   -15  20   5
-        updateGeometryValue Component(Fork/Rake)          15 -10   5
-        updateGeometryValue Custom(HeadTube/Angle)        2   -1   1  
+        updateGeometryValue             Personal(Saddle_Distance)            25  -35   5 \
+                                        Personal(HandleBar_Distance)        -25   35   5 \
+                                        Personal(Saddle_Height)             -35   25   5 \
+                                        Personal(HandleBar_Height)          -35   25   5 
+                                        
+        updateGeometryValue             Personal(HandleBar_Distance)        -10    8   3 \
+                                        Personal(HandleBar_Height)           25  -15   2 
 
-        updateGeometryValue Personal(Saddle_Distance)    -15  10   5
-        updateGeometryValue Personal(Saddle_Height)      -35  25   5
+        updateGeometryValue             Custom(BottomBracket/Depth          -20   15   3 \
+    	
+        updateGeometryValue             Custom(WheelPosition/Rear)           25  -10   5 
+        
+        updateGeometryValue             Custom(HeadTube/Angle)               -1   2    1 
+        
+	
+        updateGeometryValue             Component(Wheel/Rear/RimDiameter)    45  -45   0 \
+                                        Component(Wheel/Front/RimDiameter)   45  -45   0 
 
-        updateGeometryValue FrameTubes(HeadTube/Length)  -20  15 -15
-        updateGeometryValue Custom(WheelPosition/Rear)    25 -10  10
+        updateGeometryValue             Custom(BottomBracket/Depth          -30   25  10 \
+                                        FrameTubes(HeadTube/Length)         -30   25  10
+                                        
+        updateGeometryValue             Custom(TopTube/Angle)                 3   -4   1 
+                                        
 
-        updateGeometryValue Custom(BottomBracket/Depth)  -10  15   5
-        set cv_custom::stageRefit yes
         return
 
     }	 
@@ -230,38 +242,103 @@
 	  # -------------------------------------------------------------------------
 	  #  updateGeometryValue
 	  #
-    proc updateGeometryValue {arrayName left right end} {
-      
-        puts "   ... $arrayName"
-        set _array [lindex [split $arrayName (]  0]
-        set _name  [lindex [split $arrayName ()] 1]
-        puts "   ... $_array $_name"
-        set xPath   [format "%s/%s" $_array $_name]
-        puts "   ... $xPath"
-	            
-        set currentValue  [project::getValue $arrayName value]
-        set valueList     [[namespace current]::demoValues $currentValue $left $right $end]
-          # puts " ... project::getValue Personal(HandleBar_Distance)  [project::getValue Personal(HandleBar_Distance) value]"
-          # puts " ... \$currentValue $currentValue"
-          # puts " ... \$valueList    $valueList"
-        foreach newValue $valueList {
-            frame_geometry::set_projectValue $xPath $newValue
-            lib_gui::notebook_updateCanvas 
-        }
-    }	  
-	 
+	  
+      proc updateGeometryValue {args} {
+         
+          set _index 0
+          array set myValues {}
+          foreach {arrayName left right end} $args {
+              set _array    [lindex [split $arrayName (]  0]
+              set _name     [lindex [split $arrayName ()] 1]
+              set xPath     [format "%s/%s" $_array $_name]
+               
+              set currentValue  [project::getValue $arrayName value]
+              set valueList [[namespace current]::demoValues $currentValue $left $right $end]
+               
+              set myValues($_index) [project::flatten_nestedList $xPath $valueList]
+              incr _index
+          }
+          puts "   ..."
+          parray myValues
+          set arraySize [array size myValues]
+          puts "    ... $arraySize"
+           
+           
+          if {$arraySize > 0} {
+              set listLength [llength $myValues(0)]
+              puts "    ... $listLength"
+          } else {
+              return
+          }
+           
+           set listIndex  1
+           set arrayIndex 0
+           while {$listIndex < $listLength} {
+               while {$arrayIndex < $arraySize} {
+                   set xPath       [lindex $myValues($arrayIndex) 0]
+                   set paramValue  [lindex $myValues($arrayIndex) $listIndex]
+                   puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
+                   frame_geometry::set_projectValue $xPath $paramValue
+                   incr arrayIndex 
+               }
+               cv_custom::update [lib_gui::current_canvasCAD] keep
+               set  arrayIndex 0
+               incr listIndex
+           }
+    }  
+
+
     # -------------------------------------------------------------------------
     	#  deliver demo Values
     	#
     proc demoValues {base left right end} {
     	
-    	set leftValue  [ expr $base + $left]
-	set rightValue [ expr $base + $right]
-	set endValue   [ expr $base + $end]
-	return [list [expr 0.5*($leftValue+$base)]        $leftValue \
-		     [expr 0.5*($leftValue+$base)]        $base \
-		     [expr 0.5*($rightValue+$base)]       $rightValue \
-		     [expr 0.5*($rightValue+$endValue)]   $endValue ]
+    	set precission 3
+    	set valueList  {}
+    	
+    	
+    	set currentValue    $base
+    	
+        set step [expr 1.0*$left/$precission]
+        set i 0
+        while {$i < $precission} {
+            set currentValue [expr $currentValue + $step]
+            lappend valueList $currentValue
+            incr i
+        }
+        set i 0
+        while {$i < $precission} {
+            set currentValue [expr $currentValue - $step]
+            lappend valueList $currentValue
+            incr i
+        }
+        
+        
+    	set step [expr 1.0*$right/$precission]
+        set i 0
+        while {$i < $precission} {
+            set currentValue [expr $currentValue + $step]
+            lappend valueList $currentValue
+            incr i
+        }
+        set i 0
+        while {$i < $precission} {
+            set currentValue [expr $currentValue - $step]
+            lappend valueList $currentValue
+            incr i
+        }
+        
+        
+        set step [expr 1.0*$end/$precission]
+        set i 0
+        while {$i < $precission} {
+            set currentValue [expr $currentValue + $step]
+            lappend valueList $currentValue
+            incr i
+        }       
+    	
+    	return $valueList
+    	
     }	 
 	 
 
