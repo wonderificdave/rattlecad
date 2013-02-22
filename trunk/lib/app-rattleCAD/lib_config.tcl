@@ -290,8 +290,10 @@
             ttk::labelframe    $menueFrame.sf.lf_09        -text "Frame & Fork Parts"
                 pack $menueFrame.sf.lf_09                 -side top  -fill x  -expand yes  -pady 2
 
-                set compList {    Lugs/RearDropOut/File Component/Fork/Crown/File \
-                                Component/Fork/DropOut/File}
+                set compList {    Rendering/Fork \
+                                  Lugs/RearDropOut/File \
+                                  Component/Fork/Crown/File \
+                                  Component/Fork/DropOut/File}
                     set i 0
                 foreach xPath $compList {
                         set _array  [lindex [split $xPath /] 0]
@@ -301,10 +303,23 @@
                         puts "       ... $xPath  $configValue($xPath)"
 
                         set fileFrame [frame $menueFrame.sf.lf_09.f_$i]
-                        label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"
-                        set alternatives [lib_file::get_componentAlternatives  $xPath]
+                        switch -exact $xPath {
+                            Rendering/Fork {
+                                label $fileFrame.lb -text "  Select ForkType:"
+                                  # puts "\n  \$fileFrame $fileFrame  \$xPath $xPath\n"
+                                  # puts "     SELECT_ForkType"
+                                set listBoxContent [ projectUpdate::get_listBoxContent SELECT_ForkType Rendering(Fork))]
+                                foreach entry $listBoxContent {
+                                    puts "         ... $entry"
+                                }
+                            }
+                            default {
+                                label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"
+                                set listBoxContent [lib_file::get_componentAlternatives  $xPath]
+                            }
+                        }
                         ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
-                                                    -values $alternatives   -width 30
+                                                    -values $listBoxContent   -width 30
                             pack $fileFrame     -fill x -expand yes  -pady 2
                             pack $fileFrame.cb  -side right
                             pack $fileFrame.lb  -side left
@@ -312,6 +327,11 @@
                             bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] select]
                             bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
                 }
+                
+                #list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                {   list://Rendering(Fork@SELECT_ForkType) \
+                                }  {ForkType Select} 
+                
 
                 if {$frameCanvas != {}} {
                     # puts "   ... 0 $compCanvas  exists"
@@ -509,7 +529,8 @@
             if {$mode == {select}} {
                 project::add_tracing
                 eval set $targetVar \"$compFile\"
-                project::remove_tracing
+                    # project::remove_tracing
+                cv_custom::update [lib_gui::current_canvasCAD]
             }
     }
 
@@ -701,7 +722,7 @@
                         "Down"      {set newValue [expr {$currentValue - $scale}]}
                         "default"   {return}
                 }
-                set ::$textVar [format "%.2f" $newValue]
+                set ::$textVar [format "%.3f" $newValue]
     }
 
     #-------------------------------------------------------------------------
@@ -753,17 +774,6 @@
                             -bd 1  -justify right -bg white
                             # e.g.: project::Result(Length/TopTube/VirtualLength)
 
-            # frame    $cfgFrame.f    -relief sunken \
-                            -bd 2 -padx 2 -pady 0
-
-            # 3.2.78.10 rdial::create   $cfgFrame.f.scl    \
-                            -value      $configValue($xPath) \
-                            -scale      $scale \
-                            -step       12 \
-                            -height     11 \
-                            -width      60 \
-                            -orient     horizontal \
-                            -callback   [list  [namespace current]::callback_cDial      [namespace current]::configValue($xPath)  $myEntry ]
 
             if {$color != {}} {
                 $cfgFrame.lb  configure -fg $color
@@ -814,7 +824,7 @@
                 # puts "   -> $oldValue"
             if {$value < 0} {set scale [expr -1.0*$scale]}
             set newValue  [expr $oldValue + $scale]
-            set newValue [format "%.2f" $newValue]
+            set newValue [format "%.3f" $newValue]
                 # puts "  -> newValue $newValue"
             set $targetVar $newValue
                 # eval puts \"  ->    \$$targetVar\"
@@ -834,7 +844,7 @@
 
             set entryVar [$entry cget -text]
             eval set currentValue     [expr 1.0 * \$$entryVar]
-            set value [format "%.2f" $currentValue]
+            set value [format "%.3f" $currentValue]
             set [namespace current]::configValue(entry) $value
 
             return
@@ -855,6 +865,7 @@
                     # puts "     \$newValue $newValue"
                     # puts "[$entry cget -text]"
 
+            puts "\n         ... compare Value $newValue == $oldValue \n"
             if {$newValue == $oldValue} {
                 return
             }
@@ -868,13 +879,15 @@
 
             if {$_array eq {Result}} {
                 eval set $targetVar $oldValue
-                 frame_geometry::set_resulting_Parameters $_array $_name $newValue
+                frame_geometry::set_resulting_Parameters $_array $_name $newValue
+                cv_custom::update [lib_gui::current_canvasCAD]
                 return
             }
 
             eval set $targetVar $newValue
 
-            project::remove_tracing
+                # project::remove_tracing
+            cv_custom::update [lib_gui::current_canvasCAD]
 
             return
      }
@@ -885,7 +898,7 @@
             # puts "\n value:       $value"
             # puts "\n drag_Event:  $drag_Event"
 
-            set value [format "%.2f" $value]
+            set value [format "%.3f" $value]
                 # puts "\n value:       $value"
             if {$entryVar ne ""} {
                 eval set $entryVar      $value;  # reformat value
@@ -984,12 +997,13 @@
                                 # puts "      >[split $configValue($xPath) ;]<"
                                 # puts "      >[lindex [split $configValue($xPath) ;] 0]<"
                             set value [string trim [lindex [split $configValue($xPath) ;] 0]]
-                            set value [format "%.2f" $value]
+                            set value [format "%.3f" $value]
                             set configValue($xPath)  $value
                                 # puts "   ... $configValue($xPath)"
                                 # puts "   ... $targetVar"
                             eval set $targetVar $value
-                            project::remove_tracing
+                                # project::remove_tracing
+                            cv_custom::update [lib_gui::current_canvasCAD]
                         }
                     }
         }

@@ -1097,8 +1097,8 @@
                                                       list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) }
                               }
             } 
-            frame_geometry::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}                
-            # frame_geometry::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}                
+            projectUpdate::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}                
+            # projectUpdate::createEdit  5 80  $varName  cv_custom::update  $listDefinition  {Rendering Settings}                
     }
 
 
@@ -1236,7 +1236,7 @@
             variable canvasUpdate
             variable noteBook_top
 
-                # frame_geometry::createEdit
+                # projectUpdate::createEdit
                 #    creates window $cv.f_edit
                 #    catch <MouseWheel> for $cv.f_edit
             set currentTab [$noteBook_top select]

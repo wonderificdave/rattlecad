@@ -39,9 +39,16 @@
 
   package require   Tk          8.5
   package require   BWidget         
-  package require   tdom     
+  package require   tdom
   
-  package provide   rattleCAD   3.4
+  package require   appUtil
+  package require   bikeGeometry  0.6
+  package require   canvasCAD     0.35
+  package require   extSummary    0.3
+  
+      
+  package provide   rattleCAD     3.4
+
 
                    
     # -- default Parameters  ----
@@ -76,9 +83,9 @@
                         BASE_Dir            {}
                         ROOT_Dir            {}
                         CONFIG_Dir          {}
-			IMAGE_Dir           {}
-			TEST_Dir            {}
-			USER_Dir            {}
+                        IMAGE_Dir           {}
+                        TEST_Dir            {}
+                        USER_Dir            {}
                         EXPORT_Dir          {}
                         EXPORT_PDF          {}
                         EXPORT_HTML         {}
@@ -229,8 +236,8 @@
         puts "     ... root_InitDOM      [file join $::APPL_Config(CONFIG_Dir) rattleCAD_init.xml]"
           
           
-	   # -- initialize GUI ----------
-	init_GUI_Values
+            # -- initialize GUI ----------
+       init_GUI_Values
           
         
             
@@ -415,6 +422,19 @@
             
             # -- open config panel -----------------------
         # lib_config::create . .cfg
+        
+            # -- status message -----------
+          # appUtil::appDebug p
+          
+            # -- Version Info Summary  ---------------
+        puts "\n"
+        puts "  ----------------------------------------------"
+        puts "  rattleCAD      $::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+        puts "                             $::APPL_Config(RELEASE_Date)"
+        puts "  ----------------------------------------------\n"
+            
+          
+          
     }
 
 
@@ -718,7 +738,7 @@
        #
     proc set_window_title { {filename {}} } {
       
-            # Debug  p     
+            # appDebug  p     
         global APPL_Config
       
         set  prj_name  [file tail $filename]
@@ -726,7 +746,7 @@
         set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision) - $prj_name"
         set  APPL_Config(PROJECT_Name)  "$prj_name"
         
-            # Debug  t  "   $filename " 1      
+            # appDebug  t  "   $filename " 1      
         wm title . $APPL_Config(WINDOW_Title)
     }
 
@@ -766,6 +786,6 @@
        #  debug_out
        #   
     proc debug_out { msg {args} } {
-        Debug t $msg $args
+        appDebug t $msg $args
     }    
     

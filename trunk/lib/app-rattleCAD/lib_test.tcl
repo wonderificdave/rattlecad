@@ -246,7 +246,7 @@
           # puts " ... \$valueList    $valueList"
         foreach newValue $valueList {
             frame_geometry::set_projectValue $xPath $newValue
-            # lib_gui::notebook_updateCanvas 
+            lib_gui::notebook_updateCanvas 
         }
     }	  
 	 

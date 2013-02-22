@@ -70,11 +70,7 @@ exec wish "$0" "$@"
         # puts "  \$auto_path  $auto_path"
     
     package require   rattleCAD     3.4 
-    package require   canvasCAD     0.35
-    package require   bikeGeometry  0.4
-    package require   extSummary    0.3
 
-    
     
         # -- msgcat -1.5.0.tm - workaround  ----- on windows platforms
     switch $tcl_platform(platform) {
@@ -116,6 +112,7 @@ exec wish "$0" "$@"
         
         # -- destroy intro - image ----
     after  200 destroy .intro
+
 
 	# -- keep on top --------------
     wm deiconify .

@@ -660,31 +660,31 @@
                                     }
 
 
-                                    $cv_Name bind $_dim_HB_XPosition    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Personal(HandleBar_Distance) ]
-                                    $cv_Name bind $_dim_HB_YPosition    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Personal(HandleBar_Height) ]
-                                    $cv_Name bind $_dim_SD_XPosition    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Personal(Saddle_Distance) ]
-                                    $cv_Name bind $_dim_SD_YPosition    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Personal(Saddle_Height) ]
+                                    $cv_Name bind $_dim_HB_XPosition    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Personal(HandleBar_Distance) ]
+                                    $cv_Name bind $_dim_HB_YPosition    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Personal(HandleBar_Height) ]
+                                    $cv_Name bind $_dim_SD_XPosition    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Personal(Saddle_Distance) ]
+                                    $cv_Name bind $_dim_SD_YPosition    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Personal(Saddle_Height) ]
 
-                                    $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Saddle/Height) ]
-                                    $cv_Name bind $_dim_SP_SetBack      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(SeatPost/Setback) ]
-                                    $cv_Name bind $_dim_HT_Length       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
-                                    $cv_Name bind $_dim_LC_Position_x   <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(TopTube/PivotPosition) ]
-                                    $cv_Name bind $_dim_LC_Position_y   <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Personal(InnerLeg_Length) ]
-                                    $cv_Name bind $_dim_SN_Position_x   <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_Nose) ]
-                                    $cv_Name bind $_dim_BB_Depth        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(BottomBracket/Depth) ]
-                                    $cv_Name bind $_dim_CS_Length       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
-                                    $cv_Name bind $_dim_HT_Angle        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(HeadTube/Angle) ]
-                                    $cv_Name bind $_dim_Stem_Length     <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Stem/Length) ]
-                                    $cv_Name bind $_dim_Stem_Angle      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Stem/Angle) ]
-                                    $cv_Name bind $_dim_Fork_Rake       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Fork/Rake) ]
-                                    $cv_Name bind $_dim_Fork_Height     <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Fork/Height) ]
-                                    $cv_Name bind $_dim_RW_Radius       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Rear/RimDiameter@SELECT_Rim) Component(Wheel/Rear/TyreHeight)} {Rear Wheel Parameter} ]
-                                    $cv_Name bind $_dim_FW_Radius       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Front/RimDiameter@SELECT_Rim) Component(Wheel/Front/TyreHeight)} {Front Wheel Parameter} ]
-                                    $cv_Name bind $_dim_CR_Length       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
+                                    $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(Saddle/Height) ]
+                                    $cv_Name bind $_dim_SP_SetBack      <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(SeatPost/Setback) ]
+                                    $cv_Name bind $_dim_HT_Length       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
+                                    $cv_Name bind $_dim_LC_Position_x   <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Custom(TopTube/PivotPosition) ]
+                                    $cv_Name bind $_dim_LC_Position_y   <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Personal(InnerLeg_Length) ]
+                                    $cv_Name bind $_dim_SN_Position_x   <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_Nose) ]
+                                    $cv_Name bind $_dim_BB_Depth        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Custom(BottomBracket/Depth) ]
+                                    $cv_Name bind $_dim_CS_Length       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
+                                    $cv_Name bind $_dim_HT_Angle        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Custom(HeadTube/Angle) ]
+                                    $cv_Name bind $_dim_Stem_Length     <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(Stem/Length) ]
+                                    $cv_Name bind $_dim_Stem_Angle      <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(Stem/Angle) ]
+                                    $cv_Name bind $_dim_Fork_Rake       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(Fork/Rake) ]
+                                    $cv_Name bind $_dim_Fork_Height     <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(Fork/Height) ]
+                                    $cv_Name bind $_dim_RW_Radius       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Rear/RimDiameter@SELECT_Rim) Component(Wheel/Rear/TyreHeight)} {Rear Wheel Parameter} ]
+                                    $cv_Name bind $_dim_FW_Radius       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Front/RimDiameter@SELECT_Rim) Component(Wheel/Front/TyreHeight)} {Front Wheel Parameter} ]
+                                    $cv_Name bind $_dim_CR_Length       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
 
-                                    $cv_Name bind $_dim_ST_Angle        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Angle/SeatTube/Direction) ]
-                                    $cv_Name bind $_dim_ST_Length       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_ST) ]
-                                    $cv_Name bind $_dim_ST_Offset       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(SeatTube/OffsetBB) ]
+                                    $cv_Name bind $_dim_ST_Angle        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Angle/SeatTube/Direction) ]
+                                    $cv_Name bind $_dim_ST_Length       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_ST) ]
+                                    $cv_Name bind $_dim_ST_Offset       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Custom(SeatTube/OffsetBB) ]
 
                                     lib_gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Height
                                     lib_gui::object_CursorBinding        $cv_Name    $_dim_FW_Distance
@@ -696,15 +696,15 @@
                                     lib_gui::object_CursorBinding        $cv_Name    $_dim_HT_Stack_Y
                                     lib_gui::object_CursorBinding        $cv_Name    $_dim_CS_LengthX
 
-                                    $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_HB) ]
-                                    $cv_Name bind $_dim_FW_Distance     <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
-                                    $cv_Name bind $_dim_FW_DistanceX    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/horizontal) ]
-                                    $cv_Name bind $_dim_BB_Height       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/BottomBracket/Height) ]
-                                    $cv_Name bind $_dim_TT_Virtual      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/TopTube/VirtualLength) ]
-                                    $cv_Name bind $_dim_ST_Virtual      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/SeatTube/VirtualLength) ]
-                                    $cv_Name bind $_dim_HT_Reach_X      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/ReachLength) ]
-                                    $cv_Name bind $_dim_HT_Stack_Y      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/StackHeight) ]
-                                    $cv_Name bind $_dim_CS_LengthX      <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Result(Length/RearWheel/horizontal) ]
+                                    $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_HB) ]
+                                    $cv_Name bind $_dim_FW_Distance     <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
+                                    $cv_Name bind $_dim_FW_DistanceX    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/horizontal) ]
+                                    $cv_Name bind $_dim_BB_Height       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/BottomBracket/Height) ]
+                                    $cv_Name bind $_dim_TT_Virtual      <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/TopTube/VirtualLength) ]
+                                    $cv_Name bind $_dim_ST_Virtual      <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/SeatTube/VirtualLength) ]
+                                    $cv_Name bind $_dim_HT_Reach_X      <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/ReachLength) ]
+                                    $cv_Name bind $_dim_HT_Stack_Y      <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/StackHeight) ]
+                                    $cv_Name bind $_dim_CS_LengthX      <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Result(Length/RearWheel/horizontal) ]
 
                                         #
                                         # ... proc fill_resultValues ...
@@ -1453,7 +1453,7 @@
                                                                                     aligned    [expr  (-110 + 0.5 * $HeadTube(Diameter)) * $stageScale]   0 \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                     {FrameTubes(HeadTube/Length)    \
                                                                                     }    {HeadTube Length}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1466,7 +1466,7 @@
                                                                                     aligned    [expr 70 * $stageScale] [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                     {Custom(TopTube/OffsetHT)    \
                                                                                     }    {HeadTube TopTube Offset}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1479,7 +1479,7 @@
                                                                                     aligned    [expr -70 * $stageScale] [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {Custom(DownTube/OffsetHT) \
                                                                                         }    {HeadTube DownTube Offset}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1492,7 +1492,7 @@
                                                                                     aligned    [expr 50 * $stageScale] [expr -50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatTube/Extension) \
                                                                                         }    {SeatTube Extension}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1510,7 +1510,7 @@
                                                                                     aligned    [expr 70 * $stageScale]   [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatStay/OffsetTT) \
                                                                                         }    {SeatStay Offset TopTube}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1531,7 +1531,7 @@
                                                                                     {perpendicular}    $dim_distance $dim_offset \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(DownTube/OffsetBB) \
                                                                                         }    {DownTube Offset BottomBracket}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1552,7 +1552,7 @@
                                                                                     {perpendicular}    $dim_distance $dim_offset \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatTube/OffsetBB) \
                                                                                         }    {SeatTube Offset BottomBracket}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1574,7 +1574,7 @@
                                                                                     darkred ]
                             }
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(TopTube/Angle) \
                                                                                         }    {TopTube Angle}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1585,7 +1585,7 @@
                                                                                     150   0 \
                                                                                     darkblue ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Result(Angle/HeadTube/TopTube) \
                                                                                         }    {HeadTube TopTube Angle}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1596,7 +1596,7 @@
                                                                                     perpendicular [expr  (-110 + 0.5 * $HeadSet(Diameter)) * $stageScale]    [expr  -80 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(Fork/Height) \
                                                                                         }    {Fork Height}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1607,7 +1607,7 @@
                                                                                     perpendicular    [expr  (-150 + 0.5 * $HeadTube(Diameter)) * $stageScale]   [expr -50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(HeadSet/Height/Top) \
                                                                                         }    {HeadSet Top Height}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1618,7 +1618,7 @@
                                                                                     perpendicular    [expr  (150 - 0.5 * $HeadSet(Diameter)) * $stageScale]   [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(HeadSet/Height/Bottom) \
                                                                                         }    {HeadSet Bottom Height}]
                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1639,11 +1639,11 @@
                                                                                                     aligned            [expr    60 * $stageScale]    [expr -50 * $stageScale] \
                                                                                                     darkred ]    ;# Component(Brake/Rear/LeverLength)
                                             if {$updateCommand != {}} { $cv_Name    bind    $dimension_01    <Double-ButtonPress-1>  \
-                                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Rear/Offset) \
                                                                                                         }    {Rear Brake Offset}]
                                                                         $cv_Name    bind    $dimension_02    <Double-ButtonPress-1>  \
-                                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Rear/LeverLength) \
                                                                                                         }    {Rear Brake LeverLength}]
                                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension_01
@@ -1674,11 +1674,11 @@
 
 
                                             if {$updateCommand != {}} { $cv_Name    bind    $dimension_01    <Double-ButtonPress-1>  \
-                                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Front/Offset) \
                                                                                                         }    {Front Brake Offset}]
                                                                         $cv_Name    bind    $dimension_02    <Double-ButtonPress-1>  \
-                                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Front/LeverLength) \
                                                                                                         }    {Front Brake LeverLength}]
                                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension_01
@@ -1704,7 +1704,7 @@
                                                                                                     aligned        [expr  70 * $stageScale]    [expr  -15 * $stageScale] \
                                                                                                     darkblue ]
                                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/SeatTube/OffsetBB) \
                                                                                                         }    {BottleCage SeatTube Offset}]
                                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1729,7 +1729,7 @@
                                                                                                     aligned        [expr -1.0 * (90 + $addDist) * $stageScale]    [expr  15 * $stageScale] \
                                                                                                     darkblue ]
                                             if {$updateCommand != {}} {    $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/DownTube/OffsetBB) \
                                                                                                         }    {BottleCage DownTube Offset}]
                                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1747,7 +1747,7 @@
                                                                                                     aligned        [expr -60 * $stageScale]    [expr  15 * $stageScale] \
                                                                                                     darkblue ]
                                             if {$updateCommand != {}} {    $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/DownTube_Lower/OffsetBB) \
                                                                                                         }    {BottleCage DownTube Lower Offset}]
                                                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1771,12 +1771,12 @@
                                                                                     gray50 ]
                             if {$updateCommand != {}} { 
                                                 $cv_Name    bind    $dimension_01    <Double-ButtonPress-1>  \
-                                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                 {   Lugs(RearDropOut/Derailleur/x) \
                                                                                     Lugs(RearDropOut/Derailleur/y) \
                                                                                 }  {RearDropOut Derailleur}]
                                                  $cv_Name    bind    $dimension_02    <Double-ButtonPress-1>  \
-                                                                    [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                 {   Lugs(RearDropOut/Derailleur/x) \
                                                                                     Lugs(RearDropOut/Derailleur/y) \
                                                                                 }  {RearDropOut Derailleur}]
@@ -1823,7 +1823,7 @@
                                                                                     darkblue ]
                             if {$updateCommand != {}} {
                                         $cv_Name bind                    $dimension  \
-                                                <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                     {    Custom(SeatStay/OffsetTT)        \
                                                                                     }    {SeatStay OffsetTopTube}]
                                         lib_gui::object_CursorBinding        $cv_Name    $dimension
@@ -1991,32 +1991,32 @@
 
 
         $cv_Name bind   $represent_DO       <Double-ButtonPress-1> \
-                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                         {    Lugs(RearDropOut/Angle/value) \
                                             Lugs(RearDropOut/Angle/plus_minus) }                {Lug Specification:  RearDropout}]
         $cv_Name bind   $represent_BB_01    <Double-ButtonPress-1> \
-                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                         {    Lugs(BottomBracket/DownTube/Angle/value) \
                                             Lugs(BottomBracket/DownTube/Angle/plus_minus)  }    {Lug Specification:  Seat-/DownTube}]
         $cv_Name bind   $represent_BB_02    <Double-ButtonPress-1> \
-                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                         {    Lugs(BottomBracket/ChainStay/Angle/value) \
                                             Lugs(BottomBracket/ChainStay/Angle/plus_minus) }    {Lug Specification:  SeatTube/ChainStay}]
         $cv_Name bind   $represent_SL_01    <Double-ButtonPress-1> \
-                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                         {    Lugs(SeatTube/TopTube/Angle/value) \
                                             Lugs(SeatTube/TopTube/Angle/plus_minus) }           {Lug Specification:  Seat-/TopTube}]
         $cv_Name bind   $represent_SL_02    <Double-ButtonPress-1> \
-                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                         {    Lugs(SeatTube/SeatStay/Angle/value) \
                                             Lugs(SeatTube/SeatStay/Angle/plus_minus)
                                             Lugs(SeatTube/SeatStay/MiterDiameter)}             {Lug Specification:  SeatTube/SeatStay}]
         $cv_Name bind   $represent_HL_TT    <Double-ButtonPress-1> \
-                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                         {    Lugs(HeadTube/TopTube/Angle/value) \
                                             Lugs(HeadTube/TopTube/Angle/plus_minus) }            {Lug Specification:  Top-/HeadTube}]
         $cv_Name bind   $represent_HL_DT    <Double-ButtonPress-1> \
-                            [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                         {    Lugs(HeadTube/DownTube/Angle/value) \
                                             Lugs(HeadTube/DownTube/Angle/plus_minus) }            {Lug Specification:  Head-/DownTube}]
 

@@ -277,7 +277,7 @@
                     
                    lib_gui::object_CursorBinding    $ext_cvName $componentCrank
                    $ext_cvName bind   $componentCrank    <Double-ButtonPress-1> \
-                                       [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                       [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                     {   Component(CrankSet/ChainLine) \
                                                         Component(CrankSet/Q-Factor) \
                                                         text://Component(CrankSet/ChainRings) }            {Crankset:  Parameter}]
@@ -425,7 +425,7 @@
 
                     lib_gui::object_CursorBinding    $ext_cvName $chainstayArea
                     $ext_cvName bind   $chainstayArea    <Double-ButtonPress-1> \
-                                       [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                       [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                     {   list://Rendering(ChainStay@SELECT_ChainStay) \
                                                         Rendering(RearMockup/TyreClearance) \
                                                         Rendering(RearMockup/ChainWheelClearance) \
@@ -580,14 +580,14 @@
                 lib_gui::object_CursorBinding     $ext_cvName    $_dim_w2
                 lib_gui::object_CursorBinding     $ext_cvName    $_dim_w3
                 
-                $ext_cvName bind  $_dim_x1    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_01) ]
-                $ext_cvName bind  $_dim_x2    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_02) ]
-                $ext_cvName bind  $_dim_x3    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_03) ]
+                $ext_cvName bind  $_dim_x1    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_01) ]
+                $ext_cvName bind  $_dim_x2    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_02) ]
+                $ext_cvName bind  $_dim_x3    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_03) ]
                 
-                $ext_cvName bind  $_dim_w0    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_00) ]
-                $ext_cvName bind  $_dim_w1    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_01) ]
-                $ext_cvName bind  $_dim_w2    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_02) ]
-                $ext_cvName bind  $_dim_w3    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_03) ]
+                $ext_cvName bind  $_dim_w0    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_00) ]
+                $ext_cvName bind  $_dim_w1    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_01) ]
+                $ext_cvName bind  $_dim_w2    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_02) ]
+                $ext_cvName bind  $_dim_w3    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_03) ]
             }
             proc create_centerLine_Edit {ctrLines offset} {
                   upvar  1 cv_Name    ext_cvName 
@@ -662,41 +662,41 @@
 
                 
                 $ext_cvName bind  $_dim_length_01    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_01)]
                 $ext_cvName bind  $_dim_length_02    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_02)]
                 $ext_cvName bind  $_dim_length_03    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_03)]
                 $ext_cvName bind  $_dim_length_04    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_04)]
 
                 $ext_cvName bind  $_obj_line_01    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_01)]
                 $ext_cvName bind  $_obj_line_02    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_02)]
                 $ext_cvName bind  $_obj_line_03    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_03)]
                 $ext_cvName bind  $_obj_line_04    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                                 FrameTubes(ChainStay/CenterLine/length_04)]
                                                 
                 $ext_cvName bind  $ctrlArea_01    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                             {   FrameTubes(ChainStay/CenterLine/angle_01) \
                                                 FrameTubes(ChainStay/CenterLine/radius_01) }     {Chainstay:  Bent 01}]
                 $ext_cvName bind  $ctrlArea_02    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                             {   FrameTubes(ChainStay/CenterLine/angle_02) \
                                                 FrameTubes(ChainStay/CenterLine/radius_02) }     {Chainstay:  Bent 02}]
                 $ext_cvName bind  $ctrlArea_03    <Double-ButtonPress-1>  \
-                                [list frame_geometry::createEdit  %x %y  $ext_cvName  \
+                                [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                             {   FrameTubes(ChainStay/CenterLine/angle_03) \
                                                 FrameTubes(ChainStay/CenterLine/radius_03) }     {Chainstay:  Bent 03}]
         
@@ -921,13 +921,13 @@
                                   lib_gui::object_CursorBinding   $cv_Name    $tube_CS_right
                                    
                                   $cv_Name bind   $tube_CS_CLine    <Double-ButtonPress-1> \
-                                                  [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                  [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                               {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  CenterLine}]                               
                                   $cv_Name bind   $tube_CS_left    <Double-ButtonPress-1> \
-                                                  [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                  [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                               {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  Type}]
                                   $cv_Name bind   $tube_CS_right   <Double-ButtonPress-1> \
-                                                  [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                                                  [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                               {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  Type}]
                                 }
                    default      { set ChainStay(polygon) {} }
@@ -940,7 +940,7 @@
             set brakeDisc [create_BrakeDisc]
             lib_gui::object_CursorBinding   $cv_Name    $brakeDisc
             $cv_Name bind   $brakeDisc    <Double-ButtonPress-1> \
-                      [list frame_geometry::createEdit  %x %y  $cv_Name  \
+                      [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                   {   Rendering(RearMockup/DiscDiameter) \
                                                       Rendering(RearMockup/DiscWidth) \
                                                       Rendering(RearMockup/DiscClearance) } {DiscBrake Details}]
@@ -1011,12 +1011,12 @@
                             lib_gui::object_CursorBinding     $cv_Name    $_dim_BB_Offset
                             lib_gui::object_CursorBinding     $cv_Name    $_dim_BB_OffsetPerp
                             
-                            $cv_Name bind $_dim_00_Offset            <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_00/Offset) ]
-                            $cv_Name bind $_dim_00_OffsetPerp        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_00/OffsetPerp) ]
-                            $cv_Name bind $_dim_DO_Offset            <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_DO/Offset) ]
-                            $cv_Name bind $_dim_DO_OffsetPerp        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_DO/OffsetPerp) ]
-                            $cv_Name bind $_dim_BB_Offset            <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_BB/Offset) ]
-                            $cv_Name bind $_dim_BB_OffsetPerp        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_BB/OffsetPerp) ]
+                            $cv_Name bind $_dim_00_Offset            <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_00/Offset) ]
+                            $cv_Name bind $_dim_00_OffsetPerp        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_00/OffsetPerp) ]
+                            $cv_Name bind $_dim_DO_Offset            <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_DO/Offset) ]
+                            $cv_Name bind $_dim_DO_OffsetPerp        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_DO/OffsetPerp) ]
+                            $cv_Name bind $_dim_BB_Offset            <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_BB/Offset) ]
+                            $cv_Name bind $_dim_BB_OffsetPerp        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  FrameTubes(ChainStay/Bent/Base_BB/OffsetPerp) ]
                             
                             }
                     default {}
@@ -1062,7 +1062,7 @@
                                                                     horizontal        [expr  60 * $stageScale]   [expr 0 * $stageScale]  \
                                                                     $Colour(result) ] 
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_CS_Length
-                    $cv_Name bind $_dim_CS_Length        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
+                    $cv_Name bind $_dim_CS_Length        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
 
                     
                 # -- BottomBracket
@@ -1082,10 +1082,10 @@
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_BB_Diam_outside       
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_BB_Width       
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_CS_BB_Offset       
-                    $cv_Name bind $_dim_BB_Diam_inside  <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/inside) ]
-                    $cv_Name bind $_dim_BB_Diam_outside <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/outside) ]
-                    $cv_Name bind $_dim_BB_Width        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Width) ]
-                    $cv_Name bind $_dim_CS_BB_Offset    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/ChainStay/Offset_TopView) ]
+                    $cv_Name bind $_dim_BB_Diam_inside  <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/inside) ]
+                    $cv_Name bind $_dim_BB_Diam_outside <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/outside) ]
+                    $cv_Name bind $_dim_BB_Width        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Width) ]
+                    $cv_Name bind $_dim_CS_BB_Offset    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/ChainStay/Offset_TopView) ]
 
                     
                 # -- BrakeDisc
@@ -1099,7 +1099,7 @@
                                                                     horizontal      [expr -15 * $stageScale]    0 \
                                                                     $Colour(result) ] 
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_BrakeDisc_Dist_Hub       
-                    $cv_Name bind $_dim_BrakeDisc_Dist_Hub  <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Rendering(RearMockup/DiscOffset) ]
+                    $cv_Name bind $_dim_BrakeDisc_Dist_Hub  <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Rendering(RearMockup/DiscOffset) ]
 
 
                 # -- RearHub
@@ -1115,9 +1115,9 @@
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_Hub_Width            
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_CS_DO_Distance
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_CS_DO_Offset
-                    $cv_Name bind $_dim_Hub_Width       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/HubWidth) ]
-                    $cv_Name bind $_dim_CS_DO_Distance  <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(RearDropOut/ChainStay/Offset) ]
-                    $cv_Name bind $_dim_CS_DO_Offset    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Lugs(RearDropOut/ChainStay/Offset_TopView) ]
+                    $cv_Name bind $_dim_Hub_Width       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/HubWidth) ]
+                    $cv_Name bind $_dim_CS_DO_Distance  <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Lugs(RearDropOut/ChainStay/Offset) ]
+                    $cv_Name bind $_dim_CS_DO_Offset    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Lugs(RearDropOut/ChainStay/Offset_TopView) ]
                   
                   
                   #$project::Lugs(RearDropOut/ChainStay/Offset)                                            
@@ -1144,11 +1144,11 @@
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_Crank_Q_Factor
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_CrankArmWidth       
                     lib_gui::object_CursorBinding     $cv_Name    $_dim_ChainLine
-                    $cv_Name bind $_dim_Crank_Length    <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
-                    $cv_Name bind $_dim_PedalEye        <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(CrankSet/PedalEye) ]
-                    $cv_Name bind $_dim_Crank_Q_Factor  <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(CrankSet/Q-Factor) ]
-                    $cv_Name bind $_dim_CrankArmWidth   <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(CrankSet/ArmWidth) ]
-                    $cv_Name bind $_dim_ChainLine       <Double-ButtonPress-1>  [list frame_geometry::createEdit  %x %y  $cv_Name  Component(CrankSet/ChainLine) ]
+                    $cv_Name bind $_dim_Crank_Length    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
+                    $cv_Name bind $_dim_PedalEye        <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(CrankSet/PedalEye) ]
+                    $cv_Name bind $_dim_Crank_Q_Factor  <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(CrankSet/Q-Factor) ]
+                    $cv_Name bind $_dim_CrankArmWidth   <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(CrankSet/ArmWidth) ]
+                    $cv_Name bind $_dim_ChainLine       <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $cv_Name  Component(CrankSet/ChainLine) ]
            
             return           
 
