@@ -37,7 +37,7 @@
  #
  # 
 
- package provide bikeGeometry 0.4
+ package provide bikeGeometry 0.7
  
  namespace eval project {
 
@@ -96,13 +96,15 @@
                 # tk_messageBox -message "trace_ProjectConfig: \n     varname:         $var \n     key:             $key \n     operation:       $operation"
             
             frame_geometry::set_base_Parameters
-            cv_custom::update [lib_gui::current_canvasCAD]
+            
+            set    message "          <W> \n"
+            append message "               there was an update in previous version:\n"
+            append message "                      cv_custom::update [lib_gui::current_canvasCAD]\n"
+            append message "          <W>\n"
+            # puts "$message"
+            # tk_messageBox -message $message
+            # cv_custom::update [lib_gui::current_canvasCAD]
             return
-
-            #update
-            # cv_custom::update  lib_gui::cv_Custom02
-            catch {focus $cvEntry}
-            catch {$cvEntry selection range 0 end}
     }    
     #-------------------------------------------------------------------------
     proc dom_2_runTime {projectDOM} {
