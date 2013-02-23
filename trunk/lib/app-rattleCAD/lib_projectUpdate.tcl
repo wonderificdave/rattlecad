@@ -43,7 +43,7 @@
     package require appUtil 0.9
 
     
-     #-------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
         #  store createEdit-widgets position
     variable  _drag
     array set _drag {}
@@ -51,14 +51,14 @@
     variable _updateValue   ; array set _updateValue    {}
       
      
- } 
+
   
-     #-------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
         #  create ProjectEdit Widget
         # proc createEdit { x y cv_Name updateCommand _arrayNameList {title {Edit:}}}
-     proc projectUpdate::createEdit { x y cv_Name _arrayNameList {title {Edit:}}} {
+    proc createEdit { x y cv_Name _arrayNameList {title {Edit:}}} {
 
-            appUtil::get_procHierarchy
+              # appUtil::get_procHierarchy
             
             variable _update
             variable _updateValue
@@ -70,8 +70,8 @@
                 puts " ... Called by ${e}."
             }
             
-            appUtil::appDebug p
-            appUtil::appDebug f
+            # appUtil::appDebug p
+            # appUtil::appDebug f
             
                 puts ""
                 puts "   -------------------------------"
@@ -122,65 +122,22 @@
                     set _array      [lindex [split $_arrayName (] 0]
                     set _name       [lindex [split $_arrayName ()] 1]
                     set xpath       [format "%s/%s" $_array $_name]
-                    set index oneLine
+                    set index       oneLine
 
                     switch -glob $xpath {
                             {file://*} {
                                     set updateMode SELECT_File
-                                                                        set updateMode SELECT_File
-                                    set _array      [string range $_array 7 end]
-                                    eval set value  [format "$%s::%s(%s)" project $_array $_name]
-                                    set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                                    set key         [format "%s/%s" $_array $_name]
-                                    set _updateValue($key) $value
-
-                                        # --- create widgets per xpath list element ---
-                                    create_ListEdit SELECT_File \
-                                                $cv $cv_Name $cvEdit $cvContentFrame \
-                                                $index $labelText $key
+                                    create_fileConfig $cv $cv_Name $cvEdit $cvContentFrame $index $_array $_name
                                 }
                             {list://*} {
-                                    set _array      [string range $_array 7 end]
-                                    set _nameInfo   [split $_name {@} ]
-                                    set _name       [lindex $_nameInfo 0]
-                                    set listName    [lindex $_nameInfo 1]
-                                    
-                                    eval set value  [format "$%s::%s(%s)" project $_array $_name]
-                                    set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                                    set key         [format "%s/%s" $_array $_name]
-                                    set _updateValue($key) $value
-
-                                    create_ListEdit $listName \
-                                                $cv $cv_Name $cvEdit $cvContentFrame \
-                                                $index $labelText $key
+                                    create_listConfig $cv $cv_Name $cvEdit $cvContentFrame $index $_array $_name
                                 }
                             {text://*} {
-                                        # puts " <D> $_array"
-                                    set _array      [string range $_array 7 end]
-                                        # puts " <D> $_array"
-                                    eval set value  [format "$%s::%s(%s)" project $_array $_name]
-                                        # puts " <D> $value"
-                                    set _updateValue($xpath) $value
-                                    set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                                    set key [format "%s/%s" $_array $_name]
-                                    set _updateValue($key) $value
-
-                                        # --- create widgets per xpath list element ---
-                                    create_TextEdit $cv $cv_Name $cvEdit $cvContentFrame \
-                                                        $index $labelText $key
+                                    create_listConfig $cv $cv_Name $cvEdit $cvContentFrame $index $_array $_name
                                 }
                             default {
-                                    eval set value     [format "$%s::%s(%s)" project $_array $_name]
-                                    set _updateValue($xpath) $value
-                                    set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                                    set key [format "%s/%s" $_array $_name]
-                                    set _updateValue($key) $value
-
-                                        # --- create widgets per xpath list element ---
-                                    create_ValueEdit $cv $cv_Name $cvEdit $cvContentFrame \
-                                                        $index $labelText $key
+                                    create_valueConfig $cv $cv_Name $cvEdit $cvContentFrame $index $_array $_name
                                 }
-
                     }
             } else {
                     #
@@ -197,83 +154,20 @@
                         set _array      [lindex [split $_arrayName (] 0]
                         set _name       [lindex [split $_arrayName ()] 1]
                         set xpath       [format "%s/%s" $_array $_name]
-                        set index [expr $index +1]
+                        set index       [expr $index +1]
 
                         switch -glob $xpath {
                             {file://*} {
-                                        # puts "   ... \$xpath $xpath"
-                                    set _array      [string range $_array 7 end]
-                                        # puts "   ... \$xpath $xpath"
-                                    eval set value  [format "$%s::%s(%s)" project $_array $_name]
-                                        # replaced by 3.2.70;# set value    [ [ $domProject selectNodes /root/$xpath  ]    asText ]
-                                        # set xpath    [string range $xpath 7 end]
-                                        # set _updateValue($xpath) $value
-                                        # puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-                                    set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                                        # replaced by 3.2.70;# set labelText        [ string trim [ string map {{/} { / }} $xpath] " " ]
-                                        #
-                                    set key [format "%s/%s" $_array $_name]
-                                    set _updateValue($key) $value
-
-                                        # --- create widgets per xpath list element ---
-                                    create_ListEdit SELECT_File \
-                                                $cv $cv_Name $cvEdit $cvContentFrame \
-                                                $index $labelText $key
+                                    create_fileConfig $cv $cv_Name $cvEdit $cvContentFrame $index $_array $_name      
                                 }
                             {list://*} {
-                                        # puts "   ... \$xpath $xpath"
-                                    set _array      [string range $_array 7 end]
-                                    set _nameInfo   [split $_name {@} ]
-                                        # puts "   ... $_array $_nameInfo"
-                                    set _name       [lindex $_nameInfo 0]
-                                    set listName    [lindex $_nameInfo 1]
-
-                                    eval set value  [format "$%s::%s(%s)" project $_array $_name]
-                                        # replaced by 3.2.70;# set value    [ [ $domProject selectNodes /root/$xpath  ]    asText ]
-                                        # set _updateValue($xpath) $value
-                                        # puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-                                    set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                                        # replaced by 3.2.70;# set labelText        [ string trim [ string map {{/} { / }} $xpath] " " ]
-                                        #
-                                    set key   [format "%s/%s" $_array $_name]
-                                    set _updateValue($key) $value
-
-                                        # --- create widgets per xpath list element ---
-                                    create_ListEdit $listName \
-                                                $cv $cv_Name $cvEdit $cvContentFrame \
-                                                $index $labelText $key
+                                    create_listConfig $cv $cv_Name $cvEdit $cvContentFrame $index $_array $_name 
                                 }
                             {text://*} {
-                                        # puts "   ... \$xpath $xpath"
-                                    set _array      [string range $_array 7 end]
-                                        # puts "  <D> ... $_array $_name"
-                                    eval set value [format "$%s::%s(%s)" project $_array $_name]
-                                    set _updateValue($xpath) $value
-                                        # puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-                                    set labelText       [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                                        # removed by 3.2.70;# set labelText        [ string trim [ string map {{/} { / }} $xpath] " " ]
-                                        #
-                                    set key    [format "%s/%s" $_array $_name]
-                                    set _updateValue($key) $value
-
-                                        # --- select entries content ---
-                                    create_TextEdit $cv $cv_Name $cvEdit $cvContentFrame \
-                                                        $index $labelText $key
+                                    create_textConfig $cv $cv_Name $cvEdit $cvContentFrame $index $_array $_name 
                                 }
                             default {
-                                        # puts "   ... \$xpath $xpath"
-                                    eval set value [format "$%s::%s(%s)" project $_array $_name]
-                                    set _updateValue($xpath) $value
-                                        # puts "   -> \$_updateValue($xpath): $_updateValue($xpath)"
-                                    set labelText       [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                                        # removed by 3.2.70;# set labelText     [ string trim [ string map {{/} { / }} $xpath] " " ]
-                                        #
-                                    set key    [format "%s/%s" $_array $_name]
-                                    set _updateValue($key) $value
-
-                                        # --- select entries content ---
-                                    create_ValueEdit $cv $cv_Name $cvEdit $cvContentFrame \
-                                                        $index $labelText $key
+                                    create_valueConfig $cv $cv_Name $cvEdit $cvContentFrame $index $_array $_name 
                                 }
                         }
                     }
@@ -297,154 +191,221 @@
     }
     
      
-     #-------------------------------------------------------------------------
-        #  createEdit - sub procedures
-     proc projectUpdate::create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {
-
-             # appUtil::get_procHierarchy
-
-             eval set currentValue $[namespace current]::_updateValue($key)
-             #
-             # --- create cvLabel, cvEntry ---
-                 set    cvLabel [label  $cvContentFrame.label_${index} -text "${labelText} : "]
-                     # set cvEntry [entry  $cvContentFrame.value_${index} -textvariable $textVar  -justify right  -relief sunken -bd 1  -width 10]
-                 set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key) -justify right -relief sunken -width 10 -bd 1]
-                 $cvEntry configure -command \
-                     "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
-                 if {$index == {oneLine}} {
-                     set    cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
-                     grid    $cvLabel $cvEntry $cvClose -sticky news
-                         # grid    $cvLabel $cvEntry $cvUpdate $cvClose -sticky news
-                 } else {
-                     grid    $cvLabel $cvEntry -sticky news
-                         # grid    $cvLabel $cvEntry $cvUpdate -sticky news
-                 }
-                 grid configure $cvLabel  -padx 3 -sticky nws
-                 grid configure $cvEntry  -padx 2
-             #
-             # --- select entries content ---
-                 if {$index == {oneLine}} {
-                         focus $cvEntry
-                         $cvEntry selection range 0 end
-                 }
-             #
-             # --- define bindings ---
-                 bind $cvLabel   <ButtonPress-1>         [list [namespace current]::dragStart        %X %Y]
-                 bind $cvLabel   <B1-Motion>             [list [namespace current]::drag             %X %Y $cv $cvEdit]
-                 bind $cvEntry   <MouseWheel>            [list [namespace current]::bind_MouseWheel  [namespace current]::_updateValue($key)  %D]
-                 bind $cvEntry   <Return>                [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
-                 bind $cvEntry   <Leave>                 [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
-                 bind $cvEntry   <Double-ButtonPress-1>  [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
-     }
-     proc projectUpdate::change_ValueEdit {textVar direction} {
-             #
-             # --- dynamic update value ---
-                 set currentValue [set ::$textVar]
-                 set updateValue 1.0
-                 if {$currentValue < 20} { set updateValue 0.1 }
-                     # puts "\n  -> $currentValue   -> $updateValue\n"
-             #
-             # --- update value of spinbox ---
-                 if {$direction eq "up"} {\
-                     set newValue [expr {$currentValue + $updateValue}]\
-                 } else {\
-                     set newValue [expr {$currentValue - $updateValue}]\
-                 }
-                 set ::$textVar [format "%.3f" $newValue]
+    #-------------------------------------------------------------------------
+        #  createEdit - sub procedures   
+    proc create_fileConfig {cv cv_Name cvEdit cvContentFrame index _array _name } {
+            variable _updateValue
+              # appUtil::get_procHierarchy 
+                
+            set _array      [string range $_array 7 end]
+            set key         [format "%s/%s" $_array $_name]
+            eval set value  [format "$%s::%s(%s)" project $_array $_name]
+    
+            set _updateValue($key) $value
+            set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+            
+                # --- create widgets per xpath list element ---
+            create_ListEdit SELECT_File \
+                    $cv $cv_Name $cvEdit $cvContentFrame \
+                    $index $labelText $key
+    }  
+    proc create_listConfig {cv cv_Name cvEdit cvContentFrame index _array _name } {
+            variable _updateValue
+              # appUtil::get_procHierarchy 
+                
+            set _array      [string range $_array 7 end]
+            set _nameInfo   [split $_name {@} ]
+            set _name       [lindex $_nameInfo 0]
+            set listName    [lindex $_nameInfo 1]
+            set key         [format "%s/%s" $_array $_name]
+            eval set value  [format "$%s::%s(%s)" project $_array $_name]
+            
+            set _updateValue($key) $value
+            set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+            
+            create_ListEdit $listName \
+                    $cv $cv_Name $cvEdit $cvContentFrame \
+                    $index $labelText $key
     }
-     proc projectUpdate::create_TextEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {
+    proc create_textConfig {cv cv_Name cvEdit cvContentFrame index _array _name } {
+            variable _updateValue            
+              # appUtil::get_procHierarchy 
+                
+            set _array     [string range $_array 7 end]
+            set key        [format "%s/%s" $_array $_name]
+            eval set value [format "$%s::%s(%s)" project $_array $_name]
+            
+            set _updateValue($key) $value
+            set labelText       [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+
+                # --- select entries content ---
+            create_TextEdit \
+                    $cv $cv_Name $cvEdit $cvContentFrame \
+                    $index $labelText $key
+    }
+    proc create_valueConfig {cv cv_Name cvEdit cvContentFrame index _array _name } {
+                variable _updateValue
+                  # appUtil::get_procHierarchy 
+                    
+                set key        [format "%s/%s" $_array $_name]
+                eval set value [format "$%s::%s(%s)" project $_array $_name]
+                
+                set _updateValue($key) $value
+                set labelText       [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+                
+                    # --- select entries content ---
+                create_ValueEdit \
+                        $cv $cv_Name $cvEdit $cvContentFrame \
+                        $index $labelText $key
+        }         
+                          
+    proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {
+
+               # appUtil::get_procHierarchy
 
              eval set currentValue $[namespace current]::_updateValue($key)
-             #
-             # --- create cvLabel, cvEntry ---
-                 set    cvLabel [label  $cvContentFrame.label_${index} -text "${labelText} : "]
-                 set cvEntry [entry  $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key)  -justify right  -relief sunken -bd 1  -width 10]
-                     # set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key) -justify right -relief sunken -width 10 -bd 1]
-                     # $cvEntry configure -command \
-                         "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
-                 if {$index == {oneLine}} {
-                     set    cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
-                     grid    $cvLabel $cvEntry $cvClose -sticky news
-                         # grid  $cvLabel $cvEntry $cvUpdate $cvClose -sticky news
-                 } else {
-                     grid    $cvLabel $cvEntry -sticky news
-                         # grid    $cvLabel $cvEntry $cvUpdate -sticky news
-                 }
-                 grid configure $cvLabel  -padx 3 -sticky nws
-                 grid configure $cvEntry  -padx 2
-             #
-             # --- select entries content ---
+               #
+               # --- create cvLabel, cvEntry ---
+             set    cvLabel [label  $cvContentFrame.label_${index} -text "${labelText} : "]
+                 # set cvEntry [entry  $cvContentFrame.value_${index} -textvariable $textVar  -justify right  -relief sunken -bd 1  -width 10]
+             set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key) -justify right -relief sunken -width 10 -bd 1]
+             $cvEntry configure -command \
+                 "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
+             if {$index == {oneLine}} {
+                 set    cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+                 grid    $cvLabel $cvEntry $cvClose -sticky news
+                     # grid    $cvLabel $cvEntry $cvUpdate $cvClose -sticky news
+             } else {
+                 grid    $cvLabel $cvEntry -sticky news
+                     # grid    $cvLabel $cvEntry $cvUpdate -sticky news
+             }
+             grid configure $cvLabel  -padx 3 -sticky nws
+             grid configure $cvEntry  -padx 2
+               #
+               # --- select entries content ---
                  if {$index == {oneLine}} {
                          focus $cvEntry
                          $cvEntry selection range 0 end
                  }
-             #
-             # --- define bindings ---
-                 bind $cvLabel   <ButtonPress-1>         [list [namespace current]::dragStart       %X %Y]
-                 bind $cvLabel   <B1-Motion>             [list [namespace current]::drag            %X %Y $cv $cvEdit]
-                 #bind $cvEntry  <MouseWheel>            [list [namespace current]::bind_MouseWheel  [namespace current]::_updateValue($key)  %D]
-                 bind $cvEntry   <Return>                [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
-                 bind $cvEntry   <Leave>                 [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
-                 bind $cvEntry   <Double-ButtonPress-1>  [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
-     }
-     proc projectUpdate::create_ListEdit {type cv cv_Name cvEdit cvContentFrame index labelText key} {
+               #
+               # --- define bindings ---
+             bind $cvLabel   <ButtonPress-1>         [list [namespace current]::dragStart        %X %Y]
+             bind $cvLabel   <B1-Motion>             [list [namespace current]::drag             %X %Y $cv $cvEdit]
+             bind $cvEntry   <MouseWheel>            [list [namespace current]::bind_MouseWheel  [namespace current]::_updateValue($key)  %D]
+             bind $cvEntry   <Return>                [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
+             bind $cvEntry   <Leave>                 [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
+             bind $cvEntry   <Double-ButtonPress-1>  [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
+    }
+    proc create_TextEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {
+
+             eval set currentValue $[namespace current]::_updateValue($key)
+                 #
+                 # --- create cvLabel, cvEntry ---
+             set    cvLabel [label  $cvContentFrame.label_${index} -text "${labelText} : "]
+             set cvEntry [entry  $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key)  -justify right  -relief sunken -bd 1  -width 10]
+                 # set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key) -justify right -relief sunken -width 10 -bd 1]
+                 # $cvEntry configure -command \
+                     "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
+             if {$index == {oneLine}} {
+                 set    cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+                 grid    $cvLabel $cvEntry $cvClose -sticky news
+                     # grid  $cvLabel $cvEntry $cvUpdate $cvClose -sticky news
+             } else {
+                 grid    $cvLabel $cvEntry -sticky news
+                     # grid    $cvLabel $cvEntry $cvUpdate -sticky news
+             }
+             grid configure $cvLabel  -padx 3 -sticky nws
+             grid configure $cvEntry  -padx 2
+                 #
+                 # --- select entries content ---
+             if {$index == {oneLine}} {
+                     focus $cvEntry
+                     $cvEntry selection range 0 end
+             }
+                 #
+                 # --- define bindings ---
+             bind $cvLabel   <ButtonPress-1>         [list [namespace current]::dragStart       %X %Y]
+             bind $cvLabel   <B1-Motion>             [list [namespace current]::drag            %X %Y $cv $cvEdit]
+             #bind $cvEntry  <MouseWheel>            [list [namespace current]::bind_MouseWheel  [namespace current]::_updateValue($key)  %D]
+             bind $cvEntry   <Return>                [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
+             bind $cvEntry   <Leave>                 [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
+             bind $cvEntry   <Double-ButtonPress-1>  [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
+    }
+    proc create_ListEdit {type cv cv_Name cvEdit cvContentFrame index labelText key} {
 
 
              eval set currentValue $[namespace current]::_updateValue($key)
-             #
-             # --- create listBox content ---
-                 switch -exact $type {
-                         {SELECT_File} { puts "     createEdit::create_ListEdit::SELECT_File:"}
-                         default       { puts "     currentValue: $currentValue" }
-                 }
-                 set listBoxContent [ projectUpdate::get_listBoxContent $type $key]
-                 foreach entry $listBoxContent {
-                     puts "         ... $entry"
-                 }
-             #
-             # --- create cvLabel, cvEntry, Select ---
-                 set cvFrame        [ frame      $cvContentFrame.frame_${index} ]
-                 set     cvLabel    [ label      $cvFrame.label   -text "${labelText} : "]
-                 set      cvCBox    [ ttk::combobox $cvFrame.cb \
-                                         -textvariable [namespace current]::_updateValue($key) \
-                                         -values $listBoxContent    \
-                                         -width  25 \
-                                         -height 10 \
-                                         -justify right ]
+                 #
+                 # --- create listBox content ---
+             switch -exact $type {
+                     {SELECT_File} { puts "     createEdit::create_ListEdit::SELECT_File:"}
+                     default       { puts "     currentValue: $currentValue" }
+             }
+             set listBoxContent [ get_listBoxContent $type $key]
+             foreach entry $listBoxContent {
+                 puts "         ... $entry"
+             }
+                 #
+                 # --- create cvLabel, cvEntry, Select ---
+             set cvFrame        [ frame      $cvContentFrame.frame_${index} ]
+             set     cvLabel    [ label      $cvFrame.label   -text "${labelText} : "]
+             set      cvCBox    [ ttk::combobox $cvFrame.cb \
+                                     -textvariable [namespace current]::_updateValue($key) \
+                                     -values $listBoxContent    \
+                                     -width  25 \
+                                     -height 10 \
+                                     -justify right ]
 
-                         set postCommand [list set [namespace current]::oldValue [namespace current]::_updateValue($key)]
-                         $cvCBox configure -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::_updateValue($key)]
+             set postCommand [list set [namespace current]::oldValue [namespace current]::_updateValue($key)]
+             $cvCBox configure -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::_updateValue($key)]
 
-                 if {$index == {oneLine}} {
-                         set    cvClose [ button         $cvFrame.close   -image $lib_gui::iconArray(iconClose) -command [list [namespace current]::closeEdit $cv $cvEdit]]
-                         grid    $cvLabel $cvCBox $cvClose   -sticky news
-                         grid    $cvFrame                    -sticky news    -padx 1
-                 } else {
-                         grid    $cvLabel $cvCBox            -sticky news
-                         grid    configure $cvLabel          -sticky nws     -padx 2
-                         grid    columnconfigure     $cvFrame 1      -weight 1
-                         grid    $cvFrame                    -sticky news    -padx 1     -columnspan 3
-                 }
-             #
-             # --- define bindings ---
-                 bind $cvCBox    <<ComboboxSelected>>        [list [namespace current]::check_listBoxValue   %W $cv_Name $key]
-                 bind $cvLabel   <ButtonPress-1>             [list [namespace current]::dragStart    %X %Y]
-                 bind $cvLabel   <B1-Motion>                 [list [namespace current]::drag         %X %Y $cv $cvEdit]
-                 #bind $cvLabel  <B1-Motion>                 [list [namespace current]::drag         %X %Y $cv __cvEdit__]
-     }
-     proc projectUpdate::bind_MouseWheel {textVar value} {
-                set currentValue [set ::$textVar]
-                set updateValue 1.0
-                if {$currentValue < 20} { set updateValue 0.1 }
-                if {$value > 0} {
-                    set scale 1.0
-                } else {
-                    set scale -1.0
-                }
-                set newValue [expr {$currentValue + $scale * $updateValue}]
-                set ::$textVar [format "%.3f" $newValue]
-     }
-     proc projectUpdate::get_listBoxContent {type {key {}}} {      
+             if {$index == {oneLine}} {
+                     set    cvClose [ button         $cvFrame.close   -image $lib_gui::iconArray(iconClose) -command [list [namespace current]::closeEdit $cv $cvEdit]]
+                     grid    $cvLabel $cvCBox $cvClose   -sticky news
+                     grid    $cvFrame                    -sticky news    -padx 1
+             } else {
+                     grid    $cvLabel $cvCBox            -sticky news
+                     grid    configure $cvLabel          -sticky nws     -padx 2
+                     grid    columnconfigure     $cvFrame 1      -weight 1
+                     grid    $cvFrame                    -sticky news    -padx 1     -columnspan 3
+             }
+                 #
+                 # --- define bindings ---
+             bind $cvCBox    <<ComboboxSelected>>        [list [namespace current]::check_listBoxValue   %W $cv_Name $key]
+             bind $cvLabel   <ButtonPress-1>             [list [namespace current]::dragStart    %X %Y]
+             bind $cvLabel   <B1-Motion>                 [list [namespace current]::drag         %X %Y $cv $cvEdit]
+             #bind $cvLabel  <B1-Motion>                 [list [namespace current]::drag         %X %Y $cv __cvEdit__]
+    }
+    proc change_ValueEdit {textVar direction} {
+                 #
+                 # --- dynamic update value ---
+             set currentValue [set ::$textVar]
+             set updateValue 1.0
+             if {$currentValue < 20} { set updateValue 0.1 }
+                     # puts "\n  -> $currentValue   -> $updateValue\n"
+                 #
+                 # --- update value of spinbox ---
+             if {$direction eq "up"} {\
+                 set newValue [expr {$currentValue + $updateValue}]\
+             } else {\
+                 set newValue [expr {$currentValue - $updateValue}]\
+             }
+             set ::$textVar [format "%.3f" $newValue]
+    }
+             
+    proc bind_MouseWheel {textVar value} {
+            set currentValue [set ::$textVar]
+            set updateValue 1.0
+            if {$currentValue < 20} { set updateValue 0.1 }
+            if {$value > 0} {
+                set scale 1.0
+            } else {
+                set scale -1.0
+            }
+            set newValue [expr {$currentValue + $scale * $updateValue}]
+            set ::$textVar [format "%.3f" $newValue]
+    }
+    proc get_listBoxContent {type {key {}}} {      
             set listBoxContent {}
             switch -exact $type {
                     {SELECT_File} {             set listBoxContent [lib_file::get_componentAlternatives  $key] }
@@ -460,12 +421,12 @@
             }
             return $listBoxContent
     } 
-        #  createEdit - sub procedures
+       #  createEdit - sub procedures
     #-------------------------------------------------------------------------
-          
+           
     #-------------------------------------------------------------------------
-        #  update Project       
-    proc projectUpdate::updateConfig {cv_Name xpath {cvEntry {}}} {
+        #  update Project               
+    proc updateConfig {cv_Name xpath {cvEntry {}}} {
     
           variable _updateValue
         
@@ -503,9 +464,10 @@
           catch {focus $cvEntry}
           catch {$cvEntry selection range 0 end}
     }
+    #-------------------------------------------------------------------------    
     #-------------------------------------------------------------------------
         #  check comments in listbox   
-    proc projectUpdate::check_listBoxValue { w cv_Name xPath args} {
+    proc check_listBoxValue { w cv_Name xPath args} {
     
           variable _updateValue
           variable oldValue
@@ -538,52 +500,52 @@
           }
     } 
      
-
     #-------------------------------------------------------------------------
         #  close ProjectEdit Widget
-    proc projectUpdate::closeEdit {cv cvEdit} {
+    proc closeEdit {cv cvEdit} {
             $cv delete $cvEdit
             destroy $cvEdit
             catch [ destroy .__select_box ]
-    }     
+    }
+        
     #-------------------------------------------------------------------------
         #  binding: drag
-    proc projectUpdate::drag {x y cv id} {
-            appUtil::get_procHierarchy
-            variable _drag
-            set dx [expr {$x - $_drag(lastx)}]
-            set dy [expr {$y - $_drag(lasty)}]
-            set cv_width  [ winfo width  $cv ]
-            set cv_height [ winfo height $cv ]
-            set id_bbox   [ $cv bbox $id ]
-            if {[lindex $id_bbox 0] < 4} {set dx  1}
-            if {[lindex $id_bbox 1] < 4} {set dy  1}
-            if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
-            if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
-        
-            $cv move $id $dx $dy
-            set _drag(lastx) $x
-            set _drag(lasty) $y
+    proc drag {x y cv id} {
+          # appUtil::get_procHierarchy
+        variable _drag
+        set dx [expr {$x - $_drag(lastx)}]
+        set dy [expr {$y - $_drag(lasty)}]
+        set cv_width  [ winfo width  $cv ]
+        set cv_height [ winfo height $cv ]
+        set id_bbox   [ $cv bbox $id ]
+        if {[lindex $id_bbox 0] < 4} {set dx  1}
+        if {[lindex $id_bbox 1] < 4} {set dy  1}
+        if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
+        if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
+    
+        $cv move $id $dx $dy
+        set _drag(lastx) $x
+        set _drag(lasty) $y
     }
     #-------------------------------------------------------------------------
         #  binding: dragStart
-    proc projectUpdate::dragStart {x y} {
-            appUtil::get_procHierarchy
-            variable _drag
-            set [namespace current]::_drag(lastx) $x
-            set [namespace current]::_drag(lasty) $y
-            puts "$x $y"
+    proc dragStart {x y} {
+          # appUtil::get_procHierarchy
+        variable _drag
+        set [namespace current]::_drag(lastx) $x
+        set [namespace current]::_drag(lasty) $y
+        puts "$x $y"
      }
-        #-------------------------------------------------------------------------
-           #  create createSelectBox
-     proc projectUpdate::bind_parent_move {toplevel_widget parent} {
-            appUtil::get_procHierarchy
-            if {![winfo exists $toplevel_widget]} return
-            set toplevel_x    [winfo rootx $parent]
-            set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
-            wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
-            wm  deiconify     $toplevel_widget
+    #-------------------------------------------------------------------------
+        #  create createSelectBox
+    proc bind_parent_move {toplevel_widget parent} {
+          # appUtil::get_procHierarchy
+        if {![winfo exists $toplevel_widget]} return
+        set toplevel_x    [winfo rootx $parent]
+        set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
+        wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
+        wm  deiconify     $toplevel_widget
     }    
      
-
+ } 
 
