@@ -1,4 +1,10 @@
 
+3.4.00.16   - 2013.02.23
+-------------------------------------------------------------------------------
+    refactor:
+        ... extract procedures from projectUpdate::createEdit
+
+
 3.4.00.15   - 2013.02.22
 -------------------------------------------------------------------------------
     debug/feature:
@@ -7,13 +13,13 @@
 
 3.4.00.14   - 2013.02.22
 -------------------------------------------------------------------------------
-    refactoring:
+    refactor:
         ... move frame_geometry::createEdit to projectUpdate::createEdit
 
 
 3.4.00.13   - 2013.02.21 
 -------------------------------------------------------------------------------
-    refactoring:
+    refactor:
         ... move frame_geometry::update to cv_custom::update
     debug:
         ... reset 3.4.00.12
@@ -71,7 +77,7 @@
 
 3.4.00.05   - 2013.02.17 
 -------------------------------------------------------------------------------
-    refactoring:
+    refactor:
         ... move code to ECLIPSE and build starkit with ANT
 
 
