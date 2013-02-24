@@ -77,7 +77,7 @@
         #button     $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { lib_file::get_XMLContent [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateMTB) ]     visualize}
 
 
-        button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { lib_cfg_report::fillTree_Variable $frame_geometry::domFrame    }
+        button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { lib_cfg_report::fillTree_Variable $bikeGeometry::domFrame    }
         button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { project::runTime_2_dom $::APPL_Config(root_ProjectDOM); lib_cfg_report::fillTree_Variable $::APPL_Config(root_ProjectDOM)}
         button  $menueFrame.clear   -text {clear Tree}                      -width 30   -command { lib_cfg_report::cleanupTree }
         pack    $menueFrame.open \

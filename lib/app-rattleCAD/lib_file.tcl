@@ -81,7 +81,7 @@
                 # -- read new File
             set ::APPL_Config(root_ProjectDOM) [lib_file::get_XMLContent $fileName show]
                 #
-            frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+            bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             set_window_title $fileName
                 #
@@ -134,7 +134,7 @@
 
 
                         #
-                    frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                    bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         #
                     foreach key [dict keys $postUpdate] {
                               # puts " -> $key"
@@ -142,7 +142,7 @@
                             foreach valueKey [dict keys $valueDict] {
                                 puts "\n      -------------------------------"
                                 puts "          postUpdate:   $key - $valueKey [dict get $valueDict $valueKey]"
-                                frame_geometry::set_projectValue $key/$valueKey [dict get $valueDict $valueKey] update
+                                bikeGeometry::set_projectValue $key/$valueKey [dict get $valueDict $valueKey] update
                             }
                                 # project::pdict $valueDict
                     }
@@ -189,7 +189,7 @@
             if { [file readable $template_file ] } {
                 set ::APPL_Config(root_ProjectDOM)     [lib_file::get_XMLContent $template_file show]
                     #
-                frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                     #
                 set ::APPL_Config(PROJECT_Name)     "Template $type"
                 set ::APPL_Config(PROJECT_File)     "Template $type"  
@@ -364,7 +364,7 @@
                 #
                 # set ::APPL_Config(root_ProjectDOM) $domConfig
                 #
-            frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+            bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                 #
             set ::APPL_Config(PROJECT_Save) [clock milliseconds]                                            
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------

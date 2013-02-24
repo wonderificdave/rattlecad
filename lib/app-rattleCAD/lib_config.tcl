@@ -527,7 +527,7 @@
                 puts "       targetCanvas:   $targetCanvas"
             catch {[namespace current]::::updateCanvas $targetCanvas}
             if {$mode == {select}} {
-                project::add_tracing
+                    # project::add_tracing
                 eval set $targetVar \"$compFile\"
                     # project::remove_tracing
                 cv_custom::update [lib_gui::current_canvasCAD]
@@ -676,7 +676,7 @@
                                                     # puts "     $xPathString  $value"
                                                 if {[llength $value] == 1} {
                                                     if {[llength [split $value ',']] == 1} {
-                                                        set [namespace current]::configValue($xPathString) [ frame_geometry::set_projectValue $xPathString $value format]
+                                                        set [namespace current]::configValue($xPathString) [ bikeGeometry::set_projectValue $xPathString $value format]
                                                     }
                                                 }
                                                 if {[file tail $xPath] == {File}} {
@@ -816,7 +816,7 @@
                 #puts "       scale  $scale"
                 #puts "       value  $value"
 
-            project::remove_tracing
+              # project::remove_tracing
 
             set targetVar   [$entry cget -textvariable]
             eval set oldValue   \$$targetVar
@@ -834,13 +834,13 @@
     proc selectEntry {entry} {
 
             # puts "   ... selectEntry"
-            project::remove_tracing
+              # project::remove_tracing
 
             return
     }
     proc enterEntry {entry} {
 
-            project::remove_tracing
+              # project::remove_tracing
 
             set entryVar [$entry cget -text]
             eval set currentValue     [expr 1.0 * \$$entryVar]
@@ -865,12 +865,12 @@
                     # puts "     \$newValue $newValue"
                     # puts "[$entry cget -text]"
 
-            puts "\n         ... compare Value $newValue == $oldValue \n"
+            puts "         ... compare Value $newValue == $oldValue "
             if {$newValue == $oldValue} {
                 return
             }
 
-            project::add_tracing
+              # project::add_tracing
 
             puts "\n=================="
             puts "    leaveEntry"
@@ -879,7 +879,7 @@
 
             if {$_array eq {Result}} {
                 eval set $targetVar $oldValue
-                frame_geometry::set_resulting_Parameters $_array $_name $newValue
+                bikeGeometry::set_resultParameter $_array $_name $newValue
                 cv_custom::update [lib_gui::current_canvasCAD]
                 return
             }
@@ -910,7 +910,7 @@
                 set _array      [lindex [split $targetVar (:] 2]
                 set _name       [lindex [split $targetVar ()] 1]
                 if {$_array eq {Result}} {
-                    frame_geometry::set_resulting_Parameters $_array $_name $value
+                    bikeGeometry::set_resultParameter $_array $_name $value
                 } else {
                     eval set $targetVar     $value
                 }
@@ -992,7 +992,7 @@
                                 # puts "   ... change value"
                             set configValue($xPath) $oldValue
                         } else {
-                            project::add_tracing
+                                # project::add_tracing
                             # puts "   ... $configValue($xPath)"
                                 # puts "      >[split $configValue($xPath) ;]<"
                                 # puts "      >[lindex [split $configValue($xPath) ;] 0]<"
@@ -1027,7 +1027,7 @@
 
             if {$entryVar ne ""} {
                     # reformat value
-                set $entryVar [ frame_geometry::set_projectValue _any_ $value format]
+                set $entryVar [ bikeGeometry::set_projectValue _any_ $value format]
             }
 
      }
@@ -1053,7 +1053,7 @@
                 if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 
                 set refValue            [ [ $::APPL_Config(root_ProjectDOM) selectNodes /root/$xPath ]  asText ]
-                set configValue($xPath) [ frame_geometry::set_projectValue $xPath $configValue($xPath) format]
+                set configValue($xPath) [ bikeGeometry::set_projectValue $xPath $configValue($xPath) format]
 
                     # -----------------------------
                     #   check if there is a change
@@ -1061,11 +1061,11 @@
                         # puts "    ... no update necessary!"
                     return
                 }
-                frame_geometry::set_projectValue $xPath $configValue($xPath)
+                bikeGeometry::set_projectValue $xPath $configValue($xPath)
 
                     # -----------------------------
                     #   update Geometry
-                frame_geometry::updateConfig       $varName   cv_custom::update    _update_
+                bikeGeometry::updateConfig       $varName   cv_custom::update    _update_
 
                     # -----------------------------
                     #   focus entry
@@ -1082,7 +1082,7 @@
         variable configValue
 
         foreach xPath $componentList {
-            frame_geometry::set_projectValue $xPath $configValue($xPath)
+            bikeGeometry::set_projectValue $xPath $configValue($xPath)
         }
 
         foreach xPath { Rendering/Fork
@@ -1092,14 +1092,14 @@
                         Rendering/BottleCage/DownTube
                         Rendering/BottleCage/DownTube_Lower
         } {
-            frame_geometry::set_projectValue $xPath $configValue($xPath)
+            bikeGeometry::set_projectValue $xPath $configValue($xPath)
         }
 
         set cv          [ $lib_gui::noteBook_top select ]
         set varName     [ lib_gui::notebook_getVarName $cv ]
         if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 
-        frame_geometry::updateConfig       $varName   cv_custom::update    _update_
+        bikeGeometry::updateConfig       $varName   cv_custom::update    _update_
 
     }
 

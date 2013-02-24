@@ -43,13 +43,13 @@
     proc createBaseline {cv_Name BB_Position {colour {gray}}} {
 
                 # --- get distance to Ground
-            set BB_Ground(position) [ vectormath::addVector $frame_geometry::BottomBracket(Ground)  $BB_Position ]
+            set BB_Ground(position) [ vectormath::addVector $bikeGeometry::BottomBracket(Ground)  $BB_Position ]
 
-            set RimDiameter_Front       $frame_geometry::FrontWheel(RimDiameter)
-            set RimDiameter_Rear        $frame_geometry::RearWheel(RimDiameter)
+            set RimDiameter_Front       $bikeGeometry::FrontWheel(RimDiameter)
+            set RimDiameter_Rear        $bikeGeometry::RearWheel(RimDiameter)
 
-            set FrontWheel(position)    [ frame_geometry::object_values     FrontWheel  position    $BB_Position]
-            set RearWheel(position)     [ frame_geometry::object_values     RearWheel   position    $BB_Position  ]
+            set FrontWheel(position)    [ bikeGeometry::get_Object     FrontWheel  position    $BB_Position]
+            set RearWheel(position)     [ bikeGeometry::get_Object     RearWheel   position    $BB_Position  ]
                 # puts "   ... \$RearWheel(position)  $RearWheel(position)"
 
 
@@ -103,7 +103,7 @@
             switch $type {
                     HandleBar {
                                 # --- create Handlebar -------------
-                            set HandleBar(position)     [ frame_geometry::object_values  HandleBar  position    $BB_Position]
+                            set HandleBar(position)     [ bikeGeometry::get_Object  HandleBar  position    $BB_Position]
                             set HandleBar(file)         [ checkFileString $project::Component(HandleBar/File)]
                             set HandleBar(object)       [ $cv_Name readSVG $HandleBar(file) $HandleBar(position) -5  __HandleBar__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $HandleBar(object)
@@ -117,7 +117,7 @@
                             }
                     DerailleurRear {
                                 # --- create RearDerailleur --------
-                            set Derailleur(position)    [ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position        $BB_Position]
+                            set Derailleur(position)    [ bikeGeometry::get_Object  Lugs/Dropout/Rear/Derailleur  position        $BB_Position]
                             set Derailleur(file)        [ checkFileString $project::Component(Derailleur/Rear/File) ]
                             set Derailleur(object)      [ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  0  __DerailleurRear__ ]
                                                         $cv_Name addtag  __Decoration__ withtag $Derailleur(object)
@@ -131,7 +131,7 @@
                             }
                     DerailleurRear_ctr {
                                 # --- create RearDerailleur --------
-                            set Derailleur(position)    [ frame_geometry::object_values  Lugs/Dropout/Rear/Derailleur  position          $BB_Position]
+                            set Derailleur(position)    [ bikeGeometry::get_Object  Lugs/Dropout/Rear/Derailleur  position          $BB_Position]
                             foreach {x y} $Derailleur(position) break
                             set x1    [expr $x + 15];        set x2    [expr $x - 15];     set y1    [expr $y + 15];     set y2    [expr $y - 15]
                             $cv_Name create line  [list $x1 $y $x2 $y]   -fill gray60  -tags __Decoration__
@@ -139,8 +139,8 @@
                             }
                     DerailleurFront {
                                 # --- create FrontDerailleur --------
-                            set Derailleur(position)    [ frame_geometry::object_values  DerailleurMountFront  position    $BB_Position]
-                            set angle                   [ vectormath::angle {0 1} {0 0} [ frame_geometry::object_values SeatTube direction ] ]
+                            set Derailleur(position)    [ bikeGeometry::get_Object  DerailleurMountFront  position    $BB_Position]
+                            set angle                   [ vectormath::angle {0 1} {0 0} [ bikeGeometry::get_Object SeatTube direction ] ]
                             set Derailleur(file)        [ checkFileString $project::Component(Derailleur/Front/File) ]
                             set Derailleur(object)      [ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  $angle  __DerailleurFront__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Derailleur(object)
@@ -187,7 +187,7 @@
                             }
                     SeatPost {
                                 # --- create SeatPost ------------------
-                            set SeatPost(polygon)         [ frame_geometry::object_values SeatPost polygon $BB_Position ]
+                            set SeatPost(polygon)         [ bikeGeometry::get_Object SeatPost polygon $BB_Position ]
                             set SeatPost(object)        [ $cv_Name create polygon $SeatPost(polygon) -fill white  -outline black  -tags __Decoration__ ]
                             if {$updateCommand != {}}     { $cv_Name bind    $SeatPost(object)   <Double-ButtonPress-1> \
                                                                     [list projectUpdate::createEdit  %x %y  $cv_Name  \
@@ -204,9 +204,9 @@
                                     puts "          ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
                                     switch $Rendering(BrakeRear) {
                                         Rim {
-                                            set ss_direction    [ frame_geometry::object_values SeatStay direction ]
+                                            set ss_direction    [ bikeGeometry::get_Object SeatStay direction ]
                                             set ss_angle        [ expr - [ vectormath::angle {0 1} {0 0} $ss_direction ] ]
-                                            set RearBrake(position) [ frame_geometry::object_values  BrakeRear  position    $BB_Position]
+                                            set RearBrake(position) [ bikeGeometry::get_Object  BrakeRear  position    $BB_Position]
                                             set RearBrake(file)         [ checkFileString $project::Component(Brake/Rear/File) ]
                                             set RearBrake(object)       [ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __RearBrake__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $RearBrake(object)
@@ -230,11 +230,11 @@
                                     puts "          ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
                                     switch $Rendering(BrakeFront) {
                                         Rim {
-                                            set ht_direction    [ frame_geometry::object_values HeadTube direction ]
+                                            set ht_direction    [ bikeGeometry::get_Object HeadTube direction ]
                                             set ht_angle        [ expr [ vectormath::angle {0 1} {0 0} $ht_direction ] ]
                                             set fb_angle        $project::Component(Fork/Crown/Brake/Angle)
                                             set fb_angle        [ expr $ht_angle + $fb_angle ]
-                                            set FrontBrake(position)    [ frame_geometry::object_values  BrakeFront  position    $BB_Position]
+                                            set FrontBrake(position)    [ bikeGeometry::get_Object  BrakeFront  position    $BB_Position]
                                             set FrontBrake(file)        [ checkFileString $project::Component(Brake/Front/File) ]
                                             set FrontBrake(object)      [ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __FrontBrake__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $FrontBrake(object)
@@ -264,9 +264,9 @@
                                                 Bottle  { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
                                             }
                                                 # puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
-                                            set st_direction    [ frame_geometry::object_values SeatTube direction ]
+                                            set st_direction    [ bikeGeometry::get_Object SeatTube direction ]
                                             set st_angle        [ expr 180 + [ vectormath::dirAngle {0 0} $st_direction ] ]
-                                            set bc_position     [ frame_geometry::object_values    SeatTube/BottleCage/Base    position    $BB_Position]
+                                            set bc_position     [ bikeGeometry::get_Object    SeatTube/BottleCage/Base    position    $BB_Position]
 
                                                 # set BottleCage(file)        [ checkFileString $project::Component(BottleCage/SeatTube/File ]  asText ] ]
                                             set BottleCage(object)      [ $cv_Name readSVG $BottleCage(file) $bc_position $st_angle  __BottleCage_ST__ ]
@@ -288,9 +288,9 @@
                                                 Bottle  { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/right/bottle_Large.svg ] }
                                             }
                                                 # puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
-                                            set dt_direction    [ frame_geometry::object_values DownTube direction ]
+                                            set dt_direction    [ bikeGeometry::get_Object DownTube direction ]
                                             set dt_angle        [ vectormath::dirAngle {0 0} $dt_direction ]
-                                            set bc_position     [ frame_geometry::object_values    DownTube/BottleCage/Base    position    $BB_Position]
+                                            set bc_position     [ bikeGeometry::get_Object    DownTube/BottleCage/Base    position    $BB_Position]
 
                                             set BottleCage(object)      [ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __BottleCage_DT__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $BottleCage(object)
@@ -311,9 +311,9 @@
                                                 Bottle  { set BottleCage(file)      [ file join $::APPL_Config(CONFIG_Dir) components/bottle_cage/left/bottle_Large.svg ] }
                                             }
                                                 # puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
-                                            set dt_direction    [ frame_geometry::object_values DownTube direction ]
+                                            set dt_direction    [ bikeGeometry::get_Object DownTube direction ]
                                             set dt_angle        [ expr 180 + [ vectormath::dirAngle {0 0} $dt_direction ] ]
-                                            set bc_position     [ frame_geometry::object_values    DownTube/BottleCage_Lower/Base    position    $BB_Position]
+                                            set bc_position     [ bikeGeometry::get_Object    DownTube/BottleCage_Lower/Base    position    $BB_Position]
 
                                             set BottleCage(object)      [ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __BottleCage_DT_L__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $BottleCage(object)
@@ -329,7 +329,7 @@
                             }
                     Saddle {
                                 # --- create Saddle --------------------
-                            set Saddle(position)        [ frame_geometry::object_values        Saddle  position        $BB_Position ]
+                            set Saddle(position)        [ bikeGeometry::get_Object        Saddle  position        $BB_Position ]
                             set Saddle(file)            [ checkFileString $project::Component(Saddle/File) ]
                             set Saddle(object)          [ $cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Saddle__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Saddle(object)
@@ -344,7 +344,7 @@
                             }
                     HeadSet {
                                 # --- create HeadSet --------------------
-                            set HeadSet(polygon)        [ frame_geometry::object_values HeadSet/Top polygon $BB_Position  ]
+                            set HeadSet(polygon)        [ bikeGeometry::get_Object HeadSet/Top polygon $BB_Position  ]
                             set HeadSet(object)         [ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
                             if {$updateCommand != {}}   { $cv_Name bind $HeadSet(object)    <Double-ButtonPress-1> \
                                                                     [list projectUpdate::createEdit  %x %y  $cv_Name  \
@@ -354,7 +354,7 @@
                                                                     ]
                                                           lib_gui::object_CursorBinding     $cv_Name    $HeadSet(object)
                                     }
-                            set HeadSet(polygon)        [ frame_geometry::object_values HeadSet/Bottom polygon $BB_Position ]
+                            set HeadSet(polygon)        [ bikeGeometry::get_Object HeadSet/Bottom polygon $BB_Position ]
                             set HeadSet(object)         [ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
                             if {$updateCommand != {}}   { $cv_Name bind $HeadSet(object)    <Double-ButtonPress-1> \
                                                                     [list projectUpdate::createEdit  %x %y  $cv_Name  \
@@ -367,13 +367,13 @@
                             }
                     Stem {
                                 # --- create SeatPost ------------------
-                            set Stem(polygon)           [ frame_geometry::object_values Stem polygon $BB_Position  ]
+                            set Stem(polygon)           [ bikeGeometry::get_Object Stem polygon $BB_Position  ]
                             set Stem(object)            [ $cv_Name create polygon $Stem(polygon) -fill white  -outline black  -tags __Decoration__ ]
                             }
                     Logo {
                                 # --- create Logo --------------------
-                            set DownTube(Steerer)       [ frame_geometry::object_values      DownTube/End    position        $BB_Position ]
-                            set DownTube(BBracket)      [ frame_geometry::object_values        DownTube/Start    position        $BB_Position ]
+                            set DownTube(Steerer)       [ bikeGeometry::get_Object      DownTube/End    position        $BB_Position ]
+                            set DownTube(BBracket)      [ bikeGeometry::get_Object        DownTube/Start    position        $BB_Position ]
                             set Logo(Angle)               $project::Result(Tubes/DownTube/Direction/degree)
                             set Logo(Direction)         [ split $project::Result(Tubes/DownTube/Direction/polar) ,]
                                 # puts "  -> \$Logo(Direction)  $Logo(Direction) "
@@ -390,10 +390,10 @@
                                     }
                     }
                     RearWheel {     # --- create RearWheel -----------------
-                            set Hub(position)       [ frame_geometry::object_values        RearWheel  position        $BB_Position ]
-                            set RimDiameter             $frame_geometry::RearWheel(RimDiameter)
-                            set RimHeight               $frame_geometry::RearWheel(RimHeight)
-                            set TyreHeight              $frame_geometry::RearWheel(TyreHeight)
+                            set Hub(position)       [ bikeGeometry::get_Object        RearWheel  position        $BB_Position ]
+                            set RimDiameter             $bikeGeometry::RearWheel(RimDiameter)
+                            set RimHeight               $bikeGeometry::RearWheel(RimHeight)
+                            set TyreHeight              $bikeGeometry::RearWheel(TyreHeight)
                                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight]     -tags {__Decoration__ __Tyre__}     -fill white
                                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]               -tags {__Decoration__ __Rim_01__}   -fill white
                             set my_Rim                  [   $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]               -tags {__Decoration__ __Rim_02__}   -fill white ]
@@ -409,10 +409,10 @@
                                     }
                             }
                     FrontWheel {    # --- create FrontWheel ----------------
-                            set Hub(position)       [ frame_geometry::object_values        FrontWheel  position    $BB_Position ]
-                            set RimDiameter             $frame_geometry::FrontWheel(RimDiameter)
-                            set RimHeight               $frame_geometry::FrontWheel(RimHeight)
-                            set TyreHeight              $frame_geometry::FrontWheel(TyreHeight)
+                            set Hub(position)       [ bikeGeometry::get_Object        FrontWheel  position    $BB_Position ]
+                            set RimDiameter             $bikeGeometry::FrontWheel(RimDiameter)
+                            set RimHeight               $bikeGeometry::FrontWheel(RimHeight)
+                            set TyreHeight              $bikeGeometry::FrontWheel(TyreHeight)
                                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight]     -tags {__Decoration__ __Tyre__}     -fill white
                                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]               -tags {__Decoration__ __Rim_01__}   -fill white
                             set my_Rim                  [   $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]               -tags {__Decoration__ __Rim_02__}   -fill white ]
@@ -428,36 +428,36 @@
                                     }
                             }
                     RearWheel_Rep    {
-                            set Hub(position)       [ frame_geometry::object_values        RearWheel  position        $BB_Position ]
-                            set RimDiameter             $frame_geometry::RearWheel(RimDiameter)
-                            set RimHeight               $frame_geometry::RearWheel(RimHeight)
-                            set TyreHeight              $frame_geometry::RearWheel(TyreHeight)
+                            set Hub(position)       [ bikeGeometry::get_Object        RearWheel  position        $BB_Position ]
+                            set RimDiameter             $bikeGeometry::RearWheel(RimDiameter)
+                            set RimHeight               $bikeGeometry::RearWheel(RimHeight)
+                            set TyreHeight              $bikeGeometry::RearWheel(TyreHeight)
                             set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start -20  -extent 105 -style arc -outline gray60  -tags __Decoration__]
                             set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter ]              -start -25  -extent 100 -style arc -outline gray60  -tags __Decoration__  -width 0.35]
                             }
                     FrontWheel_Rep    {
-                            set Hub(position)       [ frame_geometry::object_values        FrontWheel  position    $BB_Position ]
-                            set RimDiameter             $frame_geometry::FrontWheel(RimDiameter)
-                            set RimHeight               $frame_geometry::FrontWheel(RimHeight)
-                            set TyreHeight              $frame_geometry::FrontWheel(TyreHeight)
+                            set Hub(position)       [ bikeGeometry::get_Object        FrontWheel  position    $BB_Position ]
+                            set RimDiameter             $bikeGeometry::FrontWheel(RimDiameter)
+                            set RimHeight               $bikeGeometry::FrontWheel(RimHeight)
+                            set TyreHeight              $bikeGeometry::FrontWheel(TyreHeight)
                             set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter + $TyreHeight] -start  95  -extent  85 -style arc -outline gray60 -tags __Decoration__]
                             set my_Wheel                [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter ]              -start  90  -extent  80 -style arc -outline gray60  -tags __Decoration__  -width 0.35  ]
                             }
                     RearWheel_Pos {
                                 # --- create RearDerailleur --------
-                            set Hub(position)       [ frame_geometry::object_values        RearWheel  position        $BB_Position ]
+                            set Hub(position)       [ bikeGeometry::get_Object        RearWheel  position        $BB_Position ]
                             foreach {x y} $Hub(position) break
                             set x1    [expr $x + 15];        set x2    [expr $x - 15];     set y1    [expr $y + 15];     set y2    [expr $y - 15]
                             $cv_Name create line  [list $x1 $y $x2 $y]   -fill darkred  -tags __Decoration__
                             $cv_Name create line  [list $x $y1 $x $y2]   -fill darkred  -tags __Decoration__
                             }
                     LegClearance_Rep {
-                            set LegClearance(position)  [ vectormath::addVector $frame_geometry::LegClearance(Position)  $BB_Position ]
+                            set LegClearance(position)  [ vectormath::addVector $bikeGeometry::LegClearance(Position)  $BB_Position ]
                             $cv_Name create circle      $LegClearance(position)  -radius 5  -outline grey60 -tags __Decoration__
                             }
 
                     default    {
-                            #set Stem(debug)        [ frame_geometry::object_values Stem debug $BB_Position  ]
+                            #set Stem(debug)        [ bikeGeometry::get_Object Stem debug $BB_Position  ]
                             #set Stem(object)       [ $cv_Name create line $Stem(debug) -fill red]
                             #$cv_Name create circle     $RearWheel(coords)  -radius 30  -outline red    -width 1.0
                             #$cv_Name create circle     [ list  $FrontWheel(x) $FrontWheel(y) ]  -radius 30  -outline red    -width 1.0
@@ -474,10 +474,10 @@
             puts "   -------------------------------"
             puts "    debug_geometry"
 
-            foreach position [array names frame_geometry::DEBUG_Geometry] {
-                        # puts "       name:            $position    $frame_geometry::DEBUG_Geometry($position)"
-                    set myPosition            [ frame_geometry::object_values        DEBUG_Geometry            $frame_geometry::DEBUG_Geometry($position)    $BB_Position ]
-                    puts "         ... $position  $frame_geometry::DEBUG_Geometry($position)"
+            foreach position [array names bikeGeometry::DEBUG_Geometry] {
+                        # puts "       name:            $position    $bikeGeometry::DEBUG_Geometry($position)"
+                    set myPosition            [ bikeGeometry::get_Object        DEBUG_Geometry            $bikeGeometry::DEBUG_Geometry($position)    $BB_Position ]
+                    puts "         ... $position  $bikeGeometry::DEBUG_Geometry($position)"
                     puts "                    + ($BB_Position)"
                     puts "             -> $myPosition"
                     $cv_Name create circle     $myPosition   -radius 5  -outline orange  -tags {__CenterLine__} -width 2.0
@@ -515,7 +515,7 @@
 
 
             # --- create HeadTube --------------------
-        set HeadTube(polygon)       [ frame_geometry::object_values HeadTube polygon $BB_Position  ]
+        set HeadTube(polygon)       [ bikeGeometry::get_Object HeadTube polygon $BB_Position  ]
         set HeadTube(object)        [ $cv_Name create polygon $HeadTube(polygon) -fill $tubeColour -outline black  -tags __HeadTube__]
                                       $cv_Name addtag  __Frame__ withtag $HeadTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $HeadTube(object)   <Double-ButtonPress-1> \
@@ -527,7 +527,7 @@
                 }
 
             # --- create DownTube --------------------
-        set DownTube(polygon)       [ frame_geometry::object_values DownTube polygon $BB_Position  ]
+        set DownTube(polygon)       [ bikeGeometry::get_Object DownTube polygon $BB_Position  ]
         set DownTube(object)        [ $cv_Name create polygon $DownTube(polygon) -fill $tubeColour -outline black  -tags __DownTube__]
                                       $cv_Name addtag  __Frame__ withtag $DownTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $DownTube(object)    <Double-ButtonPress-1> \
@@ -541,7 +541,7 @@
                 }
 
             # --- create SeatTube --------------------
-        set SeatTube(polygon)       [ frame_geometry::object_values SeatTube polygon $BB_Position  ]
+        set SeatTube(polygon)       [ bikeGeometry::get_Object SeatTube polygon $BB_Position  ]
         set SeatTube(object)        [ $cv_Name create polygon $SeatTube(polygon) -fill $tubeColour -outline black  -tags __SeatTube__]
                                       $cv_Name addtag  __Frame__ withtag $SeatTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $SeatTube(object)   <Double-ButtonPress-1> \
@@ -555,7 +555,7 @@
                 }
 
             # --- create TopTube ---------------------
-        set TopTube(polygon)        [ frame_geometry::object_values TopTube polygon $BB_Position  ]
+        set TopTube(polygon)        [ bikeGeometry::get_Object TopTube polygon $BB_Position  ]
         set TopTube(object)         [ $cv_Name create polygon $TopTube(polygon) -fill $tubeColour -outline black  -tags __TopTube__]
                                       $cv_Name addtag  __Frame__ withtag $TopTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $TopTube(object)    <Double-ButtonPress-1> \
@@ -570,10 +570,10 @@
                 }
 
             # --- create Rear Dropout ----------------
-        set RearWheel(position)     [ frame_geometry::object_values        RearWheel    position    $BB_Position]
+        set RearWheel(position)     [ bikeGeometry::get_Object        RearWheel    position    $BB_Position]
         set RearDropout(file)       [ checkFileString $project::Lugs(RearDropOut/File) ]
-        set RearDropout(Rotation)   $frame_geometry::RearDrop(RotationOffset)
-        set RearDropout(Direction)  $frame_geometry::RearDrop(Direction) 
+        set RearDropout(Rotation)   $bikeGeometry::RearDrop(RotationOffset)
+        set RearDropout(Direction)  $bikeGeometry::RearDrop(Direction) 
         set Rendering(RearDropOut)  $project::Rendering(RearDropOut)
             switch -exact $RearDropout(Direction) {
                 Chainstay { set do_angle [expr 180 - $RearDropout(Rotation) + $project::Result(Tubes/ChainStay/Direction/degree)]}              
@@ -586,7 +586,7 @@
 
 
             # --- create ChainStay -------------------
-        set ChainStay(polygon)      [ frame_geometry::object_values ChainStay polygon $BB_Position  ]
+        set ChainStay(polygon)      [ bikeGeometry::get_Object ChainStay polygon $BB_Position  ]
         set ChainStay(object)       [ $cv_Name create polygon $ChainStay(polygon) -fill $tubeColour -outline black  -tags __ChainStay__]
                                       $cv_Name addtag  __Frame__ withtag $ChainStay(object)
         if {$updateCommand != {}}   { $cv_Name bind    $ChainStay(object)    <Double-ButtonPress-1> \
@@ -603,7 +603,7 @@
                 }
 
             # --- create SeatStay --------------------
-        set SeatStay(polygon)       [ frame_geometry::object_values SeatStay polygon $BB_Position  ]
+        set SeatStay(polygon)       [ bikeGeometry::get_Object SeatStay polygon $BB_Position  ]
         set SeatStay(object)        [ $cv_Name create polygon $SeatStay(polygon) -fill $tubeColour -outline black  -tags __SeatStay__]
                                       $cv_Name addtag  __Frame__ withtag $SeatStay(object)
         if {$updateCommand != {}}   { $cv_Name bind    $SeatStay(object)    <Double-ButtonPress-1> \
@@ -707,12 +707,12 @@
                         set pt_xy [list $x $y]
                         set pt_xy [vectormath::rotatePoint {0 0} $pt_xy $currentAngle]
                         set pt_xy [vectormath::addVector $pos $pt_xy]
-                        set tmpList_01 [lappend tmpList_01 [canvasCAD::flatten_nestedList $pt_xy] ]
+                        set tmpList_01 [lappend tmpList_01 [appUtil::flatten_nestedList $pt_xy] ]
                     }
-                    set outsideProfile [lappend teethProfile [canvasCAD::flatten_nestedList $tmpList_01]]
+                    set outsideProfile [lappend teethProfile [appUtil::flatten_nestedList $tmpList_01]]
                     incr index
                 }
-                set chainWheelProfile [canvasCAD::flatten_nestedList $outsideProfile]
+                set chainWheelProfile [appUtil::flatten_nestedList $outsideProfile]
                 set chainWheelProfile [vectormath::addVectorPointList $BB_Position $chainWheelProfile]
                 return $chainWheelProfile
         }
@@ -746,7 +746,7 @@
                 }
                     # -----------------------------
                 lappend crankArmProfile [list [expr $crankLength -30] -14]
-                set crankArmProfile [canvasCAD::flatten_nestedList $crankArmProfile]
+                set crankArmProfile [appUtil::flatten_nestedList $crankArmProfile]
                 set crankArmProfile [vectormath::addVectorPointList $BB_Position $crankArmProfile]
                 return $crankArmProfile
         }
@@ -802,39 +802,39 @@
 
 
             # --- create Steerer ---------------------
-        set Steerer(polygon)        [ frame_geometry::object_values     Steerer     polygon        $BB_Position  ]
+        set Steerer(polygon)        [ bikeGeometry::get_Object     Steerer     polygon        $BB_Position  ]
         set Steerer(object)         [ $cv_Name create polygon $Steerer(polygon) -fill white -outline black -tags __Frame__ ]
 
 
 
-        set RearWheel(position)     [ frame_geometry::object_values        RearWheel    position    $BB_Position]
+        set RearWheel(position)     [ bikeGeometry::get_Object        RearWheel    position    $BB_Position]
 
             # --- create Fork Representation ----------------
         puts "          ... \$Rendering(Fork) $Rendering(Fork)"
         switch -glob $Rendering(Fork) {
             SteelLugged {
-                        set ForkBlade(polygon)      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-                        set ForkCrown(file)         [ checkFileString $frame_geometry::myFork(CrownFile) ]
-                        set ForkDropout(file)       [ checkFileString $frame_geometry::myFork(DropOutFile) ]
-                        set ForkDropout(position)   [ frame_geometry::object_values     FrontWheel  position    $BB_Position ]
-                        set do_direction            [ frame_geometry::object_values     Lugs/Dropout/Front     direction ]
+                        set ForkBlade(polygon)      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
+                        set ForkCrown(file)         [ checkFileString $bikeGeometry::myFork(CrownFile) ]
+                        set ForkDropout(file)       [ checkFileString $bikeGeometry::myFork(DropOutFile) ]
+                        set ForkDropout(position)   [ bikeGeometry::get_Object     FrontWheel  position    $BB_Position ]
+                        set do_direction            [ bikeGeometry::get_Object     Lugs/Dropout/Front     direction ]
                         set do_angle                [ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
                         }
             SteelLuggedMAX {
-                        set ForkBlade(polygon)      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-                        set ForkCrown(file)         [ checkFileString $frame_geometry::myFork(CrownFile) ]
-                        set ForkDropout(file)       [ checkFileString $frame_geometry::myFork(DropOutFile) ]
-                        set ForkDropout(position)   [ frame_geometry::object_values     FrontWheel  position    $BB_Position ]
-                        set do_direction            [ frame_geometry::object_values     Lugs/Dropout/Front     direction ]
+                        set ForkBlade(polygon)      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
+                        set ForkCrown(file)         [ checkFileString $bikeGeometry::myFork(CrownFile) ]
+                        set ForkDropout(file)       [ checkFileString $bikeGeometry::myFork(DropOutFile) ]
+                        set ForkDropout(position)   [ bikeGeometry::get_Object     FrontWheel  position    $BB_Position ]
+                        set do_direction            [ bikeGeometry::get_Object     Lugs/Dropout/Front     direction ]
                         set do_angle                [ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
                         }
             Composite     {
-                        set ForkBlade(polygon)      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-                        set ForkCrown(file)         [ checkFileString $frame_geometry::myFork(CrownFile) ]
-                        set ForkDropout(file)       [ checkFileString $frame_geometry::myFork(DropOutFile) ]
-                        set ForkDropout(position)   [ frame_geometry::object_values     FrontWheel  position    $BB_Position ]
-                        set Steerer_Fork(position)  [ frame_geometry::object_values     Lugs/ForkCrown        position    $BB_Position]
-                        set ht_direction            [ frame_geometry::object_values     HeadTube direction ]
+                        set ForkBlade(polygon)      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
+                        set ForkCrown(file)         [ checkFileString $bikeGeometry::myFork(CrownFile) ]
+                        set ForkDropout(file)       [ checkFileString $bikeGeometry::myFork(DropOutFile) ]
+                        set ForkDropout(position)   [ bikeGeometry::get_Object     FrontWheel  position    $BB_Position ]
+                        set Steerer_Fork(position)  [ bikeGeometry::get_Object     Lugs/ForkCrown        position    $BB_Position]
+                        set ht_direction            [ bikeGeometry::get_Object     HeadTube direction ]
                         set ht_angle                [ vectormath::angle {0 1} {0 0} $ht_direction ]
                         set vct_01                  [ vectormath::rotatePoint {0 0} {4 70} $ht_angle ]
                         set help_01                 [ vectormath::subVector $Steerer_Fork(position) $vct_01 ]
@@ -846,16 +846,16 @@
                             set forkSize [lindex [split $Rendering(Fork) {_}] 1 ]
                             if {$forkSize == {} } { set forkSize "26" }
                             puts "             ... \$forkSize  $forkSize"
-                        set ForkBlade(polygon)      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-                        set ForkCrown(file)         [ checkFileString $frame_geometry::myFork(CrownFile) ]
-                        set ForkDropout(file)       [ checkFileString $frame_geometry::myFork(DropOutFile) ]
+                        set ForkBlade(polygon)      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
+                        set ForkCrown(file)         [ checkFileString $bikeGeometry::myFork(CrownFile) ]
+                        set ForkDropout(file)       [ checkFileString $bikeGeometry::myFork(DropOutFile) ]
                         set Suspension_ForkRake     [[ $domInit     selectNodes /root/Options/Fork/Suspension_$forkSize/Geometry/Rake ]  asText ]
                         set Project_ForkRake        $project::Component(Fork/Rake)
-                        set do_direction            [ frame_geometry::object_values     HeadTube    direction ]
+                        set do_direction            [ bikeGeometry::get_Object     HeadTube    direction ]
                         set do_angle                [ vectormath::angle {0 1} {0 0} $do_direction ]
                         set offset                  [ expr $Project_ForkRake-$Suspension_ForkRake]
                         set vct_move                [ vectormath::rotatePoint {0 0} [list 0 $offset] [expr 90 + $do_angle] ]
-                        set ForkDropout(position)   [ vectormath::addVector [ frame_geometry::object_values        FrontWheel  position    $BB_Position ] $vct_move]
+                        set ForkDropout(position)   [ vectormath::addVector [ bikeGeometry::get_Object        FrontWheel  position    $BB_Position ] $vct_move]
                         }
             default {}
         }
@@ -895,9 +895,9 @@
 
 
             # --- create ForkCrown -------------------
-                set ht_direction    [ frame_geometry::object_values     Lugs/ForkCrown direction ]
+                set ht_direction    [ bikeGeometry::get_Object     Lugs/ForkCrown direction ]
                 set ht_angle        [expr [ vectormath::dirAngle         {0 0}     $ht_direction ] -90 ]
-        set ForkCrown(position)     [ frame_geometry::object_values        Lugs/ForkCrown        position    $BB_Position ]
+        set ForkCrown(position)     [ bikeGeometry::get_Object        Lugs/ForkCrown        position    $BB_Position ]
         set ForkCrown(object)       [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkCrown(file)] $ForkCrown(position) $ht_angle __ForkCrown__ ]
                                       $cv_Name addtag  __Frame__ withtag $ForkCrown(object)
         switch -exact $updateCommand {
@@ -981,19 +981,19 @@
             #                    #$cv_Name create line   [list $help_01 $ForkDropout(position)] -fill purple -width 1
             #                }
             #    Suspension     {
-            #                    set Steerer_Fork(position)  [ frame_geometry::point_position  Steerer_Fork  $BB_Position]
+            #                    set Steerer_Fork(position)  [ bikeGeometry::point_position  Steerer_Fork  $BB_Position]
             #                    $cv_Name create circle  $ForkDropout(position)  -radius 10  -outline darkred
             #                    $cv_Name create line    [list $Steerer_Fork(position) $ForkDropout(position)] -fill purple -width 1
             #                }
             #
-            #set debug_01                [ frame_geometry::object_values ForkBlade debug $BB_Position  ]
+            #set debug_01                [ bikeGeometry::get_Object ForkBlade debug $BB_Position  ]
             #$cv_Name create line    $debug_01 -fill purple -width 1
             #$cv_Name delete     $ForkDropout(object)
 
-            #set debug_02               [ frame_geometry::point_position  Debug02  $BB_Position]
-            #set debug_03               [ frame_geometry::point_position  Debug03  $BB_Position]
-            #set debug_04               [ frame_geometry::point_position  Debug04  $BB_Position]
-            #set debug_05               [ frame_geometry::point_position  Debug05  $BB_Position]
+            #set debug_02               [ bikeGeometry::point_position  Debug02  $BB_Position]
+            #set debug_03               [ bikeGeometry::point_position  Debug03  $BB_Position]
+            #set debug_04               [ bikeGeometry::point_position  Debug04  $BB_Position]
+            #set debug_05               [ bikeGeometry::point_position  Debug05  $BB_Position]
             #$cv_Name create circle  $debug_01 -radius 20  -outline red
             #$cv_Name create circle  $debug_02 -radius 20  -outline red
             #$cv_Name create circle  $debug_03 -radius 20  -outline blue
@@ -1017,33 +1017,33 @@
         set CrankSetLength            $project::Component(CrankSet/Length)
             # --- get defining Point coords ----------
         set BottomBracket       $BB_Position
-        set RearWheel           [ frame_geometry::object_values     RearWheel               position    $BB_Position ]
-        set FrontWheel          [ frame_geometry::object_values     FrontWheel              position    $BB_Position ]
-        set Saddle              [ frame_geometry::object_values     Saddle                  position    $BB_Position ]
-        set Saddle_Proposal     [ frame_geometry::object_values     SaddleProposal          position    $BB_Position ]
-        set SeatPost_Saddle     [ frame_geometry::object_values     SeatPostSaddle          position    $BB_Position ]
-        set SeatPost_SeatTube   [ frame_geometry::object_values     SeatPostSeatTube        position    $BB_Position ]
-        set SeatTube_Ground     [ frame_geometry::object_values     SeatTubeGround          position    $BB_Position ]
-        set SeatTube_BBracket   [ frame_geometry::object_values     SeatTube/Start          position    $BB_Position ]
-        set SeatStay_SeatTube   [ frame_geometry::object_values     SeatStay/End            position    $BB_Position ]
-        set SeatStay_RearWheel  [ frame_geometry::object_values     SeatStay/Start          position    $BB_Position ]
-        set TopTube_SeatTube    [ frame_geometry::object_values     TopTube/Start           position    $BB_Position ]
-        set TopTube_Steerer     [ frame_geometry::object_values     TopTube/End             position    $BB_Position ]
-        set Steerer_Stem        [ frame_geometry::object_values     Steerer/End             position    $BB_Position ]
-        set Steerer_Fork        [ frame_geometry::object_values     Steerer/Start           position    $BB_Position ]
-        set DownTube_Steerer    [ frame_geometry::object_values     DownTube/End            position    $BB_Position ]
-        set HandleBar           [ frame_geometry::object_values     HandleBar               position    $BB_Position ]
-        set BaseCenter          [ frame_geometry::object_values     BottomBracketGround     position    $BB_Position ]
-        set Steerer_Ground      [ frame_geometry::object_values     SteererGround           position    $BB_Position ]
-        set LegClearance        [ vectormath::addVector     $frame_geometry::LegClearance(Position)     $BB_Position ]
+        set RearWheel           [ bikeGeometry::get_Object     RearWheel               position    $BB_Position ]
+        set FrontWheel          [ bikeGeometry::get_Object     FrontWheel              position    $BB_Position ]
+        set Saddle              [ bikeGeometry::get_Object     Saddle                  position    $BB_Position ]
+        set Saddle_Proposal     [ bikeGeometry::get_Object     SaddleProposal          position    $BB_Position ]
+        set SeatPost_Saddle     [ bikeGeometry::get_Object     SeatPostSaddle          position    $BB_Position ]
+        set SeatPost_SeatTube   [ bikeGeometry::get_Object     SeatPostSeatTube        position    $BB_Position ]
+        set SeatTube_Ground     [ bikeGeometry::get_Object     SeatTubeGround          position    $BB_Position ]
+        set SeatTube_BBracket   [ bikeGeometry::get_Object     SeatTube/Start          position    $BB_Position ]
+        set SeatStay_SeatTube   [ bikeGeometry::get_Object     SeatStay/End            position    $BB_Position ]
+        set SeatStay_RearWheel  [ bikeGeometry::get_Object     SeatStay/Start          position    $BB_Position ]
+        set TopTube_SeatTube    [ bikeGeometry::get_Object     TopTube/Start           position    $BB_Position ]
+        set TopTube_Steerer     [ bikeGeometry::get_Object     TopTube/End             position    $BB_Position ]
+        set Steerer_Stem        [ bikeGeometry::get_Object     Steerer/End             position    $BB_Position ]
+        set Steerer_Fork        [ bikeGeometry::get_Object     Steerer/Start           position    $BB_Position ]
+        set DownTube_Steerer    [ bikeGeometry::get_Object     DownTube/End            position    $BB_Position ]
+        set HandleBar           [ bikeGeometry::get_Object     HandleBar               position    $BB_Position ]
+        set BaseCenter          [ bikeGeometry::get_Object     BottomBracketGround     position    $BB_Position ]
+        set Steerer_Ground      [ bikeGeometry::get_Object     SteererGround           position    $BB_Position ]
+        set LegClearance        [ vectormath::addVector     $bikeGeometry::LegClearance(Position)     $BB_Position ]
 
         set Saddle_PropRadius   [ vectormath::length                $Saddle_Proposal $BB_Position]
         set SeatTube_Angle      [ vectormath::angle                 $SeatPost_SeatTube $BB_Position [list -500 [lindex $BB_Position 1] ] ]
 
 
-            # set debug_01      [ frame_geometry::object_values ForkBlade polygon $BB_Position  ]
-            # set debug_01        [ frame_geometry::object_values        Lugs/ForkCrown      position    $BB_Position ]
-            # set debug_01      [ frame_geometry::object_values      Result/Position/SeatPost_Saddle position    $BB_Position ]
+            # set debug_01      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
+            # set debug_01        [ bikeGeometry::get_Object        Lugs/ForkCrown      position    $BB_Position ]
+            # set debug_01      [ bikeGeometry::get_Object      Result/Position/SeatPost_Saddle position    $BB_Position ]
             # $cv_Name create circle  $debug_01  -radius 20  -fill white  -tags __Frame__ -outline darkred
 
 
@@ -1060,33 +1060,33 @@
 
 
             # ------ headtube extension to ground
-        $cv_Name create centerline [ project::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]          -fill gray60                 -tags __CenterLine__
+        $cv_Name create centerline [ appUtil::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]          -fill gray60                 -tags __CenterLine__
             # ------ seattube extension to ground
-        $cv_Name create centerline [ project::flatten_nestedList  $SeatTube_BBracket  $SeatTube_Ground ]    -fill gray60                 -tags {__CenterLine__    seattube_center}
+        $cv_Name create centerline [ appUtil::flatten_nestedList  $SeatTube_BBracket  $SeatTube_Ground ]    -fill gray60                 -tags {__CenterLine__    seattube_center}
 
 
             # ------ chainstay
-        $cv_Name create line     [ project::flatten_nestedList  $RearWheel             $BottomBracket     ]      -fill gray60  -width 1.0      -tags {__CenterLine__    chainstay}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $RearWheel             $BottomBracket     ]      -fill gray60  -width 1.0      -tags {__CenterLine__    chainstay}
             # ------ seattube
-        $cv_Name create line     [ project::flatten_nestedList  $SeatPost_SeatTube   $SeatTube_BBracket ]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $SeatPost_SeatTube   $SeatTube_BBracket ]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
             # ------ seatstay
-        $cv_Name create line     [ project::flatten_nestedList  $SeatStay_SeatTube   $RearWheel         ]      -fill gray60  -width 1.0      -tags {__CenterLine__     seatstay}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $SeatStay_SeatTube   $RearWheel         ]      -fill gray60  -width 1.0      -tags {__CenterLine__     seatstay}
             # ------ toptube
-        $cv_Name create line     [ project::flatten_nestedList  $TopTube_SeatTube    $TopTube_Steerer ]      -fill gray60  -width 1.0      -tags {__CenterLine__    toptube}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $TopTube_SeatTube    $TopTube_Steerer ]      -fill gray60  -width 1.0      -tags {__CenterLine__    toptube}
             # ------ steerer / stem
-        $cv_Name create line     [ project::flatten_nestedList  $HandleBar  $Steerer_Stem  $Steerer_Fork]    -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $HandleBar  $Steerer_Stem  $Steerer_Fork]    -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
             # ------ downtube
-        $cv_Name create line     [ project::flatten_nestedList  $DownTube_Steerer     $BB_Position    ]          -fill gray60  -width 1.0      -tags {__CenterLine__    downtube}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $DownTube_Steerer     $BB_Position    ]          -fill gray60  -width 1.0      -tags {__CenterLine__    downtube}
             # ------ fork
-        $cv_Name create line     [ project::flatten_nestedList  $Steerer_Fork         $FrontWheel        ]          -fill gray60  -width 1.0      -tags {__CenterLine__    fork}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $Steerer_Fork         $FrontWheel        ]          -fill gray60  -width 1.0      -tags {__CenterLine__    fork}
 
             # ------ seatpost
-        $cv_Name create line     [ project::flatten_nestedList  $Saddle $SeatPost_Saddle $SeatPost_SeatTube] -fill gray60  -width 0.5      -tags {__CenterLine__    saddlemount}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $Saddle $SeatPost_Saddle $SeatPost_SeatTube] -fill gray60  -width 0.5      -tags {__CenterLine__    saddlemount}
 
             # ------ seattube
-            # $cv_Name create line  [ project::flatten_nestedList  $Saddle  $SeatPost_SeatTube   $BottomBracket     ]  \
+            # $cv_Name create line  [ appUtil::flatten_nestedList  $Saddle  $SeatPost_SeatTube   $BottomBracket     ]  \
             # ------ seatpost
-            # $cv_Name create line  [ project::flatten_nestedList  $Saddle $SeatPost_Saddle  $SeatPost_SeatTube ] -fill gray60  -width 1.0      -tags {__CenterLine__    saddlemount}
+            # $cv_Name create line  [ appUtil::flatten_nestedList  $Saddle $SeatPost_Saddle  $SeatPost_SeatTube ] -fill gray60  -width 1.0      -tags {__CenterLine__    saddlemount}
 
 
             # ------ crankset representation
@@ -1170,55 +1170,55 @@
 
         switch $type {
             TopTube_Seat {
-                    set Mitter(polygon)     [ frame_geometry::object_values TubeMiter/TopTube_Seat        polygon    $xy ]
+                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/TopTube_Seat        polygon    $xy ]
                     set Mitter(header)      "TopTube / SeatTube"
                     set     minorDiameter       $project::FrameTubes(TopTube/DiameterST)
-                    set     minorDirection      [ frame_geometry::object_values TopTube     direction ]
+                    set     minorDirection      [ bikeGeometry::get_Object TopTube     direction ]
                     set     majorDiameter       $project::FrameTubes(SeatTube/DiameterTT)
-                    set     majorDirection      [ frame_geometry::object_values SeatTube     direction ]
+                    set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
                     set     offSet              0
                 }
             TopTube_Head {
-                    set Mitter(polygon)     [ frame_geometry::object_values TubeMiter/TopTube_Head        polygon    $xy  ]
+                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/TopTube_Head        polygon    $xy  ]
                     set Mitter(header)      "TopTube / HeadTube"
                     set     minorDiameter       $project::FrameTubes(TopTube/DiameterHT)
-                    set     minorDirection      [ frame_geometry::object_values TopTube     direction ]
+                    set     minorDirection      [ bikeGeometry::get_Object TopTube     direction ]
                     set     majorDiameter       $project::FrameTubes(HeadTube/Diameter)
-                    set     majorDirection      [ frame_geometry::object_values HeadTube     direction ]
+                    set     majorDirection      [ bikeGeometry::get_Object HeadTube     direction ]
                     set     offSet              0
                 }
             DownTube_Head {
-                    set Mitter(polygon)     [ frame_geometry::object_values TubeMiter/DownTube_Head    polygon        $xy  ]
+                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/DownTube_Head    polygon        $xy  ]
                     set Mitter(header)      "DownTube / HeadTube"
                     set     minorDiameter       $project::FrameTubes(DownTube/DiameterHT)
-                    set     minorDirection      [ frame_geometry::object_values DownTube     direction ]
+                    set     minorDirection      [ bikeGeometry::get_Object DownTube     direction ]
                     set     majorDiameter       $project::FrameTubes(HeadTube/Diameter)
-                    set     majorDirection      [ frame_geometry::object_values HeadTube     direction ]
+                    set     majorDirection      [ bikeGeometry::get_Object HeadTube     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              0
                 }
             SeatStay_01 {
-                    set Mitter(polygon)     [ frame_geometry::object_values TubeMiter/SeatStay_01        polygon        $xy  ]
+                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/SeatStay_01        polygon        $xy  ]
                     set Mitter(header)      "SeatStay / SeatTube"
                     set     minorDiameter       $project::FrameTubes(SeatStay/DiameterST)
-                    set     minorDirection      [ frame_geometry::object_values SeatStay     direction ]
+                    set     minorDirection      [ bikeGeometry::get_Object SeatStay     direction ]
                     set     majorDiameter       $project::Lugs(SeatTube/SeatStay/MiterDiameter)
-                    set     majorDirection      [ frame_geometry::object_values SeatTube     direction ]
+                    set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              [ format "%.3f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
                 }
             SeatStay_02 {
-                    set Mitter(polygon)     [ frame_geometry::object_values TubeMiter/SeatStay_02        polygon        $xy  ]
+                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/SeatStay_02        polygon        $xy  ]
                     set Mitter(header)      "SeatStay / SeatTube"
                     set     minorDiameter       $project::FrameTubes(SeatStay/DiameterST)
-                    set     minorDirection      [ frame_geometry::object_values SeatStay     direction ]
+                    set     minorDirection      [ bikeGeometry::get_Object SeatStay     direction ]
                     set     majorDiameter       $project::Lugs(SeatTube/SeatStay/MiterDiameter)
-                    set     majorDirection      [ frame_geometry::object_values SeatTube     direction ]
+                    set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              [ format "%.3f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
                 }
             Reference {
-                    set Mitter(polygon)     [ frame_geometry::object_values TubeMiter/Reference     polygon     $xy  ]
+                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/Reference     polygon     $xy  ]
                     set Mitter(header)      "Reference"
                 }
             default {return}
@@ -1242,15 +1242,15 @@
             default {
                         set pt_01   [ vectormath::addVector $xy {0   5} ]
                         set pt_02   [ vectormath::addVector $xy {0 -75} ]
-                    $cv_Name create centerline     [ project::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25
-                        set pt_03   [ frame_geometry::coords_get_xy $Mitter(polygon) 0 ]
+                    $cv_Name create centerline     [ appUtil::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25
+                        set pt_03   [ bikeGeometry::coords_get_xy $Mitter(polygon) 0 ]
                         set pt_03   [ vectormath::addVector $pt_03 {+5  20} ]
-                        set pt_04   [frame_geometry::coords_get_xy $Mitter(polygon) end]
+                        set pt_04   [bikeGeometry::coords_get_xy $Mitter(polygon) end]
                         set pt_04   [ vectormath::addVector $pt_04 {-5  20} ]
-                    $cv_Name create line         [ project::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25
+                    $cv_Name create line         [ appUtil::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25
                         set pt_05   [ vectormath::addVector $pt_03 { 0  50} ]
                         set pt_06   [ vectormath::addVector $pt_04 { 0  50} ]
-                    $cv_Name create centerline     [ project::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25
+                    $cv_Name create centerline     [ appUtil::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25
 
                             # --- defining values
                             #

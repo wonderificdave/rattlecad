@@ -41,8 +41,8 @@
   package require   BWidget         
   package require   tdom
   
-  package require   appUtil
-  package require   bikeGeometry  0.8
+  package require   appUtil       0.10
+  package require   bikeGeometry  0.10
   package require   canvasCAD     0.35
   package require   extSummary    0.3
   
@@ -373,7 +373,7 @@
         
             # --------------------------------------------
             #    create custom base Parameters
-        frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+        bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
           
           
             # --------------------------------------------

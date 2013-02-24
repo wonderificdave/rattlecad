@@ -416,3 +416,4 @@
 2013.02.22  12:00   22:00    10:00   3.4.00 ... 15 ... demo mode: File -> Demo
 2013.02.23  21:00   24:00    03:00   3.4.00 ... 16 ... refactor: extract procedures from projectUpdate::createEdit
 2013.02.24  12:00   18:00    06:00   3.4.00 ... 18 ... refactor: project:setValue and getValue adn rattleCAD::updateProject
+2013.02.24  18:00   22:00    04:00   3.4.00 ... 20 ... refactor: bikeGeometry, rattleCAD
