@@ -43,7 +43,7 @@
 
     #-------------------------------------------------------------------------
         #  add vector to list of coordinates
-    proc frame_geometry::coords_flip_y {coordlist} {
+    proc frameGeometry::coords_flip_y {coordlist} {
             set returnList {}
             foreach {x y} $coordlist {
                 set new_y [expr -$y]
@@ -54,7 +54,7 @@
 
     #-------------------------------------------------------------------------
         #  get xy in a flat list of coordinates, start with    0, 1, 2, 3, ...
-    proc frame_geometry::coords_get_xy {coordlist index} {
+    proc frameGeometry::coords_get_xy {coordlist index} {
             if {$index == {end}} {
                 set index_y [expr [llength $coordlist] -1]
                 set index_x [expr [llength $coordlist] -2]
@@ -67,123 +67,124 @@
     }
     
     #-------------------------------------------------------------------------
-       #  sets and format Value
-    proc frame_geometry::set_projectValue {xpath value {mode {update}}} {
-    
-        # xpath: e.g.:Custom/BottomBracket/Depth
-        variable         _updateValue
-    
-        puts ""
-        puts "   -------------------------------"
-        puts "    set_projectValue"
-        puts "       xpath:           $xpath"
-        puts "       value:           $value"
-        puts "       mode:            $mode"
-    
-        set _array     [lindex [split $xpath /] 0]
-        set _name     [string range $xpath [string length $_array/] end]
-    	# puts "     ... $_array  $_name"
-    
-    
-        # --- handle xpath values ---
-    	    # puts "  ... mode: $mode"
-        if {$mode == {update}} {
-    	    # puts "  ... set_projectValue: $xpath"
-    	switch -glob $_array {
-    	    {Result} {
-    		    set newValue [ string map {, .} $value]
-    			# puts "\n  ... set_projectValue: ... Result/..."
-    		    set_resulting_Parameters $_array $_name $newValue
-    		    return
-    		}
-    	    default {}
-    	}
-        }
-    
-    
-    	# --- exceptions without any format-checks
-    	    # on int list values like defined
-    	    # puts "<D> $xpath"
-        switch $xpath {
-    	    {Component/Wheel/Rear/RimDiameter} -
-    	    {Component/Wheel/Front/RimDiameter} -
-    	    {Lugs/RearDropOut/Direction} {
-    			set newValue    $value
-    			project::setValue [format "%s(%s)" $_array $_name] value $newValue
-    			return $newValue
-    		    }
-    
-    	    {Component/CrankSet/ChainRings} -
-    	    {Component/Wheel/Rear/FirstSprocket} {
-    			set newValue [ string map {, .} $value]
-    			    # puts " <D> $newValue"
-    			if {$mode == {update}} {
-    			    project::setValue [format "%s(%s)" $_array $_name] value $newValue
-    			}
-    			return $newValue
-    		    }                         
-    
-    	    default { }
-        }
-    
-    
-    
-    
-    	# --- set new Value
-        set newValue [ string map {, .} $value]
-    	# --- check Value --- ";" ... like in APPL_RimList
-        set newValue [lindex [split $newValue ;] 0]
-    	# --- check Value --- update
-        if {$mode == {update}} {
-    	set _updateValue($xpath) $newValue
-        }
-    
-    
-    	# --- update or return on errorID
-        set checkValue {mathValue}
-        if {[file dirname $xpath] == {Rendering}} {
-    		    # puts "               ... [file dirname $xpath] "
-    		set checkValue {}
-        }
-        if {[file tail $xpath]    == {File}     } {
-    		    # puts "               ... [file tail    $xpath] "
-    		set checkValue {}
-        }
-    
-        if {[lindex [split $xpath /] 0] == {Rendering}} {
-    		set checkValue {}
-    		puts "   ... Rendering: $xpath "
-    		puts "        ... $value [file tail $xpath]"
-        }
-    
-    	 puts "               ... checkValue: $checkValue "
-    
-    	# --- update or return on errorID
-        if {$checkValue == {mathValue} } {
-    	if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
-    	    puts "\n$errorID\n"
-    	    return
-    	} else {
-    	    set newValue [format "%.3f" $newValue]
-    	}
-        }
-    
-        if {$mode == {update}} {
-    	project::setValue [format "%s(%s)" $_array $_name] value $newValue
-        }
-    
-        return $newValue
-    
+        #  sets and format Value
+    proc frameGeometry::set_projectValue {xpath value {mode {update}}} {
+     
+         # xpath: e.g.:Custom/BottomBracket/Depth
+         variable         _updateValue
+     
+         puts ""
+         puts "   -------------------------------"
+         puts "    set_projectValue"
+         puts "       xpath:           $xpath"
+         puts "       value:           $value"
+         puts "       mode:            $mode"
+     
+           # set _array     [lindex [split $xpath /] 0]
+           # set _name     [string range $xpath [string length $_array/] end]
+         foreach {_array _name path} [project::unifyKey $xpath] break
+           # puts "     ... $_array  $_name"
+     
+     
+         # --- handle xpath values ---
+             # puts "  ... mode: $mode"
+         if {$mode == {update}} {
+             # puts "  ... set_projectValue: $xpath"
+         switch -glob $_array {
+             {Result} {
+                 set newValue [ string map {, .} $value]
+                 # puts "\n  ... set_projectValue: ... Result/..."
+                 set_resultParameter $_array $_name $newValue
+                 return
+             }
+             default {}
+         }
+         }
+     
+     
+         # --- exceptions without any format-checks
+             # on int list values like defined
+             # puts "<D> $xpath"
+         switch $xpath {
+             {Component/Wheel/Rear/RimDiameter} -
+             {Component/Wheel/Front/RimDiameter} -
+             {Lugs/RearDropOut/Direction} {
+                 set newValue    $value
+                 project::setValue [format "%s(%s)" $_array $_name] value $newValue
+                 return $newValue
+                 }
+     
+             {Component/CrankSet/ChainRings} -
+             {Component/Wheel/Rear/FirstSprocket} {
+                 set newValue [ string map {, .} $value]
+                     # puts " <D> $newValue"
+                 if {$mode == {update}} {
+                     project::setValue [format "%s(%s)" $_array $_name] value $newValue
+                 }
+                 return $newValue
+                 }                         
+     
+             default { }
+         }
+     
+     
+     
+     
+         # --- set new Value
+         set newValue [ string map {, .} $value]
+         # --- check Value --- ";" ... like in APPL_RimList
+         set newValue [lindex [split $newValue ;] 0]
+         # --- check Value --- update
+         if {$mode == {update}} {
+         set _updateValue($xpath) $newValue
+         }
+     
+     
+         # --- update or return on errorID
+         set checkValue {mathValue}
+         if {[file dirname $xpath] == {Rendering}} {
+                 # puts "               ... [file dirname $xpath] "
+             set checkValue {}
+         }
+         if {[file tail $xpath]    == {File}     } {
+                 # puts "               ... [file tail    $xpath] "
+             set checkValue {}
+         }
+     
+         if {[lindex [split $xpath /] 0] == {Rendering}} {
+             set checkValue {}
+             puts "   ... Rendering: $xpath "
+             puts "        ... $value [file tail $xpath]"
+         }
+     
+          puts "               ... checkValue: $checkValue "
+     
+         # --- update or return on errorID
+         if {$checkValue == {mathValue} } {
+         if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
+             puts "\n$errorID\n"
+             return
+         } else {
+             set newValue [format "%.3f" $newValue]
+         }
+         }
+     
+         if {$mode == {update}} {
+         project::setValue [format "%s(%s)" $_array $_name] value $newValue
+         }
+     
+         return $newValue
+     
     }
     #-------------------------------------------------------------------------
        #  handle modification on /root/Result/... values
-    proc frame_geometry::set_resulting_Parameters {_array _name value} {
+    proc frameGeometry::set_resultParameter {_array _name value} {
     
         variable         _updateValue
     
         puts ""
         puts "   -------------------------------"
-        puts "    set_resulting_Parameters"
+        puts "    set_resultParameter"
         puts "       _array:          $_array"
         puts "       _name:           $_name"
         puts "       value:           $value"
@@ -438,7 +439,7 @@
     		    set height                  [ project::getValue [format "%s(%s)" Personal Saddle_Height] value ]
     		    set angle                   [ vectormath::dirAngle {0 0} [list $newValue $height] ]
     
-    		    set_resulting_Parameters Result Angle/SeatTube/Direction $angle
+    		    set_resultParameter Result Angle/SeatTube/Direction $angle
     
     			# puts "   $newValue / $height -> $angle"
     		    return
@@ -465,7 +466,7 @@
     		    puts "\n"
     		    puts "     WARNING!"
     		    puts "\n"
-    		    puts "        ... set_resulting_Parameters:  "
+    		    puts "        ... set_resultParameter:  "
     		    puts "                 $xpath"
     		    puts "            ... is not registered!"
     		    puts "\n"
@@ -476,7 +477,7 @@
     }
     #-------------------------------------------------------------------------
        #  trace/update Project
-    proc frame_geometry::trace_Project {varname key operation} {
+    proc frameGeometry::trace_Project {varname key operation} {
         if {$key != ""} {
     	    set varname ${varname}($key)
     	    }

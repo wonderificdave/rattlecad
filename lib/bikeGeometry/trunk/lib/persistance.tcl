@@ -37,8 +37,6 @@
  #
  # 
 
- package provide bikeGeometry 0.8
- 
  namespace eval project {
 
     variable postUpdate [ dict create ]
@@ -95,7 +93,7 @@
                 
                 # tk_messageBox -message "trace_ProjectConfig: \n     varname:         $var \n     key:             $key \n     operation:       $operation"
             
-            frame_geometry::set_base_Parameters
+            frameGeometry::set_base_Parameters
             
             set    message "          <W> \n"
             append message "               there was an update in previous version:\n"
@@ -520,7 +518,7 @@
                     project::update_ProjectVersion {3.3.06}
                     # puts "[[$::APPL_Config(root_ProjectDOM) selectNode /root/Rendering] asXML]"
                     # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                    frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                    frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
             }
             
               # -- replace old result-Definition of projectXML with the newer one
@@ -968,9 +966,9 @@
                                                 set WheelPositionFront [$nodeWP nodeValue]
                                                 $nodeTA nodeValue $HeadTubeAngle
                                                 puts "          ... correction WheelPosition/Front: $WheelPositionFront"
-                                                frame_geometry::set_base_Parameters $domProject
-                                                # 3.2.76 frame_geometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
-                                                frame_geometry::set_projectValue Result/Length/FrontWheel/diagonal $WheelPositionFront update
+                                                frameGeometry::set_base_Parameters $domProject
+                                                # 3.2.76 frameGeometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
+                                                frameGeometry::set_projectValue Result/Length/FrontWheel/diagonal $WheelPositionFront update
                                                 puts "          ... correction WheelPosition/Front: $WheelPositionFront"
                                             }
                                         }
@@ -1321,7 +1319,7 @@
                                 #
                                 # -- update values
                                 #
-                            # frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                            # frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                             dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
                         
                         }
@@ -1369,7 +1367,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                            # frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.03} {
@@ -1402,7 +1400,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                            # frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.04} {    
@@ -1436,7 +1434,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frame_geometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                            # frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.05} {    
