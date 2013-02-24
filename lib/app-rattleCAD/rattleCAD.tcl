@@ -42,7 +42,7 @@
   package require   tdom
   
   package require   appUtil
-  package require   bikeGeometry  0.7
+  package require   bikeGeometry  0.8
   package require   canvasCAD     0.35
   package require   extSummary    0.3
   
