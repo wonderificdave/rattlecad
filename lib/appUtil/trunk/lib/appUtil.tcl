@@ -35,7 +35,7 @@
 ###            Bug with liststructure in data if 'Out' and Level=1
 ###
 
-package provide appUtil  0.9
+package provide appUtil  0.10
 
 namespace eval appUtil { 
 

@@ -8,7 +8,7 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded appUtil  0.9 "\
+package ifneeded appUtil  0.10 "\
         [list source [file join $dir lib appUtil.tcl] ]; \
         [list source [file join $dir lib lib_debug.tcl] ]; \
     "
