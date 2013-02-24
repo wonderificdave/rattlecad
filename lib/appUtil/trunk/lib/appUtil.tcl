@@ -153,6 +153,66 @@ namespace eval appUtil {
     return ""
   }
 
+      #-------------------------------------------------------------------------
+      # see  http://wiki.tcl.tk/440
+      #
+    proc flatten_nestedList { args } {
+          if {[llength $args] == 0 } { return ""}
+          set flatList {}
+          foreach e [eval concat $args] {
+              foreach ee $e { lappend flatList $ee }
+          }
+              # tk_messageBox -message "flatten_nestedList:\n    $args  -/- [llength $args] \n $flatList  -/- [llength $flatList]"
+          return $flatList
+    }    
+    
+    
+    #-------------------------------------------------------------------------
+      # see  http://wiki.tcl.tk/23526
+      #
+    proc pdict { d {i 0} {p "  "} {s " -> "} } {
+          set errorInfo $::errorInfo
+          set errorCode $::errorCode
+              set fRepExist [expr {0 < [llength\
+                      [info commands tcl::unsupported::representation]]}]
+          while 1 {
+              if { [catch {dict keys $d}] } {
+                  if {! [info exists dName] && [uplevel 1 [list info exists $d]]} {
+                      set dName $d
+                      unset d
+                      upvar 1 $dName d
+                      continue
+                  }
+                  return -code error  "error: pdict - argument is not a dict"
+              }
+              break
+          }
+          if {[info exists dName]} {
+              puts "dict $dName"
+          }
+          set prefix [string repeat $p $i]
+          set max 0
+          foreach key [dict keys $d] {
+              if { [string length $key] > $max } {
+                  set max [string length $key]
+              }
+          }
+          dict for {key val} ${d} {
+              puts -nonewline "${prefix}[format "%-${max}s" $key]$s"
+              if {    $fRepExist && ! [string match "value is a dict*"\
+                          [tcl::unsupported::representation $val]]
+                      || ! $fRepExist && [catch {dict keys $val}] } {
+                  puts "'${val}'"
+              } else {
+                  puts ""
+                  pdict $val [expr {$i+1}] $p $s
+              }
+          }
+          set ::errorInfo $errorInfo
+          set ::errorCode $errorCode
+          return ""
+    }
+
   namespace export SetConfig DelConfig GetConfig ReadConfigFile SetDebugLevel Debug
 }
 
