@@ -37,7 +37,7 @@
  #
  # 
 
- package provide bikeGeometry 0.7
+ package provide bikeGeometry 0.8
  
  namespace eval project {
 
@@ -81,8 +81,8 @@
     #-------------------------------------------------------------------------
     proc trace_ProjectConfig {varname key operation} {
             if {$key != ""} {
-                    set varname ${varname}($key)
-                    }
+                set varname ${varname}($key)
+            }
             upvar $varname var
             
                 puts "\n\n"
@@ -101,9 +101,9 @@
             append message "               there was an update in previous version:\n"
             append message "                      cv_custom::update [lib_gui::current_canvasCAD]\n"
             append message "          <W>\n"
-            # puts "$message"
-            # tk_messageBox -message $message
-            # cv_custom::update [lib_gui::current_canvasCAD]
+                # puts "$message"
+                # tk_messageBox -message $message
+                # cv_custom::update [lib_gui::current_canvasCAD]
             return
     }    
     #-------------------------------------------------------------------------
@@ -190,13 +190,54 @@
 
 
     #-------------------------------------------------------------------------
-        #  set value
+        # unifyKey 
         #
-        # proc setValue {xPath type args} 
-    proc setValue {arrayName type args} {
+        #    key of format:
+        #            NAME(a)
+        #            NAME(a/b/c)
+        #            NAME/a
+        #            NAME/a/b/c
+        #         
+    proc unifyKey {key} {
+        
+        package require appUtil 0.9
+        # appUtil::get_procHierarchy
+        
+        set isArray [string first "(" $key 0]
+        if {$isArray > 1} {
+              # puts "          <D> -> got Array  $key <- ($isArray)"
+            set arrayName   [lindex [split $key (]  0]
+            set keyName     [lindex [split $key ()] 1]
+            set xPath       [format "%s/%s" $arrayName $keyName]
+              # puts "          <D> -> got Array  $arrayName $keyName"
+            return [list $arrayName $keyName $xPath]
+        } else {
+            set values      [split $key /]
+            set slashIndex  [string first {/} $key 1]
+              # puts "          <D> -> got xPath  $key <- ($isArray) <- $slashIndex"
+            set arrayName   [string range $key 0 $slashIndex-1]
+            set keyName     [string range $key $slashIndex+1 end]       
+            set xPath       [format "%s/%s" $arrayName $keyName]
+              # puts "          <D> -> got xPath  $arrayName $keyName"
+            return [list $arrayName $keyName $xPath]
+        }
+        #
+    }
+        
+    #-------------------------------------------------------------------------
+        # setValue {key type args}
+        #
+        #        key of format:
+        #            NAME(a)
+        #            NAME(a/b/c)
+        #            NAME/a
+        #            NAME/a/b/c 
+        #
+    proc setValue {key type args} {
     
-            set _array [lindex [split $arrayName (] 0]
-            set _name [lindex [split $arrayName ()] 1]
+            foreach {_array _name _path} [unifyKey $key] break
+                # set _array [lindex [split $arrayName (] 0]
+                # set _name [lindex [split $arrayName ()] 1]
             
                 # -- Exception on different types of direction definitions
             switch -exact $type {
@@ -302,15 +343,20 @@
     }
         
     #-------------------------------------------------------------------------
-        #  get value
+        # getValue {key type args}
         #
-        # proc getValue {xPath type args}
-    proc getValue {arrayName type args} {
+        #        key of format:
+        #            NAME(a)
+        #            NAME(a/b/c)
+        #            NAME/a
+        #            NAME/a/b/c 
+        #
+    proc getValue {key type args} {
     
-                # convert _array(_name) -> _array/_name
-            set _array [lindex [split $arrayName (] 0]
-            set _name  [lindex [split $arrayName ()] 1]
-            set xPath  [format "%s/%s" $_array $_name]
+            foreach {_array _name xPath} [unifyKey $key] break
+                # set _array [lindex [split $arrayName (] 0]
+                # set _name  [lindex [split $arrayName ()] 1]
+                # set xPath  [format "%s/%s" $_array $_name]
             
                 # -- Exception on different types of direction definitions
             switch -exact $type {
