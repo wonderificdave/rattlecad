@@ -76,7 +76,10 @@
        # -- keep on top --------------
        wm deiconify .
        
-       # -- integration test -------------
+       # -- update display -----------
+       lib_gui::notebook_refitCanvas
+       
+       # -- integration test ---------
        set openFile         [file join  $TEST_Dir sample __test_Integration_02.xml]
        puts "          ... $openFile\n"
        lib_file::openProject_xml   $openFile
@@ -162,6 +165,9 @@
 
         # lib_file::saveProject_xml saveAs    
         
+        # -- update display -----------
+        lib_gui::notebook_refitCanvas
+        
         foreach fileName [lsort [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml]] {
             puts "\n     open Sample File:"
         puts "          .... $fileName\n"
@@ -210,30 +216,34 @@
             
         # lib_gui::select_canvasCAD   cv_Custom00
         
+        # -- update display -----------
+        lib_gui::notebook_refitCanvas
         cv_custom::update [lib_gui::current_canvasCAD]
-    
-        updateGeometryValue             Personal(Saddle_Distance)            25  -35   5 \
-                                        Personal(HandleBar_Distance)        -25   35   5 \
-                                        Personal(Saddle_Height)             -35   25   5 \
-                                        Personal(HandleBar_Height)          -35   25   5 
+        
+        
+        # -- morphing -----------------
+        updateGeometryValue     Personal(Saddle_Distance)            25  -35   5 \
+                                Personal(HandleBar_Distance)        -25   35   5 \
+                                Personal(Saddle_Height)             -35   25   5 \
+                                Personal(HandleBar_Height)          -35   25   5 
                                         
-        updateGeometryValue             Personal(HandleBar_Distance)        -10    8   3 \
-                                        Personal(HandleBar_Height)           25  -15   2 
+        updateGeometryValue     Personal(HandleBar_Distance)        -10    8   3 \
+                                Personal(HandleBar_Height)           25  -15   2 
 
-        updateGeometryValue             Custom(BottomBracket/Depth          -20   15   3 \
+        updateGeometryValue     Custom(BottomBracket/Depth          -20   15   3 \
         
-        updateGeometryValue             Custom(WheelPosition/Rear)           25  -10   5 
+        updateGeometryValue     Custom(WheelPosition/Rear)           25  -10   5 
         
-        updateGeometryValue             Custom(HeadTube/Angle)               -1   2    1 
+        updateGeometryValue     Custom(HeadTube/Angle)               -1   2    1 
         
     
-        updateGeometryValue             Component(Wheel/Rear/RimDiameter)    45  -45   0 \
-                                        Component(Wheel/Front/RimDiameter)   45  -45   0 
+        updateGeometryValue     Component(Wheel/Rear/RimDiameter)    45  -45   0 \
+                                Component(Wheel/Front/RimDiameter)   45  -45   0 
 
-        updateGeometryValue             Custom(BottomBracket/Depth          -30   25  10 \
-                                        FrameTubes(HeadTube/Length)         -30   25  10
+        updateGeometryValue     Custom(BottomBracket/Depth          -30   25  10 \
+                                FrameTubes(HeadTube/Length)         -30   25  10
                                         
-        updateGeometryValue             Custom(TopTube/Angle)                 3   -4   1 
+        updateGeometryValue     Custom(TopTube/Angle)                 3   -4   1 
                                         
 
         return
@@ -256,7 +266,7 @@
               set currentValue  [project::getValue $arrayName value]
               set valueList [[namespace current]::demoValues $currentValue $left $right $end]
                
-              set myValues($_index) [project::flatten_nestedList $xPath $valueList]
+              set myValues($_index) [appUtil::flatten_nestedList $xPath $valueList]
               incr _index
           }
           puts "   ..."
@@ -279,7 +289,7 @@
                    set xPath       [lindex $myValues($arrayIndex) 0]
                    set paramValue  [lindex $myValues($arrayIndex) $listIndex]
                    puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
-                   frame_geometry::set_projectValue $xPath $paramValue
+                   bikeGeometry::set_projectValue $xPath $paramValue
                    incr arrayIndex 
                }
                cv_custom::update [lib_gui::current_canvasCAD] keep

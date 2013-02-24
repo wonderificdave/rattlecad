@@ -427,7 +427,7 @@
                       puts "    updateConfig"
                       puts "       updateConfig:    $_updateValue($xpath)"
                       project::add_tracing
-                      frame_geometry::set_projectValue $xpath $_updateValue($xpath)
+                      bikeGeometry::set_projectValue $xpath $_updateValue($xpath)
                       project::remove_tracing
                       cv_custom::update [lib_gui::current_canvasCAD]
                   }
@@ -435,12 +435,11 @@
         
           #
           # --- finaly update
-          # frame_geometry::set_base_Parameters ;#$domProject
+          # bikeGeometry::set_base_Parameters ;#$domProject
           update
           catch {focus $cvEntry}
           catch {$cvEntry selection range 0 end}
     }
-    #-------------------------------------------------------------------------    
     #-------------------------------------------------------------------------
         #  check comments in listbox   
     proc check_listBoxValue { w cv_Name xPath args} {

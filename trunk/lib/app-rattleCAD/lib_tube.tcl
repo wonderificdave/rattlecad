@@ -610,7 +610,7 @@ namespace eval lib_tube {
             # -- draw shape of tube
         set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
         set outLineRight  [lib_tube::get_tubeShape    $centerLine $tubeProfile right ]
-        set outLine       [canvasCAD::flatten_nestedList $outLineLeft $outLineRight]
+        set outLine       [appUtil::flatten_nestedList $outLineLeft $outLineRight]
         set angleRotation [expr $angleRotation - $headTube_Angle]
         set brakeDefLine  [lrange $outLineRight 0 1]
 
@@ -627,12 +627,12 @@ namespace eval lib_tube {
         set outLine [vectormath::addVectorPointList         $dropOutPos $outLine]
         
             # -- get oriented centerLine
-        set centerLine [vectormath::addVectorPointList      $addVector [canvasCAD::flatten_nestedList $centerLine]]
+        set centerLine [vectormath::addVectorPointList      $addVector [appUtil::flatten_nestedList $centerLine]]
         set centerLine [vectormath::rotatePointList {0 0}   $centerLine $angleRotation]
         set centerLine [vectormath::addVectorPointList      $dropOutPos $centerLine]
         
             # -- get oriented brakeDefLine
-        set brakeDefLine [vectormath::addVectorPointList    $addVector [canvasCAD::flatten_nestedList $brakeDefLine]]
+        set brakeDefLine [vectormath::addVectorPointList    $addVector [appUtil::flatten_nestedList $brakeDefLine]]
         set brakeDefLine [vectormath::rotatePointList {0 0} $brakeDefLine $angleRotation]
         set brakeDefLine [vectormath::addVectorPointList    $dropOutPos $brakeDefLine]
 
