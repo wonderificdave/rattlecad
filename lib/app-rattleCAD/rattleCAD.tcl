@@ -42,7 +42,7 @@
   package require   tdom
   
   package require   appUtil
-  package require   bikeGeometry  0.6
+  package require   bikeGeometry  0.7
   package require   canvasCAD     0.35
   package require   extSummary    0.3
   
@@ -237,7 +237,7 @@
           
           
             # -- initialize GUI ----------
-       init_GUI_Values
+       init_GUI_Settings
           
         
             
@@ -279,7 +279,7 @@
             foreach entry $::APPL_Config(list_Rims) {
                 puts "        -> $entry"
             }
-	}       
+        }       
 	    
         # puts "\n     APPL_CompLocation"
         foreach index [array names APPL_CompLocation] {
@@ -441,7 +441,7 @@
     #-------------------------------------------------------------------------
        #  load settings from etc/config_initValues.xml
        #
-    proc init_GUI_Values {} {
+    proc init_GUI_Settings {} {
         
         variable APPL_Config
         set root_InitDOM     $APPL_Config(root_InitDOM)
@@ -491,18 +491,7 @@
         
             # -- check user settings in $::APPL_Config(USER_Dir)/rattleCAD_init.xml  ----
             #
-        if {[file exists [file join $::APPL_Config(USER_Dir) rattleCAD_init.xml ] ]} {
-              set ::APPL_Config(user_InitDOM)  [ lib_file::get_XMLContent     [file join $::APPL_Config(USER_Dir) rattleCAD_init.xml ] ]
-              puts ""
-              puts "     ... user_InitDOM      [file join $::APPL_Config(USER_Dir) rattleCAD_init.xml]"
-                # puts "[$::APPL_Config(user_InitDOM) asXML]"
-              catch {set ::APPL_Config(TemplateType) [[$::APPL_Config(user_InitDOM) selectNodes /root/TemplateFile/text()] asXML]}
-              catch {set ::APPL_Config(FrameJigType) [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameJigType/text()] asXML]}
-              
-              puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
-              puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
-              puts ""
-        }
+        read_userInit
             
             
             # --- get Template - File to load
@@ -661,6 +650,43 @@
         
     }
 
+    
+    #-------------------------------------------------------------------------
+        # check user settings in $::APPL_Config(USER_Dir)/rattleCAD_init.xml
+        #            
+    proc read_userInit {} {    
+        set fileName    [file join $::APPL_Config(USER_Dir) _rattleCAD.init ]
+        if {[file exists $fileName ]} {
+              set ::APPL_Config(user_InitDOM)  [ lib_file::get_XMLContent     $fileName ]
+              puts ""
+              puts "     ... user_InitDOM      $fileName"
+                # puts "[$::APPL_Config(user_InitDOM) asXML]"
+              catch {set ::APPL_Config(TemplateType) [[$::APPL_Config(user_InitDOM) selectNodes /root/TemplateFile/text()] asXML]}
+              catch {set ::APPL_Config(FrameJigType) [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameJigType/text()] asXML]}
+              catch {set ::APPL_Config(GUI_Font)     [[$::APPL_Config(user_InitDOM) selectNodes /root/GUI_Font/text()]     asXML]}
+              
+              puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
+              puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
+              puts "        ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
+              puts ""
+        } else {
+              set    fp [open $fileName w]
+              puts  $fp {<?xml version="1.0" encoding="UTF-8" ?>}
+              puts  $fp {<root>}
+              puts  $fp "    <GUI_Font>$::APPL_Config(GUI_Font)</GUI_Font>"
+              puts  $fp {</root>}
+              close $fp
+              puts ""
+              puts "     ... user_InitDOM      $fileName"
+              puts "         ------------------------"
+              puts "           ... write:"   
+              puts "                       $fileName"
+              puts "                   ... done"
+              
+              read_userInit
+        }
+    }    
+    
     
     #-------------------------------------------------------------------------
        #  startup intro image

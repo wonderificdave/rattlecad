@@ -1,4 +1,11 @@
 
+3.4.00.17   - 2013.02.24
+-------------------------------------------------------------------------------
+    feature:
+        ... create user-init file: _rattleCAD.init   .. in project-directory
+            ... containing:  <GUI_Font>Arial 8</GUI_Font> for font and size
+
+
 3.4.00.16   - 2013.02.23
 -------------------------------------------------------------------------------
     refactor:
