@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="210mm" height="297mm" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 210 297"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:cc="http://creativecommons.org/ns#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:svg="http://www.w3.org/2000/svg"
+ xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+ xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+ sodipodi:version="0.32"
+ inkscape:version="0.46"
+ sodipodi:docname="suspension_crown.svg"
+ inkscape:output_extension="org.inkscape.output.svg.inkscape">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#1F1A17;stroke-width:0.0762}
+    .str1 {stroke:#DA2725;stroke-width:0.0762}
+    .fil0 {fill:none}
+   ]]>
+  </style>
+ </defs>
+ <g id="Ebene_x0020_1">
+  <sodipodi:namedview inkscape:window-height="882" inkscape:window-width="1309" inkscape:pageshadow="2" inkscape:pageopacity="0.0" guidetolerance="10.0" gridtolerance="10.0" objecttolerance="10.0" borderopacity="1.0" bordercolor="#666666" pagecolor="#ffffff" id="base" showgrid="false" inkscape:zoom="0.39904791" inkscape:cx="840.52304" inkscape:cy="1257.2761" inkscape:window-x="220" inkscape:window-y="220" inkscape:current-layer="svg2"/>
+  <rect id="rect12" class="fil0 str0" x="97.037" y="-23.465" width="32" height="251.741"/>
+  <polygon id="polygon28" class="fil0 str1" points="93.893,-44.5615 93.893,-24.0095 93.893,-44.5615 95.9083,-50.3128 130.495,-50.3128 132.583,-44.5615 132.544,-14.414 130.599,-10.412 95.642,-10.412 93.893,-14.414 93.893,-24.0095 92.3568,-30.3088 88.959,-40.058 83.174,-51.2165 75.568,-57.6539 71.392,-58.7877 70.713,-61.4954 70.713,-78.5512 71.711,-81.0188 112.362,-81.0188 113.103,-79.0079 113.103,-64.1404 110.798,-68.6956 110.7,-70.6793 111.795,-74.6196 110.7,-70.6793 110.798,-68.6956 113.103,-64.1404 123.231,-50.3128 95.9083,-50.3128 "/>
+  <polygon id="polygon30" class="fil0 str1" points="98.084,-57.2924 99.54,-57.2924 128.122,-57.2924 128.122,-50.3128 98.084,-50.3128 98.084,-53.0268 98.084,-55.6011 "/>
+  <circle id="center_00" class="fil0 str1" cx="92.037" cy="-81.0188" r="5.5706" sodipodi:ry="5.5706301" sodipodi:rx="5.5706301" sodipodi:cy="67.481201" sodipodi:cx="197.037"/>
+  <polyline id="polyline37" class="fil0 str1" points="92.586,-52.5428 91.6987,-55.1034 88.5326,-59.4393 83.5979,-65.8881 79.7382,-70.5928 77.7055,-74.8213 "/>
+  <rect class="fil0 str2" x="77.7365" y="-139.98" width="28.6" height="58.9614"/>
+  <rect class="fil0 str2" x="77.0365" y="-89.298" width="30" height="8.2792"/>
+ </g>
+</svg>
