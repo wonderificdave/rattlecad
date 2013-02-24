@@ -12,17 +12,17 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir rattleCAD.tcl]]; \ 
         [list source  [file join $dir lib_file.tcl]]; \
         [list source  [file join $dir lib_gui.tcl]]; \
-        [list source  [file join $dir lib_cfg_report.tcl]]; \
+        [list source  [file join $dir lib_cfgReport.tcl]]; \
         [list source  [file join $dir lib_config.tcl]]; \
-        [list source  [file join $dir lib_comp_library.tcl]]; \
-        [list source  [file join $dir lib_frame_visualisation.tcl]]; \
+        [list source  [file join $dir lib_compLibrary.tcl]]; \
+        [list source  [file join $dir lib_bikeRendering.tcl]]; \
         [list source  [file join $dir lib_version_info.tcl]]; \
         [list source  [file join $dir lib_tube.tcl]]; \
         [list source  [file join $dir lib_projectUpdate.tcl]]; \
-        [list source  [file join $dir lib_cv_custom.tcl]]; \
-        [list source  [file join $dir lib_cv_customRearMockup.tcl]]; \
-        [list source  [file join $dir lib_cv_customFrameJig.tcl]]; \
-        [list source  [file join $dir lib_cv_customUpdate.tcl]]; \
+        [list source  [file join $dir lib_cvCustom.tcl]]; \
+        [list source  [file join $dir lib_cvRearMockup.tcl]]; \
+        [list source  [file join $dir lib_cvFrameJig.tcl]]; \
+        [list source  [file join $dir lib_cvUpdate.tcl]]; \
         [list source  [file join $dir lib_test.tcl]]; \
    "
 
