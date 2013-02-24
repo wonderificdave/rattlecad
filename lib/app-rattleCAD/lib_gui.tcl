@@ -64,51 +64,51 @@
             
         set mainframe_Menue {
             "&File"   all file 0 {
-                    {command "&New"             	{}  "New Project File"      {Ctrl n}      -command { lib_file::newProject_xml } }
-                    {command "&Open"            	{}  "0pen Project File"     {Ctrl o}      -command { lib_file::openProject_xml } }
-                    {command "&Save"            	{}  "Save Project File"     {Ctrl s}      -command { lib_file::saveProject_xml } }
-                    {command "Save &As ..."     	{}  "Save Project File As"  {CtrlAlt s}   -command { lib_file::saveProject_xml saveAs} }
+                {command "&New"                 {}  "New Project File"      {Ctrl n}      -command { lib_file::newProject_xml } }
+                {command "&Open"                {}  "0pen Project File"     {Ctrl o}      -command { lib_file::openProject_xml } }
+                {command "&Save"                {}  "Save Project File"     {Ctrl s}      -command { lib_file::saveProject_xml } }
+                {command "Save &As ..."         {}  "Save Project File As"  {CtrlAlt s}   -command { lib_file::saveProject_xml saveAs} }
+                
+                {separator}
+                
+                {command "&Export PDF"      {}  "Export PDF-Report"     {Ctrl p}      -command { lib_gui::export_Project      pdf} }
+                {command "&Export HTML"     {}  "Export HTML-Report"    {Ctrl t}      -command { lib_gui::export_Project      html} }
+                {command "&Export SVG"      {}  "Export to SVG"         {}            -command { lib_gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
+                {command "&Export DXF"      {}  "Export to DXF"         {}            -command { lib_gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
+                {command "&Export PS"       {}  "Export to PostScript"  {}            -command { lib_gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
                     
-		    {separator}
-                    
-		    {command "&Export PDF"      {}  "Export PDF-Report"     {Ctrl p}      -command { lib_gui::export_Project      pdf} }
-                    {command "&Export HTML"     {}  "Export HTML-Report"    {Ctrl t}      -command { lib_gui::export_Project      html} }
-                    {command "&Export SVG"      {}  "Export to SVG"         {}            -command { lib_gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
-                    {command "&Export DXF"      {}  "Export to DXF"         {}            -command { lib_gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
-                    {command "&Export PS"       {}  "Export to PostScript"  {}            -command { lib_gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
-                    
-		    {separator}
-		    
-		    {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD_Test::controlDemo demo_01 } }
-		    {command "Samples"          {}  "rattleCAD Samples"     {}            -command { rattleCAD_Test::controlDemo loopSamples } }
-							    		    
-		    {separator}
-                    
-		    {command "Impo&rt"          {}  "import Parameter"      {Ctrl i}      -command { lib_file::openProject_Subset_xml } }
-                    {command "&Rendering"       {}  "Rendering Settings"    {}            -command { lib_gui::set_RenderingSettings } }
-                    
-		    {separator}
-                    
-		    {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}      -command { lib_gui::open_configPanel } }
-                    
-                    {separator}
-                    
-		    {command "Integration Test" {}  "Integration Test"      {CtrlAlt f}   -command { rattleCAD_Test::controlDemo integrationTest_00} }
-		    {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
-		    {command "&Update"          {}  "update Configuration"  {Ctrl u}      -command { lib_gui::notebook_updateCanvas force } }
-																	    															                    
-		    {separator}
-                    
-		    {command "E&xit"            {}  "Exit rattle_CAD"       {Ctrl x}      -command { lib_gui::exit_rattleCAD } }
+                {separator}
+                
+                {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD_Test::controlDemo demo_01 } }
+                {command "Samples"          {}  "rattleCAD Samples"     {}            -command { rattleCAD_Test::controlDemo loopSamples } }
+                {command "Integration Test" {}  "Integration Test"      {CtrlAlt f}   -command { rattleCAD_Test::controlDemo integrationTest_00} }
+                                                                                
+                {separator}
+                        
+                {command "Impo&rt"          {}  "import Parameter"      {Ctrl i}      -command { lib_file::openProject_Subset_xml } }
+                {command "&Rendering"       {}  "Rendering Settings"    {}            -command { lib_gui::set_RenderingSettings } }
+                        
+                {separator}
+                        
+                {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}      -command { lib_gui::open_configPanel } }
+                        
+                {separator}
+                        
+                {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
+                {command "&Update"          {}  "update Configuration"  {Ctrl u}      -command { lib_gui::notebook_updateCanvas force } }
+                                                                                                                                                            
+                {separator}
+                        
+                {command "E&xit"            {}  "Exit rattle_CAD"       {Ctrl x}      -command { lib_gui::exit_rattleCAD } }
             }
             "Info"   all info 0 {
-                    {command "&Info"            {}  "Information"           {Ctrl w}      -command { version_info::create  .v_info 0} }
-                    {command "&Help"            {}  "Help"                  {Ctrl h}      -command { version_info::create  .v_info 1} }
+                {command "&Info"            {}  "Information"           {Ctrl w}      -command { version_info::create  .v_info 0} }
+                {command "&Help"            {}  "Help"                  {Ctrl h}      -command { version_info::create  .v_info 1} }
             }
             "rattleCAD-Project"   all info 0 {
-                    {command "rattleCAD WebSite"    {}  "about rattleCAD"       {}        -command { lib_file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
-                    {command "project@sourceforge"  {}  "sourceforge.net"       {}        -command { lib_file::open_URL {http://sourceforge.net/projects/rattlecad/index.html} } }
-                    {command "like rattleCAD"       {}  "donate"                {}        -command { lib_file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
+                {command "rattleCAD WebSite"    {}  "about rattleCAD"       {}        -command { lib_file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
+                {command "project@sourceforge"  {}  "sourceforge.net"       {}        -command { lib_file::open_URL {http://sourceforge.net/projects/rattlecad/index.html} } }
+                {command "like rattleCAD"       {}  "donate"                {}        -command { lib_file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
             }
         }
         
@@ -564,7 +564,7 @@
             set cv_ID          [lindex [string map {:: { }} $cv_Name] 1]
             puts "\n\n"
                   # puts "   export_Project::cv_Name: $cv_Name $cv_ID"
-                  # tk_messageBox -message  "   notebook_exportSVG::cv_Name: $cv_Name"	
+                  # tk_messageBox -message  "   notebook_exportSVG::cv_Name: $cv_Name"    
             switch -exact $type {
                 html {   set exportDir  $::APPL_Config(EXPORT_HTML) }
                 pdf  {   set exportDir  $::APPL_Config(EXPORT_PDF)}
@@ -641,7 +641,7 @@
                         foreach cadCanv [lsort [array names notebookCanvas]] {
                               # puts "   -> $cadCanv"
                             select_canvasCAD $cadCanv
-                            set w			[$cadCanv getNodeAttr	Canvas	path]			
+                            set w            [$cadCanv getNodeAttr    Canvas    path]            
                               # puts "   ->    $w"
                             update
                             $w lower {__NB_Button__}        all
@@ -660,8 +660,8 @@
                 default {}
             }
 
-	    $noteBook_top select $currentTab
-	    
+        $noteBook_top select $currentTab
+        
             return
 
     }
@@ -705,7 +705,7 @@
             puts "         notebook_exportPS      $currentTab "
             puts "             currentTab-Parent  [winfo name   $currentTab]  "
             puts "             currentTab-Parent  [winfo parent $currentTab]  "
-            puts "             canvasCAD Object   [$cv_Name getNodeAttr	Canvas	path]"
+            puts "             canvasCAD Object   [$cv_Name getNodeAttr    Canvas    path]"
             puts "                          ...   $cv_Name"
             
                 # $cv_Name print $exportFile
@@ -757,7 +757,7 @@
             puts "         notebook_exportSVG     $currentTab "
             puts "             currentTab-Parent  [winfo name   $currentTab]  "
             puts "             currentTab-Parent  [winfo parent $currentTab]  "
-            puts "             canvasCAD Object   [$cv_Name getNodeAttr	Canvas	path]"
+            puts "             canvasCAD Object   [$cv_Name getNodeAttr    Canvas    path]"
             puts "                          ...   $cv_Name"
             
             set exportFile [$cv_Name exportSVG $exportFile]
@@ -804,7 +804,7 @@
             puts "         notebook_exportDXF     $currentTab "
             puts "             currentTab-Parent  [winfo name   $currentTab]  "
             puts "             currentTab-Parent  [winfo parent $currentTab]  "
-            puts "             canvasCAD Object   [$cv_Name getNodeAttr	Canvas	path]"
+            puts "             canvasCAD Object   [$cv_Name getNodeAttr    Canvas    path]"
             puts "                          ...   $cv_Name"
             
             set exportFile [$cv_Name exportDXF $exportFile]

@@ -41,43 +41,43 @@
    
     proc controlDemo {{testProcedure {}}} {
         if {$testProcedure == {}} {
-	   set testProcedure   integrationTest_00     
+       set testProcedure   integrationTest_00     
         }  
         switch -exact $testProcedure {
-	    integrationTest_00    {
-		     # tk_messageBox -title "integration Test" -message "... start integrationTest 00"
-		   [namespace current]::integrationTest_00 
-		   tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
-	    }
-	    loopSamples {
-		     # tk_messageBox -title "loop Samples" -message "... start loopSamples"
-		   [namespace current]::loopSamples
-		   tk_messageBox -title "loop Samples" -message "... rattleCAD Samples!"
-	    }    
-	    demo_01 {
-		     # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
-		   [namespace current]::demo_01
-		   tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
-	    }    
-	    default {}       
-        }	   
-    }	   
-	 
+        integrationTest_00    {
+             # tk_messageBox -title "integration Test" -message "... start integrationTest 00"
+           [namespace current]::integrationTest_00 
+           tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
+        }
+        loopSamples {
+             # tk_messageBox -title "loop Samples" -message "... start loopSamples"
+           [namespace current]::loopSamples
+           tk_messageBox -title "loop Samples" -message "... rattleCAD Samples!"
+        }    
+        demo_01 {
+             # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
+           [namespace current]::demo_01
+           tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
+        }    
+        default {}       
+        }       
+    }       
+     
     #-------------------------------------------------------------------------
         #  integrationTest_00
         #
     proc integrationTest_00 {args} {
-	      
+          
        set TEST_Dir $::APPL_Config(TEST_Dir) 
        puts "\n\n ====== integrationComplete ================ \n\n"
        puts "   -> TEST_Dir: $TEST_Dir\n"  
        
 
-	   # -- keep on top --------------
+       # -- keep on top --------------
        wm deiconify .
        
-	   # -- integration test -------------
-       set openFile 		[file join  $TEST_Dir sample Kid20_V7.xml]
+       # -- integration test -------------
+       set openFile         [file join  $TEST_Dir sample __test_Integration_02.xml]
        puts "          ... $openFile\n"
        lib_file::openProject_xml   $openFile
        
@@ -89,43 +89,44 @@
        lib_gui::export_Project      html
        wm deiconify .        
        update
-	   
-	   
+       
+       
        puts "\n\n === export  svg / dxf /ps  ===\n"
        lib_gui::notebook_exportSVG  $::APPL_Config(EXPORT_Dir) no
        lib_gui::notebook_exportDXF  $::APPL_Config(EXPORT_Dir) no
        lib_gui::notebook_exportPS   $::APPL_Config(EXPORT_Dir) no
        wm deiconify .
        update
-	   
+       
        
        puts "\n\n === open file  ===\n"
        puts "   -> TEST_Dir: $TEST_Dir\n"
        foreach thisFile { 
-                      focus_cayo_expert_2010__L_56.xml focus_cayo_expert_2010__M_54.xml  focus_cayo_expert_2010__XL_58.xml \
-		      columbus_max.xml \
-		      _template_3.2.78.xml _template_3.2.78_offroad.xml _template_3.3.00.xml _template_3.3.02.xml \
-		      _template_3.3.03.xml _template_3.3.04.xml _template_3.3.05.35.xml _template_3.3.06.xml 
-		      Kid20_V7.xml  ghost_powerkid_20.xml _ghost_powerkid_20.xml   
-       } {	   
-	   set openFile 	[file join  $TEST_Dir sample $thisFile]
-	   puts "          ... $openFile\n"
-	   lib_file::openProject_xml   $openFile		   
+              focus_cayo_expert_2010__L_56.xml focus_cayo_expert_2010__M_54.xml  focus_cayo_expert_2010__XL_58.xml \
+              columbus_max.xml \
+              _template_3.2.78.xml _template_3.2.78_offroad.xml _template_3.3.00.xml _template_3.3.02.xml \
+              _template_3.3.03.xml _template_3.3.04.xml _template_3.3.05.35.xml _template_3.3.06.xml \
+              Kid20_V7.xml  ghost_powerkid_20.xml \
+              __test_Integration_02.xml   
+       } {       
+       set openFile     [file join  $TEST_Dir sample $thisFile]
+       puts "          ... $openFile\n"
+       lib_file::openProject_xml   $openFile           
        }
-	   
-		      
-       puts "\n\n === open config Panel  ===\n"		   
+       
+              
+       puts "\n\n === open config Panel  ===\n"           
        set cfgPanel [lib_gui::open_configPanel]
        puts "    ... $cfgPanel"
        
-	   
+       
        puts "\n\n === open not existing file  ===\n"  
-       set openFile 	[file join  $TEST_Dir sample _ghost_powerkid_20.xml]
+       set openFile     [file join  $TEST_Dir sample _ghost_powerkid_20.xml]
        puts "          ... $openFile\n"
-       lib_file::openProject_xml   $openFile		       
-	   
-	   
-       puts "\n\n === create Information  ===\n"	  
+       lib_file::openProject_xml   $openFile               
+       
+       
+       puts "\n\n === create Information  ===\n"      
        version_info::create  .v_info 0
        
        puts "\n\n === create Help  ===\n"
@@ -134,83 +135,83 @@
        puts "\n\n === create Environment  ===\n"
        version_info::create  .v_info 2
        
-       puts "\n\n === create_intro  ===\n"	    
+       puts "\n\n === create_intro  ===\n"        
        create_intro .intro
        after  100 destroy .intro
    
        
-       puts "\n\n === open Config gPanel ===\n"	    
+       puts "\n\n === open Config gPanel ===\n"        
        puts "    ... $cfgPanel"
-	   
-       puts "\n\n === end ===\n"	   
+       
+       puts "\n\n === end ===\n"       
        puts "   -> TEST_Dir: $TEST_Dir\n"   
    }   
 
 
     #-------------------------------------------------------------------------
         #  loopSamples
-        #	 
+        #     
     proc loopSamples {args} {
         set currentFile $::APPL_Config(PROJECT_File)
-	    set SAMPLE_Dir 	$::APPL_Config(SAMPLE_Dir)
+        set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
 
         puts "\n\n  ====== l o o p   S A M P L E   F i l e s ========\n"                         
         puts "      currentFile  ... $currentFile"
         puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
-	    puts "" 
+        puts "" 
 
-	    # lib_file::saveProject_xml saveAs    
-	    
+        # lib_file::saveProject_xml saveAs    
+        
         foreach fileName [lsort [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml]] {
-    	    puts "\n     open Sample File:"
-	    puts "          .... $fileName\n"
+            puts "\n     open Sample File:"
+        puts "          .... $fileName\n"
             lib_file::openProject_xml   $fileName
-	    after 100
+        after 100
         }
-    	  # -- open previous opened File   
-    	puts "\n      ... open previous opened file:"
-    	puts "\n            ... $currentFile"
-    	switch -exact $currentFile {
-    	    {Template Road} {
-    		lib_gui::load_Template  Road
-    	    }	    
-    	    {Template MTB} {
-    		lib_gui::load_Template  MTB
-    	    }
-    	    default {
-        		lib_file::openProject_xml   $currentFile    
-    	    }
-    	}	
-	
+          # -- open previous opened File   
+        puts "\n      ... open previous opened file:"
+        puts "\n            ... $currentFile"
+        switch -exact $currentFile {
+            {Template Road} {
+            lib_gui::load_Template  Road
+            }        
+            {Template MTB} {
+            lib_gui::load_Template  MTB
+            }
+            default {
+                lib_file::openProject_xml   $currentFile    
+            }
+        }    
+    
           # tk_messageBox -title "loop Samples" -message "... $SAMPLE_Dir!"   
-    }	 
-	 
-	 
-    #-------------------------------------------------------------------------
-	#  demo 01
-	#	 
-    proc demo_01 {args} {
-    	set currentFile $::APPL_Config(PROJECT_File)
-    	set SAMPLE_Dir 	$::APPL_Config(SAMPLE_Dir)
-                       
-    	puts "\n\n  ====== D E M O N ST R A T I O N   0 1 ===========\n"                         
-    	puts "      currentFile  ... $currentFile"
-    	puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
-    	puts "" 
+    }     
      
-    	
-    	set values [[namespace current]::demoValues 30 -3 5 2]  
-    	puts " ... \$values .. $values" 
-    	set values [[namespace current]::demoValues 30 5 -3 2]  
-    	puts " ... \$values .. $values" 
-    	
-        	# proc setValue {arrayName type args}
-        	# proc getValue {arrayName type args}
-        	
+     
+    #-------------------------------------------------------------------------
+    #  demo 01
+    #     
+    proc demo_01 {args} {
+        set currentFile $::APPL_Config(PROJECT_File)
+        set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
+                       
+        puts "\n\n  ====== D E M O N ST R A T I O N   0 1 ===========\n"                         
+        puts "      currentFile  ... $currentFile"
+        puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
+        puts "" 
+     
+        
+        set values [[namespace current]::demoValues 30 -3 5 2]  
+        puts " ... \$values .. $values" 
+        set values [[namespace current]::demoValues 30 5 -3 2]  
+        puts " ... \$values .. $values" 
+        
+            # proc setValue {arrayName type args}
+            # proc getValue {arrayName type args}
+            
         # lib_gui::select_canvasCAD   cv_Custom00
         
         cv_custom::update [lib_gui::current_canvasCAD]
-	
+    
         updateGeometryValue             Personal(Saddle_Distance)            25  -35   5 \
                                         Personal(HandleBar_Distance)        -25   35   5 \
                                         Personal(Saddle_Height)             -35   25   5 \
@@ -220,12 +221,12 @@
                                         Personal(HandleBar_Height)           25  -15   2 
 
         updateGeometryValue             Custom(BottomBracket/Depth          -20   15   3 \
-    	
+        
         updateGeometryValue             Custom(WheelPosition/Rear)           25  -10   5 
         
         updateGeometryValue             Custom(HeadTube/Angle)               -1   2    1 
         
-	
+    
         updateGeometryValue             Component(Wheel/Rear/RimDiameter)    45  -45   0 \
                                         Component(Wheel/Front/RimDiameter)   45  -45   0 
 
@@ -237,12 +238,12 @@
 
         return
 
-    }	 
+    }     
 
-	  # -------------------------------------------------------------------------
-	  #  updateGeometryValue
-	  #
-	  
+      # -------------------------------------------------------------------------
+      #  updateGeometryValue
+      #
+      
       proc updateGeometryValue {args} {
          
           set _index 0
@@ -289,16 +290,16 @@
 
 
     # -------------------------------------------------------------------------
-    	#  deliver demo Values
-    	#
+        #  deliver demo Values
+        #
     proc demoValues {base left right end} {
-    	
-    	set precission 3
-    	set valueList  {}
-    	
-    	
-    	set currentValue    $base
-    	
+        
+        set precission 3
+        set valueList  {}
+        
+        
+        set currentValue    $base
+        
         set step [expr 1.0*$left/$precission]
         set i 0
         while {$i < $precission} {
@@ -314,7 +315,7 @@
         }
         
         
-    	set step [expr 1.0*$right/$precission]
+        set step [expr 1.0*$right/$precission]
         set i 0
         while {$i < $precission} {
             set currentValue [expr $currentValue + $step]
@@ -336,11 +337,11 @@
             lappend valueList $currentValue
             incr i
         }       
-    	
-    	return $valueList
-    	
-    }	 
-	 
+        
+        return $valueList
+        
+    }     
+     
 
 
      #-------------------------------------------------------------------------

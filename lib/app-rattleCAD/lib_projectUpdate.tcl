@@ -192,15 +192,28 @@
     
      
     #-------------------------------------------------------------------------
-        #  createEdit - sub procedures   
+        #  createEdit - sub procedures 
+    proc debug_compare {a b} {
+        if {$a != $b} {
+            appUtil::get_procHierarchy
+            tk_messageBox -messager "   ... pleas check this:\n      $a $b"
+        } else {
+            puts "\n ... debug_compare:"
+            puts   "       $a"
+            puts   "       $b\n"
+        }
+    }    
+          
     proc create_fileConfig {cv cv_Name cvEdit cvContentFrame index _array _name } {
             variable _updateValue
               # appUtil::get_procHierarchy 
                 
             set _array      [string range $_array 7 end]
             set key         [format "%s/%s" $_array $_name]
-            eval set value  [format "$%s::%s(%s)" project $_array $_name]
-    
+            set value       [project::getValue [format "%s(%s)" $_array $_name] value]
+              # eval set value1  [format "$%s::%s(%s)" project $_array $_name]
+              # debug_compare $value $value1
+            
             set _updateValue($key) $value
             set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
             
@@ -218,7 +231,9 @@
             set _name       [lindex $_nameInfo 0]
             set listName    [lindex $_nameInfo 1]
             set key         [format "%s/%s" $_array $_name]
-            eval set value  [format "$%s::%s(%s)" project $_array $_name]
+            set value       [project::getValue [format "%s(%s)" $_array $_name] value]
+              # eval set value1  [format "$%s::%s(%s)" project $_array $_name]
+              # debug_compare $value $value1
             
             set _updateValue($key) $value
             set labelText   [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
@@ -231,9 +246,11 @@
             variable _updateValue            
               # appUtil::get_procHierarchy 
                 
-            set _array     [string range $_array 7 end]
-            set key        [format "%s/%s" $_array $_name]
-            eval set value [format "$%s::%s(%s)" project $_array $_name]
+            set _array      [string range $_array 7 end]
+            set key         [format "%s/%s" $_array $_name]
+            set value       [project::getValue [format "%s(%s)" $_array $_name] value]
+              # eval set value1  [format "$%s::%s(%s)" project $_array $_name]
+              # debug_compare $value $value1
             
             set _updateValue($key) $value
             set labelText       [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
@@ -244,19 +261,21 @@
                     $index $labelText $key
     }
     proc create_valueConfig {cv cv_Name cvEdit cvContentFrame index _array _name } {
-                variable _updateValue
-                  # appUtil::get_procHierarchy 
-                    
-                set key        [format "%s/%s" $_array $_name]
-                eval set value [format "$%s::%s(%s)" project $_array $_name]
+            variable _updateValue
+              # appUtil::get_procHierarchy 
                 
-                set _updateValue($key) $value
-                set labelText       [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
-                
-                    # --- select entries content ---
-                create_ValueEdit \
-                        $cv $cv_Name $cvEdit $cvContentFrame \
-                        $index $labelText $key
+            set key         [format "%s/%s" $_array $_name]
+            set value       [project::getValue [format "%s(%s)" $_array $_name] value]
+              # eval set value1  [format "$%s::%s(%s)" project $_array $_name]
+              # debug_compare $value $value1
+            
+            set _updateValue($key) $value
+            set labelText       [format "%s ( %s )" $_array [ string trim [ string map {{/} { / }} $_name] " " ] ]
+            
+                # --- select entries content ---
+            create_ValueEdit \
+                    $cv $cv_Name $cvEdit $cvContentFrame \
+                    $index $labelText $key
         }         
                           
     proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {
