@@ -1,0 +1,97 @@
+
+
+What is the aim of this program?
+-----------------------------------------------------------------
+
+    The program should guide you through the different process steps 
+    during definition of a bicycle frame represented in tabs:
+
+    Personal:
+            ... define riders parameter
+                You can edit parameters by doubleclicking the measured value
+                on the coloured dimensions. 
+                
+    Detail:
+            ... define the main geometry parameters
+                Editing like in Personal Tab
+                
+    Frame:
+            ... detail your geometry to define all tube parameters
+                Editing like in Personal Tab
+                
+    Assembly:
+            ... take your frame and assemble it with components
+                There are no dimensions to edit but you can exchange components
+                if still defined for rattleCAD. The library should be filled
+                with more components.
+
+    Dimensions / Drafting - Frame / Drafting - Jig:
+            ... summaries for the workshop
+                There are of course no dimensions to edit
+
+    
+
+How to edit parameters
+-----------------------------------------------------------------
+
+    This is great change since rattleCAD 2.x.
+    You can edit parameters by doubleclicking the measured value
+    on the coloured dimensions. Inactive dimensions are mostly gray
+    coloured.
+
+
+
+How to zoom in / out
+-----------------------------------------------------------------
+
+    Take a look on the button bar near the "exit" Button
+        scale minus
+        scale plus
+        resize
+        
+    You can also play with your mouse buttons.
+    Press the right mouse button on the graphic area, drag the mouse 
+    over the screen and release it. 
+    You can get the standard scale with the resize button near the
+    "exit" Button in the button bar. 
+    
+
+
+How to move the zoomed area
+-----------------------------------------------------------------
+
+    Press the left mouse button on the graphic area, drag the mouse 
+    over the screen and release it. During dragging a red line appears
+    and shows you the direction of dragging.
+ 
+
+  
+Why Reference and Personal Tabs
+-----------------------------------------------------------------
+
+    Personal Tab:
+	    The position of handlebar is locked by horizontal and
+		vertical position in reference to bottom bracket. These are
+		to most important values to fit a bicycle to customer.
+		
+	Reference Tab:
+		If you have an existing dimension sheet of a bicycle you
+		can use these values in this tab and get the base geometry
+		for rattleCAD. After capture these values you can copy them
+        to personal via "Reference Geometry" Button in the button bar. 		
+   
+
+  
+How to print
+-----------------------------------------------------------------
+
+    rattleCAD uses postscript does not directly send the content
+    to a printer and uses a postscript viewer to print from there. 
+    You have to install a postsript viewer like
+        gsview:  http://pages.cs.wisc.edu/~ghost/gsview/index.htm
+    
+    gsview is not part of rattleCAD
+    
+    You can also use any other programs to view .ps-files and print 
+    the content there.
+    

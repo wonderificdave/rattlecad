@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<values>
+	<tube_diameter>
+		<vintage  toptube="25.4" downtube="28.6" seattube="28.6" headtube="31.8" />
+		<standard toptube="28.6" downtube="31.8" seattube="28.6" headtube="31.8" />
+		<oversize toptube="31.8" downtube="34.9" seattube="31.8" headtube="36.0" />
+	</tube_diameter>
+	<rims>
+		<rim inch="28&#8221;" metric="622" standard="ertro-road" />
+		<rim inch="26&#8221;" metric="559" standard="ertro-mtb" />
+		<rim inch="26&#8221;" metric="571" standard="ertro-tria" />
+		<separator/>
+		<rim inch="26&#8221;" metric="590" standard="ertro" />
+		<rim inch="24&#8221;" metric="507" standard="ertro" />
+		<rim inch="20&#8221;" metric="451" standard="ertro" />
+		<rim inch="20&#8221;" metric="406" standard="ertro" />
+		<rim inch="18&#8221;" metric="355" standard="ertro" />
+		<rim inch="18&#8221;" metric="349" standard="ertro" />
+		<rim inch="18&#8221;" metric="340" standard="ertro" />
+		<rim inch="16&#8221;" metric="330" standard="ertro" />
+		<rim inch="16&#8221;" metric="305" standard="ertro" />
+		<separator/>	
+		<rim inch="28&#8221;" metric="635" standard="french" />
+		<rim inch="27&#8221;" metric="630" standard="english" />
+		<rim inch="26&#8221;" metric="584" standard="french" />
+		<rim inch="24&#8221;" metric="540" standard="french" /> 
+		<rim inch="22&#8221;" metric="490" standard="french" />
+		<rim inch="22&#8221;" metric="440" standard="french" />
+		<rim inch="20&#8221;" metric="390" standard="french" />
+		<rim inch="16&#8221;" metric="340" standard="french" />
+		<rim inch="14&#8221;" metric="298" standard="french" />
+	</rims>
+</values>
