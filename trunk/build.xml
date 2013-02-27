@@ -6,7 +6,7 @@
 	Pro Projekt muss ein Default Target definiert sein!
 //-->
 
-<project default="rattleCAD_build_4.0">
+<project default="rattleCAD_build_3.4">
 	<!-- 
 	jedes Ant Project besteht aus einer oder mehreren Targets, in denen
 	Tasks ausgefuehrt werden
@@ -15,7 +15,7 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.00.20" />
+	<property name = "rattleCAD_Version" 	value = "3.4.00.22" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
@@ -32,7 +32,7 @@
 			        
 
 	
-	<target   name = "rattleCAD_build_4.0">
+	<target   name = "rattleCAD_build_3.4">
 	
 			<echo>build rattleCAD ${rattleCAD_Version}</echo>
 			<echo> </echo>	<echo> </echo>

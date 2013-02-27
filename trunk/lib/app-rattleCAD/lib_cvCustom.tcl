@@ -757,13 +757,14 @@
                             set _dim_Head_Down_Angle    [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList [list $DownTube(Steerer) $DownTube(BBracket) $Steerer(Ground)] ] \
                                                                 180   0 \
                                                                 gray50 ]
-                            set _dim_Seat_Top_Angle     [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList [list $TopTube(SeatTube) $BottomBracket(Position) $TopTube(Steerer)] ] \
+                            set _dim_Seat_Top_Angle     [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList [list $TopTube(SeatTube) $SeatTube(BBracket) $TopTube(Steerer)] ] \
                                                                 110  10 \
                                                                 gray50 ]
-                            set _dim_Down_Seat_Angle    [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList [list $SeatTube(BBracket) $DownTube(Steerer) $TopTube(SeatTube) ] ] \
+                                            set pt_base [ vectormath::intersectPoint  $DownTube(Steerer) $DownTube(BBracket) $SeatTube(BBracket) $SeatTube(TopTube) ]
+                            set _dim_Down_Seat_Angle    [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList [list $pt_base  $DownTube(Steerer) $TopTube(SeatTube) ] ] \
                                                                 110   0 \
                                                                 gray50 ]
-                            set _dim_Seat_SS_Angle      [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList [list $SeatStay(SeatTube) $Position(IS_ChainSt_SeatSt) $BottomBracket(Position) ] ] \
+                            set _dim_Seat_SS_Angle      [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList [list $SeatStay(SeatTube) $Position(IS_ChainSt_SeatSt) $SeatTube(BBracket) ] ] \
                                                                 110   0 \
                                                                 gray50 ]
                                             set pt_base [ vectormath::intersectPoint  $SeatTube(BBracket) $TopTube(SeatTube)  $BottomBracket(Position) $Position(IS_ChainSt_SeatSt) ]
@@ -1036,9 +1037,15 @@
                             set _dim_Seat_Top_Angle     [ $cv_Name dimension  angle            [ appUtil::flatten_nestedList [list $TopTube(SeatTube) $SeatTube(BBracket) $TopTube(Steerer)] ] \
                                                                                         150   0 \
                                                                                         darkred ]
-                            set _dim_Down_Seat_Angle    [ $cv_Name dimension  angle            [ appUtil::flatten_nestedList [list $SeatTube(BBracket) $DownTube(Steerer) $TopTube(SeatTube) ] ] \
+                            
+                            
+                                            set pt_base [ vectormath::intersectPoint  $DownTube(Steerer) $DownTube(BBracket) $SeatTube(BBracket) $SeatTube(TopTube) ]
+                            set _dim_Down_Seat_Angle    [ $cv_Name dimension  angle            [ appUtil::flatten_nestedList [list $pt_base $DownTube(Steerer) $TopTube(SeatTube) ] ] \
                                                                                          90   0 \
                                                                                         darkred ]
+                                                                                        
+                                                                                        
+                                                                                        
                                             set pt_base [ vectormath::intersectPoint  $SeatTube(BBracket) $TopTube(SeatTube)  $BottomBracket(Position) $Position(IS_ChainSt_SeatSt) ]
                             set _dim_ST_CS_Angle        [ $cv_Name dimension  angle            [ appUtil::flatten_nestedList [list $pt_base $TopTube(SeatTube) $Position(IS_ChainSt_SeatSt)] ] \
                                                                                          90   0 \
