@@ -69,12 +69,12 @@
     }
     proc remove_tracing {} {
                 # puts "\n   project::remove_tracing\n"
-            trace remove  variable [namespace current]::Personal    write [namespace current]::trace_ProjectConfig
-            trace remove  variable [namespace current]::Custom      write [namespace current]::trace_ProjectConfig
-            trace remove  variable [namespace current]::Lugs        write [namespace current]::trace_ProjectConfig
-            trace remove  variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
-            trace remove  variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
-            trace remove  variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
+            #trace remove  variable [namespace current]::Personal    write [namespace current]::trace_ProjectConfig
+            #trace remove  variable [namespace current]::Custom      write [namespace current]::trace_ProjectConfig
+            #trace remove  variable [namespace current]::Lugs        write [namespace current]::trace_ProjectConfig
+            #trace remove  variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
+            #trace remove  variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
+            #trace remove  variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
     }
     #-------------------------------------------------------------------------
     proc trace_ProjectConfig {varname key operation} {
@@ -93,7 +93,7 @@
                 
                 # tk_messageBox -message "trace_ProjectConfig: \n     varname:         $var \n     key:             $key \n     operation:       $operation"
             
-            frameGeometry::set_base_Parameters
+            bikeGeometry::set_base_Parameters
             
             set    message "          <W> \n"
             append message "               there was an update in previous version:\n"
@@ -518,7 +518,7 @@
                     project::update_ProjectVersion {3.3.06}
                     # puts "[[$::APPL_Config(root_ProjectDOM) selectNode /root/Rendering] asXML]"
                     # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                    frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                    bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
             }
             
               # -- replace old result-Definition of projectXML with the newer one
@@ -966,9 +966,9 @@
                                                 set WheelPositionFront [$nodeWP nodeValue]
                                                 $nodeTA nodeValue $HeadTubeAngle
                                                 puts "          ... correction WheelPosition/Front: $WheelPositionFront"
-                                                frameGeometry::set_base_Parameters $domProject
-                                                # 3.2.76 frameGeometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
-                                                frameGeometry::set_projectValue Result/Length/FrontWheel/diagonal $WheelPositionFront update
+                                                bikeGeometry::set_base_Parameters $domProject
+                                                # 3.2.76 bikeGeometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
+                                                bikeGeometry::set_projectValue Result/Length/FrontWheel/diagonal $WheelPositionFront update
                                                 puts "          ... correction WheelPosition/Front: $WheelPositionFront"
                                             }
                                         }
@@ -1319,7 +1319,7 @@
                                 #
                                 # -- update values
                                 #
-                            # frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                             dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
                         
                         }
@@ -1367,7 +1367,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.03} {
@@ -1400,7 +1400,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.04} {    
@@ -1434,7 +1434,7 @@
                                 # -- update values
                                 #
                             # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # frameGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                         
                         }                            
                 {3.3.05} {    
