@@ -78,8 +78,7 @@
 
 
         button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { lib_cfg_report::fillTree_Variable $bikeGeometry::domFrame    }
-        button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { lib_cfg_report::fillTree_Variable {currentProject} }
-         # button  $menueFrame.bt06    -text {current Project}              -width 30   -command { project::runTime_2_dom $::APPL_Config(root_ProjectDOM); lib_cfg_report::fillTree_Variable $::APPL_Config(root_ProjectDOM)}
+        button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { project::runTime_2_dom $::APPL_Config(root_ProjectDOM); lib_cfg_report::fillTree_Variable $::APPL_Config(root_ProjectDOM)}
         button  $menueFrame.clear   -text {clear Tree}                      -width 30   -command { lib_cfg_report::cleanupTree }
         pack    $menueFrame.open \
                 $menueFrame.bt01 \
@@ -135,13 +134,6 @@
             #
             # -- define global parameters
             #
-        switch -exact $var {
-            currentProject {
-                    set var [bikeGeometry::get_projectXML]
-                }
-            default {}
-        }
-            
         lib_cfg_report::fillTree "$var" root
     }
 

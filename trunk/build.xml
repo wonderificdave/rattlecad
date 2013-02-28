@@ -15,7 +15,7 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.00.23" />
+	<property name = "rattleCAD_Version" 	value = "3.4.00.22" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
@@ -107,9 +107,6 @@
       </copy>
       <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/lib">
           <fileset dir="${bikeGeometry_home}/lib"/>
-      </copy>
-      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/etc">
-          <fileset dir="${bikeGeometry_home}/etc"/>
       </copy>
       <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/test">
           <fileset dir="${bikeGeometry_home}/test"/>
