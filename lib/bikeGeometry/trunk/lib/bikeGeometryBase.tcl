@@ -45,8 +45,6 @@
         #
         #    <T> ... should be renamed to compute_Project
         #
-    proc bikeGeometry::set_base_Parameters_old {{_projectDOM {}}} {}
-    
     proc bikeGeometry::set_base_Parameters {} {
             
             variable Project
@@ -83,18 +81,6 @@
 
             variable DEBUG_Geometry
 
-
-                #
-                # --- convert projectDOM to runtime variables
-            set _projectDOM {}
-            if {$_projectDOM != {}} {
-                project::dom_2_runTime $_projectDOM
-                        # parray project::Project
-                        # parray project::Result
-                        # exit
-            } else {
-            
-            }
 
                 #
                 # --- increase global update timestamp
@@ -157,13 +143,11 @@
                 # --- get Fork -----------------------------
             set Fork(Height)                $project::Component(Fork/Height)
             set Fork(Rake)                  $project::Component(Fork/Rake)
-#            set Fork(Rendering)             $project::Rendering(ForkBlade)
             set Fork(BladeWith)             $project::Component(Fork/Blade/Width)
             set Fork(BladeDiameterDO)       $project::Component(Fork/Blade/DiameterDO)
             set Fork(BladeTaperLength)      $project::Component(Fork/Blade/TaperLength)
             set Fork(BladeBendRadius)       $project::Component(Fork/Blade/BendRadius)
             set Fork(BladeEndLength)        $project::Component(Fork/Blade/EndLength)
-            # set Fork(BladeOffset)           $project::Component(Fork/Blade/Offset)
             set Fork(BladeOffsetCrown)      $project::Component(Fork/Crown/Blade/Offset)
             set Fork(BladeOffsetCrownPerp)  $project::Component(Fork/Crown/Blade/OffsetPerp)
             set Fork(BladeOffsetDO)         $project::Component(Fork/DropOut/Offset)

@@ -140,7 +140,7 @@
                 set varname ${varname}($key)
             }
             upvar $varname var
-            appUtil::get_procHierarchy
+              # appUtil::get_procHierarchy
             
             puts "\n\n"
             puts "   --<trace>--------------------------"
@@ -150,35 +150,18 @@
             puts "       var:             $var"
             puts "       operation:       $operation"
                 
-                # tk_messageBox -message "trace_ProjectConfig: \n     varname:         $var \n     key:             $key \n     operation:       $operation"
-            
-                #bikeGeometry::set_base_Parameters
-                
-                #set    message "          <W> \n"
-                #append message "               there was an update in previous version:\n"
-                #append message "                      cv_custom::update [lib_gui::current_canvasCAD]\n"
-                #append message "          <W>\n"
-                    # puts "$message"
-                    # tk_messageBox -message $message
-                    # cv_custom::update [lib_gui::current_canvasCAD]
             return
     }    
     #-------------------------------------------------------------------------
-    proc dom_2_runTime_old {_projectDOM} {}
     proc dom_2_runTime {} {
                             
 
             variable projectDOM 
             
-                puts "\n\n"
-                puts "   -------------------------------"
-                puts "    project::dom_2_runTime"
-                
-            remove_tracing
-                     
-                # --------------------------------
-                # set $_projectDOM to global $projectDOM
-            # set projectDOM $_projectDOM     
+            puts "\n\n"
+            puts "   -------------------------------"
+            puts "    project::dom_2_runTime"
+               
                 
             foreach branch [[$projectDOM selectNodes /root] childNodes] {
                     
@@ -404,12 +387,6 @@
                                     puts "     ... $type ... unhandled"
                                 }
             }
-            
-                
-  
-                
-                # eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
-                # puts "            -> new value: $args \n"
 
     }
         
@@ -547,13 +524,6 @@
             foreach key [dict keys $postUpdate] {
                 dict unset $postUpdate $key ;   # clear the dict
             }
-            
-            #set domProject      $::APPL_Config(root_ProjectDOM)
-            #set project_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
-                # set domProject      $::APPL_Config(root_ProjectDOM)
-            # set domProject      $projectDOM
-                # set project_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
-                # puts "   -> \$project_Version $project_Version"
 
             set project_Version  [[$projectDOM selectNodes /root/Project/rattleCADVersion/text()] asXML]
             # puts "   -> \$project_Version $project_Version"
@@ -596,12 +566,6 @@
                     project::update_ProjectVersion {3.3.04}
                     project::update_ProjectVersion {3.3.05}
                     project::update_ProjectVersion {3.3.06}
-                    # puts "[[$::APPL_Config(root_ProjectDOM) selectNode /root/Rendering] asXML]"
-                    # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                    #
-                    #  --- remove for bikeGeometry::set_newProject
-                    #
-                    # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
             }
             
               # -- replace old result-Definition of projectXML with the newer one
@@ -619,14 +583,9 @@
               # return
             variable projectDOM
             variable resultNode
-                # set domProject    $::APPL_Config(root_ProjectDOM)
-            # set domProject    $projectDOM  
-            
-            # tk_messageBox -message "   Update: update_projectResult"
-            puts [$resultNode asXML]
-            
-               # set domTemplate   [lib_file::get_XMLContent $::APPL_Config(TemplateInit)]
-               #puts [$templDOM asXML]
+
+                # puts [$resultNode asXML]
+
             set oldNode [$projectDOM selectNode /root/Result]
             if {$oldNode != {}} {
                 puts "                           ... update File ... /root/Result"
@@ -634,13 +593,11 @@
                     # --remove old ResultNode
                 $parentNode removeChild $oldNode 
                 $oldNode delete
-                    # -- add new ResultNode
+                      # -- add new ResultNode
                         # set newNode [$domTemplate selectNode /root/Result]
                         # $parentNode appendXML [$newNode asXML]
                 $parentNode appendXML [$resultNode asXML]
             }
-            # puts [$::APPL_Config(root_ProjectDOM) asXML]
-            # exit
     }
     
     #-------------------------------------------------------------------------

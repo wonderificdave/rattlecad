@@ -37,7 +37,7 @@
  #
  #
 
- package provide bikeGeometry 0.12
+ package provide bikeGeometry 0.13
 
  namespace eval bikeGeometry {
 
@@ -129,21 +129,10 @@
                 #
             project::dom_2_runTime
         
-                # puts "     -- 001 --------"
-                # set myNode [$project::projectDOM selectNode Result/Position]
-                # puts [$myNode asXML]
-                # 
-                # puts "     -- 002 --------"
-                # set myNode [$project::projectDOM selectNode Result/Length/HeadTube]
-                # #puts [$myNode asXML]
-                # 
-                # puts "     -- 003 --------"
-                # set myNode [$project::projectDOM selectNode Result/Position/SeatPostSeatTube]
-                # #puts [$myNode asXML]
-                # 
-                # puts "     -- 004 --------"
-                # puts [$project::projectDOM asXML]
-                # #exit
+                  # 
+                  # puts "     -- 004 --------"
+                  # puts [$project::projectDOM asXML]
+                  # #exit
                 
             # --- compute geometry ----------------------
                 #
@@ -162,12 +151,7 @@
                     }
                         # project::pdict $valueDict
             }
-            
-                # set debugFile  [file join $::APPL_Config(USER_Dir) debug.xml]
-                # puts "   -> $debugFile"
-                # set fp [open $debugFile w]
-                # puts $fp [$::APPL_Config(root_ProjectDOM)  asXML]
-                # close $fp
+
     }
     
     proc get_projectXML {} {
