@@ -1241,6 +1241,20 @@
                 #    catch <MouseWheel> for $cv.f_edit
             set currentTab [$noteBook_top select]
             set varName    [notebook_getVarName $currentTab]
+            
+                # ----------------------------
+                # exception for the report tab
+                #    ... there is no canvas
+                #
+            switch -glob $currentTab {
+                *\.report {
+                        puts "  -- <E> -- $currentTab"
+                        return
+                    }
+                default {}    
+            } 
+            
+            
             set cv         [ $varName getNodeAttr Canvas path]
             if {[llength [ $cv gettags  __cvEdit__]] > 0 } {
                 # puts "\n=================="

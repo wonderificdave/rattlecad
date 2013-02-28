@@ -239,15 +239,6 @@
                     create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)  $::APPL_Config(list_Rims)
                     create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Front/TyreHeight)     0.20
 
-
-                # -----------------
-                #   refresh Values
-            #ttk::labelframe    $menueFrame.sf.updateValues              -text "refresh Values"
-            #    pack $menueFrame.sf.updateValues                    -side top  -fill x  -pady 2
-            #pack [frame $menueFrame.sf.updateValues.f_upd]              -fill x -expand yes -padx 3 -pady 2
-            #button     $menueFrame.sf.updateValues.f_upd.bt_update      -text {refresh}         -width 10    -command [namespace current]::init_configValues
-            #    pack $menueFrame.sf.updateValues.f_upd.bt_update    -side right
-
     }
     #-------------------------------------------------------------------------
        #  add content 02
@@ -284,7 +275,7 @@
                     create_configEdit_title $menueFrame.sf.lf_01    {SeatTube - Extension}          Custom(SeatTube/Extension)          0.20  darkred
                     create_configEdit_title $menueFrame.sf.lf_01    {TopTube/SeatStay - Offset}     Custom(SeatStay/OffsetTT)           0.20  darkred
                     create_configEdit_title $menueFrame.sf.lf_01    {TopTube - Angle}               Custom(TopTube/Angle)               0.20  darkred
-                    create_configEdit_title $menueFrame.sf.lf_01    {DownTube/BB - Offset}           Custom(DownTube/OffsetBB)          0.20  darkred
+                    create_configEdit_title $menueFrame.sf.lf_01    {DownTube/BB - Offset}          Custom(DownTube/OffsetBB)          0.20  darkred
 
 
                 # -----------------
@@ -330,10 +321,6 @@
                             bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
                 }
                 
-                #list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                {   list://Rendering(Fork@SELECT_ForkType) \
-                                }  {ForkType Select} 
-                
 
                 if {$frameCanvas != {}} {
                     # puts "   ... 0 $compCanvas  exists"
@@ -341,14 +328,6 @@
                 }
                 set frameCanvas [canvasCAD::newCanvas cv_FrameParts $menueFrame.sf.lf_09.cvCAD "_unused_"  280  210  passive  1.0  0  -bd 2  -bg white  -relief sunken]
                     # puts " ---- created $compCanvas"
-
-                # -----------------
-                #   Update Values
-            #ttk::labelframe    $menueFrame.sf.updateValues                      -text "update Values"
-            #    pack $menueFrame.sf.updateValues                            -side top  -fill x  -pady 2
-            #        pack [frame $menueFrame.sf.updateValues.f_upd]          -fill x -expand yes -padx 3 -pady 2
-            #        button  $menueFrame.sf.updateValues.f_upd.bt_update     -text {update}            -width 10    -command [namespace current]::update_Rendering
-            #            pack $menueFrame.sf.updateValues.f_upd.bt_update    -side right
 
     }
     #-------------------------------------------------------------------------
@@ -395,15 +374,6 @@
                         pack $menueFrame.sf.lf_06.bt_f      -fill both  -expand yes
                     button  $menueFrame.sf.lf_06.bt_f.bt_check      -text {switch: check Frame Angles}  -width 30   -bd 1 -command [namespace current]::tubing_checkAngles
                         pack $menueFrame.sf.lf_06.bt_f.bt_check     -side right -fill both -expand yes
-
-
-                # -----------------
-                #   Update Values
-            #ttk::labelframe    $menueFrame.sf.updateValues                      -text "update Values"
-            #    pack $menueFrame.sf.updateValues                            -side top  -fill x  -pady 2
-            #        pack [frame $menueFrame.sf.updateValues.f_upd]          -fill x -expand yes -padx 3 -pady 2
-            #        button  $menueFrame.sf.updateValues.f_upd.bt_update     -text {update}          -width 10   -command [namespace current]::update_Rendering
-            #            pack $menueFrame.sf.updateValues.f_upd.bt_update    -side right
 
     }
     #-------------------------------------------------------------------------
@@ -664,7 +634,7 @@
                     "#comment" -
                     "cdata" {}
                     default {
-                            #puts "[Tree:newItem .f.w [$node toXPath] -image idir]"
+                            # puts "[Tree:newItem .f.w [$node toXPath] -image idir]"
                             # puts "    ... recurseInsert .. [$node toXPath]"
                             foreach childNode [$node childNodes] {
                                 set name [$childNode nodeName]
@@ -701,12 +671,7 @@
             }
             set projectDOM  [bikeGeometry::get_projectXML]
             recurseInsert   $projectDOM  {/}
-              # recurseInsert   [$::APPL_Config(root_ProjectDOM) selectNodes /root]  {/}
 
-            # parray [namespace current]::configValue
-            #foreach file $componentList {
-                #puts "    ... $file"
-            #}
             return
     }
 
@@ -863,7 +828,6 @@
             set entryVar [$entry cget -text]
             eval set newValue   \$$entryVar
             set newValue     [expr 1.0 * [string map {, .} $newValue]]
-            #set newValue [ string map {, .} $value]
 
             eval set oldValue    $[namespace current]::configValue(entry)
                     # puts "     \$oldValue $oldValue"
@@ -874,8 +838,6 @@
             if {$newValue == $oldValue} {
                 return
             }
-
-              # project::add_tracing
 
             puts "\n=================="
             puts "    leaveEntry"
@@ -890,21 +852,20 @@
             }
 
             set key [lindex [split $targetVar :] 2]
-              # puts "  <I> \$key $key"
+                # puts "  <I> \$key $key"
             bikeGeometry::set_projectValue $key $newValue
-              # eval set $targetVar $newValue
+                # eval set $targetVar $newValue
 
-                # project::remove_tracing
             cv_custom::update [lib_gui::current_canvasCAD]
 
             return
      }
 
     proc rem_callback_cDial {{entryVar {}}  entry  {value {0}} {drag_Event {}} } {
-            # puts "\n entryVar:    $entryVar"
-            # puts "\n target_Var:  $target_Var"
-            # puts "\n value:       $value"
-            # puts "\n drag_Event:  $drag_Event"
+                # puts "\n entryVar:    $entryVar"
+                # puts "\n target_Var:  $target_Var"
+                # puts "\n value:       $value"
+                # puts "\n drag_Event:  $drag_Event"
 
             set value [format "%.3f" $value]
                 # puts "\n value:       $value"
@@ -940,10 +901,6 @@
             set xPath       [format "%s/%s" $_array $_name]
             eval set configValue($xPath)    [format "$%s::%s(%s)" project $_array $_name]
             set labelString $_name
-                # set node      [$::APPL_Config(root_ProjectDOM) selectNodes $xPath]
-                # set childNode [$node childNodes]
-                # set value    .... [$childNode asText]
-                # set labelString   [string map "{/} { / }" [string map "$labelCut {}" $xPath] ]
 
                 # --------------
                     # puts "    .. check ..     $xPath    "
@@ -982,39 +939,39 @@
 
 
     proc tubing_checkAngles {} {
-        set lib_gui::checkAngles {on}
-        lib_gui::select_canvasCAD   cv_Custom10
-        cv_custom::update           [lib_gui::current_canvasCAD]
+            set lib_gui::checkAngles {on}
+            lib_gui::select_canvasCAD   cv_Custom10
+            cv_custom::update           [lib_gui::current_canvasCAD]
     }
 
 
     proc check_Value { w xPath targetVar} {
 
-        variable configValue
-        variable oldValue
-
-         switch $xPath {
-                {Component/Wheel/Rear/RimDiameter} -
-                {Component/Wheel/Front/RimDiameter} {
-                        if {[string range $configValue($xPath) 0 3] == "----"} {
-                                # puts "   ... change value"
-                            set configValue($xPath) $oldValue
-                        } else {
-                                # project::add_tracing
-                            # puts "   ... $configValue($xPath)"
-                                # puts "      >[split $configValue($xPath) ;]<"
-                                # puts "      >[lindex [split $configValue($xPath) ;] 0]<"
-                            set value [string trim [lindex [split $configValue($xPath) ;] 0]]
-                            set value [format "%.3f" $value]
-                            set configValue($xPath)  $value
-                                # puts "   ... $configValue($xPath)"
-                                # puts "   ... $targetVar"
-                            eval set $targetVar $value
-                                # project::remove_tracing
-                            cv_custom::update [lib_gui::current_canvasCAD]
+            variable configValue
+            variable oldValue
+    
+             switch $xPath {
+                    {Component/Wheel/Rear/RimDiameter} -
+                    {Component/Wheel/Front/RimDiameter} {
+                            if {[string range $configValue($xPath) 0 3] == "----"} {
+                                    # puts "   ... change value"
+                                set configValue($xPath) $oldValue
+                            } else {
+                                    # project::add_tracing
+                                    # puts "   ... $configValue($xPath)"
+                                    # puts "      >[split $configValue($xPath) ;]<"
+                                    # puts "      >[lindex [split $configValue($xPath) ;] 0]<"
+                                set value [string trim [lindex [split $configValue($xPath) ;] 0]]
+                                set value [format "%.3f" $value]
+                                set configValue($xPath)  $value
+                                    # puts "   ... $configValue($xPath)"
+                                    # puts "   ... $targetVar"
+                                eval set $targetVar $value
+                                    # project::remove_tracing
+                                cv_custom::update [lib_gui::current_canvasCAD]
+                            }
                         }
-                    }
-        }
+            }
     }
     #-------------------------------------------------------------------------
        #  update Config
@@ -1038,49 +995,6 @@
                 set $entryVar [ bikeGeometry::set_projectValue _any_ $value format]
             }
 
-     }
-
-
-    #-------------------------------------------------------------------------
-       #  update configured frame
-       #
-    proc remove__updateConfig {{xPath {}} {cfgEntry {}}} {
-
-            variable configValue
-
-                    # puts "\n"
-                    # puts "  -------------------------------------------"
-                    # puts "   ... xPath    $xPath"
-                    # puts "   ... cfgEntry $cfgEntry"
-                    # puts "   ...          $configValue($xPath)"
-
-                    # -----------------------------
-                    # get current Tab
-                set cv          [ $lib_gui::noteBook_top select ]
-                set varName     [ lib_gui::notebook_getVarName $cv ]
-                if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
-
-                # recurseInsert   [bikeGeometry::get_projectXML]
-                
-                set refValue            [ [ $::APPL_Config(root_ProjectDOM) selectNodes /root/$xPath ]  asText ]
-                
-                set configValue($xPath) [ bikeGeometry::set_projectValue $xPath $configValue($xPath) format]
-
-                    # -----------------------------
-                    #   check if there is a change
-                if {$configValue($xPath) == $refValue} {
-                        # puts "    ... no update necessary!"
-                    return
-                }
-                bikeGeometry::set_projectValue $xPath $configValue($xPath)
-
-                    # -----------------------------
-                    #   update Geometry
-                bikeGeometry::updateConfig       $varName   cv_custom::update    _update_
-
-                    # -----------------------------
-                    #   focus entry
-                focus $cfgEntry
      }
 
 
@@ -1111,7 +1025,6 @@
         if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 
         bikeGeometry::updateConfig       $varName   cv_custom::update    _update_
-
     }
 
 
