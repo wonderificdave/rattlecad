@@ -41,26 +41,35 @@
    
     proc controlDemo {{testProcedure {}}} {
         if {$testProcedure == {}} {
-       set testProcedure   integrationTest_00     
+            set testProcedure   integrationTest_00     
         }  
+        set timeStart    [clock milliseconds]
+        
         switch -exact $testProcedure {
         integrationTest_00    {
-             # tk_messageBox -title "integration Test" -message "... start integrationTest 00"
+               # tk_messageBox -title "integration Test" -message "... start integrationTest 00"
            [namespace current]::integrationTest_00 
-           tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
+           set messageValue "... integrationTest 00"
+               # tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
         }
         loopSamples {
-             # tk_messageBox -title "loop Samples" -message "... start loopSamples"
+               # tk_messageBox -title "loop Samples" -message "... start loopSamples"
            [namespace current]::loopSamples
-           tk_messageBox -title "loop Samples" -message "... rattleCAD Samples!"
+           set messageValue "... start loopSamples"        
+               # tk_messageBox -title "loop Samples" -message "... rattleCAD Samples!"
         }    
         demo_01 {
              # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
            [namespace current]::demo_01
-           tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
+           set messageValue "... rattleCAD Principle!"
+               # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
         }    
         default {}       
-        }       
+        }
+        
+        set timeEnd     [clock milliseconds]
+        set timeUsed    [expr 0.001*($timeEnd - $timeStart)]
+        tk_messageBox -title "Demontsration" -message "$messageValue\n       used: $timeUsed seconds"      
     }       
      
     #-------------------------------------------------------------------------
@@ -179,10 +188,10 @@
         puts "\n            ... $currentFile"
         switch -exact $currentFile {
             {Template Road} {
-            lib_gui::load_Template  Road
+                lib_gui::load_Template  Road
             }        
             {Template MTB} {
-            lib_gui::load_Template  MTB
+                lib_gui::load_Template  MTB
             }
             default {
                 lib_file::openProject_xml   $currentFile    
@@ -289,7 +298,7 @@
                    set xPath       [lindex $myValues($arrayIndex) 0]
                    set paramValue  [lindex $myValues($arrayIndex) $listIndex]
                    puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
-                   bikeGeometry::set_projectValue $xPath $paramValue
+                   bikeGeometry::setValue $xPath $paramValue
                    incr arrayIndex 
                }
                cv_custom::update [lib_gui::current_canvasCAD] keep

@@ -427,7 +427,7 @@
                       puts "    updateConfig"
                       puts "       updateConfig:    $_updateValue($xpath)"
                       project::add_tracing
-                      bikeGeometry::set_projectValue $xpath $_updateValue($xpath)
+                      bikeGeometry::setValue $xpath $_updateValue($xpath)
                       project::remove_tracing
                       cv_custom::update [lib_gui::current_canvasCAD]
                   }

@@ -649,7 +649,7 @@
                                                     # puts "     $xPathString  $value"
                                                 if {[llength $value] == 1} {
                                                     if {[llength [split $value ',']] == 1} {
-                                                        set [namespace current]::configValue($xPathString) [ bikeGeometry::set_projectValue $xPathString $value format]
+                                                        set [namespace current]::configValue($xPathString) [ bikeGeometry::setValue $xPathString $value format]
                                                     }
                                                 }
                                                 if {[file tail $xPath] == {File}} {
@@ -853,7 +853,7 @@
 
             set key [lindex [split $targetVar :] 2]
                 # puts "  <I> \$key $key"
-            bikeGeometry::set_projectValue $key $newValue
+            bikeGeometry::setValue $key $newValue
                 # eval set $targetVar $newValue
 
             cv_custom::update [lib_gui::current_canvasCAD]
@@ -992,7 +992,7 @@
 
             if {$entryVar ne ""} {
                     # reformat value
-                set $entryVar [ bikeGeometry::set_projectValue _any_ $value format]
+                set $entryVar [ bikeGeometry::setValue _any_ $value format]
             }
 
      }
@@ -1007,7 +1007,7 @@
         variable configValue
 
         foreach xPath $componentList {
-            bikeGeometry::set_projectValue $xPath $configValue($xPath)
+            bikeGeometry::setValue $xPath $configValue($xPath)
         }
 
         foreach xPath { Rendering/Fork
@@ -1017,7 +1017,7 @@
                         Rendering/BottleCage/DownTube
                         Rendering/BottleCage/DownTube_Lower
         } {
-            bikeGeometry::set_projectValue $xPath $configValue($xPath)
+            bikeGeometry::setValue $xPath $configValue($xPath)
         }
 
         set cv          [ $lib_gui::noteBook_top select ]

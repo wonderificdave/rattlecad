@@ -2,8 +2,17 @@
 3.4.00.24  - 2013.02.27
 -------------------------------------------------------------------------------
     refactor:
+        ... call bikeGeometry::setValue instead of bikeGeometry::set_projectValue 
+        ... rattleCAD_Test::controlDemo: return used time
+        
+
+3.4.00.24  - 2013.02.27
+-------------------------------------------------------------------------------
+    refactor:
         ... some code cleanup
-            
+    debug:
+        mouse binding in "... info" tab
+        
 
 3.4.00.23  - 2013.02.27
 -------------------------------------------------------------------------------
