@@ -999,7 +999,16 @@
             set RearBrake(Mount)        $pt_14
 
             project::setValue Result(Position/BrakeRear)    position    $RearBrake(Shoe)
-
+                #
+                # - TODO -- remove above line -------
+                #
+            project::setValue Result(Position/Brake/Rear/Shoe)          position    $RearBrake(Shoe)
+            project::setValue Result(Position/Brake/Rear/Help)          position    $RearBrake(Help)
+            project::setValue Result(Position/Brake/Rear/Definition)    position    $RearBrake(Definition)
+            project::setValue Result(Position/Brake/Rear/Mount)         position    $RearBrake(Mount)
+               
+             
+                                    
                 variable DEBUG_Geometry
                 # set DEBUG_Geometry(pt_21) "[lindex $pt_01 0],[lindex $pt_01 1]"
                 # set DEBUG_Geometry(pt_22) "[lindex $pt_02 0],[lindex $pt_02 1]"
@@ -1069,6 +1078,14 @@
             set FrontBrake(Mount)       $pt_16
 
             project::setValue Result(Position/BrakeFront)   position    $FrontBrake(Shoe)
+                #
+                # - TODO -- remove above line -------
+                #
+            project::setValue Result(Position/Brake/Front/Shoe)          position   $FrontBrake(Shoe)
+            project::setValue Result(Position/Brake/Front/Help)          position   $FrontBrake(Help)
+            project::setValue Result(Position/Brake/Front/Definition)    position   $FrontBrake(Definition)
+            project::setValue Result(Position/Brake/Front/Mount)         position   $FrontBrake(Mount)
+
 
                     # set pt_18         [split [ project::getValue Result(Tubes/ForkBlade/Start)     position] , ]
                     # set pt_19         [split [ project::getValue Result(Tubes/ForkBlade/End)       position] , ]
@@ -1523,20 +1540,7 @@
             set coordList [ lappend coordList [expr -0.5*$perimeter] -70 ]
             return $coordList
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
  
  
     # --- Result Angles  ----------------------------------

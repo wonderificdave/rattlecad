@@ -39,7 +39,65 @@
 
  namespace eval project {
 
+        # --------------------------------------------
+        # initial package definition
+    package require tdom
+    
+    
+    # --------------------------------------------
+        # Export as global command
+    variable packageHomeDir [file normalize [file join [pwd] [file dirname [info script]]] ]
+    
+    
+    #-------------------------------------------------------------------------
+        #  definitions of template Documents
+    variable initRoot
+    variable projectDOM
+    
+    
+    #-------------------------------------------------------------------------
+        #  fill initDOM
+        #    ... these are default settings for the application
+        #               
+    set fp [open [file join $packageHomeDir .. etc initTemplate.xml] ]
+    fconfigure      $fp -encoding utf-8
+    set initXML     [read $fp]
+    close           $fp          
+    set initDoc     [dom parse $initXML]
+    set initRoot    [$initDoc documentElement]
+    
+    
+    #-------------------------------------------------------------------------
+        #  fill projectDOM
+        #    ... these is a default project
+        #  
+    set fp [open [file join $packageHomeDir .. etc projectTemplate.xml] ]
+    fconfigure      $fp -encoding utf-8
+    set projXML     [read $fp]
+    close           $fp          
+    set projDoc     [dom parse $projXML]
+    set projectDOM  [$projDoc documentElement]
+    
+    
+    #-------------------------------------------------------------------------
+        #  get the resultNodeStructure
+        #    ... and add it to projectDOM
+        #               
+    set resultNode [$initRoot selectNode Result]    
+    
+    
+    #-------------------------------------------------------------------------
+        #  handle update procedure
+        #
     variable postUpdate [ dict create ]
+    
+    #-------------------------------------------------------------------------
+        #  handle Project Information
+        #
+    variable Project;   array set Project {}
+         set Project(Name)      "I am new, ..."
+         set Project(modified)  [clock milliseconds]
+    
  
     #-------------------------------------------------------------------------
     proc get_xPath {node} {
@@ -82,36 +140,45 @@
                 set varname ${varname}($key)
             }
             upvar $varname var
+            appUtil::get_procHierarchy
             
-                puts "\n\n"
-                puts "   --<trace>--------------------------"
-                puts "    trace_ProjectConfig"
-                puts "       varname:         $varname"
-                puts "       key:             $key"
-                puts "       var:             $var"
-                puts "       operation:       $operation"
+            puts "\n\n"
+            puts "   --<trace>--------------------------"
+            puts "    trace_ProjectConfig"
+            puts "       varname:         $varname"
+            puts "       key:             $key"
+            puts "       var:             $var"
+            puts "       operation:       $operation"
                 
                 # tk_messageBox -message "trace_ProjectConfig: \n     varname:         $var \n     key:             $key \n     operation:       $operation"
             
-            bikeGeometry::set_base_Parameters
-            
-            set    message "          <W> \n"
-            append message "               there was an update in previous version:\n"
-            append message "                      cv_custom::update [lib_gui::current_canvasCAD]\n"
-            append message "          <W>\n"
-                # puts "$message"
-                # tk_messageBox -message $message
-                # cv_custom::update [lib_gui::current_canvasCAD]
+                #bikeGeometry::set_base_Parameters
+                
+                #set    message "          <W> \n"
+                #append message "               there was an update in previous version:\n"
+                #append message "                      cv_custom::update [lib_gui::current_canvasCAD]\n"
+                #append message "          <W>\n"
+                    # puts "$message"
+                    # tk_messageBox -message $message
+                    # cv_custom::update [lib_gui::current_canvasCAD]
             return
     }    
     #-------------------------------------------------------------------------
-    proc dom_2_runTime {projectDOM} {
-            
-            remove_tracing
+    proc dom_2_runTime_old {_projectDOM} {}
+    proc dom_2_runTime {} {
+                            
+
+            variable projectDOM 
             
                 puts "\n\n"
                 puts "   -------------------------------"
                 puts "    project::dom_2_runTime"
+                
+            remove_tracing
+                     
+                # --------------------------------
+                # set $_projectDOM to global $projectDOM
+            # set projectDOM $_projectDOM     
                 
             foreach branch [[$projectDOM selectNodes /root] childNodes] {
                     
@@ -147,7 +214,9 @@
             add_tracing
     }
     #-------------------------------------------------------------------------
-    proc runTime_2_dom {projectDOM} {
+    proc runTime_2_dom {{_projectDOM {}}} {
+            
+            variable projectDOM 
             
                 puts "\n\n"
                 puts "   -------------------------------"
@@ -184,6 +253,7 @@
                             }
                     }
             }
+            return $projectDOM
     }
 
 
@@ -335,8 +405,11 @@
                                 }
             }
             
+                
+  
+                
                 # eval set value [format "$%s::%s(%s)" [namespace current] $_array $_name]
-                # puts "            -> new value: $value \n"
+                # puts "            -> new value: $args \n"
 
     }
         
@@ -470,19 +543,26 @@
     proc update_Project {} {
             
             variable postUpdate ;# this dict will be returned at the end
-            
+            variable projectDOM
             foreach key [dict keys $postUpdate] {
                 dict unset $postUpdate $key ;   # clear the dict
             }
             
-            set domProject      $::APPL_Config(root_ProjectDOM)
-            set project_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
+            #set domProject      $::APPL_Config(root_ProjectDOM)
+            #set project_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
+                # set domProject      $::APPL_Config(root_ProjectDOM)
+            # set domProject      $projectDOM
+                # set project_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
+                # puts "   -> \$project_Version $project_Version"
+
+            set project_Version  [[$projectDOM selectNodes /root/Project/rattleCADVersion/text()] asXML]
+            # puts "   -> \$project_Version $project_Version"
             
                     puts "\n"
                     puts "    -------------------------------"
                     puts "    project::update_Project"
-                    puts "       RELEASE_Version:  $::APPL_Config(RELEASE_Version)"
-                    puts "       RELEASE_Revision: $::APPL_Config(RELEASE_Revision)"
+                    # puts "       RELEASE_Version:  $::APPL_Config(RELEASE_Version)"
+                    # puts "       RELEASE_Revision: $::APPL_Config(RELEASE_Revision)"
                     puts ""
                     puts "       project_Version:  $project_Version \n"
             
@@ -518,11 +598,14 @@
                     project::update_ProjectVersion {3.3.06}
                     # puts "[[$::APPL_Config(root_ProjectDOM) selectNode /root/Rendering] asXML]"
                     # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                    bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
+                    #
+                    #  --- remove for bikeGeometry::set_newProject
+                    #
+                    # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
             }
             
               # -- replace old result-Definition of projectXML with the newer one
-            update_resultArea
+            update_projectResult
             
             return $postUpdate
     }               
@@ -531,21 +614,30 @@
     #-------------------------------------------------------------------------
         #  replace <Result> tag with definition of templates
         #    
-    proc update_resultArea {} {
-            variable postUpdate
-            set domProject    $::APPL_Config(root_ProjectDOM)
-            set domTemplate   [lib_file::get_XMLContent $::APPL_Config(TemplateInit)]
-            #puts [$templDOM asXML]
-            set oldNode [$domProject selectNode /root/Result]
+    proc update_projectResult {} {
+              # variable postUpdate
+              # return
+            variable projectDOM
+            variable resultNode
+                # set domProject    $::APPL_Config(root_ProjectDOM)
+            # set domProject    $projectDOM  
+            
+            # tk_messageBox -message "   Update: update_projectResult"
+            puts [$resultNode asXML]
+            
+               # set domTemplate   [lib_file::get_XMLContent $::APPL_Config(TemplateInit)]
+               #puts [$templDOM asXML]
+            set oldNode [$projectDOM selectNode /root/Result]
             if {$oldNode != {}} {
-              puts "                           ... update File ... /root/Result"
-              set parentNode [$oldNode parentNode]
-                # --remove old ResultNode
-              $parentNode removeChild $oldNode 
-              $oldNode delete
-                # -- add new ResultNode
-              set newNode [$domTemplate selectNode /root/Result]
-              $parentNode appendXML [$newNode asXML]
+                puts "                           ... update File ... /root/Result"
+                set parentNode [$oldNode parentNode]
+                    # --remove old ResultNode
+                $parentNode removeChild $oldNode 
+                $oldNode delete
+                    # -- add new ResultNode
+                        # set newNode [$domTemplate selectNode /root/Result]
+                        # $parentNode appendXML [$newNode asXML]
+                $parentNode appendXML [$resultNode asXML]
             }
             # puts [$::APPL_Config(root_ProjectDOM) asXML]
             # exit
@@ -557,7 +649,10 @@
     proc update_ProjectVersion {Version} {
     
             variable postUpdate
-            set domProject $::APPL_Config(root_ProjectDOM)
+            variable projectDOM
+            
+                # set domProject $::APPL_Config(root_ProjectDOM)
+            # set domProject $projectDOM
             
                     puts "\n"
                     puts "       -------------------------------"
@@ -568,20 +663,20 @@
             
                 {3.1} {		set node {}
                                 # --- /root/Personal/SeatTube_Length
-                            set node [$domProject selectNode /root/Personal/SeatTube_Length]
+                            set node [$projectDOM selectNode /root/Personal/SeatTube_Length]
                             if {$node == {}} {
                                 puts "                           ... update File ... /root/Personal/SeatTube_Length"
                                 puts "                           ... update File ... /root/Personal/SeatTube_Length"
-                                set LegLength [expr 0.88 * [[$domProject selectNode /root/Personal/InnerLeg_Length] asText ] ]
-                                set node [$domProject selectNode /root/Personal]
+                                set LegLength [expr 0.88 * [[$projectDOM selectNode /root/Personal/InnerLeg_Length] asText ] ]
+                                set node [$projectDOM selectNode /root/Personal]
                                 $node appendXML "<SeatTube_Length>$LegLength</SeatTube_Length>"
                             }
 
                                 # --- /root/Result
-                            set node [$domProject selectNode /root/Result]
+                            set node [$projectDOM selectNode /root/Result]
                             if {$node == {}} {
                                 puts "                           ... update File ... /root/Result"
-                                set node [$domProject selectNode /root]
+                                set node [$projectDOM selectNode /root]
                                 $node appendXML "<Result>
                                                     <HeadTube>
                                                         <ReachLength>0.00</ReachLength>
@@ -609,10 +704,10 @@
                             }
 
                                 # --- /root/Rendering
-                            set node [$domProject selectNode /root/Rendering]
+                            set node [$projectDOM selectNode /root/Rendering]
                             if {$node == {}} {
                                 puts "                           ... update File ... /root/Rendering"
-                                set node [$domProject selectNode /root]
+                                set node [$projectDOM selectNode /root]
                                 $node appendXML "<Rendering>
                                                     <Fork>SteelLugged</Fork>
                                                 </Rendering>"
@@ -622,20 +717,20 @@
 
                 {3.2.20} {	set node {}
                                 # --- /root/Result/HeadTube/TopTubeAngle
-                            set node [$domProject selectNode /root/Result/HeadTube/TopTubeAngle]
+                            set node [$projectDOM selectNode /root/Result/HeadTube/TopTubeAngle]
                             if {$node == {}} {
                                 # puts "                           ... update File ... /root/Result/HeadTube/TopTubeAngle"
-                                # set node [$domProject selectNode /root/Result/HeadTube]
+                                # set node [$projectDOM selectNode /root/Result/HeadTube]
                                 # $node appendXML "<TopTubeAngle>0.00</TopTubeAngle>"
                             }
                         }
 
                 {3.2.22} {	set node {}
                                 # --- /root/Component/BottleCage
-                            set node [$domProject selectNode /root/Component/BottleCage]
+                            set node [$projectDOM selectNode /root/Component/BottleCage]
                             if {$node == {}} {
                                 puts "                           ... update File ... /root/Component/BottleCage"
-                                set node [$domProject selectNode /root/Component]
+                                set node [$projectDOM selectNode /root/Component]
                                 # puts "  [$node asXML]"
                                 $node appendXML "<BottleCage>
                                                     <SeatTube>
@@ -651,15 +746,15 @@
                                                         <OffsetBB>150.00</OffsetBB>
                                                     </DownTube_Lower>
                                                 </BottleCage>"
-                                set node [$domProject selectNode /root/Component/BottleCage]
+                                set node [$projectDOM selectNode /root/Component/BottleCage]
                                 # puts "  [$node asXML]"
                             }
 
                                 # --- /root/Rendering/BottleCage ...
-                            set node [$domProject selectNode /root/Rendering/BottleCage]
+                            set node [$projectDOM selectNode /root/Rendering/BottleCage]
                             if {$node == {}} {
                                 puts "                           ... update File ... /root/Rendering/BottleCage"
-                                set node [$domProject selectNode /root/Rendering]
+                                set node [$projectDOM selectNode /root/Rendering]
                                 $node appendXML "<BottleCage>
                                                     <SeatTube>Cage</SeatTube>
                                                     <DownTube>Cage</DownTube>
@@ -668,15 +763,15 @@
                             }  
 
                                 # --- /root/Component/Derailleur
-                            set node [$domProject selectNode /root/Component/Derailleur/Front]
+                            set node [$projectDOM selectNode /root/Component/Derailleur/Front]
                             if {$node == {}} {
                                 puts "                           ... update File ... /root/Component/Derailleur"
-                                set oldNode [$domProject selectNode /root/Component/Derailleur/File/text()]
+                                set oldNode [$projectDOM selectNode /root/Component/Derailleur/File/text()]
                                 # puts " ... asXML     [$oldNode asXML]"                
                                 # puts " ... nodeValue [$oldNode nodeValue]"                
                                 set value [file tail [$oldNode nodeValue]]
-                                set oldNode [$domProject selectNode /root/Component/Derailleur]
-                                set node     [$domProject selectNode /root/Component]
+                                set oldNode [$projectDOM selectNode /root/Component/Derailleur]
+                                set node     [$projectDOM selectNode /root/Component]
                                 $node removeChild $oldNode 
                                 $oldNode delete 
                                 $node appendXML "<Derailleur>
@@ -697,7 +792,7 @@
              
                 {3.2.23} {	set node {}
                                 # --- /root/Rendering/Brake ...
-                            set node [$domProject selectNode /root/Rendering/Brakes]
+                            set node [$projectDOM selectNode /root/Rendering/Brakes]
                             if {$node != {}} {
                                 puts "                           ... update File ... /root/Rendering/Brakes"
                                 set parentNode [$node parentNode]
@@ -706,10 +801,10 @@
                             }
 
                                 # --- /root/Rendering/Brake ...
-                            set node [$domProject selectNode /root/Rendering/Brake]
+                            set node [$projectDOM selectNode /root/Rendering/Brake]
                             if {$node == {}} {
                                 puts "                           ... update File ... /root/Rendering/Brake"
-                                set node [$domProject selectNode /root/Rendering]
+                                set node [$projectDOM selectNode /root/Rendering]
                                 $node appendXML "<Brake>
                                                     <Front>Road</Front>
                                                     <Rear>Road</Rear>
@@ -718,7 +813,7 @@
                         }
                 {3.2.28} {	set node {}
                                 # --- /root/Result ...
-                            set node [$domProject selectNode /root/Result]
+                            set node [$projectDOM selectNode /root/Result]
                             if {$node != {}} {
                                 puts "                           ... update File ... /root/Result"
                                 foreach childNode [ $node childNodes ] {
@@ -727,12 +822,12 @@
                                 }
                             }
                                 # --- /root/Result/Tubes ...
-                            set node [$domProject selectNode /root/Result/Tubes]
+                            set node [$projectDOM selectNode /root/Result/Tubes]
                             if {$node == {}} {
                                 puts "                           ... update File ... /root/Result/Tubes"
-                                set node [$domProject selectNode /root/Result]
+                                set node [$projectDOM selectNode /root/Result]
                                 $node appendXML "<Tubes/>"
-                                set node [$domProject selectNode /root/Result/Tubes]
+                                set node [$projectDOM selectNode /root/Result/Tubes]
                                 foreach tubeName { SeatTube HeadTube DownTube TopTube Steerer ChainStay SeatStay ForkBlade } {
                                     $node appendXML "<$tubeName>
                                                             <Direction>
@@ -750,21 +845,21 @@
                                                         <Base>0.00,0.00</Base>
                                                         <Offset>0.00,0.00</Offset>
                                                     </BottleCage>"                                
-                                set childNode [$domProject selectNode /root/Result/Tubes/SeatTube]
+                                set childNode [$projectDOM selectNode /root/Result/Tubes/SeatTube]
                                 $childNode appendXML $bottleCageXML
-                                set childNode [$domProject selectNode /root/Result/Tubes/DownTube]
+                                set childNode [$projectDOM selectNode /root/Result/Tubes/DownTube]
                                 $childNode appendXML $bottleCageXML
                                 $childNode appendXML "<BottleCage_Lower>
                                                         <Base>0.00,0.00</Base>
                                                         <Offset>0.00,0.00</Offset>
                                                     </BottleCage_Lower>"
                                 puts "                           ... update File ... /root/Result/Tubes/ChainStay/SeatStay_IS"
-                                set node [$domProject selectNode /root/Result/Tubes/ChainStay]
+                                set node [$projectDOM selectNode /root/Result/Tubes/ChainStay]
                                 $node appendXML "<SeatStay_IS>0.00,0.00</SeatStay_IS>"
                             }
 
                                 # --- /root/Result/Lugs ...
-                            set node [$domProject selectNode /root/Result]
+                            set node [$projectDOM selectNode /root/Result]
                                 puts "                           ... update File ... /root/Result/Lugs"
                                 $node appendXML "<Lugs>
                                                     <Dropout>
@@ -797,7 +892,7 @@
                                                 </Lugs>"
 
                                 # --- /root/Result/Components ...
-                            set node [$domProject selectNode /root/Result]
+                            set node [$projectDOM selectNode /root/Result]
                                 puts "                           ... update File ... /root/Result/Components"
                                 $node appendXML "<Components>
                                                     <SeatPost>
@@ -817,7 +912,7 @@
                                                 </Components>"
 
                                 # --- /root/Result/Position ...
-                            set node [$domProject selectNode /root/Result]
+                            set node [$projectDOM selectNode /root/Result]
                                 puts "                           ... update File ... /root/Result/Position"
                                 $node appendXML "<Position>
                                                     <BottomBracket>0.00,0.00</BottomBracket>
@@ -837,7 +932,7 @@
                                                 </Position>"
 
                                 # --- /root/Result/TubeMiter ...
-                            set node [$domProject selectNode /root/Result]
+                            set node [$projectDOM selectNode /root/Result]
                                 puts "                           ... update File ... /root/Result/Position"
                                 $node appendXML "<TubeMiter>
                                                     <TopTube_Head>
@@ -863,10 +958,10 @@
                         }            
                 {3.2.32} {	set node {}
                                 # --- /root/Temporary/BottomBracket ...
-                            set node [$domProject selectNode /root/Temporary/BottomBracket]
+                            set node [$projectDOM selectNode /root/Temporary/BottomBracket]
                             if {$node == {}} {
                                 #puts "                           ... update File ... /root/Temporary/BottomBracket"
-                                #set node [$domProject selectNode /root/Temporary]
+                                #set node [$projectDOM selectNode /root/Temporary]
                                 #$node appendXML "<BottomBracket>
                                 #                        <Height>0.00</Height>
                                 #                </BottomBracket>"
@@ -875,20 +970,20 @@
                          }
                 {3.2.40} {	set node {}
                                 # --- /root/Custom/HeadTube/Angle ...
-                            #$domProject selectNode /root/Temporary/WheelPosition/front/diagonal
+                            #$projectDOM selectNode /root/Temporary/WheelPosition/front/diagonal
                             
                             # 3.2.71 
-                            set node [$domProject selectNode /root/Component/Brake/Front]
+                            set node [$projectDOM selectNode /root/Component/Brake/Front]
                             if {$node != {}} {
                                 $node appendXML "<Offset>28.00</Offset>"
                             }    
-                            set node [$domProject selectNode /root/Component/Brake/Rear]
+                            set node [$projectDOM selectNode /root/Component/Brake/Rear]
                             if {$node != {}} {
                                 $node appendXML "<Offset>30.00</Offset>"
                             }
 
                             # 3.2.76
-                            set node [$domProject selectNode /root/Result]
+                            set node [$projectDOM selectNode /root/Result]
                             if {$node != {}} {
                                 $node appendXML "<Length>
                                                     <HeadTube>
@@ -937,11 +1032,11 @@
                             }
 
 
-                            set node [$domProject selectNode /root/Custom/HeadTube/Angle]
+                            set node [$projectDOM selectNode /root/Custom/HeadTube/Angle]
                             if {$node == {}} {
                                     # ... node does not exist
                                 puts "                           ... update File ... /root/Custom/HeadTube/Angle"
-                                set nodeTA [$domProject selectNode /root/Result/Angle/HeadTube/TopTube/text()]
+                                set nodeTA [$projectDOM selectNode /root/Result/Angle/HeadTube/TopTube/text()]
                                 if {$nodeTA == {}} {
                                         # ... no temporary informtion, take a default
                                         set HeadTubeAngle   "73.50"
@@ -950,23 +1045,23 @@
                                 } else {
                                         # ... temporary informtion, take this
                                         set HeadTubeAngle [$nodeTA nodeValue]
-                                        # 3.2.76 set nodeHT [$domProject selectNode /root/Temporary/HeadTube/Angle/text()]
-                                        set nodeHT [$domProject selectNode /root/Result/Length/HeadTube/Angle/text()]
+                                        # 3.2.76 set nodeHT [$projectDOM selectNode /root/Temporary/HeadTube/Angle/text()]
+                                        set nodeHT [$projectDOM selectNode /root/Result/Length/HeadTube/Angle/text()]
                                         set HeadTubeAngle [$nodeTA nodeValue]
-                                        set node [$domProject selectNode /root/Custom/HeadTube]
+                                        set node [$projectDOM selectNode /root/Custom/HeadTube]
                                         if { $HeadTubeAngle > 20 } {
                                             # ... $HeadTubeAngle in a valid range
                                             $node appendXML "<Angle>$HeadTubeAngle</Angle>"
                                         } else {
                                             # ... $HeadTubeAngle in an invalid range
                                             $node appendXML "<Angle>73.50</Angle>"
-                                            set nodeWP [$domProject selectNode /root/Custom/WheelPosition]
-                                            set nodeWP [$domProject selectNode /root/Custom/WheelPosition/Front/text()]
+                                            set nodeWP [$projectDOM selectNode /root/Custom/WheelPosition]
+                                            set nodeWP [$projectDOM selectNode /root/Custom/WheelPosition/Front/text()]
                                             if { $nodeWP != {} } {
                                                 set WheelPositionFront [$nodeWP nodeValue]
                                                 $nodeTA nodeValue $HeadTubeAngle
                                                 puts "          ... correction WheelPosition/Front: $WheelPositionFront"
-                                                bikeGeometry::set_base_Parameters $domProject
+                                                bikeGeometry::set_base_Parameters $projectDOM
                                                 # 3.2.76 bikeGeometry::set_projectValue Temporary/WheelPosition/front/diagonal $WheelPositionFront update
                                                 bikeGeometry::set_projectValue Result/Length/FrontWheel/diagonal $WheelPositionFront update
                                                 puts "          ... correction WheelPosition/Front: $WheelPositionFront"
@@ -974,23 +1069,23 @@
                                         }
                                 }
                             }
-                            # set node [$domProject selectNode /root/Custom/HeadTube]
+                            # set node [$projectDOM selectNode /root/Custom/HeadTube]
                             # puts "   <D> 9999 \n[$node asXML]"
 
                          }
                 {3.2.63} {	set node {}
-                            set oldNode [$domProject selectNode /root/Custom/WheelPosition/Front]
+                            set oldNode [$projectDOM selectNode /root/Custom/WheelPosition/Front]
                             if {$oldNode != {}} {
                                 puts "                           ... update File ... /root/Custom/WheelPosition/Front"
-                                set node     [$domProject selectNode /root/Custom/WheelPosition]
+                                set node     [$projectDOM selectNode /root/Custom/WheelPosition]
                                 $node removeChild $oldNode 
                                 $oldNode delete
                             }
                         }
                 {3.2.71} {	set node {}
-                            set node [$domProject selectNode /root/Result/Position]
+                            set node [$projectDOM selectNode /root/Result/Position]
                             foreach child {BrakeShoeFront BrakeShoeRear BrakeMountFront BrakeMountRear } {
-                                    set removeNode [$domProject selectNode /root/Result/Position/$child]
+                                    set removeNode [$projectDOM selectNode /root/Result/Position/$child]
                                     if {$removeNode != {}} {
                                         $node removeChild $removeNode 
                                         $removeNode delete
@@ -1003,7 +1098,7 @@
                             }
 
                             foreach child {Front Rear} {
-                                    set node [$domProject selectNode /root/Rendering/Brake/$child]
+                                    set node [$projectDOM selectNode /root/Rendering/Brake/$child]
                                     if {$node != {}} {
                                         set txtNode [$node firstChild] 
                                         set value    [$txtNode nodeValue]
@@ -1016,7 +1111,7 @@
                             }
                         }
                 {3.2.74} {	set node {}
-                            set node [$domProject selectNode /root/Component/Fork/Crown/Brake/OffsetPerp]
+                            set node [$projectDOM selectNode /root/Component/Fork/Crown/Brake/OffsetPerp]
                             if {$node != {}} {
                                     puts "                           ... update File ... /root/Component/Fork/Crown/Brake"
                                     set parentNode [$node parentNode]
@@ -1026,10 +1121,10 @@
                         }
 
                 {3.2.76} {	set node {}
-                            set node [$domProject selectNode /root/Lugs]
+                            set node [$projectDOM selectNode /root/Lugs]
                             if {$node == {}} {                     
                                 puts "                           ... update File ... /root/Lugs"
-                                set node [$domProject selectNode /root]
+                                set node [$projectDOM selectNode /root]
                                 $node appendXML "<Lugs>
                                                     <HeadTube>
                                                         <TopTube>
@@ -1077,30 +1172,30 @@
                                                 </Lugs>"
 
                                     # puts "  ... debug 3.2.76 - 01"
-                                set node [$domProject selectNode /root/Lugs/SeatTube/SeatStay/MiterDiameter/text()]
+                                set node [$projectDOM selectNode /root/Lugs/SeatTube/SeatStay/MiterDiameter/text()]
                                     # puts " ... $node nodeValue .."
                                     # puts " ... [$node asXML] .."
                                     # puts " ... [$node nodeValue] .."
                                 if {[$node nodeValue] == {20.00}} {
                                         puts "                           ... update File ... /root/Lugs/SeatTube/SeatStay/MiterDiameter"
-                                        set resultNode [$domProject selectNode /root/FrameTubes/SeatTube/DiameterTT/text()]
+                                        set resultNode [$projectDOM selectNode /root/FrameTubes/SeatTube/DiameterTT/text()]
                                         # puts "    ... [$resultNode nodeValue] .."
                                         $node nodeValue [$resultNode nodeValue]
                                 }
                             }               
                 
                             set node {}
-                            set node [$domProject selectNode /root/Component/RearDropOut]
+                            set node [$projectDOM selectNode /root/Component/RearDropOut]
                             if {$node != {}} {
                                 puts "                           ... update File ... /root/Lugs/RearDropOut"
                                 set parentNode [$node parentNode]
                                 $parentNode removeChild $node
-                                set targetNode [$domProject selectNode /root/Lugs]
+                                set targetNode [$projectDOM selectNode /root/Lugs]
                                 $targetNode appendChild $node
                             }
                             
                             set node {}
-                            set node [$domProject selectNode /root/Lugs/RearDropOut]
+                            set node [$projectDOM selectNode /root/Lugs/RearDropOut]
                             if {$node != {}} {
                                 puts "                           ... update File ... /root/Lugs/RearDropOut/Angle"
                                 $node appendXML "<Angle>
@@ -1111,7 +1206,7 @@
                             
                             set node {}
                                 # --- /root/Temporary ...
-                            set node [$domProject selectNode /root/Temporary]
+                            set node [$projectDOM selectNode /root/Temporary]
                             if {$node != {}} {
                                 puts "                           ... update File ... /root/Temporary"
                                 set parentNode [$node parentNode]
@@ -1126,17 +1221,17 @@
                                 #
                                 # -- /root/Rendering
                                 #
-                            set parentNode [$domProject selectNode /root/Rendering]
+                            set parentNode [$projectDOM selectNode /root/Rendering]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Rendering/ChainStay]
+                            set node [$projectDOM selectNode /root/Rendering/ChainStay]
                             if {$node == {}} {                     
                                     puts "                           ... update File ... /root/Rendering/ChainStay"
                                     $parentNode appendXML "       <ChainStay>straight</ChainStay>"
                             }
                             
                             set node {}
-                            set node [$domProject selectNode /root/Rendering/RearMockup]
+                            set node [$projectDOM selectNode /root/Rendering/RearMockup]
                             if {$node == {}} {                     
                                     puts "                           ... update File ... /root/Rendering/RearMockup"
                                     $parentNode appendXML " <RearMockup>
@@ -1150,7 +1245,7 @@
                                 #
                                 # -- /root/FrameTubes/ChainStay
                                 #
-                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay]
+                            set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay]
                                 
                                 set value(DiameterBB)  [[ $parentNode selectNode DiameterBB/text() ] nodeValue]
                                 set value(DiameterSS)  [[ $parentNode selectNode DiameterSS/text() ] nodeValue]
@@ -1185,7 +1280,7 @@
                                 #
                                 # -- /root/Lugs/BottomBracket
                                 #
-                            set parentNode [$domProject selectNode /root/Lugs]
+                            set parentNode [$projectDOM selectNode /root/Lugs]
                                      
                             set node {}
                             set node [$parentNode selectNode BottomBracket]
@@ -1216,7 +1311,7 @@
                                 #
                                 # -- /root/Component
                                 #
-                            set parentNode [$domProject selectNode /root/Component]
+                            set parentNode [$projectDOM selectNode /root/Component]
                             
                                 # -- /root/Component/Wheel/Rear
                                 #
@@ -1274,14 +1369,14 @@
                                 #
                                 # -- /root/Personal
                                 #
-                            #set parentNode [$domProject selectNode /root/Result]
+                            #set parentNode [$projectDOM selectNode /root/Result]
                             #    puts [$parentNode asXML]
                             #    set textValue           [[ $parentNode selectNode Position/Saddle/text() ] nodeValue]
                             #    set value(SD_Height)    [expr -1.0 * [lindex [split $textValue ,] 1]]
                             #    puts "  <D> $value(SD_Height) $textValue"
                             #    exit
  
-                            set parentNode [$domProject selectNode /root/Personal]
+                            set parentNode [$projectDOM selectNode /root/Personal]
                                     puts "                           ... update File ... /root/Personal"
                                 set value(ST_Angle)     [[ $parentNode selectNode SeatTube_Angle/text()  ] nodeValue]
                                 set value(ST_Length)    [[ $parentNode selectNode SeatTube_Length/text() ] nodeValue]
@@ -1302,7 +1397,7 @@
                                 #
                                 # -- /root/Result
                                 #
-                            set parentNode [$domProject selectNode /root/Result]
+                            set parentNode [$projectDOM selectNode /root/Result]
                                     puts "                           ... update File ... /root/Result"
                             foreach node [$parentNode childNodes] {
                                     $parentNode removeChild $node
@@ -1329,10 +1424,10 @@
                                 #
                                 # -- /root/Component/Saddle
                                 #
-                            set parentNode [$domProject selectNode /root/Component/Saddle]
+                            set parentNode [$projectDOM selectNode /root/Component/Saddle]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Component/Saddle/Length]
+                            set node [$projectDOM selectNode /root/Component/Saddle/Length]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Component/Saddle/..."
                                     $parentNode appendXML "<Length>280.00</Length>"
@@ -1342,10 +1437,10 @@
                                 #
                                 # -- /root/Length/Saddle
                                 #
-                            set parentNode [$domProject selectNode /root/Result/Length/Saddle]
+                            set parentNode [$projectDOM selectNode /root/Result/Length/Saddle]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Result/Length/Saddle/Offset_BB_Nose]
+                            set node [$projectDOM selectNode /root/Result/Length/Saddle/Offset_BB_Nose]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Result/Length/Saddle/Offset_BB_Nose"
                                     $parentNode appendXML "<Offset_BB_Nose>0.00</Offset_BB_Nose>"
@@ -1354,10 +1449,10 @@
                                 #
                                 # -- /root/Position/SaddleNose
                                 #
-                            set parentNode [$domProject selectNode /root/Result/Position]
+                            set parentNode [$projectDOM selectNode /root/Result/Position]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Result/Position/SaddleNose]
+                            set node [$projectDOM selectNode /root/Result/Position/SaddleNose]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Result/Position/SaddleNose"
                                     $parentNode appendXML "<SaddleNose>0.00,0.00</SaddleNose>"
@@ -1374,10 +1469,10 @@
                                 #
                                 # -- /root/Result/Position/SeatTubeVirtualTopTube
                                 #
-                            set parentNode [$domProject selectNode /root/Result/Position]
+                            set parentNode [$projectDOM selectNode /root/Result/Position]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Result/Position/SeatTubeVirtualTopTube]
+                            set node [$projectDOM selectNode /root/Result/Position/SeatTubeVirtualTopTube]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Result/Position/SeatTubeVirtualTopTube"
                                     $parentNode appendXML "<SeatTubeVirtualTopTube>0.00</SeatTubeVirtualTopTube>"
@@ -1386,10 +1481,10 @@
                                 #
                                 # -- /root/Result/Length/SeatTube/VirtualLength
                                 #
-                            set parentNode [$domProject selectNode /root/Result/Length/SeatTube]
+                            set parentNode [$projectDOM selectNode /root/Result/Length/SeatTube]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Result/Length/SeatTube/VirtualLength]
+                            set node [$projectDOM selectNode /root/Result/Length/SeatTube/VirtualLength]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Result/Length/SeatTube/VirtualLength"
                                     $parentNode appendXML "<VirtualLength>0.00</VirtualLength>"
@@ -1407,10 +1502,10 @@
                                 #
                                 # -- /root/Result/Position/SeatTubeVirtualTopTube
                                 #
-                            set parentNode [$domProject selectNode /root/Custom/SeatTube]
+                            set parentNode [$projectDOM selectNode /root/Custom/SeatTube]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Custom/SeatTube/OffsetBB]
+                            set node [$projectDOM selectNode /root/Custom/SeatTube/OffsetBB]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Custom/SeatTube/OffsetBB"
                                     $parentNode appendXML "<OffsetBB>0.00</OffsetBB>"
@@ -1419,10 +1514,10 @@
                                  #
                                 # -- /root/Component/Logo/File)
                                 #
-                            set parentNode [$domProject selectNode /root/Component]
+                            set parentNode [$projectDOM selectNode /root/Component]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Component/Logo/File]
+                            set node [$projectDOM selectNode /root/Component/Logo/File]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Component/Logo/File"
                                     $parentNode appendXML "<Logo>
@@ -1441,10 +1536,10 @@
                                 #
                                 # -- /root/Lugs/RearDropOut/Direction
                                 #
-                            set parentNode [$domProject selectNode /root/Rendering]
+                            set parentNode [$projectDOM selectNode /root/Rendering]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Rendering/RearDropOut]
+                            set node [$projectDOM selectNode /root/Rendering/RearDropOut]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Rendering/RearDropOut"
                                     $parentNode appendXML "<RearDropOut>behind</RearDropOut>"
@@ -1452,29 +1547,29 @@
                                 #
                                 # -- /root/Lugs/RearDropOut/Direction
                                 #
-                            set parentNode [$domProject selectNode /root/Lugs/RearDropOut]
+                            set parentNode [$projectDOM selectNode /root/Lugs/RearDropOut]
                             
                             set node {}
-                            set node [$domProject selectNode /root/Lugs/RearDropOut/Direction]
+                            set node [$projectDOM selectNode /root/Lugs/RearDropOut/Direction]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Lugs/RearDropOut/Direction"
                                     $parentNode appendXML "<Direction>horizontal</Direction>"
                             }
                             set node {}
-                            set node [$domProject selectNode /root/Lugs/RearDropOut/RotationOffset]
+                            set node [$projectDOM selectNode /root/Lugs/RearDropOut/RotationOffset]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Lugs/RearDropOut/RotationOffset"
                                     $parentNode appendXML "<RotationOffset>0.00</RotationOffset>"
                             }
 
                             set node {}
-                            set node [$domProject selectNode /root/Lugs/RearDropOut/Derailleur/x/text()]
+                            set node [$projectDOM selectNode /root/Lugs/RearDropOut/Derailleur/x/text()]
                             if {$node != {}} {
                                     puts "                           ... update File ... /root/Lugs/RearDropOut/Derailleur/x"
                                     set value [$node nodeValue]
                                     $node nodeValue  [expr abs($value)]
                             }
-                            set node [$domProject selectNode /root/Lugs/RearDropOut/Derailleur/y/text()]
+                            set node [$projectDOM selectNode /root/Lugs/RearDropOut/Derailleur/y/text()]
                             if {$node != {}} {
                                     puts "                           ... update File ... /root/Lugs/RearDropOut/Derailleur/y"
                                     set value [$node nodeValue]
@@ -1483,8 +1578,8 @@
                                 #
                                 # -- /root/FrameTubes/ChainStay
                                 #
-                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay]
-                            set node [$domProject selectNode /root/FrameTubes/ChainStay/Bent]
+                            set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay]
+                            set node [$projectDOM selectNode /root/FrameTubes/ChainStay/Bent]
                             if {$node != {}} {
                                     puts "                           ... update File ... /root/FrameTubes/ChainStay/Bent"
                                     $parentNode removeChild $node 
@@ -1493,8 +1588,8 @@
                                 #
                                 # -- /root/FrameTubes/ChainStay/CenterLine
                                 #
-                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay]
-                            set node [$domProject selectNode /root/FrameTubes/ChainStay/CenterLine]
+                            set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay]
+                            set node [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine"
                                     $parentNode appendXML  "<CenterLine>
@@ -1510,8 +1605,8 @@
                                                               <radius_03>320.00</radius_03>
                                                             </CenterLine>"
                             }
-                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay/CenterLine]
-                            set node [$domProject selectNode /root/FrameTubes/ChainStay/CenterLine/length_04]
+                            set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine]
+                            set node [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_04]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine"
                                     $parentNode appendXML  "<length_04>10.00</length_04>"
@@ -1522,15 +1617,15 @@
                                 #
                                 # -- /root/FrameTubes/ChainStay/Profile
                                 #
-                            set parentNode [$domProject selectNode /root/FrameTubes/ChainStay]
-                            set node [$domProject selectNode /root/FrameTubes/ChainStay/Profile/p01]
+                            set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay]
+                            set node [$projectDOM selectNode /root/FrameTubes/ChainStay/Profile/p01]
                             if {$node != {}} {
                                     puts "                           ... update File ... selectNode /root/FrameTubes/ChainStay/Profile"
-                                    set removeNode [$domProject selectNode /root/FrameTubes/ChainStay/Profile]
+                                    set removeNode [$projectDOM selectNode /root/FrameTubes/ChainStay/Profile]
                                     $parentNode removeChild $removeNode 
                                     $removeNode delete
                             }
-                            set node [$domProject selectNode /root/FrameTubes/ChainStay/Profile]
+                            set node [$projectDOM selectNode /root/FrameTubes/ChainStay/Profile]
                             if {$node == {}} {
                                     puts "                           ... update File ... selectNode /root/FrameTubes/ChainStay/Profile"
                                     $parentNode appendXML  "<Profile>              
@@ -1546,23 +1641,23 @@
                                 #
                                 # -- /root/Rendering/RearMockup
                                 #
-                            set parentNode [$domProject selectNode /root/Rendering/RearMockup]
-                            set node [$domProject selectNode /root/Rendering/RearMockup/DiscOffset]
+                            set parentNode [$projectDOM selectNode /root/Rendering/RearMockup]
+                            set node [$projectDOM selectNode /root/Rendering/RearMockup/DiscOffset]
                             if {$node == {}} {
                                     puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscOffset"
                                     $parentNode appendXML  "<DiscOffset>15.30</DiscOffset>"
                             }
-                            set node [$domProject selectNode /root/Rendering/RearMockup/DiscWidth]
+                            set node [$projectDOM selectNode /root/Rendering/RearMockup/DiscWidth]
                             if {$node == {}} {
                                     puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscWidth"
                                     $parentNode appendXML  "<DiscWidth>2.00</DiscWidth>"
                             }
-                            set node [$domProject selectNode /root/Rendering/RearMockup/DiscDiameter]
+                            set node [$projectDOM selectNode /root/Rendering/RearMockup/DiscDiameter]
                             if {$node == {}} {
                                     puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscDiameter"
                                     $parentNode appendXML  "<DiscDiameter>160.00</DiscDiameter>"
                             }
-                            set node [$domProject selectNode /root/Rendering/RearMockup/DiscClearance]
+                            set node [$projectDOM selectNode /root/Rendering/RearMockup/DiscClearance]
                             if {$node == {}} {
                                     puts "                           ... update File ... selectNode /root/Rendering/RearMockup/DiscClearance"
                                     $parentNode appendXML  "<DiscClearance>5.00</DiscClearance>"
@@ -1573,7 +1668,7 @@
                                 # -- get Fork Type
                                     puts "                           ... update File ... /root/Rendering/ForkBlade"
                                     puts "                                           ... /root/Component/Fork/Blade"
-                            set node [$domProject selectNode /root/Rendering/Fork/text()]
+                            set node [$projectDOM selectNode /root/Rendering/Fork/text()]
                                 # puts [$node asXML]
                             if {$node != {}} {
                               set forkRendering [$node nodeValue]
@@ -1585,11 +1680,11 @@
                               }
                               
                                 # -- update ForkBlade default Parameter
-                              set node_Blade      [$domProject selectNode /root/Component/Fork/Blade]
+                              set node_Blade      [$projectDOM selectNode /root/Component/Fork/Blade]
                                 #
                               $node_Blade appendXML  "<BendRadius>350.0</BendRadius>"
                               $node_Blade appendXML  "<EndLength>10.0</EndLength>"
-                              set node [$domProject selectNode /root/Component/Fork/Blade/Offset]
+                              set node [$projectDOM selectNode /root/Component/Fork/Blade/Offset]
                               if {$node != {}} {
                                       $node_Blade removeChild $node 
                                       $node delete 
@@ -1597,18 +1692,18 @@
                               
                               
                                 # -- update ForkBlade Rendering
-                              set node_Crown      [$domProject selectNode /root/Component/Fork/Crown/File/text()]
-                              set node_Rendering  [$domProject selectNode /root/Rendering]
-                              set node_Blade      [$domProject selectNode /root/Rendering/ForkBlade]
+                              set node_Crown      [$projectDOM selectNode /root/Component/Fork/Crown/File/text()]
+                              set node_Rendering  [$projectDOM selectNode /root/Rendering]
+                              set node_Blade      [$projectDOM selectNode /root/Rendering/ForkBlade]
                                 #
                               if {$node_Blade == {}} {
                                   $node_Rendering appendXML "<ForkBlade>straight</ForkBlade>"
                               }
-                                # puts " -- 02 ----- [[$domProject selectNode /root/Rendering/ForkBlade] asXML]"
+                                # puts " -- 02 ----- [[$projectDOM selectNode /root/Rendering/ForkBlade] asXML]"
                               switch -exact $forkRendering {
                                   SteelLugged {
                                         set forkCrown       [file tail [$node_Crown nodeValue]]
-                                        set bladeRendering  [$domProject selectNode /root/Rendering/ForkBlade/text()]
+                                        set bladeRendering  [$projectDOM selectNode /root/Rendering/ForkBlade/text()]
                                         set forkBlade [$bladeRendering nodeValue]
                                             puts "                                           ... $forkCrown"
                                             puts "                                           ... $forkBlade"
@@ -1629,7 +1724,7 @@
                          
                         }
                 {ab-xy} {	set node {}
-                            set node [$domProject selectNode /root/Project/rattleCADVersion/text()]
+                            set node [$projectDOM selectNode /root/Project/rattleCADVersion/text()]
                             puts " ... [$node nodeValue] .."
                             puts " ... [$node asText] .."
                             $node nodeValue [format "%s.%s" $::APPL_Config(RELEASE_Version) $::APPL_Config(RELEASE_Revision)] 

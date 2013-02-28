@@ -41,9 +41,14 @@
         
 
     #-------------------------------------------------------------------------
-        #  base: fill current Project Values and namespace frameCoords::
-    proc bikeGeometry::set_base_Parameters {{domProject {}}} {
-            # variable Reference
+        #  compute all values of the project 
+        #
+        #    <T> ... should be renamed to compute_Project
+        #
+    proc bikeGeometry::set_base_Parameters_old {{_projectDOM {}}} {}
+    
+    proc bikeGeometry::set_base_Parameters {} {
+            
             variable Project
 
             variable BottomBracket
@@ -80,16 +85,22 @@
 
 
                 #
-                # --- convert domProject to runtime variables
-            if {$domProject != {}} {
-                    project::dom_2_runTime $domProject
+                # --- convert projectDOM to runtime variables
+            set _projectDOM {}
+            if {$_projectDOM != {}} {
+                project::dom_2_runTime $_projectDOM
                         # parray project::Project
                         # parray project::Result
                         # exit
+            } else {
+            
             }
 
                 #
                 # --- increase global update timestamp
+            #
+            #  ... this should migrate to anywhere else
+            #
             set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
 
 
@@ -319,7 +330,7 @@
                 #
             get_basePoints
             project::setValue Result(Position/FrontWheel)            position    $FrontWheel(Position)
-            project::setValue Result(Lugs/Dropout/Front/Position)    position     $FrontWheel(Distance_X)    [expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
+            project::setValue Result(Lugs/Dropout/Front/Position)    position    $FrontWheel(Distance_X)    [expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
 
 
             #
@@ -376,6 +387,14 @@
 
                 #
             get_TubeMiter
+            
+            
+            # ----------------------------------
+                # finally update projectDOM
+            return [project::runTime_2_dom]
+            # $projectDOM
+     
+            
     }
 
 
