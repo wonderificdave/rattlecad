@@ -50,6 +50,8 @@
     variable    componentList   {}
     variable    compCanvas      {}
     variable    frameCanvas     {}
+    
+    variable   projectDOM
 
 
     #-------------------------------------------------------------------------
@@ -648,7 +650,8 @@
     proc init_configValues {} {
 
             variable componentList
-
+            variable projectDOM
+            
             proc recurseInsert { node parent} {
                     # puts "    ... recurseInsert .. [$node toXPath]"
                 variable componentList
@@ -696,7 +699,9 @@
                     }
                 }
             }
-            recurseInsert   [$::APPL_Config(root_ProjectDOM) selectNodes /root]  {/}
+            set projectDOM  [bikeGeometry::get_projectXML]
+            recurseInsert   $projectDOM  {/}
+              # recurseInsert   [$::APPL_Config(root_ProjectDOM) selectNodes /root]  {/}
 
             # parray [namespace current]::configValue
             #foreach file $componentList {
@@ -884,7 +889,10 @@
                 return
             }
 
-            eval set $targetVar $newValue
+            set key [lindex [split $targetVar :] 2]
+              # puts "  <I> \$key $key"
+            bikeGeometry::set_projectValue $key $newValue
+              # eval set $targetVar $newValue
 
                 # project::remove_tracing
             cv_custom::update [lib_gui::current_canvasCAD]
@@ -1052,7 +1060,10 @@
                 set varName     [ lib_gui::notebook_getVarName $cv ]
                 if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 
+                # recurseInsert   [bikeGeometry::get_projectXML]
+                
                 set refValue            [ [ $::APPL_Config(root_ProjectDOM) selectNodes /root/$xPath ]  asText ]
+                
                 set configValue($xPath) [ bikeGeometry::set_projectValue $xPath $configValue($xPath) format]
 
                     # -----------------------------
