@@ -1,9 +1,16 @@
 
+3.4.00.23  - 2013.02.27
+-------------------------------------------------------------------------------
+    refactor:
+        ... harmonize interface on bikeGeometry
+            ... but there are still a few side-links
+            
+
 3.4.00.22  - 2013.02.27
 -------------------------------------------------------------------------------
     debug:
-        ... redirect angles in FrameDetails View belonging to 
-                SeatTube / BB Offset
+        ... show angles in FrameDetails View belonging between 
+              SeatTube & DownTube and SeatTube & TopTube belonging to BB Offset
 
 
 3.4.00.20  - 2013.02.24
