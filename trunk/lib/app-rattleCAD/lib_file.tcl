@@ -137,8 +137,8 @@
                     set ::APPL_Config(PROJECT_Save) [clock milliseconds]
 
 		    
-		        #
-		    lib_gui::notebook_updateCanvas		    
+        		        #
+        		    lib_gui::notebook_updateCanvas	force	    
 		    
 
                         # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------

@@ -69,7 +69,7 @@
         
         set timeEnd     [clock milliseconds]
         set timeUsed    [expr 0.001*($timeEnd - $timeStart)]
-        tk_messageBox -title "Demontsration" -message "$messageValue\n       used: $timeUsed seconds"      
+        tk_messageBox -title "Demontsration" -message "$messageValue\n       elapsed: $timeUsed seconds"      
     }       
      
     #-------------------------------------------------------------------------
@@ -121,9 +121,11 @@
               Kid20_V7.xml  ghost_powerkid_20.xml \
               __test_Integration_02.xml   
        } {       
-       set openFile     [file join  $TEST_Dir sample $thisFile]
-       puts "          ... $openFile\n"
-       lib_file::openProject_xml   $openFile           
+           set openFile     [file join  $TEST_Dir sample $thisFile]
+           puts "          ... $openFile\n"
+           lib_file::openProject_xml   $openFile 
+           wm deiconify .
+           #update          
        }
        
               
@@ -298,7 +300,8 @@
                    set xPath       [lindex $myValues($arrayIndex) 0]
                    set paramValue  [lindex $myValues($arrayIndex) $listIndex]
                    puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
-                   bikeGeometry::setValue $xPath $paramValue
+                   projectUpdate::set_Value $xPath $paramValue
+                       # bikeGeometry::set_Value $xPath $paramValue
                    incr arrayIndex 
                }
                cv_custom::update [lib_gui::current_canvasCAD] keep

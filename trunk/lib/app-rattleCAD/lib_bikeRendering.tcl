@@ -849,7 +849,7 @@
                         set ForkBlade(polygon)      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
                         set ForkCrown(file)         [ checkFileString $bikeGeometry::myFork(CrownFile) ]
                         set ForkDropout(file)       [ checkFileString $bikeGeometry::myFork(DropOutFile) ]
-                        set Suspension_ForkRake     [[ $domInit     selectNodes /root/Options/Fork/Suspension_$forkSize/Geometry/Rake ]  asText ]
+                        set Suspension_ForkRake     [[ $domInit     selectNodes /root/Fork/Suspension_$forkSize/Geometry/Rake ]  asText ]
                         set Project_ForkRake        $project::Component(Fork/Rake)
                         set do_direction            [ bikeGeometry::get_Object     HeadTube    direction ]
                         set do_angle                [ vectormath::angle {0 1} {0 0} $do_direction ]

@@ -1,14 +1,20 @@
 
-3.4.00.24  - 2013.02.27
+3.4.00.26  - 2013.02.28
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
+        ... lib_config.tcl: Config Window
+        
+
+3.4.00.25  - 2013.02.28
+-------------------------------------------------------------------------------
+    refactoring:
         ... call bikeGeometry::setValue instead of bikeGeometry::set_projectValue 
         ... rattleCAD_Test::controlDemo: return used time
         
 
 3.4.00.24  - 2013.02.27
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
         ... some code cleanup
     debug:
         mouse binding in "... info" tab
@@ -16,7 +22,7 @@
 
 3.4.00.23  - 2013.02.27
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
         ... harmonize interface on bikeGeometry
             ... but there are still a few side-links
             
@@ -30,13 +36,13 @@
 
 3.4.00.20  - 2013.02.24
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
         ... bikeGeometry
 
 
 3.4.00.18  - 2013.02.24
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
         ... unify procedures project::setValues and project::getValues
             ... updating: rattleCAD::projectUpdate
 
@@ -50,7 +56,7 @@
 
 3.4.00.16   - 2013.02.23
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
         ... extract procedures from projectUpdate::createEdit
 
 
@@ -62,13 +68,13 @@
 
 3.4.00.14   - 2013.02.22
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
         ... move frame_geometry::createEdit to projectUpdate::createEdit
 
 
 3.4.00.13   - 2013.02.21 
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
         ... move frame_geometry::update to cv_custom::update
     debug:
         ... reset 3.4.00.12
@@ -126,7 +132,7 @@
 
 3.4.00.05   - 2013.02.17 
 -------------------------------------------------------------------------------
-    refactor:
+    refactoring:
         ... move code to ECLIPSE and build starkit with ANT
 
 

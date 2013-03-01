@@ -53,6 +53,7 @@
      
 
   
+
     #-------------------------------------------------------------------------
         #  create ProjectEdit Widget
         # proc createEdit { x y cv_Name updateCommand _arrayNameList {title {Edit:}}}
@@ -83,7 +84,7 @@
             }
             puts ""
 
-            project::remove_tracing
+            # project::remove_tracing
 
 
             set x_offset 20
@@ -427,8 +428,12 @@
                       puts "    updateConfig"
                       puts "       updateConfig:    $_updateValue($xpath)"
                       project::add_tracing
-                      bikeGeometry::setValue $xpath $_updateValue($xpath)
-                      project::remove_tracing
+                          
+                      bikeGeometry::set_Value $xpath $_updateValue($xpath)
+                      set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+                      
+                          # set_Value xpath $_updateValue($xpath)
+                          # project::remove_tracing
                       cv_custom::update [lib_gui::current_canvasCAD]
                   }
           }

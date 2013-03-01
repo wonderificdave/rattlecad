@@ -317,8 +317,13 @@
                             pack $fileFrame.cb  -side right
                             pack $fileFrame.lb  -side left
 
-                            bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] select]
-                            bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
+                        set key [format "%s(%s)" $_array $_name]
+                        bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] select]
+                        bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
+
+                            # [ bikeGeometry::set_Value $xPathString $value format]
+                            # bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] select]
+                            # bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
                 }
                 
 
@@ -447,21 +452,28 @@
 
                 # -----------------
                 #   Rendering
-                set entryList { {Fork Type}         Fork                      list_ForkTypes  \
-                                {Fork Blade Type}   ForkBlade                 list_ForkBladeTypes  \
-                                {Brake Type Front}  Brake/Front               list_BrakeTypes \
-                                {Brake Type Rear}   Brake/Rear                list_BrakeTypes \
-                                {BottleCage ST}     BottleCage/SeatTube       list_BottleCage \
-                                {BottleCage DT}     BottleCage/DownTube       list_BottleCage \
-                                {BottleCage DT L}   BottleCage/DownTube_Lower list_BottleCage \
+                set entryList { {Fork Type}         Rendering Fork                      list_ForkTypes  \
+                                {Fork Blade Type}   Rendering ForkBlade                 list_ForkBladeTypes  \
+                                {Brake Type Front}  Rendering Brake/Front               list_BrakeTypes \
+                                {Brake Type Rear}   Rendering Brake/Rear                list_BrakeTypes \
+                                {BottleCage ST}     Rendering BottleCage/SeatTube       list_BottleCage \
+                                {BottleCage DT}     Rendering BottleCage/DownTube       list_BottleCage \
+                                {BottleCage DT L}   Rendering BottleCage/DownTube_Lower list_BottleCage \
                             }
                     set i 10
-                foreach {label type name} $entryList {
-                    incr i 1
-                    set optionFrame [frame $menueFrame.sf.lf_02.f___$i]
-                    label $optionFrame.lb -text "  $label"
-                    ttk::combobox $optionFrame.cb   -textvariable [format "%s::%s(%s)" project Rendering $type] \
-                                                    -values $::APPL_Config($name)        -width 30
+                foreach {label _array _name listName} $entryList {
+                        set xPath [format "%s/%s" $_array $_name]
+
+    
+                        incr i 1
+                        set optionFrame [frame $menueFrame.sf.lf_02.f___$i]
+                        label $optionFrame.lb -text "  $label"
+                        ttk::combobox $optionFrame.cb -textvariable [namespace current]::configValue($xPath) \
+                                                    -values $::APPL_Config($listName)        -width 30
+
+                        bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
+                        bind $optionFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]
+                        
                         pack $optionFrame -fill x -expand yes  -pady 2
                         pack $optionFrame.cb -side right
                         pack $optionFrame.lb -side left
@@ -470,11 +482,6 @@
 
                 # -----------------
                 #   Update Values
-            #ttk::labelframe    $menueFrame.sf.updateValues                      -text "update Values"
-            #    pack $menueFrame.sf.updateValues                            -side top  -fill x  -pady 2
-            #        pack [frame $menueFrame.sf.updateValues.f_upd]          -fill x -expand yes -padx 3 -pady 2
-            #        button  $menueFrame.sf.updateValues.f_upd.bt_update     -text {update}            -width 10    -command [namespace current]::update_Rendering
-            #            pack $menueFrame.sf.updateValues.f_upd.bt_update    -side right
 
     }
 
@@ -497,13 +504,16 @@
                 puts "       compFile:       $compFile"
                 puts "       targetVar:      $targetVar"
                 puts "       targetCanvas:   $targetCanvas"
+                puts "       mode:           $mode"
             catch {[namespace current]::::updateCanvas $targetCanvas}
             if {$mode == {select}} {
-                    # project::add_tracing
-                eval set $targetVar \"$compFile\"
-                    # project::remove_tracing
+                set key [lindex [split $targetVar ::] 2]
+                bikeGeometry::set_Value $key $compFile force
+                set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
                 cv_custom::update [lib_gui::current_canvasCAD]
             }
+                # puts "    ListboxEvent ... done"
+            
     }
 
     #-------------------------------------------------------------------------
@@ -649,7 +659,8 @@
                                                     # puts "     $xPathString  $value"
                                                 if {[llength $value] == 1} {
                                                     if {[llength [split $value ',']] == 1} {
-                                                        set [namespace current]::configValue($xPathString) [ bikeGeometry::setValue $xPathString $value format]
+                                                        set [namespace current]::configValue($xPathString) [ update_Value $xPathString $value format]
+                                                            # set [namespace current]::configValue($xPathString) [ bikeGeometry::set_Value $xPathString $value format]
                                                     }
                                                 }
                                                 if {[file tail $xPath] == {File}} {
@@ -834,15 +845,16 @@
                     # puts "     \$newValue $newValue"
                     # puts "[$entry cget -text]"
 
-            puts "         ... compare Value $newValue == $oldValue "
             if {$newValue == $oldValue} {
+                puts "\n         ... compare Value $newValue == $oldValue "
                 return
             }
 
-            puts "\n=================="
-            puts "    leaveEntry"
-            puts "       entry        $entry"
-            puts "       targetVar    $targetVar"
+            puts "\n         ... compare Value $newValue <> $oldValue "
+            puts "     =================="
+            puts "         leaveEntry"
+            puts "             entry        $entry"
+            puts "             targetVar    $targetVar"
 
             if {$_array eq {Result}} {
                 eval set $targetVar $oldValue
@@ -853,7 +865,9 @@
 
             set key [lindex [split $targetVar :] 2]
                 # puts "  <I> \$key $key"
-            bikeGeometry::setValue $key $newValue
+                # puts "  <I> update_Value $key $newValue"
+            update_Value $key $newValue
+                # bikeGeometry::set_Value $key $newValue
                 # eval set $targetVar $newValue
 
             cv_custom::update [lib_gui::current_canvasCAD]
@@ -964,9 +978,12 @@
                                 set value [string trim [lindex [split $configValue($xPath) ;] 0]]
                                 set value [format "%.3f" $value]
                                 set configValue($xPath)  $value
-                                    # puts "   ... $configValue($xPath)"
-                                    # puts "   ... $targetVar"
-                                eval set $targetVar $value
+                                     puts "   ... $configValue($xPath)"
+                                     puts "   ... $targetVar"
+                                set key [lindex [split $targetVar :] 2]
+                                     puts "   ... $key"
+                                bikeGeometry::set_Value $key $value
+                                    # eval set $targetVar $value
                                     # project::remove_tracing
                                 cv_custom::update [lib_gui::current_canvasCAD]
                             }
@@ -992,7 +1009,10 @@
 
             if {$entryVar ne ""} {
                     # reformat value
-                set $entryVar [ bikeGeometry::setValue _any_ $value format]
+                    #puts " -> $::APPL_Config(canvasCAD_Update)"
+                set $entryVar [update_Value $key $newValue format]
+                    # set $entryVar [ bikeGeometry::set_Value _any_ $value format]
+                    #puts " -> $::APPL_Config(canvasCAD_Update)"
             }
 
      }
@@ -1007,7 +1027,8 @@
         variable configValue
 
         foreach xPath $componentList {
-            bikeGeometry::setValue $xPath $configValue($xPath)
+             update_Value $xPath $configValue($xPath)
+                 # bikeGeometry::set_Value $xPath $configValue($xPath)
         }
 
         foreach xPath { Rendering/Fork
@@ -1017,7 +1038,8 @@
                         Rendering/BottleCage/DownTube
                         Rendering/BottleCage/DownTube_Lower
         } {
-            bikeGeometry::setValue $xPath $configValue($xPath)
+            update_Value $xPath $configValue($xPath)
+                # bikeGeometry::set_Value $xPath $configValue($xPath)
         }
 
         set cv          [ $lib_gui::noteBook_top select ]
@@ -1025,6 +1047,26 @@
         if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 
         bikeGeometry::updateConfig       $varName   cv_custom::update    _update_
+    }
+
+
+
+    #-------------------------------------------------------------------------
+        #  this is THE SETTER for the bikeGeometry library
+        #    
+    proc update_Value {key newValue {mode {update}}} {
+            # puts ""
+            # puts "         $::APPL_Config(canvasCAD_Update)"
+        set updatedValue [bikeGeometry::set_Value $key $newValue $mode]
+        set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+            # puts "         $::APPL_Config(canvasCAD_Update)"
+            # puts "       -----------------------------------"
+            # puts "         \$key:           $key"
+            # puts "         \$newValue:      $newValue"
+            # puts "         \$mode:          $mode"
+            # puts "         \$updateValue:   $updatedValue"
+        # puts ""
+        return $updatedValue
     }
 
 
