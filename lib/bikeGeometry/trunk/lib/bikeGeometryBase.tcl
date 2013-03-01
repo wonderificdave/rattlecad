@@ -81,13 +81,14 @@
 
             variable DEBUG_Geometry
 
+              # appUtil::get_procHierarchy
 
                 #
                 # --- increase global update timestamp
-            #
-            #  ... this should migrate to anywhere else
-            #
-            set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
+                #
+                #  ... this should migrate to anywhere else
+                #
+                # set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
 
 
                 #

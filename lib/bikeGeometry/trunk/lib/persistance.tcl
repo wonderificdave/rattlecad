@@ -51,8 +51,9 @@
     
     #-------------------------------------------------------------------------
         #  definitions of template Documents
-    variable initRoot
+    variable initDOM 
     variable projectDOM
+    variable resultNode
     
     
     #-------------------------------------------------------------------------
@@ -64,7 +65,7 @@
     set initXML     [read $fp]
     close           $fp          
     set initDoc     [dom parse $initXML]
-    set initRoot    [$initDoc documentElement]
+    set initDOM     [$initDoc documentElement]
     
     
     #-------------------------------------------------------------------------
@@ -83,7 +84,7 @@
         #  get the resultNodeStructure
         #    ... and add it to projectDOM
         #               
-    set resultNode [$initRoot selectNode Result]    
+    set resultNode [$initDOM selectNode Result]    
     
     
     #-------------------------------------------------------------------------
@@ -118,12 +119,12 @@
     #-------------------------------------------------------------------------
     proc add_tracing {} {
                 # puts "\n   project::add_tracing\n"
-            trace add     variable [namespace current]::Personal    write [namespace current]::trace_ProjectConfig
-            trace add     variable [namespace current]::Custom      write [namespace current]::trace_ProjectConfig
-            trace add     variable [namespace current]::Lugs        write [namespace current]::trace_ProjectConfig
-            trace add     variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
-            trace add     variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
-            trace add     variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
+            #trace add     variable [namespace current]::Personal    write [namespace current]::trace_ProjectConfig
+            #trace add     variable [namespace current]::Custom      write [namespace current]::trace_ProjectConfig
+            #trace add     variable [namespace current]::Lugs        write [namespace current]::trace_ProjectConfig
+            #trace add     variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
+            #trace add     variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
+            #trace add     variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
     }
     proc remove_tracing {} {
                 # puts "\n   project::remove_tracing\n"
@@ -162,7 +163,8 @@
             puts "   -------------------------------"
             puts "    project::dom_2_runTime"
                
-                
+              # remove_tracing
+            
             foreach branch [[$projectDOM selectNodes /root] childNodes] {
                     
                         # puts "  NodeType:  [$branch nodeType]"
@@ -194,7 +196,7 @@
                         #parray $myArray
             }
             
-            add_tracing
+            # add_tracing
     }
     #-------------------------------------------------------------------------
     proc runTime_2_dom {{_projectDOM {}}} {
@@ -238,8 +240,6 @@
             }
             return $projectDOM
     }
-
-
     #-------------------------------------------------------------------------
         # unifyKey 
         #
@@ -274,7 +274,6 @@
         }
         #
     }
-        
     #-------------------------------------------------------------------------
         # setValue {key type args}
         #
@@ -305,9 +304,6 @@
                     value       {}
                     default     {}
             }
-            
-                # set domProject $::APPL_Config(root_ProjectDOM)            
-                # set node    [$domProject selectNodes /root/$_array/$_name/text()]
                 # puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
             set check_name [array names [namespace current]::$_array $_name]
             if { $check_name == {} } {
@@ -389,7 +385,6 @@
             }
 
     }
-        
     #-------------------------------------------------------------------------
         # getValue {key type args}
         #
@@ -419,9 +414,6 @@
                                     }
                                 }
             }
-
-                # set domProject $::APPL_Config(root_ProjectDOM)            
-                # set node	[$domProject selectNodes /root/$_array/$_name/text()]
                 # puts "  -> exist? ... [array names [namespace current]::$_array $_name]"
             set check_name [array names [namespace current]::$_array $_name]
             if { $check_name == {} } {
@@ -459,8 +451,26 @@
             # puts "    ... return new: $value"
             return $value            
     }
-
- 
+    #-------------------------------------------------------------------------
+        #  init Fork Configuration
+        #  ... 
+        #
+    proc add_forkSetting {_forkDOM} {
+            variable initDOM
+            set forkNode   [$initDOM selectNode Fork]
+            
+            if {$forkNode == {}} {
+                $initDOM appendXML [$_forkDOM asXML]
+            } else {
+                  # puts [$forkNode asXML]
+                $initDOM removeChild $forkNode
+                $forkNode delete
+                $initDOM appendXML [$_forkDOM asXML]
+            }
+              # puts "[[$initDOM selectNode Fork] asXML]"
+    }
+    #-------------------------------------------------------------------------
+       #  import templates to current project
     proc import_ProjectSubset {nodeRoot} {
                 # puts "[$nodeRoot asXML]"
                 
@@ -468,7 +478,8 @@
                     puts "    -------------------------------"
                     puts "    project::import_ProjectSubset"
                     
-            project::remove_tracing
+              # project::remove_tracing
+            
             set setValue_Command    {}
             set setValue_Command_OK {}
                 
@@ -504,16 +515,14 @@
 
             }
             
-            project::add_tracing
+              # project::add_tracing
+            
             if {$setValue_Command_OK != {}} {
                 eval $setValue_Command
             }
             # eval [format "setValue %s(%s) value $nodeValue" $_array $_nameValue]
 
     }
-    
-    
-    
     #-------------------------------------------------------------------------
         #  check File Version 3.1 -> 3.2
         #    
@@ -531,8 +540,6 @@
                     puts "\n"
                     puts "    -------------------------------"
                     puts "    project::update_Project"
-                    # puts "       RELEASE_Version:  $::APPL_Config(RELEASE_Version)"
-                    # puts "       RELEASE_Revision: $::APPL_Config(RELEASE_Revision)"
                     puts ""
                     puts "       project_Version:  $project_Version \n"
             
@@ -607,14 +614,12 @@
     
             variable postUpdate
             variable projectDOM
+            variable resultNode
             
-                # set domProject $::APPL_Config(root_ProjectDOM)
-            # set domProject $projectDOM
-            
-                    puts "\n"
-                    puts "       -------------------------------"
-                    puts "          project::update_ProjectVersion"
-                    puts "             Version:   $Version"
+            puts "\n"
+            puts "       -------------------------------"
+            puts "          project::update_ProjectVersion"
+            puts "             Version:   $Version"
             
             switch -exact $Version {
             
@@ -1360,20 +1365,19 @@
                                     $parentNode removeChild $node
                                     $node delete                                    
                             } 
-                            set templateRoot    [ lib_file::get_XMLContent $::APPL_Config(TemplateInit)]
-                            set resultNode      [ $templateRoot selectNode /root/Result]
-                                # puts "[$resultNode asXML]"
+                            # -- 0.14 -- handled by update_projectResult
+                                #set templateRoot    [ lib_file::get_XMLContent $::APPL_Config(TemplateInit)]
+                                #set resultNode      [ $templateRoot selectNode /root/Result]
+                            puts "[$resultNode asXML]"
                             foreach child       [ $resultNode childNodes ] {
                                     catch {$parentNode appendXML [$child asXML]}
                             }
-                            
+                                
                             
                                 #
                                 # -- update values
                                 #
-                            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                             dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                        
                         }
                        
                                 
@@ -1414,13 +1418,6 @@
                                     puts "                           ... update File ... /root/Result/Position/SaddleNose"
                                     $parentNode appendXML "<SaddleNose>0.00,0.00</SaddleNose>"
                             }
-                                
-                                #
-                                # -- update values
-                                #
-                            # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
-                        
                         }                            
                 {3.3.03} {
                                 #
@@ -1446,14 +1443,6 @@
                                     puts "                           ... update File ... /root/Result/Length/SeatTube/VirtualLength"
                                     $parentNode appendXML "<VirtualLength>0.00</VirtualLength>"
                             }
-
-                                
-                                #
-                                # -- update values
-                                #
-                            # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
-                        
                         }                            
                 {3.3.04} {    
                                 #
@@ -1481,13 +1470,6 @@
                                                                 <File>etc:logo/rattleCAD.svg</File>
                                                            </Logo>"
                             }
-
-                                #
-                                # -- update values
-                                #
-                            # dict set postUpdate     Result      Angle/SeatTube/Direction    $value(ST_Angle) 
-                            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
-                        
                         }                            
                 {3.3.05} {    
                                 #
@@ -1684,7 +1666,6 @@
                             set node [$projectDOM selectNode /root/Project/rattleCADVersion/text()]
                             puts " ... [$node nodeValue] .."
                             puts " ... [$node asText] .."
-                            $node nodeValue [format "%s.%s" $::APPL_Config(RELEASE_Version) $::APPL_Config(RELEASE_Revision)] 
                             return
                         }
 

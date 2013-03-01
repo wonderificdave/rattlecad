@@ -37,7 +37,7 @@
  #
  #
 
- package provide bikeGeometry 0.13
+ package provide bikeGeometry 0.14
 
  namespace eval bikeGeometry {
 
@@ -105,15 +105,28 @@
             #-------------------------------------------------------------------------
                 #  dataprovider of create_selectbox
             variable _listBoxValues
-        
+         
     #-------------------------------------------------------------------------
         #  load newProject
         #
         #  ... loads a new project given by a XML-Project as rootNode
         #
     proc set_newProject {_projectDOM} {
-                  
-            
+
+            # --- report Fork Settings ------------------
+                #                  
+            set forkNode   [$project::initDOM selectNode Fork/_bikeGeometry_default_]  
+            if {$forkNode != {}} {
+                puts ""
+                puts "        -- <W> ----------------------------------------------------"
+                puts "           <W> bikeGeometry:"
+                puts "           <W>       ...  using default Fork Settings"
+                puts "           <W>         see -> \$bikeGeometry::initDOM /root/Fork"
+                puts "           <W>"
+                puts "" 
+            }      
+    
+                     
             # --- set the Geometry DOM Object -----------
                 #
             set project::projectDOM $_projectDOM
@@ -146,20 +159,32 @@
                     set valueDict   [dict get $postUpdate $key]
                     foreach valueKey [dict keys $valueDict] {
                         puts "\n      -------------------------------"
-                        puts "          postUpdate:   $key - $valueKey [dict get $valueDict $valueKey]"
-                        bikeGeometry::set_projectValue $key/$valueKey [dict get $valueDict $valueKey] update
+                        set newValue [dict get $valueDict $valueKey]
+                        puts "          postUpdate:   $key - $valueKey -> $newValue"
+                        bikeGeometry::set_Value $key/$valueKey $newValue update
                     }
                         # project::pdict $valueDict
             }
-
+            return
     }
-    
+    #-------------------------------------------------------------------------
+        #  get current projectDOM as XML
     proc get_projectXML {} {
             return [project::runTime_2_dom]
     }
     
-
-
+    #-------------------------------------------------------------------------
+        #  init Fork Configuration
+        #  ... 
+        #
+    proc set_forkConfig {_forkDOM} {
+            project::add_forkSetting $_forkDOM
+    }
+    #-------------------------------------------------------------------------
+        #  get Value
+    proc get_Value {xpath type args} {
+        return [project::getValue $xpath $type $args]
+    }
     #-------------------------------------------------------------------------
         #  return all geometry-values to create specified tube in absolute position
     proc get_Object {object index {centerPoint {0 0}} } {
@@ -287,20 +312,457 @@
                         }
             }
     }
-
-
     #-------------------------------------------------------------------------
-        #  get Value
-    proc get_Value {xpath type args} {
-        return [project::getValue $xpath $type $args]
+        #  sets and format Value
+    proc set_projectValue_renamed {xpath value {mode {update}}} {}
+    #-------------------------------------------------------------------------
+        #  sets and format Value
+    proc set_Value {xpath value {mode {update}}} {
+     
+               # xpath: e.g.:Custom/BottomBracket/Depth
+               
+             variable         _updateValue
+         
+             #puts ""
+             #puts "   -------------------------------"
+             #puts "    setValue"
+             #puts "       xpath:           $xpath"
+             #puts "       value:           $value"
+             #puts "       mode:            $mode"
+         
+             foreach {_array _name path} [project::unifyKey $xpath] break
+                 # puts "     ... $_array  $_name"
+         
+         
+             # --- handle xpath values ---
+                 # puts "  ... mode: $mode"
+                 
+             # --- exception on mode == force ---
+                 #  
+             if {$mode == {force}} { 
+                 eval set [format "project::%s(%s)" $_array $_name] $value
+                 bikeGeometry::set_base_Parameters
+                 return $value
+             }              
+                 
+             # --- exception for Result - Values ---
+                 #  ... loop over set_resultParameter
+                 #    if there is a Result to set
+                 #             
+             if {$mode == {update}} {
+                 # puts "  ... setValue: $xpath"
+                 switch -glob $_array {
+                     {Result} {
+                         set newValue [ string map {, .} $value]
+                         # puts "\n  ... setValue: ... Result/..."
+                         set_resultParameter $_array $_name $newValue
+                         return
+                     }
+                     default {}
+                 }
+             }
+         
+             # --- all the exceptions done ---
+                 # on int list values like defined
+                 # puts "<D> $xpath"
+             switch $xpath {
+                 {Component/Wheel/Rear/RimDiameter} -
+                 {Component/Wheel/Front/RimDiameter} -
+                 {Lugs/RearDropOut/Direction} {
+                         set newValue    $value
+                         project::setValue [format "%s(%s)" $_array $_name] value $newValue
+                         bikeGeometry::set_base_Parameters  
+                         return $newValue
+                     }
+         
+                 {Component/CrankSet/ChainRings} -
+                 {Component/Wheel/Rear/FirstSprocket} {
+                         set newValue [ string map {, .} $value]
+                             # puts " <D> $newValue"
+                         if {$mode == {update}} {
+                             project::setValue [format "%s(%s)" $_array $_name] value $newValue
+                         }
+                         bikeGeometry::set_base_Parameters  
+                         return $newValue
+                     }                         
+         
+                 default { }
+             }
+         
+         
+         # --- exceptions without any format-checks
+             # on int list values like defined
+             # puts "<D> $xpath"
+        
+                 # --- set new Value
+             set newValue [ string map {, .} $value]
+                 # --- check Value --- ";" ... like in APPL_RimList
+             set newValue [lindex [split $newValue ;] 0]
+                 # --- check Value --- update
+             if {$mode == {update}} {
+                 set _updateValue($xpath) $newValue
+             }
+         
+         
+             # --- update or return on errorID
+             set checkValue {mathValue}
+             if {[file dirname $xpath] == {Rendering}} {
+                     # puts "               ... [file dirname $xpath] "
+                 set checkValue {}
+             }
+             if {[file tail $xpath]    == {File}     } {
+                     # puts "               ... [file tail    $xpath] "
+                 set checkValue {}
+             }
+         
+             if {[lindex [split $xpath /] 0] == {Rendering}} {
+                 set checkValue {}
+                 puts "   ... Rendering: $xpath "
+                 puts "        ... $value [file tail $xpath]"
+             }
+         
+             puts "               ... checkValue: $checkValue "
+         
+             # --- update or return on errorID
+             if {$checkValue == {mathValue} } {
+                 if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
+                     puts "\n$errorID\n"
+                     return
+                 } else {
+                     set newValue [format "%.3f" $newValue]
+                 }
+             }
+         
+             # ---------------------------
+                 #  just return Parameter if required 
+                 #       ... by mode: format
+                 #
+             if {$mode != {update}} {
+                 return $newValue
+             }
+             
+    
+         
+             # --------------------------------------
+                 #  at least update Geometry
+                 #   ... if not left earlier
+                 #
+             project::setValue [format "%s(%s)" $_array $_name] value $newValue
+             bikeGeometry::set_base_Parameters  
+             puts "" 
+                 # puts "    setValue:  $argv\n" 
+             puts "                [format "%s(%s)" $_array $_name] vs $xpath "
+             return $newValue
     }
     #-------------------------------------------------------------------------
-        #  set Value
-    proc setValue {xpath value {mode {update}}} {
-        return [bikeGeometry::set_projectValue $xpath $value $mode]
+       #  handle modification on /root/Result/... values
+    proc set_resultParameter {_array _name value} {
+    
+            variable         _updateValue
+        
+            puts ""
+            puts "   -------------------------------"
+            puts "    set_resultParameter"
+            puts "       _array:          $_array"
+            puts "       _name:           $_name"
+            puts "       value:           $value"
+        
+            variable BottomBracket
+            variable HandleBar
+            variable Saddle
+            variable SeatPost
+            variable SeatTube
+            variable HeadTube
+            variable FrontWheel
+            variable Fork
+            variable Stem
+        
+        
+            set xpath "$_array/$_name"
+            puts "       xpath:           $xpath"
+        
+            switch -glob $_name {
+        
+                {Length/BottomBracket/Height}    {
+                      # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                      set oldValue                $project::Result(Length/BottomBracket/Height)
+                      # 3.2.76 set oldValue       $project::Temporary(BottomBracket/Height)
+                      set newValue                [set_Value $xpath  $value format]
+                      set _updateValue($xpath)    $newValue
+                      set delta                   [expr $newValue - $oldValue]
+                        # puts "   ... oldValue:   $oldValue"
+                        # puts "   ... newValue:   $newValue"
+                        # puts "   ...... delta:   $delta"
+              
+                        # --- update value
+                        #
+                      set xpath                   Custom/BottomBracket/Depth
+                      set oldValue                $project::Custom(BottomBracket/Depth)
+                      set newValue                [expr $oldValue - $delta ]
+                      set_Value                   $xpath     $newValue
+                      return
+                  }
+              
+                {Angle/HeadTube/TopTube} {
+                      # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                      set HeadTopTube_Angle       [set_Value $xpath  $value format]
+                      set _updateValue($xpath)    $HeadTopTube_Angle
+                        # puts "          \$HeadTopTube_Angle  = $HeadTopTube_Angle"
+                  
+                        # --- update value
+                        #
+                      set HeadTube_Angle          $project::Custom(HeadTube/Angle)
+                      set value                   [expr $HeadTopTube_Angle - $HeadTube_Angle]
+                      set xpath                   Custom/TopTube/Angle
+                      set_Value                   $xpath     $value
+                      return
+                  }
+              
+                {Angle/SeatTube/Direction} {
+                          # puts "\n"
+                          # puts "  ... Angle/SeatTube/Direction comes here: $value"
+                          # puts ""
+                      set oldValue        $project::Result(Angle/SeatTube/Direction)
+                      set SP_Setback      [project::getValue Component(SeatPost/Setback)   value]
+                      set length_Setback  [expr $SP_Setback * sin([vectormath::rad $value])]
+                      set height_Setback  [expr $SP_Setback * cos([vectormath::rad $value])]
+                        # puts "    -> value $value"
+                        # puts "    -> oldValue $oldValue"
+                        # puts "    -> SP_Setback $SP_Setback"
+                        # puts "    -> length_Setback $length_Setback"
+                        # puts "    -> height_Setback $height_Setback"
+                      set ST_height       [expr [project::getValue Personal(Saddle_Height)   value] - [project::getValue Component(Saddle/Height)   value] + $height_Setback]
+                      set length_SeatTube [expr $ST_height / tan([vectormath::rad $value])]
+                        # puts "    -> ST_height $ST_height"
+                        # puts "    -> length_SeatTube $length_SeatTube"
+                  
+                        # --- update value
+                        #
+                      set value [expr $length_Setback + $length_SeatTube]
+                      set xpath                   Personal/Saddle_Distance
+                      set_Value                   $xpath     $value
+                      return
+                   }
+              
+                {Length/SeatTube/VirtualLength} {
+                          # puts "  -> Length/SeatTube/VirtualLength"
+                          # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+              
+                        # SeatTube Offset
+                        #
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
+                      set newValue                [set_Value $xpath  $value format]
+                      set _updateValue($xpath)    $newValue
+                      set delta                   [expr $newValue - $oldValue]
+              
+                      set offsetSeatTube          [vectormath::rotateLine {0 0} $delta [expr 180 - $project::Result(Angle/SeatTube/Direction)]]
+                      set offsetSeatTube_x        [lindex $offsetSeatTube 0]
+                        # puts "   -> $offsetSeatTube"
+                  
+                        # HeadTube Offset - horizontal
+                        #
+                      set deltaHeadTube           [expr [lindex $offsetSeatTube 1] / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+                      set offsetHeadTube_x        [expr [lindex $offsetSeatTube 1] / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+              
+                        # HeadTube Offset - horizontal & length
+                        #
+                        # project::remove_tracing ; #because of setting more then one parameter at once
+                        #
+                      set xpath                   Personal/HandleBar_Distance
+                      set newValue                [expr $HandleBar(Distance)    + $offsetHeadTube_x + $offsetSeatTube_x]
+                      set_Value                   $xpath     $newValue
+                        #
+                      set xpath                   FrameTubes/HeadTube/Length
+                      set newValue                [expr $HeadTube(Length)    + $deltaHeadTube]
+                      set_Value                   $xpath     $newValue
+                        #
+                        # project::add_tracing
+                      set_Value                   $xpath     $newValue
+                        #
+                      return
+                }
+              
+                {Length/HeadTube/ReachLength} {
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
+                      set newValue                [set_Value $xpath  $value format]
+                      set _updateValue($xpath)    $newValue
+                      set delta                   [expr $newValue - $oldValue]
+              
+                      set xpath                   Personal/HandleBar_Distance
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
+                      set newValue                [expr $HandleBar(Distance)    + $delta]
+                      set_Value                   $xpath     $newValue
+                      return
+                }
+              
+                {Length/HeadTube/StackHeight} {
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
+                      set newValue                [set_Value $xpath  $value format]
+                      set _updateValue($xpath)    $newValue
+                      set delta                   [expr $newValue - $oldValue]
+              
+                      set deltaHeadTube           [expr $delta / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+                      set offsetHeadTube_x        [expr $delta / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
+              
+                        # puts "==================="
+                        # puts "    delta             $delta"
+                        # puts "    deltaHeadTube     $deltaHeadTube"
+                        # puts "    offsetHeadTube_x  $offsetHeadTube_x"
+                  
+                        #
+                        # project::remove_tracing ; #because of setting two parameters at once
+                        #
+                      set xpath                   Personal/HandleBar_Height
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
+                      set newValue                [expr $HandleBar(Height)    + $delta]
+                      set_Value                   $xpath      $newValue
+                        #
+                        # project::add_tracing
+                        #
+                      set xpath                   FrameTubes/HeadTube/Length
+                      set oldValue                $project::FrameTubes(HeadTube/Length)
+                      set newValue                [expr $project::FrameTubes(HeadTube/Length) + $deltaHeadTube ]
+                      set_Value                   $xpath     $newValue
+                    #
+                      return
+                }
+              
+                {Length/TopTube/VirtualLength}            -
+                {Length/FrontWheel/horizontal} {
+                      # puts "  -> Length/TopTube/VirtualLength"
+                      # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
+                      # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
+                      set newValue                [set_Value $xpath  $value format]
+                      set _updateValue($xpath)    $newValue
+                      set delta                   [expr $newValue - $oldValue]
+              
+                    # --- set HandleBar(Distance)
+                    #
+                      set newValue                [ expr $HandleBar(Distance)    + $delta ]
+                      set xpath                   Personal/HandleBar_Distance
+                      set_Value $xpath     $newValue
+                      return
+                  }
+              
+                {Length/RearWheel/horizontal} {
+                          # puts "  -> Length/TopTube/VirtualLength"
+                          # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                          #set oldValue               [project::getValue [format "%s(%s)" $_array $_name] value]
+                          # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
+                      set newValue                [set_Value $xpath  $value format]
+                      set _updateValue($xpath)    $newValue
+                          #set delta                  [expr $newValue - $oldValue]
+                      set bbDepth                 $project::Custom(BottomBracket/Depth)
+              
+                    # --- set HandleBar(Distance)
+                    #
+                      set newValue                [ expr { sqrt( $newValue * $newValue + $bbDepth * $bbDepth ) } ]
+                      set xpath                   Custom/WheelPosition/Rear
+                      set_Value                   $xpath     $newValue
+                      return
+                  }
+              
+                {Length/FrontWheel/diagonal}    {
+                        # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
+                        # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
+                      set newValue                [set_Value $xpath  $value format]
+                      set _updateValue($xpath)    $newValue
+                        # puts "                 <D> ... $oldValue $newValue"
+              
+                    # --- set HandleBar(Angle)
+                    #
+                      set vect_01     [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]
+                      set vect_02     [ expr $vect_01 - $Fork(Rake) ]
+              
+                      set FrontWheel(Distance_X_tmp)  [ expr { sqrt( $newValue * $newValue - $FrontWheel(Distance_Y) * $FrontWheel(Distance_Y) ) } ]
+                      set FrontWheel(Position_tmp)    [ list $FrontWheel(Distance_X_tmp) $FrontWheel(Distance_Y)]
+              
+                      set help_03   [ vectormath::cathetusPoint    $HandleBar(Position)    $FrontWheel(Position_tmp)    $vect_02  close ]
+                      set vect_HT   [ vectormath::parallel      $help_03                  $FrontWheel(Position_tmp)    $Fork(Rake) ]
+                        # puts "                 <D> ... $vect_HT"
+              
+                      set help_01  [ lindex $vect_HT 0]
+                      set help_02  [ lindex $vect_HT 1]
+                      set help_03  [list -200 [ lindex $help_02 1] ]
+              
+                      set newValue                [vectormath::angle    $help_01 $help_02 $help_03 ]
+                      set xpath                   Custom/HeadTube/Angle
+                      set_Value                   $xpath     $newValue
+                      return
+                  }
+              
+                {Length/Saddle/Offset_HB}    {
+                        # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
+                      set newValue                [set_Value $xpath  $value format ]
+                      set _updateValue($xpath)    $newValue
+              
+                      set delta                   [expr $oldValue - $newValue ]
+                        # puts "          $newValue - $oldValue = $delta"
+              
+                        # --- set HandleBar(Distance)
+                        #
+                      set newValue                [expr $HandleBar(Height)    + $delta ]
+                      set xpath                   Personal/HandleBar_Height
+                      set_Value                   $xpath     $newValue
+                      return
+                  }
+              
+                {Length/Saddle/Offset_BB_ST}    {
+                        # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                      set newValue                [set_Value $xpath  $value format ]
+                      set height                  [project::getValue [format "%s(%s)" Personal Saddle_Height] value ]
+                      set angle                   [vectormath::dirAngle {0 0} [list $newValue $height] ]
+              
+                      set_resultParameter Result Angle/SeatTube/Direction $angle
+              
+                        # puts "   $newValue / $height -> $angle"
+                      return
+                  }
+              
+                {Length/Saddle/Offset_BB_Nose}    {
+                        # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
+                      set newValue                [set_Value $xpath  $value format ]
+                      set delta                   [expr -1.0 * ($newValue - $oldValue) ]
+              
+                        # --- set HandleBar(Distance)
+                        #
+                      set newValue                [expr $project::Component(Saddle/LengthNose) + $delta ]
+                      set xpath                   Component/Saddle/LengthNose
+                      set_Value                   $xpath     $newValue
+                      return
+                  }
+              
+              
+              
+              
+                default {
+                      puts "\n"
+                      puts "     WARNING!"
+                      puts "\n"
+                      puts "        ... set_resultParameter:  "
+                      puts "                 $xpath"
+                      puts "            ... is not registered!"
+                      puts "\n"
+                      return
+                  }
+            }
+    
     }
-
-
+    #-------------------------------------------------------------------------
+       #  trace/update Project
+    proc trace_Project {varname key operation} {
+            if {$key != ""} {
+        	    set varname ${varname}($key)
+        	}
+            upvar $varname var
+            # value is 889 (operation w)
+            # value is 889 (operation r)
+            puts "trace_Prototype: (operation: $operation) $varname is $var "
+    }
     #-------------------------------------------------------------------------
         #  add vector to list of coordinates
     proc coords_flip_y {coordlist} {
@@ -327,464 +789,11 @@
     }
     
     #-------------------------------------------------------------------------
-        #  sets and format Value
-    proc set_projectValue {xpath value {mode {update}}} {
-     
-         # xpath: e.g.:Custom/BottomBracket/Depth
-         variable         _updateValue
-     
-         puts ""
-         puts "   -------------------------------"
-         puts "    set_projectValue"
-         puts "       xpath:           $xpath"
-         puts "       value:           $value"
-         puts "       mode:            $mode"
-     
-           # set _array     [lindex [split $xpath /] 0]
-           # set _name     [string range $xpath [string length $_array/] end]
-         foreach {_array _name path} [project::unifyKey $xpath] break
-           # puts "     ... $_array  $_name"
-     
-     
-         # --- handle xpath values ---
-             # puts "  ... mode: $mode"
-             
-             
-         # --- exception for Result - Values ---
-             #  ... loop over set_resultParameter
-             #    if there is a Result to set
-             #             
-         if {$mode == {update}} {
-             # puts "  ... set_projectValue: $xpath"
-             switch -glob $_array {
-                 {Result} {
-                     set newValue [ string map {, .} $value]
-                     # puts "\n  ... set_projectValue: ... Result/..."
-                     set_resultParameter $_array $_name $newValue
-                     return
-                 }
-                 default {}
-             }
-         }
-     
-     
-         # --- all the exceptions done ---
-             # on int list values like defined
-             # puts "<D> $xpath"
-         switch $xpath {
-             {Component/Wheel/Rear/RimDiameter} -
-             {Component/Wheel/Front/RimDiameter} -
-             {Lugs/RearDropOut/Direction} {
-                     set newValue    $value
-                     project::setValue [format "%s(%s)" $_array $_name] value $newValue
-                     bikeGeometry::set_base_Parameters  
-                     return $newValue
-                 }
-     
-             {Component/CrankSet/ChainRings} -
-             {Component/Wheel/Rear/FirstSprocket} {
-                     set newValue [ string map {, .} $value]
-                         # puts " <D> $newValue"
-                     if {$mode == {update}} {
-                         project::setValue [format "%s(%s)" $_array $_name] value $newValue
-                     }
-                     bikeGeometry::set_base_Parameters  
-                     return $newValue
-                 }                         
-     
-             default { }
-         }
-     
-     
-     # --- exceptions without any format-checks
-         # on int list values like defined
-         # puts "<D> $xpath"
-    
-             # --- set new Value
-         set newValue [ string map {, .} $value]
-             # --- check Value --- ";" ... like in APPL_RimList
-         set newValue [lindex [split $newValue ;] 0]
-             # --- check Value --- update
-         if {$mode == {update}} {
-             set _updateValue($xpath) $newValue
-         }
-     
-     
-         # --- update or return on errorID
-         set checkValue {mathValue}
-         if {[file dirname $xpath] == {Rendering}} {
-                 # puts "               ... [file dirname $xpath] "
-             set checkValue {}
-         }
-         if {[file tail $xpath]    == {File}     } {
-                 # puts "               ... [file tail    $xpath] "
-             set checkValue {}
-         }
-     
-         if {[lindex [split $xpath /] 0] == {Rendering}} {
-             set checkValue {}
-             puts "   ... Rendering: $xpath "
-             puts "        ... $value [file tail $xpath]"
-         }
-     
-         puts "               ... checkValue: $checkValue "
-     
-         # --- update or return on errorID
-         if {$checkValue == {mathValue} } {
-             if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
-                 puts "\n$errorID\n"
-                 return
-             } else {
-                 set newValue [format "%.3f" $newValue]
-             }
-         }
-     
-         # ---------------------------
-             #  just return Parameter if required 
-             #       ... by mode: format
-             #
-         if {$mode != {update}} {
-             return $newValue
-         }
-         
-
-     
-         # --------------------------------------
-             #  at least update Geometry
-             #   ... if not left earlier
-             #
-         project::setValue [format "%s(%s)" $_array $_name] value $newValue
-         bikeGeometry::set_base_Parameters  
-         puts "" 
-         # puts "    set_projectValue:  $argv\n" 
-         puts "                [format "%s(%s)" $_array $_name] vs $xpath "
-         return $newValue
-
-     
-    }
-    #-------------------------------------------------------------------------
-       #  handle modification on /root/Result/... values
-    proc set_resultParameter {_array _name value} {
-    
-        variable         _updateValue
-    
-        puts ""
-        puts "   -------------------------------"
-        puts "    set_resultParameter"
-        puts "       _array:          $_array"
-        puts "       _name:           $_name"
-        puts "       value:           $value"
-    
-        variable BottomBracket
-        variable HandleBar
-        variable Saddle
-        variable SeatPost
-        variable SeatTube
-        variable HeadTube
-        variable FrontWheel
-        variable Fork
-        variable Stem
-    
-    
-        set xpath "$_array/$_name"
-        puts "       xpath:           $xpath"
-    
-        switch -glob $_name {
-    
-            {Length/BottomBracket/Height}    {
-                  # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                  set oldValue                $project::Result(Length/BottomBracket/Height)
-                  # 3.2.76 set oldValue       $project::Temporary(BottomBracket/Height)
-                  set newValue                [set_projectValue $xpath  $value format]
-                  set _updateValue($xpath)    $newValue
-                  set delta       [expr $newValue - $oldValue]
-                    # puts "   ... oldValue:   $oldValue"
-                    # puts "   ... newValue:   $newValue"
-                    # puts "   ...... delta:   $delta"
-          
-                # --- update value
-                #
-                  set xpath                   Custom/BottomBracket/Depth
-                  set oldValue                $project::Custom(BottomBracket/Depth)
-                  set newValue                [ expr $oldValue - $delta ]
-                  set_projectValue $xpath     $newValue
-                  return
-              }
-          
-            {Angle/HeadTube/TopTube} {
-                  # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                  set HeadTopTube_Angle       [ set_projectValue $xpath  $value format]
-                  set _updateValue($xpath)    $HeadTopTube_Angle
-                # puts "          \$HeadTopTube_Angle  = $HeadTopTube_Angle"
-          
-                # --- update value
-                #
-                  set HeadTube_Angle          $project::Custom(HeadTube/Angle)
-                  set value                    [ expr $HeadTopTube_Angle - $HeadTube_Angle]
-                  set xpath                    Custom/TopTube/Angle
-          
-                  set_projectValue $xpath     $value
-                  return
-              }
-          
-            {Angle/SeatTube/Direction} {
-                  # puts "\n"
-                  # puts "  ... Angle/SeatTube/Direction comes here: $value"
-                  # puts ""
-                  set oldValue        $project::Result(Angle/SeatTube/Direction)
-                  set SP_Setback      [project::getValue Component(SeatPost/Setback)   value]
-                  set length_Setback  [expr $SP_Setback * sin([vectormath::rad $value])]
-                  set height_Setback  [expr $SP_Setback * cos([vectormath::rad $value])]
-                # puts "    -> value $value"
-                # puts "    -> oldValue $oldValue"
-                # puts "    -> SP_Setback $SP_Setback"
-                # puts "    -> length_Setback $length_Setback"
-                # puts "    -> height_Setback $height_Setback"
-                  set ST_height       [expr [project::getValue Personal(Saddle_Height)   value] - [project::getValue Component(Saddle/Height)   value] + $height_Setback]
-                  set length_SeatTube [expr $ST_height / tan([vectormath::rad $value])]
-                # puts "    -> ST_height $ST_height"
-                # puts "    -> length_SeatTube $length_SeatTube"
-          
-                # --- update value
-                #
-                  set value [expr $length_Setback + $length_SeatTube]
-                  set xpath                   Personal/Saddle_Distance
-                  set_projectValue $xpath     $value
-                  return
-               }
-          
-            {Length/SeatTube/VirtualLength} {
-                  # puts "  -> Length/SeatTube/VirtualLength"
-                  # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-          
-                # SeatTube Offset
-                #
-                  set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                  set newValue                [set_projectValue $xpath  $value format]
-                  set _updateValue($xpath)    $newValue
-                  set delta                   [expr $newValue - $oldValue]
-          
-                  set offsetSeatTube          [vectormath::rotateLine {0 0} $delta [expr 180 - $project::Result(Angle/SeatTube/Direction)]]
-                  set offsetSeatTube_x        [lindex $offsetSeatTube 0]
-                # puts "   -> $offsetSeatTube"
-          
-                # HeadTube Offset - horizontal
-                #
-                  set deltaHeadTube           [expr [lindex $offsetSeatTube 1] / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-                  set offsetHeadTube_x        [expr [lindex $offsetSeatTube 1] / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-          
-                # HeadTube Offset - horizontal & length
-                #
-                  project::remove_tracing ; #because of setting more then one parameter at once
-                #
-                  set xpath                   Personal/HandleBar_Distance
-                  set newValue                [expr $HandleBar(Distance)    + $offsetHeadTube_x + $offsetSeatTube_x]
-                  set_projectValue $xpath     $newValue
-                #
-                  set xpath                   FrameTubes/HeadTube/Length
-                  set newValue                [expr $HeadTube(Length)    + $deltaHeadTube]
-                  set_projectValue $xpath     $newValue
-                #
-                  project::add_tracing
-                  set_projectValue $xpath      $newValue
-                #
-                  return
-            }
-          
-            {Length/HeadTube/ReachLength} {
-                  set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                  set newValue                [set_projectValue $xpath  $value format]
-                  set _updateValue($xpath)    $newValue
-                  set delta                   [expr $newValue - $oldValue]
-          
-                  set xpath                   Personal/HandleBar_Distance
-                  set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                  set newValue                [expr $HandleBar(Distance)    + $delta]
-                  set_projectValue $xpath     $newValue
-                  return
-            }
-          
-            {Length/HeadTube/StackHeight} {
-                  set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                  set newValue                [set_projectValue $xpath  $value format]
-                  set _updateValue($xpath)    $newValue
-                  set delta                   [expr $newValue - $oldValue]
-          
-                  set deltaHeadTube           [expr $delta / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-                  set offsetHeadTube_x        [expr $delta / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-          
-                # puts "==================="
-                # puts "    delta             $delta"
-                # puts "    deltaHeadTube     $deltaHeadTube"
-                # puts "    offsetHeadTube_x  $offsetHeadTube_x"
-          
-                #
-                  project::remove_tracing ; #because of setting two parameters at once
-                #
-                  set xpath                    Personal/HandleBar_Height
-                  set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                  set newValue                [expr $HandleBar(Height)    + $delta]
-                  set_projectValue $xpath      $newValue
-                #
-                  project::add_tracing
-                #
-                  set xpath                   FrameTubes/HeadTube/Length
-                  set oldValue                $project::FrameTubes(HeadTube/Length)
-                  set newValue                [expr $project::FrameTubes(HeadTube/Length) + $deltaHeadTube ]
-                  set_projectValue $xpath     $newValue
-                #
-                  return
-            }
-          
-            {Length/TopTube/VirtualLength}            -
-            {Length/FrontWheel/horizontal} {
-                  # puts "  -> Length/TopTube/VirtualLength"
-                  # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                  set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                  # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
-                  set newValue                [set_projectValue $xpath  $value format]
-                  set _updateValue($xpath)    $newValue
-                  set delta                   [expr $newValue - $oldValue]
-          
-                # --- set HandleBar(Distance)
-                #
-                  set newValue                [ expr $HandleBar(Distance)    + $delta ]
-                  set xpath                   Personal/HandleBar_Distance
-                  set_projectValue $xpath     $newValue
-                  return
-              }
-          
-            {Length/RearWheel/horizontal} {
-                  # puts "  -> Length/TopTube/VirtualLength"
-                  # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                  #set oldValue               [project::getValue [format "%s(%s)" $_array $_name] value]
-                  # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
-                  set newValue                [set_projectValue $xpath  $value format]
-                  set _updateValue($xpath)    $newValue
-                  #set delta                  [expr $newValue - $oldValue]
-                  set bbDepth                 $project::Custom(BottomBracket/Depth)
-          
-                # --- set HandleBar(Distance)
-                #
-                  set newValue                [ expr { sqrt( $newValue * $newValue + $bbDepth * $bbDepth ) } ]
-                  set xpath                   Custom/WheelPosition/Rear
-                  set_projectValue $xpath     $newValue
-                  return
-              }
-          
-            {Length/FrontWheel/diagonal}    {
-                # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                  set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
-                  set newValue                [set_projectValue $xpath  $value format]
-                  set _updateValue($xpath)    $newValue
-                # puts "                 <D> ... $oldValue $newValue"
-          
-                # --- set HandleBar(Angle)
-                #
-                  set vect_01     [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]
-                  set vect_02     [ expr $vect_01 - $Fork(Rake) ]
-          
-                  set FrontWheel(Distance_X_tmp)  [ expr { sqrt( $newValue * $newValue - $FrontWheel(Distance_Y) * $FrontWheel(Distance_Y) ) } ]
-                  set FrontWheel(Position_tmp)    [ list $FrontWheel(Distance_X_tmp) $FrontWheel(Distance_Y)]
-          
-                  set help_03   [ vectormath::cathetusPoint    $HandleBar(Position)    $FrontWheel(Position_tmp)    $vect_02  close ]
-                  set vect_HT   [ vectormath::parallel      $help_03                  $FrontWheel(Position_tmp)    $Fork(Rake) ]
-                # puts "                 <D> ... $vect_HT"
-          
-                  set help_01  [ lindex $vect_HT 0]
-                  set help_02  [ lindex $vect_HT 1]
-                  set help_03  [list -200 [ lindex $help_02 1] ]
-          
-                  set newValue                [ vectormath::angle    $help_01 $help_02 $help_03 ]
-                  set xpath                   Custom/HeadTube/Angle
-                  set_projectValue $xpath     $newValue
-                  return
-              }
-          
-            {Length/Saddle/Offset_HB}    {
-                  # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                  set oldValue               [ project::getValue [format "%s(%s)" $_array $_name] value ]
-                  set newValue               [ set_projectValue $xpath  $value format ]
-                  set _updateValue($xpath)   $newValue
-          
-                  set delta                    [ expr $oldValue - $newValue ]
-                    # puts "          $newValue - $oldValue = $delta"
-          
-                # --- set HandleBar(Distance)
-                #
-                  set newValue                [ expr $HandleBar(Height)    + $delta ]
-                  set xpath                   Personal/HandleBar_Height
-                  set_projectValue $xpath     $newValue
-                  return
-              }
-          
-            {Length/Saddle/Offset_BB_ST}    {
-                  # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                  set newValue                [ set_projectValue $xpath  $value format ]
-                  set height                  [ project::getValue [format "%s(%s)" Personal Saddle_Height] value ]
-                  set angle                   [ vectormath::dirAngle {0 0} [list $newValue $height] ]
-          
-                  set_resultParameter Result Angle/SeatTube/Direction $angle
-          
-                # puts "   $newValue / $height -> $angle"
-                  return
-              }
-          
-            {Length/Saddle/Offset_BB_Nose}    {
-                  # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                  set oldValue                [ project::getValue [format "%s(%s)" $_array $_name] value ]
-                  set newValue                [ set_projectValue $xpath  $value format ]
-                  set delta                   [ expr -1.0 * ($newValue - $oldValue) ]
-          
-                # --- set HandleBar(Distance)
-                #
-                  set newValue                [ expr $project::Component(Saddle/LengthNose) + $delta ]
-                  set xpath                   Component/Saddle/LengthNose
-                  set_projectValue $xpath     $newValue
-                  return
-              }
-          
-          
-          
-          
-            default {
-                  puts "\n"
-                  puts "     WARNING!"
-                  puts "\n"
-                  puts "        ... set_resultParameter:  "
-                  puts "                 $xpath"
-                  puts "            ... is not registered!"
-                  puts "\n"
-                  return
-              }
-        }
-    
-    }
-    #-------------------------------------------------------------------------
-       #  trace/update Project
-    proc trace_Project {varname key operation} {
-        if {$key != ""} {
-    	    set varname ${varname}($key)
-    	    }
-        upvar $varname var
-        # value is 889 (operation w)
-        # value is 889 (operation r)
-        puts "trace_Prototype: (operation: $operation) $varname is $var "
-    }
-    
-    
-    
-    
-    
-    #-------------------------------------------------------------------------
         #  return project attributes
     proc project_attribute {attribute } {
             variable Project
             return $Project($attribute)
     }
-
-
 
  }
 
