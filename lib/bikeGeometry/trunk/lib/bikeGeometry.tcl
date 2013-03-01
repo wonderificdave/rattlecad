@@ -37,7 +37,7 @@
  #
  #
 
- package provide bikeGeometry 0.14
+ package provide bikeGeometry 0.15
 
  namespace eval bikeGeometry {
 
@@ -115,8 +115,8 @@
 
             # --- report Fork Settings ------------------
                 #                  
-            set forkNode   [$project::initDOM selectNode Fork/_bikeGeometry_default_]  
-            if {$forkNode != {}} {
+            set _forkDOM   [$project::initDOM selectNode Fork/_bikeGeometry_default_]  
+            if {$_forkDOM != {}} {
                 puts ""
                 puts "        -- <W> ----------------------------------------------------"
                 puts "           <W> bikeGeometry:"
@@ -165,7 +165,7 @@
                     }
                         # project::pdict $valueDict
             }
-            return
+            return [project::runTime_2_dom]
     }
     #-------------------------------------------------------------------------
         #  get current projectDOM as XML
