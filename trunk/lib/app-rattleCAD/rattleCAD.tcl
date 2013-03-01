@@ -250,7 +250,7 @@
         puts "     ... TemplateInit      $::APPL_Config(TemplateInit)"
             
         
-        set ::APPL_Config(root_ProjectDOM)    [ lib_file::get_XMLContent     $::APPL_Config(TemplateInit) ]
+        set ::APPL_Config(root_ProjectDOM)    [lib_file::get_XMLContent     $::APPL_Config(TemplateInit)]
           
         proc __unused {} {
                 # -- status messages --------
@@ -376,9 +376,8 @@
         
         
             # --------------------------------------------
-            #    create custom base Parameters
+            #    create project Object
         bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
-            # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
           
           
             # --------------------------------------------

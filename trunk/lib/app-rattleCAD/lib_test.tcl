@@ -300,8 +300,8 @@
                    set xPath       [lindex $myValues($arrayIndex) 0]
                    set paramValue  [lindex $myValues($arrayIndex) $listIndex]
                    puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
-                   projectUpdate::set_Value $xPath $paramValue
-                       # bikeGeometry::set_Value $xPath $paramValue
+                       # projectUpdate::set_Value $xPath $paramValue
+                   bikeGeometry::set_Value $xPath $paramValue
                    incr arrayIndex 
                }
                cv_custom::update [lib_gui::current_canvasCAD] keep

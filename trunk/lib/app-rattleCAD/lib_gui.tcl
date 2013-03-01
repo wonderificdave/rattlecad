@@ -733,9 +733,6 @@
        #
     proc notebook_exportSVG {printDir {postEvent {open}}} {
             variable noteBook_top
-            
-                ## -- read from domConfig
-            # remove 3.2.70 ;# set domConfig $::APPL_Config(root_ProjectDOM)
 
                 # --- get currentTab
             set currentTab     [ $noteBook_top select ]
@@ -781,9 +778,6 @@
        #
     proc notebook_exportDXF {printDir {postEvent {open}}} {
             variable noteBook_top
-            
-                ## -- read from domConfig
-            # remove 3.2.70 ;# set domConfig $::APPL_Config(root_ProjectDOM)
 
                 # --- get currentTab
             set currentTab     [ $noteBook_top select ]

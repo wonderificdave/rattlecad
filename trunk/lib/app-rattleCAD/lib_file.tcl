@@ -82,7 +82,6 @@
             set ::APPL_Config(root_ProjectDOM) [lib_file::get_XMLContent $fileName show]
                 #
             bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
-                #  bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                 
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             set_window_title $fileName
@@ -126,12 +125,6 @@
                     puts "         ... version:    $rattleCAD_Version"
 
                     bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
-                        # set project::projectDOM $::APPL_Config(root_ProjectDOM)
-                        # set postUpdate [ project::update_Project ]
-                        # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
-                            #
-                        #foreach key [dict keys $postUpdate] 
-                                  # puts " -> $key" ... 
                         
                     set ::APPL_Config(PROJECT_File) $fileName
                     set ::APPL_Config(PROJECT_Save) [clock milliseconds]
@@ -151,6 +144,12 @@
             }
                 #
             lib_gui::open_configPanel  refresh
+            
+                # -- fill tree
+                #
+            lib_cfg_report::fillTree [bikeGeometry::get_projectXML] root
+
+
             
                 #
             puts "\n"
@@ -176,7 +175,6 @@
                 set ::APPL_Config(root_ProjectDOM)     [lib_file::get_XMLContent $template_file show]
                     #
                 bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
-                    #  bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
                     #
                 set ::APPL_Config(PROJECT_Name)     "Template $type"
                 set ::APPL_Config(PROJECT_File)     "Template $type"  
@@ -184,7 +182,7 @@
                     # puts " <D> -> \$::APPL_Config(PROJECT_Name)  $::APPL_Config(PROJECT_Name)"
                     # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
                     #
-	        lib_gui::notebook_updateCanvas
+	        lib_gui::notebook_updateCanvas force
 	            #
 	        set_window_title $::APPL_Config(PROJECT_Name)
             } else {
@@ -193,6 +191,10 @@
 
                 #
             lib_gui::open_configPanel  refresh
+            
+                # -- fill tree
+                #
+            lib_cfg_report::fillTree [bikeGeometry::get_projectXML] root
     }
 
 
@@ -275,9 +277,6 @@
                 puts "       ... saveProject_xml - ... initialFile: \"$initialFile\""
 
 
-                # -- read from domConfig
-                # set domConfig $::APPL_Config(root_ProjectDOM)
-
             switch $mode {
                 {save}        {
                                 # set fileName    [file join $::APPL_Config(USER_Dir) $initialFile]
@@ -313,15 +312,9 @@
             # --- set xml-File Attributes
             set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
             set project::Project(rattleCADVersion)     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
-                # [ $domConfig selectNodes /root/Project/modified/text()             ]     nodeValue     [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-                # [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]     nodeValue     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
-
+ 
                 # -- read from domConfig
             set domConfig [project::runTime_2_dom]               
-                # project::runTime_2_dom
-                # project::runTime_2_dom $::APPL_Config(root_ProjectDOM) 
-                # set domConfig $::APPL_Config(root_ProjectDOM)
-
 
                 # -- open File for writing
             if {[file exist $fileName]} {
@@ -349,12 +342,8 @@
                     puts "                   ... done"
             }
 
-
-                #
-                # set ::APPL_Config(root_ProjectDOM) $domConfig
                 #
             set ::APPL_Config(root_ProjectDOM) [bikeGeometry::get_projectXML]
-                # bikeGeometry::set_base_Parameters $::APPL_Config(root_ProjectDOM)
             
                 #
             set ::APPL_Config(PROJECT_Save) [clock milliseconds]                                            
@@ -418,7 +407,7 @@
                 # -- fill tree
                 #
             if {$show != {}} {
-                lib_cfg_report::fillTree "$root" root
+                # lib_cfg_report::fillTree "$root" root
             }
 
                 #

@@ -41,8 +41,8 @@
     </Startup>
     
     <Template>
-        <Road>template_road_3.3.xml</Road>
-        <MTB>template_mtb_3.3.xml</MTB>
+        <Road>template_road_3.4.xml</Road>
+        <MTB>template_mtb_3.4.xml</MTB>
     </Template>
 
     <Options>
