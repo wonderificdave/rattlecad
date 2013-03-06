@@ -44,11 +44,12 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-        puts "\n\n ====== I N I T ============================ \n\n"
+    puts "\n\n ====== I N I T ============================ \n\n"
         
-        # -- APPL_Config(BASE_Dir)  ------
-    set BASE_Dir  [file dirname [file normalize $::argv0] ]
- 
+        # -- ::APPL_Config(BASE_Dir)  ------
+    set BASE_Dir  [file normalize [file join [file dirname [file normalize $::argv0]] ..]]
+    puts "   -> BASE_Dir: $BASE_Dir\n"
+      
         # -- redefine on Starkit  -----
         #         exception for starkit compilation
         #        .../rattleCAD.exe
@@ -62,42 +63,45 @@ exec wish "$0" "$@"
         # -- Libraries  ---------------
     lappend auto_path           [file join $BASE_Dir lib]
     
-    package require   rattleCAD  3.3 
-    package require   canvasCAD  0.33
-    package require   extSummary 0.1
+	    # puts "  \$auto_path  $auto_path"
+	
+    package require   rattleCAD     3.3 
+    package require   appUtil       0.12 
+    package require   canvasCAD     0.35
+    package require   extSummary    0.3
     
-         # -- msgcat -1.5.0.tm - workaround  ----- on windows platforms
+    # -- msgcat -1.5.0.tm - workaround  ----- on windows platforms
     switch $tcl_platform(platform) {
-        windows {    
-            puts "\n     ... check registry: HKEY_CURRENT_USER\\Control Panel\\International\n "
-            package require   registry 
-            set regPath {HKEY_CURRENT_USER\Control Panel}    
-            if { [catch {registry keys $regPath\\International} fid] } {
-            # puts stderr "Could not get keys of $regPath\International\n$fid"
-            foreach key [registry keys $regPath] {
-                puts "             $regPath\\$key"
-            }
-            set interPath $regPath\\International
-            puts "\n             $interPath"
-            registry set $interPath
-            puts   "             ... check: clock format -> [clock format [clock seconds]]\n"
-            } 
-        }   
+	windows {    
+	    puts "\n     ... check registry: HKEY_CURRENT_USER\\Control Panel\\International\n "
+	    package require   registry 
+	    set regPath {HKEY_CURRENT_USER\Control Panel}    
+	    if { [catch {registry keys $regPath\\International} fid] } {
+	    # puts stderr "Could not get keys of $regPath\International\n$fid"
+	    foreach key [registry keys $regPath] {
+		puts "             $regPath\\$key"
+	    }
+	    set interPath $regPath\\International
+	    puts "\n             $interPath"
+	    registry set $interPath
+	    puts   "             ... check: clock format -> [clock format [clock seconds]]\n"
+	    } 
+	}   
     }
 
 
-         # -- Version Info  ----------------------
+	 # -- Version Info  ----------------------
     if {[file exists [file join $APPL_Config(ROOT_Dir) tclkit.inf]]} {
-        # puts " customizing strings in executable"
-        set fd [open [file join $APPL_Config(ROOT_Dir) tclkit.inf]]
-        array set strinfo [read $fd]
-        close $fd
+	# puts " customizing strings in executable"
+	set fd [open [file join $APPL_Config(ROOT_Dir) tclkit.inf]]
+	array set strinfo [read $fd]
+	close $fd
     } else {
-        array set strinfo {
-                ProductVersion  {3.3.xx}
-                FileVersion     {??}
-                FileDate        {??. ???. 201?}
-        }
+	array set strinfo {
+		ProductVersion  {3.3.xx}
+		FileVersion     {??}
+		FileDate        {??. ???. 201?}
+	}
     }
     # parray strinfo
     
@@ -105,7 +109,7 @@ exec wish "$0" "$@"
     set APPL_Config(RELEASE_Revision) $strinfo(FileVersion)       ;#{66}
     set APPL_Config(RELEASE_Date)     $strinfo(FileDate)          ;#{18. Dec. 2011}
     
-         # -- Application Directories  -----------
+	 # -- Application Directories  -----------
     set APPL_Config(BASE_Dir)         $BASE_Dir
     set APPL_Config(CONFIG_Dir)       [file join    $BASE_Dir etc   ]
     set APPL_Config(IMAGE_Dir)        [file join    $BASE_Dir image ]
@@ -116,34 +120,34 @@ exec wish "$0" "$@"
     set APPL_Config(EXPORT_PDF)       [lib_file::check_user_dir rattleCAD/pdf]
 
 
-        # -- Version Info Summary  ---------------
-        puts "  ----------------------------------------------"
-        puts "  rattleCAD      $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)"
-        puts "                             $APPL_Config(RELEASE_Date)"
-        puts "  ----------------------------------------------"
+	# -- Version Info Summary  ---------------
+	puts "  ----------------------------------------------"
+	puts "  rattleCAD      $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)"
+	puts "                             $APPL_Config(RELEASE_Date)"
+	puts "  ----------------------------------------------"
 
 
-        # -- Tcl/Tk Runtime  --------------------
-        puts "  Tcl/Tk:    [info patchlevel]"
-        puts "  Exec:      [info nameofexecutable]"
-        puts "  ----------------------------------------------"
-        puts "    Tk:          [package require Tk]"
-        puts "    BWidget:     [package require BWidget]"
-        puts "    tdom:        [package require tdom]"
-        puts "    rattleCAD:   [package require rattleCAD]"
-        puts "    canvasCAD:   [package require canvasCAD]"
-        puts "    extSummary:  [package require extSummary]"
-        puts "  ----------------------------------------------"
-        puts "    APPL_Config(ROOT_Dir)     $APPL_Config(ROOT_Dir)"
-        puts "    APPL_Config(BASE_Dir)     $APPL_Config(BASE_Dir)"
-        puts "    APPL_Config(CONFIG_Dir)   $APPL_Config(CONFIG_Dir)"
-        puts "    APPL_Config(IMAGE_Dir)    $APPL_Config(IMAGE_Dir)"
-        puts "    APPL_Config(USER_Dir)     $APPL_Config(USER_Dir)"
-        puts "    APPL_Config(EXPORT_Dir)   $APPL_Config(EXPORT_Dir)"
-        puts "    APPL_Config(EXPORT_HTML)  $APPL_Config(EXPORT_HTML)"
-        puts "    APPL_Config(EXPORT_PDF)   $APPL_Config(EXPORT_PDF)"
-        puts "  ----------------------------------------------"
-        puts ""
+	# -- Tcl/Tk Runtime  --------------------
+	puts "  Tcl/Tk:    [info patchlevel]"
+	puts "  Exec:      [info nameofexecutable]"
+	puts "  ----------------------------------------------"
+	puts "    Tk:          [package require Tk]"
+	puts "    BWidget:     [package require BWidget]"
+	puts "    tdom:        [package require tdom]"
+	puts "    rattleCAD:   [package require rattleCAD]"
+	puts "    canvasCAD:   [package require canvasCAD]"
+	puts "    extSummary:  [package require extSummary]"
+	puts "  ----------------------------------------------"
+	puts "    APPL_Config(ROOT_Dir)     $APPL_Config(ROOT_Dir)"
+	puts "    APPL_Config(BASE_Dir)     $APPL_Config(BASE_Dir)"
+	puts "    APPL_Config(CONFIG_Dir)   $APPL_Config(CONFIG_Dir)"
+	puts "    APPL_Config(IMAGE_Dir)    $APPL_Config(IMAGE_Dir)"
+	puts "    APPL_Config(USER_Dir)     $APPL_Config(USER_Dir)"
+	puts "    APPL_Config(EXPORT_Dir)   $APPL_Config(EXPORT_Dir)"
+	puts "    APPL_Config(EXPORT_HTML)  $APPL_Config(EXPORT_HTML)"
+	puts "    APPL_Config(EXPORT_PDF)   $APPL_Config(EXPORT_PDF)"
+	puts "  ----------------------------------------------"
+	puts ""
 
   
   ###########################################################################
@@ -153,31 +157,31 @@ exec wish "$0" "$@"
   ###########################################################################
     # set APPL_Config(USER_Dir) $APPL_Config(BASE_Dir)
     proc check_BASE_Dir {} {
-            if {$::APPL_Config(BASE_Dir) eq $::APPL_Config(USER_Dir)} {
-                set     message "Dear User!\n"
-                append  message "\n  ...  since rattleCAD Version 3.2.78.03"
-                append  message "\n        there is a new definition of the user-Directory."
-                append  message "\n"
-                append  message "\n  ... your new user-Directory is defined as:"
-                append  message "\n        $::APPL_Config(USER_Dir)"
-                append  message "\n"
-                append  message "\n  ... please install rattleCAD in an other Directory"
-                append  message "\n"
-                append  message "\n    e.g.:\n"
-                append  message "\n         \[Windows\] C:\\Program Files\\rattleCAD\\"
-                append  message "\n                                     .\\3.2.78.03"
-                append  message "\n                                     .\\rattleCAD.tcl"
-                append  message "\n"
-                append  message "\n         \[Linux\]   /opt/rattleCAD/"
-                append  message "\n                                     ./3.2.78.03"
-                append  message "\n                                     ./rattleCAD.tcl"
-                append  message "\n"
-                append  message "\n                            your rattleCAD!"
+	    if {$::APPL_Config(BASE_Dir) eq $::APPL_Config(USER_Dir)} {
+		set     message "Dear User!\n"
+		append  message "\n  ...  since rattleCAD Version 3.2.78.03"
+		append  message "\n        there is a new definition of the user-Directory."
+		append  message "\n"
+		append  message "\n  ... your new user-Directory is defined as:"
+		append  message "\n        $::APPL_Config(USER_Dir)"
+		append  message "\n"
+		append  message "\n  ... please install rattleCAD in an other Directory"
+		append  message "\n"
+		append  message "\n    e.g.:\n"
+		append  message "\n         \[Windows\] C:\\Program Files\\rattleCAD\\"
+		append  message "\n                                     .\\3.2.78.03"
+		append  message "\n                                     .\\rattleCAD.tcl"
+		append  message "\n"
+		append  message "\n         \[Linux\]   /opt/rattleCAD/"
+		append  message "\n                                     ./3.2.78.03"
+		append  message "\n                                     ./rattleCAD.tcl"
+		append  message "\n"
+		append  message "\n                            your rattleCAD!"
 
-               
-                tk_messageBox -icon info -message $message
-                exit
-            }           
+	       
+		tk_messageBox -icon info -message $message
+		exit
+	    }           
     }
     check_BASE_Dir
   
@@ -188,58 +192,58 @@ exec wish "$0" "$@"
   ###########################################################################
 
 
-        # -- init Parameters  ----
+	# -- init Parameters  ----
     set APPL_Config(root_InitDOM)  [ lib_file::get_XMLContent     [file join $APPL_Config(CONFIG_Dir) rattleCAD_init.xml ] ]
-        puts "     ... root_InitDOM      [file join $APPL_Config(CONFIG_Dir) rattleCAD_init.xml]"
+	puts "     ... root_InitDOM      [file join $APPL_Config(CONFIG_Dir) rattleCAD_init.xml]"
 
 
     initValues
 
     
 
-        
-        # -- load template ----------
-        puts "     ... TemplateType      $APPL_Config(TemplateType)"
-        puts "     ... TemplateInit      $APPL_Config(TemplateInit)"
-        
+	
+	# -- load template ----------
+	puts "     ... TemplateType      $APPL_Config(TemplateType)"
+	puts "     ... TemplateInit      $APPL_Config(TemplateInit)"
+	
     
     set APPL_Config(root_ProjectDOM)    [ lib_file::get_XMLContent     $APPL_Config(TemplateInit) ]
 
     
-        # -- status messages --------
+	# -- status messages --------
     puts "\n     APPL_Config(list_TemplateTypes)"
     foreach entry $APPL_Config(list_TemplateTypes) {
-        puts "        -> $entry"
+	puts "        -> $entry"
     }
 
     puts "\n     APPL_Config(list_FrameJigTypes)"
     foreach entry $APPL_Config(list_FrameJigTypes) {
-        puts "        -> $entry"
+	puts "        -> $entry"
     }
 
     puts "\n     APPL_Config(list_ForkTypes)"
     foreach entry $APPL_Config(list_ForkTypes) {
-        puts "        -> $entry"
+	puts "        -> $entry"
     }
 
     puts "\n     APPL_Config(list_BrakeTypes)"
     foreach entry $APPL_Config(list_BrakeTypes) {
-        puts "        -> $entry"
+	puts "        -> $entry"
     }
     
     puts "\n     APPL_Config(list_BottleCage)"
     foreach entry $APPL_Config(list_BottleCage) {
-        puts "        -> $entry"
+	puts "        -> $entry"
     }
     
     puts "\n     APPL_Config(list_Rims)"
     foreach entry $APPL_Config(list_Rims) {
-        puts "        -> $entry"
+	puts "        -> $entry"
     }
     
     puts "\n  APPL_CompLocation"
     foreach index [array names APPL_CompLocation] {
-        puts [format "        -> %-42s %s" $index    $APPL_CompLocation($index)]
+	puts [format "        -> %-42s %s" $index    $APPL_CompLocation($index)]
     } 
     
 
@@ -251,16 +255,16 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-        # ttk::style configure TCombobox -padding 0
-        # ttk::style theme use default
+	# ttk::style configure TCombobox -padding 0
+	# ttk::style theme use default
     ttk::style configure TCombobox -padding 0
     # -- set standard font ------------
     option add *font $APPL_Config(GUI_Font)
     
     lib_gui::binding_copyClass Spinbox mySpinbox
     lib_gui::binding_removeOnly     mySpinbox [list <Clear>]
-        # lib_gui::binding_reportBindings Text
-        # lib_gui::binding_reportBindings mySpinbox
+	# lib_gui::binding_reportBindings Text
+	# lib_gui::binding_reportBindings mySpinbox
     
 
   
@@ -270,7 +274,7 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-        puts "\n\n ====== M A I N ============================ \n\n"
+	puts "\n\n ====== M A I N ============================ \n\n"
 
 
 
@@ -295,88 +299,88 @@ exec wish "$0" "$@"
 
 
     
-        # ---     create iconBitmap  -----
-            #puts " \$tcl_platform(os)  $tcl_platform(os) $tcl_platform(platform)"    
+	# ---     create iconBitmap  -----
+	    #puts " \$tcl_platform(os)  $tcl_platform(os) $tcl_platform(platform)"    
     if {$tcl_platform(platform) == {windows}} {
-        wm iconbitmap . [file join $APPL_Config(BASE_Dir) tclkit.ico]      
+	wm iconbitmap . [file join $APPL_Config(BASE_Dir) tclkit.ico]      
     } else {
-        wm iconphoto  . [image create photo .ico1 -format gif -file [file join $APPL_Config(BASE_Dir)  icon16.gif] ]
+	wm iconphoto  . [image create photo .ico1 -format gif -file [file join $APPL_Config(BASE_Dir)  icon16.gif] ]
     } 
   
   
-         # ---     create Mainframe  -----
+	 # ---     create Mainframe  -----
     set    mainframe  [ lib_gui::create_MainFrame ]
-        pack $mainframe  -fill both  -expand yes  -side top 
+	pack $mainframe  -fill both  -expand yes  -side top 
     set    indicator  [$mainframe addindicator -textvariable "::APPL_Config(PROJECT_Name)"  -anchor w]
-        $indicator  configure -relief flat
+	$indicator  configure -relief flat
     set frame         [$mainframe getframe]
 
 
-        # ---     Button-bar frame  --------
+	# ---     Button-bar frame  --------
     set bb_frame [ frame $frame.f1  -relief sunken        -bd 1  ]
-        pack  $bb_frame  -padx 0  -pady 3  -expand no   -fill x
+	pack  $bb_frame  -padx 0  -pady 3  -expand no   -fill x
     lib_gui::create_ButtonBar $bb_frame 
 
     
-        # ---     notebook frame  -------
+	# ---     notebook frame  -------
     set nb_frame [ frame $frame.f2  -relief sunken        -bd 1  ]
-        pack  $nb_frame  -padx 0  -pady 0  -expand yes  -fill both
-        
-        # ---     notebook  -------------
+	pack  $nb_frame  -padx 0  -pady 0  -expand yes  -fill both
+	
+	# ---     notebook  -------------
     lib_gui::create_Notebook $nb_frame
 
     
     
-        # --------------------------------------------
-        #    create custom base Parameters
+	# --------------------------------------------
+	#    create custom base Parameters
     frame_geometry::set_base_Parameters $APPL_Config(root_ProjectDOM)
 
 
-        # --------------------------------------------
-        #    set APPL_Config(PROJECT_Name)        
+	# --------------------------------------------
+	#    set APPL_Config(PROJECT_Name)        
     set APPL_Config(PROJECT_Name)           "Template $APPL_Config(TemplateType)"
     set APPL_Config(PROJECT_File)           "Template $APPL_Config(TemplateType)"
     set APPL_Config(PROJECT_Save)           [clock milliseconds]
 
 
-        # --------------------------------------------
-        #    check startup parameters
+	# --------------------------------------------
+	#    check startup parameters
     if {$argc == 1} {
-        set startupProject  [lindex $argv 0]
-        puts "\n"
-        puts " ====== startup   F I L E ========================"
-        puts "        ... [file normalize $startupProject]\n"
-        lib_file::openProject_xml [file tail $startupProject] $startupProject    
+	set startupProject  [lindex $argv 0]
+	puts "\n"
+	puts " ====== startup   F I L E ========================"
+	puts "        ... [file normalize $startupProject]\n"
+	lib_file::openProject_xml [file tail $startupProject] $startupProject    
     }
     
 
 
-         # --------------------------------------------
-        #    finalize
+	 # --------------------------------------------
+	#    finalize
    
     update 
     wm minsize . [winfo width  .]   [winfo height  .]
  
-        # -- keyboard bindings -----------------------
+	# -- keyboard bindings -----------------------
     lib_gui::global_kb_Binding ab
     
-         # -- window binding -----------------------
+	 # -- window binding -----------------------
     bind . <Configure> [list lib_gui::check_windowSize]
     bind . <Destroy> {
-        # http://www.tek-tips.com/viewthread.cfm?qid=339303
-        # Test if the toplevel (in this case ".")
-        # received the event.
-          # puts "         check: bind . <DESTROY> %W"
-        if {[string equal %W "."]} {
-            lib_gui::exit_rattleCAD yesno bind_Destroy
-        }
+	# http://www.tek-tips.com/viewthread.cfm?qid=339303
+	# Test if the toplevel (in this case ".")
+	# received the event.
+	  # puts "         check: bind . <DESTROY> %W"
+	if {[string equal %W "."]} {
+	    lib_gui::exit_rattleCAD yesno bind_Destroy
+	}
     } 
 
 
-        # -- window title ----------------------------
+	# -- window title ----------------------------
     set_window_title                 $APPL_Config(PROJECT_Name)
-        
-        # -- open config panel -----------------------
+	
+	# -- open config panel -----------------------
     # lib_config::create . .cfg
 
     
@@ -385,16 +389,36 @@ exec wish "$0" "$@"
   #                 R  -  U  -  N  -  T  -  I  -  M  -  E 
   #
   ###########################################################################
-
-        puts "\n\n ====== R U N T I M E ============================ \n\n"
-        
-        
+    
+    
+    
+    puts "\n\n ====== R U N T I M E ============================ \n\n"
+    
+    
         # -- destroy intro - image ----
-    after  200 destroy .intro
-
+    after  50 destroy .intro
+    
         # -- keep on top --------------
     wm deiconify .
 
-
+    #set value $::Widget::Button::.mainframe.frame.f1.cfg:mod(-activebackground)
+    #puts "   .. $value"
+    #exit
+   
+        # -- test: report runTime -----    
+    set runtimeDOM [appUtil::namespaceReport]
+    puts [$runtimeDOM asXML]
     
-
+    set TEST_Dir [file join $BASE_Dir _test]
+    
+    set fileName [file join $TEST_Dir rattleCAD_3.3.06.36.xml]
+    set fp      [open $fileName w]
+    puts $fp [$runtimeDOM  asXML]
+    close $fp
+    
+    puts "\n"
+    puts "  ... see also logFile:"
+    puts "             $fileName\n"
+    
+    exit
+    
