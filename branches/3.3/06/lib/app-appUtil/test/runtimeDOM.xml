@@ -1,0 +1,386 @@
+<root>
+    <__test_appUtil>
+        <my_Namespace_00>
+            <my_Namespace_01>
+                <my_Namespace_02>
+                    <my_Namespace_03/>
+                    <____procedures>
+                        <my_Procedure_00/>
+                        <my_Procedure_01/>
+                        <my_Procedure_02/>
+                    </____procedures>
+                </my_Namespace_02>
+                <____procedures>
+                    <my_Procedure_00/>
+                    <my_Procedure_01/>
+                </____procedures>
+                <____arrays>
+                    <APPL_Config>
+                        <element name="RELEASE_Version">3.4</element>
+                    </APPL_Config>
+                    <my_Array_01>
+                        <element name="_00">value_00</element>
+                        <element name="_01">value_01</element>
+                    </my_Array_01>
+                </____arrays>
+                <____vars>
+                    <my_Var_01>var_01</my_Var_01>
+                </____vars>
+            </my_Namespace_01>
+            <____procedures>
+                <my_Procedure_00/>
+            </____procedures>
+        </my_Namespace_00>
+        <____vars>
+            <BASE_Dir>R:/_devlp/_svn_local/rattleCAD_3.3.06/appUtil</BASE_Dir>
+            <SAMPLE_Dir>R:/_devlp/_svn_local/rattleCAD_3.3.06/appUtil/test/sample</SAMPLE_Dir>
+            <TEST_Dir>R:/_devlp/_svn_local/rattleCAD_3.3.06/appUtil/test</TEST_Dir>
+        </____vars>
+    </__test_appUtil>
+    <activestate>
+        <teapot>
+            <link>
+                <____procedures>
+                    <setup/>
+                    <use/>
+                    <usel/>
+                </____procedures>
+            </link>
+        </teapot>
+        <____arrays>
+            <ActiveTcl>
+                <element name="arch">win32-ix86</element>
+                <element name="as,mode">normal</element>
+                <element name="build">295402</element>
+                <element name="buildtime,fmt">Mon Nov 07 15:34:40 PST 2011</element>
+                <element name="buildtime,sec">1320708880</element>
+                <element name="maturity">final</element>
+                <element name="product">ActiveTcl</element>
+                <element name="release">8.5.11.0</element>
+            </ActiveTcl>
+            <config>
+                <element name="ActiveTcl">ActiveState ActiveTcl 8.5.11.0.295402 Win32/x86 @ Mon Nov 07 15:34:40 PST 2011 / normal</element>
+            </config>
+        </____arrays>
+    </activestate>
+    <appUtil>
+        <____procedures>
+            <DelConfig/>
+            <GetConfig/>
+            <ReadConfigFile/>
+            <SetConfig/>
+            <SetDebugLevel/>
+            <_add_arraykeyValues/>
+            <_add_namespaceContent/>
+            <_add_namespaceReport/>
+            <_add_varValue/>
+            <_childArrays/>
+            <_childNamespaces/>
+            <_childProcedures/>
+            <_childVars/>
+            <appDebug/>
+            <debug_clear/>
+            <debug_create/>
+            <debug_destroy/>
+            <debug_out/>
+            <debug_print/>
+            <flatten_nestedList/>
+            <get_dictValue/>
+            <get_procHierarchy/>
+            <namespaceReport/>
+            <pdict/>
+            <update_font/>
+        </____procedures>
+        <____vars>
+            <Config_Value_Notset></Config_Value_Notset>
+            <Config_Value_Separator>.</Config_Value_Separator>
+            <DebugLevel>0</DebugLevel>
+            <config_var>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</config_var>
+            <debug_text></debug_text>
+            <font>-*-Courier-Medium-R-Normal--*-140-*-*-*-*-*-*</font>
+            <widget_id>.d_e_b_u_g</widget_id>
+            <window_title>appUtil::Debug</window_title>
+        </____vars>
+    </appUtil>
+    <dom>
+        <DOMImplementation>
+            <____procedures>
+                <hasFeature/>
+                <load/>
+            </____procedures>
+        </DOMImplementation>
+        <Doc>
+            <____procedures>
+                <importNode/>
+                <info/>
+                <isa/>
+            </____procedures>
+        </Doc>
+        <Node>
+            <____procedures>
+                <appendData/>
+                <childNodesLive/>
+                <deleteData/>
+                <info/>
+                <insertData/>
+                <isWithin/>
+                <isa/>
+                <item/>
+                <length/>
+                <replaceData/>
+                <simpleTranslate/>
+                <substringData/>
+                <tagName/>
+            </____procedures>
+        </Node>
+        <xpathFunc>
+            <____procedures>
+                <element-available/>
+                <function-available/>
+                <system-property/>
+            </____procedures>
+        </xpathFunc>
+        <xpathFuncHelper>
+            <____procedures>
+                <coerce2number/>
+                <coerce2string/>
+            </____procedures>
+        </xpathFuncHelper>
+    </dom>
+    <pkg/>
+    <platform>
+        <____procedures>
+            <LibcVersion/>
+            <generic/>
+            <identify/>
+            <patterns/>
+        </____procedures>
+    </platform>
+    <tDOM>
+        <____procedures>
+            <IANAEncoding2TclEncoding/>
+            <baseURL/>
+            <xmlOpenFile/>
+            <xmlReadFile/>
+        </____procedures>
+        <____vars>
+            <extRefHandlerDebug>0</extRefHandlerDebug>
+            <useForeignDTD></useForeignDTD>
+        </____vars>
+    </tDOM>
+    <tcl>
+        <Pkg>
+            <____procedures>
+                <CompareExtension/>
+                <Create/>
+            </____procedures>
+        </Pkg>
+        <chan/>
+        <clock>
+            <____vars>
+                <TclLibDir>D:/Programme/TclTk/lib/tcl8.5</TclLibDir>
+            </____vars>
+        </clock>
+        <dict/>
+        <info/>
+        <mathfunc>
+            <____procedures>
+                <max/>
+                <min/>
+            </____procedures>
+        </mathfunc>
+        <mathop/>
+        <string/>
+        <tm>
+            <____procedures>
+                <Defaults/>
+                <UnknownHandler/>
+                <add/>
+                <list/>
+                <remove/>
+                <roots/>
+            </____procedures>
+            <____vars>
+                <paths>D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/site-tcl D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.0 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.1 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.2 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.3 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.4 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.5 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/site-tcl D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.0 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.1 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.2 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.3 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.4 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.5 D:/Programme/TclTk/lib/tcl8/site-tcl D:/Programme/TclTk/lib/tcl8/8.0 D:/Programme/TclTk/lib/tcl8/8.1 D:/Programme/TclTk/lib/tcl8/8.2 D:/Programme/TclTk/lib/tcl8/8.3 D:/Programme/TclTk/lib/tcl8/8.4 D:/Programme/TclTk/lib/tcl8/8.5</paths>
+                <pkgpattern>^([_[:alpha:]][:_[:alnum:]]*)-([[:digit:]].*)[.]tm$</pkgpattern>
+            </____vars>
+        </tm>
+        <unsupported/>
+        <____procedures>
+            <CopyDirectory/>
+            <EnvTraceProc/>
+            <InitWinEnv/>
+            <MacOSXPkgUnknown/>
+        </____procedures>
+        <____vars>
+            <Dir>D:/Programme/TclTk/lib/tcl8.5/encoding</Dir>
+            <Path>D:/Programme/TclTk/lib/tcl8.5/encoding</Path>
+            <auto_oldpath>{R:\_devlp\_svn_local\rattleCAD_3.3.06\appUtil} D:/Programme/TclTk/lib/tcl8.5 D:/Programme/TclTk/lib</auto_oldpath>
+        </____vars>
+    </tcl>
+    <xml/>
+    <____procedures>
+        <auto_execok/>
+        <auto_import/>
+        <auto_load/>
+        <auto_load_index/>
+        <auto_qualify/>
+        <check_loaded_Tk/>
+        <check_nodeName/>
+        <clock/>
+        <pkg_mkIndex/>
+        <tclLog/>
+        <tclPkgSetup/>
+        <tclPkgUnknown/>
+        <unknown/>
+    </____procedures>
+    <____arrays>
+        <auto_index>
+            <element name="::auto_mkindex_parser::cleanup">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::command">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::commandInit">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::fullname">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::hook">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::init">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::mkindex">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::slavehook">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::pkg::create">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="::safe::AddSubDirs">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::AliasEncoding">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::AliasLoad">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::AliasSource">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::AliasSubset">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::CheckFileName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::CheckInterp">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::DeleteHookName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Exists">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::FileInAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::GetAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpCreate">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpInit">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpNested">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpSetConfig">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpStateName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpStatics">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::IsInterp">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Lappend">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Log">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::NestedOk">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::NestedOkName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::PathListName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::PathNumberName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::PathToken">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Set">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::StaticsOk">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::StaticsOkName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Subset">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::SyncAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Toplevel">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::TranslatePath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Unset">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::VirtualPathListName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpAddToAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpConfigure">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpCreate">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpDelete">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpFindInAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpInit">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::setLogCmd">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::tcl::HistAdd">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistChange">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistClear">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistEvent">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistIndex">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistInfo">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistKeep">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistRedo">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::MacOSXPkgUnknown">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="::tcl::tm::UnknownHandler">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::add">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::list">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::path">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::remove">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::roots">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="auto_mkindex">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="auto_mkindex_old">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="auto_reset">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="history">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="parray">source D:/Programme/TclTk/lib/tcl8.5/parray.tcl</element>
+            <element name="pkg_mkIndex">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="tclPkgSetup">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="tclPkgUnknown">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="tcl_endOfWord">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+            <element name="tcl_findLibrary">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="tcl_startOfNextWord">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+            <element name="tcl_startOfPreviousWord">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+            <element name="tcl_wordBreakAfter">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+            <element name="tcl_wordBreakBefore">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+        </auto_index>
+        <env>
+            <element name="ALLUSERSPROFILE">D:\Dokumente und Einstellungen\All Users</element>
+            <element name="APPDATA">E:\manfred\_profile\Anwendungsdaten</element>
+            <element name="CLIENTNAME">Console</element>
+            <element name="COMPUTERNAME">HP7600</element>
+            <element name="ComSpec">D:\WINDOWS\system32\cmd.exe</element>
+            <element name="CommonProgramFiles">D:\Programme\Gemeinsame Dateien</element>
+            <element name="FP_NO_HOST_CHECK">NO</element>
+            <element name="HOME">D:\Dokumente und Einstellungen\manfred</element>
+            <element name="HOMEDRIVE">D:</element>
+            <element name="HOMEPATH">\Dokumente und Einstellungen\manfred</element>
+            <element name="LOGONSERVER">\\HP7600</element>
+            <element name="MYTCL">D:\Programme\MyTcl</element>
+            <element name="NUMBER_OF_PROCESSORS">2</element>
+            <element name="OS">Windows_NT</element>
+            <element name="PATHEXT">.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.tcl;.py;.pyw</element>
+            <element name="PROCESSOR_ARCHITECTURE">x86</element>
+            <element name="PROCESSOR_IDENTIFIER">x86 Family 15 Model 4 Stepping 1, GenuineIntel</element>
+            <element name="PROCESSOR_LEVEL">15</element>
+            <element name="PROCESSOR_REVISION">0401</element>
+            <element name="PROMPT">$P$G</element>
+            <element name="Path">D:/Programme/Java/jre6/bin/client;D:/Programme/Java/jre6/bin;D:/Programme/Java/jre6/lib/i386;D:\Programme\PC Connectivity Solution\;D:\Programme\ImageMagick-6.7.5-Q8;D:\Programme\ImageMagick-6.7.4-Q16;D:\Programme\Python\3.2\Lib\site-packages\PyQt4;D:\Programme\Python\3.2\;D:\Programme\Python\3.2\Scripts;D:\Python\3.2\Lib\site-packages\PyQt4;D:\Programme\TclTk\bin;D:\WINDOWS\system32;D:\WINDOWS;D:\WINDOWS\System32\Wbem;D:\Programme\ATI Technologies\ATI.ACE\Core-Static;D:\Programme\Gemeinsame Dateien\Teleca Shared;D:\Programme\SlikSvn\bin;D:\Programme\Instant Reality\bin\;D:\Programme\MiKTeX 2.9\miktex\bin\;D:\Programme\TortoiseSVN\bin;D:\Programme\Python\3.2\Lib\site-packages\PyQt4;D:\Programme\eclipse\juno;</element>
+            <element name="ProgramFiles">D:\Programme</element>
+            <element name="SESSIONNAME">Console</element>
+            <element name="SystemDrive">D:</element>
+            <element name="SystemRoot">D:\WINDOWS</element>
+            <element name="TCLLIBPATH">{R:\_devlp\_svn_local\rattleCAD_3.3.06\appUtil}</element>
+            <element name="TEMP">D:\WINDOWS\TEMP</element>
+            <element name="TMP">D:\WINDOWS\TEMP</element>
+            <element name="USERDOMAIN">HP7600</element>
+            <element name="USERNAME">manfred</element>
+            <element name="USERPROFILE">D:\Dokumente und Einstellungen\manfred</element>
+            <element name="VBOX_INSTALL_PATH">D:\Programme\Oracle\VirtualBox\</element>
+            <element name="protector_attach">true</element>
+            <element name="windir">D:\WINDOWS</element>
+        </env>
+        <tcl_platform>
+            <element name="byteOrder">littleEndian</element>
+            <element name="machine">intel</element>
+            <element name="os">Windows NT</element>
+            <element name="osVersion">5.1</element>
+            <element name="platform">windows</element>
+            <element name="pointerSize">4</element>
+            <element name="threaded">1</element>
+            <element name="user">manfred</element>
+            <element name="wordSize">4</element>
+        </tcl_platform>
+    </____arrays>
+    <____vars>
+        <argc>0</argc>
+        <argv></argv>
+        <argv0>R:\_devlp\_svn_local\rattleCAD_3.3.06\appUtil\test\test_globalNamespace_1.0.tcl</argv0>
+        <auto_path>{R:\_devlp\_svn_local\rattleCAD_3.3.06\appUtil} D:/Programme/TclTk/lib/tcl8.5 D:/Programme/TclTk/lib d:/programme/tcltk/lib/teapot/package/win32-ix86/lib d:/programme/tcltk/lib/teapot/package/tcl/lib R:/_devlp/_svn_local/rattleCAD_3.3.06/appUtil/lib R:/_devlp/_svn_local/rattleCAD_3.3.06/appUtil/..</auto_path>
+        <errorCode>NONE</errorCode>
+        <errorInfo>can't read "::appUtil::config_var": no such variable
+    while executing
+"set _varValue $::appUtil::config_var"
+    ("eval" body line 1)
+    invoked from within
+"eval $cmdString"</errorInfo>
+        <tcl_interactive>0</tcl_interactive>
+        <tcl_library>D:/Programme/TclTk/lib/tcl8.5</tcl_library>
+        <tcl_patchLevel>8.5.11</tcl_patchLevel>
+        <tcl_rcFileName>~/tclshrc.tcl</tcl_rcFileName>
+        <tcl_version>8.5</tcl_version>
+    </____vars>
+</root>
+

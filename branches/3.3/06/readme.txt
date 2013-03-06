@@ -1,4 +1,18 @@
+ 
+3.3.06.36   - 2013.03.04 
+-------------------------------------------------------------------------------
+    eclipse: 
+	    ... move project to Eclipse IDE, build rattleCAD.exe and zip by ANT
 
+ 
+3.3.06.35   - 2013.02.27 
+-------------------------------------------------------------------------------
+    debug: 
+	    ... show angles in FrameDetails View belonging between 
+	          SeatTube & DownTube and SeatTube & TopTube 
+	          belonging to BB Offset
+
+ 
 3.3.06.34   - 2013.02.06 
 -------------------------------------------------------------------------------
     Siegmund Freud:

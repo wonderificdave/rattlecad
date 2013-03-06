@@ -600,7 +600,7 @@
 
                 # thanks to:  http://wiki.tcl.tk/3834
             if { [expr [string compare "$::tcl_platform(platform)" "windows" ] == 0] } {
-                    package require registry 1.0
+                    package require registry 1.1
                     set homeDir_Request [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders} {Personal}]
                     set homeDir {}
                     foreach dir [string trim [split $homeDir_Request \\]] {
