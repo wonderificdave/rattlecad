@@ -30,6 +30,7 @@ exec tclsh "$0" ${1+"$@"}
         foreach _element [lsort $namespaceList] {
             set childNamespace_Name [string map [list $namespaceName {}] $_element]
             set _nodeName   [string map [list {::} {}] $childNamespace_Name]
+            set _nodeName   [check_nodeName $_nodeName]
                 # puts "         -> $childNamespace_Name"
             set _node [$domDOC createElement $_nodeName]
             $domNode appendChild $_node
@@ -49,8 +50,8 @@ exec tclsh "$0" ${1+"$@"}
                 #
             set procedureList   [_childProcedures $namespaceName]
             if {$procedureList != {}} {
-               set _domNode   [$domNode appendChild [$domDOC createElement {____procedures}]]
-               foreach _element $procedureList {
+                set _domNode   [$domNode appendChild [$domDOC createElement {____procedures______}]]
+                foreach _element $procedureList {
                     set _nodeName   [string map [list $namespaceName {} {::} {}] $_element]
                     set _nodeName   [check_nodeName $_nodeName]
                         # puts "   -> \$_nodeName: $_element -> $_nodeName"
@@ -64,7 +65,7 @@ exec tclsh "$0" ${1+"$@"}
                 #
             set arrayList   [_childArrays $namespaceName]
             if {$arrayList != {}} {
-                set _domNode   [$domNode appendChild [$domDOC createElement {____arrays}]]
+                set _domNode   [$domNode appendChild [$domDOC createElement {____arrays__________}]]
                 foreach _element $arrayList {
                     set _nodeName   [string map [list $namespaceName {} {::} {}] $_element]
                     set _nodeName   [check_nodeName $_nodeName]
@@ -77,21 +78,21 @@ exec tclsh "$0" ${1+"$@"}
             }
 
    
-               # -- child vars -----------------
-               #
-           set varList   [_childVars $namespaceName]
-           if {$varList != {}} {
-               set _domNode   [$domNode appendChild [$domDOC createElement {____vars}]]
-               foreach _element $varList {
-                   set _nodeName   [string map [list $namespaceName {} {::} {}] $_element]
-                   set _nodeName   [check_nodeName $_nodeName]
-                       # puts "   -> \$_nodeName: $_element -> $_nodeName"
-                   set _node [$domDOC createElement $_nodeName]
-                   $_domNode appendChild $_node
-                       # -- add value to node
-                   _add_varValue $_node $_element
-               }
-           }   
+                # -- child vars -----------------
+                #
+            set varList   [_childVars $namespaceName]
+            if {$varList != {}} {
+                set _domNode   [$domNode appendChild [$domDOC createElement {____vars____________}]]
+                foreach _element $varList {
+                    set _nodeName   [string map [list $namespaceName {} {::} {}] $_element]
+                    set _nodeName   [check_nodeName $_nodeName]
+                        # puts "   -> \$_nodeName: $_element -> $_nodeName"
+                    set _node [$domDOC createElement $_nodeName]
+                    $_domNode appendChild $_node
+                        # -- add value to node
+                    _add_varValue $_node $_element
+                } 
+            }   
     
     }
     
@@ -114,6 +115,7 @@ exec tclsh "$0" ${1+"$@"}
                     set _keyValue "<E> ERROR could not get Value: ... dont know why"
                     $_node appendChild [$domDOC createTextNode $_keyValue]
                 } else {
+                    set _keyValue [check_nodeValue $_keyValue]
                     $_node appendChild [$domDOC createTextNode $_keyValue]
                 }
             }
@@ -130,6 +132,7 @@ exec tclsh "$0" ${1+"$@"}
                 # puts "     -> array / not var: $::appUtil::config_var"
                 set _varValue "<E> ERROR could not get Value: seems to be an array, but is not proper set as ARRAY"
             }
+            set _varValue [check_nodeValue $_varValue]
             $domNode appendChild [$domDOC createTextNode $_varValue]
     }
 
@@ -180,12 +183,17 @@ exec tclsh "$0" ${1+"$@"}
     }  
     
     proc check_nodeName {_name} {
-        set newName [string map {{'} {_} {.} {_}} $_name]
+        set newName [string map {{'} {_} {.} {_} {:} {.}} $_name]
         if {$newName == {}} {set newName {___empty___}}
         if {$_name != $newName} {
             puts "       -> check_nodeName: $_name / $newName"
         }
         return $newName
+    }
+    
+    proc check_nodeValue {_value} {
+        set newValue [string map {{”} {?}} $_value]
+        return $newValue
     }
     
     
