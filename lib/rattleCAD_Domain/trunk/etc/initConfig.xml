@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    
+    <Options>
+        
+        <FrameJigType>
+            <rattleCAD/>
+            <vienna/>
+            <nuremberg/>
+            <geldersheim/>
+        </FrameJigType>
+
+        <DropOutDirection>
+            <Chainstay/>
+            <horizontal/>
+        </DropOutDirection>
+
+        <Binary_OnOff>
+            <on/>
+            <off/>
+        </Binary_OnOff>
+
+        <ForkBlade>
+            <straight/>
+            <bent/>
+        </ForkBlade>
+        
+    </Options>        
+
+    
+    <Fork>
+
+        <SteelLuggedMAX>
+            <Crown>
+              <File>fork/_max/longshen_max_36_5.svg</File>
+              <Brake>
+                <Offset>20.00</Offset>
+                <Angle>0.00</Angle>
+              </Brake>
+              <Blade>
+                <Offset>35.00</Offset>
+                <OffsetPerp>3.50</OffsetPerp>
+              </Blade>
+            </Crown>
+            <Blade>
+              <Width>36.00</Width>
+              <DiameterDO>14.00</DiameterDO>
+              <TaperLength>250.00</TaperLength>
+              <BendRadius>350.00</BendRadius>
+              <EndLength>10.00</EndLength>
+            </Blade>
+            <Brake>
+              <Offset>28.00</Offset>
+            </Brake>
+            <DropOut>
+              <File>fork/_max/dropout_14.svg</File>
+              <Offset>20.00</Offset>
+              <OffsetPerp>0.00</OffsetPerp>
+            </DropOut>
+        </SteelLuggedMAX>
+
+        <SteelLugged></SteelLugged>
+        
+        <Composite>    
+            <Crown>
+              <File>fork/_composite/fork_crown.svg</File>
+              <Brake>
+                   <Front>
+                        <Mount>0.00,0.00</Mount>
+                        <Shoe>0.00,0.00</Shoe>
+                        <Help>0.00,0.00</Help>
+                        <Definition>0.00,0.00</Definition>
+                   </Front>
+                   <Rear>
+                        <Mount>0.00,0.00</Mount>
+                        <Shoe>0.00,0.00</Shoe>
+                        <Help>0.00,0.00</Help>
+                        <Definition>0.00,0.00</Definition>
+                   </Rear>
+              </Brake>
+              <Blade>
+                <Offset>45.00</Offset>
+                <OffsetPerp>-4.50</OffsetPerp>
+              </Blade>
+            </Crown>
+            <Blade>
+              <Width>50.00</Width>
+              <DiameterDO>21.00</DiameterDO>
+            </Blade>
+            <Brake>
+              <Offset>34.00</Offset>
+            </Brake>					<DropOut>
+            <File>fork/_composite/dropout.svg</File>
+              <Offset>20.00</Offset>
+            </DropOut>
+        </Composite>
+          
+        <_Suspension>
+          <Crown>
+            <File>fork/_suspension/fork_crown.svg</File>
+            <Brake>
+              <Offset>20.00</Offset>
+              <Angle>0.00</Angle>
+            </Brake>
+          </Crown>
+          <Leg>
+            <Offset>200.00</Offset>
+            <OffsetPerp>21.00</OffsetPerp>
+            <Diameter>38.00</Diameter>
+          </Leg>
+        </_Suspension>
+
+        <Suspension_20>
+          <Geometry>
+            <Rake>40.00</Rake>
+          </Geometry>
+          <DropOut>
+            <File>fork/_suspension/suspension_bridge_20.svg</File>
+          </DropOut>
+          <Brake>
+            <Offset>25.00</Offset>
+          </Brake>
+        </Suspension_20>
+
+        <Suspension_26>
+          <Geometry>
+            <Rake>40.00</Rake>
+          </Geometry>
+          <DropOut>
+            <File>fork/_suspension/suspension_bridge_26.svg</File>
+          </DropOut>
+          <Brake>
+            <Offset>25.00</Offset>
+          </Brake>
+        </Suspension_26>
+
+        <Suspension_29>   
+          <Geometry>
+            <Rake>45.00</Rake>
+          </Geometry>
+          <DropOut>
+            <File>fork/_suspension/suspension_bridge_29.svg</File>
+          </DropOut>
+          <Brake>
+            <Offset>25.00</Offset>
+          </Brake>
+        </Suspension_29>
+        
+        <_bikeGeometry_default_/>
+
+    </Fork>
+
+</root>
