@@ -41,13 +41,17 @@
   package require   BWidget         
   package require   tdom
   
-  package require   appUtil       0.10
-  package require   bikeGeometry  0.14
+  package require   appUtil       0.12
   package require   canvasCAD     0.35
   package require   extSummary    0.3
   
-      
+  package require   rc_Domain    0.1
+  
+       
   package provide   rattleCAD     3.4
+ 
+  
+  
 
 
                    
@@ -238,7 +242,7 @@
           
           
             # -- set bikeGeometry Fork Configuration      
-        bikeGeometry::set_forkConfig [$::APPL_Config(root_InitDOM) selectNode /root/Fork]
+        rc_Domain::set_forkConfig [$::APPL_Config(root_InitDOM) selectNode /root/Fork]
   
           
             # -- initialize GUI ----------
@@ -377,7 +381,7 @@
         
             # --------------------------------------------
             #    create project Object
-        bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
+        rc_Domain::set_newProject $::APPL_Config(root_ProjectDOM)
           
           
             # --------------------------------------------

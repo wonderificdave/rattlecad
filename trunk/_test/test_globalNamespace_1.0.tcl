@@ -44,35 +44,29 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-  namespace eval _rc_gui {}
-  
+  namespace eval rc_GUI {}
+
     puts "\n\n ====== I N I T ============================ \n\n"
         
         # -- ::APPL_Config(BASE_Dir)  ------
-    set BASE_Dir  [file normalize [file dirname [file normalize $::argv0]]]
-  
+    set BASE_Dir  [file normalize [file join [file dirname [file normalize $::argv0]] ..]]
+    puts "   -> BASE_Dir: $BASE_Dir\n"
+      
         # -- redefine on Starkit  -----
         #         exception for starkit compilation
-	#        .../rattleCAD.exe
-	#        .../rattleCAD.exe
-    set APPL_Type       [file tail $::argv0]    
-    switch $APPL_Type {
-        {rattleCAD__.exe} {    
-            set BASE_Dir    [file dirname $BASE_Dir]
-        }
-	{main.tcl} -    
-	default {}
+        #        .../rattleCAD.exe
+    set APPL_Type       [file tail $BASE_Dir]    
+    if {$APPL_Type == {rattleCAD.exe}}    {    
+        set BASE_Dir    [file dirname $BASE_Dir]
     }
 
 
 
         # -- Libraries  ---------------
     lappend auto_path           [file join $BASE_Dir lib]
-
-        # puts "  \$auto_path  $auto_path"
     
-    package require   rattleCAD     3.4 
-
+	    # puts "  \$auto_path  $auto_path"
+    package require   rattleCAD  3.4
     
         # -- msgcat -1.5.0.tm - workaround  ----- on windows platforms
     switch $tcl_platform(platform) {
@@ -81,14 +75,14 @@ exec wish "$0" "$@"
             package require   registry 
 	    set regPath {HKEY_CURRENT_USER\Control Panel}    
 	    if { [catch {registry keys $regPath\\International} fid] } {
-		  # puts stderr "Could not get keys of $regPath\International\n$fid"
-		  foreach key [registry keys $regPath] {
-		      puts "             $regPath\\$key"
-		  }
-		  set interPath $regPath\\International
-		  puts "\n             $interPath"
-		  registry set $interPath
-		  puts   "             ... check: clock format -> [clock format [clock seconds]]\n"
+			# puts stderr "Could not get keys of $regPath\International\n$fid"
+		foreach key [registry keys $regPath] {
+		    puts "             $regPath\\$key"
+		}
+		set interPath $regPath\\International
+		puts "\n             $interPath"
+		registry set $interPath
+		puts   "             ... check: clock format -> [clock format [clock seconds]]\n"
 	    } 
 	}   
     }
@@ -107,63 +101,42 @@ exec wish "$0" "$@"
     } else {	    
 	init_rattleCAD $BASE_Dir
     }
-    
+    tk_messageBox -message "do schau her"
  
     puts "\n\n ====== R U N T I M E ============================ \n\n"
         
         
         # -- destroy intro - image ----
-    after  50 destroy .intro
+    after  100 destroy .intro
 
-
-	# -- keep on top --------------
+        # -- keep on top --------------
     wm deiconify .
+   
+        # -- pretest ------------------
+    puts "   info vars ::Widget::Button::            [info vars ::Widget::Button]"
+    puts "   namespace children ::Widget::Button::   [namespace children ::Widget::Button]"
     
+    puts "    [info vars ::Widget::Button::.mainframe.frame.f1.cfg:mod(-activebackground)]"
     
-	# -- check commandline args --
-    if {$argc > 1} {
-        set i 0
-        array set argValues {}
-        while {$i < [llength $argv]} {
-            set arg [lindex $argv $i]
-            # puts "         ... [string index $arg 0]"
-            if {[string index $arg 0] == {-}} {
-        	set key $arg
-        	set argValues($key) {}
-        	incr i
-            } else {
-                lappend argValues($key) [lindex $argv $i]
-                incr i
-            }
-        }
-          # parray argValues
-          # puts "\n ... <D>  [array names argValues {-test}]"
-	    
-	    
-        if {[array names argValues {-file}] == {-file}} {
-            puts "\n =============================================="    
-            puts "      ... CommandLine Argument: -file $argValues(-file)\n"    
-            set openFile [lindex $argValues(-file) 0]
-            if {$openFile != {}} {
-        	puts "          ... $openFile\n"
-    	        lib_file::openProject_xml   $openFile
-    	    }    
-        }	    
-	    
-        if {[array names argValues {-test}] == {-test}} {
-    	    puts "\n =============================================="    
-    	    puts "      ... CommandLine Argument: -test $argValues(-test)\n"    
-    	    puts "      ... run some tests\n"    
-    	    set testCommands $argValues(-test)
-    	    foreach command $testCommands {
-    	        puts "\n         ... $command"
-	        rattleCAD_Test::controlDemo $command
-    	   }
-        }
-
-	    
-    }
+    #set value $::Widget::Button::.mainframe.frame.f1.cfg:mod(-activebackground)
+    #puts "   .. $value"
+    #exit
+   
+        # -- test: report runTime -----    
+    set runtimeDOM [appUtil::namespaceReport]
+    # puts [$runtimeDOM asXML]
     
+    set TEST_Dir [file join $BASE_Dir _test]
     
-        
-
+    set fileName [file join $TEST_Dir [format "rattleCAD_%s.%s.xml" $APPL_Config(RELEASE_Version) $APPL_Config(RELEASE_Revision)]]
+    set fp      [open $fileName w]
+    puts $fp [$runtimeDOM  asXML]
+    close $fp
+    
+    puts "\n"
+    puts "  ... see also logFile:"
+    puts "             $fileName\n"
+    
+    # parray APPL_Config
+    exit
+    
