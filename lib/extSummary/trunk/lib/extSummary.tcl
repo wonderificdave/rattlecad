@@ -44,7 +44,7 @@
  #  20100629: incorrect "rotation direction" in vertical mode repaired
  #
  
- package provide extSummary 0.3
+ package provide extSummary 0.4
  
  package require Tk 8.5
  

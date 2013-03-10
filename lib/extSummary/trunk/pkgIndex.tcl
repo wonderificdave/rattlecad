@@ -8,7 +8,7 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded extSummary  0.3 "\
+package ifneeded extSummary  0.4 "\
  			[list source [file join $dir lib extSummary.tcl]]; \
  			[list source [file join $dir lib lib_rdial.tcl]]; \
    "
