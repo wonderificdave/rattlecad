@@ -399,16 +399,8 @@
         
         set BottomBracketDepth        [project::getValue Custom(BottomBracket/Depth)         value]
         set BottomBracketHeight       [expr $RearWheel(Radius) - $BottomBracketDepth]
-        set FrameSize                 [project::getValue Result(Position/SummarySize)        position]
-          # set FrameSize          [split [project::getValue Result(Position/SummarySize)        position] ,]
-        puts "--<D>------"
-        puts "     \$RearWheel(Position)     $RearWheel(Position)"
-        puts "     \$RearWheel(RimDiameter)  $RearWheel(RimDiameter)"
-        puts "     \$RearWheel(TyreHeight)   $RearWheel(TyreHeight) "
-        puts "     \$FrameSize               $FrameSize "
+        set FrameSize          [split [project::getValue Result(Position/SummarySize)        position] ,]
         set SummaryLength             [lindex $FrameSize 0]
-        puts "     \$SummaryLength           $SummaryLength "
-        puts "--<D>------"
         
         
         if {$keepPosition != {reset}} {

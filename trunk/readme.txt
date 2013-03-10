@@ -1,4 +1,10 @@
 
+3.4.00.30  - 2013.03.10
+-------------------------------------------------------------------------------
+    feature:
+        ... add runTime report to info Tab:  "rattleCAD - runTime"
+        
+
 3.4.00.28  - 2013.03.01
 -------------------------------------------------------------------------------
     debug:
@@ -20,7 +26,8 @@
 3.4.00.25  - 2013.02.28
 -------------------------------------------------------------------------------
     refactoring:
-        ... call bikeGeometry::setValue instead of bikeGeometry::set_projectValue 
+        ... call bikeGeometry::setValue instead of 
+              bikeGeometry::set_projectValue 
         ... rattleCAD_Test::controlDemo: return used time
         
 
@@ -43,7 +50,8 @@
 -------------------------------------------------------------------------------
     debug:
         ... show angles in FrameDetails View belonging between 
-              SeatTube & DownTube and SeatTube & TopTube belonging to BB Offset
+              SeatTube & DownTube and SeatTube & TopTube belonging 
+              to BB Offset
 
 
 3.4.00.20  - 2013.02.24

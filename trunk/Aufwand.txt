@@ -331,7 +331,7 @@
 2012.05.02  21:30   24:00   02:30   3.3.00 ... 29 ... bugfix on result-seattube-angle and 
                                                30 ... add intersection dimensions on down-&seattube in framedrafting
 --------------------------------------------------------------------------
-                            3:30    661,50        3.3.00.32
+                             3:30    661,50        3.3.00.32
 
                              
 2012.05.12  22:30  02:30    04:00   3.3.02 ... 00 ... add dimension for saddlenose 
@@ -418,6 +418,8 @@
 2013.02.24  12:00   18:00    06:00   3.4.00 ... 18 ... refactor: project:setValue and getValue adn rattleCAD::updateProject
 2013.02.24  18:00   22:00    04:00   3.4.00 ... 20 ... refactor: bikeGeometry, rattleCAD
 2013.02.28  00:00   00:00    25:00   3.4.00 ... 26 ... refactor: bikeGeometry, rattleCAD
-2013.03.01  10:00   14:30    04:30   3.4.00 ... 28 ... refactor: bikeGeometry, rattleCAD
+2013.03.01  10:00   05:00    05:00   3.4.00 ... 28 ... refactor: bikeGeometry, rattleCAD
+2013.03.10  00:00   00:00    53:30   3.4.00 ... 29 ... refactor: try modularize applictation -> appBike
+2013.03.10  14:00   17:00    03:00   3.4.00 ... 30 ... back to 3.4.00.28, runTime-Report in infoo-Tab
 --------------------------------------------------------------------------
-                            104,50  1003,00        3.4.00.28
+                            158,00   898,50        3.3.05.34

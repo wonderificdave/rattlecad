@@ -44,8 +44,6 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-  namespace eval rc_GUI {}
-
     puts "\n\n ====== I N I T ============================ \n\n"
         
         # -- ::APPL_Config(BASE_Dir)  ------
@@ -66,7 +64,13 @@ exec wish "$0" "$@"
     lappend auto_path           [file join $BASE_Dir lib]
     
 	    # puts "  \$auto_path  $auto_path"
-    package require   rattleCAD  3.4
+	
+    package require   rattleCAD     3.4 
+    package require   appUtil       0.11 
+    package require   canvasCAD     0.35
+    package require   bikeGeometry  0.3
+    package require   extSummary    0.3
+    
     
         # -- msgcat -1.5.0.tm - workaround  ----- on windows platforms
     switch $tcl_platform(platform) {
@@ -101,7 +105,7 @@ exec wish "$0" "$@"
     } else {	    
 	init_rattleCAD $BASE_Dir
     }
-    tk_messageBox -message "do schau her"
+    
  
     puts "\n\n ====== R U N T I M E ============================ \n\n"
         

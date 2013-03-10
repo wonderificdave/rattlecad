@@ -8,9 +8,8 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded   rattleCAD  3.4 "\  
+package ifneeded   rattleCAD  3.4 "\ 
         [list source  [file join $dir rattleCAD.tcl]]; \ 
-        [list source  [file join $dir lib__mapProject.tcl]]; \ 
         [list source  [file join $dir lib_file.tcl]]; \
         [list source  [file join $dir lib_gui.tcl]]; \
         [list source  [file join $dir lib_cfgReport.tcl]]; \
@@ -18,7 +17,6 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir lib_compLibrary.tcl]]; \
         [list source  [file join $dir lib_bikeRendering.tcl]]; \
         [list source  [file join $dir lib_version_info.tcl]]; \
-        [list source  [file join $dir lib_tube.tcl]]; \
         [list source  [file join $dir lib_projectUpdate.tcl]]; \
         [list source  [file join $dir lib_cvCustom.tcl]]; \
         [list source  [file join $dir lib_cvRearMockup.tcl]]; \

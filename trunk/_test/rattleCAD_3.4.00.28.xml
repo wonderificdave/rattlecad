@@ -2288,7 +2288,7 @@
             <_drag>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</_drag>
             <_listBoxValues>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</_listBoxValues>
             <initDOM>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</initDOM>
-            <packageHomeDir>R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/lib</packageHomeDir>
+            <packageHomeDir>E:/manfred/_profile/workspace/rattleCAD/bikeGeometry/lib</packageHomeDir>
             <projectDOM>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</projectDOM>
         </____vars>
     </bikeGeometry>
@@ -2358,8 +2358,8 @@
         </____arrays>
         <____vars>
             <DIN_Format>mm {4A0 2378 2A0 1682 A0 1189 A1 841 A2 594 A3 420 A4 297 A5 210 A6 148 A7 105 A8 74 A9 52 A10 37} ps {6741 4A0 4768 2A0 3370 A0 2384 A1 1684 A2 1191 A3 842 A4 595 A5 420 A6 298 A7 210 A8 147 A9 105 A10 }</DIN_Format>
-            <__packageDoc>domDoc00B03C60</__packageDoc>
-            <__packageRoot>domNode00B03830</__packageRoot>
+            <__packageDoc>domDoc00B03B50</__packageDoc>
+            <__packageRoot>domNode00B037D0</__packageRoot>
             <__packageXML>&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
 &lt;root&gt;
 	&lt;_package_ Version="0.5"&gt;
@@ -2380,9 +2380,9 @@
 	&lt;/_package_&gt;
 &lt;/root&gt;</__packageXML>
             <canvasUnitScale>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</canvasUnitScale>
-            <fp>file112f208</fp>
+            <fp>file11301c8</fp>
             <ghostScriptExec>D:/Programme/gs/gs9.06/bin/gswin32c.exe</ghostScriptExec>
-            <packageHomeDir>R:/_devlp/_svn_local/rattleCAD_3.4.00/canvasCAD/lib</packageHomeDir>
+            <packageHomeDir>E:/manfred/_profile/workspace/rattleCAD/canvasCAD/lib</packageHomeDir>
         </____vars>
     </canvasCAD>
     <cv_custom>
@@ -2658,7 +2658,7 @@
             <compCanvas>::lib_comp_library::cv_Component</compCanvas>
             <compFile></compFile>
             <compList_Custom>E:/manfred/Dateien/rattleCAD/components/dropout/Kai_Bendixen_00.svg E:/manfred/Dateien/rattleCAD/components/rear_derailleur/custom_00.svg</compList_Custom>
-            <compList_System>R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/default_blank.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/default_exception.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/bottle_cage/left/bottleCage.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/bottle_cage/left/bottle_Large.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/bottle_cage/left/brazeOn.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/bottle_cage/right/bottleCage.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/bottle_cage/right/bottle_Large.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/bottle_cage/right/brazeOn.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/brake/front/campagnolo_frontbrake.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/brake/front/v_frontbrake.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/brake/rear/campagnolo_rearbrake.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/brake/rear/v_rearbrake.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/crankset/campagnolo_ultra_torque.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/crankset/custom.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/crankset/shimano_FC-M770.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/crankset/shimano_hollowtech_II.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/front/campagnolo_qs.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/front/__blank__.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/rear/campagnolo_2006_long.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/rear/campagnolo_2006_medium.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/rear/campagnolo_2006_short.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/rear/campagnolo_2011_UltraShift.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/rear/custom_00.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/rear/shimano_RD-M773.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/derailleur/rear/__blank__.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/dropout_01.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/dropout_02.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/dropout_03.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/dropout_04.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/dropout_05.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/kinesis_1113.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/llewellyn_LRD_64.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/llewellyn_LRD_68.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/llewellyn_LRD_72.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/paragon_DR1008_70.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/rear_dropout_01.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/rear_dropout_02.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/rear_dropout_ss_01.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/rear_dropout_ss_RE1430.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/rear_dropout_ss_wild_lilies_grow.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/richardsachs_PiccoliGioielli_68.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/dropout/selberbruzzler_wawe_50grad.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/crown/crown_3021.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/crown/longshen_17.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/crown/longshen_34.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/crown/longshen_max_36_5.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/dropout/dropout_14.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/dropout/LE_17.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/dropout/llewellyn_LFD.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/dropout/richardsachs_PiccoliGioielli.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_composite/dropout.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_composite/fork_crown.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_suspension/fork_crown.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_suspension/suspension_bridge.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_suspension/suspension_bridge_20.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_suspension/suspension_bridge_26.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_suspension/suspension_bridge_28.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_suspension/suspension_bridge_29.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/fork/_suspension/suspension_bridge_29_FOX_32F29.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/handlebar/campagnolo_ergopower_11_a.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/handlebar/campagnolo_ergopower_11_b.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/handlebar/flatbar_sti.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/handlebar/timetrial.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/logo/rattleCAD.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/saddle/ergon_sm3-s.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/saddle/saddle.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/saddle/saddle_a.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/saddle/saddle_b.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/saddle/saddle_c.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/saddle/saddle_for_kids_a.svg R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/components/saddle/selle_italia_slr_kit_carbonio02.svg</compList_System>
+            <compList_System>E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/default_blank.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/default_exception.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/bottle_cage/left/bottleCage.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/bottle_cage/left/bottle_Large.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/bottle_cage/left/brazeOn.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/bottle_cage/right/bottleCage.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/bottle_cage/right/bottle_Large.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/bottle_cage/right/brazeOn.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/brake/front/campagnolo_frontbrake.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/brake/front/v_frontbrake.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/brake/rear/campagnolo_rearbrake.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/brake/rear/v_rearbrake.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/crankset/campagnolo_ultra_torque.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/crankset/custom.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/crankset/shimano_FC-M770.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/crankset/shimano_hollowtech_II.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/front/campagnolo_qs.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/front/__blank__.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/rear/campagnolo_2006_long.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/rear/campagnolo_2006_medium.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/rear/campagnolo_2006_short.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/rear/campagnolo_2011_UltraShift.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/rear/custom_00.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/rear/shimano_RD-M773.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/derailleur/rear/__blank__.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/dropout_01.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/dropout_02.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/dropout_03.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/dropout_04.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/dropout_05.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/kinesis_1113.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/llewellyn_LRD_64.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/llewellyn_LRD_68.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/llewellyn_LRD_72.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/paragon_DR1008_70.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/rear_dropout_01.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/rear_dropout_02.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/rear_dropout_ss_01.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/rear_dropout_ss_RE1430.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/rear_dropout_ss_wild_lilies_grow.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/richardsachs_PiccoliGioielli_68.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/dropout/selberbruzzler_wawe_50grad.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/crown/crown_3021.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/crown/longshen_17.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/crown/longshen_34.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/crown/longshen_max_36_5.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/dropout/dropout_14.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/dropout/LE_17.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/dropout/llewellyn_LFD.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/dropout/richardsachs_PiccoliGioielli.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_composite/dropout.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_composite/fork_crown.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_suspension/fork_crown.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_suspension/suspension_bridge.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_suspension/suspension_bridge_20.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_suspension/suspension_bridge_26.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_suspension/suspension_bridge_28.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_suspension/suspension_bridge_29.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/fork/_suspension/suspension_bridge_29_FOX_32F29.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/handlebar/campagnolo_ergopower_11_a.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/handlebar/campagnolo_ergopower_11_b.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/handlebar/flatbar_sti.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/handlebar/timetrial.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/logo/rattleCAD.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/saddle/ergon_sm3-s.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/saddle/saddle.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/saddle/saddle_a.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/saddle/saddle_b.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/saddle/saddle_c.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/saddle/saddle_for_kids_a.svg E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/components/saddle/selle_italia_slr_kit_carbonio02.svg</compList_System>
             <menueFrame>.mainframe.frame.f2.nb.components.f.f_menue</menueFrame>
             <rdials_list>.mainframe.frame.f2.nb.components.f.f_menue.bf.scale.off_x.f.scl .mainframe.frame.f2.nb.components.f.f_menue.bf.scale.off_y.f.scl .mainframe.frame.f2.nb.components.f.f_menue.bf.scale.angle.f.scl</rdials_list>
         </____vars>
@@ -2778,7 +2778,7 @@
                 <element name="width">900</element>
             </canvasGeometry>
             <canvasUpdate>
-                <element name="cv_Custom30">1362520410023</element>
+                <element name="cv_Custom30">1362348502618</element>
                 <element name="recompute">0</element>
             </canvasUpdate>
             <external_canvasCAD>
@@ -3195,9 +3195,9 @@
             </Result>
         </____arrays>
         <____vars>
-            <fp>file1126e78</fp>
-            <initDOM>domNode00AF2060</initDOM>
-            <initDoc>domDoc00AF2400</initDoc>
+            <fp>file111dde8</fp>
+            <initDOM>domNode00AF2040</initDOM>
+            <initDoc>domDoc00AF23D0</initDoc>
             <initXML>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
 &lt;root&gt;
     
@@ -3605,7 +3605,7 @@
     &lt;/Result&gt;
 
 &lt;/root&gt;</initXML>
-            <packageHomeDir>R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/lib</packageHomeDir>
+            <packageHomeDir>E:/manfred/_profile/workspace/rattleCAD/bikeGeometry/lib</packageHomeDir>
             <postUpdate></postUpdate>
             <projDoc>domDoc00AFB180</projDoc>
             <projXML>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
@@ -3938,7 +3938,7 @@
     &lt;/Result&gt;
 &lt;/root&gt;</projXML>
             <DOM>domNode00B0DAC0</DOM>
-            <resultNode>domNode00AF50A0</resultNode>
+            <resultNode>domNode00AF5080</resultNode>
             <xPath>root/Result/TubeMiter/Reference/Polygon</xPath>
         </____vars>
     </project>
@@ -4116,7 +4116,7 @@
         <____vars>
             <Dir>D:/Programme/TclTk/lib/tcl8.5/encoding</Dir>
             <Path>D:/Programme/TclTk/lib/tcl8.5/encoding</Path>
-            <auto_oldpath>{R:\_devlp\_svn_local\rattleCAD_3.4.00\rattleCAD_3.4.00.28} {R:\_devlp\_svn_local\rattleCAD_3.4.00\bikeGeometry} {R:\_devlp\_svn_local\rattleCAD_3.4.00\vectorMath} {R:\_devlp\_svn_local\rattleCAD_3.4.00\canvasCAD} {R:\_devlp\_svn_local\rattleCAD_3.4.00\extSummary} {R:\_devlp\_svn_local\rattleCAD_3.4.00\appUtil} {R:\_devlp\_svn_local\rattleCAD_3.4.00\osEnv} D:/Programme/TclTk/lib/tcl8.5 D:/Programme/TclTk/lib d:/programme/tcltk/lib/teapot/package/win32-ix86/lib d:/programme/tcltk/lib/teapot/package/tcl/lib R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/lib D:/Programme/TclTk/lib/tk8.5 D:/Programme/TclTk/lib/tk8.5/ttk</auto_oldpath>
+            <auto_oldpath>{E:\manfred\_profile\workspace\rattleCAD\rattleCAD_3.4} {E:\manfred\_profile\workspace\rattleCAD\bikeGeometry} {E:\manfred\_profile\workspace\rattleCAD\vectorMath} {E:\manfred\_profile\workspace\rattleCAD\canvasCAD} {E:\manfred\_profile\workspace\rattleCAD\extSummary} {E:\manfred\_profile\workspace\rattleCAD\appUtil} {E:\manfred\_profile\workspace\rattleCAD\osEnv} D:/Programme/TclTk/lib/tcl8.5 D:/Programme/TclTk/lib d:/programme/tcltk/lib/teapot/package/win32-ix86/lib d:/programme/tcltk/lib/teapot/package/tcl/lib E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/lib D:/Programme/TclTk/lib/tk8.5 D:/Programme/TclTk/lib/tk8.5/ttk</auto_oldpath>
         </____vars>
     </tcl>
     <tk>
@@ -4969,10 +4969,10 @@
         <____vars>
             <error_col>#a00000</error_col>
             <fid>m_iso8</fid>
-            <font_dir>R:/_devlp/_svn_local/rattleCAD_3.4.00/canvasCAD/font</font_dir>
+            <font_dir>E:/manfred/_profile/workspace/rattleCAD/canvasCAD/font</font_dir>
             <glb_shp></glb_shp>
             <linewidth>0.4947332336075791</linewidth>
-            <packageHomeDir>R:/_devlp/_svn_local/rattleCAD_3.4.00/canvasCAD/lib</packageHomeDir>
+            <packageHomeDir>E:/manfred/_profile/workspace/rattleCAD/canvasCAD/lib</packageHomeDir>
             <texthandle>30</texthandle>
         </____vars>
     </vectorfont>
@@ -5102,28 +5102,28 @@
             <element name="Lugs/RearDropOut/File">components/dropout</element>
         </APPL_CompLocation>
         <APPL_Config>
-            <element name="BASE_Dir">R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28</element>
-            <element name="CONFIG_Dir">R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc</element>
+            <element name="BASE_Dir">E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4</element>
+            <element name="CONFIG_Dir">E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc</element>
             <element name="EXPORT_Dir">E:/manfred/Dateien/rattleCAD/export</element>
             <element name="EXPORT_HTML">E:/manfred/Dateien/rattleCAD/html</element>
             <element name="EXPORT_PDF">E:/manfred/Dateien/rattleCAD/pdf</element>
             <element name="FILE_List"></element>
             <element name="FrameJigType">nuremberg</element>
             <element name="GUI_Font">Arial 8</element>
-            <element name="IMAGE_Dir">R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/image</element>
+            <element name="IMAGE_Dir">E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/image</element>
             <element name="Language">english</element>
             <element name="PROJECT_File">Template Road</element>
             <element name="PROJECT_Name">Template Road</element>
-            <element name="PROJECT_Save">1362520405555</element>
+            <element name="PROJECT_Save">1362348498912</element>
             <element name="RELEASE_Date">01. Mar. 2013</element>
             <element name="RELEASE_Revision">28</element>
             <element name="RELEASE_Version">3.4.00</element>
-            <element name="ROOT_Dir">R:/_devlp/_svn_local/rattleCAD_3.4.00</element>
-            <element name="SAMPLE_Dir">R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/sample</element>
-            <element name="TEST_Dir">R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/_test</element>
-            <element name="TemplateInit">R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/template_road_3.4.xml</element>
-            <element name="TemplateMTB_default">R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/template_mtb_3.4.xml</element>
-            <element name="TemplateRoad_default">R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/etc/template_road_3.4.xml</element>
+            <element name="ROOT_Dir">E:/manfred/_profile/workspace/rattleCAD</element>
+            <element name="SAMPLE_Dir">E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/sample</element>
+            <element name="TEST_Dir">E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/_test</element>
+            <element name="TemplateInit">E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/template_road_3.4.xml</element>
+            <element name="TemplateMTB_default">E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/template_mtb_3.4.xml</element>
+            <element name="TemplateRoad_default">E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/etc/template_road_3.4.xml</element>
             <element name="TemplateType">Road</element>
             <element name="USER_Dir">E:/manfred/Dateien/rattleCAD</element>
             <element name="USER_InitString">_init_Template</element>
@@ -5141,7 +5141,7 @@
             <element name="list_FrameJigTypes">rattleCAD vienna nuremberg geldersheim</element>
             <element name="list_Rims">{622 ; 28” ETRTO-Road} {559 ; 26” ETRTO-MTB} {571 ; 26” ETRTO-Tria} ----------------- {590 ; 26” ETRTO} {507 ; 24” ETRTO} {451 ; 20” ETRTO} {406 ; 20” ETRTO} {355 ; 18” ETRTO} {349 ; 18” ETRTO} {340 ; 18” ETRTO} {330 ; 16” ETRTO} {305 ; 16” ETRTO} ----------------- {635 ; 28” french} {630 ; 27” english} {584 ; 26” french} {540 ; 24” french} {490 ; 22” french} {440 ; 22” french} {390 ; 20” french} {340 ; 16” french} {298 ; 14” french}</element>
             <element name="list_TemplateTypes">Road MTB</element>
-            <element name="root_InitDOM">domNode00B03A00</element>
+            <element name="root_InitDOM">domNode00B03DA0</element>
             <element name="root_ProjectDOM">domNode00B0DAC0</element>
             <element name="user_InitDOM">domNode00B0A050</element>
             <element name="window_Size">0</element>
@@ -5634,7 +5634,7 @@
             <element name="SESSIONNAME">Console</element>
             <element name="SystemDrive">D:</element>
             <element name="SystemRoot">D:\WINDOWS</element>
-            <element name="TCLLIBPATH">{R:\_devlp\_svn_local\rattleCAD_3.4.00\rattleCAD_3.4.00.28} {R:\_devlp\_svn_local\rattleCAD_3.4.00\bikeGeometry} {R:\_devlp\_svn_local\rattleCAD_3.4.00\vectorMath} {R:\_devlp\_svn_local\rattleCAD_3.4.00\canvasCAD} {R:\_devlp\_svn_local\rattleCAD_3.4.00\extSummary} {R:\_devlp\_svn_local\rattleCAD_3.4.00\appUtil} {R:\_devlp\_svn_local\rattleCAD_3.4.00\osEnv}</element>
+            <element name="TCLLIBPATH">{E:\manfred\_profile\workspace\rattleCAD\rattleCAD_3.4} {E:\manfred\_profile\workspace\rattleCAD\bikeGeometry} {E:\manfred\_profile\workspace\rattleCAD\vectorMath} {E:\manfred\_profile\workspace\rattleCAD\canvasCAD} {E:\manfred\_profile\workspace\rattleCAD\extSummary} {E:\manfred\_profile\workspace\rattleCAD\appUtil} {E:\manfred\_profile\workspace\rattleCAD\osEnv}</element>
             <element name="TEMP">D:\WINDOWS\TEMP</element>
             <element name="TMP">D:\WINDOWS\TEMP</element>
             <element name="USERDOMAIN">HP7600</element>
@@ -5657,12 +5657,12 @@
         </tcl_platform>
     </____arrays>
     <____vars>
-        <APPL_Type>rattleCAD_3.4.00.28</APPL_Type>
-        <BASE_Dir>R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28</BASE_Dir>
+        <APPL_Type>rattleCAD_3.4</APPL_Type>
+        <BASE_Dir>E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4</BASE_Dir>
         <argc>0</argc>
         <argv></argv>
-        <argv0>R:\_devlp\_svn_local\rattleCAD_3.4.00\rattleCAD_3.4.00.28\_test\test_rattleCAD_globalNamespace_1.0.tcl</argv0>
-        <auto_path>{R:\_devlp\_svn_local\rattleCAD_3.4.00\rattleCAD_3.4.00.28} {R:\_devlp\_svn_local\rattleCAD_3.4.00\bikeGeometry} {R:\_devlp\_svn_local\rattleCAD_3.4.00\vectorMath} {R:\_devlp\_svn_local\rattleCAD_3.4.00\canvasCAD} {R:\_devlp\_svn_local\rattleCAD_3.4.00\extSummary} {R:\_devlp\_svn_local\rattleCAD_3.4.00\appUtil} {R:\_devlp\_svn_local\rattleCAD_3.4.00\osEnv} D:/Programme/TclTk/lib/tcl8.5 D:/Programme/TclTk/lib d:/programme/tcltk/lib/teapot/package/win32-ix86/lib d:/programme/tcltk/lib/teapot/package/tcl/lib R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4.00.28/lib D:/Programme/TclTk/lib/tk8.5 D:/Programme/TclTk/lib/tk8.5/ttk</auto_path>
+        <argv0>E:\manfred\_profile\workspace\rattleCAD\rattleCAD_3.4\_test\test_rattleCAD_globalNamespace_1.0.tcl</argv0>
+        <auto_path>{E:\manfred\_profile\workspace\rattleCAD\rattleCAD_3.4} {E:\manfred\_profile\workspace\rattleCAD\bikeGeometry} {E:\manfred\_profile\workspace\rattleCAD\vectorMath} {E:\manfred\_profile\workspace\rattleCAD\canvasCAD} {E:\manfred\_profile\workspace\rattleCAD\extSummary} {E:\manfred\_profile\workspace\rattleCAD\appUtil} {E:\manfred\_profile\workspace\rattleCAD\osEnv} D:/Programme/TclTk/lib/tcl8.5 D:/Programme/TclTk/lib d:/programme/tcltk/lib/teapot/package/win32-ix86/lib d:/programme/tcltk/lib/teapot/package/tcl/lib E:/manfred/_profile/workspace/rattleCAD/rattleCAD_3.4/lib D:/Programme/TclTk/lib/tk8.5 D:/Programme/TclTk/lib/tk8.5/ttk</auto_path>
         <cfg_panel>image20</cfg_panel>
         <debug_level>0</debug_level>
         <dir>d:/programme/tcltk/lib/teapot/package/tcl/lib/BWidget1.9.5</dir>

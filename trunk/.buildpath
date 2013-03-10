@@ -11,7 +11,6 @@
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/vectorMath"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/canvasCAD"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/extSummary"/>
-	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/appUtil"/>
+	<buildpathentry combineaccessrules="false" kind="prj" path="/appUtil"/>
 	<buildpathentry combineaccessrules="false" kind="prj" path="/osEnv"/>
-	<buildpathentry combineaccessrules="false" kind="prj" path="/rattleCAD_Domain"/>
 </buildpath>

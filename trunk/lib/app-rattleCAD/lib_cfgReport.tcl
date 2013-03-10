@@ -77,13 +77,16 @@
 
         button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { lib_cfg_report::fillTree_Variable $bikeGeometry::domFrame    }
         button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { lib_cfg_report::fillTree_Variable {currentProject} }
+        button  $menueFrame.bt07    -text {rattleCAD - Runtime}             -width 30   -command { lib_cfg_report::fillTree_Variable {runTime} }
         button  $menueFrame.clear   -text {clear Tree}                      -width 30   -command { lib_cfg_report::cleanupTree }
+        
         pack    $menueFrame.open \
                 $menueFrame.bt01 \
                 $menueFrame.bt02 \
                 $menueFrame.bt03 \
                 $menueFrame.bt04 \
                 $menueFrame.bt06 \
+                $menueFrame.bt07 \
                 $menueFrame.clear \
                 -side top
 
@@ -91,11 +94,13 @@
             #    [lib_file::getTemplateFile    $::APPL_Config(TemplateType)]
 
         set treeWidget  [ ttk::treeview $treeFrame.tree \
-                                                    -columns "value" \
+                                                    -columns "attr value" \
                                                     -xscrollcommand "$treeFrame.tree_x set" \
                                                     -yscrollcommand "$treeFrame.tree_y set" ]
             $treeWidget heading "#0"   -anchor w  -text "XML" -anchor w
             $treeWidget column  "#0"   -width  160
+            $treeWidget heading attr   -anchor w  -text "Attribute"
+            $treeWidget column  attr   -width  60
             $treeWidget heading value  -anchor w  -text "Value"
             $treeWidget column  value  -width  900
 
@@ -136,6 +141,10 @@
             currentProject {
                     set var [bikeGeometry::get_projectXML]
                 }
+            runTime {   
+                    set var [appUtil::namespaceReport ::]
+                }
+   
             default {}
         }
             
@@ -167,6 +176,9 @@
 
             set domDepth [llength [split [$node toXPath] /]]
             set nodeName [$node nodeName]
+            if {[catch {set nodeAttr_Name [$node getAttribute name]} eID]} {
+                set nodeAttr_Name {-}
+            }
             set done 0
             if {$nodeName eq "#text" || $nodeName eq "#cdata"} {
                 set text [string map {\n " "} [$node nodeValue]]
@@ -181,7 +193,7 @@
                     set done 1
                 }
             }
-            $w insert $parent end -id $node -text $nodeName -tags $node -values [list "$text" ]
+            $w insert $parent end -id $node -text $nodeName -tags $node -values [list "$nodeAttr_Name" "$text" ]
 
             case [expr $domDepth-1] {
                  0  {   set r [format %x  0];   set g [format %x  0];   set b [format %x 15]}
