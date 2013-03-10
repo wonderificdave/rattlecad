@@ -53,6 +53,7 @@
         #  definitions of template Documents
     variable initDOM 
     variable projectDOM
+    variable projectDICT
     variable resultNode
     
     
@@ -249,6 +250,32 @@
             }
             return $projectDOM
     }
+    #-------------------------------------------------------------------------
+    proc runTime_2_dict {} {
+            
+            variable projectDICT 
+            
+            set domNode [runTime_2_dom]
+                
+            #puts "\n\n"
+            #puts "     -------------------------------"
+            #puts "      projectGeometry::runTime_2_dict"
+            #puts "        ... domNode:  [$domNode nodeName]" 
+
+            foreach branch [[$domNode selectNodes /[$domNode nodeName]] childNodes] {
+                    # puts " 1st level:  [$branch toXPath]"
+                    # just care about nodes of type ELEMENT_NODE
+                    #  or be aware of comments at this level
+                if {[$branch nodeType] != {ELEMENT_NODE}} {
+                    continue
+                }
+                    # create a new branch in dictionary projectDICT
+                set branchNode [[dom parse [$branch asXML]] documentElement]
+                    # fill the dictionary
+                recurse_domTree $branchNode
+            }
+            return $projectDICT 
+    }    
     #-------------------------------------------------------------------------
         # unifyKey 
         #
@@ -558,6 +585,55 @@
     }    
     
     
+    #-------------------------------------------------------------------------
+        # recursion function for runTime_2_dict
+    proc recurse_domTree {node} {
+            variable projectDICT
+            
+            set xPath       [$node toXPath]
+            set nodeName    [$node nodeName]
+            # puts "   -> $xPath - $nodeName"
+
+            
+            set nodeType [$node nodeType]
+            
+              # just handle nodes of type ...
+            switch -exact -- $nodeType {
+              TEXT_NODE {
+                    set textValue [$node asText]
+                    set dictPath  [lrange [split [string trim $xPath "/"] /] 0 end-1]
+                    dict set projectDICT {*}${dictPath} {}
+                    set_dictValue ${dictPath} ${textValue}
+                    return
+                  }
+              ELEMENT_NODE {
+                    foreach childNode [$node childNodes] {
+                        recurse_domTree $childNode
+                    }
+                  }
+              default { return }
+            }
+    }
+    proc set_dictValue {dictPath dictValue} {
+            variable projectDICT         
+            if {[dict exists $projectDICT {*}$dictPath]} {
+                  # nested dict does exist
+                if {[expr fmod([llength $dictValue],2)] < 1} {
+                    set command [format "dict set projectDICT %s {\"%s\"}" $dictPath $dictValue]
+                } else {
+                    set command [format "dict set projectDICT %s {%s}" $dictPath $dictValue]
+                }
+                {*}$command
+                return
+            }
+    }
+    proc get_dictValue {dictPath dictKey} {
+              variable projectDICT  
+              set value "___undefined___"
+              catch {set value [dict get $projectDICT {*}$dictPath $dictKey]}
+                # puts "     ... getValue: $value  <- $dictPath / $dictKey"
+              return $value
+    }     
     #-------------------------------------------------------------------------
         # see  http://wiki.tcl.tk/23526
         #

@@ -37,7 +37,7 @@
  #
  #
 
- package provide bikeGeometry 0.15
+ package provide bikeGeometry 0.17
 
  namespace eval bikeGeometry {
 
@@ -172,6 +172,13 @@
     proc get_projectXML {} {
             return [project::runTime_2_dom]
     }
+    
+    #-------------------------------------------------------------------------
+        #  get current projectDOM as XML
+    proc get_projectDICT {} {
+            return [project::runTime_2_dict]
+    }
+
     
     #-------------------------------------------------------------------------
         #  init Fork Configuration
