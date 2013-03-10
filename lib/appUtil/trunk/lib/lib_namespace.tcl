@@ -57,6 +57,7 @@ exec tclsh "$0" ${1+"$@"}
                         # puts "   -> \$_nodeName: $_element -> $_nodeName"
                     set _node       [$domDOC createElement $_nodeName]
                     $_domNode appendChild $_node
+                    _add_procArgs $_node $_element
                 }
             } 
             
@@ -92,9 +93,21 @@ exec tclsh "$0" ${1+"$@"}
                         # -- add value to node
                     _add_varValue $_node $_element
                 } 
-            }   
-    
+            }
     }
+
+    proc appUtil::_add_procArgs {domNode varName} {
+            
+            set domDOC [$domNode ownerDocument]
+    
+                # puts "      -> _add_arraykeyValues:  $domNode $varName"
+            
+            set _procArgs   [info args $varName]
+            set _varValue [check_nodeValue $_procArgs]
+            $domNode appendChild [$domDOC createTextNode $_varValue]
+    }
+
+
     
     proc appUtil::_add_arraykeyValues {domNode arrayName} {
             
