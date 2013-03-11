@@ -176,20 +176,22 @@
 
             set domDepth [llength [split [$node toXPath] /]]
             set nodeName [$node nodeName]
-            if {[catch {set nodeAttr_Name [$node getAttribute name]} eID]} {
-                set nodeAttr_Name {-}
-            }
             set done 0
             if {$nodeName eq "#text" || $nodeName eq "#cdata"} {
                 set text [string map {\n " "} [$node nodeValue]]
             } else {
                 set text {}
+                set nodeAttr_Name {-}
                 foreach att [getAttributes $node] {
+                    if {$att == {name}} {
+                        catch {set nodeAttr_Name [$node getAttribute name]}
+                        continue
+                    }
                     catch {append text " $att=\"[$node getAttribute $att]\""}
                 }
                 set children [$node childNodes]
                 if {[llength $children]==1 && [$children nodeName] eq "#text"} {
-                    append text [$children nodeValue]
+                    append text " [$children nodeValue]"
                     set done 1
                 }
             }
