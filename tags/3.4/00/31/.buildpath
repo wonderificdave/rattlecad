@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path=""/>
+	<buildpathentry kind="con" path="org.eclipse.dltk.launching.INTERPRETER_CONTAINER">
+		<attributes>
+			<attribute name="user_dependencies" value=""/>
+			<attribute name="auto_dependencies" value="starkit|registry|Tk|Tcl|tdom|BWidget"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/bikeGeometry"/>
+	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/vectorMath"/>
+	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/canvasCAD"/>
+	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/extSummary"/>
+	<buildpathentry combineaccessrules="false" kind="prj" path="/appUtil"/>
+	<buildpathentry combineaccessrules="false" kind="prj" path="/osEnv"/>
+</buildpath>
