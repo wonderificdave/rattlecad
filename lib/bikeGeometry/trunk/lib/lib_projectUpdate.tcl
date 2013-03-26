@@ -1122,6 +1122,16 @@
                                 #
                               if {$node_Blade == {}} {
                                   $node_Rendering appendXML "<ForkBlade>straight</ForkBlade>"
+                              } else {
+                                      # -- fix -------
+                                      # http://sourceforge.net/p/rattlecad/tickets/2/
+                                  if {[llength $node_Blade] > 1} {
+                                        # tk_messageBox -message " do hots wos"
+                                      foreach node [lrange $node_Blade 1 end] {
+                                          $node_Rendering removeChild $node
+                                          $node delete
+                                      }
+                                  }
                               }
                                 # puts " -- 02 ----- [[$projectDOM selectNode /root/Rendering/ForkBlade] asXML]"
                               switch -exact $forkRendering {
