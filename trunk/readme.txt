@@ -4,7 +4,8 @@
     debug:
         ... bikeGeometry 0.18: Fork Setting fails on 3.3.06.20 
                http://sourceforge.net/p/rattlecad/tickets/2/
-        
+
+               
 3.4.00.31  - 2013.03.11
 -------------------------------------------------------------------------------
     debug:
