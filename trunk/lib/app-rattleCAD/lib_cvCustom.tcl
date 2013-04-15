@@ -929,6 +929,7 @@
 
                             #$cv_Name create circle  [lindex $SeatTube(vct_Top) 0]        -radius 15  -outline red    -width 1        -tags __CenterLine__
                             #$cv_Name create circle  [lindex $SeatTube(vct_Top) 1]            -radius 15  -outline blue   -width 1        -tags __CenterLine__
+                            #             lib_gui::cv_Custom40 setPrecision 2 force
 
 
                                 set DownTube(polygon)   [ bikeGeometry::get_Object DownTube polygon        $BB_Position  ]
@@ -1174,6 +1175,9 @@
 
                                 # -- Cutting Length --------------------
                                 #
+                                # --- modify dimension precision from 1 to 2
+                           lib_gui::cv_Custom40 setPrecision 2
+                                # 
                                 set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon $BB_Position  ]
                                 set pt_01               [ bikeGeometry::coords_get_xy $TopTube(polygon)  8 ]
                                 set pt_02               [ bikeGeometry::coords_get_xy $TopTube(polygon) 11 ]
@@ -1191,6 +1195,10 @@
                             set _dim_SeatTube_CutLength [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $help_st_dt $pt_05] ] \
                                                                                         aligned    [expr   90 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
+                                                                                        lib_gui::cv_Custom40 setPrecision 2
+                                #  --- reset dimension precision to default
+                            lib_gui::cv_Custom40 setPrecision reset
+                                                                                                                                                                                
 
 
                                 # -- Tubing Details --------------------

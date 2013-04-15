@@ -203,7 +203,11 @@
             $noteBook_top add [frame $noteBook_top.components]     -text "... Components" 
             $noteBook_top add [frame $noteBook_top.report]         -text "... info" 
             
-
+            
+                # ---     modify dimension precision in Frame Drafting ; updates current and default precision
+            #lib_gui::cv_Custom40 setPrecision 2 force
+                
+                
                 # ---     fill with Report Widgets
             lib_cfg_report::createReport     $noteBook_top.report
                 # ---     fill with Library Widgets
