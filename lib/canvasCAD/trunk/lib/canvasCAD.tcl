@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.36
+package provide canvasCAD 0.38
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -78,7 +78,8 @@ package require tdom
                 close         $fp
                 
             variable DIN_Format {}
-            variable ghostScriptExec {}            
+            variable ghostScriptExec {}
+            variable precValue 1
             
             set __packageDoc  [dom parse $__packageXML]
             set __packageRoot [$__packageDoc documentElement]
@@ -139,10 +140,10 @@ package require tdom
                 set canvasDOMNode    [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                 setNodeAttribute  $canvasDOMNode  Stage  title    $title
                 setNodeAttribute  $canvasDOMNode  Stage  width    $st_width
-                setNodeAttribute  $canvasDOMNode  Stage  height    $st_height
-                setNodeAttribute  $canvasDOMNode  Stage  unit    $st_unit 
+                setNodeAttribute  $canvasDOMNode  Stage  height   $st_height
+                setNodeAttribute  $canvasDOMNode  Stage  unit     $st_unit 
                 setNodeAttribute  $canvasDOMNode  Stage  scale    $stageScale                     
-                setNodeAttribute  $canvasDOMNode  Stage  format    $stageFormat                     
+                setNodeAttribute  $canvasDOMNode  Stage  format   $stageFormat                     
             
             # ------- Create the object ----------------------------------
                 proc $name {method args} [format { canvasCAD::ObjectMethods %s $method $args } $name]
@@ -436,7 +437,15 @@ package require tdom
                                     set argList         [lrange $argList 2 end]
                                     return [ dimension  $type $canvasDOMNode $CoordList $argList ]
                                 }
-                    # ------------------------            
+                    # ------------------------
+                setPrecision {
+                                    set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    set precValue       [lindex $argList 0]
+                                    set argType         [lindex $argList 1]
+                                    set precValue       [setPrecision $canvasDOMNode $precValue $argType]
+                                    return $precValue
+                               }                               
+                    # ------------------------                           
                 scaleToCenter {     set scale           [lindex $argList 0]
                                     return [ scaleToCenter     $name $scale ] 
                                 }
@@ -532,11 +541,11 @@ package require tdom
 
             # tk_messageBox -message "create:  \n    $w  $type \n    $cv_Config\n    $CoordList \n    $args "            
             set w            [ getNodeAttribute    $canvasDOMNode    Canvas     path  ]            
-            set wScale        [ getNodeAttribute    $canvasDOMNode    Canvas     scale ]            
-            set stageScale     [ getNodeAttribute    $canvasDOMNode    Stage    scale ]            
-            set stageUnit     [ getNodeAttribute    $canvasDOMNode    Stage    unit  ]            
+            set wScale       [ getNodeAttribute    $canvasDOMNode    Canvas     scale ]            
+            set stageScale   [ getNodeAttribute    $canvasDOMNode    Stage      scale ]            
+            set stageUnit    [ getNodeAttribute    $canvasDOMNode    Stage      unit  ]            
             set font         [ getNodeAttribute    $canvasDOMNode    Style      font  ]
-            set unitScale    [ get_unitRefScale     $stageUnit    ]
+            set unitScale    [ get_unitRefScale    $stageUnit    ]
 
             set moveVector  [ get_BottomLeft $w ]
             
@@ -794,6 +803,45 @@ package require tdom
         proc characterList {} {     
             # puts "  -- characterList_Vector"
             return [vectorfont::get_characterList]
+        }
+        
+        
+        
+        #-------------------------------------------------------------------------
+            #
+            # changes precision of dimension for just this canvasCAD
+            #       
+        proc setPrecision {canvasDOMNode newPrecision styleArgument} {            
+            set defaultValue [getNodeAttribute  $canvasDOMNode  Style  defaultprecision]
+            set currentValue [getNodeAttribute  $canvasDOMNode  Style  precision]
+            
+            if {$newPrecision == {reset}} {
+                    # puts "  -- setPrecision ---"
+                setNodeAttribute  $canvasDOMNode  Style  precision $defaultValue
+                return $defaultValue
+            }
+
+            if {![catch {set newValue [expr int($newPrecision)]} eID]} {
+                    # puts "  -> got it: \$newValue  $newValue"
+                switch -exact $styleArgument {
+                    {default} {
+                        setNodeAttribute  $canvasDOMNode  Style  defaultprecision $newValue
+                            # puts "  -> $styleArgument / $newValue"
+                        return $newValue
+                    }
+                    {force} {
+                        setNodeAttribute  $canvasDOMNode  Style  defaultprecision $newValue
+                        setNodeAttribute  $canvasDOMNode  Style  precision $newValue
+                        return $newValue
+                    }
+                    default {
+                        setNodeAttribute  $canvasDOMNode  Style  precision $newValue
+                            # puts "  -> $styleArgument / $newValue"
+                        return $newValue
+                    }
+                }
+            }
+            return $defaultValue
         }
 
     

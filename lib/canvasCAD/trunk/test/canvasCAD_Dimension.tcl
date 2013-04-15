@@ -19,7 +19,7 @@
   lappend auto_path "$APPL_ROOT_Dir"
   
   package require 	Tk
-  package require   canvasCAD
+  package require   canvasCAD 0.38
 
   
  	
@@ -80,8 +80,9 @@
 		variable font_colour		black
 		variable demo_type			dimension
 		variable drw_scale		     0.8
-		variable cv_scale		     1
-				
+        variable cv_scale            1
+        variable precision           1
+                        				
 		proc createStage {cv_path cv_width cv_height st_width st_height unit st_scale args} {
 			variable myCanvas
 			variable cv_scale
@@ -179,6 +180,32 @@
 				
 				$myCanvas scaleToCenter $cv_scale
 		}
+		
+        proc setPrecision {{precValue {1}}} {
+        
+                variable  myCanvas
+                
+                variable  precision 
+                
+                puts "\n  -> setPrecision:   $myCanvas"
+                
+                #$myCanvas clean_StageContent
+                #set board [ $myCanvas dict_getValue Canvas  path]
+            
+                
+                puts "\n\n============================="
+                puts "   -> precision:           $precValue"
+                puts "============================="
+                puts "\n\n"
+                
+                set precValue [$myCanvas setPrecision $precValue ]
+                puts "   -> precision:           $precValue"
+                
+                set sketchboard::precision $precValue
+                
+                update_board
+        }
+		
 		
 		proc update_board {{value {0}}} {
 			
@@ -424,8 +451,12 @@
 								   $f_settings.scale.drw_scale.scl      configure   -resolution 0.1
 				create_config_line $f_settings.scale.cv_scale	" Canvas scale  "  sketchboard::cv_scale	 0.2  5.0  
 								   $f_settings.scale.cv_scale.scl      	configure   -resolution 0.1  -command "sketchboard::scale_board"
-				button  		   $f_settings.scale.recenter   -text "recenter"   -command {sketchboard::recenter_board}
-				button  		   $f_settings.scale.refit		-text "refit"      -command {sketchboard::refit_board}
+                create_config_line $f_settings.scale.precision  " Dimension precision"  sketchboard::precision  0  5  
+                                   $f_settings.scale.precision.scl      configure   -resolution 1.0  -command "sketchboard::setPrecision"
+
+                button             $f_settings.scale.reset   -text "reset Precision"   -command {sketchboard::setPrecision reset}
+                button             $f_settings.scale.recenter   -text "recenter"   -command {sketchboard::recenter_board}
+                button  		   $f_settings.scale.refit		-text "refit"      -command {sketchboard::refit_board}
 								   
 
 				# -- select font-colour ---
@@ -480,6 +511,7 @@
 						$f_settings.demo.graphic \
 						$f_settings.scale.drw_scale \
 						$f_settings.scale.cv_scale \
+                        $f_settings.scale.reset\
 						$f_settings.scale.recenter \
 						$f_settings.scale.refit \
 					 -side top  -fill x
@@ -501,7 +533,7 @@
 		
 	set f_demo  [labelframe .f0.f_config.f_demo  -text "Demo" ]
 		button  $f_demo.bt_clear   -text "clear"  -command {$sketchboard::myCanvas clean_StageContent} 
-		button  $f_demo.bt_update  -text "update"   -command {sketchboard::update_board}
+		button  $f_demo.bt_update  -text "update" -command {sketchboard::update_board}
  	
 	pack  $f_demo  -side top 	-expand yes -fill x
 		pack $f_demo.bt_clear 	-expand yes -fill x
@@ -519,6 +551,7 @@
 	
 	pack  $f_status  -side top -expand yes -fill x
 
+    set sketchboard::precision [$sketchboard::myCanvas setPrecision 2 default]
 
 	####+### E N D
   update

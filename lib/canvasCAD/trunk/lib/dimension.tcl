@@ -147,6 +147,8 @@ namespace eval dimension {
 			#  	create_Text   $w  $cv_Config  $cv_Dimension  $dimText  $textOrient  $textPosition  $textPosAngle 
 			#	create_Text   $w  $cv_Config  $cv_Dimension  $dimText  $textPosition  $textPosAngle $textOrient  
     proc create_Text {canvasDOMNode dimValue format p dimAngle colour } {
+            
+            set precValue $canvasCAD::precValue
 		
 			set w		 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Canvas 	path 		]			
 			set stageUnit 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Stage	unit 		]			
@@ -155,17 +157,21 @@ namespace eval dimension {
 			set fontColour 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Style  	fontcolour	]
 			set fontDist	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Style  	fontdist	]
 			set font 		[ canvasCAD::getNodeAttribute  $canvasDOMNode	Style  	font		]
-			set fontStyle 	[ canvasCAD::getNodeAttribute  $canvasDOMNode	Style  	fontstyle	]
-			set fontWidth	[ expr $fontSize / 10 ]
-			set unitScale	[ canvasCAD::get_unitRefScale $stageUnit ]
+            set fontStyle   [ canvasCAD::getNodeAttribute  $canvasDOMNode   Style   fontstyle   ]
+            set fontWidth   [ expr $fontSize / 10 ]
+            set dimPrec     [ canvasCAD::getNodeAttribute  $canvasDOMNode   Style   precision   ]
+            set unitScale	[ canvasCAD::get_unitRefScale  $stageUnit ]
 			
 
 			# -------------------------------
 				# format text
 			if { $fontColour != $colour } { set fontColour 	$colour }
 			if { $dimValue < 0 } {set dimValue [expr -1*$dimValue]	}
-			set text_1	[ format "%.1f%s" $dimValue	$format]
-                        set text 	[ string map {. ,} $text_1	]
+			set formatString "\%.${dimPrec}f\%s"
+            set text_1   [ format "$formatString" $dimValue $format]
+                # set text_1   [ format "%.1f%s" $dimValue $format]
+            
+            set text 	[ string map {. ,} $text_1	]
 			
 			# -------------------------------
 				# geometric definitions			
