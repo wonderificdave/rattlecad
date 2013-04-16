@@ -1176,7 +1176,8 @@
                                 # -- Cutting Length --------------------
                                 #
                                 # --- modify dimension precision from 1 to 2
-                           lib_gui::cv_Custom40 setPrecision 2
+                           # reset be 3.4.00.34
+                           #lib_gui::cv_Custom40 setPrecision 2
                                 # 
                                 set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon $BB_Position  ]
                                 set pt_01               [ bikeGeometry::coords_get_xy $TopTube(polygon)  8 ]
@@ -1197,7 +1198,8 @@
                                                                                         darkviolet ]
                                                                                         lib_gui::cv_Custom40 setPrecision 2
                                 #  --- reset dimension precision to default
-                            lib_gui::cv_Custom40 setPrecision reset
+                            # reset be 3.4.00.34
+                            # lib_gui::cv_Custom40 setPrecision reset
                                                                                                                                                                                 
 
 
