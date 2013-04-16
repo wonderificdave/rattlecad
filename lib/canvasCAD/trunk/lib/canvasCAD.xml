@@ -13,7 +13,7 @@
 		<Object_Template>
 			<Canvas path="" iborder="0" scale=""/>
 			<Stage 	format="" unit="" scale="" width="" height="" title=""/>
-			<Style  linewidth="0.35" linecolour="black" fontstyle="vector" fontsize="3.5" fontdist="1" font="Arial" fontcolour="black" precision="1" defaultprecision="1"/>
+			<Style  linewidth="0.35" linecolour="black" fontstyle="vector" fontsize="3.5" fontdist="1" font="Arial" fontcolour="black" precision="2" defaultprecision="2"/>
 		</Object_Template>
 	</_package_>
 </root>

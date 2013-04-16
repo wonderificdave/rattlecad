@@ -165,13 +165,30 @@ namespace eval dimension {
 
 			# -------------------------------
 				# format text
+				#
 			if { $fontColour != $colour } { set fontColour 	$colour }
 			if { $dimValue < 0 } {set dimValue [expr -1*$dimValue]	}
-			set formatString "\%.${dimPrec}f\%s"
-            set text_1   [ format "$formatString" $dimValue $format]
+			set formatString "\%.${dimPrec}f"
+            set dimValue [ format "$formatString" $dimValue ]
+                #
+                # remove trailing zeros
+                #
+            set leading  [ lindex [split $dimValue .] 0]
+            set trailing [ lindex [split $dimValue .] 1]            
+            if {[expr $dimValue ==  $leading]} {
+                set text [ format "%s%s"  $leading $format ]
+            } else {
+                set trailing [ string trimright $trailing {0} ]
+                if {$trailing == {}} {
+                    set text [ format "%s%s"    $leading $format ]
+                } else {
+                    set text [ format "%s,%s%s" $leading $trailing $format ]
+                }
+            }
+                # canvasCAD 0.36
                 # set text_1   [ format "%.1f%s" $dimValue $format]
-            
-            set text 	[ string map {. ,} $text_1	]
+                # set text_2   [ string map {. ,} $text_1 ]
+
 			
 			# -------------------------------
 				# geometric definitions			
