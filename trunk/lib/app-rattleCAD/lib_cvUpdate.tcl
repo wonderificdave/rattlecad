@@ -57,24 +57,24 @@
                     set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                     $cv_Name        clean_StageContent
                         #
-                    update_cv_Parameter                         $cv_Name $xy
+                    update_cv_Parameter               $cv_Name $xy
                         #
-                    frame_visualisation::createBaseline         $cv_Name $xy
+                    bikeRendering::createBaseline     $cv_Name $xy
                         #
-                    createDimension                             $cv_Name $xy    point_seat
-                    createDimension                             $cv_Name $xy    cline_frame
-                    createDimension                             $cv_Name $xy    point_frame
-                    createDimension                             $cv_Name $xy    geometry_bg
+                    createDimension                   $cv_Name $xy    point_seat
+                    createDimension                   $cv_Name $xy    cline_frame
+                    createDimension                   $cv_Name $xy    point_frame
+                    createDimension                   $cv_Name $xy    geometry_bg
                         #
-                    frame_visualisation::createFrame_Centerline $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
+                    bikeRendering::createFrame_Centerline $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
                         #
-                    createDimension                             $cv_Name $xy    point_personal
-                    createDimension                             $cv_Name $xy    point_crank
-                    createDimension                             $cv_Name $xy    geometry_fg
+                    createDimension                   $cv_Name $xy    point_personal
+                    createDimension                   $cv_Name $xy    point_crank
+                    createDimension                   $cv_Name $xy    geometry_fg
                         #
-                    update_renderCenterline                     $cv_Name
+                    update_renderCenterline           $cv_Name
                         #
-                    createWaterMark                             $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
+                    createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
             lib_gui::cv_Custom10 {
@@ -88,54 +88,54 @@
                         #
                     createLugRep                                $cv_Name $xy
                         #
-                    frame_visualisation::createDecoration       $cv_Name $xy    SeatPost                editable   ;# $updateCommand
-                    frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Rep
-                    frame_visualisation::createDecoration       $cv_Name $xy    FrontWheel_Rep
+                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost                editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Rep
+                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
                         #
-                    frame_visualisation::createFork_Rep         $cv_Name $xy    editable   ;# $updateCommand
-                    frame_visualisation::createFrame_Tubes      $cv_Name $xy    editable   ;# $updateCommand
+                    bikeRendering::createFork_Rep     $cv_Name $xy    editable   ;# $updateCommand
+                    bikeRendering::createFrame_Tubes  $cv_Name $xy    editable   ;# $updateCommand
                         #
-                    frame_visualisation::createDecoration       $cv_Name $xy    Logo
-                    frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Pos
-                    frame_visualisation::createDecoration       $cv_Name $xy    DerailleurRear_ctr      editable   ;# $updateCommand
-                    frame_visualisation::createDecoration       $cv_Name $xy    Saddle                  editable   ;# $updateCommand
-                    frame_visualisation::createDecoration       $cv_Name $xy    HeadSet                 editable   ;# $updateCommand
-                    frame_visualisation::createDecoration       $cv_Name $xy    BottleCage              editable   ;# $updateCommand
-                    frame_visualisation::createDecoration       $cv_Name $xy    Stem
-                    frame_visualisation::createDecoration       $cv_Name $xy    LegClearance_Rep
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo
+                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Pos
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr      editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    Saddle                  editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet                 editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage              editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    Stem
+                    bikeRendering::createDecoration   $cv_Name $xy    LegClearance_Rep
                         #
-                    createCenterline                            $cv_Name $xy    Saddle
+                    createCenterline                  $cv_Name $xy    Saddle
                         #
-                    createDimension                             $cv_Name $xy    point_frame_dimension
-                    createDimension                             $cv_Name $xy    cline_brake
-                    createDimension                             $cv_Name $xy    frameTubing_bg
+                    createDimension                   $cv_Name $xy    point_frame_dimension
+                    createDimension                   $cv_Name $xy    cline_brake
+                    createDimension                   $cv_Name $xy    frameTubing_bg
                         #
-                    createDimensionType                         $cv_Name $xy    RearWheel_Clearance
-                    createDimensionType                         $cv_Name $xy    LegClearance
-                    createDimensionType                         $cv_Name $xy    DerailleurMount
-                    createDimensionType                         $cv_Name $xy    HeadTube_Length         editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    SeatTube_Extension      editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    SeatStay_Offset         editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    HeadTube_OffsetTT       editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    HeadTube_OffsetDT       editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    DownTube_Offset         editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    SeatTube_Offset         editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    TopTube_Angle           editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    HeadSet_Top             editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    HeadSet_Bottom          editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    ForkHeight              editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    Brake_Rear              editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    Brake_Front             editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    TopHeadTube_Angle       editable   ;# $updateCommand
-                    createDimensionType                         $cv_Name $xy    BottleCage              editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    RearWheel_Clearance
+                    createDimensionType               $cv_Name $xy    LegClearance
+                    createDimensionType               $cv_Name $xy    DerailleurMount
+                    createDimensionType               $cv_Name $xy    HeadTube_Length         editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    SeatTube_Extension      editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    SeatStay_Offset         editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    HeadTube_OffsetTT       editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    HeadTube_OffsetDT       editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    DownTube_Offset         editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    SeatTube_Offset         editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    TopTube_Angle           editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    HeadSet_Top             editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    HeadSet_Bottom          editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    ForkHeight              editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    Brake_Rear              editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    Brake_Front             editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    TopHeadTube_Angle       editable   ;# $updateCommand
+                    createDimensionType               $cv_Name $xy    BottleCage              editable   ;# $updateCommand
                         #
-                        # frame_visualisation::debug_geometry           $cv_Name $xy
+                        # bikeRendering::debug_geometry   $cv_Name $xy
                         #
-                    update_renderCanvas                         $cv_Name
+                    update_renderCanvas               $cv_Name
                         #
-                    createWaterMark                             $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
+                    createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
-                    lib_gui::notebook_createButton              $cv_Name        TubingCheckAngles
+                    lib_gui::notebook_createButton    $cv_Name        TubingCheckAngles
                         #
                 }
             lib_gui::cv_Custom20 {
@@ -149,15 +149,15 @@
                         #
                     $cv_Name        clean_StageContent
                         #
-                    update_cv_Parameter                         $cv_Name $xy
+                    update_cv_Parameter               $cv_Name $xy
                         #
-                    createDraftingFrame                         $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
+                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
                         #
-                    createRearMockup                            $cv_Name
+                    createRearMockup                  $cv_Name
                         #
-                    $cv_Name            centerContent           { 0  5}          {__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
+                    $cv_Name         centerContent    { 0  5}          {__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
                         #
-                    lib_gui::notebook_createButton              $cv_Name         {changeFormatScale}
+                    lib_gui::notebook_createButton    $cv_Name         {changeFormatScale}
                         #
                 }
             lib_gui::cv_Custom40 {
@@ -171,33 +171,33 @@
                         #
                     $cv_Name        clean_StageContent
                         #
-                    update_cv_Parameter                         $cv_Name $xy
+                    update_cv_Parameter               $cv_Name $xy
                         #
-                    createDraftingFrame                         $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
+                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
                         #
-                    frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Rep
-                    frame_visualisation::createDecoration       $cv_Name $xy    FrontWheel_Rep
+                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Rep
+                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
                         #
-                    frame_visualisation::createFork_Rep         $cv_Name $xy
-                    frame_visualisation::createFrame_Tubes      $cv_Name $xy
+                    bikeRendering::createFork_Rep     $cv_Name $xy
+                    bikeRendering::createFrame_Tubes  $cv_Name $xy
                         #
-                    frame_visualisation::createDecoration       $cv_Name $xy    Logo
-                    frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Pos
-                    frame_visualisation::createDecoration       $cv_Name $xy    DerailleurRear_ctr
-                    frame_visualisation::createDecoration       $cv_Name $xy    BottleCage
-                    frame_visualisation::createDecoration       $cv_Name $xy    LegClearance_Rep
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo
+                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Pos
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr
+                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage
+                    bikeRendering::createDecoration   $cv_Name $xy    LegClearance_Rep
                         #
-                    createCenterline                            $cv_Name $xy
+                    createCenterline                  $cv_Name $xy
                         #
-                    createDimension                             $cv_Name $xy    cline_brake
-                    createDimension                             $cv_Name $xy    frameDrafting_bg
+                    createDimension                   $cv_Name $xy    cline_brake
+                    createDimension                   $cv_Name $xy    frameDrafting_bg
                         #
-                    $cv_Name        centerContent               { 0  25}        {__Decoration__  __CenterLine__  __Dimension__  __Frame__}
+                    $cv_Name        centerContent     { 0  25}        {__Decoration__  __CenterLine__  __Dimension__  __Frame__}
                         #
-                    update_renderCanvas                         $cv_Name
+                    update_renderCanvas               $cv_Name
                         #
-                    lib_gui::notebook_createButton              $cv_Name        changeFormatScale
+                    lib_gui::notebook_createButton    $cv_Name        changeFormatScale
                         #
                 }
             lib_gui::cv_Custom30 {
@@ -222,42 +222,42 @@
                         #   puts "\n\n"
                     $cv_Name        clean_StageContent
                         #
-                    update_cv_Parameter                     $cv_Name $xy
+                    update_cv_Parameter               $cv_Name $xy
                         #
-                    createDimension                         $cv_Name $xy    point_seat
-                    createDimension                         $cv_Name $xy    point_center
+                    createDimension                   $cv_Name $xy    point_seat
+                    createDimension                   $cv_Name $xy    point_center
                         #
-                    frame_visualisation::createDecoration   $cv_Name $xy    RearWheel
-                    frame_visualisation::createDecoration   $cv_Name $xy    FrontWheel
-                    frame_visualisation::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    SeatPost
+                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel
+                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel
+                    bikeRendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost
+                      #
+                    bikeRendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
+                    bikeRendering::createFrame_Tubes  $cv_Name $xy
+                      #
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo
+                    bikeRendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet
+                    bikeRendering::createDecoration   $cv_Name $xy    Stem
+                    bikeRendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
                         #
-                    frame_visualisation::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
-                    frame_visualisation::createFrame_Tubes  $cv_Name $xy
+                    createDimension                   $cv_Name $xy    cline_angle
                         #
-                    frame_visualisation::createDecoration   $cv_Name $xy    Logo
-                    frame_visualisation::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    HeadSet
-                    frame_visualisation::createDecoration   $cv_Name $xy    Stem
-                    frame_visualisation::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
+                    createDimension                   $cv_Name $xy    summary_bg
                         #
-                    createDimension                         $cv_Name $xy    cline_angle
+                    createDimension                   $cv_Name $xy    summary_fg
                         #
-                    createDimension                         $cv_Name $xy    summary_bg
+                    bikeRendering::createBaseline     $cv_Name $xy    black
                         #
-                    createDimension                         $cv_Name $xy    summary_fg
+                    update_renderCanvas               $cv_Name
                         #
-                    frame_visualisation::createBaseline     $cv_Name $xy    black
+                    createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
-                    update_renderCanvas                     $cv_Name
-                        #
-                    createWaterMark                         $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
-                        #
-                    lib_gui::notebook_createButton          $cv_Name        changeFormatScale   format
+                    lib_gui::notebook_createButton    $cv_Name        changeFormatScale   format
                         #
                 }
             lib_gui::cv_Custom50 {
@@ -268,25 +268,25 @@
                         #
                     $cv_Name        clean_StageContent
                         #
-                    frame_visualisation::createBaseline     $cv_Name $xy
+                    bikeRendering::createBaseline     $cv_Name $xy
                         #
-                    frame_visualisation::createDecoration   $cv_Name $xy    RearWheel       editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    FrontWheel      editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    SeatPost
+                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel       editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel      editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost
                         #
-                    frame_visualisation::createFork_Rep     $cv_Name $xy    selectable                  ;# $updateCommand
-                    frame_visualisation::createFrame_Tubes  $cv_Name $xy
-                    frame_visualisation::createDecoration   $cv_Name $xy    Logo
-                    frame_visualisation::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
+                    bikeRendering::createFork_Rep     $cv_Name $xy    selectable                  ;# $updateCommand
+                    bikeRendering::createFrame_Tubes  $cv_Name $xy
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo
+                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
                         #
-                    frame_visualisation::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    HeadSet
-                    frame_visualisation::createDecoration   $cv_Name $xy    Stem
-                    frame_visualisation::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet
+                    bikeRendering::createDecoration   $cv_Name $xy    Stem
+                    bikeRendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
                         #
                     update_renderCanvas                     $cv_Name
                         #
@@ -299,17 +299,17 @@
                         #
                     $cv_Name        clean_StageContent
                         #
-                    frame_visualisation::createTubemiter        $cv_Name { 80 190}  TopTube_Seat
-                    frame_visualisation::createTubemiter        $cv_Name {200 190}  TopTube_Head
-                    frame_visualisation::createTubemiter        $cv_Name { 80 105}  DownTube_Head
-                    frame_visualisation::createTubemiter        $cv_Name {180 105}  SeatStay_02
-                    frame_visualisation::createTubemiter        $cv_Name {250 105}  SeatStay_01
-                    frame_visualisation::createTubemiter        $cv_Name {220  15}  Reference
+                    bikeRendering::createTubemiter    $cv_Name { 80 190}  TopTube_Seat
+                    bikeRendering::createTubemiter    $cv_Name {200 190}  TopTube_Head
+                    bikeRendering::createTubemiter    $cv_Name { 80 105}  DownTube_Head
+                    bikeRendering::createTubemiter    $cv_Name {180 105}  SeatStay_02
+                    bikeRendering::createTubemiter    $cv_Name {250 105}  SeatStay_01
+                    bikeRendering::createTubemiter    $cv_Name {220  15}  Reference
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
                         #
-                    update_renderCanvas                         $cv_Name
+                    update_renderCanvas               $cv_Name
                         #
-                    createWaterMark                             $cv_Name $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
+                    createWaterMark                   $cv_Name $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
             lib_gui::cv_Custom70 {
@@ -323,16 +323,16 @@
                         #
                     $cv_Name            clean_StageContent
                         #
-                    update_cv_Parameter                         $cv_Name $xy
+                    update_cv_Parameter               $cv_Name $xy
                         #
                     set drawingTitle    "<- $::APPL_Config(FrameJigType) ->    $::APPL_Config(PROJECT_Name)"
-                    createDraftingFrame                         $cv_Name        $stageFormat    [expr 1/$stageScale]    "$drawingTitle"  [bikeGeometry::project_attribute modified]
+                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    "$drawingTitle"  [bikeGeometry::project_attribute modified]
                         #
-                    createFrameJig                              $cv_Name $xy    $stageScale   $::APPL_Config(FrameJigType)
+                    createFrameJig                    $cv_Name $xy    $stageScale   $::APPL_Config(FrameJigType)
                         #
-                    $cv_Name         centerContent              {0  15}         {__Frame__  __Decoration__  __CenterLine__  __Dimension__}
+                    $cv_Name         centerContent    {0  15}         {__Frame__  __Decoration__  __CenterLine__  __Dimension__}
                         #
-                    lib_gui::notebook_createButton              $cv_Name        {changeFormatScale changeFrameJigVariant}
+                    lib_gui::notebook_createButton    $cv_Name        {changeFormatScale changeFrameJigVariant}
                         #
                 }
             lib_gui::cv_Custom99 {
@@ -343,24 +343,24 @@
                         #
                     $cv_Name        clean_StageContent
                         #
-                    frame_visualisation::createBaseline     $cv_Name $xy
+                    bikeRendering::createBaseline     $cv_Name $xy
                         #
-                    frame_visualisation::createDecoration   $cv_Name $xy    RearWheel           editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    FrontWheel          editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    Brake               editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    SeatPost
+                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel           editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel          editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    Brake               editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost
                         #
-                    frame_visualisation::createFork_Rep     $cv_Name $xy
-                    frame_visualisation::createFrame_Tubes  $cv_Name $xy
-                    frame_visualisation::createDecoration   $cv_Name $xy    BottleCage         editable   ;# $updateCommand
+                    bikeRendering::createFork_Rep     $cv_Name $xy
+                    bikeRendering::createFrame_Tubes  $cv_Name $xy
+                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage         editable   ;# $updateCommand
                         #
-                    frame_visualisation::createDecoration   $cv_Name $xy    Saddle             editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    HeadSet
-                    frame_visualisation::createDecoration   $cv_Name $xy    Stem
-                    frame_visualisation::createDecoration   $cv_Name $xy    HandleBar          editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    DerailleurRear     editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    DerailleurFront    editable   ;# $updateCommand
-                    frame_visualisation::createDecoration   $cv_Name $xy    CrankSet           editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    Saddle             editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet
+                    bikeRendering::createDecoration   $cv_Name $xy    Stem
+                    bikeRendering::createDecoration   $cv_Name $xy    HandleBar          editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear     editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront    editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    CrankSet           editable   ;# $updateCommand
                         #
                     createWaterMark                         $cv_Name         $::APPL_Config(PROJECT_File)    [bikeGeometry::project_attribute modified]
                         #

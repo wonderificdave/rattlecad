@@ -1,6 +1,6 @@
  ##+##########################################################################
  #
- # package: rattleCAD   ->  lib_frame_visualisation.tcl
+ # package: rattleCAD   ->  lib_bikeRendering.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their
@@ -32,12 +32,12 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #  namespace:  rattleCAD::frame_visualisation
+ #  namespace:  rattleCAD::bikeRendering
  # ---------------------------------------------------------------------------
  #
  #
 
- namespace eval frame_visualisation {
+ namespace eval bikeRendering {
 
 
     proc createBaseline {cv_Name BB_Position {colour {gray}}} {

@@ -39,12 +39,12 @@
 
 
     proc cv_custom::createFrameJig {cv_Name  xy   stageScale  frameJigType} {
-            frame_visualisation::createDecoration       $cv_Name $xy    RearWheel_Rep
-            frame_visualisation::createDecoration       $cv_Name $xy    FrontWheel_Rep
+            bikeRendering::createDecoration       $cv_Name $xy    RearWheel_Rep
+            bikeRendering::createDecoration       $cv_Name $xy    FrontWheel_Rep
                 #
-            frame_visualisation::createFrame_Tubes      $cv_Name $xy
+            bikeRendering::createFrame_Tubes      $cv_Name $xy
                 #
-            frame_visualisation::createDecoration       $cv_Name $xy    DerailleurRear_ctr
+            bikeRendering::createDecoration       $cv_Name $xy    DerailleurRear_ctr
                 #
             createCenterline                            $cv_Name $xy
                 #
