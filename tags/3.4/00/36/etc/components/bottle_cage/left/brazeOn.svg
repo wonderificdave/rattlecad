@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: CorelDRAW -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xml:space="preserve"
+   width="297mm"
+   height="210mm"
+   style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+   viewBox="0 0 297 210"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="bottle_cage_left.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"><metadata
+   id="metadata24"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><sodipodi:namedview
+   inkscape:window-height="480"
+   inkscape:window-width="640"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   guidetolerance="10.0"
+   gridtolerance="10.0"
+   objecttolerance="10.0"
+   borderopacity="1.0"
+   bordercolor="#666666"
+   pagecolor="#ffffff"
+   id="base"
+   showgrid="false"
+   inkscape:zoom="0.69029147"
+   inkscape:cx="626.35682"
+   inkscape:cy="405.80864"
+   inkscape:current-layer="svg2" />
+ <defs
+   id="defs4"><inkscape:perspective
+   sodipodi:type="inkscape:persp3d"
+   inkscape:vp_x="0 : 372.04724 : 1"
+   inkscape:vp_y="0 : 1000 : 0"
+   inkscape:vp_z="1052.3622 : 372.04724 : 1"
+   inkscape:persp3d-origin="526.18109 : 248.03149 : 1"
+   id="perspective26" />
+  <style
+   type="text/css"
+   id="style6">
+   
+    .str0 {stroke:#DA251D;stroke-width:0.0762}
+    .fil0 {fill:none}
+    .fil1 {fill:#DEDEDD}
+   
+  </style>
+ 
+  <metadata
+   id="CorelCorpID_0Corel-Layer" />
+  
+  
+  
+  
+  
+  
+  
+ </defs>
+ <polygon
+   style="fill:#dededd;stroke:#da251d;stroke-width:0.0762"
+   id="polygon12"
+   points="137.496,154.895 137.496,156.189 136.512,156.386 135.755,156.503 134.807,156.62 133.893,156.689 132.889,156.71 131.886,156.689 130.971,156.62 130.025,156.503 129.268,156.386 128.283,156.189 128.283,154.895 137.496,154.895 "
+   class="fil1 str0" /><circle
+   style="fill:#dededd;stroke:#da251d;stroke-width:0.0762"
+   sodipodi:ry="2.5925"
+   sodipodi:rx="2.5925"
+   sodipodi:cy="156.189"
+   sodipodi:cx="196.89"
+   r="2.5925"
+   cy="156.189"
+   cx="196.89"
+   class="fil1 str0"
+   id="center_00" /><polygon
+   style="fill:#dededd;stroke:#da251d;stroke-width:0.0762"
+   id="polygon15"
+   points="201.497,154.895 201.497,156.189 200.512,156.386 199.755,156.503 198.808,156.62 197.894,156.689 196.89,156.71 195.886,156.689 194.972,156.62 194.026,156.503 193.268,156.386 192.284,156.189 192.284,154.895 201.497,154.895 "
+   class="fil1 str0" />
+</svg>
