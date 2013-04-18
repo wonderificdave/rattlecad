@@ -546,7 +546,8 @@
                                       $cv_Name addtag  __Frame__ withtag $SeatTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $SeatTube(object)   <Double-ButtonPress-1> \
                                                     [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                                                    {   FrameTubes(SeatTube/DiameterTT)   \
+                                                                    {   Lugs(SeatTube/SeatStay/MiterDiameter) \
+                                                                        FrameTubes(SeatTube/DiameterTT)   \
                                                                         FrameTubes(SeatTube/DiameterBB)   \
                                                                         FrameTubes(SeatTube/TaperLength)  \
                                                                     }  {SeatTube Parameter}
@@ -591,7 +592,7 @@
                                       $cv_Name addtag  __Frame__ withtag $ChainStay(object)
         if {$updateCommand != {}}   { $cv_Name bind    $ChainStay(object)    <Double-ButtonPress-1> \
                                                     [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                                                    {   FrameTubes(ChainStay/DiameterSS)    \
+                                                                    {   FrameTubes(ChainStay/DiameterSS)      \
                                                                         FrameTubes(ChainStay/Height)    \
                                                                         FrameTubes(ChainStay/HeightBB)  \
                                                                         FrameTubes(ChainStay/TaperLength)   \
@@ -608,7 +609,8 @@
                                       $cv_Name addtag  __Frame__ withtag $SeatStay(object)
         if {$updateCommand != {}}   { $cv_Name bind    $SeatStay(object)    <Double-ButtonPress-1> \
                                                     [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                                                    {   FrameTubes(SeatStay/DiameterST)   \
+                                                                    {   Lugs(SeatTube/SeatStay/MiterDiameter) \
+                                                                        FrameTubes(SeatStay/DiameterST)   \
                                                                         FrameTubes(SeatStay/DiameterCS)   \
                                                                         FrameTubes(SeatStay/TaperLength)  \
                                                                         Custom(SeatStay/OffsetTT)   \

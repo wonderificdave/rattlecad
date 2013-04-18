@@ -1,4 +1,13 @@
 
+3.4.00.35  - 2013.04.18
+-------------------------------------------------------------------------------
+    feature:
+        ... parameter of Lugs(SeatTube/SeatStay/MiterDiameter) now also
+               available on SeatTube and SeatStay. This parameter was currently
+               available only at [check Frame Angles] in the arc between
+               SeatStay and SeatTube
+
+
 3.4.00.34  - 2013.04.16
 -------------------------------------------------------------------------------
     feature:

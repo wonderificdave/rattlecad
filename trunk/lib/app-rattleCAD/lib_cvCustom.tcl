@@ -2009,32 +2009,32 @@
 
         $cv_Name bind   $represent_DO       <Double-ButtonPress-1> \
                             [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                        {    Lugs(RearDropOut/Angle/value) \
+                                        {   Lugs(RearDropOut/Angle/value) \
                                             Lugs(RearDropOut/Angle/plus_minus) }                {Lug Specification:  RearDropout}]
         $cv_Name bind   $represent_BB_01    <Double-ButtonPress-1> \
                             [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                        {    Lugs(BottomBracket/DownTube/Angle/value) \
+                                        {   Lugs(BottomBracket/DownTube/Angle/value) \
                                             Lugs(BottomBracket/DownTube/Angle/plus_minus)  }    {Lug Specification:  Seat-/DownTube}]
         $cv_Name bind   $represent_BB_02    <Double-ButtonPress-1> \
                             [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                        {    Lugs(BottomBracket/ChainStay/Angle/value) \
+                                        {   Lugs(BottomBracket/ChainStay/Angle/value) \
                                             Lugs(BottomBracket/ChainStay/Angle/plus_minus) }    {Lug Specification:  SeatTube/ChainStay}]
         $cv_Name bind   $represent_SL_01    <Double-ButtonPress-1> \
                             [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                        {    Lugs(SeatTube/TopTube/Angle/value) \
+                                        {   Lugs(SeatTube/TopTube/Angle/value) \
                                             Lugs(SeatTube/TopTube/Angle/plus_minus) }           {Lug Specification:  Seat-/TopTube}]
         $cv_Name bind   $represent_SL_02    <Double-ButtonPress-1> \
                             [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                        {    Lugs(SeatTube/SeatStay/Angle/value) \
+                                        {   Lugs(SeatTube/SeatStay/Angle/value) \
                                             Lugs(SeatTube/SeatStay/Angle/plus_minus)
                                             Lugs(SeatTube/SeatStay/MiterDiameter)}             {Lug Specification:  SeatTube/SeatStay}]
         $cv_Name bind   $represent_HL_TT    <Double-ButtonPress-1> \
                             [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                        {    Lugs(HeadTube/TopTube/Angle/value) \
+                                        {   Lugs(HeadTube/TopTube/Angle/value) \
                                             Lugs(HeadTube/TopTube/Angle/plus_minus) }            {Lug Specification:  Top-/HeadTube}]
         $cv_Name bind   $represent_HL_DT    <Double-ButtonPress-1> \
                             [list projectUpdate::createEdit  %x %y  $cv_Name  \
-                                        {    Lugs(HeadTube/DownTube/Angle/value) \
+                                        {   Lugs(HeadTube/DownTube/Angle/value) \
                                             Lugs(HeadTube/DownTube/Angle/plus_minus) }            {Lug Specification:  Head-/DownTube}]
 
         $cv_Name bind   $represent_DO       <Enter>  \
