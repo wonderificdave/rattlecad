@@ -5,7 +5,6 @@
         ... both scripts are necessary to build svg-components for rattleCAD
         ... create script: .../_style/chainWheel_SVG.tcl
         ... make it run:   .../_style/simplify_SVG.tcl
-      
 
 
 3.4.00.36  - 2013.04.16
