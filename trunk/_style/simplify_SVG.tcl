@@ -21,6 +21,9 @@ exec wish "$0" "$@"
     package require Tk
     package require tdom
  
+    set APPL_ROOT_Dir [file dirname [lindex $argv0]]
+    lappend auto_path "$APPL_ROOT_Dir/lib"
+    
     variable exportFileName {export.svg}
     
     variable min_SegmentLength 0.4
@@ -30,7 +33,7 @@ exec wish "$0" "$@"
     variable free_ObjectID     0
     variable file_saveCount    0
     
-    set currentVersion 0.5.07
+    set currentVersion 3.4.00
 
     # -- handling puts
     # http://wiki.tcl.tk/1290
@@ -1581,11 +1584,11 @@ exec wish "$0" "$@"
                            [button $w.c -text Cancel -command "destroy $w"] -sticky ew
                    grid $w.i -sticky w
                    grid columnconfigure $w 1 -weight 1
-                   $t tag config hilite -background yellow
+                   $t tag config hilite -background lightblue
                } else {raise $w}
             }       
             proc searchrep'next {w {searchString {}}} {
-                $w tag config hilite -background yellow
+                $w tag config hilite -background lightblue
                 if {$searchString ne {}} {
                     puts "   -> searchString: $searchString / $::Find"
                     set ::Find $searchString
@@ -1632,7 +1635,7 @@ exec wish "$0" "$@"
 
         # --- window ----------
         #
-    pack [ frame .f -bg yellow] 
+    pack [ frame .f -bg lightblue] 
         
     set buttonBar    [ frame .f.bb ]
         pack $buttonBar      -expand yes -fill both 
