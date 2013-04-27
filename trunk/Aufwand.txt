@@ -427,5 +427,7 @@
                             
 2013.04.15  21:00   24:00    03:00   3.4.00 ... 33 ... %.2f precision in drafting tab
 2013.04.16  21:00   23:00    02:00   3.4.00 ... 34 ... remove trailing 000 on dimensions
-2013.04.26  22:00   01:30    03:30   3.4.00 ... 37 ... update scripts in ./_style directory
-                            
+2013.04.25  22:00   01:30    03:30   3.4.00 ... 37 ... update scripts in ./_style directory
+2013.04.27  00:00   00:00    20:00   3.4.00 ... 38 ... add SuperRecord 84 Components to rattleCAD
+
+
