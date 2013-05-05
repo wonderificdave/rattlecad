@@ -55,6 +55,11 @@
                     project::update_ProjectVersion {3.3.05}
                     project::update_ProjectVersion {3.3.06}
             }
+            # puts " -> $project_Version < 3.5"
+            if { $project_Version < 3.5 } {    
+                     puts "\n\n       -- 3.4.xx -----------"
+                    project::update_ProjectVersion {3.4.00}
+            }
             
               # -- replace old result-Definition of projectXML with the newer one
             # update_projectResult
@@ -1155,8 +1160,19 @@
                                   }
                             }
                           }
-                         
                         }
+                {3.4.00} {
+                                # -- get Fork Dropout Rendering
+                                    puts "                           ... update File ... /root/Rendering/ForkDropOut"
+                          set node            [$projectDOM selectNode /root/Rendering/ForkDropOut]
+                          set node_Rendering  [$projectDOM selectNode /root/Rendering]
+                                # puts [$node asXML]
+                          if {$node == {}} {
+                            puts "                                           ... front"
+                            $node_Rendering appendXML  "<ForkDropOut>front</ForkDropOut>"
+                          }         
+                        }       
+                        
                 {ab-xy} {	set node {}
                             set node [$projectDOM selectNode /root/Project/rattleCADVersion/text()]
                             puts " ... [$node nodeValue] .."
