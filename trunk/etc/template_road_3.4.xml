@@ -312,6 +312,7 @@
             <DownTube_Lower>off</DownTube_Lower>
         </BottleCage>
         <RearDropOut>behind</RearDropOut>
+        <ForkDropOut>front</ForkDropOut>
         <ChainStay>straight</ChainStay>
         <RearMockup>
             <DiscOffset>15.30</DiscOffset>

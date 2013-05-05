@@ -785,6 +785,9 @@
             # --- get Rendering Style
         set Rendering(Fork)         $project::Rendering(Fork)
         set Rendering(ForkBlade)    $project::Rendering(ForkBlade)
+        set Rendering(ForkDropOut)  $project::Rendering(ForkDropOut)
+        
+                # tk_messageBox -message "Rendering(ForkDropOut): $Rendering(ForkDropOut)"
 
             # --- check existance of File --- regarding on user/etc
         proc checkFileString {fileString} {
@@ -860,6 +863,12 @@
                         set ForkDropout(position)   [ vectormath::addVector [ bikeGeometry::get_Object        FrontWheel  position    $BB_Position ] $vct_move]
                         }
             default {}
+        }
+
+            # --- create Fork Dropout ---------------
+        if {$Rendering(ForkDropOut) == {behind}} {
+            set ForkDropout(object)     [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __ForkDropout__]
+            $cv_Name addtag  __Frame__ withtag $ForkDropout(object)
         }
 
             # --- create Fork Blade -----------------
@@ -939,22 +948,26 @@
         }
 
             # --- create Fork Dropout ---------------
-        set ForkDropout(object)     [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __ForkDropout__]
-                                      $cv_Name addtag  __Frame__ withtag $ForkDropout(object)
-       
+        if {$Rendering(ForkDropOut) == {front}} {
+            set ForkDropout(object)     [ $cv_Name readSVG [file join $::APPL_Config(CONFIG_Dir)/components $ForkDropout(file)] $ForkDropout(position) $do_angle  __ForkDropout__]
+            $cv_Name addtag  __Frame__ withtag $ForkDropout(object)
+        }
+        # --- set Fork Dropout Edit -----------------
         switch -exact $updateCommand {
-            editable {              $cv_Name bind $ForkDropout(object)  <Double-ButtonPress-1> \
+            editable { if {$Rendering(Fork) == {SteelLugged}} {           
+                                      $cv_Name bind $ForkDropout(object)  <Double-ButtonPress-1> \
                                                     [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                     {   file://Component(Fork/DropOut/File)    \
+                                                                        list://Rendering(ForkDropOut@SELECT_DropOutPosition)
                                                                         Component(Fork/DropOut/Offset)     \
                                                                         Component(Fork/DropOut/OffsetPerp) \
                                                                     }  {ForkDropout Parameter} \
                                                     ]
                                       lib_gui::object_CursorBinding     $cv_Name    $ForkDropout(object)
+                       }
                 }
             default {}
         }
-
 
             # --- check bindings and remove ----------
         switch $Rendering(Fork) {
@@ -968,42 +981,6 @@
 
         $cv_Name create circle  $ForkDropout(position)    -radius 4.5    -fill white    -tags __Frame__
 
-
-            # SeatPost_Saddle(Position)
-            #switch $Rendering(Fork)
-            #    SteelLugged {
-            #                }
-            #    Composite     {
-            #                    $cv_Name create circle  $Steerer_Fork(position) -radius 10  -outline darkred
-            #                    $cv_Name create circle  $ForkDropout(position)  -radius 10  -outline darkred
-            #                    $cv_Name create circle  $help_01                -radius 10  -outline darkblue
-            #                    $cv_Name create circle  $help_02                -radius 10  -outline blue
-            #                    $cv_Name create line    [list $help_01 $ForkDropout(position)]                 -fill red -width 1
-            #                    $cv_Name create line    [list $Steerer_Fork(position) $ForkDropout(position)] -fill purple -width 1
-            #                    #$cv_Name create line   [list $help_01 $ForkDropout(position)] -fill purple -width 1
-            #                }
-            #    Suspension     {
-            #                    set Steerer_Fork(position)  [ bikeGeometry::point_position  Steerer_Fork  $BB_Position]
-            #                    $cv_Name create circle  $ForkDropout(position)  -radius 10  -outline darkred
-            #                    $cv_Name create line    [list $Steerer_Fork(position) $ForkDropout(position)] -fill purple -width 1
-            #                }
-            #
-            #set debug_01                [ bikeGeometry::get_Object ForkBlade debug $BB_Position  ]
-            #$cv_Name create line    $debug_01 -fill purple -width 1
-            #$cv_Name delete     $ForkDropout(object)
-
-            #set debug_02               [ bikeGeometry::point_position  Debug02  $BB_Position]
-            #set debug_03               [ bikeGeometry::point_position  Debug03  $BB_Position]
-            #set debug_04               [ bikeGeometry::point_position  Debug04  $BB_Position]
-            #set debug_05               [ bikeGeometry::point_position  Debug05  $BB_Position]
-            #$cv_Name create circle  $debug_01 -radius 20  -outline red
-            #$cv_Name create circle  $debug_02 -radius 20  -outline red
-            #$cv_Name create circle  $debug_03 -radius 20  -outline blue
-            #$cv_Name create circle  $debug_04 -radius 20  -outline darkblue
-            #$cv_Name create circle  $debug_05 -radius 10  -outline darkblue
-            #$cv_Name create line    [list $debug_01 $debug_02 $debug_03 $debug_04] -fill purple -width 1
-            #$cv_Name create line    [list $debug_01 $debug_02 $debug_03 $debug_04 $debug_05] -fill blue
-            #$cv_Name create line    [list $debug_01 $debug_02 $debug_03 $debug_04 $debug_05] -fill purple -width 1
 
     }
 

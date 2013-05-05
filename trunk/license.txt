@@ -108,5 +108,15 @@
 
        crankset/shimano_hollowtech_II.svg
             ... iges by Simon Weishaupt
+            
        dropout/rear_dropout_ss_wild_lilies_grow.svg
             ... dxf  by Michael Wiedemann
+            
+       dropout/gp_wilson.svg
+            ... and
+       fork/dropout/gp_wilson.svg
+            ... by Paul Wyganowski from 
+                  http://wyganowskiframes.com/?attachment_id=189
+            
+            
+            

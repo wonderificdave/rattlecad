@@ -429,5 +429,7 @@
 2013.04.16  21:00   23:00    02:00   3.4.00 ... 34 ... remove trailing 000 on dimensions
 2013.04.25  22:00   01:30    03:30   3.4.00 ... 37 ... update scripts in ./_style directory
 2013.04.27  00:00   00:00    20:00   3.4.00 ... 38 ... add SuperRecord 84 Components to rattleCAD
+2013.05.03  00:00   00:00    05:00   3.4.00 ... 39 ... add G.P. Wilson dropouts
+2013.05.05  02:00   04:00    02:00   3.4.00 ... 40 ... allow fork dropouts appear above or below fork blade 
 
 
