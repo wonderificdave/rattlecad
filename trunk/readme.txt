@@ -1,4 +1,13 @@
 
+3.4.00.41  - 2013.05.10
+-------------------------------------------------------------------------------
+    feature:
+        ... add Shimano DURA-ACE Components to rattleCAD
+    debug:
+        ... removed an exception for handlebar and saddle visualization 
+               in lib_cvCustom.tcl -> update_renderCanvas
+
+
 3.4.00.40  - 2013.05.05
 -------------------------------------------------------------------------------
     feature:

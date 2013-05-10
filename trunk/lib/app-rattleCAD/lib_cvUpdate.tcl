@@ -288,9 +288,9 @@
                     bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
                     bikeRendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
                         #
-                    update_renderCanvas                     $cv_Name
+                    update_renderCanvas               $cv_Name
                         #
-                    createWaterMark                         $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
+                    createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
             lib_gui::cv_Custom60 {

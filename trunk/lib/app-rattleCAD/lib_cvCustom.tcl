@@ -2206,15 +2206,19 @@
             foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Rim_02__}] {
                 $cv_Name itemconfigure  $cv_Item -fill $decoColour
             }
-            # return
-            foreach cv_Item [$cv_Name find withtag {__Decoration__ && __HandleBar__}] {
-                if {$cv_Type == {polygon}} {
-                    $cv_Name itemconfigure  $cv_Item -fill $tubeColour
+            
+            if { 0 == 1} {
+                # dont know anymore, why there was an exception for saddle and handlebar ... 2013-05-10
+                foreach cv_Item [$cv_Name find withtag {__Decoration__ && __HandleBar__}] {
+                    puts "   .. debug Handlebar: [$cv_Name gettags $cv_Item]   ... $tubeColour"
+                    if {$cv_Type == {polygon}} {
+                        # $cv_Name itemconfigure  $cv_Item -fill $tubeColour
+                    }
                 }
-            }
-            foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Saddle__}] {
-                if {$cv_Type == {polygon}} {
-                    $cv_Name itemconfigure  $cv_Item -fill $tubeColour
+                foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Saddle__}] {
+                    if {$cv_Type == {polygon}} {
+                        $cv_Name itemconfigure  $cv_Item -fill $tubeColour
+                    }
                 }
             }
     }
