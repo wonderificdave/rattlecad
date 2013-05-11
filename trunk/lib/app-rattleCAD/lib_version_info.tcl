@@ -200,14 +200,14 @@
         $env_text  insert end "   Runtime:          ... [file tail $::argv0]\n"
         $env_text  insert end "  ----------------------------------------------------\n"
         $env_text  insert end "     Tcl/Tk:         [info patchlevel]\n"
-	$env_text  insert end "     Exec:             [info nameofexecutable]\n"
-	$env_text  insert end "\n"
+        $env_text  insert end "     Exec:             [info nameofexecutable]\n"
+        $env_text  insert end "\n"
         $env_text  insert end "       Tk:             [package require Tk]\n"
         $env_text  insert end "       BWidget:        [package require BWidget]\n"
         $env_text  insert end "       rattleCAD:      [package require rattleCAD]\n"
-	$env_text  insert end "       bikeGeometry:   [package require bikeGeometry]\n"
-	$env_text  insert end "       canvasCAD:      [package require canvasCAD]\n"
-	$env_text  insert end "       extSummary:     [package require extSummary]\n"  
+        $env_text  insert end "       bikeGeometry:   [package require bikeGeometry]\n"
+        $env_text  insert end "       canvasCAD:      [package require canvasCAD]\n"
+        $env_text  insert end "       extSummary:     [package require extSummary]\n"  
         $env_text  insert end "\n\n"
         $env_text  insert end "   Version:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
@@ -222,8 +222,8 @@
         $env_text  insert end "     APPL_Config(BASE_Dir):  \n                   ... $APPL_Config(BASE_Dir)\n"
         $env_text  insert end "     APPL_Config(CONFIG_Dir):\n                   ... $APPL_Config(CONFIG_Dir)\n"
         $env_text  insert end "     APPL_Config(IMAGE_Dir): \n                   ... $APPL_Config(IMAGE_Dir)\n"
-	$env_text  insert end "     APPL_Config(SAMPLE_Dir):\n                   ... $APPL_Config(SAMPLE_Dir)\n"
-	$env_text  insert end "     APPL_Config(TEST_Dir):  \n                   ... $APPL_Config(TEST_Dir)\n"   
+        $env_text  insert end "     APPL_Config(SAMPLE_Dir):\n                   ... $APPL_Config(SAMPLE_Dir)\n"
+        $env_text  insert end "     APPL_Config(TEST_Dir):  \n                   ... $APPL_Config(TEST_Dir)\n"   
         $env_text  insert end "     APPL_Config(USER_Dir):  \n                   ... $APPL_Config(USER_Dir)\n"
         $env_text  insert end "\n"
         # $env_text  insert end "     APPL_Config(USER_Init):     $APPL_Config(USER_Init)\n"
@@ -250,16 +250,16 @@
 		list_*  {}
 		default continue
 	    }
-	$env_text  insert end [format "     %-35s\n" APPL_Config($name):]
+        $env_text  insert end [format "     %-35s\n" APPL_Config($name):]
 	    foreach value $::APPL_Config($name) {	
-	$env_text  insert end [format "     %-20s %s\n" "" $value]
+        $env_text  insert end [format "     %-20s %s\n" "" $value]
 	    }	
 	}
         $env_text  insert end "\n\n\n"
         $env_text  insert end "   others:\n"
         $env_text  insert end "  ----------------------------------------------------\n"
         $env_text  insert end "\n"
-	$env_text  insert end "     \$::argv0:        \n                   ... $::argv0\n"	   
+        $env_text  insert end "     \$::argv0:        \n                   ... $::argv0\n"	   
 	   
         
         

@@ -44,6 +44,9 @@
 
     variable    compList_System {}
     variable    compList_Custom {}
+    variable    tree_System     {}
+    variable    tree_Custom     {}
+    variable    list_Selection  {}
     variable    rdials_list     {}
 
     variable    compFile        {}
@@ -61,69 +64,92 @@
 
         variable    compList_System
         variable    compList_Custom
-
+        variable    tree_System
+        variable    tree_Custom
+        variable    list_Selection
+        
 
         pack [ frame $w.f -bg yellow] -fill both -expand yes
-        set menueFrame    [ frame $w.f.f_menue    -relief flat -bd 1]
+        set menueFrame  [ frame $w.f.f_menue    -relief flat -bd 1]
         set canvasFrame [ frame $w.f.f_canvas ]
         pack     $menueFrame \
                 $canvasFrame\
             -fill both -side left
         pack configure $canvasFrame -expand yes
 
+
             # -- file Listbox
         ttk::labelframe    $menueFrame.lf  -text "FileList" -width 34
-            pack $menueFrame.lf  -expand no -fill x
-        set nb_fileList    [ ttk::notebook $menueFrame.lf.nb ]
-            pack $nb_fileList      -expand no -fill both
-        $nb_fileList add [frame $nb_fileList.system]     -text "... system"
-        $nb_fileList add [frame $nb_fileList.custom]     -text "... custom"
-            # -- system Content
-        set f_system    [ frame     $nb_fileList.system.f ]
+            pack $menueFrame.lf -expand no -fill x
+        
+        
+            # -- file Structure Frame
+        set f_struct     [ ttk::notebook $menueFrame.lf.str ]
+            pack $f_struct      -expand no -fill both
+            
+            
+            # -- file Structure Notebook
+        set nb_struct    [ ttk::notebook $f_struct.nb ]
+            pack $nb_struct     -expand no -fill both
+        $nb_struct add [frame $nb_struct.system]     -text "... system"
+        $nb_struct add [frame $nb_struct.custom]     -text "... custom"
+
+        
+            # -- System Components Structure --------------
+            #
+        set f_system    [ frame     $nb_struct.system.f ]
             pack     $f_system -side top  -expand no -fill none
-            listbox   $f_system.lbox \
-                          -listvariable   [namespace current]::compList_System \
-                          -selectmode     single \
-                          -relief         sunken \
-                          -width          27 \
-                          -height          15 \
-                          -yscrollcommand "$f_system.scb_y  set" \
-                          -xscrollcommand "$f_system.scb_x  set"
-            scrollbar $f_system.scb_y \
-                          -orient         v \
-                          -command        "$f_system.lbox yview"
-            scrollbar $f_system.scb_x \
-                          -orient         h \
-                          -command        "$f_system.lbox xview"
+        set tree_System \
+        [ttk::treeview $f_system.tree \
+                      -columns {fullpath type size} \
+                      -displaycolumns {} \
+                      -yscroll "$f_system.scb_try set" \
+                      -height  8]
+        ttk::scrollbar $f_system.scb_try \
+                      -orient vertical   \
+                      -command "$f_system.tree yview"
+        $tree_System heading \#0 -text "System Components"
+        
+        grid $tree_System $f_system.scb_try    -sticky news
+        
 
-            grid    $f_system.lbox     $f_system.scb_y    -sticky news
-            grid                    $f_system.scb_x    -sticky news
-
-        bind $f_system.lbox <<ListboxSelect>> [list [namespace current]::::ListboxChanged %W]
-
-            # -- customContent
-        set f_custom    [ frame     $nb_fileList.custom.f ]
+            # -- Custom Components Structure --------------
+            #
+        set f_custom    [ frame     $nb_struct.custom.f ]
             pack     $f_custom -side top  -expand no -fill none
-            listbox   $f_custom.lbox \
-                          -listvariable   [namespace current]::compList_Custom \
-                          -selectmode     single \
-                          -relief         sunken \
-                          -width          27 \
-                          -height          15 \
-                          -yscrollcommand "$f_custom.scb_y  set" \
-                          -xscrollcommand "$f_custom.scb_x  set"
-            scrollbar $f_custom.scb_y \
-                          -orient         v \
-                          -command        "$f_custom.lbox yview"
-            scrollbar $f_custom.scb_x \
-                          -orient         h \
-                          -command        "$f_custom.lbox xview"
+        set tree_Custom \
+        [ttk::treeview $f_custom.tree \
+                        -columns {fullpath type size} \
+                        -displaycolumns {} \
+                        -yscroll "$f_custom.scb_try set" \
+                        -height  8]
+        ttk::scrollbar $f_custom.scb_try \
+                        -orient vertical   \
+                        -command "$f_custom.tree yview"
+        $tree_Custom heading \#0 -text "Custom Components"
+          
+        grid $tree_Custom $f_custom.scb_try    -sticky news  
+           
+            
+            # -- Selection --------------------------
+            #
+        set f_select    [ frame     $f_struct.sel ]
+            pack     $f_select -side top  -expand no -fill none
+            
+        set list_Selection \
+        [ttk::treeview $f_select.list \
+                    -columns {filename type size} \
+                    -displaycolumns {} \
+                    -yscroll "$f_select.scb_lsy set" \
+                    -height  9]
+        ttk::scrollbar $f_select.scb_lsy \
+                    -orient vertical   \
+                    -command "$f_select.list yview"
+        $list_Selection heading \#0 -text "File Name"
 
-            grid    $f_custom.lbox     $f_custom.scb_y    -sticky news
-            grid                    $f_custom.scb_x    -sticky news
+        grid $list_Selection    $f_select.scb_lsy    -sticky news
 
-        bind $f_custom.lbox <<ListboxSelect>> [list [namespace current]::::ListboxChanged %W]
-
+        
             # -- Button
             # -- ButtonFrame
         frame           $menueFrame.bf -relief flat -bd 1
@@ -134,7 +160,7 @@
                  $menueFrame.bf.scale   -expand yes  -side top  -fill x  -pady 4
 
             # -- Button
-        button  $menueFrame.bf.update.l_clear    -text {clear List}            -width 20    -command [list [namespace current]::update_compList {clear} ]
+        button  $menueFrame.bf.update.l_clear     -text {clear List}           -width 20    -command [list [namespace current]::cleanupTree $list_Selection]
         button  $menueFrame.bf.update.l_update    -text {update List}          -width 20    -command [list [namespace current]::update_compList {} ]
         button  $menueFrame.bf.update.c_update    -text {update Canvas}        -width 20    -command [list [namespace current]::updateCanvas]
         pack    $menueFrame.bf.update.l_clear \
@@ -160,23 +186,150 @@
         set tabID       [string map {/ . } [string map {. /} $w] ]
             # puts "\n  ... register:  $tabID $compCanvas"
         lib_gui::register_external_canvasCAD $tabID $compCanvas
+       
+            # -- TreeView bindings       
+        bind $tree_System <<TreeviewOpen>>   [list [namespace current]::::populateTree %W]
+        bind $tree_System <<TreeviewSelect>> [list [namespace current]::::selectTree   %W]
+        bind $tree_Custom <<TreeviewOpen>>   [list [namespace current]::::populateTree %W]
+        bind $tree_Custom <<TreeviewSelect>> [list [namespace current]::::selectTree   %W]
+        bind $list_Selection <<TreeviewSelect>> [list [namespace current]::::selectList   %W]        
+            # -- Notebook bindings
+        bind  $nb_struct <<NotebookTabChanged>>  [list [namespace current]::cleanupTree $list_Selection]
+        bind  $nb_struct <<NotebookTabChanged>>  [list [namespace current]::updateCanvas]
+    }
 
+    #-------------------------------------------------------------------------
+        #  populateRoots
+        #
+    proc populateRoots {tree} {
+        foreach dir [list [file join $::APPL_Config(CONFIG_Dir) components] {R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4/etc/components} {E:/manfred/Dateien/rattleCAD/components}] {
+              # puts "  -> $dir"
+            set lastNode [$tree insert {} end -text $dir -values [list $dir directory]]
+            populateTree $tree $lastNode    
+        }
+    }
+    proc populateRoot {treeWidget title baseDir} {
+          # puts "  -> $baseDir"
+        set lastNode [$treeWidget insert {} end -text $title -values [list $baseDir directory]]
+        populateTree $treeWidget $lastNode
+        $treeWidget item $lastNode -open 1
+    }
+
+    #-------------------------------------------------------------------------
+        #  populateTree
+        #
+        ## Code to populate a node of the tree
+    proc populateTree {tree {node {}}} {
+        variable list_Selection
+        
+          # puts "  \n -> populateTree: $node "
+        if {$node == {}} {
+            set node [$tree focus]
+        }
+
+        set nodeStatus [$tree set $node type]
+        set nodePath   [$tree set $node fullpath]
+        switch -exact $nodeStatus {
+             processedDirectory {
+                     fillList $list_Selection $nodePath
+                     return
+                 }
+             directory  {
+                     fillList $list_Selection $nodePath
+                     $tree delete [$tree children $node]
+                 }
+             default {}
+        }       
+        
+        set contentList {}
+        foreach f [lsort -dictionary [glob -nocomplain -dir $nodePath -types d *]] {
+            lappend contentList $f
+              # puts "   -> dir  $f"
+        }
+        
+        foreach f $contentList {
+            set type [file type $f]
+            if {$type eq "directory"} {
+                    # -- get directory content ---
+                    #     dont add directory if it is empty
+                set decission no
+                set fileContent 1
+                set dirContent  1
+                set fileContent [catch {glob -directory $f -type f *.svg}]
+                set dirContent  [catch {glob -directory $f -type d *}]
+                  # puts "    \$f $f"
+                  # puts "        \$decission   $decission"
+                if {$fileContent == 0} { set decission yes }
+                if {$dirContent  == 0} { set decission yes }
+                  # puts "        \$fileContent $fileContent"
+                  # puts "        \$dirContent  $dirContent"
+                  # puts "        \$decission   $decission"
+                if {$decission eq {yes}} {
+                    set id [$tree insert $node end -text [file tail $f] -values [list $f $type]]
+                    ## Make it so that this node is openable
+                    $tree insert $id 0 -text dummy ;# a dummy
+                    $tree item $id -text [file tail $f]
+                      # puts "   -> ok ok $f"
+                } else {
+                      # puts "   -> no no $f"
+                }
+            }
+        }
+    
+        # Stop this code from rerunning on the current node
+        $tree set $node type processedDirectory
     }
 
 
     #-------------------------------------------------------------------------
-       #  ListboxChanged Event
-       #
-    proc ListboxChanged {w} {
-                # http://www.tek-tips.com/viewthread.cfm?qid=822756&page=42
-                # 2010.10.15
-                # puts -nonewline "Listbox $w selection is now: "
-        variable compFile
+        #  selectTree
+        #
+    proc selectTree {treeWidget} {
+        
+        variable compFile    
+        variable compList_System    
+        variable list_Selection    
+        
+          # puts "  \n -> selectTree:"
+        set node [$treeWidget focus]
+        
+        # -- current Node
+          # puts "  -> [$tree set $node type]"
+          # puts "  -> [$tree set $node fullpath]"        
+        
+        set dirPath  [$treeWidget set $node fullpath]
+        fillList $list_Selection $dirPath
+        return
+    }
 
-        foreach index [$w curselection] {
-            set compFile [$w get $index]
-            puts "  $index $compFile"
-            [namespace current]::::updateCanvas
+
+    #-------------------------------------------------------------------------
+        #  fillList
+        #
+    proc fillList {listWidget path} {
+
+        cleanupTree $listWidget
+        foreach f [lsort -dictionary [glob -nocomplain -dir $path -types f *.svg]] {
+            set id [$listWidget insert {} end -text [file tail $f] -values [list $f {file}]]
+              # puts "   -> file $f"
+        }
+    }
+    
+    
+    #-------------------------------------------------------------------------
+        #  selectList
+        #
+    proc selectList {listWidget} {
+    
+        variable compFile    
+        
+        set node [$listWidget focus]
+          # puts "  -> listWidget: [$listWidget set $node filename]"
+          # puts "  -> listWidget: [$listWidget set $node type]"
+        
+        set compFile [$listWidget set $node filename]
+        if {[catch {[namespace current]::::updateCanvas} fid]} {
+            puts "   ... could not open file $compFile"
         }
     }
 
@@ -185,19 +338,30 @@
        #  update Component FileList
        #
     proc update_compList {{mode {}}} {
-        variable    compList_System
-        variable    compList_Custom
-
-        if {[string match $mode {clear}]} {
-            puts "    ... update_compList -> mode $mode    ... clear "
-            set compList_System {}
-            set compList_Custom {}
-        } else {
-            set compList_System [lib_file::findFiles [ file join $::APPL_Config(CONFIG_Dir) components ] *.svg]
-            set compList_Custom [lib_file::findFiles [ file join $::APPL_Config(USER_Dir)   components ] *.svg]
+        variable    tree_System
+        variable    tree_Custom
+        variable    list_Selection
+        
+        cleanupTree  $tree_System
+        cleanupTree  $tree_Custom
+        cleanupTree  $list_Selection
+        populateRoot $tree_System System [file join $::APPL_Config(CONFIG_Dir) components] 
+        populateRoot $tree_Custom Custom [file join $::APPL_Config(USER_Dir)   components] 
+                
+    }
+    
+    
+    #-------------------------------------------------------------------------
+        #  reset Positioning
+        #    
+    proc cleanupTree {treeWidget} {
+            # puts "  ... $treeWidget "
+        foreach childNode [$treeWidget children {}] {
+                # puts "   .... $childNode"
+            $treeWidget detach     $childNode
+            $treeWidget delete     $childNode
         }
     }
-
 
     #-------------------------------------------------------------------------
        #  reset Positioning
