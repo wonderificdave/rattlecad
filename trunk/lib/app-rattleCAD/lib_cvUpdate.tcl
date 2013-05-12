@@ -95,7 +95,7 @@
                     bikeRendering::createFork_Rep     $cv_Name $xy    editable   ;# $updateCommand
                     bikeRendering::createFrame_Tubes  $cv_Name $xy    editable   ;# $updateCommand
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo                    editable   ;# $updateCommand
                     bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Pos
                     bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr      editable   ;# $updateCommand
                     bikeRendering::createDecoration   $cv_Name $xy    Saddle                  editable   ;# $updateCommand
@@ -182,7 +182,7 @@
                     bikeRendering::createFork_Rep     $cv_Name $xy
                     bikeRendering::createFrame_Tubes  $cv_Name $xy
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
                     bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Pos
                     bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr
                     bikeRendering::createDecoration   $cv_Name $xy    BottleCage
@@ -235,7 +235,7 @@
                     bikeRendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
                     bikeRendering::createFrame_Tubes  $cv_Name $xy
                       #
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
                     bikeRendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
                     bikeRendering::createDecoration   $cv_Name $xy    HeadSet
                     bikeRendering::createDecoration   $cv_Name $xy    Stem
@@ -277,7 +277,7 @@
                         #
                     bikeRendering::createFork_Rep     $cv_Name $xy    selectable                  ;# $updateCommand
                     bikeRendering::createFrame_Tubes  $cv_Name $xy
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
                     bikeRendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
                         #
                     bikeRendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand

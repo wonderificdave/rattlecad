@@ -44,6 +44,8 @@
                 #
             bikeRendering::createFrame_Tubes      $cv_Name $xy
                 #
+            bikeRendering::createDecoration       $cv_Name $xy    Logo
+                #
             bikeRendering::createDecoration       $cv_Name $xy    DerailleurRear_ctr
                 #
             createCenterline                            $cv_Name $xy

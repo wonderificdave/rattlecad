@@ -373,7 +373,7 @@
                     Logo {
                                 # --- create Logo --------------------
                             set DownTube(Steerer)       [ bikeGeometry::get_Object      DownTube/End    position        $BB_Position ]
-                            set DownTube(BBracket)      [ bikeGeometry::get_Object        DownTube/Start    position        $BB_Position ]
+                            set DownTube(BBracket)      [ bikeGeometry::get_Object      DownTube/Start  position        $BB_Position ]
                             set Logo(Angle)               $project::Result(Tubes/DownTube/Direction/degree)
                             set Logo(Direction)         [ split $project::Result(Tubes/DownTube/Direction/polar) ,]
                                 # puts "  -> \$Logo(Direction)  $Logo(Direction) "
@@ -381,12 +381,12 @@
                             set Logo(file)              [ checkFileString $project::Component(Logo/File) ]
                             set Logo(object)            [ $cv_Name readSVG $Logo(file) $Logo(position)    $Logo(Angle)  __Logo__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Logo(object)
-                            if {$updateCommand != {}}   { $cv_Name bind $Saddle(object)     <Double-ButtonPress-1> \
+                            if {$updateCommand != {}}   { $cv_Name bind $Logo(object)     <Double-ButtonPress-1> \
                                                                     [list projectUpdate::createEdit  %x %y  $cv_Name  \
                                                                                     {   file://Component(Logo/File)    \
                                                                                     }   {Logo Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $Saddle(object)
+                                                          lib_gui::object_CursorBinding     $cv_Name    $Logo(object)
                                     }
                     }
                     RearWheel {     # --- create RearWheel -----------------

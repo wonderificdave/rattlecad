@@ -50,7 +50,7 @@
         <ComponentLocation>
             <component key="Component/Fork/Crown/File"					      dir="components/fork/crown"      />
             <component key="Component/Fork/DropOut/File"				      dir="components/fork/dropout"    />
-            <component key="Lugs/RearDropOut/File"					          dir="components/dropout"		 />
+            <component key="Lugs/RearDropOut/File"					          dir="components/dropout"		     />
             <component key="Component/Brake/Front/File"					      dir="components/brake/front"     />
             <component key="Component/Brake/Rear/File"					      dir="components/brake/rear"      />
             <component key="Component/HandleBar/File"					        dir="components/handlebar"       />
@@ -61,7 +61,7 @@
             <component key="Component/BottleCage/SeatTube/File"			  dir="components/bottle_cage/left" 	 />
             <component key="Component/BottleCage/DownTube/File" 		  dir="components/bottle_cage/right" 	 />
             <component key="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
-            <component key="Component/Label"	                        dir="components/label" 	         />
+            <component key="Component/Logo/File"                      dir="components/logo" 	         />
         </ComponentLocation>
         
         <TemplateType>
