@@ -32,6 +32,10 @@ exec wish "$0" "$@"
     variable svg_LastHighlight {}
     variable free_ObjectID     0
     variable file_saveCount    0
+    variable tmpSVG            [dom parse "<root/>"]
+    variable svgID             0
+    
+    variable CONST_PI [expr 4*atan(1)]
     
     set currentVersion 3.4.00
 
@@ -67,8 +71,7 @@ exec wish "$0" "$@"
     #
     # ----------------------------------------------
 
-
-	proc mirrorPoint {p a} {
+	  proc mirrorPoint {p a} {
             # reflects point p on line {{0 0} a}
         
             foreach {px py} $p  {ax ay} $a  break;
@@ -80,7 +83,7 @@ exec wish "$0" "$@"
             }
             
             
-            set CONST_PI [ expr 4*atan(1) ]
+            variable CONST_PI
                 # puts "\n       ... start:      0 / 0  --   --  $px / $py  --  $ax / $ay"
         
 
@@ -119,6 +122,163 @@ exec wish "$0" "$@"
                 # puts "\n       ... start:      0 0  --  $x $y  --  $px $py  --  $ax $ay"
             return [list $x $y]                                        
     }	
+
+
+    proc filterList {inputList {filter {}}} {
+        set returnList {}
+        foreach value $inputList {
+          if {$value == $filter} {continue}
+          set value     [string trim $value]
+          set pointList [lappend returnList $value]
+        }
+        return $returnList
+    }   
+
+
+    proc copyAttribute {node attributeName {targetNode {}}} {
+        if {[$node hasAttribute $attributeName]} {
+              # puts "       [$node asXML]"
+            set attributeValue [$node getAttribute $attributeName]
+            if {$targetNode != {}} {  
+               $targetNode setAttribute $attributeName [$node getAttribute $attributeName]
+            }
+            return $attributeValue
+        }
+    }   
+
+
+    proc update_Attributes {sourceNode targetNode} {
+        variable svgID
+        incr svgID
+        if {[$sourceNode hasAttribute id]} {
+            $targetNode setAttribute id [$sourceNode getAttribute id]
+        } else {
+            $targetNode setAttribute id [format "simplify_SVG__%6i" $svgID]
+        }
+        foreach attr [$sourceNode attributes] {
+            if {$attr == {id}} continue
+            $targetNode setAttribute $attr [$sourceNode getAttribute $attr]
+        }
+    }        
+    
+
+    proc unifyTransform {node} {
+            
+              # set constant Value
+            variable CONST_PI
+            
+              # -- default Value
+            set transformMatrix {1 0 0 1 0 0}
+            set translateMatrix {1 0 0 1 0 0}
+            set transformArg {}
+            
+              # -- get transform Information
+            if {[catch {set transformArg  [$node getAttribute transform]} eID]} {
+                #return $matrix
+                set transformType {__default__}
+            } else {
+                # puts "      -> $transformArg"
+                set transformType  [lindex [split $transformArg (]  0]
+                set transformValue [lindex [split $transformArg ()] 1]
+                puts "      --> \$transformType   $transformType"
+                puts "      --> \$transformValue  $transformValue"
+            }
+            
+            
+              # -- define the unified translation matrix 
+              #  from http://de.wikibooks.org/wiki/SVG/_Transformationen
+              #
+            set x [copyAttribute  $node  x]
+            set y [copyAttribute  $node  y]
+            if {$x != {}} {
+                if {$y != {}} {
+                    set translateMatrix [list 1 0 0 1 $x $y]
+                } else {
+                    set translateMatrix [list 1 0 0 1 $x 0]
+                }
+            }
+              
+              
+              # -- define the unified transform matrix 
+              #  from http://de.wikibooks.org/wiki/SVG/_Transformationen
+              #  
+            switch -exact $transformType {
+                matrix {
+                          set transformMatrix $transformValue
+                      }
+                translate {
+                        puts "  ---> \$transformValue $transformValue"
+                        if {[llength $transformValue] == 1} {
+                          set translateMatrix [list 1 0 0 1 $transformValue 0]
+                        } else {
+                          set translateMatrix [list 1 0 0 1 [lindex $transformValue 0] [lindex $transformValue 1]]
+                        }                
+                      }
+                scale {
+                        if {[llength $transformValue] == 1} {
+                          set transformMatrix [list [lindex $transformValue 0] 0 0 [lindex $transformValue 0] 0 0]
+                        } else {
+                          set transformMatrix [list [lindex $transformValue 0] 0 0 [lindex $transformValue 1] 0 0]
+                        }
+                      }
+                rotate {
+                          set angleRad [expr -1.0*$transformValue*$CONST_PI/180]
+                          set transformMatrix [list [expr cos($angleRad)] [expr -1.0*sin($angleRad)] \
+                                                    [expr sin($angleRad)] [expr cos($angleRad)] \
+                                                    0 0]
+                       }
+                skewX {
+                          set angleRad [expr $transformValue*$CONST_PI/180]
+                          set transformMatrix [list 1 0 \
+                                                    [expr tan($angleRad)] 1 \
+                                                    0 0]       
+                }
+                skewY {
+                          set angleRad [expr $transformValue*$CONST_PI/180]
+                          set transformMatrix [list 1 [expr tan($angleRad)] \
+                                                    0 1 \
+                                                    0 0]       
+                }
+                __default__ -
+                default {
+   
+                }
+            }
+
+            puts "  ---> \$transformMatrix $transformMatrix"
+            puts "  ---> \$translateMatrix $translateMatrix"
+            
+
+            return [list $translateMatrix $transformMatrix $transformType]
+    }    
+
+
+    proc matrixTransform {valueList matrix} {
+            
+            #  -- the art of handling the transform matrix in SVG
+            #           got it from here: http://commons.oreilly.com/wiki/index.php/SVG_Essentials/Matrix_Algebra
+            #       | a  c  tx |                    | a*x  c*y  tx*1 |  -> x
+            #       | b  d  ty |  *  |x  y  1|  =   | b*x  d*y  ty*1 |  -> y
+            #       | 0  0   1 |                    | 0*x  0*y   1*1 |  -> z (not interesting in a 2D)   
+            
+            # puts "    transform_SVGObject: $matrix"
+        
+        set valueList_Return {}
+            
+        foreach {a b c d e f} $matrix break
+
+        foreach {x y} $valueList {
+            # puts "\n--------------------"
+            # puts "       -> $x $y"
+          set new_x [ expr $a*$x + $c*$y + $e ]
+          set new_y [ expr $b*$x + $d*$y + $f ]
+            # puts "          x/y:  $x / $y"
+            # puts "          a/b -> xt:  $a / $b -> $new_x"
+            # puts "          c/d -> yt:  $c / $d -> $new_y"
+          set valueList_Return [lappend valueList_Return $new_x $new_y ]
+        }
+        return $valueList_Return
+    }
 
 
     proc Bezier {xy {PRECISION 10}} {
@@ -178,19 +338,8 @@ exec wish "$0" "$@"
             return $xy
     }
 
-	
-	proc filterList {inputList {filter {}}} {
-			set returnList {}
-			foreach value $inputList {
-				if {$value == $filter} {continue}
-				set value     [string trim $value]
-				set pointList [lappend returnList $value]
-			}
-			return $returnList
-	}   
-	
 
-    proc absolutPath {pathDefinition {position {0 0}} } {
+    proc path_toPolygon {pathDefinition {position {0 0}} } {
     
         set transform(x) [lindex $position 0]
         set transform(y) [lindex $position 1]
@@ -433,6 +582,437 @@ exec wish "$0" "$@"
     }
 
 
+    proc simplify_Rectangle {node parentTransform {targetNode {}}} {
+        variable tmpSVG
+          # -- handle as polygon
+        set width     [$node getAttribute width]
+        set height    [$node getAttribute height]
+        set pointList [list 0,0 $width,0 $width,$height 0,$height]
+        $node setAttribute points $pointList
+        
+        set myNode [ simplify_Polygon $node $parentTransform]
+        return $myNode
+    }
+
+
+    proc simplify_Circle {node parentTransform} {   
+        
+        variable tmpSVG  
+          # -- handle as ellipse
+        set rx     [copyAttribute $node r]
+        set ry     [copyAttribute $node r]
+        $node setAttribute rx $rx
+        $node setAttribute ry $ry
+        
+        set myNode [simplify_Ellipse $node $parentTransform]
+        
+        return $myNode
+    }    
+
+ 
+    proc simplify_Line {node parentTransform} { 
+        
+        variable tmpSVG  
+        variable flatSVG 
+        variable min_SegmentLength        
+        
+        set transform       [unifyTransform $node]
+        set translateMatrix [lindex $transform 0]
+        set transformMatrix [lindex $transform 1]
+        set transformType   [lindex $transform 2]
+        
+        puts "\n =============================\n  -> [$node asXML]"
+        puts "       \$transformType   $transformType"
+        puts "       \$translateMatrix $translateMatrix"   
+        puts "       \$transformMatrix $transformMatrix"   
+        
+    
+          # -- define nodeType: line
+        set resultNode [$tmpSVG createElement line]
+        
+          # -- get shape 
+        set x1  [copyAttribute $node x1]
+        set y1  [copyAttribute $node y1]
+        set x2  [copyAttribute $node x2] 
+        set y2  [copyAttribute $node y2]
+        set pointList [list $x1 $y1 $x2 $y2]
+
+        
+          # -- handle translation by given x,y
+        set pointList [matrixTransform $pointList $translateMatrix]
+          # puts "   -> $pointList"
+        
+        
+          # -- handle transformation by given attribute
+        set pointList [matrixTransform $pointList $transformMatrix]
+          # puts "   -> $pointList"
+        
+          # --check relevance
+        set segLength  [pointDistance [lrange $pointList 0 1] [lrange $pointList 2 3]]
+        # puts "   -> \$segLength $segLength"
+        if {$segLength < $min_SegmentLength} {
+            puts "line,segLength:  $segLength   < $min_SegmentLength"
+            puts "      ... excepted\n"
+            return {}
+        }        
+        
+        $resultNode setAttribute x1 [lindex $pointList 0]
+        $resultNode setAttribute y1 [lindex $pointList 1]
+        $resultNode setAttribute x2 [lindex $pointList 2]
+        $resultNode setAttribute y2 [lindex $pointList 3]
+        
+        
+          # -- create returnNode with ordered attributes
+        set newNode [$tmpSVG createElement line]
+        update_Attributes $resultNode $newNode
+
+          
+          # -- set defaults
+        $newNode setAttribute stroke          black
+        $newNode setAttribute stroke-width    0.1
+        
+          # -- return svg-Node
+        return $newNode
+    }
+
+
+    proc simplify_Ellipse {node parentTransform {targetNode {}}} {   
+        
+        variable tmpSVG  
+        variable flatSVG
+        variable CONST_PI
+        
+        set transform       [unifyTransform $node]
+        set translateMatrix [lindex $transform 0]
+        set transformMatrix [lindex $transform 1]
+        set transformType   [lindex $transform 2]
+        
+        puts "\n =============================\n  -> [$node asXML]"
+        puts "       \$transformType   $transformType"
+        puts "       \$translateMatrix $translateMatrix"   
+        puts "       \$transformMatrix $transformMatrix"   
+        
+    
+          # -- define nodeType: polygon
+        set resultNode [$tmpSVG createElement polygon]
+        
+        set center_x  [copyAttribute $node cx]
+        set center_y  [copyAttribute $node cy]
+        set radius_x  [copyAttribute $node rx] 
+        set radius_y  [copyAttribute $node ry]
+        if {$center_x == {}} {set center_x 0}
+        if {$center_y == {}} {set center_y 0}
+        
+
+          # -- for handling id="center_00" and origin values
+        $resultNode setAttribute cx $center_x       
+        $resultNode setAttribute cy $center_y    
+
+
+          # -- define shape as polygon        
+        set pointList {}
+        set i 0
+        set j 60
+        set deltaAngle  [expr 2*$CONST_PI/$j]
+        set ratioRadius [expr 1.0*$radius_y/$radius_x]
+        puts "   \$deltaAngle \$ratioRadius: $deltaAngle $ratioRadius"
+        while {$i < $j} {
+            set angle [expr $i*$deltaAngle]
+            set x     [expr $center_x + ($radius_x * cos($angle))]
+            set y     [expr $center_y + $ratioRadius * ($radius_x * sin($angle))]
+            lappend pointList $x $y
+            incr i
+        }
+        
+          # -- handle translation by given x,y
+        set pointList [matrixTransform $pointList $translateMatrix]
+          # puts "   -> $pointList"
+        
+        
+          # -- handle transformation by given attribute
+        set pointList [matrixTransform $pointList $transformMatrix]
+          # puts "   -> $pointList"
+        
+        
+          # -- convert to svg-polygon attributes
+        set tmpList {}
+        foreach {x y} $pointList {
+            lappend tmpList "[expr  $x + [lindex $parentTransform 0]],[expr $y + [lindex $parentTransform 1]]"
+        }
+        $resultNode setAttribute points $tmpList
+        
+          # -- create returnNode with ordered attributes
+        set newNode [$tmpSVG createElement polygon]
+        update_Attributes $resultNode $newNode
+        
+          # -- set defaults
+        $newNode setAttribute fill            none
+        $newNode setAttribute stroke          black
+        $newNode setAttribute stroke-width    0.1
+        
+          # -- return svg-Node
+        return $newNode
+    } 
+
+
+    proc simplify_Polygon {node parentTransform {targetNode {}}} {
+        
+        variable tmpSVG  
+        variable flatSVG
+        
+        set transform       [unifyTransform $node]
+        set translateMatrix [lindex $transform 0]
+        set transformMatrix [lindex $transform 1]
+        set transformType   [lindex $transform 2]
+        
+        puts "\n\n\n =============================\n  -> [$node asXML]"
+        puts "       \$transformType   $transformType"
+        puts "       \$translateMatrix $translateMatrix"   
+        puts "       \$transformMatrix $transformMatrix"
+        
+
+          # -- define nodeType: polygon
+        set resultNode [$tmpSVG createElement polygon]
+        
+          # -- define shape as pointList
+        set tmpList [$node getAttribute points]
+        set pointList {}
+        foreach point $tmpList {
+            foreach {x y} [split $point ,] break
+            lappend pointList $x $y
+        }
+          # puts "   -> $pointList"
+        
+          # -- handle translation by given x,y
+        set pointList [matrixTransform $pointList $translateMatrix]
+          # puts "   -> $pointList"
+        
+          # -- handle transformation by given attribute
+        set pointList [matrixTransform $pointList $transformMatrix]
+          # puts "   -> $pointList"
+        
+          # -- convert to svg-polygon attributes
+        set tmpList {}
+        foreach {x y} $pointList {
+            lappend tmpList "[expr  $x + [lindex $parentTransform 0]],[expr $y + [lindex $parentTransform 1]]"
+        }
+        $resultNode setAttribute points $tmpList
+
+        
+          # -- create returnNode with ordered attributes
+        set newNode [$tmpSVG createElement polygon]
+        update_Attributes $resultNode $newNode
+
+          # -- set defaults
+        $newNode setAttribute fill            none
+        $newNode setAttribute stroke          black
+        $newNode setAttribute stroke-width    0.1
+        
+          # -- return svg-Node
+        return $newNode
+    }
+
+
+    proc simplify_Path  {node parentTransform {targetNode {}}} {
+ 
+        variable tmpSVG  
+        variable flatSVG
+        
+        set transform       [unifyTransform $node]
+        set translateMatrix [lindex $transform 0]
+        set transformMatrix [lindex $transform 1]
+        set transformType   [lindex $transform 2]
+        
+        puts "\n =============================\n  -> [$node asXML]"
+        puts "       \$transformType   $transformType"
+        puts "       \$translateMatrix $translateMatrix"   
+        puts "       \$transformMatrix $transformMatrix"   
+
+        
+        
+        set splitPathCount 0
+        set svgPath     [path_toPolygon [ $node getAttribute d ] $parentTransform]
+        set splitIndex  [lsearch -exact -all $svgPath {M}]
+        set splitIndex  [lappend splitIndex end]
+        
+            # puts $svgPath
+            # puts $splitIndex
+            # exit
+        set returnNodes {}
+        set i 0
+        while {$i < [llength $splitIndex]-1} {
+                set indexStart     [lindex $splitIndex $i]
+                set indexEnd       [lindex $splitIndex $i+1]
+                incr i
+                
+                if {$indexEnd != {end}} {set indexEnd [expr $indexEnd -1 ]}
+                set pathSegment [lrange $svgPath $indexStart $indexEnd ]
+                    # puts "   ... $indexStart / $indexEnd"
+                    # puts "   ... $i   [lindex $splitIndex $i]"
+                    # puts "      ... $pathSegment"
+                
+                
+                if { [lindex $pathSegment end] == {Z} } {
+                        set pathSegment        [string trim [string map {Z { }} $pathSegment] ]
+                        set elementType     polygon
+                } else {
+                        set elementType     polyline
+                }
+                    # puts "\n$pathSegment\n_________pathSegment________"
+                set loopNode  [$tmpSVG createElement node]
+                set pointList [path_to_Polygon $pathSegment]
+                    # puts "\n$pointList\n_________objectPoints________"
+
+                if {[llength $pointList] < 2} {
+                    puts "\n"
+                    puts "polyline-polygon -> pointList:  $pointList   <- [llength $pointList]"
+                    puts "      ... excepted\n"
+                    return
+                    # continue
+                } else {
+                    puts [$node asXML]
+                    puts [$node attributes]
+                    foreach attr [$node attributes] {
+                        $loopNode setAttribute $attr [$node getAttribute $attr]
+                    }                    
+                    puts [$loopNode asXML]
+                    $loopNode setAttribute d {}
+                    puts [$loopNode asXML]
+                    $loopNode setAttribute points $pointList
+                }
+                set resultNode [simplify_Polygon  $loopNode $parentTransform]
+                set newNode    [$flatSVG createElement $elementType]
+                copyAttribute $resultNode id $newNode
+                update_Attributes $resultNode $newNode
+                
+                foreach attr [$resultNode attributes] {
+                    #$newNode setAttribute $attr [$resultNode getAttribute $attr]
+                }
+
+                $newNode setAttribute fill            none
+                $newNode setAttribute stroke          black
+                $newNode setAttribute stroke-width    0.1
+                    
+                lappend returnNodes $newNode
+                
+                incr splitPathCount
+        }    
+    
+        return $returnNodes
+
+    }
+
+
+    proc path_to_Polygon {pathDefinition} {
+          # -------------------------------------------------
+          # http://www.selfsvg.info/?section=3.5
+          # 
+          # -------------------------------------------------
+              # puts "\n\n === new pathString =====================\n"        
+
+              # puts "\npathString:\n  $pathString\n"            
+          
+              # puts " - > pathDefinition:\n$pathDefinition\n"
+
+        
+        set canvasElementType     line
+        set controlString        {}
+        set isClosed            {no}
+
+            # puts " ... simplify_Path :\n$pathString"
+        set pathString  [string map { M {_M}   L {_L}   H {_H}   V {_V}   C {_C}   S {_S}   Q {_Q}   T {_T}   A {_A} }   [string trim $pathDefinition] ]
+        
+        set lineString  {}
+        set segmentList [split $pathString {_}]
+        set segmentList [filterList $segmentList]
+            # puts "$segmentList\n-------------------------simplify_Path---"
+        
+        
+        set prevCoord_x         55
+        set prevCoord_y         55
+        
+        set ref_x 0
+        set ref_y 0
+        
+        set loopControl 0
+        
+        foreach segment $segmentList {
+            
+                # puts "\n\n_____loop_______________________________________________"
+                # puts "\n\n      $ref_x $ref_y\n_____ref_x___ref_y________"
+                # puts "\n\n      <$segment>\n_____segment________"
+
+        
+                # puts "  ... $segment"
+            set segmentDef            [split [string trim $segment]]
+            set segmentType         [lindex $segmentDef 0]
+            set segmentCoords         [lrange $segmentDef 1 end]
+                # puts "\n$segmentType - [llength $segmentCoords] - $segmentCoords\n____type__segmentCoords__"
+                
+            switch -exact $segmentType {
+                M     { #MoveTo 
+                        set lineString         [ concat $lineString     $segmentCoords ]
+                        set ref_x     [ lindex $segmentCoords 0 ]
+                        set ref_y     [ lindex $segmentCoords 1 ]
+                      }
+                L     { #LineTo - absolute
+                        set lineString         [ concat $lineString     $segmentCoords ] 
+                        set ref_x     [ lindex $segmentCoords end-1]
+                        set ref_y     [ lindex $segmentCoords end  ]
+                      } 
+                C     { # Bezier - absolute
+                            # puts "\n\n  [llength $segmentCoords] - $segmentCoords\n______segmentCoords____"
+                        # puts "\n( $ref_x / $ref_y )\n      ____start_position__"
+                        # puts "\n$segmentType - [llength $segmentCoords] - ( $ref_x / $ref_y ) - $segmentCoords\n      ______type__segmentCoords__"
+                        
+                        set segmentValues    {}
+                        foreach {value} $segmentCoords {
+                            set segmentValues     [ lappend segmentValues $value ]                        
+                        }
+                        
+                            # exception on to less values
+                                #     - just a line to last coordinate
+                                #                                
+                        if {[llength $segmentValues] < 6 } {\
+                            set ref_x     [ lindex $segmentValues end-1]
+                            set ref_y     [ lindex $segmentValues end  ]
+                            set lineString [ concat $lineString $ref_x $ref_y ]
+                                puts "\n\n      <[llength $segmentValues]> - $segmentValues\n_____Exception________"
+                            return
+                            # continue
+                        }
+                        
+                            # continue Bezier definition
+                                #     - just a line to last coordinate
+                                #                                
+                        set segmentValues    [ linsert $segmentValues 0 $ref_x $ref_y ]                            
+                            # puts "\n  [llength $segmentValues_abs] - $segmentValues_abs\n______segmentValues_abs____"
+                        set bezierValues    [ Bezier $segmentValues]
+                        set ref_x     [ lindex $bezierValues end-1]
+                        set ref_y     [ lindex $bezierValues end  ]
+                            # puts "           ===================="
+                            # puts "           $prevCoord -> $prevCoord"
+                            # puts "                 $bezierString"
+                            # puts "            ===================="                            
+                        set lineString         [ concat $lineString     [lrange $bezierValues 2 end] ]
+                      }
+                    
+                default {
+                        puts "\n\n  ... whats on there?  ->  $segmentType \n\n"
+                      }
+            }
+            
+        }
+        
+        set pointList {}
+        foreach {x y}  [split $lineString { }] {
+            set pointList [lappend pointList "$x,$y"]
+        }
+        # puts "-> pointList:\n$pointList\n"
+        return $pointList
+    }
+
+
     proc simplifySVG {domSVG {parentTransform {0 0}}} {
             
             puts "\n"
@@ -442,6 +1022,7 @@ exec wish "$0" "$@"
             puts "\n"
 
                         
+            variable detailText
             variable min_SegmentLength
             variable flatSVG
             variable fillGeometry
@@ -449,475 +1030,136 @@ exec wish "$0" "$@"
             
             set fillGeometry {gray80}
                         
-            proc addNode {node targetNode parentTransform} {
-
-                    variable min_SegmentLength
-                    variable flatSVG
-                    variable fillGeometry
-                    variable free_ObjectID
-
-                    # puts "   ... $node"
-                    if {[$node nodeType] != {ELEMENT_NODE}} return ;#continue
-                
-                        # -- set defaults
-                    set objectPoints {}
-
-
-                        # -- get transform attribute
-                    set transform(parent) $parentTransform
-                    foreach {transform(parent_x) transform(parent_y)} $transform(parent) break;
-                    
-                    if {[catch {set transform(self)  [ $node getAttribute transform ]} errmsg] } {
-                        set transform(type) {xy}
-                        set transform(self_x) 0
-                        set transform(self_y) 0
-                    } else {
-                        # puts "\n -> $transform(self)"
-                        set transform(type) [lindex [split $transform(self) ()] 0]
-                        set transform(args) [lindex [split $transform(self) ()] 1]
-                        switch -exact $transform(type) {
-                            matrix {
-                                    #puts "\n-----"
-                                    #puts "$transform(type)"
-                                    #puts "$transform(args)"
-                                    set transform(self_x) 0
-                                    set transform(self_y) 0
-                                    }
-                            default {
-                                    set transform(self)  [ lrange [ split [ $node getAttribute transform ] (,) ] 1 2]
-                                    foreach {transform(self_x) transform(self_y)} $transform(self) break
-                                    }
-                       }
-                    }
-
-                   
-                        # puts "       ... this:    $transform(self_x) / $transform(self_y)"
-                    set transform(self_x) [expr $transform(self_x) + $transform(parent_x)] 
-                    set transform(self_y) [expr $transform(self_y) + $transform(parent_y)] 
-                        # puts "         ... this:  $transform(self_x) / $transform(self_y)\n"
-                          
-                    
-                        # -- get nodeName
-                    set nodeName [$node nodeName]
-                    if  {[$node hasAttribute id]} {
-                        set nodeID   [$node getAttribute id]
-                    } else {
-                        incr free_ObjectID
-                        set nodeID   [format "_new_%s" $free_ObjectID]
-                    }
-                    
-                            # puts "  ... $nodeName"
-                        # puts "    addNode -> \$nodeID  $nodeID"
-                            # puts "     ... $transform(self_x) / $transform(self_y)"
-
-                    
-                    switch -exact $nodeName {
-                            g {
-                                            # puts "\n\n  ... looping"
-                                            # puts "   [$node asXML]"
-                                        set myNode [ $flatSVG createElement g]
-                                        $targetNode appendChild $myNode
-                                        foreach childNode [$node childNodes] {
-                                            addNode $childNode $myNode {0 0}
-                                        }
-                                }
-                            rect {
-                                        set myNode [ $flatSVG createElement $nodeName]
-                                            $myNode setAttribute x               [ expr [ $node getAttribute x ] + $transform(self_x) ]
-                                            $myNode setAttribute y               [ expr [ $node getAttribute y ] + $transform(self_y) ]
-                                            $myNode setAttribute width           [ $node getAttribute width  ]
-                                            $myNode setAttribute height          [ $node getAttribute height ]
-                                            $myNode setAttribute fill            none
-                                            $myNode setAttribute stroke          black
-                                            $myNode setAttribute stroke-width    0.1
-                                        $targetNode appendChild $myNode
-                                }
-                            polygon {
-                                        set pointList     [split [string map {, { }} [$node getAttribute points ] ] ]
-										set pointList     [filterList $pointList {}]
-										set valueList     {}
-                                            # -- remove tiny segments from polyline ---
-                                        foreach {x y} $pointList break
-                                        set x             [expr $x + $transform(self_x) ]
-                                        set y             [expr $y + $transform(self_y) ]
-                                        set valueList     [lappend valueList $x,$y]
-                                        set lastBase      [list $x $y]
-                                        set lastCount     0
-                                        
-                                        foreach {x y} [lrange $pointList 2 end] {
-                                           incr lastCount
-                                            set x          [expr $x + $transform(self_x) ]
-                                            set y          [expr $y + $transform(self_y) ]
-                                            set segLength  [pointDistance $lastBase [list $x $y]]
-                                            # puts "   -> \$segLength $segLength"
-                                            if {$segLength > $min_SegmentLength} {
-                                                    # puts "   -> add to valueList; $lastCount ignored"
-                                                set lastBase   [list $x $y]
-                                                set valueList  [lappend valueList $x,$y]
-                                            }
-                                        }
-                                         if {[llength $valueList] < 3} {
-                                                puts "\n"
-                                                puts "polygon,valueList:  $valueList   <- [llength $valueList]"
-                                                puts "      ... excepted\n"
-                                                return
-                                                # continue
-                                        }
-                                        set myNode         [ $flatSVG createElement     $nodeName]
-                                            $myNode setAttribute points          $valueList
-                                            $myNode setAttribute fill            none
-                                            $myNode setAttribute stroke          black
-                                            $myNode setAttribute stroke-width    0.1
-                                        $targetNode appendChild $myNode
-                                }
-                            polyline { # polyline class="fil0 str0" points="44.9197,137.492 47.3404,135.703 48.7804,133.101 ..."
-                                        set pointList     [split [string map {, { }} [$node getAttribute points ] ] ]
-										set pointList     [filterList $pointList {}]
-                                        set valueList     {}
-                                            # -- remove tiny segments from polyline ---
-                                        foreach {x y} $pointList break
-                                        set x             [expr $x + $transform(self_x) ]
-                                        set y             [expr $y + $transform(self_y) ]
-                                        set valueList     [lappend valueList $x,$y]
-                                        set lastBase      [list $x $y]
-                                        set lastCount     0
-                                        
-                                        foreach {x y} [lrange $pointList 2 end] {
-                                            incr lastCount
-                                            set x          [expr $x + $transform(self_x) ]
-                                            set y          [expr $y + $transform(self_y) ]
-                                            set segLength  [pointDistance $lastBase [list $x $y]]
-                                            # puts "   -> \$segLength $segLength"
-                                            if {$segLength > $min_SegmentLength} {
-                                                # puts "   -> add to valueList; $lastCount ignored"
-                                                set lastBase   [list $x $y]
-                                                set valueList  [lappend valueList $x,$y]
-                                            }                                       
-                                        }
-                                        if {[llength $valueList] < 2} {
-                                                puts "\n"
-                                                puts "polyline,valueList:  $valueList   <- [llength $valueList]"
-                                                puts "      ... excepted\n"
-                                                return
-                                                # continue
-                                        }
-                                        set myNode         [ $flatSVG createElement $nodeName]
-                                            $myNode setAttribute points          $valueList
-                                            $myNode setAttribute fill            none
-                                            $myNode setAttribute stroke          black
-                                            $myNode setAttribute stroke-width    0.1
-                                        $targetNode appendChild $myNode
-                                }
-                            line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
-                                        set myNode         [ $flatSVG createElement $nodeName]
-                                            set x1 [ expr [ $node getAttribute x1 ] + $transform(self_x) ]
-                                            set y1 [ expr [ $node getAttribute y1 ] + $transform(self_y) ]
-                                            set x2 [ expr [ $node getAttribute x2 ] + $transform(self_x) ]
-                                            set y2 [ expr [ $node getAttribute y2 ] + $transform(self_y) ]
-                                      
-                                            $myNode setAttribute x1     $x1         
-                                            $myNode setAttribute y1     $y1        
-                                            $myNode setAttribute x2     $x2        
-                                            $myNode setAttribute y2     $y2        
-                                            set segLength  [pointDistance [list $x1 $y1] [list $x2 $y2]]
-                                            # puts "   -> \$segLength $segLength"
-                                            if {$segLength < $min_SegmentLength} {
-                                                puts "line,segLength:  $segLength   < $min_SegmentLength"
-                                                puts "      ... excepted\n"
-                                                return
-                                                # continue
-                                            }
-                                            $myNode setAttribute fill            none
-                                            $myNode setAttribute stroke          black
-                                            $myNode setAttribute stroke-width    0.1
-                                        $targetNode appendChild $myNode
-                                }
-                            ellipse { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
-                                        # --- dont display the center_object with id="center_00"
-                                        if {$transform(type) eq "matrix"} {
-                                            # puts " .. inside matrix"
-                                                # puts "\n-----"
-                                                # puts "[$node asXML]"
-                                                # puts "      $transform(type)"
-                                                # puts "      $transform(args)"
-                                                puts "[$node asXML]"
-                                                
-                                                puts $$transform(args)
-                                                foreach {a b c d e f} $transform(args) break
-                                                
-                                                set scale_x  [format "%.4f" [expr abs($a) + abs($c)]]
-                                                set scale_y  [format "%.4f" [expr abs($b) + abs($d)]]
-                                                    # set radius   [$node getAttribute r]
-                                                    puts "   scale:  $scale_x / $scale_y"
-                                                    
-                                                if {$scale_x eq $scale_y} {
-                                                        set myNode         [ $flatSVG createElement circle]
-                                                        $myNode setAttribute cx [expr $a*1.0 + $c*1.0 + $e*1.0]
-                                                        $myNode setAttribute cy [expr $b*1.0 + $d*1.0 + $f*1.0]
-                                                            #$myNode setAttribute cx $e
-                                                            #$myNode setAttribute cy $f
-                                                            #$myNode setAttribute cx [expr $a*$e + $c*$e]
-                                                            #$myNode setAttribute cy [expr $b*$f + $d*$f]
-                                                        $myNode setAttribute r               [ $node getAttribute rx  ]
-                                                        $myNode setAttribute r  [expr abs($scale_x) * [ $node getAttribute rx  ]]
-                                                } else {
-                                                        set myNode         [ $flatSVG createElement $nodeName]
-                                                        $myNode setAttribute cx [expr $a*1.0 + $c*1.0 + $e*1.0]
-                                                        $myNode setAttribute cy [expr $b*1.0 + $d*1.0 + $f*1.0]
-                                                        $myNode setAttribute rx [expr ($a*1.0 + $c*1.0 ) * [ $node getAttribute rx  ]]
-                                                        $myNode setAttribute ry [expr ($a*1.0 + $c*1.0 ) * [ $node getAttribute ry  ]]
-                                                }
-                                                puts " [$myNode asXML]"
-                                                # exit
-                                        } else {
-                                                set myNode         [ $flatSVG createElement $nodeName]
-                                                    $myNode setAttribute cx              [ expr [ $node getAttribute cx ] + $transform(self_x) ]
-                                                    $myNode setAttribute cy              [ expr [ $node getAttribute cy ] + $transform(self_y) ]
-                                                    $myNode setAttribute rx              [ $node getAttribute rx  ]
-                                                    $myNode setAttribute ry              [ $node getAttribute ry  ]
-                                        }
-                                            $myNode setAttribute fill            none
-                                            $myNode setAttribute stroke          black
-                                            $myNode setAttribute stroke-width    0.1
-                                        $targetNode appendChild $myNode
-                                }
-                            circle { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
-                                            # --- dont display the center_object with id="center_00"
-                                        if {$transform(type) eq "matrix"} {
-                                            # puts " .. inside matrix"
-                                                # puts "\n-----"
-                                                # puts "[$node asXML]"
-                                                # puts "      $transform(type)"
-                                                # puts "      $transform(args)"
-                                                puts $$transform(args)
-                                                foreach {a b c d e f} $transform(args) break
-                                                    set scale_x  [format "%.4f" [expr $a + $c]]
-                                                    set scale_y  [format "%.4f" [expr $b + $d]]
-                                                    set radius   [$node getAttribute r]
-                                                    # puts "   scale:  $scale_x / $scale_y"
-                                            if {[expr abs($scale_x) - abs($scale_y)] == 0} {
-                                                set myNode         [ $flatSVG createElement $nodeName]
-                                                $myNode setAttribute cx $e
-                                                $myNode setAttribute cy $f
-                                                    #$myNode setAttribute cx [expr $a*1.0 + $c*1.0 + $e*1.0]
-                                                    #$myNode setAttribute cy [expr $b*1.0 + $d*1.0 + $f*1.0]
-                                                    #$myNode setAttribute cx [expr $a*$e + $c*$e]
-                                                    #$myNode setAttribute cy [expr $b*$f + $d*$f]
-                                                $myNode setAttribute r  [expr abs($scale_x) * $radius]
-                                            } else {
-                                                set myNode         [ $flatSVG createElement ellipse]
-                                                $myNode setAttribute cx $e
-                                                $myNode setAttribute cy $f
-                                                $myNode setAttribute rx [expr abs($scale_x) * $radius]     
-                                                $myNode setAttribute ry [expr abs($scale_y) * $radius]        
-                                            }
-                                        } else {
-                                            set myNode         [ $flatSVG createElement $nodeName]
-                                            $myNode setAttribute cx              [ expr [ $node getAttribute cx ] + $transform(self_x) ]
-                                            $myNode setAttribute cy              [ expr [ $node getAttribute cy ] + $transform(self_y) ]
-                                            $myNode setAttribute r               [ $node getAttribute r  ]
-                                        }
-                                            $myNode setAttribute fill            none
-                                            $myNode setAttribute stroke          black
-                                            $myNode setAttribute stroke-width    0.1
-                                                # puts "[$myNode asXML]"
-                                        $targetNode appendChild $myNode
-                                }
-                            path { # path d="M ......."
-                                        # absolutPath
-                                        set splitPathCount 0
-                                        puts "  -> path id: $nodeID"
-                                        set svgPath     [ absolutPath [ $node getAttribute d ] [ list $transform(self_x) $transform(self_y)] ]
-                                        set splitIndex    [lsearch -exact -all $svgPath {M}]
-                                        set splitIndex    [lappend splitIndex end]
-                                            set i 0
-                                            # puts $svgPath
-                                            # puts $splitIndex
-                                            # exit
-                                        while {$i < [llength $splitIndex]-1} {
-                                                set indexStart     [lindex $splitIndex $i]
-                                                set indexEnd       [lindex $splitIndex $i+1]
-                                                incr i
-                                                
-                                                if {$indexEnd != {end}} {set indexEnd [expr $indexEnd -1 ]}
-                                                set pathSegment [lrange $svgPath $indexStart $indexEnd ]
-                                                    # puts "   ... $indexStart / $indexEnd"
-                                                    # puts "   ... $i   [lindex $splitIndex $i]"
-                                                    # puts "      ... $pathSegment"
-                                                
-                                                
-                                                if { [lindex $pathSegment end] == {Z} } {
-                                                        set pathSegment        [string trim [string map {Z { }} $pathSegment] ]
-                                                        set elementType     polygon
-                                                } else {
-                                                        set elementType     polyline
-                                                }
-                                                    # puts "\n$pathSegment\n_________pathSegment________"
-                                                set objectPoints [ convertPath2Line $pathSegment ]
-                                                    # puts "\n$objectPoints\n_________objectPoints________"
-
-                                                if {[llength $objectPoints] < 2} {
-                                                    puts "\n"
-                                                    puts "polyline-polygon,objectPoints:  $objectPoints   <- [llength $objectPoints]"
-                                                    puts "      ... excepted\n"
-                                                    return
-                                                    # continue
-                                                }
-                                                
-                                                incr splitPathCount
-                                                set myID   [format "%s_%s" $nodeID $splitPathCount]
-                                                set myNode [ $flatSVG createElement $elementType]
-                                                    $myNode setAttribute points          $objectPoints
-                                                    $myNode setAttribute fill            none
-                                                    $myNode setAttribute stroke          black
-                                                    $myNode setAttribute stroke-width    0.1
-                                                    $myNode setAttribute id              $myID
-                                                $targetNode appendChild $myNode
-                                        }
-                                        
-                                        # puts "       ... search for:   [lsearch -exact -all $svgPath {M}]\n"
-
-                                }        
-
-                            default { 
-                                        # -- for temporary use, will never be added to $targetNode
-                                        set myNode [ $flatSVG createElement unused ]
-                                }
-                    }
-                    # puts "        $nodeName:  $objectPoints"
-                    # -- get nodeID
-                    if {[$node hasAttribute id]} {
-                        set nodeID   [$node getAttribute id]
-                            # puts "  ... $nodeName / $nodeID"
-                        $myNode setAttribute id $nodeID
-                    }                
-            }
-            
                 # puts [$targetNode asXML]
 
                 # puts "  ... [ $flatSVG asXML]\n"
             set root [ $flatSVG documentElement ]
                 # puts "  ... [ $root asXML]\n"
             foreach node [$domSVG childNodes] {
-                addNode $node $root $parentTransform
+                add_SVGNode $node $root $parentTransform
             }
 
             return $root
     }
 
 
-    proc convertPath2Line {pathDefinition} {
-            # -------------------------------------------------
-            # http://www.selfsvg.info/?section=3.5
-            # 
-            # -------------------------------------------------
-                # puts "\n\n === new pathString =====================\n"        
+    proc add_SVGNode {node targetNode parentTransform} {
 
-                # puts "\npathString:\n  $pathString\n"            
-            
-                # puts " - > pathDefinition:\n$pathDefinition\n"
+            variable detailText
+            variable min_SegmentLength
+            variable flatSVG
+            variable fillGeometry
+            variable free_ObjectID
 
-            
-            set canvasElementType     line
-            set controlString        {}
-            set isClosed            {no}
+            # puts "   ... $node"
+            if {[$node nodeType] != {ELEMENT_NODE}} return ;#continue
+        
+                # --- predefine attributes'
+            set objectPoints {}
+            set x 0
+            set y 0
 
-                # puts " ... convertPath2Line :\n$pathString"
-            set pathString  [string map { M {_M}   L {_L}   H {_H}   V {_V}   C {_C}   S {_S}   Q {_Q}   T {_T}   A {_A} }   [string trim $pathDefinition] ]
-            
-            set lineString  {}
-            set segmentList [split $pathString {_}]
-            set segmentList [filterList $segmentList]
-                # puts "$segmentList\n-------------------------convertPath2Line---"
-            
-            
-            set prevCoord_x         55
-            set prevCoord_y         55
-            
-            set ref_x 0
-            set ref_y 0
-            
-            set loopControl 0
-            
-            foreach segment $segmentList {
-                
-                    # puts "\n\n_____loop_______________________________________________"
-                    # puts "\n\n      $ref_x $ref_y\n_____ref_x___ref_y________"
-                    # puts "\n\n      <$segment>\n_____segment________"
+                # -- get transform attribute
+            set transform(parent) $parentTransform
+            foreach {transform(parent_x) transform(parent_y)} $transform(parent) break;
+            set transform(self_x) 0
+            set transform(self_y) 0
+            set transform(self)   {0 0}
 
+           
+                # puts "       ... this:    $transform(self_x) / $transform(self_y)"
+            set transform(self_x) [expr $transform(self_x) + $transform(parent_x)] 
+            set transform(self_y) [expr $transform(self_y) + $transform(parent_y)] 
+                # puts "         ... this:  $transform(self_x) / $transform(self_y)\n"
+                  
             
-                    # puts "  ... $segment"
-                set segmentDef            [split [string trim $segment]]
-                set segmentType         [lindex $segmentDef 0]
-                set segmentCoords         [lrange $segmentDef 1 end]
-                    # puts "\n$segmentType - [llength $segmentCoords] - $segmentCoords\n____type__segmentCoords__"
-                    
-                switch -exact $segmentType {
-                    M     { #MoveTo 
-                            set lineString         [ concat $lineString     $segmentCoords ]
-                            set ref_x     [ lindex $segmentCoords 0 ]
-                            set ref_y     [ lindex $segmentCoords 1 ]
-                        }
-                    L     { #LineTo - absolute
-                            set lineString         [ concat $lineString     $segmentCoords ] 
-                            set ref_x     [ lindex $segmentCoords end-1]
-                            set ref_y     [ lindex $segmentCoords end  ]
-                        } 
-                    C     { # Bezier - absolute
-                                # puts "\n\n  [llength $segmentCoords] - $segmentCoords\n______segmentCoords____"
-                            # puts "\n( $ref_x / $ref_y )\n      ____start_position__"
-                            # puts "\n$segmentType - [llength $segmentCoords] - ( $ref_x / $ref_y ) - $segmentCoords\n      ______type__segmentCoords__"
-                            
-                            set segmentValues    {}
-                            foreach {value} $segmentCoords {
-                                set segmentValues     [ lappend segmentValues $value ]                        
-                            }
-                            
-                                # exception on to less values
-                                    #     - just a line to last coordinate
-                                    #                                
-                            if {[llength $segmentValues] < 6 } {\
-                                set ref_x     [ lindex $segmentValues end-1]
-                                set ref_y     [ lindex $segmentValues end  ]
-                                set lineString [ concat $lineString $ref_x $ref_y ]
-                                    puts "\n\n      <[llength $segmentValues]> - $segmentValues\n_____Exception________"
-                                return
-                                # continue
-                            }
-                            
-                                # continue Bezier definition
-                                    #     - just a line to last coordinate
-                                    #                                
-                            set segmentValues    [ linsert $segmentValues 0 $ref_x $ref_y ]                            
-                                # puts "\n  [llength $segmentValues_abs] - $segmentValues_abs\n______segmentValues_abs____"
-                            set bezierValues    [ Bezier $segmentValues]
-                            set ref_x     [ lindex $bezierValues end-1]
-                            set ref_y     [ lindex $bezierValues end  ]
-                                # puts "           ===================="
-                                # puts "           $prevCoord -> $prevCoord"
-                                # puts "                 $bezierString"
-                                # puts "            ===================="                            
-                            set lineString         [ concat $lineString     [lrange $bezierValues 2 end] ]
-                        }
-                        
-                        default {
-                            puts "\n\n  ... whats on there?  ->  $segmentType \n\n"
-                        }
-                }
-                
-                    # incr loopControl
-                    # puts "  ... $loopControl"
-                
-                # puts "\n( $ref_x / $ref_y )\n      ____end_position__"                
-                # puts "\n\n      $ref_x $ref_y\n_____ref_x___ref_y________"
+                # -- get nodeName
+            set nodeName [$node nodeName]
+            if  {[$node hasAttribute id]} {
+                set nodeID   [$node getAttribute id]
+            } else {
+                incr free_ObjectID
+                set nodeID   [format "_new_%s" $free_ObjectID]
             }
+          
             
-            foreach {x y}  [split $lineString { }] {
-                set pointList [lappend pointList "$x,$y"]
+            set parentTransform [list $transform(self_x) $transform(self_y)]
+                                
+            switch -exact $nodeName {
+                    g {
+                                    # puts "\n\n  ... looping"
+                                    # puts "   [$node asXML]"
+                                set myNode [$flatSVG createElement g]
+                                $targetNode appendChild $myNode
+                                foreach childNode [$node childNodes] {
+                                    add_SVGNode $childNode $myNode {0 0}
+                                }
+                        }
+                    rect {
+                                set myNode  [simplify_Rectangle $node $parentTransform]
+                                $myNode setAttribute id $nodeID
+                                $targetNode appendChild $myNode 
+                        }
+                    polygon {
+                                set myNode  [simplify_Polygon $node $parentTransform]
+                                $myNode setAttribute id $nodeID
+                                $targetNode appendChild $myNode 
+                        }
+                    polyline { # polyline class="fil0 str0" points="44.9197,137.492 47.3404,135.703 48.7804,133.101 ..."
+                                set polygonNode  [simplify_Polygon $node $parentTransform]
+                                set myNode [$flatSVG createElement polyline]
+                                $myNode setAttribute id $nodeID
+                                foreach attr [$polygonNode attributes] {
+                                    $myNode setAttribute $attr [$polygonNode hasAttribute $attr]
+                                }
+                                $targetNode appendChild $myNode 
+                        }
+                    line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
+                                set myNode  [simplify_Line $node $parentTransform]
+                                if {$myNode != {}} {
+                                  $myNode setAttribute id $nodeID
+                                  $targetNode appendChild $myNode
+                                }                                        
+                        }
+                    ellipse { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
+                                set myNode  [simplify_Ellipse $node $parentTransform $targetNode]
+                                $myNode setAttribute id $nodeID
+                                $targetNode appendChild $myNode                                         
+                        }
+                    circle { # circle cx="58.4116" cy="120.791" r="5.04665"
+                                    # --- dont display the center_object with id="center_00"
+                                set myNode  [simplify_Circle $node $parentTransform]
+                                $myNode setAttribute id $nodeID
+                                $targetNode appendChild $myNode 
+                        }
+                    path { # path d="M ......."
+                                # path_toPolygon
+                                set tmpNodes [ simplify_Path $node $parentTransform]
+                                set loopID 0
+                                foreach myNode $tmpNodes {
+                                    incr loopID
+                                    $myNode setAttribute id [format "%s_%s" $nodeID $loopID]
+                                    $targetNode appendChild $myNode
+                                }
+                        }        
+
+                    default { 
+                                # -- for temporary use, will never be added to $targetNode
+                                set myNode [$flatSVG createElement unused ]
+                        }
             }
-            # puts "-> pointList:\n$pointList\n"
-            return $pointList
-            
+            # puts "        $nodeName:  $objectPoints"
+            # -- get nodeID
+            if {[$node hasAttribute id]} {
+                set nodeID   [$node getAttribute id]
+                    # puts "  ... $nodeName / $nodeID"
+                $myNode setAttribute id $nodeID
+            } else {
+                set nodeID {... unset}  
+            }
+            $detailText inser end "    -> $nodeName - $nodeID\n"
+            update
+                                
     }
 
 
@@ -934,145 +1176,7 @@ exec wish "$0" "$@"
             puts "  =============================================="
             puts "\n"
 
-            
-            
-            proc draw_SVGNode {node canvas transform_x transform_y} {
-                        
-                    variable flatText
-                    variable fillGeometry
-                    variable centerNode
-                    variable free_ObjectID
-
-                        # puts [$node asXML]
-                        
-                        # -- set defaults
-                    set objectPoints {}
-                    
-                        # -- get centerNode of SVG defined by id="center_00"
-                        #   circle or ellipse  by cx and cy attributes
-                        #
-                         #
-                    set nodeName [$node nodeName]
-                    if {[$node hasAttribute id]} {
-                            # puts "   -> [$node getAttribute id]"
-                        set tagName [$node getAttribute id]
-                        if {$tagName eq "center_00"} {
-                            set centerNode $node
-                            puts "\n       centerNode found:"
-                            puts   "         [$node asXML]\n"
-                            # exit
-                        }
-                    } else {
-                        # -- give every node an id
-                        #
-                        incr free_ObjectID
-                        set  tagName  [format "_tag_%s_" $free_ObjectID]
-                        puts "\n\n   ... $tagName \n\n"
-                        $node setAttribute id $tagName
-                    }
-                    
-                    # -- give every node an id
-                        #   circle or ellipse  by cx and cy attributes
-                        #
-                    set myObject {}
-
-					
-                    switch -exact $nodeName {
-                            g {
-                                        foreach childNode [$node childNodes] {
-                                                draw_SVGNode $childNode $canvas $transform_x $transform_y
-                                                set myObject {}
-                                                # break
-                                        }
-                                }
-                            rect {
-                                        set x         [expr [$node getAttribute x] + $transform_x ]
-                                        set y         [expr [$node getAttribute y] + $transform_y ]
-                                        set width     [$node getAttribute  width ]
-                                        set height    [$node getAttribute  height]
-                                        set x2 [expr $x + $width ]
-                                        set y2 [expr $y + $height]
-                                        set objectPoints [list $x $y $x $y2 $x2 $y2 $x2 $y]
-                                            # -- create rectangle
-                                                # puts "$canvas create polygon     $objectPoints -outline black -fill white"
-                                        set myObject [$canvas create polygon     $objectPoints -outline black -fill $fillGeometry -tags $tagName]
-                                }
-                            polygon {
-                                        set valueList [ $node getAttribute points ]
-										if {[llength $valueList] < 2} {return}
-                                        foreach {coords} $valueList {
-                                            foreach {x y}  [split $coords ,] break
-                                            set x     [expr $x + $transform_x ]
-                                            set y     [expr $y + $transform_y ]
-                                            set objectPoints [lappend objectPoints $x $y ]
-                                        }
-                                            # -- create polygon
-                                                # puts "\n$canvas create polygon     $objectPoints -outline black -fill white"
-                                        set myObject [$canvas create polygon     $objectPoints -outline black -fill $fillGeometry  -tags $tagName]
-                                }
-                            polyline { # polyline class="fil0 str0" points="44.9197,137.492 47.3404,135.703 48.7804,133.101 ..."
-                                        set valueList [ $node getAttribute points ]
-										if {[llength $valueList] < 2} {return}
-                                        foreach {coords} $valueList {
-                                            foreach {x y}  [split $coords ,] break
-                                            set x     [expr $x + $transform_x ]
-                                            set y     [expr $y + $transform_y ]
-                                            set objectPoints [lappend objectPoints $x $y ]
-                                        }
-                                            # -- create polyline
-                                                # puts "$canvas create line $objectPoints -fill black"
-                                        set myObject [$canvas create line $objectPoints -fill black  -tags $tagName]
-                                }
-                            line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
-										set objectPoints [list	[expr [$node getAttribute x1] + $transform_x ] [expr [$node getAttribute y1] + $transform_y ] \
-                                                                [expr [$node getAttribute x2] + $transform_x ] [expr [$node getAttribute y2] + $transform_y ] ]
-                                            # -- create line
-                                                # puts "$canvas create line $objectPoints -fill black"
-										set myObject [$canvas create line $objectPoints -fill black]
-                                    }
-                            circle { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
-                                            # puts "[$node asXML]"
-                                        set cx [expr [$node getAttribute cx] + $transform_x ]
-                                        set cy [expr [$node getAttribute cy] + $transform_y ]
-                                        set r  [$node getAttribute  r]
-                                        set x1 [expr $cx - $r]
-                                        set y1 [expr $cy - $r]
-                                        set x2 [expr $cx + $r]
-                                        set y2 [expr $cy + $r]
-                                        set objectPoints [list $x1 $y1 $x2 $y2]
-                                            # -- create circle
-                                                # puts "$canvas create oval $objectPoints -fill black"
-                                        set myObject [$canvas create oval $objectPoints -outline black -fill $fillGeometry  -tags $tagName]
-                                }
-                            ellipse { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
-                                        # --- dont display the center_object with id="center_00"
-                                        set cx [expr [$node getAttribute cx] + $transform_x ]
-                                        set cy [expr [$node getAttribute cy] + $transform_y ]
-                                        set rx  [$node getAttribute  rx]
-                                        set ry  [$node getAttribute  ry]
-                                        set x1 [expr $cx - $rx]
-                                        set y1 [expr $cy - $ry]
-                                        set x2 [expr $cx + $rx]
-                                        set y2 [expr $cy + $ry]
-                                        set objectPoints [list $x1 $y1 $x2 $y2]
-                                            # -- create circle
-                                                # puts "$canvas create oval $objectPoints -fill black"
-                                        set myObject [$canvas create oval $objectPoints -outline black -fill $fillGeometry  -tags $tagName]
-                                }
-                            default {
-                                        set myObject {}
-                            }
-                    }
-                    
-                    if {$myObject eq {}} return
-                        # $canvas bind	$myObject	<ButtonPress-1> [list puts "    -> $tagName"]
-                        # $canvas bind	$myObject	<ButtonPress-1> [list searchrep'next $flatText $tagName]
-                    $canvas bind	$myObject	<ButtonPress-1> [list event_Canvas $tagName]
-                        # $canvas bind	$myObject	<ButtonPress-1> [list puts "    -> $tagName"; set ::Find $tagName; searchrep'next $flatText]
-                
-            }
- 
-
+                  
             set nodeList       [$domSVG childNodes]         
             set centerNode     {}
             set tagID 0
@@ -1082,16 +1186,23 @@ exec wish "$0" "$@"
             
                 # return
             foreach node $nodeList {
-                draw_SVGNode $node $canvas $transform_x $transform_y
+                 if {[catch {draw_SVGNode $node $canvas $transform_x $transform_y} eID]} {
+                     puts "   -> $eID"
+                     tk_messageBox -title "creation Error: drawSVG" -icon error -message "\n$eID\n-----------\n[$node asXML]"
+                 }
             }
-
-
-
-            if {$centerNode ne {}} {
+            
+            if {$centerNode != {}} {
                     puts   "\n     CenterNode:  \n"
                     puts   "         [$node asXML]\n"
-                    set cx [$centerNode getAttribute cx]
-                    set cy [$centerNode getAttribute cy]
+                    set cx [copyAttribute $centerNode cx]
+                    set cy [copyAttribute $centerNode cy]
+                    if {$cx == {}} {
+                        tk_messageBox -icon error -message "... please check coordinates cx/cy for node with id=\"center_00\"" 
+                    }
+                    if {$cy == {}} {
+                        tk_messageBox -icon error -message "... please check coordinates cx/cy for node with id=\"center_00\"" 
+                    }
                     set r  25
                     
                     set x1 [expr $cx - $r + $transform_x]
@@ -1101,124 +1212,265 @@ exec wish "$0" "$@"
                     set objectPoints [list $x1 $y1 $x2 $y2]
 
                     $canvas create oval $objectPoints -outline red -fill {} -tags __center_00__
-                    
-                    return
-                    
-                    set objectPoints [list	[expr $cx - 250 + $transform_x ] [expr $cy + $transform_y ] \
-                                            [expr $cx + 250 + $transform_x ] [expr $cy + $transform_y ] ]
-                    set objectPoints [list	[expr $cx + $transform_x ] [expr $cy - 250 + $transform_y ] \
-                                            [expr $cx + $transform_x ] [expr $cy + 250 + $transform_y ] ]
-                    $canvas create line $objectPoints -fill red
             }
-            
-    
     }
+
+
+    proc draw_SVGNode {node canvas transform_x transform_y} {
+              
+        variable flatText
+        variable fillGeometry
+        variable centerNode
+        variable free_ObjectID
+
+            # puts [$node asXML]
+            
+            # -- set defaults
+        set objectPoints {}
+        
+            # -- get centerNode of SVG defined by id="center_00"
+            #   circle or ellipse  by cx and cy attributes
+            #
+             #
+        set nodeName [$node nodeName]
+        if {[$node hasAttribute id]} {
+                # puts "   -> [$node getAttribute id]"
+            set tagName [$node getAttribute id]
+            if {$tagName eq "center_00"} {
+                    if {$centerNode != {}} {
+                    tk_messageBox -icon info -message "centerNode allready exists:\n [$node asXML]" 
+                    return
+                } else {
+                    set centerNode $node
+                    puts "\n       centerNode found:"
+                    puts   "         [$node asXML]\n"
+                    # tk_messageBox -message "centerNode found:\n [$node asXML]" 
+                    set nodeName centerNode
+               }
+            }
+        } else {
+            # -- give every node an id
+            #
+            incr free_ObjectID
+            set  tagName  [format "_tag_%s_" $free_ObjectID]
+            puts "\n\n   ... $tagName \n\n"
+            $node setAttribute id $tagName
+        }
+        
+        # -- give every node an id
+            #   circle or ellipse  by cx and cy attributes
+            #
+        set myObject {}
+
+
+        switch -exact $nodeName {
+                g {
+                            foreach childNode [$node childNodes] {
+                                if {[catch {draw_SVGNode $childNode $canvas $transform_x $transform_y} eID]} {
+                                     puts "   -> $eID"
+                                     tk_messageBox -title "creation Error: draw_SVGNode" -icon error -message "\n$eID\n-----------\n[$childNode asXML]"
+                                }    
+                                set myObject {}
+                                # break
+                            }
+                    }
+                rect {
+                            set x         [expr [$node getAttribute x] + $transform_x ]
+                            set y         [expr [$node getAttribute y] + $transform_y ]
+                            set width     [$node getAttribute  width ]
+                            set height    [$node getAttribute  height]
+                            set x2 [expr $x + $width ]
+                            set y2 [expr $y + $height]
+                            set objectPoints [list $x $y $x $y2 $x2 $y2 $x2 $y]
+                                # -- create rectangle
+                                    # puts "$canvas create polygon     $objectPoints -outline black -fill white"
+                            set myObject [$canvas create polygon     $objectPoints -outline black -fill $fillGeometry -tags $tagName]
+                    }
+                polygon {
+                            set valueList [ $node getAttribute points ]
+                            if {[llength $valueList] < 2} {return}
+                            foreach {coords} $valueList {
+                                foreach {x y}  [split $coords ,] break
+                                set x     [expr $x + $transform_x ]
+                                set y     [expr $y + $transform_y ]
+                                set objectPoints [lappend objectPoints $x $y ]
+                            }
+                                # -- create polygon
+                                    # puts "\n$canvas create polygon     $objectPoints -outline black -fill white"
+                            set myObject [$canvas create polygon     $objectPoints -outline black -fill $fillGeometry  -tags $tagName]
+                    }
+                polyline { # polyline class="fil0 str0" points="44.9197,137.492 47.3404,135.703 48.7804,133.101 ..."
+                            set valueList [ $node getAttribute points ]
+                            if {[llength $valueList] < 2} {return}
+                            foreach {coords} $valueList {
+                                foreach {x y}  [split $coords ,] break
+                                set x     [expr $x + $transform_x ]
+                                set y     [expr $y + $transform_y ]
+                                set objectPoints [lappend objectPoints $x $y ]
+                            }
+                                # -- create polyline
+                                    # puts "$canvas create line $objectPoints -fill black"
+                            set myObject [$canvas create line $objectPoints -fill black  -tags $tagName]
+                    }
+                line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
+                            set objectPoints [list	[expr [$node getAttribute x1] + $transform_x ] [expr [$node getAttribute y1] + $transform_y ] \
+                                                    [expr [$node getAttribute x2] + $transform_x ] [expr [$node getAttribute y2] + $transform_y ] ]
+                                # -- create line
+                                    # puts "$canvas create line $objectPoints -fill black"
+                            set myObject [$canvas create line $objectPoints -fill black]
+                        }
+                circle { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
+                                # puts "[$node asXML]"
+                            set cx [expr [$node getAttribute cx] + $transform_x ]
+                            set cy [expr [$node getAttribute cy] + $transform_y ]
+                            set r  [$node getAttribute  r]
+                            set x1 [expr $cx - $r]
+                            set y1 [expr $cy - $r]
+                            set x2 [expr $cx + $r]
+                            set y2 [expr $cy + $r]
+                            set objectPoints [list $x1 $y1 $x2 $y2]
+                                # -- create circle
+                                    # puts "$canvas create oval $objectPoints -fill black"
+                            set myObject [$canvas create oval $objectPoints -outline black -fill $fillGeometry  -tags $tagName]
+                    }
+                ellipse { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
+                            # --- dont display the center_object with id="center_00"
+                            set cx [expr [$node getAttribute cx] + $transform_x ]
+                            set cy [expr [$node getAttribute cy] + $transform_y ]
+                            set rx  [$node getAttribute  rx]
+                            set ry  [$node getAttribute  ry]
+                            set x1 [expr $cx - $rx]
+                            set y1 [expr $cy - $ry]
+                            set x2 [expr $cx + $rx]
+                            set y2 [expr $cy + $ry]
+                            set objectPoints [list $x1 $y1 $x2 $y2]
+                                # -- create circle
+                                    # puts "$canvas create oval $objectPoints -fill black"
+                            set myObject [$canvas create oval $objectPoints -outline black -fill $fillGeometry  -tags $tagName]
+                    }
+                default {
+                            set myObject {}
+                }
+                # $detailText insert end 
+        }
+        
+        if {$myObject eq {}} return
+            # $canvas bind	$myObject	<ButtonPress-1> [list puts "    -> $tagName"]
+            # $canvas bind	$myObject	<ButtonPress-1> [list searchrep'next $flatText $tagName]
+        $canvas bind	$myObject	<ButtonPress-1> [list event_Canvas $tagName]
+            # $canvas bind	$myObject	<ButtonPress-1> [list puts "    -> $tagName"; set ::Find $tagName; searchrep'next $flatText]
+      
+    }
+
 
     proc recursiveInsertTree {w node parent} {
             
-            variable free_ObjectID
-            
-			proc getAttributes node {
-					if {![catch {$node attributes} res]} {set res}
-			} 
-				
-			set domDepth [llength [split [$node toXPath] /]]			
-                
-                # node Attributes
-			set nodeName [$node nodeName]
-            set nodeID   {}
-            set done 0
-            if {$nodeName eq "#text" || $nodeName eq "#cdata"} {
-                set text [string map {\n " "} [$node nodeValue]]
-            } else {
-                set text {}
-                foreach att [getAttributes $node] {
-                    switch -exact $att {
-                        id {
-                            set nodeID [$node getAttribute id]
-                        }
-                        default {
-                            catch {append text " $att=\"[$node getAttribute $att]\""}
-                        }
+        variable free_ObjectID
+        
+        proc getAttributes node {
+            if {![catch {$node attributes} res]} {set res}
+        } 
+          
+        set domDepth [llength [split [$node toXPath] /]]			
+                  
+                  # node Attributes
+        set nodeName [$node nodeName]
+        set nodeID   {}
+        set done 0
+        if {$nodeName eq "#text" || $nodeName eq "#cdata"} {
+            set text [string map {\n " "} [$node nodeValue]]
+        } else {
+            set text {}
+            foreach att [getAttributes $node] {
+                switch -exact $att {
+                    id {
+                        set nodeID [$node getAttribute id]
+                    }
+                    default {
+                        catch {append text " $att=\"[$node getAttribute $att]\""}
                     }
                 }
-               
-                set children [$node childNodes]
-                if {[llength $children]==1 && [$children nodeName] eq "#text"} {
-                    append text "-textValue [$children nodeValue]"
-                    set done 1
-                }
-                
             }
-                
-                # -- set a unique ID to every treeNode
-            if {$nodeID eq {}} {
-                incr free_ObjectID
-                set  tree_nodeID [format "_set_to_%s" $free_ObjectID]
-            } else {
-                set  tree_nodeID $nodeID
+           
+            set children [$node childNodes]
+            if {[llength $children]==1 && [$children nodeName] eq "#text"} {
+                append text "-textValue [$children nodeValue]"
+                set done 1
             }
             
-            append nodeText "<$nodeName id=\"$tree_nodeID\" "
-            append nodeText "$text"
-            append nodeText "/>"
-
+        }
             
-                # -- insert the treeNode
-            set treeItem [$w insert $parent end -id $tree_nodeID -text $nodeName -tags $node -values [list $nodeID "$nodeText" ] ]
-			
-			case [expr $domDepth-1] {
-				 0 	{	set r [format %x  0];	set g [format %x  0];	set b [format %x 15]}
-				 1 	{	set r [format %x  3];	set g [format %x  0];	set b [format %x 12]}
-				 2 	{	set r [format %x  6];	set g [format %x  0];	set b [format %x  9]}
-				 3 	{	set r [format %x  9];	set g [format %x  0];	set b [format %x  6]}
-				 4 	{	set r [format %x 12];	set g [format %x  0];	set b [format %x  3]}
-				 5 	{	set r [format %x 15];	set g [format %x  0];	set b [format %x  0]}
-				 6 	{	set r [format %x 12];	set g [format %x  3];	set b [format %x  0]}
-				 7 	{	set r [format %x  9];	set g [format %x  6];	set b [format %x  0]}
-				 8 	{	set r [format %x  6];	set g [format %x  9];	set b [format %x  0]}
-				 9 	{	set r [format %x  3];	set g [format %x 12];	set b [format %x  0]}
- 				10 	{	set r [format %x  0];	set g [format %x 15];	set b [format %x  0]}
-				11 	{	set r [format %x  0];	set g [format %x 12];	set b [format %x  3]}
-				12 	{	set r [format %x  0];	set g [format %x  9];	set b [format %x  6]}
-				13 	{	set r [format %x  0];	set g [format %x  6];	set b [format %x  9]}
-				14 	{	set r [format %x  0];	set g [format %x  3];	set b [format %x 12]}
-				15 	{	set r [format %x  0];	set g [format %x  0];	set b [format %x 15]}
-				default 
-					{	set r [format %x 12];	set g [format %x 12];	set b [format %x 12]}
-			}
-			set fill [format "#%s%s%s%s%s%s" $r $r $g $g $b $b] 
-			
-			$w tag configure $treeItem -foreground $fill
-			
-			#ttk::style map Treeview \
-				-background [list selected "#4a6984"] \
-				-foreground [list selected "#ffffff"]   
+            # -- set a unique ID to every treeNode
+        if {$nodeID eq {}} {
+            incr free_ObjectID
+            set  tree_nodeID [format "_set_to_%s" $free_ObjectID]
+        } else {
+            set  tree_nodeID $nodeID
+        }
+        
+        append nodeText "<$nodeName id=\"$tree_nodeID\" "
+        append nodeText "$text"
+        append nodeText "/>"
 
-                # puts "   -> \$parent $parent"
-                # puts "   -> \$treeItem $treeItem"
-                # puts "   -> \$tree_nodeID $tree_nodeID"
-                # tk_messageBox -message  "   -> \$parent $parent"
+        
+            # -- insert the treeNode
+        set treeItem [$w insert $parent end -id $tree_nodeID -text $nodeName -tags $node -values [list $nodeID "$nodeText" ] ]
+			
+        switch -exact [expr $domDepth-1] {
+           0 	{	set r [format %x  0];	set g [format %x  0];	set b [format %x 15]}
+           1 	{	set r [format %x  3];	set g [format %x  0];	set b [format %x 12]}
+           2 	{	set r [format %x  6];	set g [format %x  0];	set b [format %x  9]}
+           3 	{	set r [format %x  9];	set g [format %x  0];	set b [format %x  6]}
+           4 	{	set r [format %x 12];	set g [format %x  0];	set b [format %x  3]}
+           5 	{	set r [format %x 15];	set g [format %x  0];	set b [format %x  0]}
+           6 	{	set r [format %x 12];	set g [format %x  3];	set b [format %x  0]}
+           7 	{	set r [format %x  9];	set g [format %x  6];	set b [format %x  0]}
+           8 	{	set r [format %x  6];	set g [format %x  9];	set b [format %x  0]}
+           9 	{	set r [format %x  3];	set g [format %x 12];	set b [format %x  0]}
+          10 	{	set r [format %x  0];	set g [format %x 15];	set b [format %x  0]}
+          11 	{	set r [format %x  0];	set g [format %x 12];	set b [format %x  3]}
+          12 	{	set r [format %x  0];	set g [format %x  9];	set b [format %x  6]}
+          13 	{	set r [format %x  0];	set g [format %x  6];	set b [format %x  9]}
+          14 	{	set r [format %x  0];	set g [format %x  3];	set b [format %x 12]}
+          15 	{	set r [format %x  0];	set g [format %x  0];	set b [format %x 15]}
+          default 
+            {	set r [format %x 12];	set g [format %x 12];	set b [format %x 12]}
+        }
+        set fill [format "#%s%s%s%s%s%s" $r $r $g $g $b $b] 
+        
+        $w tag configure $treeItem -foreground $fill
+			
+          #ttk::style map Treeview \
+            -background [list selected "#4a6984"] \
+            -foreground [list selected "#ffffff"]   
 
-            if {$parent eq {}} {$w item $treeItem -open 1}
+                    # puts "   -> \$parent $parent"
+                    # puts "   -> \$treeItem $treeItem"
+                    # puts "   -> \$tree_nodeID $tree_nodeID"
+                    # tk_messageBox -message  "   -> \$parent $parent"
 
-            if !$done {
-                foreach child [$node childNodes] {
-                    recursiveInsertTree $w $child $treeItem
-                }
+        if {$parent eq {}} {$w item $treeItem -open 1}
+
+        if !$done {
+            foreach child [$node childNodes] {
+                recursiveInsertTree $w $child $treeItem
             }
+        }
     }
+
 
     proc cleanupTree {w} {
-            foreach childNode [$w children {} ] {
-                $w detach     $childNode
-                $w delete     $childNode
-            }    
+        foreach childNode [$w children {} ] {
+            $w detach     $childNode
+            $w delete     $childNode
+        }    
     }
 
+
     proc getAttributes node {
-            if {![catch {$node attributes} res]} {set res}
+        if {![catch {$node attributes} res]} {set res}
     } 
+
 
     proc openSVG {{argv {}}} {
             variable resultCanvas
@@ -1264,7 +1516,7 @@ exec wish "$0" "$@"
             if {$fileName == {}} {return}
 			
             set fp [open $fileName]
-			# fconfigure    $fp -encoding utf-8
+			      # fconfigure    $fp -encoding utf-8
             set svg [read $fp]
             close         $fp
          
@@ -1301,10 +1553,12 @@ exec wish "$0" "$@"
             wm title . "simplifySVG $currentVersion - $fileName"
     }
 
+
     proc reloadSVG {} {
             variable fileName
             openSVG $fileName
     }
+
 
     proc updateContent {} {
             variable resultCanvas
@@ -1335,6 +1589,7 @@ exec wish "$0" "$@"
 
             
     }
+
 
     proc fitContent {} {
             variable resultCanvas
@@ -1396,6 +1651,7 @@ exec wish "$0" "$@"
             }
 
     }
+
 
     proc saveContent {{mode {}}} {
             variable flatText 
@@ -1497,26 +1753,28 @@ exec wish "$0" "$@"
             return
     }           
 
+
     proc event_Canvas {tagName {type {}}} {
             variable resultCanvas
             variable flatTree
             variable flatText
             
             # searchrep'next $flatText $tagName
-
-			proc open_toNode {w itemID} {
-				if {$itemID != {}} {
-					$w item [$w parent $itemID] -open 1
-					open_toNode $w [$w parent $itemID]
-				}
-			}
-
             open_toNode $flatTree $tagName
             catch {$flatTree focus $tagName}
             catch {$flatTree selection set $tagName}
             catch {$flatTree see [lindex $tagName 0]}
     }
-    
+
+
+    proc open_toNode {w itemID} {
+				if {$itemID != {}} {
+					$w item [$w parent $itemID] -open 1
+					open_toNode $w [$w parent $itemID]
+				}
+    }
+
+
     proc toggle_fillGeometry {} {
             variable fillGeometry
             
@@ -1528,6 +1786,8 @@ exec wish "$0" "$@"
         
             updateContent   
     }
+
+
     proc toggle_highlight_Object {svgObject {status {on}}} {
             variable resultCanvas
             if {$status eq {on}} {
@@ -1554,7 +1814,7 @@ exec wish "$0" "$@"
                              }
             }
     }
- 
+
                 
             # -- http://wiki.tcl.tk/15612
             #    Richard Suchenwirth 2006-03-17
@@ -1562,6 +1822,8 @@ exec wish "$0" "$@"
             variable IgnoreCase 0
             variable Find {}
             variable Replace {}
+            
+            
             proc searchrep {t {replace 1}} {
                #variable IgnoreCase
                set w .sr
@@ -1587,6 +1849,8 @@ exec wish "$0" "$@"
                    $t tag config hilite -background lightblue
                } else {raise $w}
             }       
+            
+            
             proc searchrep'next {w {searchString {}}} {
                 $w tag config hilite -background lightblue
                 if {$searchString ne {}} {
@@ -1612,6 +1876,8 @@ exec wish "$0" "$@"
                      # $w tag add hilite $pos $pos+${n}c
                 }
             }   
+            
+            
             proc searchrep'rep1 w {
                if {[$w tag ranges hilite] ne ""} {
                    $w delete insert insert+[string length $::Find]c
@@ -1620,14 +1886,20 @@ exec wish "$0" "$@"
                    return 1
                } else {return 0}
             }
+            
+            
             proc searchrep'all w {
                 set go 1
                 while {$go} {set go [searchrep'rep1 $w]}
-            }       
+            }
+            
+            # -- http://wiki.tcl.tk/15612
+            #    Richard Suchenwirth 2006-03-17
+            #
      
         
-   # tk_messageBox -message "encoding system  [encoding system]"
-   puts "encoding system  [encoding system]"
+        # tk_messageBox -message "encoding system  [encoding system]"
+    puts "encoding system  [encoding system]"
         
         # --- store fileName --
         #
@@ -1691,7 +1963,7 @@ exec wish "$0" "$@"
  
         # --- result deep svg  - treeview---
         #
-	set deepTree [ ttk::treeview $deepTreeFrame.t   \
+	  set deepTree [ ttk::treeview $deepTreeFrame.t   \
                     -columns 		"nodeID nodeValue" \
 					-displaycolumns "nodeID nodeValue" \
                     -xscrollcommand "$flatTreeFrame.x set" \
@@ -1742,9 +2014,9 @@ exec wish "$0" "$@"
         $flatTree heading "#0"  -text "XML" -anchor w
         $flatTree column  "#0"  -width 150
         $flatTree heading nodeID 	-text "id" 
-		$flatTree column  nodeID 	-width  50 -stretch no
+		$flatTree column  nodeID 	-width  80 -stretch no
 		$flatTree heading nodeValue -text "Value" 
-        $flatTree column  nodeValue -width 250 
+        $flatTree column  nodeValue -width 220 
         
     scrollbar $flatTreeFrame.x -ori hori -command  "$flatTreeFrame.t xview"
     scrollbar $flatTreeFrame.y -ori vert -command  "$flatTreeFrame.t yview"
