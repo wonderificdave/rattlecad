@@ -91,7 +91,12 @@
                 {separator}
                         
                 {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}      -command { lib_gui::open_configPanel } }
-                        
+                
+                {separator}
+                
+                {command "&SVG-Component"   {}  "open simplify_SVG"     {}            -command { lib_tool::start_simplifySVG } }
+                {command "&SVG-ChainWheel"  {}  "open chainWheel_SVG"   {}            -command { lib_tool::start_chainWheelSVG } }
+                                
                 {separator}
                         
                 {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }

@@ -93,7 +93,7 @@
                 {{SVG}       {.svg}  }
             }
         set initialFile "ChainWheel_Profile_$sketchboard::teethCount"
-        set initialDir  $::env(USERPROFILE)  
+        set initialDir  [file normalize .]  
         
         set fileName    [tk_getSaveFile -initialdir $initialDir -initialfile $initialFile -filetypes $types]  
         if {$fileName == {}} return
