@@ -40,6 +40,33 @@
  
  namespace eval lib_tool {
 
+    proc check_runTime {} {
+        set nameofExecutable [info nameofexecutable]
+        set executableFile [file tail $nameofExecutable]
+        set executableExt  [lindex [split $executableFile .] end]
+        set executableName [string map [list .$executableExt {}] $executableFile]
+        
+        # tk_messageBox -icon info -message "Executeable:\n  $nameofExecutable\n    $executableFile\n      $executableName\n      $executableExt"
+        
+        set executable_OK 1 ;# if 1 ... OK
+        switch $::tcl_platform(platform) {
+            windows {
+                if {$executableName == {rattleCAD}} {
+                    set executable_OK 0
+                }
+            }
+        }
+        return [list $executable_OK $executableFile $nameofExecutable]
+    }
+
+    
+    proc toolException {command runTime} {
+        tk_messageBox -icon info \
+                -title   "[file tail $command]   -   tclTk-Runtime required!" \
+                -message "  ... this feature is available in tclTk-Runtime only!\n\n  ... current runtime:\n         $runTime"
+        return
+    }
+
     proc start_simplifySVG {} {
         puts "\n"
         puts "    start simplify_SVG.tcl: "
@@ -50,15 +77,31 @@
         puts "      -> $testDir"
         puts ""
         
+        set runtime_Info [check_runTime]
+        set runtime_OK       [lindex $runtime_Info 0]
+        set runtime_FileName [lindex $runtime_Info 1]
+        set runtime_FullName [lindex $runtime_Info 2]
+        puts "      -> $runtime_OK"
+        puts "      -> $runtime_FileName"
+        puts "      -> $runtime_FullName"
+        puts ""
+                
         if {![file exists $testDir]} {
            file mkdir $testDir
         }
         cd $testDir
-        if {[catch {exec [info nameofexecutable] [file normalize $command] &} eID]} {
-            tk_messageBox -icon error -message "  ... only available on tclTk-Runtime"
+
+        if {!$runtime_OK} {
+            toolException $command $runtime_FullName
+            return
+        }
+        
+        if {[catch {exec $runtime_FullName [file normalize $command] &} eID]} {
+            tk_messageBox -icon error -message "  ... could not execute $command"
         }
     }    
-    
+
+
     proc start_chainWheelSVG {} {
         puts "\n"
         puts "    start chainWheel_SVG.tcl: "
@@ -69,12 +112,27 @@
         puts "      -> $testDir"
         puts ""
         
+        set runtime_Info [check_runTime]
+        set runtime_OK       [lindex $runtime_Info 0]
+        set runtime_FileName [lindex $runtime_Info 1]
+        set runtime_FullName [lindex $runtime_Info 2]
+        puts "      -> $runtime_OK"
+        puts "      -> $runtime_FileName"
+        puts "      -> $runtime_FullName"
+        puts ""
+        
         if {![file exists $testDir]} {
            file mkdir $testDir
         }
         cd $testDir
-        if {[catch {exec [info nameofexecutable] [file normalize $command] &} eID]} {
-            tk_messageBox -icon error -message "  ... only available on tclTk-Runtime"
+
+        if {!$runtime_OK} {
+            toolException $command $runtime_FullName
+            return
+        }
+        
+        if {[catch {exec $runtime_FullName [file normalize $command] &} eID]} {
+            tk_messageBox -icon error -message "  ... could not execute $command"
         }
     }    
 

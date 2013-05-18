@@ -1,4 +1,12 @@
 
+3.4.00.46  - 2013.05.18
+-------------------------------------------------------------------------------
+    debug:
+        ... catch error if not in tclTk runtime  
+               File -> SVG-Component  .../_style/simplify_SVG.tcl
+               File -> SVG-ChainWheel .../_style/chainWheel_SVG.tcl
+        
+
 3.4.00.45  - 2013.05.18
 -------------------------------------------------------------------------------
     feature:

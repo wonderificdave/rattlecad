@@ -37,7 +37,7 @@ exec wish "$0" "$@"
     
     variable CONST_PI [expr 4*atan(1)]
     
-    set currentVersion 3.4.00
+    set currentVersion 3.4.00.46
 
     # -- handling puts
     # http://wiki.tcl.tk/1290

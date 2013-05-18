@@ -55,11 +55,9 @@ exec wish "$0" "$@"
 	#        .../rattleCAD.exe
     set APPL_Type       [file tail $::argv0]    
     switch $APPL_Type {
-        {rattleCAD__.exe} {    
-            set BASE_Dir    [file dirname $BASE_Dir]
-        }
-	{main.tcl} -    
-	default {}
+        {rattleCAD__.exe} { set BASE_Dir    [file dirname $BASE_Dir] }
+	    {main.tcl} -    
+	    default           {}
     }
 
 
