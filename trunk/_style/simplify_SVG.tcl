@@ -160,7 +160,7 @@ exec wish "$0" "$@"
             $targetNode setAttribute $attr [$sourceNode getAttribute $attr]
         }
     }        
-    
+
 
     proc unifyTransform {node} {
             
@@ -182,6 +182,9 @@ exec wish "$0" "$@"
                 set transformValue [lindex [split $transformArg ()] 1]
                 puts "      --> \$transformType   $transformType"
                 puts "      --> \$transformValue  $transformValue"
+                if {[string first {,} $transformValue] > 0} {
+                    set transformValue [string map {, { }} $transformValue]
+                }
             }
             
             
@@ -339,6 +342,41 @@ exec wish "$0" "$@"
     }
 
 
+    proc format_pathValues {pathValueString} {
+
+        #set commandList {}
+        set valueList {}
+        foreach xy $pathValueString {
+              # puts "       -> $xy"
+            if {[string first {10e} $xy] >= 0} {
+                    # ... sometimes the pathValueString contains values like: 10e-4
+                    # these values does not work in tcl
+                    # therfore
+                    # puts "           -> check:  $xy"
+                foreach {x y} [split $xy ,] break
+                if {[string first {10e} $x] >= 0} {
+                    set exponent [lindex [split $x e] 1]
+                    set x [expr 1.0 * pow(10,$exponent)]
+                }
+                if {[string first {10e} $y] >= 0} {
+                    set exponent [lindex [split $y e] 1]
+                    set y [expr 1.0 * pow(10,$exponent)]
+                }
+                append valueList "$x $y "
+            } else {
+                set value [split $xy ,]
+                append valueList "$value "
+            }
+        }
+          # return [lrange $commandList 1 end]
+          # puts $commandList
+          # puts "  --"
+          # puts [lrange $commandList 1 end]
+          # exit
+        return $valueList
+    }
+
+
     proc path_toPolygon {pathDefinition {position {0 0}} } {
     
         set transform(x) [lindex $position 0]
@@ -352,6 +390,10 @@ exec wish "$0" "$@"
         
         
         set pathValueList [filterList $pathValueList]
+        puts " ->\$pathValueList\n  $pathValueList"
+        set pathValueList [format_pathValues $pathDefinition]
+        puts " ->\$pathValueList\n  $pathValueList"
+        
             # puts "$pathDefList\n   ______pathDefList_____"
         
         
@@ -579,6 +621,270 @@ exec wish "$0" "$@"
         }
                     
         return $pathValueList_abs
+    }
+
+
+    proc format_pathValues_nextLevel {pathValueString} {
+
+        set commandList {}
+        set valueList {}
+        foreach xy $pathValueString {
+              # puts "       -> $xy"
+            if {[string first {10e} $xy] >= 0} {
+                    # ... sometimes the pathValueString contains values like: 10e-4
+                    # these values does not work in tcl
+                    # therfore
+                    # puts "           -> check:  $xy"
+                foreach {x y} [split $xy ,] break
+                if {[string first {10e} $x] >= 0} {
+                    set exponent [lindex [split $x e] 1]
+                    set x [expr 1.0 * pow(10,$exponent)]
+                }
+                if {[string first {10e} $y] >= 0} {
+                    set exponent [lindex [split $y e] 1]
+                    set y [expr 1.0 * pow(10,$exponent)]
+                }
+                lappend valueList [list $x $y]
+            } else {
+                set value [split $xy ,]
+                if {[catch {expr 1.0 * [lindex $value 0]} eID]} {
+                       # get the command M, m, c, h ..
+                    puts "    -> $value"
+                    lappend commandList $valueList
+                    set valueList $value
+                } else {
+                    lappend valueList $value
+                }
+            }
+        }
+          # return [lrange $commandList 1 end]
+          # puts $commandList
+          # puts "  --"
+          # puts [lrange $commandList 1 end]
+          # exit
+        return [lrange $commandList 1 end]
+    }
+
+
+    proc path_toPolygon_nextLEevel {pathDefinition {position {0 0}} } {
+    
+        set transform(x) [lindex $position 0]
+        set transform(y) [lindex $position 1]
+        
+        
+        set pathValueList  [format_pathValues $pathDefinition]
+        
+            # puts "$pathDefList\n   ______pathDefList_____"
+        puts "   -> \$pathDefinition $pathDefinition\n"    
+        puts "   -> \$pathValueList  $pathValueList\n"    
+
+        
+        
+            # -- convert all relative values to absolute values
+            #
+        array \
+            set penPosition    { x 0 \
+                                 y 0 }
+                                 
+        
+            # -- loop throug pathValueList            
+            #
+        set pathValueList_abs    {}
+        set listIndex            0
+        
+        foreach pathValue  $pathValueList {
+            set command [lindex $pathValue 0]
+            set values  [lrange $pathValue 1 end]
+            puts "$command -> $values"
+            # value
+            
+            switch -exact $command {
+                M {            # puts "    $command  ... implemented yet"
+                        puts "$values  [llength $values]"
+                        foreach {xy} $values break
+                        foreach {x y} $xy break
+                        puts "$x  / $y "
+                        set penPosition(x)       [expr $x + $transform(x)]    ; incr listIndex 
+                        set penPosition(y)       [expr $y + $transform(y)]    ; incr listIndex
+                        set pathValueList_abs    [lappend pathValueList_abs $command $penPosition(x) $penPosition(y)]
+                    }
+                m {             # puts "    $command  ... implemented yet"
+                        set pathValueList_abs        [lappend pathValueList_abs M]
+                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
+                        foreach {xy} $values {
+                            foreach {x y} $xy break
+                                # puts "          ... control: [checkControl $x]  ... $x $y  ";  
+                            set penPosition(x)       [expr $x + $penPosition(x)]    ; incr listIndex 
+                            set penPosition(y)       [expr $y + $penPosition(y)]    ; incr listIndex
+                            set pathValueList_abs    [lappend pathValueList_abs $penPosition(x) $penPosition(y)]                        
+                        }
+                    }
+                l {     # puts "    $command  ... implemented yet"
+                        set pathValueList_abs    [lappend pathValueList_abs L]
+                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
+                        foreach {x y} $values {
+                            foreach {x y} $xy break
+                                # puts "          ... control: [checkControl $x]  ... $x $y  ";  
+                            set penPosition(x)       [expr $x + $penPosition(x)]    ; incr listIndex 
+                            set penPosition(y)       [expr $y + $penPosition(y)]    ; incr listIndex
+                            set pathValueList_abs    [lappend pathValueList_abs $penPosition(x) $penPosition(y)]                        
+                        }
+                    }
+                c {        # puts "    $command  ... implemented yet"
+                        set pathValueList_abs        [lappend pathValueList_abs C]
+                        set bezierIndex    0
+                        foreach {x y} $values {
+                            foreach {x y} $xy break
+                                puts "          ... control: ... $x $y  ";
+                                # puts "          ... control: [checkControl $x]  ... $x $y  ";  
+                            set ctrlPosition(x)      [expr $x + $penPosition(x)]    ; incr listIndex
+                            set ctrlPosition(y)      [expr $y + $penPosition(y)]    ; incr listIndex
+                            set pathValueList_abs    [lappend pathValueList_abs $ctrlPosition(x) $ctrlPosition(y)]
+                            incr bezierIndex
+                            if {$bezierIndex > 2} {
+                                set penPosition(x)         $ctrlPosition(x) 
+                                set penPosition(y)         $ctrlPosition(y)
+                                set bezierIndex 0
+                            }
+                        }
+                    }
+                h {        # puts "    $command  ... implemented yet"
+                        set pathValueList_abs       [lappend pathValueList_abs L]
+                        set x     $values
+                        set penPosition(x)          [expr $x + $penPosition(x)]    ; incr listIndex
+                        set pathValueList_abs       [lappend pathValueList_abs $penPosition(x) $penPosition(y)]
+                    }
+                v {        # puts "    $command  ... implemented yet"
+                        set pathValueList_abs       [lappend pathValueList_abs L]
+                        set y     $values
+                        set penPosition(y)          [expr $y + $penPosition(y)]    ; incr listIndex
+                        set pathValueList_abs       [lappend pathValueList_abs $penPosition(x) $penPosition(y)]
+                    }
+                L  {       # puts "    $command  ... implemented yet"
+                        set pathValueList_abs       [lappend pathValueList_abs L]
+                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
+                        foreach {xy} $values {
+                            foreach {x y} $xy break
+                              # puts "          ... control: [checkControl $x]  ... $x $y  ";  
+                            set penPosition(x)      [expr $x  + $transform(x)]    ; incr listIndex 
+                            set penPosition(y)      [expr $y  + $transform(y)]    ; incr listIndex
+                            set pathValueList_abs   [lappend pathValueList_abs $penPosition(x) $penPosition(y)]                        
+                            # puts "  [checkControl $x]
+                        }
+                    }                    
+                H {        # puts "    $command  ... implemented yet"
+                        set pathValueList_abs       [lappend pathValueList_abs L]
+                        set x     $values
+                        set penPosition(x)          [expr $x  + $transform(x)]    ; incr listIndex
+                        set pathValueList_abs       [lappend pathValueList_abs $penPosition(x) $penPosition(y)]
+                    }
+                V {        # puts "    $command  ... implemented yet"
+                        set pathValueList_abs       [lappend pathValueList_abs L]
+                        set y     $values
+                        set penPosition(y)          [expr $y  + $transform(y)]    ; incr listIndex
+                        set pathValueList_abs       [lappend pathValueList_abs $penPosition(x) $penPosition(y)]
+                    }
+                C {        # puts "    $command  ... implemented yet"
+                        set pathValueList_abs       [lappend pathValueList_abs C]
+                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
+                        foreach {xy} $values {
+                                 # puts "          ... control: [checkControl $x]  ... $x $y  ";  
+                            set penPosition(x)      [expr $x + $transform(x)]    ; incr listIndex 
+                            set penPosition(y)      [expr $y + $transform(y)]    ; incr listIndex
+                            set pathValueList_abs   [lappend pathValueList_abs $penPosition(x) $penPosition(y)]                        
+                            # puts "  [checkControl $x]
+                        }
+                    }                    
+                S {       # puts "    $command  ... implemented yet"
+                        set pathValueList_abs    [lappend pathValueList_abs C]
+                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
+                        foreach {xy1 xy2} $values {
+                                foreach {ctrl_x ctrl_y} $xy1 break
+                                foreach {base_x base_y} $xy2 break
+                        
+                                    # puts " ... $listIndex"
+                        
+                                incr listIndex 4
+                                set ctrl_dx  [expr $ctrl_x - $penPosition(x)]
+                                set ctrl_dy  [expr $ctrl_y - $penPosition(y)]
+                                set base_dx  [expr $base_x - $penPosition(x)]
+                                set base_dy  [expr $base_y - $penPosition(y)]
+                                
+                                set ctrVector [ mirrorPoint [list $ctrl_dx $ctrl_dy] [list $base_dx $base_dy]] 
+                                    # puts "  ... ctrVector  $ctrVector"
+                                set ctrl_1(x)      [expr $penPosition(x) + [lindex $ctrVector 0]]
+                                set ctrl_1(y)      [expr $penPosition(y) + [lindex $ctrVector 1]]
+                                set ctrl_2(x)      $ctrl_x
+                                set ctrl_2(y)      $ctrl_y
+                                    # puts "     ---------------------------------------"
+                                    # puts "      $penPosition(x) $penPosition(y)"
+                                    # puts "      $ctrl_1(x) $ctrl_1(y)"
+                                    # puts "      $ctrl_2(x) $ctrl_2(y)"
+                                    # puts "      $base_x $base_y"
+                                set penPosition(x) $base_x
+                                set penPosition(y) $base_y
+                                set pathValueList_abs [lappend pathValueList_abs $ctrl_1(x) $ctrl_1(y) $ctrl_2(x) $ctrl_2(y) $penPosition(x) $penPosition(y)]
+                        }
+                    }
+                s {       # puts "    $command  ... implemented yet"
+                        set pathValueList_abs    [lappend pathValueList_abs C]
+                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
+                         foreach {xy1 xy2} $values {
+                                foreach {ctrl_x ctrl_y} $xy1 break
+                                foreach {base_x base_y} $xy2 break
+                                    # puts " ... $listIndex"
+                                incr listIndex 4
+                                set ctrVector [ mirrorPoint [list $ctrl_x  $ctrl_y] [list $base_x $base_y]]                                     
+                                        # puts "  ... ctrVector  $ctrVector"
+                                if {$ctrVector == {}} {
+                                    set pathValueList_abs    [lrange $pathValueList_abs 0 end-1]
+                                    set penPosition(x) [expr $penPosition(x) + $base_x]
+                                    set penPosition(y) [expr $penPosition(y) + $base_y]
+                                    set pathValueList_abs [lappend pathValueList_abs L $penPosition(x) $penPosition(y)]
+                                        # puts "   ... exception:  $pathValueList_abs"
+                                } else {                                            
+                                    set ctrl_1(x)      [expr $penPosition(x) + [lindex $ctrVector 0]]
+                                    set ctrl_1(y)      [expr $penPosition(y) + [lindex $ctrVector 1]]
+                                    set ctrl_2(x)      [expr $penPosition(x) + $ctrl_x]
+                                    set ctrl_2(y)      [expr $penPosition(y) + $ctrl_y]
+                                    set base_2(x)      [expr $penPosition(x) + $base_x]
+                                    set base_2(y)      [expr $penPosition(y) + $base_y]
+                                        # puts "     ---------------------------------------"
+                                        # puts "      $penPosition(x) $penPosition(y)"
+                                        # puts "      $ctrl_1(x) $ctrl_1(y)"
+                                        # puts "      $ctrl_2(x) $ctrl_2(y)"
+                                        # puts "      $base_2(x) $base_2(y)"
+                                    set penPosition(x) [expr $penPosition(x) + $base_x]
+                                    set penPosition(y) [expr $penPosition(y) + $base_y]
+                                    set pathValueList_abs [lappend pathValueList_abs $ctrl_1(x) $ctrl_1(y) $ctrl_2(x) $ctrl_2(y) $penPosition(x) $penPosition(y)]
+                                }
+                        }
+                    }
+
+                Q -
+                T -
+                A -
+                q -
+                t -
+                a {
+                        # incr listIndex
+                        puts "    $command  ... not implemented yet  - $listIndex"
+                }
+                Z -
+                z {
+                        # puts "    $command  ... implemented yet  - $listIndex" 
+                        set pathValueList_abs    [lappend pathValueList_abs Z]                        
+                }
+
+                default {
+                        # incr listIndex
+                        puts "    $command  ... not registered yet  - $listIndex"
+                }    
+            }
+        }
+       
+        return $pathValueList_abs
+
     }
 
 
@@ -867,7 +1173,7 @@ exec wish "$0" "$@"
                     puts "\n"
                     puts "polyline-polygon -> pointList:  $pointList   <- [llength $pointList]"
                     puts "      ... excepted\n"
-                    return
+                    return {}
                     # continue
                 } else {
                     puts [$node asXML]
@@ -1137,6 +1443,7 @@ exec wish "$0" "$@"
                                 set tmpNodes [ simplify_Path $node $parentTransform]
                                 set loopID 0
                                 foreach myNode $tmpNodes {
+                                    if {$myNode == {}} continue
                                     incr loopID
                                     $myNode setAttribute id [format "%s_%s" $nodeID $loopID]
                                     $targetNode appendChild $myNode
@@ -1153,7 +1460,6 @@ exec wish "$0" "$@"
             if {[$node hasAttribute id]} {
                 set nodeID   [$node getAttribute id]
                     # puts "  ... $nodeName / $nodeID"
-                $myNode setAttribute id $nodeID
             } else {
                 set nodeID {... unset}  
             }
