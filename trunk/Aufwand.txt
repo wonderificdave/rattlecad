@@ -436,5 +436,6 @@
 2013.05.11  23:00   03:00    04:00   3.4.00 ... 43 ... make frame label editable (handled as logo)
 2013.05.18  15:00   03:00    10:00   3.4.00 ... 44 ... .../_style/simplify_SVG.tcl
 2013.05.18  11:00   12:00    02:00   3.4.00 ... 46 ... run tools out of rattleCAD (simplify_SVG.tcl. chainWheel_SVG.tcl)
+2013.05.19  23:00   06:00    07:00   3.4.00 ... 47 ... debug .../_style/simplify_SVG.tcl
 
 

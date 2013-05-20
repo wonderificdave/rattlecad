@@ -34,10 +34,12 @@ exec wish "$0" "$@"
     variable file_saveCount    0
     variable tmpSVG            [dom parse "<root/>"]
     variable svgID             0
-    
+    variable my_Center_Object  {}
+    variable fitVector         {0 0 1}
+            
     variable CONST_PI [expr 4*atan(1)]
     
-    set currentVersion 3.4.00.46
+    set currentVersion 3.4.00.47
 
     # -- handling puts
     # http://wiki.tcl.tk/1290
@@ -70,6 +72,25 @@ exec wish "$0" "$@"
     proc subVector {v1 v2} { return [addVector $v1 $v2 -1] }
     #
     # ----------------------------------------------
+    
+    
+    proc flatten_nestedList { args } {
+        if {[llength $args] == 0 } { return ""}
+        set flatList {}
+        foreach e [eval concat $args] {
+            foreach ee $e { lappend flatList $ee }
+        }
+            # tk_messageBox -message "flatten_nestedList:\n    $args  -/- [llength $args] \n $flatList  -/- [llength $flatList]"
+        return $flatList
+    }  
+    
+    
+    proc get_svgID {} {
+        variable svgID
+        incr svgID
+        return [format "simplify_%s" $svgID]
+    }
+
 
 	  proc mirrorPoint {p a} {
             # reflects point p on line {{0 0} a}
@@ -210,7 +231,7 @@ exec wish "$0" "$@"
                           set transformMatrix $transformValue
                       }
                 translate {
-                        puts "  ---> \$transformValue $transformValue"
+                          # puts "  ---> \$transformValue $transformValue"
                         if {[llength $transformValue] == 1} {
                           set translateMatrix [list 1 0 0 1 $transformValue 0]
                         } else {
@@ -248,9 +269,8 @@ exec wish "$0" "$@"
                 }
             }
 
-            puts "  ---> \$transformMatrix $transformMatrix"
-            puts "  ---> \$translateMatrix $translateMatrix"
-            
+              # puts "  ---> \$transformMatrix $transformMatrix"
+              # puts "  ---> \$translateMatrix $translateMatrix"
 
             return [list $translateMatrix $transformMatrix $transformType]
     }    
@@ -282,6 +302,7 @@ exec wish "$0" "$@"
         }
         return $valueList_Return
     }
+
 
 
     proc Bezier {xy {PRECISION 10}} {
@@ -342,7 +363,7 @@ exec wish "$0" "$@"
     }
 
 
-    proc format_pathValues {pathValueString} {
+    proc check_pathValues_prev_007 {pathValueString} {
 
         #set commandList {}
         set valueList {}
@@ -377,23 +398,41 @@ exec wish "$0" "$@"
     }
 
 
-    proc path_toPolygon {pathDefinition {position {0 0}} } {
+    proc check_pathValues {pathValueString} {
+
+            # puts "\n  ==== check_pathValues_new ======"
+            # puts "\n ---------"
+            # puts "$pathValueString"
+        set pathValueString   [string map { M { M }   Z { Z }   L { L }   H { H }   V { V }   C { C }   S { S }   Q { Q }   T { T }   A { A }  \
+                                            m { m }   z { Z }   l { l }   h { h }   v { v }   c { c }   s { s }   q { q }   t { t }   a { a }  , { }  } \
+                                        [string trim $pathValueString] ]
+            # puts "\n ---------"
+            # puts "$pathValueString"
+        
+        set valueList {}
+        foreach value $pathValueString {
+              # puts "       -> $xy"
+            if {[string first {10e} $value] >= 0} {
+                    # ... sometimes the pathValueString contains values like: 10e-4
+                    # these values does not work in tcl
+                    # therfore
+                    # puts "           -> check:  $xy"
+                set exponent [lindex [split $value e] 1]
+                set value [expr 1.0 * pow(10,$exponent)]
+            }
+            lappend valueList $value
+        }
+        return $valueList
+    }
+
+
+    proc format_absPath {pathDefinition {position {0 0}} } {
     
         set transform(x) [lindex $position 0]
         set transform(y) [lindex $position 1]
         
-        set pathValueList   [string map { M {_M_}   Z {_Z_}   L {_L_}   H {_H_}   V {_V_}   C {_C_}   S {_S_}   Q {_Q_}   T {_T_}   A {_A_}   \
-                                          m {_m_}   z {_Z_}   l {_l_}   h {_h_}   v {_v_}   c {_c_}   s {_s_}   q {_q_}   t {_t_}   a {_a_} \
-                                         {-} {_-}  {,} {_} } \
-                                        [string trim $pathDefinition] ]
-        set pathValueList   [split $pathValueList {_ }]        
-        
-        
-        set pathValueList [filterList $pathValueList]
-        puts " ->\$pathValueList\n  $pathValueList"
-        set pathValueList [format_pathValues $pathDefinition]
-        puts " ->\$pathValueList\n  $pathValueList"
-        
+        set pathValueList [check_pathValues $pathDefinition]
+            # puts "   001 ->\$pathValueList\n  $pathValueList"
             # puts "$pathDefList\n   ______pathDefList_____"
         
         
@@ -620,272 +659,165 @@ exec wish "$0" "$@"
             }
         }
                     
-        return $pathValueList_abs
-    }
-
-
-    proc format_pathValues_nextLevel {pathValueString} {
-
-        set commandList {}
+        set partList  {}
         set valueList {}
-        foreach xy $pathValueString {
-              # puts "       -> $xy"
-            if {[string first {10e} $xy] >= 0} {
-                    # ... sometimes the pathValueString contains values like: 10e-4
-                    # these values does not work in tcl
-                    # therfore
-                    # puts "           -> check:  $xy"
-                foreach {x y} [split $xy ,] break
-                if {[string first {10e} $x] >= 0} {
-                    set exponent [lindex [split $x e] 1]
-                    set x [expr 1.0 * pow(10,$exponent)]
-                }
-                if {[string first {10e} $y] >= 0} {
-                    set exponent [lindex [split $y e] 1]
-                    set y [expr 1.0 * pow(10,$exponent)]
-                }
-                lappend valueList [list $x $y]
-            } else {
-                set value [split $xy ,]
-                if {[catch {expr 1.0 * [lindex $value 0]} eID]} {
-                       # get the command M, m, c, h ..
-                    puts "    -> $value"
-                    lappend commandList $valueList
-                    set valueList $value
-                } else {
+        foreach value $pathValueList_abs {
+            switch -exact $value {
+                m -
+                M {
+                    lappend partList $valueList 
+                    set valueList {}
                     lappend valueList $value
-                }
+                  }
+               default {
+                    lappend valueList $value
+                  }
             }
         }
-          # return [lrange $commandList 1 end]
-          # puts $commandList
-          # puts "  --"
-          # puts [lrange $commandList 1 end]
-          # exit
-        return [lrange $commandList 1 end]
+        lappend partList $valueList
+
+          # puts "\n   -> format_absPath:\n ===================================="
+        puts "\n--------------"
+        puts "\n         [lrange $partList 1 end]\n"
+        puts "--------------"
+        return [lrange $partList 1 end]
+        
+        
+        # return $pathValueList_abs
     }
 
-
-    proc path_toPolygon_nextLEevel {pathDefinition {position {0 0}} } {
     
-        set transform(x) [lindex $position 0]
-        set transform(y) [lindex $position 1]
-        
-        
-        set pathValueList  [format_pathValues $pathDefinition]
-        
-            # puts "$pathDefList\n   ______pathDefList_____"
-        puts "   -> \$pathDefinition $pathDefinition\n"    
-        puts "   -> \$pathValueList  $pathValueList\n"    
+    proc format_pathtoLine {pathDefinition} {
+            # -------------------------------------------------
+            # http://www.selfsvg.info/?section=3.5
+            # 
+            # -------------------------------------------------
+                # puts "\n\n === new format_pathtoLine =====================\n"        
 
-        
-        
-            # -- convert all relative values to absolute values
-            #
-        array \
-            set penPosition    { x 0 \
-                                 y 0 }
-                                 
-        
-            # -- loop throug pathValueList            
-            #
-        set pathValueList_abs    {}
-        set listIndex            0
-        
-        foreach pathValue  $pathValueList {
-            set command [lindex $pathValue 0]
-            set values  [lrange $pathValue 1 end]
-            puts "$command -> $values"
-            # value
+                # puts "\npathString:\n  $pathString\n"            
             
-            switch -exact $command {
-                M {            # puts "    $command  ... implemented yet"
-                        puts "$values  [llength $values]"
-                        foreach {xy} $values break
-                        foreach {x y} $xy break
-                        puts "$x  / $y "
-                        set penPosition(x)       [expr $x + $transform(x)]    ; incr listIndex 
-                        set penPosition(y)       [expr $y + $transform(y)]    ; incr listIndex
-                        set pathValueList_abs    [lappend pathValueList_abs $command $penPosition(x) $penPosition(y)]
-                    }
-                m {             # puts "    $command  ... implemented yet"
-                        set pathValueList_abs        [lappend pathValueList_abs M]
-                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
-                        foreach {xy} $values {
-                            foreach {x y} $xy break
-                                # puts "          ... control: [checkControl $x]  ... $x $y  ";  
-                            set penPosition(x)       [expr $x + $penPosition(x)]    ; incr listIndex 
-                            set penPosition(y)       [expr $y + $penPosition(y)]    ; incr listIndex
-                            set pathValueList_abs    [lappend pathValueList_abs $penPosition(x) $penPosition(y)]                        
-                        }
-                    }
-                l {     # puts "    $command  ... implemented yet"
-                        set pathValueList_abs    [lappend pathValueList_abs L]
-                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
-                        foreach {x y} $values {
-                            foreach {x y} $xy break
-                                # puts "          ... control: [checkControl $x]  ... $x $y  ";  
-                            set penPosition(x)       [expr $x + $penPosition(x)]    ; incr listIndex 
-                            set penPosition(y)       [expr $y + $penPosition(y)]    ; incr listIndex
-                            set pathValueList_abs    [lappend pathValueList_abs $penPosition(x) $penPosition(y)]                        
-                        }
-                    }
-                c {        # puts "    $command  ... implemented yet"
-                        set pathValueList_abs        [lappend pathValueList_abs C]
-                        set bezierIndex    0
-                        foreach {x y} $values {
-                            foreach {x y} $xy break
-                                puts "          ... control: ... $x $y  ";
-                                # puts "          ... control: [checkControl $x]  ... $x $y  ";  
-                            set ctrlPosition(x)      [expr $x + $penPosition(x)]    ; incr listIndex
-                            set ctrlPosition(y)      [expr $y + $penPosition(y)]    ; incr listIndex
-                            set pathValueList_abs    [lappend pathValueList_abs $ctrlPosition(x) $ctrlPosition(y)]
-                            incr bezierIndex
-                            if {$bezierIndex > 2} {
-                                set penPosition(x)         $ctrlPosition(x) 
-                                set penPosition(y)         $ctrlPosition(y)
-                                set bezierIndex 0
-                            }
-                        }
-                    }
-                h {        # puts "    $command  ... implemented yet"
-                        set pathValueList_abs       [lappend pathValueList_abs L]
-                        set x     $values
-                        set penPosition(x)          [expr $x + $penPosition(x)]    ; incr listIndex
-                        set pathValueList_abs       [lappend pathValueList_abs $penPosition(x) $penPosition(y)]
-                    }
-                v {        # puts "    $command  ... implemented yet"
-                        set pathValueList_abs       [lappend pathValueList_abs L]
-                        set y     $values
-                        set penPosition(y)          [expr $y + $penPosition(y)]    ; incr listIndex
-                        set pathValueList_abs       [lappend pathValueList_abs $penPosition(x) $penPosition(y)]
-                    }
-                L  {       # puts "    $command  ... implemented yet"
-                        set pathValueList_abs       [lappend pathValueList_abs L]
-                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
-                        foreach {xy} $values {
-                            foreach {x y} $xy break
-                              # puts "          ... control: [checkControl $x]  ... $x $y  ";  
-                            set penPosition(x)      [expr $x  + $transform(x)]    ; incr listIndex 
-                            set penPosition(y)      [expr $y  + $transform(y)]    ; incr listIndex
-                            set pathValueList_abs   [lappend pathValueList_abs $penPosition(x) $penPosition(y)]                        
-                            # puts "  [checkControl $x]
-                        }
-                    }                    
-                H {        # puts "    $command  ... implemented yet"
-                        set pathValueList_abs       [lappend pathValueList_abs L]
-                        set x     $values
-                        set penPosition(x)          [expr $x  + $transform(x)]    ; incr listIndex
-                        set pathValueList_abs       [lappend pathValueList_abs $penPosition(x) $penPosition(y)]
-                    }
-                V {        # puts "    $command  ... implemented yet"
-                        set pathValueList_abs       [lappend pathValueList_abs L]
-                        set y     $values
-                        set penPosition(y)          [expr $y  + $transform(y)]    ; incr listIndex
-                        set pathValueList_abs       [lappend pathValueList_abs $penPosition(x) $penPosition(y)]
-                    }
-                C {        # puts "    $command  ... implemented yet"
-                        set pathValueList_abs       [lappend pathValueList_abs C]
-                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
-                        foreach {xy} $values {
-                                 # puts "          ... control: [checkControl $x]  ... $x $y  ";  
-                            set penPosition(x)      [expr $x + $transform(x)]    ; incr listIndex 
-                            set penPosition(y)      [expr $y + $transform(y)]    ; incr listIndex
-                            set pathValueList_abs   [lappend pathValueList_abs $penPosition(x) $penPosition(y)]                        
-                            # puts "  [checkControl $x]
-                        }
-                    }                    
-                S {       # puts "    $command  ... implemented yet"
-                        set pathValueList_abs    [lappend pathValueList_abs C]
-                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
-                        foreach {xy1 xy2} $values {
-                                foreach {ctrl_x ctrl_y} $xy1 break
-                                foreach {base_x base_y} $xy2 break
-                        
-                                    # puts " ... $listIndex"
-                        
-                                incr listIndex 4
-                                set ctrl_dx  [expr $ctrl_x - $penPosition(x)]
-                                set ctrl_dy  [expr $ctrl_y - $penPosition(y)]
-                                set base_dx  [expr $base_x - $penPosition(x)]
-                                set base_dy  [expr $base_y - $penPosition(y)]
-                                
-                                set ctrVector [ mirrorPoint [list $ctrl_dx $ctrl_dy] [list $base_dx $base_dy]] 
-                                    # puts "  ... ctrVector  $ctrVector"
-                                set ctrl_1(x)      [expr $penPosition(x) + [lindex $ctrVector 0]]
-                                set ctrl_1(y)      [expr $penPosition(y) + [lindex $ctrVector 1]]
-                                set ctrl_2(x)      $ctrl_x
-                                set ctrl_2(y)      $ctrl_y
-                                    # puts "     ---------------------------------------"
-                                    # puts "      $penPosition(x) $penPosition(y)"
-                                    # puts "      $ctrl_1(x) $ctrl_1(y)"
-                                    # puts "      $ctrl_2(x) $ctrl_2(y)"
-                                    # puts "      $base_x $base_y"
-                                set penPosition(x) $base_x
-                                set penPosition(y) $base_y
-                                set pathValueList_abs [lappend pathValueList_abs $ctrl_1(x) $ctrl_1(y) $ctrl_2(x) $ctrl_2(y) $penPosition(x) $penPosition(y)]
-                        }
-                    }
-                s {       # puts "    $command  ... implemented yet"
-                        set pathValueList_abs    [lappend pathValueList_abs C]
-                                # puts "      $listIndex - [lindex $pathValueList $listIndex] "
-                         foreach {xy1 xy2} $values {
-                                foreach {ctrl_x ctrl_y} $xy1 break
-                                foreach {base_x base_y} $xy2 break
-                                    # puts " ... $listIndex"
-                                incr listIndex 4
-                                set ctrVector [ mirrorPoint [list $ctrl_x  $ctrl_y] [list $base_x $base_y]]                                     
-                                        # puts "  ... ctrVector  $ctrVector"
-                                if {$ctrVector == {}} {
-                                    set pathValueList_abs    [lrange $pathValueList_abs 0 end-1]
-                                    set penPosition(x) [expr $penPosition(x) + $base_x]
-                                    set penPosition(y) [expr $penPosition(y) + $base_y]
-                                    set pathValueList_abs [lappend pathValueList_abs L $penPosition(x) $penPosition(y)]
-                                        # puts "   ... exception:  $pathValueList_abs"
-                                } else {                                            
-                                    set ctrl_1(x)      [expr $penPosition(x) + [lindex $ctrVector 0]]
-                                    set ctrl_1(y)      [expr $penPosition(y) + [lindex $ctrVector 1]]
-                                    set ctrl_2(x)      [expr $penPosition(x) + $ctrl_x]
-                                    set ctrl_2(y)      [expr $penPosition(y) + $ctrl_y]
-                                    set base_2(x)      [expr $penPosition(x) + $base_x]
-                                    set base_2(y)      [expr $penPosition(y) + $base_y]
-                                        # puts "     ---------------------------------------"
-                                        # puts "      $penPosition(x) $penPosition(y)"
-                                        # puts "      $ctrl_1(x) $ctrl_1(y)"
-                                        # puts "      $ctrl_2(x) $ctrl_2(y)"
-                                        # puts "      $base_2(x) $base_2(y)"
-                                    set penPosition(x) [expr $penPosition(x) + $base_x]
-                                    set penPosition(y) [expr $penPosition(y) + $base_y]
-                                    set pathValueList_abs [lappend pathValueList_abs $ctrl_1(x) $ctrl_1(y) $ctrl_2(x) $ctrl_2(y) $penPosition(x) $penPosition(y)]
-                                }
-                        }
-                    }
+                # puts "       - > pathDefinition:\n$pathDefinition\n"
 
-                Q -
-                T -
-                A -
-                q -
-                t -
-                a {
-                        # incr listIndex
-                        puts "    $command  ... not implemented yet  - $listIndex"
+            
+            set canvasElementType   line
+            set controlString       {}
+            set isClosed            {no}
+                
+            
+            set segment     {}
+            set segmentList {}
+              # foreach element [flatten_nestedList $pathDefinition] {}
+            foreach element $pathDefinition {
+                  # puts "  -> $element"
+                if {[string match {[A-Z]} $element]} {
+                   lappend segmentList $segment
+                   set segment $element
+                } else {
+                   lappend segment $element
+                     # puts "  -> $element"
                 }
-                Z -
-                z {
-                        # puts "    $command  ... implemented yet  - $listIndex" 
-                        set pathValueList_abs    [lappend pathValueList_abs Z]                        
-                }
-
-                default {
-                        # incr listIndex
-                        puts "    $command  ... not registered yet  - $listIndex"
-                }    
             }
-        }
-       
-        return $pathValueList_abs
+            lappend segmentList $segment
+            set segmentList [lrange $segmentList 1 end]
+            
+            set prevCoord_x         55
+            set prevCoord_y         55
+            
+            set ref_x 0
+            set ref_y 0
+            
+            set loopControl 0
+            set lineString  {}
+            
+              # puts "   -> \$pathDefinition: $pathDefinition"
+              # puts "   -> \$segmentList:    $segmentList"
+            #exit
+            
+            
+            foreach segment $segmentList {
 
+                
+                    # puts "\n\n_____loop_______________________________________________"
+                    # puts "\n\n      $ref_x $ref_y\n_____ref_x___ref_y________"
+                    # puts "\n\n      <$segment>\n_____segment________"
+
+            
+                    # puts "  ... $segment"
+                set segmentDef            [split [string trim $segment]]
+                set segmentType           [lindex $segmentDef 0]
+                set segmentCoords         [lrange $segmentDef 1 end]
+                    # puts "\n$segmentType - [llength $segmentCoords] - $segmentCoords\n____type__segmentCoords__"
+                    
+                switch -exact $segmentType {
+                    M     { #MoveTo 
+                            set lineString         [ concat $lineString     $segmentCoords ]
+                            set ref_x     [ lindex $segmentCoords 0 ]
+                            set ref_y     [ lindex $segmentCoords 1 ]
+                        }
+                    L     { #LineTo - absolute
+                            set lineString         [ concat $lineString     $segmentCoords ] 
+                            set ref_x     [ lindex $segmentCoords end-1]
+                            set ref_y     [ lindex $segmentCoords end  ]
+                        } 
+                    C     { # Bezier - absolute
+                                # puts "\n\n  [llength $segmentCoords] - $segmentCoords\n______segmentCoords____"
+                            # puts "\n( $ref_x / $ref_y )\n      ____start_position__"
+                            # puts "\n$segmentType - [llength $segmentCoords] - ( $ref_x / $ref_y ) - $segmentCoords\n      ______type__segmentCoords__"
+                            
+                            set segmentValues    {}
+                            foreach {value} $segmentCoords {
+                                set segmentValues     [ lappend segmentValues $value ]                        
+                            }
+                            
+                                # exception on to less values
+                                    #     - just a line to last coordinate
+                                    #                                
+                            if {[llength $segmentValues] < 6 } {\
+                                set ref_x     [ lindex $segmentValues end-1]
+                                set ref_y     [ lindex $segmentValues end  ]
+                                set lineString [ concat $lineString $ref_x $ref_y ]
+                                    puts "\n\n      <[llength $segmentValues]> - $segmentValues\n_____Exception________"
+                                return
+                                # continue
+                            }
+                            
+                                # continue Bezier definition
+                                    #     - just a line to last coordinate
+                                    #                                
+                            set segmentValues    [ linsert $segmentValues 0 $ref_x $ref_y ]                            
+                                # puts "\n  [llength $segmentValues_abs] - $segmentValues_abs\n______segmentValues_abs____"
+                            set bezierValues    [ Bezier $segmentValues]
+                            set ref_x     [ lindex $bezierValues end-1]
+                            set ref_y     [ lindex $bezierValues end  ]
+                                # puts "           ===================="
+                                # puts "           $prevCoord -> $prevCoord"
+                                # puts "                 $bezierString"
+                                # puts "            ===================="                            
+                            set lineString         [ concat $lineString     [lrange $bezierValues 2 end] ]
+                        }
+                        
+                        default {
+                            puts "\n\n  ... whats on there?  ->  $segmentType"
+                            puts     "   ...     segmentList  ->  $segmentList \n\n"
+                        }
+                }
+                
+                    # incr loopControl
+                    # puts "  ... $loopControl"
+                
+                # puts "\n( $ref_x / $ref_y )\n      ____end_position__"                
+                # puts "\n\n      $ref_x $ref_y\n_____ref_x___ref_y________"
+            }
+            
+            set pointList {}
+            foreach {x y}  [split $lineString { }] {
+                set pointList [lappend pointList "$x,$y"]
+            }
+            # puts "-> pointList:\n$pointList\n"
+            return $pointList
+            
     }
+
 
 
     proc simplify_Rectangle {node parentTransform {targetNode {}}} {
@@ -927,7 +859,7 @@ exec wish "$0" "$@"
         set transformMatrix [lindex $transform 1]
         set transformType   [lindex $transform 2]
         
-        puts "\n =============================\n  -> [$node asXML]"
+        puts "\n === simplify_Line ==========================\n  -> [$node asXML]"
         puts "       \$transformType   $transformType"
         puts "       \$translateMatrix $translateMatrix"   
         puts "       \$transformMatrix $transformMatrix"   
@@ -993,7 +925,7 @@ exec wish "$0" "$@"
         set transformMatrix [lindex $transform 1]
         set transformType   [lindex $transform 2]
         
-        puts "\n =============================\n  -> [$node asXML]"
+        puts "\n === simplify_Ellipse ==========================\n  -> [$node asXML]"
         puts "       \$transformType   $transformType"
         puts "       \$translateMatrix $translateMatrix"   
         puts "       \$transformMatrix $transformMatrix"   
@@ -1002,17 +934,30 @@ exec wish "$0" "$@"
           # -- define nodeType: polygon
         set resultNode [$tmpSVG createElement polygon]
         
-        set center_x  [copyAttribute $node cx]
-        set center_y  [copyAttribute $node cy]
+        set center_x  [copyAttribute $node cx $resultNode]
+        set center_y  [copyAttribute $node cy $resultNode]
         set radius_x  [copyAttribute $node rx] 
         set radius_y  [copyAttribute $node ry]
-        if {$center_x == {}} {set center_x 0}
-        if {$center_y == {}} {set center_y 0}
+        
+          # -- get the origin of the circle
+        set origin_x [expr [lindex $translateMatrix 4] +[lindex $transformMatrix 4]]          
+        set origin_y [expr [lindex $translateMatrix 5] +[lindex $transformMatrix 5]]          
+        if {$center_x == {}} { set center_x 0 }
+        if {$center_y == {}} { set center_y 0 }
+        
+        #set nodeID  [copyAttribute $node id]
+        # if {$nodeID =={center_00}} {}
+        #     set centerNode [$flatSVG createElement circle]
+        #     $centerNode setAttribute cx $origin_x
+        #     $centerNode setAttribute cy $origin_y
+        #     $centerNode setAttribute r  15
+        #     $flatSVG addChild $centerNode
+
         
 
           # -- for handling id="center_00" and origin values
-        $resultNode setAttribute cx $center_x       
-        $resultNode setAttribute cy $center_y    
+        # $resultNode setAttribute cx $center_x       
+        # $resultNode setAttribute cy $center_y    
 
 
           # -- define shape as polygon        
@@ -1071,7 +1016,7 @@ exec wish "$0" "$@"
         set transformMatrix [lindex $transform 1]
         set transformType   [lindex $transform 2]
         
-        puts "\n\n\n =============================\n  -> [$node asXML]"
+        puts "\n\n\n === simplify_Polygon ==========================\n  -> [$node asXML]"
         puts "       \$transformType   $transformType"
         puts "       \$translateMatrix $translateMatrix"   
         puts "       \$transformMatrix $transformMatrix"
@@ -1129,193 +1074,94 @@ exec wish "$0" "$@"
         set transformMatrix [lindex $transform 1]
         set transformType   [lindex $transform 2]
         
-        puts "\n =============================\n  -> [$node asXML]"
+        puts "\n == simplify_Path ===========================\n\n  -> [$node asXML]"
         puts "       \$transformType   $transformType"
         puts "       \$translateMatrix $translateMatrix"   
         puts "       \$transformMatrix $transformMatrix"   
 
         
-        
-        set splitPathCount 0
-        set svgPath     [path_toPolygon [ $node getAttribute d ] $parentTransform]
-        set splitIndex  [lsearch -exact -all $svgPath {M}]
-        set splitIndex  [lappend splitIndex end]
-        
-            # puts $svgPath
-            # puts $splitIndex
-            # exit
-        set returnNodes {}
-        set i 0
-        while {$i < [llength $splitIndex]-1} {
-                set indexStart     [lindex $splitIndex $i]
-                set indexEnd       [lindex $splitIndex $i+1]
-                incr i
-                
-                if {$indexEnd != {end}} {set indexEnd [expr $indexEnd -1 ]}
-                set pathSegment [lrange $svgPath $indexStart $indexEnd ]
-                    # puts "   ... $indexStart / $indexEnd"
-                    # puts "   ... $i   [lindex $splitIndex $i]"
-                    # puts "      ... $pathSegment"
-                
-                
-                if { [lindex $pathSegment end] == {Z} } {
-                        set pathSegment        [string trim [string map {Z { }} $pathSegment] ]
-                        set elementType     polygon
-                } else {
-                        set elementType     polyline
-                }
-                    # puts "\n$pathSegment\n_________pathSegment________"
-                set loopNode  [$tmpSVG createElement node]
-                set pointList [path_to_Polygon $pathSegment]
-                    # puts "\n$pointList\n_________objectPoints________"
-
-                if {[llength $pointList] < 2} {
-                    puts "\n"
-                    puts "polyline-polygon -> pointList:  $pointList   <- [llength $pointList]"
-                    puts "      ... excepted\n"
-                    return {}
-                    # continue
-                } else {
-                    puts [$node asXML]
-                    puts [$node attributes]
-                    foreach attr [$node attributes] {
-                        $loopNode setAttribute $attr [$node getAttribute $attr]
-                    }                    
-                    puts [$loopNode asXML]
-                    $loopNode setAttribute d {}
-                    puts [$loopNode asXML]
-                    $loopNode setAttribute points $pointList
-                }
-                set resultNode [simplify_Polygon  $loopNode $parentTransform]
-                set newNode    [$flatSVG createElement $elementType]
-                copyAttribute $resultNode id $newNode
-                update_Attributes $resultNode $newNode
-                
-                foreach attr [$resultNode attributes] {
-                    #$newNode setAttribute $attr [$resultNode getAttribute $attr]
-                }
-
-                $newNode setAttribute fill            none
-                $newNode setAttribute stroke          black
-                $newNode setAttribute stroke-width    0.1
-                    
-                lappend returnNodes $newNode
-                
-                incr splitPathCount
-        }    
-    
-        return $returnNodes
-
-    }
-
-
-    proc path_to_Polygon {pathDefinition} {
-          # -------------------------------------------------
-          # http://www.selfsvg.info/?section=3.5
-          # 
-          # -------------------------------------------------
-              # puts "\n\n === new pathString =====================\n"        
-
-              # puts "\npathString:\n  $pathString\n"            
-          
-              # puts " - > pathDefinition:\n$pathDefinition\n"
-
-        
-        set canvasElementType     line
-        set controlString        {}
-        set isClosed            {no}
-
-            # puts " ... simplify_Path :\n$pathString"
-        set pathString  [string map { M {_M}   L {_L}   H {_H}   V {_V}   C {_C}   S {_S}   Q {_Q}   T {_T}   A {_A} }   [string trim $pathDefinition] ]
-        
-        set lineString  {}
-        set segmentList [split $pathString {_}]
-        set segmentList [filterList $segmentList]
-            # puts "$segmentList\n-------------------------simplify_Path---"
-        
-        
-        set prevCoord_x         55
-        set prevCoord_y         55
-        
-        set ref_x 0
-        set ref_y 0
-        
-        set loopControl 0
-        
-        foreach segment $segmentList {
+        proc get_pathNode {node pathDescription nodeName} {
+            variable flatSVG
             
-                # puts "\n\n_____loop_______________________________________________"
-                # puts "\n\n      $ref_x $ref_y\n_____ref_x___ref_y________"
-                # puts "\n\n      <$segment>\n_____segment________"
-
-        
-                # puts "  ... $segment"
-            set segmentDef            [split [string trim $segment]]
-            set segmentType         [lindex $segmentDef 0]
-            set segmentCoords         [lrange $segmentDef 1 end]
-                # puts "\n$segmentType - [llength $segmentCoords] - $segmentCoords\n____type__segmentCoords__"
-                
-            switch -exact $segmentType {
-                M     { #MoveTo 
-                        set lineString         [ concat $lineString     $segmentCoords ]
-                        set ref_x     [ lindex $segmentCoords 0 ]
-                        set ref_y     [ lindex $segmentCoords 1 ]
-                      }
-                L     { #LineTo - absolute
-                        set lineString         [ concat $lineString     $segmentCoords ] 
-                        set ref_x     [ lindex $segmentCoords end-1]
-                        set ref_y     [ lindex $segmentCoords end  ]
-                      } 
-                C     { # Bezier - absolute
-                            # puts "\n\n  [llength $segmentCoords] - $segmentCoords\n______segmentCoords____"
-                        # puts "\n( $ref_x / $ref_y )\n      ____start_position__"
-                        # puts "\n$segmentType - [llength $segmentCoords] - ( $ref_x / $ref_y ) - $segmentCoords\n      ______type__segmentCoords__"
-                        
-                        set segmentValues    {}
-                        foreach {value} $segmentCoords {
-                            set segmentValues     [ lappend segmentValues $value ]                        
-                        }
-                        
-                            # exception on to less values
-                                #     - just a line to last coordinate
-                                #                                
-                        if {[llength $segmentValues] < 6 } {\
-                            set ref_x     [ lindex $segmentValues end-1]
-                            set ref_y     [ lindex $segmentValues end  ]
-                            set lineString [ concat $lineString $ref_x $ref_y ]
-                                puts "\n\n      <[llength $segmentValues]> - $segmentValues\n_____Exception________"
-                            return
-                            # continue
-                        }
-                        
-                            # continue Bezier definition
-                                #     - just a line to last coordinate
-                                #                                
-                        set segmentValues    [ linsert $segmentValues 0 $ref_x $ref_y ]                            
-                            # puts "\n  [llength $segmentValues_abs] - $segmentValues_abs\n______segmentValues_abs____"
-                        set bezierValues    [ Bezier $segmentValues]
-                        set ref_x     [ lindex $bezierValues end-1]
-                        set ref_y     [ lindex $bezierValues end  ]
-                            # puts "           ===================="
-                            # puts "           $prevCoord -> $prevCoord"
-                            # puts "                 $bezierString"
-                            # puts "            ===================="                            
-                        set lineString         [ concat $lineString     [lrange $bezierValues 2 end] ]
-                      }
-                    
-                default {
-                        puts "\n\n  ... whats on there?  ->  $segmentType \n\n"
-                      }
+            set newNode   [$flatSVG createElement $nodeName]
+            foreach attr  [$node attributes] {
+                $newNode setAttribute $attr [$node getAttribute $attr]
+            }
+              # puts [$newNode asXML]
+            set pointList [format_pathtoLine [flatten_nestedList $pathDescription]]
+              # puts "   ->\n    \$pointList $pointList"
+            $newNode setAttribute     points          $pointList
+            $newNode removeAttribute  d
+              # update_Attributes $resultNode $newNode
+            $newNode setAttribute     fill            none
+            $newNode setAttribute     stroke          black
+            $newNode setAttribute     stroke-width    0.1
+            
+            if {$pointList == {}} {
+              puts "\n\n\n\n"
+              puts "  -> [$node asXML]"
+              puts "  -> $pathDescription"
+              puts "  -> [$newNode asXML]"
+              puts "\n\n\n\n"
             }
             
+            return $newNode
         }
         
-        set pointList {}
-        foreach {x y}  [split $lineString { }] {
-            set pointList [lappend pointList "$x,$y"]
+        
+        
+        set splitPathCount 0
+        set pathInfo [ $node getAttribute d ]
+          # puts "  -> \$pathInfo $pathInfo\n"
+        
+        set svgPath     [ format_absPath [ $node getAttribute d ] $parentTransform ]
+             # set svgPath     [format_absPath [ $node getAttribute d ]]
+        foreach pathElement $svgPath {
+            # puts "    00 -> \$pathElement $pathElement"
         }
-        # puts "-> pointList:\n$pointList\n"
-        return $pointList
+        if {[llength $svgPath] > 1} {
+            set newNode [$flatSVG createElement g]
+            set nodeID [copyAttribute $node id $newNode]
+              # $newNode setAttribute children  [llength $svgPath]
+            set i 0
+            foreach pathSegment $svgPath {
+                  set pathSegment [flatten_nestedList $pathSegment]
+                    # puts "\n--<D>---- loop ----------"
+                    # puts "    01 -> \$pathSegment $pathSegment"
+                    # puts "   ->   ende: [lindex $pathSegment end]"
+                  if { [lindex $pathSegment end] == {Z} } {
+                      set pathSegment [lrange $pathSegment 0 end-1]
+                      # puts "    02 -> \$pathSegment $pathSegment"
+                    set loopNode    [get_pathNode $node $pathSegment polygon]
+                  } else {
+                      set loopNode    [get_pathNode $node $pathSegment polyline]
+                  }
+                  if {[$loopNode hasAttribute id]} {
+                      set loopID [$loopNode getAttribute id]
+                      $loopNode setAttribute id [format "%s___%s" $loopID $i]
+                  } else {
+                      $loopNode setAttribute id [get_svgID]
+                  }
+                  $newNode appendChild $loopNode
+                  incr i
+            }
+        } else {
+            set pathSegment $svgPath
+            set pathSegment [flatten_nestedList $svgPath]
+              # puts "\n--<D>------- single -------"
+              # puts "   -> \$pathSegment [llength $pathSegment] [lindex $pathSegment end]"
+              # puts "   -> \$pathSegment $pathSegment"
+              # puts "   ->   ende: [lindex $pathSegment end]"
+            if { [lindex $pathSegment end] == {Z} } {
+                set pathSegment [lrange $pathSegment 0 end-1]
+                set newNode     [get_pathNode $node $pathSegment polygon]
+            } else {
+                set newNode     [get_pathNode $node $pathSegment polyline]
+            }             
+        }
+        
+        return $newNode
+
     }
 
 
@@ -1439,9 +1285,9 @@ exec wish "$0" "$@"
                                 $targetNode appendChild $myNode 
                         }
                     path { # path d="M ......."
-                                # path_toPolygon
                                 set tmpNodes [ simplify_Path $node $parentTransform]
                                 set loopID 0
+                                  # puts "\n\n  tmpNodes -> $tmpNodes \n\n"
                                 foreach myNode $tmpNodes {
                                     if {$myNode == {}} continue
                                     incr loopID
@@ -1455,6 +1301,8 @@ exec wish "$0" "$@"
                                 set myNode [$flatSVG createElement unused ]
                         }
             }
+            
+            # puts "[$myNode asXML]"
             # puts "        $nodeName:  $objectPoints"
             # -- get nodeID
             if {[$node hasAttribute id]} {
@@ -1559,7 +1407,7 @@ exec wish "$0" "$@"
             #
             incr free_ObjectID
             set  tagName  [format "_tag_%s_" $free_ObjectID]
-            puts "\n\n   ... $tagName \n\n"
+            puts "\n   ... $tagName \n"
             $node setAttribute id $tagName
         }
         
@@ -1899,6 +1747,7 @@ exec wish "$0" "$@"
 
     proc fitContent {} {
             variable resultCanvas
+            variable fitVector
             # variable centerNode
             
             puts "\n"
@@ -1919,7 +1768,7 @@ exec wish "$0" "$@"
             puts "      \$contentHeight  $contentHeight"
             
             
-            set canvasWidth [$resultCanvas cget  -width]
+            set canvasWidth  [$resultCanvas cget  -width]
             set canvasHeight [$resultCanvas cget -height]
             puts "      \$canvasWidth   $canvasWidth"
             puts "      \$canvasHeight  $canvasHeight"
@@ -1930,7 +1779,10 @@ exec wish "$0" "$@"
             set scale $scale_x
             if {$scale_y < $scale_x} {set scale $scale_y}
             
-            $resultCanvas move all [expr 0.5*$canvasWidth - $contentCenter_x] [expr 0.5*$canvasHeight - $contentCenter_y] 
+            set move_x [expr 0.5*$canvasWidth  - $contentCenter_x]
+            set move_y [expr 0.5*$canvasHeight - $contentCenter_y] 
+            set fitVector [list $move_x $move_y $scale]
+            $resultCanvas move all $move_x $move_y
             if {$scale > 0} {
                 $resultCanvas scale all [expr 0.5*$canvasWidth] [expr 0.5*$canvasHeight] $scale $scale
             }
@@ -1950,10 +1802,10 @@ exec wish "$0" "$@"
                 
                 set objectPoints    [list	100 $c_y \
                                             [expr $canvasWidth - 100] $c_y]
- 				$resultCanvas create line $objectPoints -fill red -dash {20 1 1}
+ 				        $resultCanvas create line $objectPoints -fill red -dash {20 1 1}
                 set objectPoints    [list	$c_x 100 \
                                             $c_x [expr $canvasHeight - 100]]
- 				$resultCanvas create line $objectPoints -fill red -dash {20 1 1}
+ 				        $resultCanvas create line $objectPoints -fill red -dash {20 1 1}
             }
 
     }
@@ -2010,6 +1862,7 @@ exec wish "$0" "$@"
             variable detailText
             variable resultCanvas
             variable svg_LastHighlight
+            variable my_Center_Object
             
             puts "\n  -> event_flatTree:  $W $T $x $y $args"
             set treeItem 	[$W selection]
@@ -2037,6 +1890,9 @@ exec wish "$0" "$@"
             
             
             $detailText delete 1.0 end
+            
+            $detailText insert end "$my_Center_Object\n"
+            $detailText insert end "------------------------\n"
             $detailText insert end "Node Attributes:\n"
             $detailText insert end "------------------------\n\n"
                 #$detailText insert end "   item -text:     [$W item $itemID -text]\n"
@@ -2064,12 +1920,57 @@ exec wish "$0" "$@"
             variable resultCanvas
             variable flatTree
             variable flatText
+            variable my_Center_Object
+            variable fitVector
+            
+              # -- create a center Circle on canvas
+              #
+            puts "\n    .. $tagName"
+            catch {$resultCanvas delete {_my_Center_}}
+            set objectCoords [$resultCanvas coords $tagName]
+            set xmin  99999
+            set ymin  99999
+            set xmax -99999
+            set ymax -99999
+            foreach {x y} $objectCoords {
+                if {$x < $xmin} {set xmin $x}
+                if {$y < $ymin} {set ymin $y}
+                if {$x > $xmax} {set xmax $x}
+                if {$y > $ymax} {set ymax $y}
+            }
+            set center_x [expr ($xmin + $xmax)/2]
+            set center_y [expr ($ymin + $ymax)/2]
+            
+            
+            
+            
+            puts "         ... $xmin/$ymin $xmax/$ymax"
+            $resultCanvas create oval [expr $center_x - 5]  [expr $center_y - 5]  [expr $center_x + 5]  [expr $center_y + 5] -tags  {_my_Center_}
+            
+              # -- fitVector
+            foreach {x y scale} $fitVector break
+            set canvasWidth  [$resultCanvas cget  -width]
+            set canvasHeight [$resultCanvas cget -height]
+            set dx  [expr ($center_x - 0.5*$canvasWidth)/$scale]
+            set dy  [expr ($center_y - 0.5*$canvasHeight)/$scale]
+            set cx  [expr $center_x - $dx - $x]
+            set cy  [expr $center_y - $dy - $y]
+            #puts 
+            
+            #   cx="278.8849839782714" cy="147.361163
+            # puts "         ... [$resultCanvas coords $tagName]"
+            # set my_Center_Object "$fitVector\ncenter:$center_x/$center_y\nc: $cx/$cy\n<circle id=\"center_00\" cx=\"$center_x\" cy=\"$center_y\" r=\"5\"/>" 
+            set my_Center_Object "<circle id=\"center_00\" cx=\"$center_x\" cy=\"$center_y\" r=\"5\"/>" 
+            puts $my_Center_Object
+            
+            
             
             # searchrep'next $flatText $tagName
             open_toNode $flatTree $tagName
             catch {$flatTree focus $tagName}
             catch {$flatTree selection set $tagName}
             catch {$flatTree see [lindex $tagName 0]}
+
     }
 
 
