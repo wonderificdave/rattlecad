@@ -43,7 +43,7 @@
   
   package require   appUtil       0.14
   package require   bikeGeometry  0.19
-  package require   canvasCAD     0.38
+  package require   canvasCAD     0.41
   package require   extSummary    0.4
   
       
@@ -69,7 +69,7 @@
                         VECTOR_Font         {}
                         Language            {english}
     
-                        USER_InitString     {_init_Template}        
+                        USER_InitString     {_init_Template}
                         WINDOW_Title        {}
                         FILE_List           {}
 

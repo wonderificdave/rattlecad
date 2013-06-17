@@ -3,7 +3,7 @@
     <Project>
         <rattleCADVersion>3.4.00</rattleCADVersion>
         <Name>Template Road</Name>
-        <modified>2013.03.01/12:00</modified>
+        <modified>2013.06.10/12:00</modified>
     </Project>
 
     <Personal>
@@ -80,16 +80,19 @@
             <Width>18.00</Width>
             <WidthBB>22.20</WidthBB>
             <CenterLine>
-              <length_01>150.00</length_01>
-              <length_02>160.00</length_02>
-              <length_03>47.00</length_03>
-              <length_04>10.00</length_04>
-              <angle_01>9.00</angle_01>
-              <angle_02>-5.00</angle_02>
-              <angle_03>0.00</angle_03>
-              <radius_01>320.00</radius_01>
-              <radius_02>320.00</radius_02>
-              <radius_03>320.00</radius_03>
+                <length_01>50.000</length_01>
+                <length_02>160.00</length_02>
+                <length_03>47.00</length_03>
+                <length_04>60.000</length_04>
+                <length_05>60.000</length_05>
+                <angle_01>-8.000</angle_01>
+                <angle_02>5.000</angle_02>
+                <angle_03>0.00</angle_03>
+                <angle_04>-2.000</angle_04>
+                <radius_01>320.00</radius_01>
+                <radius_02>320.00</radius_02>
+                <radius_03>320.00</radius_03>
+                <radius_04>320.00</radius_04>
             </CenterLine>
             <Profile>              
                 <width_00>12.50</width_00>
