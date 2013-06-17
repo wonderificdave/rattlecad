@@ -47,20 +47,23 @@ namespace eval lib_tube {
         variable arcPrecission
         # puts "  -> $arcPrecission"
         
-        foreach {S01_length S02_length S03_length S04_length \
-                 S01_angle  S02_angle  S03_angle \
-                 S01_radius S02_radius S03_radius} $centerLineDef break
+        foreach {S01_length S02_length S03_length S04_length S05_length \
+                 S01_angle  S02_angle  S03_angle  S04_angle \
+                 S01_radius S02_radius S03_radius S04_radius} $centerLineDef break
 
         set angle_00    0
         set angle_01    [expr $angle_00 + $S01_angle]
         set angle_02    [expr $angle_01 + $S02_angle]
         set angle_03    [expr $angle_02 + $S03_angle]
+        set angle_04    [expr $angle_03 + $S04_angle]
         set segment_01  [expr $S01_radius * $S01_angle * $vectormath::CONST_PI / 180]
         set segment_02  [expr $S02_radius * $S02_angle * $vectormath::CONST_PI / 180]
         set segment_03  [expr $S03_radius * $S03_angle * $vectormath::CONST_PI / 180]
+        set segment_04  [expr $S04_radius * $S04_angle * $vectormath::CONST_PI / 180]
         set offset_01   [expr abs(0.5 * $segment_01)]
         set offset_02   [expr abs(0.5 * $segment_02)]
         set offset_03   [expr abs(0.5 * $segment_03)]
+        set offset_04   [expr abs(0.5 * $segment_04)]
 
         set p_S00       {0 0}
         set p_End       $p_S00
@@ -206,16 +209,67 @@ namespace eval lib_tube {
             set p_S03_b  $p_End
         }
         
+        
+        
+        
+        
           
           # ============================================
-          # last-Segment
-        if {$offset_03 == 0} { 
+          # 4th bent-Segment
+        if {$S03_angle == 0} { 
             set p_S04 [vectormath::addVector $p_S03 [vectormath::rotateLine {0 0} $S04_length $angle_03]]
         } else {
             set length_04 [expr $S04_length - $offset_03]
             set p_S04 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_04 $angle_03]]
         }
-        lappend basePoints $p_S04
+        if {$S04_angle == 0} {
+            set angle_04    $angle_03
+            set segment_04  0
+            set offset_04   0        
+            set p_S04_a     $p_S04
+            set p_S04_b     $p_S04
+            set p_S04_ct    $p_S04
+            set p_End       $p_S04
+            lappend basePoints $p_End
+        } else {
+            if {$S04_angle > 0} {
+                set p_End  [vectormath::addVector $p_S04 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_04] $angle_03]]   
+                set p_S04_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S04_radius [expr (90 + $angle_03)]]]
+            } else {
+                set p_End  [vectormath::addVector $p_S04 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_03] $angle_03]]   
+                set p_S04_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S04_radius [expr -1.0*(90 - $angle_03)]]]
+            }
+            set p_S04_a  $p_End
+            
+            set nrSegments  [expr abs(round($segment_04/$arcPrecission))]
+            if {$nrSegments < 1} {
+                # puts "    -> nrSegments: $nrSegments"
+              set nrSegments 1
+            }
+            set deltaAngle  [expr 1.0*$S04_angle/$nrSegments]
+              # puts "  ->  Segments/Angle: $nrSegments $deltaAngle"
+            set pStart  $p_End
+            set i 0
+            while {$i < $nrSegments} {
+              set p_End  [vectormath::rotatePoint $p_S04_ct $pStart $deltaAngle]
+              lappend basePoints $p_End
+                # puts "  -> i/p_End:  $i  $p_End"
+              set pStart $p_End
+              incr i
+            }
+            set p_S04_b  $p_End
+        }
+        
+          
+          # ============================================
+          # last-Segment
+        if {$offset_04 == 0} { 
+            set p_S05 [vectormath::addVector $p_S04 [vectormath::rotateLine {0 0} $S05_length $angle_04]]
+        } else {
+            set length_05 [expr $S05_length - $offset_04]
+            set p_S05 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_05 $angle_04]]
+        }
+        lappend basePoints $p_S05
         
         
           # -- define controlLines
@@ -228,10 +282,13 @@ namespace eval lib_tube {
         set ctrlPoint_02_b [vectormath::addVector $p_S03_a [vectormath::rotateLine {0 0} $offset_03 $angle_02]]
         
         set ctrlPoint_03_a [vectormath::addVector $p_S03_b [vectormath::rotateLine {0 0} $offset_03 [expr 180 + $angle_03]]]
+        set ctrlPoint_03_b [vectormath::addVector $p_S04_a [vectormath::rotateLine {0 0} $offset_04 $angle_03]]
         
-        set controlPoints  [list $p_S00 $ctrlPoint_00_b  $ctrlPoint_01_a $ctrlPoint_01_b $ctrlPoint_02_a $ctrlPoint_02_b $ctrlPoint_03_a $p_S04]
+        set ctrlPoint_04_a [vectormath::addVector $p_S04_b [vectormath::rotateLine {0 0} $offset_04 [expr 180 + $angle_04]]]
+        
+        set controlPoints  [list $p_S00 $ctrlPoint_00_b  $ctrlPoint_01_a $ctrlPoint_01_b $ctrlPoint_02_a $ctrlPoint_02_b $ctrlPoint_03_a $ctrlPoint_03_b $ctrlPoint_04_a $p_S05]
 
-        
+          # puts " <D> -> $basePoints $controlPoints"
         return [list $basePoints $controlPoints]
     }
 
@@ -419,17 +476,20 @@ namespace eval lib_tube {
               set S02_length  [expr [lindex $p_04 0] + 0.5 * $segLength - 20] ;#[expr $length_bladeDO - $S01_length - 20]
               set S03_length  10 ;#[expr [lindex $p_04 0] - 20]                       
               set S04_length  10                         
+              set S05_length  10                         
               set S01_angle   $bendAngle
               set S02_angle   0                       
               set S03_angle   0                       
+              set S04_angle   0                       
               set S01_radius  $bendRadius
               set S02_radius  0
               set S03_radius  0            
+              set S04_radius  0            
 
                 # -- set centerLine of bent tube
-              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length \
-                                      $S01_angle  $S02_angle $S03_angle \
-                                      $S01_radius $S02_radius $S03_radius]              
+              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
+                                      $S01_angle  $S02_angle  $S03_angle   $S04_angle \
+                                      $S01_radius $S02_radius $S03_radius  $S04_radius]              
               
 
                 # -- set profile of bent tube
@@ -468,21 +528,24 @@ namespace eval lib_tube {
               set angleRotation [expr 180 + $dirAngle]
                     #puts "   -> \$angleRotation $angleRotation\n"
               
-              set S01_length  [expr 0.25 * $length]
-              set S02_length  [expr 0.25 * $length]
-              set S03_length  [expr 0.25 * $length]                       
-              set S04_length  [expr 0.25 * $length]                         
+              set S01_length  [expr 0.20 * $length]
+              set S02_length  [expr 0.20 * $length]
+              set S03_length  [expr 0.20 * $length]                       
+              set S04_length  [expr 0.20 * $length]                         
+              set S05_length  [expr 0.20 * $length]                         
               set S01_angle   0
               set S02_angle   0                       
               set S03_angle   0                       
+              set S04_angle   0                       
               set S01_radius  0
               set S02_radius  0
               set S03_radius  0
+              set S04_radius  0
 
                 # -- set centerLine of straight tube
-              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length \
-                                      $S01_angle  $S02_angle $S03_angle \
-                                      $S01_radius $S02_radius $S03_radius]
+              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
+                                      $S01_angle  $S02_angle  $S03_angle   $S04_angle \
+                                      $S01_radius $S02_radius $S03_radius  $S04_radius] 
                                       
               # -- set profile of straight tube       
               set tubeProfile [lib_tube::init_tubeProfile $profileDef]                          
@@ -561,18 +624,21 @@ namespace eval lib_tube {
               set S02_length  [expr [vectormath::length $p_04 $p_06] - 20] ;#[expr $length_bladeDO - $S01_length - 20]
               set S03_length  10                
               set S04_length  10                                          
+              set S05_length  10                                          
               set S01_angle   [expr -1.0 * $bendAngle * (180/$vectormath::CONST_PI)]
               set S02_angle   0                       
               set S03_angle   0                       
+              set S04_angle   0                       
               set S01_radius  $max_bendRadius
               set S02_radius  0
               set S03_radius  0  
+              set S04_radius  0  
                 # puts "   -> \$S01_angle $S01_angle\n"
 
                 # -- set centerLine of straight tube
-              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length \
-                                      $S01_angle  $S02_angle $S03_angle \
-                                      $S01_radius $S02_radius $S03_radius]
+              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
+                                      $S01_angle  $S02_angle  $S03_angle   $S04_angle \
+                                      $S01_radius $S02_radius $S03_radius  $S04_radius] 
                                       
               # -- set profile of straight tube                
               set profileDef {}

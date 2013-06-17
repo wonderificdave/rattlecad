@@ -107,6 +107,7 @@
                         set project::Lugs(BottomBracket/Diameter/inside) [expr $BottomBracket(outside) -2.0]
                         set BottomBracket(inside)   $project::Lugs(BottomBracket/Diameter/inside)
                 }
+            set BottomBracket(OffsetCS_TopView)    $project::Lugs(BottomBracket/ChainStay/Offset_TopView)
 
                 #
                 # --- get RearWheel
@@ -118,6 +119,7 @@
             #set RearWheel(Distance_X)  [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
             set RearWheel(Distance_X)   [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
             set RearWheel(Position)     [ list [expr -1.0 * $RearWheel(Distance_X)] $project::Custom(BottomBracket/Depth) ]
+            set RearWheel(HubWidth)     $project::Component(Wheel/Rear/HubWidth)
                 # set RearWheel(Distance_X) 450
 
                 #
@@ -200,7 +202,8 @@
             set ChainStay(DiameterSS)       $project::FrameTubes(ChainStay/DiameterSS)
             set ChainStay(Height)           $project::FrameTubes(ChainStay/Height)
             set ChainStay(TaperLength)      $project::FrameTubes(ChainStay/TaperLength)
-
+            set ChainStay(WidthBB)          $project::FrameTubes(ChainStay/WidthBB)
+            
                 #
                 # --- get SeatStay -------------------------
             set SeatStay(DiameterST)        $project::FrameTubes(SeatStay/DiameterST)
@@ -218,6 +221,7 @@
             set RearDrop(OffsetSSPerp)      $project::Lugs(RearDropOut/SeatStay/OffsetPerp)
             set RearDrop(Derailleur_x)      $project::Lugs(RearDropOut/Derailleur/x)
             set RearDrop(Derailleur_y)      $project::Lugs(RearDropOut/Derailleur/y)
+            set RearDrop(OffsetCS_TopView)  $project::Lugs(RearDropOut/ChainStay/Offset_TopView)
 
                 #
                 # --- get Saddle ---------------------------
