@@ -102,27 +102,27 @@
         }
     }
       
-      proc dirAngle_Coincidence {p1 p2 tolerance p_perp} {
-              set distance [checkPointCoincidence $p1 $p2 $tolerance]
-              if { $distance  == 0 } {
-                      # puts "       --> $distance / coincident  in ($tolerance)"
-                  set angle [expr [dirAngle $p1 $p_perp] - 90]
-                      # puts "           $angle"
-                  return $angle
-              } else {
-                  set angle [dirAngle $p1 $p2]
-                  return $angle
-              }
-      }    
+    proc dirAngle_Coincidence {p1 p2 tolerance p_perp} {
+            set distance [checkPointCoincidence $p1 $p2 $tolerance]
+            if { $distance  == 0 } {
+                    # puts "       --> $distance / coincident  in ($tolerance)"
+                set angle [expr [dirAngle $p1 $p_perp] - 90]
+                    # puts "           $angle"
+                return $angle
+            } else {
+                set angle [dirAngle $p1 $p2]
+                return $angle
+            }
+    }    
       
-      proc checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
+    proc checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
               set disctance [length $p1 $p2]
               if { $disctance < $tolerance} {
                   return 0
               } else {
                   return $disctance
               }            
-      }
+    }
 
     proc mirrorPoint { p1 p2 p3 } { 
         # mirror p3 by vector(p1,p2)
@@ -149,8 +149,23 @@
 
     proc distancePerp { p1 p2 p3 } { 
         # perpendicular distance from vector(p1,p2) through p3 
-        set p4		[ intersectPerp $p1 $p2 $p3]
-        return 		[ length $p3 $p4 ]
+        set p4      [ intersectPerp $p1 $p2 $p3]
+        return      [ length $p3 $p4 ]
+    }
+
+    proc offsetOrientation { p1 p2 p3 } { 
+          # check if <p3> is on left or right side of line <p1,p2>
+          # right ->   1
+          # online ->  0
+          # left  ->  -1
+        set angle_1_2 [ dirAngle $p1 $p2]
+        set angle_2_3 [ dirAngle $p2 $p3]
+        set angleIS [ angle $p1 $p2 $p3 ]
+          # puts "   -> offsetOrientation:  { $p1 / $p2 / $p3 } -> $angle_1_2 / $angle_2_3"
+          # if {$angleIS < 0}   [expr 360.0 + $angleIS]
+        if {$angle_1_2 > $angle_2_3}  {return  1} ;# right side
+        if {$angle_1_2 < $angle_2_3}  {return -1} ;# left side
+        return  0
     }
 
     proc length { p1 p2 } { 
@@ -257,7 +272,7 @@
         set p2 [lindex $v1 1]
         set p3 [lindex $v2 0]
         set p4 [lindex $v2 1]
-              return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
+        return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
     } 
     proc intersectPoint {p1 p2 p3 p4   {errorMode {}} } {
         return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
