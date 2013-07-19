@@ -420,7 +420,7 @@
     #-------------------------------------------------------------------------
        #  register external canvasCAD-Widgets
        #
-     proc register_external_canvasCAD {tabID cvID} {
+    proc register_external_canvasCAD {tabID cvID} {
             variable external_canvasCAD
             set external_canvasCAD($tabID) $cvID    
             puts "\n            register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
@@ -470,9 +470,9 @@
             variable noteBook_top
             variable canvasUpdate
                     
-            set currentTab                 [$noteBook_top select]
-            set varName                    [notebook_getVarName $currentTab]
-            set varName                    [lindex [split $varName {::}] end]
+            set currentTab              [$noteBook_top select]
+            set varName                 [notebook_getVarName $currentTab]
+            set varName                 [lindex [split $varName {::}] end]
             
             set updateDone              {no}
 

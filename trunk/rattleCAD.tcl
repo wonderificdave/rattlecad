@@ -144,7 +144,7 @@ exec wish "$0" "$@"
         	puts "          ... $openFile\n"
     	        lib_file::openProject_xml   $openFile
     	    }    
-        }	    
+        }
 	    
         if {[array names argValues {-test}] == {-test}} {
     	    puts "\n =============================================="    
