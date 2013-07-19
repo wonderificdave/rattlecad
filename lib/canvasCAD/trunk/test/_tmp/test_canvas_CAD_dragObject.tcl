@@ -14,14 +14,12 @@
   set WINDOW_Title      "cad_canvasCAD, an extension for canvas"
 
   
-  set BASE_Dir  [file normalize [file dirname [file normalize $::argv0]]] 
-  set APPL_ROOT_Dir [file dirname $BASE_Dir]
-  puts "   \$BASE_Dir ........ $BASE_Dir"
-  puts "   \$APPL_ROOT_Dir ... $APPL_ROOT_Dir"
-  lappend auto_path "$APPL_ROOT_Dir"
+  set APPL_ROOT_Dir [file dirname [lindex $argv0]]
+ 
+  lappend auto_path "$APPL_ROOT_Dir/_canvasCAD"
   
   package require 	Tk
-  package require   canvasCAD 0.38
+  package require   canvasCAD
 
   
  	
@@ -82,9 +80,8 @@
 		variable font_colour		black
 		variable demo_type			dimension
 		variable drw_scale		     0.8
-        variable cv_scale            1
-        variable precision           1
-                        				
+		variable cv_scale		     1
+				
 		proc createStage {cv_path cv_width cv_height st_width st_height unit st_scale args} {
 			variable myCanvas
 			variable cv_scale
@@ -108,21 +105,21 @@
 						
 				variable  myCanvas
 				
-				$myCanvas  create   line  		{0 0 20 0 20 20 0 20 0 0} 		-tags {Line_01}  -fill blue   -width 2 
-				$myCanvas  create   line  		{30 30 90 30 90 90 30 90 30 30} -tags {Line_01}  -fill blue   -width 2 
-				$myCanvas  create   line  		{0 0 30 30 } 		-tags {Line_01}  -fill blue   -width 2 
+				#$myCanvas  create   line  		{0 0 20 0 20 20 0 20 0 0} 		-tags {Line_01}  -fill blue   -width 2 
+				#$myCanvas  create   line  		{30 30 90 30 90 90 30 90 30 30} -tags {Line_01}  -fill blue   -width 2 
+				#$myCanvas  create   line  		{0 0 30 30 } 		-tags {Line_01}  -fill blue   -width 2 
 				
-				$myCanvas  create   rectangle  	{180 120 280 180 } 	-tags {Line_01}  -fill violet   -width 2 
-				$myCanvas  create   polygon  	{40 60  80 50  120 90  180 130  90 150  50 90 35 95} -tags {Line_01}  -outline red  -fill yellow -width 2 
+				#$myCanvas  create   rectangle  	{180 120 280 180 } 	-tags {Line_01}  -fill violet   -width 2 
+				#$myCanvas  create   polygon  	{40 60  80 50  120 90  180 130  90 150  50 90 35 95} -tags {Line_01}  -outline red  -fill yellow -width 2 
 
-				$myCanvas  create   oval  		{30 160 155 230 } 	-tags {Line_01}  -fill red   -width 2 		
-				$myCanvas  create   circle  	{160 60}   -radius 50 -tags {Line_01}  -fill blue   -width 2 
-				$myCanvas  create   arc  		{270 160}  -radius 50  -start 30  -extent 170 -tags {Line_01}  -outline gray  -width 2  -style arc
+				#$myCanvas  create   oval  		{30 160 155 230 } 	-tags {Line_01}  -fill red   -width 2 		
+				#$myCanvas  create   circle  	{160 60}   -radius 50 -tags {Line_01}  -fill blue   -width 2 
+				#$myCanvas  create   arc  		{270 160}  -radius 50  -start 30  -extent 170 -tags {Line_01}  -outline gray  -width 2  -style arc
 				
-				$myCanvas  create   text		{140 90}  -text "text a"
-				$myCanvas  create   vectortext	{120 70}  -text "vectorText ab"
-				$myCanvas  create   vectortext	{100 50}  -text "vectorText abc"  -size 10
-				$myCanvas  create   text		{145 95}  -text "text abcd" -size 10
+				#$myCanvas  create   text		{140 90}  -text "text a"
+				#$myCanvas  create   vectortext	{120 70}  -text "vectorText ab"
+				#$myCanvas  create   vectortext	{100 50}  -text "vectorText abc"  -size 10
+				#$myCanvas  create   text		{145 95}  -text "text abcd" -size 10
 		}
 		
 		proc recenter_board {} {
@@ -183,35 +180,10 @@
 				$myCanvas scaleToCenter $cv_scale
 		}
 		
-        proc setPrecision {{precValue {1}}} {
-        
-                variable  myCanvas
-                
-                variable  precision 
-                
-                puts "\n  -> setPrecision:   $myCanvas"
-                
-                #$myCanvas clean_StageContent
-                #set board [ $myCanvas dict_getValue Canvas  path]
-            
-                
-                puts "\n\n============================="
-                puts "   -> precision:           $precValue"
-                puts "============================="
-                puts "\n\n"
-                
-                set precValue [$myCanvas setPrecision $precValue ]
-                puts "   -> precision:           $precValue"
-                
-                set sketchboard::precision $precValue
-                
-                update_board
-        }
-		
-		
 		proc update_board {{value {0}}} {
 			
-				variable  myCanvas
+				return
+        variable  myCanvas
 				
 				variable  start_angle 
 				variable  start_length
@@ -453,12 +425,8 @@
 								   $f_settings.scale.drw_scale.scl      configure   -resolution 0.1
 				create_config_line $f_settings.scale.cv_scale	" Canvas scale  "  sketchboard::cv_scale	 0.2  5.0  
 								   $f_settings.scale.cv_scale.scl      	configure   -resolution 0.1  -command "sketchboard::scale_board"
-                create_config_line $f_settings.scale.precision  " Dimension precision"  sketchboard::precision  0  5  
-                                   $f_settings.scale.precision.scl      configure   -resolution 1.0  -command "sketchboard::setPrecision"
-
-                button             $f_settings.scale.reset   -text "reset Precision"   -command {sketchboard::setPrecision reset}
-                button             $f_settings.scale.recenter   -text "recenter"   -command {sketchboard::recenter_board}
-                button  		   $f_settings.scale.refit		-text "refit"      -command {sketchboard::refit_board}
+				button  		   $f_settings.scale.recenter   -text "recenter"   -command {sketchboard::recenter_board}
+				button  		   $f_settings.scale.refit		-text "refit"      -command {sketchboard::refit_board}
 								   
 
 				# -- select font-colour ---
@@ -513,7 +481,6 @@
 						$f_settings.demo.graphic \
 						$f_settings.scale.drw_scale \
 						$f_settings.scale.cv_scale \
-                        $f_settings.scale.reset\
 						$f_settings.scale.recenter \
 						$f_settings.scale.refit \
 					 -side top  -fill x
@@ -535,7 +502,7 @@
 		
 	set f_demo  [labelframe .f0.f_config.f_demo  -text "Demo" ]
 		button  $f_demo.bt_clear   -text "clear"  -command {$sketchboard::myCanvas clean_StageContent} 
-		button  $f_demo.bt_update  -text "update" -command {sketchboard::update_board}
+		button  $f_demo.bt_update  -text "update"   -command {sketchboard::update_board}
  	
 	pack  $f_demo  -side top 	-expand yes -fill x
 		pack $f_demo.bt_clear 	-expand yes -fill x
@@ -553,7 +520,6 @@
 	
 	pack  $f_status  -side top -expand yes -fill x
 
-    set sketchboard::precision [$sketchboard::myCanvas setPrecision 2 default]
 
 	####+### E N D
   update

@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.40
+package provide canvasCAD 0.42
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -191,12 +191,12 @@ package require tdom
                                 bind $cv <Motion>         [ list canvasCAD::reportPointerPostion $name %x %y ]
                                 bind $cv <Configure>     [ namespace code [list resizeCanvas $w] ]
                                     # Set up event bindings for move canvas:
-                                bind $cv <1>                        "canvasCAD::setMark        $cv %x %y  move"
-                                bind $cv <B1-Motion>                "canvasCAD::setStroke    $cv %x %y"
-                                bind $cv <ButtonRelease-1>            "canvasCAD::moveContent    $cv %x %y  $name; $cv configure -cursor arrow"
-                                bind $cv <3>                        "canvasCAD::setMark        $cv %x %y  zoom"
+                                bind $cv <1>                        "canvasCAD::setMark      $cv %x %y  move"
+                                bind $cv <B1-Motion>                "canvasCAD::motion_B1    $cv %x %y"
+                                bind $cv <ButtonRelease-1>          "canvasCAD::release_B1   $cv %x %y  $name; $cv configure -cursor arrow"
+                                bind $cv <3>                        "canvasCAD::setMark      $cv %x %y  zoom"
                                 bind $cv <B3-Motion>                "canvasCAD::setStroke    $cv %x %y"
-                                bind $cv <ButtonRelease-3>            "canvasCAD::zoomArea    $cv %x %y  $name; $cv configure -cursor arrow"
+                                bind $cv <ButtonRelease-3>          "canvasCAD::zoomArea     $cv %x %y  $name; $cv configure -cursor arrow"
                             }
                 }
                 
@@ -471,9 +471,14 @@ package require tdom
                                         # puts "[$canvasDOMNode asXML]"
                                     return [ getNodeAttribute $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ]
                                 }
+                getPath {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    return [getNodeAttribute $canvasDOMNode Canvas path]
+                                }
                 getNode {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     return [ getNode $canvasDOMNode [lindex $argList 0] ]
                                 }
+                                                
+                                
                     # ------------------------        
                 getFormatSize {     set formatKey       [lindex $argList 0]
                                     return [getFormatSize $formatKey]                                    
@@ -565,7 +570,7 @@ package require tdom
                 centerline {    set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }    
                 polygon    -
                 rectangle -
-                oval    {         set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }        
+                oval    {       set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }        
                 arc -
                 circle    {    
                             set new_args     [ flatten_nestedList $args ]
@@ -676,36 +681,34 @@ package require tdom
             }
             
             switch  -exact -- $type {
-                centerline    { set myItem     [ centerLine            $canvasDOMNode $CoordList  [flatten_nestedList $args] ] }
-                draftLine    -
+                centerline  { set myItem    [ centerLine            $canvasDOMNode $CoordList  [flatten_nestedList $args] ] }
+                draftLine   -
                 line        { set myItem    [ eval $w create line        $CoordList  [flatten_nestedList $args] ] }
                 oval -
-                circle         { set myItem    [ eval $w create oval        $CoordList  [flatten_nestedList $args] ] }
-                arc            { set myItem    [ eval $w create arc         $CoordList  [flatten_nestedList $args] ] }
-                rectangle    { set myItem     [ eval $w create rectangle   $CoordList  [flatten_nestedList $args] ] }
-                polygon        { set myItem     [ eval $w create polygon     $CoordList  [flatten_nestedList $args] ] }
-                text        {     
-                                set font     [ format "%s %s"   $font      $fontSize ]
-                                set myItem     [ eval $w create text          $CoordList     -anchor se \
-                                                                                    -text     \"$myText\"  \
-                                                                                    -font     \"$font\"  \
-                                                                                    [flatten_nestedList $args] ] 
+                circle      { set myItem    [ eval $w create oval        $CoordList  [flatten_nestedList $args] ] }
+                arc         { set myItem    [ eval $w create arc         $CoordList  [flatten_nestedList $args] ] }
+                rectangle   { set myItem    [ eval $w create rectangle   $CoordList  [flatten_nestedList $args] ] }
+                polygon     { set myItem    [ eval $w create polygon     $CoordList  [flatten_nestedList $args] ] }
+                text        { set font      [ format "%s %s"   $font     $fontSize ]
+                              set myItem    [ eval $w create text        $CoordList  -anchor se \
+                                                                                     -text     \"$myText\"  \
+                                                                                     -font     \"$font\"  \
+                                                                                     [flatten_nestedList $args] ] 
                             }            
                 draftText -
-                vectortext    { 
-                                set UnitScale [ get_unitRefScale $stageUnit ]
-                                set pos_x [expr [lindex $CoordList 0]]
-                                set pos_y [expr [lindex $CoordList 1]]                                
-                                vectorfont::setposition  $pos_x $pos_y
+                vectortext  { set UnitScale [ get_unitRefScale $stageUnit ]
+                              set pos_x [expr [lindex $CoordList 0]]
+                              set pos_y [expr [lindex $CoordList 1]]                                
+                              vectorfont::setposition  $pos_x $pos_y
                               set myItem     [vectorfont::drawtext $w $myText]
                             }
-                button {
-                            button $w.button -text "Click button 3 to drag"
-                            $w create window 50 35 \
-                            -window .c.button -anchor w -tags {$w.button}
+                button      {
+                              button $w.button -text "Click button 3 to drag"
+                              $w create window 50 35 \
+                                 -window .c.button -anchor w -tags {$w.button}
                             }
 
-                default        {}
+                default     {}
             }
 
             $w scale $myItem  0 0  $unitScale $unitScale
@@ -719,14 +722,14 @@ package require tdom
             #
         proc dimension {type canvasDOMNode CoordList args} {
                 #tk_messageBox -message "canvasCAD::dimension $CoordList $args"
-            set w            [ getNodeAttribute    $canvasDOMNode    Canvas path    ]            
-            set wScale        [ getNodeAttribute    $canvasDOMNode    Canvas     scale ]            
+            set w           [ getNodeAttribute    $canvasDOMNode    Canvas path    ]            
+            set wScale      [ getNodeAttribute    $canvasDOMNode    Canvas     scale ]            
             set stageScale  [ getNodeAttribute    $canvasDOMNode    Stage    scale ] 
             set stageUnit   [ getNodeAttribute    $canvasDOMNode    Stage    unit  ]
-            set unitScale    [ get_unitRefScale     $stageUnit    ]
-            set moveVector  [ get_BottomLeft     $w ]
-            set CoordList     [ flatten_nestedList $CoordList ]
-            set args         [ flatten_nestedList $args ]
+            set unitScale   [ get_unitRefScale    $stageUnit    ]
+            set moveVector  [ get_BottomLeft      $w ]
+            set CoordList   [ flatten_nestedList  $CoordList ]
+            set args        [ flatten_nestedList  $args ]
             
                 #    set cv_ObjectName [$canvasDOMNode getAttribute id]
                 #    set cv_Object     [ getValue $cv_ObjectName ]

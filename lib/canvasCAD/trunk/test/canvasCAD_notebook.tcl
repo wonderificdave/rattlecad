@@ -14,8 +14,10 @@
 	set WINDOW_Title      "cad_canvasCAD, an extension for canvas"
 
 	  
-	set APPL_ROOT_Dir [file dirname [file dirname [lindex $argv0]]]
-	puts "   \$APPL_ROOT_Dir ... $APPL_ROOT_Dir"
+  set BASE_Dir  [file normalize [file dirname [file normalize $::argv0]]] 
+  set APPL_ROOT_Dir [file dirname $BASE_Dir]
+  puts "   \$BASE_Dir ........ $BASE_Dir"
+  puts "   \$APPL_ROOT_Dir ... $APPL_ROOT_Dir"
 	lappend auto_path "$APPL_ROOT_Dir"
 	  
 	package require 	Tk
@@ -109,7 +111,7 @@
 				$cv03  create   vectortext	{5.0 3.0}  -text "vectorText  5.0 3.0  -size 1"  -size 1		
                 
                 
-                $cv03  readSVG "$APPL_ROOT_Dir/../etc/components/crankset/shimano_FC-M770.svg"                {550 450} 0 {crankset}
+                $cv03  readSVG "$APPL_ROOT_Dir/test/shimano_FC-M770.svg"                {550 450} 0 {crankset}
                 #$cv03  readSVG "shimano_crankset_XT_FC-M770_try.svg"   {250 350} 0 {crankset}
 	
 	
@@ -154,7 +156,47 @@
             $cv04  create   vectortext	{50.0 30.0}  -text "vectorText  50.0 30.0  -size 10"  -size 10
             $cv04  create   vectortext	{50.0 60.0}  -text "vectorText  Sonderzeichen abc°^Ø±"  -size 10
 	
-	
+            #set moveButton [button .bt_move -text "Test Button"]
+            #set id [$cv04 create window 100 100 -window $moveButton]
+            #rectangle   {4.5 3.1 6.2 5.0 }  -tags {Line_01}  -fill violet   -width 2
+            puts " -> Canvas $cv04"
+            set myCanvas [$cv04 getPath]
+            puts "   [$cv04 getPath] .. $myCanvas"
+            #button .b -text "Test Button"
+            #set id [$myCanvas create window 100 100 -window .b]
+            
+            
+            
+            # set id0 [$myCanvas  create   rectangle   {345 131 372 160}  -fill violet   -width 2]
+            set id  [$myCanvas  create   rectangle   {245 131 262 150}  -tags {__dragObject__  abcd efghijk}  -fill violet   -width 2]
+            $myCanvas addtag __Content__ withtag $id
+              # puts " -> rectangle $id"
+            
+            set objectIDs [$myCanvas gettags $id] 
+              # puts " -> rectangle $objectIDs"
+            
+            set oldX 0
+            set oldY 0
+            bind $id <1> {set oldX %x ; set oldY %y}
+            bind $id <B1-Motion> {%W move current [expr %x-$oldX] [expr %y-$oldY]}
+            
+            
+            bind $id <ButtonPress-3> {
+                puts "   ... bind <1>"
+                set ::x %X
+                set ::y %Y
+            }
+            bind $id <3> {
+                puts "   ... bind <3>"
+                set ::x %X
+                set ::y %Y
+            }
+            #bind $id <Control-B1-Motion> [list drag.canvas.item $myCanvas $id %X %Y]
+            
+            #bindtag $objectID 
+            #puts "bindtags [bindtags $myCanvas]"
+            #puts "bindtags [bindtags $myCanvas $objectID]"
+            
 		# --------------------------------------------
 				# 	final
 			#.f.nb select .f.nb.f1
@@ -177,6 +219,17 @@
 	}
 			
 			
-			
+    proc drag.canvas.item {canWin item newX newY} {
+        puts "drag.canvas.item"
+        set xDiff [expr {$newX - $::x}]
+        set yDiff [expr {$newY - $::y}]
+    
+        set ::x $newX
+        set ::y $newY
+    
+        puts "$xDiff -> $newX"
+        puts "$yDiff -> $newY"
+        $canWin move $item $xDiff $yDiff
+    }			
 			
 

@@ -72,6 +72,15 @@
 			set node [$node selectNodes $pathString ]
 			return [$node getAttribute $attribute]
 	}
+	
+	proc canvasCAD::getCanvasDOMNode {pathString} {
+        variable __packageRoot
+          # puts [$__packageRoot asXML]
+        set  canvasNode [$__packageRoot find path $pathString]
+          # puts [$canvasNode asXML]
+        set canvasID [$canvasNode parentNode ]
+        return $canvasID
+	}
 
 	
 	#-------------------------------------------------------------------------

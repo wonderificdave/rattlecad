@@ -14,10 +14,15 @@
   set WINDOW_Title      "cad_canvasCAD, an extension for canvas"
 
   
-  set APPL_ROOT_Dir [file dirname [lindex $argv0]]
- 
-  lappend auto_path "$APPL_ROOT_Dir/_canvasCAD"
-  lappend auto_path "$APPL_ROOT_Dir/app-rattleCAD"
+  set BASE_Dir  [file normalize [file dirname [file normalize $::argv0]]] 
+  set APPL_ROOT_Dir [file dirname $BASE_Dir]
+  puts "   \$BASE_Dir ........ $BASE_Dir"
+  puts "   \$APPL_ROOT_Dir ... $APPL_ROOT_Dir"
+  lappend auto_path "$APPL_ROOT_Dir" 
+  lappend auto_path "$APPL_ROOT_Dir/../appUtil"
+  lappend auto_path "$APPL_ROOT_Dir/../bikeGeometry"
+  lappend auto_path "$APPL_ROOT_Dir/../extSummary"
+  lappend auto_path "$APPL_ROOT_Dir/../rattleCAD_3.4/lib/app-rattleCAD"
   
   package require 	Tk
   package require   canvasCAD
