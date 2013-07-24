@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.21
+ package provide bikeGeometry 0.22
 
  namespace eval bikeGeometry {
 
@@ -458,9 +458,9 @@
                  #
              project::setValue [format "%s(%s)" $_array $_name] value $newValue
              bikeGeometry::set_base_Parameters  
-             puts "" 
+                 # puts "" 
                  # puts "    setValue:  $argv\n" 
-             puts "                [format "%s(%s)" $_array $_name] vs $xpath "
+                 # puts "                [format "%s(%s)" $_array $_name] vs $xpath "
              return $newValue
     }
     #-------------------------------------------------------------------------

@@ -182,7 +182,7 @@
                     }
                     set branch_Name     [$branch nodeName]
                     
-                    puts "         branch_Name:     $branch_Name"
+                      # puts "         branch_Name:     $branch_Name"
 
                     set branch_xPath    [get_xPath $branch]
                     set myArray $branch_Name
@@ -224,7 +224,7 @@
                     }
                     
                     set branch_Name     [$branch nodeName]
-                    puts "         branch_Name:     $branch_Name"
+                      # puts "         branch_Name:     $branch_Name"
                     set branch_xPath    [get_xPath $branch]
                     set myArray $branch_Name
 
