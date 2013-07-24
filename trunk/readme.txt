@@ -1,8 +1,21 @@
 
+3.4.00.52  - 2013.07.19
+-------------------------------------------------------------------------------
+    debug/Feature:
+        ... add additional control to edit values of single bends
+                curved chainstay  
+
+
+3.4.00.51  - 2013.07.23
+-------------------------------------------------------------------------------
+    feature:
+        ... accelerate update of RearMockup on edit of curved ChainStay
+
+
 3.4.00.50  - 2013.07.19
 -------------------------------------------------------------------------------
     feature:
-        ... add additional extended edit of curved chainstay (drag circles)   
+        ... add additional extended edit of curved ChainStay (drag circles)   
 
 
 3.4.00.49  - 2013.06.17

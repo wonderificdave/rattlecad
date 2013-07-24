@@ -407,7 +407,7 @@
 2013.02.06  21:00   23:00    02:00   3.3.06 ... 33 ... handle error on update 3.3.05 files with bent fork blades
 2013.02.07  22:00   23:00    01:00   3.3.06 ... 34 ... startup_image.gif: Bicycle Fame Geometry -> Bicycle Frame Geometry
 --------------------------------------------------------------------------
-                             78,00   898,50        3.3.05.34
+                             78,00   898,50        3.3.06.34
 
 
 2013.02.17  00:00   00:00    30:00   3.4.00 ... 05 ... migrate to ECLIPSE, refactor code, build starkit with ANT 
@@ -422,7 +422,7 @@
 2013.03.10  00:00   00:00    53:30   3.4.00 ... 29 ... refactor: try modularize applictation -> appBike
 2013.03.10  14:00   17:00    03:00   3.4.00 ... 30 ... back to 3.4.00.28, runTime-Report in info-Tab
 --------------------------------------------------------------------------
-                            158,00   898,50        3.3.05.34
+                            161:30  1060,00        3.4.00.30
                                                
                             
 2013.04.15  21:00   24:00    03:00   3.4.00 ... 33 ... %.2f precision in drafting tab
@@ -437,5 +437,9 @@
 2013.05.18  15:00   03:00    10:00   3.4.00 ... 44 ... .../_style/simplify_SVG.tcl
 2013.05.18  11:00   12:00    02:00   3.4.00 ... 46 ... run tools out of rattleCAD (simplify_SVG.tcl. chainWheel_SVG.tcl)
 2013.05.19  23:00   06:00    07:00   3.4.00 ... 47 ... debug .../_style/simplify_SVG.tcl
+2013.07.19  00:00   00:00    40:00   3.4.00 ... 50 ... extended edit of curved chainstay
+--------------------------------------------------------------------------
+                            104:30  1164,50        3.4.00.30
 
-
+2013.07.23  21:30   02:30    04:00   3.4.00 ... 52 ... update edit of curved chainstay
+                            

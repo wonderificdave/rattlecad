@@ -214,8 +214,8 @@
                # -- create tubeProfile Edit
                # -- create centerLine Edit
             switch -exact $project::Rendering(ChainStay) {
-                   {bent} { create_tubeProfile_Edit  {0 145}
-                            create_centerLine_Edit   $ChainStay(ctrLines) {0 110}
+                   {bent} { create_centerLine_Edit   $ChainStay(ctrLines) {0 110}
+                            create_tubeProfile_Edit  {0 145}
                           }
                    default {create_tubeProfile_Edit  {0  95}
                           }
@@ -395,6 +395,7 @@
             
             return
     }
+
     proc cv_custom::create_DropOut {} {   
             upvar  1 cv_Name    ext_cvName              
             upvar  1 Length     ext_Length
@@ -419,6 +420,7 @@
                 set pointList           [ list $x1 [expr -1*$y1] $x2 [expr -1*$y2] ]
             $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
     }
+
     proc cv_custom::create_BrakeDisc {} {
           upvar  1 cv_Name    ext_cvName              
           upvar  1 Length     ext_Length
@@ -467,7 +469,8 @@
 
           return $object
     }
-   
+
+
     proc cv_custom::create_CrankArm {} {
             upvar  1 cv_Name            ext_cvName
             upvar  1 stageScale         ext_stageScale
@@ -564,6 +567,7 @@
            
             return
     }
+
     proc cv_custom::create_ClearArea {} {
             upvar  1 cv_Name    ext_cvName
             upvar  1 stageScale ext_stageScale
@@ -665,8 +669,7 @@
                                                 Rendering(RearMockup/CassetteClearance) }            {ChainStay:  Area}]                    
              return
     }                   
-            
-            
+ 
     proc cv_custom::create_ControlCurves {} {
             upvar  1 cv_Name    ext_cvName
             upvar  1 stageScale ext_stageScale
@@ -703,7 +706,6 @@
      
             return
     }
-      
 
     proc cv_custom::create_tubeProfile_Edit {offset} {
           upvar  1 cv_Name    ext_cvName 
@@ -820,6 +822,7 @@
         $ext_cvName bind  $_dim_w2    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_02) ]
         $ext_cvName bind  $_dim_w3    <Double-ButtonPress-1>  [list projectUpdate::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_03) ]
     }
+
     proc cv_custom::create_centerLine_Edit {ctrLines offset} {
           variable ctrl_Points
           
@@ -844,7 +847,6 @@
         
         set textPosition [vectormath::addVector $offset  [list -70 -2.5]]
         set item  [$ext_cvName create draftText $textPosition -text "ChainStay CenterLine" -size [expr 5*$ext_stageScale]]
-        # set item  [$ext_cvName create draftText $textPosition -text "ChainStay Profile" -size [expr 5*$ext_stageScale]]
         $ext_cvName    addtag __CenterLine__ withtag  $item
 
 
@@ -880,27 +882,37 @@
         set base_p5 [list [lindex $ctrl_p5 0] [lindex $base_p0 1]]
         # -- draw base line
         set base_Line   [$ext_cvName create centerline [appUtil::flatten_nestedList $base_p0 $base_p5]   -tags __CenterLine__   -fill gray50]
-                        
-            # -- draw control areas
-        set ctrlArea_01 [$ext_cvName create circle     $ctrl_Points(1)    -radius 10    -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_02 [$ext_cvName create circle     $ctrl_Points(2)    -radius 10    -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_03 [$ext_cvName create circle     $ctrl_Points(3)    -radius 10    -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_04 [$ext_cvName create circle     $ctrl_Points(4)    -radius 10    -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_05 [$ext_cvName create circle     $ctrl_Points(5)    -radius 10    -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        
+        
+        
+            # -- draw edit areas
+        set editArea_01 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)]                                    
+        set editArea_02 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)]                                    
+        set editArea_03 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)]                                    
+        set editArea_04 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)]                                    
+                                
+            # -- draw drag areas
+        set ctrlArea_01 [$ext_cvName create circle     $ctrl_Points(1)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_02 [$ext_cvName create circle     $ctrl_Points(2)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_03 [$ext_cvName create circle     $ctrl_Points(3)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_04 [$ext_cvName create circle     $ctrl_Points(4)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_05 [$ext_cvName create circle     $ctrl_Points(5)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
 
-        set ctrlArea_11 [$ext_cvName create circle     $ctrl_Points(1)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_12 [$ext_cvName create circle     $ctrl_Points(2)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_13 [$ext_cvName create circle     $ctrl_Points(3)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_14 [$ext_cvName create circle     $ctrl_Points(4)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_15 [$ext_cvName create circle     $ctrl_Points(5)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-                                            
-            
             # -- draw control Lines
         set _obj_line_01  [$ext_cvName  create   line [appUtil::flatten_nestedList $p0 $p1]   -tags __CenterLine__   -fill orange]
         set _obj_line_02  [$ext_cvName  create   line [appUtil::flatten_nestedList $p2 $p3]   -tags __CenterLine__   -fill orange]
         set _obj_line_03  [$ext_cvName  create   line [appUtil::flatten_nestedList $p4 $p5]   -tags __CenterLine__   -fill orange]
         set _obj_line_04  [$ext_cvName  create   line [appUtil::flatten_nestedList $p6 $p7]   -tags __CenterLine__   -fill orange]
         set _obj_line_05  [$ext_cvName  create   line [appUtil::flatten_nestedList $p8 $p9]   -tags __CenterLine__   -fill orange]
+
+            # -- draw a circle on intersecting vectors
+        $ext_cvName create circle     $ctrl_Points(1)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}
+        $ext_cvName create circle     $ctrl_Points(2)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}
+        $ext_cvName create circle     $ctrl_Points(3)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}
+        $ext_cvName create circle     $ctrl_Points(4)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}
+        $ext_cvName create circle     $ctrl_Points(5)    -radius 0.5   -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}
+        
+                                                                                                        
         
         set _dim_length_01          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p0 $p1 ] \
                                             aligned    [expr -15 * $ext_stageScale]   0 \
@@ -935,13 +947,11 @@
         lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_03
         lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_04
         
-                                     # -- current_cv     object_ID      update_Command                        reference_Name
-        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_01   [namespace current]::move_ctrlPoints  1
-        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_02   [namespace current]::move_ctrlPoints  2
-        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_03   [namespace current]::move_ctrlPoints  3
-        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_04   [namespace current]::move_ctrlPoints  4
-        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_05   [namespace current]::move_ctrlPoints  5
-                                                                                        
+        lib_gui::object_CursorBinding     $ext_cvName    $editArea_01
+        lib_gui::object_CursorBinding     $ext_cvName    $editArea_02
+        lib_gui::object_CursorBinding     $ext_cvName    $editArea_03
+        lib_gui::object_CursorBinding     $ext_cvName    $editArea_04
+        
         
         $ext_cvName bind  $_dim_length_01    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
@@ -975,25 +985,31 @@
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                         FrameTubes(ChainStay/CenterLine/length_05)]
                                         
-        $ext_cvName bind  $ctrlArea_01    <Double-ButtonPress-1>  \
+        $ext_cvName bind  $editArea_01    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_01) \
                                         FrameTubes(ChainStay/CenterLine/radius_01) }     {Chainstay:  Bent 01}]
-        $ext_cvName bind  $ctrlArea_02    <Double-ButtonPress-1>  \
+        $ext_cvName bind  $editArea_02    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_02) \
                                         FrameTubes(ChainStay/CenterLine/radius_02) }     {Chainstay:  Bent 02}]
-        $ext_cvName bind  $ctrlArea_03    <Double-ButtonPress-1>  \
+        $ext_cvName bind  $editArea_03    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_03) \
                                         FrameTubes(ChainStay/CenterLine/radius_03) }     {Chainstay:  Bent 03}]
-        $ext_cvName bind  $ctrlArea_04    <Double-ButtonPress-1>  \
+        $ext_cvName bind  $editArea_04    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_04) \
                                         FrameTubes(ChainStay/CenterLine/radius_04) }     {Chainstay:  Bent 04}]
 
          
-                                        
+                                      # -- current_cv     object_ID      update_Command                        reference_Name
+         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_01   [namespace current]::move_ctrlPoints  1
+         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_02   [namespace current]::move_ctrlPoints  2
+         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_03   [namespace current]::move_ctrlPoints  3
+         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_04   [namespace current]::move_ctrlPoints  4
+         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_05   [namespace current]::move_ctrlPoints  5
+                               
     }
 
     proc cv_custom::get_ChainWheel {z w position} {                    
@@ -1022,6 +1038,8 @@
             set polygon         [ vectormath::addVectorPointList    $position $polygon ]                                                            
             return [list $pt_Clearance_l $polygon $pt_Clearance_r]
     }
+
+
     proc cv_custom::get_BottomBracket {} {   
             upvar  1 cv_Name    ext_cvName              
             upvar  1 Length     ext_Length
@@ -1035,62 +1053,107 @@
             
             return [list $pointList_OutSide $pointList_InSide]
     }
-    
-    proc cv_custom::move_ctrlPoints {id xy} {
-        variable ctrl_Points
-        puts "\n   -------------------------------"
-        puts "    cv_custom::move_ctrlPoints"
-        puts "       id:              $id"
-        puts "       xy:              $xy"
-        puts "   -------------------------------"
-        foreach key [lsort [array names ctrl_Points]] {
-            puts "          $key           $ctrl_Points($key)"
-        }                      
-        puts "   -------------------------------"
-        
-        foreach {x y} $xy break
-        set ctrl_Points($id) [vectormath::addVector $ctrl_Points($id) [list $x [expr -1.0*$y]]]
 
-        set S01_length   [vectormath::length   $ctrl_Points(0) $ctrl_Points(1)]
-        set S02_length   [vectormath::length   $ctrl_Points(1) $ctrl_Points(2)]
-        set S03_length   [vectormath::length   $ctrl_Points(2) $ctrl_Points(3)]
-        set S04_length   [vectormath::length   $ctrl_Points(3) $ctrl_Points(4)]
-        set S05_length   [vectormath::length   $ctrl_Points(4) $ctrl_Points(5)]
-        
-        set S01_orient [vectormath::offsetOrientation $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)]
-        set S02_orient [vectormath::offsetOrientation $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)]
-        set S03_orient [vectormath::offsetOrientation $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)]
-        set S04_orient [vectormath::offsetOrientation $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)]
-        
-        set S01_angle  [expr $S01_orient * (-180 + [vectormath::angle    $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)])]
-        set S02_angle  [expr $S02_orient * (-180 + [vectormath::angle    $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)])]
-        set S03_angle  [expr $S03_orient * (-180 + [vectormath::angle    $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)])]
-        set S04_angle  [expr $S04_orient * (-180 + [vectormath::angle    $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)])]
-        
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/length_01  $S01_length
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/length_02  $S02_length
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/length_03  $S03_length
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/length_04  $S04_length
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/length_05  $S05_length
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/angle_01   $S01_angle
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/angle_02   $S02_angle
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/angle_03   $S03_angle
-        bikeGeometry::set_Value FrameTubes/ChainStay/CenterLine/angle_04   $S04_angle
-        
-        puts "\n   -------------------------------"
-        puts "       -> S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)"
-        puts "       -> S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)"
-        puts "       -> S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)"
-        puts "       -> S04_length   $project::FrameTubes(ChainStay/CenterLine/length_04)"
-        puts "       -> S05_length   $project::FrameTubes(ChainStay/CenterLine/length_05)"
-        puts "       -> S01_angle    $project::FrameTubes(ChainStay/CenterLine/angle_01)"
-        puts "       -> S02_angle    $project::FrameTubes(ChainStay/CenterLine/angle_02)"
-        puts "       -> S03_angle    $project::FrameTubes(ChainStay/CenterLine/angle_03)"
-        puts "       -> S04_angle    $project::FrameTubes(ChainStay/CenterLine/angle_04)"
-        
-        cv_custom::update [lib_gui::current_canvasCAD]
-        
-        return
+    proc cv_custom::create_controlField {cv_Name xy1 xy xy2} {
+            # upvar  1 cv_Name    ext_cvName
+            set CONST_PI $vectormath::CONST_PI
+            set r  8.0
+            set h1  12
+            set h2  15
+            set b1   9
+            set b2  15
+            #set l  [expr $h*2/3]
+            
+            set baseAngle   [vectormath::dirAngle $xy1 $xy] 
+            set xy_orient   [vectormath::offsetOrientation $xy1 $xy $xy2]
+            set xy_angle    [expr $xy_orient * (0 + [vectormath::angle    $xy1 $xy $xy2])]
+                # puts "      \$baseAngle    $baseAngle"
+                # puts "      \$xy_orient    $xy_orient"
+                # puts "      \$xy_angle     $xy_angle"
+            set orientAngle [expr 180 + $baseAngle + 0.5*$xy_angle]
+            set p_01        [vectormath::rotateLine  $xy $h1 $orientAngle]
+            set p_02        [vectormath::rotateLine  $xy [expr $h1 + $h2] $orientAngle]
+           
+            set p_011        [vectormath::rotateLine  $p_01 [expr 0.5*$b1] [expr  90.0 + $orientAngle]]
+            set p_012        [vectormath::rotateLine  $p_01 [expr 0.5*$b1] [expr -90.0 + $orientAngle]]
+            set p_021        [vectormath::rotateLine  $p_02 [expr 0.5*$b2] [expr -90.0 + $orientAngle]]
+            set p_022        [vectormath::rotateLine  $p_02 [expr 0.5*$b2] [expr  90.0 + $orientAngle]]
+            
+            set coordList     [appUtil::flatten_nestedList  $p_011 $p_012    $p_021 $p_022]
+            # set ctrlLine      [$cv_Name create line         $coordList                               -fill orange      -width 1.0   -tags {__CenterLine__}]
+            set ctrlPolygon   [$cv_Name create polygon      $coordList            -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}]
+            set returnObj     $ctrlPolygon
+            return $returnObj
+           
+    }
+
+    proc cv_custom::move_ctrlPoints {id xy} {
+            variable ctrl_Points
+            puts "\n   -------------------------------"
+            puts "    cv_custom::move_ctrlPoints"
+            puts "       id:              $id"
+            puts "       xy:              $xy"
+            puts "   -------------------------------"
+            foreach key [lsort [array names ctrl_Points]] {
+                puts "          $key           $ctrl_Points($key)"
+            }                      
+            puts "   -------------------------------"
+            
+            foreach {x y} $xy break
+            set ctrl_Points($id) [vectormath::addVector $ctrl_Points($id) [list $x [expr -1.0*$y]]]
+    
+            set S01_length   [vectormath::length   $ctrl_Points(0) $ctrl_Points(1)]
+            set S02_length   [vectormath::length   $ctrl_Points(1) $ctrl_Points(2)]
+            set S03_length   [vectormath::length   $ctrl_Points(2) $ctrl_Points(3)]
+            set S04_length   [vectormath::length   $ctrl_Points(3) $ctrl_Points(4)]
+            set S05_length   [vectormath::length   $ctrl_Points(4) $ctrl_Points(5)]
+            
+            set S01_orient [vectormath::offsetOrientation $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)]
+            set S02_orient [vectormath::offsetOrientation $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)]
+            set S03_orient [vectormath::offsetOrientation $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)]
+            set S04_orient [vectormath::offsetOrientation $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)]
+            
+            set S01_angle  [expr $S01_orient * (-180 + [vectormath::angle    $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)])]
+            set S02_angle  [expr $S02_orient * (-180 + [vectormath::angle    $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)])]
+            set S03_angle  [expr $S03_orient * (-180 + [vectormath::angle    $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)])]
+            set S04_angle  [expr $S04_orient * (-180 + [vectormath::angle    $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)])]
+            
+            proc update_ChainStayValue {xPath value} {
+                set lastValue  [bikeGeometry::get_Value $xPath  value]
+                set diffValue  [expr abs($lastValue - $value)]
+                if {$diffValue > 1} { 
+                    puts "            ... update:  $xPath  $lastValue -> $value" 
+                    bikeGeometry::set_Value $xPath  $value
+                } else {
+                    puts "            ... ignore:  $xPath  $lastValue -> $value"
+                }
+            }
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_01  $S01_length
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_02  $S02_length
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_03  $S03_length
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_04  $S04_length
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_05  $S05_length
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_01   $S01_angle
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_02   $S02_angle
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_03   $S03_angle
+            update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_04   $S04_angle
+            
+            puts "\n   -------------------------------"
+            puts "       -> S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)"
+            puts "       -> S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)"
+            puts "       -> S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)"
+            puts "       -> S04_length   $project::FrameTubes(ChainStay/CenterLine/length_04)"
+            puts "       -> S05_length   $project::FrameTubes(ChainStay/CenterLine/length_05)"
+            puts "       -> S01_angle    $project::FrameTubes(ChainStay/CenterLine/angle_01)"
+            puts "       -> S02_angle    $project::FrameTubes(ChainStay/CenterLine/angle_02)"
+            puts "       -> S03_angle    $project::FrameTubes(ChainStay/CenterLine/angle_03)"
+            puts "       -> S04_angle    $project::FrameTubes(ChainStay/CenterLine/angle_04)"
+            
+              #set cv_Name     [lib_gui::current_canvasCAD]
+              #cv_custom::clean_StageContent   $cv_Name
+            cv_custom::update [lib_gui::current_canvasCAD]
+            
+            return
     }
 
