@@ -102,15 +102,6 @@
           # correlates to procedure: event_dragObjects
         variable CANVAS_dragObject
         set CANVAS_dragObject([$cv getPath]/$objectID) [list $command $referenceName]
-          # puts "\n-------------register_dragObject--"
-          # parray CANVAS_dragObject
-          # puts "-------------register_dragObject--\n"
-          # puts "   -> \$cv $cv [$cv getPath]"
-          # ----------------
-          # set cvPath [$cv getPath]
-          # bind $cvPath <2>                        "canvasCAD::dragStart    %x %y"
-          # bind $cvPath <B2-Motion>                "canvasCAD::dragContent  $cvPath $objectID %x %y ; $cvPath configure -cursor arrow"
-          # bind $cvPath <ButtonRelease-2>          "$cvPath configure -cursor arrow"
     }
     
     proc canvasCAD::event_dragObject {cv x y objectID} {
@@ -239,7 +230,7 @@
             set CANVAS_Point(x1) $x
             set CANVAS_Point(y1) $y
             
-            puts "    -> proc canvasCAD::dragContent $w $id $x $y"
+              # puts "    -> proc canvasCAD::dragContent $w $id $x $y"
             $w move $id $xDiff $yDiff
             return
     }
