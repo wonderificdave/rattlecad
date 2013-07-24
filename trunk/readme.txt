@@ -1,9 +1,22 @@
 
-3.4.00.52  - 2013.07.19
+3.4.00.54  - 2013.07.24
 -------------------------------------------------------------------------------
-    debug/Feature:
+    feature:
+        ... additional editable values on editArea for curved ChainStay 
+        ... additional dropout paragon_DR2010_58.svg        
+
+
+3.4.00.53  - 2013.07.24
+-------------------------------------------------------------------------------
+    feature:
+        ... change shape of editArea for curved ChainStay  
+
+
+3.4.00.52  - 2013.07.23
+-------------------------------------------------------------------------------
+    debug/feature:
         ... add additional control to edit values of single bends
-                curved chainstay  
+                curved ChainStay  
 
 
 3.4.00.51  - 2013.07.23

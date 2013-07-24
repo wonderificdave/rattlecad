@@ -892,11 +892,11 @@
         set editArea_04 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)]                                    
                                 
             # -- draw drag areas
-        set ctrlArea_01 [$ext_cvName create circle     $ctrl_Points(1)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_02 [$ext_cvName create circle     $ctrl_Points(2)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_03 [$ext_cvName create circle     $ctrl_Points(3)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_04 [$ext_cvName create circle     $ctrl_Points(4)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_05 [$ext_cvName create circle     $ctrl_Points(5)    -radius  8.0  -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_01 [$ext_cvName create circle     $ctrl_Points(1)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_02 [$ext_cvName create circle     $ctrl_Points(2)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_03 [$ext_cvName create circle     $ctrl_Points(3)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_04 [$ext_cvName create circle     $ctrl_Points(4)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        set ctrlArea_05 [$ext_cvName create circle     $ctrl_Points(5)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
 
             # -- draw control Lines
         set _obj_line_01  [$ext_cvName  create   line [appUtil::flatten_nestedList $p0 $p1]   -tags __CenterLine__   -fill orange]
@@ -988,19 +988,27 @@
         $ext_cvName bind  $editArea_01    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_01) \
-                                        FrameTubes(ChainStay/CenterLine/radius_01) }     {Chainstay:  Bent 01}]
+                                        FrameTubes(ChainStay/CenterLine/radius_01 \
+                                        FrameTubes(ChainStay/CenterLine/length_01 \
+                                        FrameTubes(ChainStay/CenterLine/length_02))) }   {Chainstay:  Bent 01}]
         $ext_cvName bind  $editArea_02    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_02) \
-                                        FrameTubes(ChainStay/CenterLine/radius_02) }     {Chainstay:  Bent 02}]
+                                        FrameTubes(ChainStay/CenterLine/radius_02 \
+                                        FrameTubes(ChainStay/CenterLine/length_02 \
+                                        FrameTubes(ChainStay/CenterLine/length_03))) }   {Chainstay:  Bent 02}]
         $ext_cvName bind  $editArea_03    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_03) \
-                                        FrameTubes(ChainStay/CenterLine/radius_03) }     {Chainstay:  Bent 03}]
+                                        FrameTubes(ChainStay/CenterLine/radius_03 \
+                                        FrameTubes(ChainStay/CenterLine/length_03 \
+                                        FrameTubes(ChainStay/CenterLine/length_04))) }   {Chainstay:  Bent 03}]                                 
         $ext_cvName bind  $editArea_04    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_04) \
-                                        FrameTubes(ChainStay/CenterLine/radius_04) }     {Chainstay:  Bent 04}]
+                                        FrameTubes(ChainStay/CenterLine/radius_04 \
+                                        FrameTubes(ChainStay/CenterLine/length_04 \
+                                        FrameTubes(ChainStay/CenterLine/length_05))) }   {Chainstay:  Bent 04}]
 
          
                                       # -- current_cv     object_ID      update_Command                        reference_Name
@@ -1058,12 +1066,12 @@
             # upvar  1 cv_Name    ext_cvName
             set CONST_PI $vectormath::CONST_PI
             set r  8.0
-            set h1  12
-            set h2  15
-            set b1   9
+            set h1  7
+            set h2  25
+            set b1  40
             set b2  15
-            #set l  [expr $h*2/3]
             
+                # -- get orientation of controlField
             set baseAngle   [vectormath::dirAngle $xy1 $xy] 
             set xy_orient   [vectormath::offsetOrientation $xy1 $xy $xy2]
             set xy_angle    [expr $xy_orient * (0 + [vectormath::angle    $xy1 $xy $xy2])]
@@ -1071,20 +1079,41 @@
                 # puts "      \$xy_orient    $xy_orient"
                 # puts "      \$xy_angle     $xy_angle"
             set orientAngle [expr 180 + $baseAngle + 0.5*$xy_angle]
-            set p_01        [vectormath::rotateLine  $xy $h1 $orientAngle]
-            set p_02        [vectormath::rotateLine  $xy [expr $h1 + $h2] $orientAngle]
-           
-            set p_011        [vectormath::rotateLine  $p_01 [expr 0.5*$b1] [expr  90.0 + $orientAngle]]
-            set p_012        [vectormath::rotateLine  $p_01 [expr 0.5*$b1] [expr -90.0 + $orientAngle]]
-            set p_021        [vectormath::rotateLine  $p_02 [expr 0.5*$b2] [expr -90.0 + $orientAngle]]
-            set p_022        [vectormath::rotateLine  $p_02 [expr 0.5*$b2] [expr  90.0 + $orientAngle]]
             
-            set coordList     [appUtil::flatten_nestedList  $p_011 $p_012    $p_021 $p_022]
-            # set ctrlLine      [$cv_Name create line         $coordList                               -fill orange      -width 1.0   -tags {__CenterLine__}]
-            set ctrlPolygon   [$cv_Name create polygon      $coordList            -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}]
-            set returnObj     $ctrlPolygon
-            return $returnObj
-           
+                # -- get trapez-shape of controlField
+            set x1   $h1
+            set x2   [expr $h1 +$h2]
+            set y11  [expr +0.5 * $b1]
+            set y12  [expr -0.5 * $b1]
+            set y21  [expr +0.5 * $b2]
+            set y22  [expr -0.5 * $b2]
+            
+                # -- get arc of controlField
+            set arcCenter   [vectormath::intersectPoint [list $x1 $y11] [list $x2 $y21]  [list $x1 $y12] [list $x2 $y22] ]
+            set arcAngle    [vectormath::angle          [list $x2 $y21] $arcCenter  [list $x2 $y22] ]
+            
+            set p           [list $x1 $y11]
+            set arcPoints   $p
+            set segmeents   8
+            set i 0
+            while {$i < $segmeents} {
+                set p [vectormath::rotatePoint $arcCenter $p [expr $arcAngle/$segmeents]]
+                lappend arcPoints $p
+                incr i
+                    # puts "    -> $i"
+            }
+            
+                # -- position of controlField
+            set coordList   $arcPoints
+            set coordList   [appUtil::flatten_nestedList $coordList $x2 $y22  $x2 $y21]
+
+            set coordList   [vectormath::addVectorPointList  $xy $coordList]
+            set coordList   [vectormath::rotatePointList     $xy $coordList $orientAngle]
+            set ctrlPolygon [$cv_Name create polygon     $coordList            -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}]
+            set returnObj   $ctrlPolygon
+            
+                # -- return controlField
+            return $returnObj    
     }
 
     proc cv_custom::move_ctrlPoints {id xy} {
