@@ -1,4 +1,12 @@
 
+3.4.00.56  - 2013.07.26
+-------------------------------------------------------------------------------
+    feature:
+        ... additional Binding in BaseConcept to an Edit Window 
+                for Stem, Fork and BottomBracket. After setting values to 0.00 
+                the editable dimensions disappears    
+
+
 3.4.00.55  - 2013.07.26
 -------------------------------------------------------------------------------
     feature:

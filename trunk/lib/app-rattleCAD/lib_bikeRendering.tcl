@@ -1033,31 +1033,31 @@
 
 
             # ------ rearwheel representation
-        $cv_Name create circle     $RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]      -outline gray60 -width 1.0    -tags {__CenterLine__    rearWheel}
+        $cv_Name create circle     $RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]    -outline gray60 -width 1.0    -tags {__CenterLine__    rearWheel}
             # ------ frontwheel representation
-        $cv_Name create circle     $FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]      -outline gray60    -width 1.0    -tags {__CenterLine__    frontWheel}
+        $cv_Name create circle     $FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  -outline gray60    -width 1.0    -tags {__CenterLine__    frontWheel}
 
 
             # ------ headtube extension to ground
-        $cv_Name create centerline [ appUtil::flatten_nestedList  $Steerer_Fork   $Steerer_Ground  ]          -fill gray60                 -tags __CenterLine__
+        $cv_Name create centerline [ appUtil::flatten_nestedList  $Steerer_Fork       $Steerer_Ground   ]    -fill gray60                 -tags __CenterLine__
             # ------ seattube extension to ground
-        $cv_Name create centerline [ appUtil::flatten_nestedList  $SeatTube_BBracket  $SeatTube_Ground ]    -fill gray60                 -tags {__CenterLine__    seattube_center}
+        $cv_Name create centerline [ appUtil::flatten_nestedList  $SeatTube_BBracket  $SeatTube_Ground  ]    -fill gray60                 -tags {__CenterLine__    seattube_center}
 
 
             # ------ chainstay
-        $cv_Name create line     [ appUtil::flatten_nestedList  $RearWheel             $BottomBracket     ]      -fill gray60  -width 1.0      -tags {__CenterLine__    chainstay}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $RearWheel            $BottomBracket    ]    -fill gray60  -width 1.0      -tags {__CenterLine__    chainstay}
             # ------ seattube
-        $cv_Name create line     [ appUtil::flatten_nestedList  $SeatPost_SeatTube   $SeatTube_BBracket ]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $SeatPost_SeatTube    $SeatTube_BBracket]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
             # ------ seatstay
-        $cv_Name create line     [ appUtil::flatten_nestedList  $SeatStay_SeatTube   $RearWheel         ]      -fill gray60  -width 1.0      -tags {__CenterLine__     seatstay}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $SeatStay_SeatTube    $RearWheel        ]    -fill gray60  -width 1.0      -tags {__CenterLine__    seatstay}
             # ------ toptube
-        $cv_Name create line     [ appUtil::flatten_nestedList  $TopTube_SeatTube    $TopTube_Steerer ]      -fill gray60  -width 1.0      -tags {__CenterLine__    toptube}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $TopTube_SeatTube     $TopTube_Steerer  ]    -fill gray60  -width 1.0      -tags {__CenterLine__    toptube}
             # ------ steerer / stem
         $cv_Name create line     [ appUtil::flatten_nestedList  $HandleBar  $Steerer_Stem  $Steerer_Fork]    -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
             # ------ downtube
-        $cv_Name create line     [ appUtil::flatten_nestedList  $DownTube_Steerer     $BB_Position    ]          -fill gray60  -width 1.0      -tags {__CenterLine__    downtube}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $DownTube_Steerer     $BB_Position      ]    -fill gray60  -width 1.0      -tags {__CenterLine__    downtube}
             # ------ fork
-        $cv_Name create line     [ appUtil::flatten_nestedList  $Steerer_Fork         $FrontWheel        ]          -fill gray60  -width 1.0      -tags {__CenterLine__    fork}
+        $cv_Name create line     [ appUtil::flatten_nestedList  $Steerer_Fork         $FrontWheel       ]    -fill gray60  -width 1.0      -tags {__CenterLine__    fork}
 
             # ------ seatpost
         $cv_Name create line     [ appUtil::flatten_nestedList  $Saddle $SeatPost_Saddle $SeatPost_SeatTube] -fill gray60  -width 0.5      -tags {__CenterLine__    saddlemount}
@@ -1070,7 +1070,7 @@
 
             # ------ crankset representation
         $cv_Name create arc     $BottomBracket  -radius $CrankSetLength      -start -95  -extent 170  -style arc  -outline gray \
-                                                                                                                          -width 1.0      -tags {__CenterLine__    crankset}
+                                                                                                                           -width 1.0      -tags {__CenterLine__    crankset}
             # ------ saddle proposal
         $cv_Name create arc     $BottomBracket  -radius $Saddle_PropRadius   -start [expr 177 - $SeatTube_Angle]   -extent 6   -style arc  -outline darkmagenta \
                                                                                                                           -width 1.0      -tags {__CenterLine__    saddleproposal}
@@ -1100,7 +1100,8 @@
             set highlight(colour) red
             set highlight(width)  2.0
                 # --- create position points
-            $cv_Name create circle  $BottomBracket      -radius 20  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $BottomBracket      -radius 20  -outline $highlight(colour)     -tags {__CenterLine__  bottombracket}  \
+                                                                                                                            -width $highlight(width)
             $cv_Name create circle  $HandleBar          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
             $cv_Name create circle  $Saddle             -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
             $cv_Name create circle  $FrontWheel         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
@@ -1137,6 +1138,31 @@
         foreach item $excludeList {
             catch {$cv_Name delete $item } error
         }
+        
+                # --- bindings -----------
+        foreach item {steerer fork bottombracket} {
+            lib_gui::object_CursorBinding     $cv_Name    $item 
+        }
+        
+        $cv_Name bind  steerer        <Double-ButtonPress-1>  \
+                [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                            {   Component(Stem/Angle)  \
+                                Component(Stem/Length) \
+                                Component(Fork/Height) \
+                                Component(Fork/Rake) }                {Steerer/Fork:  Settings}]
+
+        $cv_Name bind  fork           <Double-ButtonPress-1>  \
+                [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                            {   Component(Stem/Angle)  \
+                                Component(Stem/Length) \
+                                Component(Fork/Height) \
+                                Component(Fork/Rake) }                {Steerer/Fork:  Settings}]
+
+        $cv_Name bind  bottombracket  <Double-ButtonPress-1>  \
+                [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                            {   Custom(BottomBracket/Depth) \
+                                Result(Length/BottomBracket/Height) } {BottomBracket:  Settings}]
+   
     }
 
 
