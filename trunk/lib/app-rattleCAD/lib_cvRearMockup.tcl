@@ -874,6 +874,7 @@
         set ctrl_Points(3)  [vectormath::intersectPoint $p4 $p5  $p6 $p7]  
         set ctrl_Points(4)  [vectormath::intersectPoint $p6 $p7  $p8 $p9] 
         set ctrl_Points(5)  $p9 
+        set ctrl_Points(6)  [vectormath::addVector $p9 {20 0}]
         
             # $project::Lugs(BottomBracket/ChainStay/Offset_TopView
             # [ expr 0.5 * $project::Component(Wheel/Rear/HubWidth) ]
@@ -886,18 +887,20 @@
         
         
             # -- draw edit areas
-        set editArea_01 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)]                                    
-        set editArea_02 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)]                                    
-        set editArea_03 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)]                                    
-        set editArea_04 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)]                                    
-                                
+        set ctrlArea_01 [$ext_cvName create circle       $ctrl_Points(1)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__}]
+        set ctrlArea_02 [$ext_cvName create circle       $ctrl_Points(2)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__}]
+        set ctrlArea_03 [$ext_cvName create circle       $ctrl_Points(3)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__}]
+        set ctrlArea_04 [$ext_cvName create circle       $ctrl_Points(4)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__}]
+            # set ctrlArea_05 [$ext_cvName create circle       $ctrl_Points(5)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__}]
+        
             # -- draw drag areas
-        set ctrlArea_01 [$ext_cvName create circle     $ctrl_Points(1)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_02 [$ext_cvName create circle     $ctrl_Points(2)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_03 [$ext_cvName create circle     $ctrl_Points(3)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_04 [$ext_cvName create circle     $ctrl_Points(4)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-        set ctrlArea_05 [$ext_cvName create circle     $ctrl_Points(5)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
-
+        set ctrlArea_11 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)  __dragObject__]                                    
+        set ctrlArea_12 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)  __dragObject__]                                    
+        set ctrlArea_13 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)  __dragObject__]                                    
+        set ctrlArea_14 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)  __dragObject__]                                    
+        set ctrlArea_15 [$ext_cvName create circle       $ctrl_Points(5)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+            # set ctrlArea_15 [cv_custom::create_controlField  $ext_cvName  $ctrl_Points(4) $ctrl_Points(5) $ctrl_Points(6)  __dragObject__]                                    
+                                                                                                                                                
             # -- draw control Lines
         set _obj_line_01  [$ext_cvName  create   line [appUtil::flatten_nestedList $p0 $p1]   -tags __CenterLine__   -fill orange]
         set _obj_line_02  [$ext_cvName  create   line [appUtil::flatten_nestedList $p2 $p3]   -tags __CenterLine__   -fill orange]
@@ -947,10 +950,19 @@
         lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_03
         lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_04
         
-        lib_gui::object_CursorBinding     $ext_cvName    $editArea_01
-        lib_gui::object_CursorBinding     $ext_cvName    $editArea_02
-        lib_gui::object_CursorBinding     $ext_cvName    $editArea_03
-        lib_gui::object_CursorBinding     $ext_cvName    $editArea_04
+        lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_11
+        lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_12
+        lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_13
+        lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_14
+        lib_gui::object_CursorBinding     $ext_cvName    $ctrlArea_15
+        
+        
+                                     # -- current_cv     object_ID      update_Command                        reference_Name
+        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_11   [namespace current]::move_ctrlPoints  1
+        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_12   [namespace current]::move_ctrlPoints  2
+        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_13   [namespace current]::move_ctrlPoints  3
+        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_14   [namespace current]::move_ctrlPoints  4
+        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_15   [namespace current]::move_ctrlPoints  5
         
         
         $ext_cvName bind  $_dim_length_01    <Double-ButtonPress-1>  \
@@ -985,38 +997,32 @@
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                         FrameTubes(ChainStay/CenterLine/length_05)]
                                         
-        $ext_cvName bind  $editArea_01    <Double-ButtonPress-1>  \
+        $ext_cvName bind  $ctrlArea_01    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_01) \
                                         FrameTubes(ChainStay/CenterLine/radius_01 \
                                         FrameTubes(ChainStay/CenterLine/length_01 \
                                         FrameTubes(ChainStay/CenterLine/length_02))) }   {Chainstay:  Bent 01}]
-        $ext_cvName bind  $editArea_02    <Double-ButtonPress-1>  \
+        $ext_cvName bind  $ctrlArea_02    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_02) \
                                         FrameTubes(ChainStay/CenterLine/radius_02 \
                                         FrameTubes(ChainStay/CenterLine/length_02 \
                                         FrameTubes(ChainStay/CenterLine/length_03))) }   {Chainstay:  Bent 02}]
-        $ext_cvName bind  $editArea_03    <Double-ButtonPress-1>  \
+        $ext_cvName bind  $ctrlArea_03    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_03) \
                                         FrameTubes(ChainStay/CenterLine/radius_03 \
                                         FrameTubes(ChainStay/CenterLine/length_03 \
                                         FrameTubes(ChainStay/CenterLine/length_04))) }   {Chainstay:  Bent 03}]                                 
-        $ext_cvName bind  $editArea_04    <Double-ButtonPress-1>  \
+        $ext_cvName bind  $ctrlArea_04    <Double-ButtonPress-1>  \
                         [list projectUpdate::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_04) \
                                         FrameTubes(ChainStay/CenterLine/radius_04 \
                                         FrameTubes(ChainStay/CenterLine/length_04 \
                                         FrameTubes(ChainStay/CenterLine/length_05))) }   {Chainstay:  Bent 04}]
 
-         
-                                      # -- current_cv     object_ID      update_Command                        reference_Name
-         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_01   [namespace current]::move_ctrlPoints  1
-         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_02   [namespace current]::move_ctrlPoints  2
-         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_03   [namespace current]::move_ctrlPoints  3
-         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_04   [namespace current]::move_ctrlPoints  4
-         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_05   [namespace current]::move_ctrlPoints  5
+
                                
     }
 
@@ -1062,14 +1068,14 @@
             return [list $pointList_OutSide $pointList_InSide]
     }
 
-    proc cv_custom::create_controlField {cv_Name xy1 xy xy2} {
+    proc cv_custom::create_controlField {cv_Name xy1 xy xy2 {tag {}}} {
             # upvar  1 cv_Name    ext_cvName
             set CONST_PI $vectormath::CONST_PI
-            set r  8.0
-            set h1  7
-            set h2  25
-            set b1  40
-            set b2  15
+            set r    8.0
+            set h1  15
+            set h2  20
+            set b1  35
+            set b2  05
             
                 # -- get orientation of controlField
             set baseAngle   [vectormath::dirAngle $xy1 $xy] 
@@ -1109,7 +1115,7 @@
 
             set coordList   [vectormath::addVectorPointList  $xy $coordList]
             set coordList   [vectormath::rotatePointList     $xy $coordList $orientAngle]
-            set ctrlPolygon [$cv_Name create polygon     $coordList            -outline orange    -fill lightgray   -width 1.0   -tags {__CenterLine__}]
+            set ctrlPolygon [$cv_Name create polygon     $coordList   -outline orange    -fill lightgray   -width 1.0   -tags [list __CenterLine__ $tag]]
             set returnObj   $ctrlPolygon
             
                 # -- return controlField
