@@ -858,21 +858,21 @@
             # puts "    -> $i"
         }
           # puts " .. ChainStay - Control Curve: [llength $ctrLines]"
-          # puts " .. ChainStay - Control Curve: \n        -> $p1 \n        -> $p3 \n        -> $p5 \n        -> $p7 \n        -> $p9"
-          # puts " .. ChainStay - Control Curve: \n        -> $p0 \n        -> $p2 \n        -> $p4 \n        -> $p6 \n        -> $p8"
-                        
+          # puts " .. ChainStay - Control Curve: \n        -> p0: $p0 \n        -> p2: $p2 \n        -> p4: $p4 \n        -> p6: $p6 \n        -> p8: $p8"
+          # puts " .. ChainStay - Control Curve: \n        -> p1: $p1 \n        -> p3: $p3 \n        -> p5: $p5 \n        -> p7: $p7 \n        -> p9: $p9"
+                                     
         set ctrl_p0 $p0
-        set ctrl_p1 [vectormath::intersectPoint $p0 $p1  $p2 $p3]
-        set ctrl_p2 [vectormath::intersectPoint $p2 $p3  $p4 $p5]
-        set ctrl_p3 [vectormath::intersectPoint $p4 $p5  $p6 $p7]
-        set ctrl_p4 [vectormath::intersectPoint $p6 $p7  $p8 $p9]
+        set ctrl_p1 [vectormath::intersectPoint $p0 $p1  $p2 $p3 center]
+        set ctrl_p2 [vectormath::intersectPoint $p2 $p3  $p4 $p5 center]
+        set ctrl_p3 [vectormath::intersectPoint $p4 $p5  $p6 $p7 center]
+        set ctrl_p4 [vectormath::intersectPoint $p6 $p7  $p8 $p9 center]
         set ctrl_p5 $p9
         
         set ctrl_Points(0)  $p0  
-        set ctrl_Points(1)  [vectormath::intersectPoint $p0 $p1  $p2 $p3]  
-        set ctrl_Points(2)  [vectormath::intersectPoint $p2 $p3  $p4 $p5]  
-        set ctrl_Points(3)  [vectormath::intersectPoint $p4 $p5  $p6 $p7]  
-        set ctrl_Points(4)  [vectormath::intersectPoint $p6 $p7  $p8 $p9] 
+        set ctrl_Points(1)  [vectormath::intersectPoint $p0 $p1  $p2 $p3 center]  
+        set ctrl_Points(2)  [vectormath::intersectPoint $p2 $p3  $p4 $p5 center]  
+        set ctrl_Points(3)  [vectormath::intersectPoint $p4 $p5  $p6 $p7 center]  
+        set ctrl_Points(4)  [vectormath::intersectPoint $p6 $p7  $p8 $p9 center] 
         set ctrl_Points(5)  $p9 
         set ctrl_Points(6)  [vectormath::addVector $p9 {20 0}]
         
@@ -1080,15 +1080,16 @@
                 # -- get orientation of controlField
             set baseAngle   [vectormath::dirAngle $xy1 $xy] 
             set xy_orient   [vectormath::offsetOrientation $xy1 $xy $xy2]
+            if {$xy_orient == 0} {set xy_orient 1}
             set xy_angle    [expr $xy_orient * (0 + [vectormath::angle    $xy1 $xy $xy2])]
                 # puts "      \$baseAngle    $baseAngle"
                 # puts "      \$xy_orient    $xy_orient"
-                # puts "      \$xy_angle     $xy_angle"
+                 puts "      \$xy_angle     $xy_angle"
             set orientAngle [expr 180 + $baseAngle + 0.5*$xy_angle]
             
                 # -- get trapez-shape of controlField
             set x1   $h1
-            set x2   [expr $h1 +$h2]
+            set x2   [expr  $h1 + $h2]
             set y11  [expr +0.5 * $b1]
             set y12  [expr -0.5 * $b1]
             set y21  [expr +0.5 * $b2]
