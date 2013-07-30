@@ -258,9 +258,9 @@
                                   $S01_radius $S02_radius $S03_radius $S04_radius]
                                   
               # -- get smooth centerLine
-          set retValues [lib_tube::init_centerLine $centerLineDef] 
-          set centerLine  [lindex $retValues 0]
-          set ctrLines    [lindex $retValues 1]
+          set retValues     [lib_tube::init_centerLine $centerLineDef] 
+          set centerLine    [lindex $retValues 0]
+          set ctrLines      [lindex $retValues 1]
                # puts "  -> \$centerLine $centerLine"
                # puts "  -> \$centerLine [llength $centerLine]"
                # exit
@@ -303,144 +303,7 @@
           
           return [list $centerLine $outLine $ctrLines]
     }
-    proc bikeGeometry::___get_ChainStay_remove {{type {bent}}} {   
-              
-            set Length(01)              [ expr 0.5 * $project::Lugs(BottomBracket/Diameter/inside) ]
-            set Length(02)              [ expr 0.5 * $project::Lugs(BottomBracket/Width) ]
-            set Length(03)              [ expr $Length(02) - $project::Lugs(BottomBracket/ChainStay/Offset_TopView) ]
-            set Length(04)              [ expr 0.5 * $project::Component(Wheel/Rear/HubWidth) ]
-            set Length(05)              [ expr 0.5 * $project::Component(Wheel/Rear/HubWidth) + $project::Lugs(RearDropOut/ChainStay/Offset_TopView)]
-            set Length(ChainStay)       $project::Custom(WheelPosition/Rear)
-              puts "  -> \$Length(01)           $Length(01)"
-              puts "  -> \$Length(02)           $Length(02)"
-              puts "  -> \$Length(03)           $Length(03)"
-              puts "  -> \$Length(04)           $Length(04)"
-              puts "  -> \$Length(05)           $Length(05)"                                  
-              puts "  -> \$Length(ChainStay)    $Length(ChainStay)"                                  
-              
-            set Center(RearHub)         [ list [expr -1 * $Length(ChainStay)] 0 ]
-            set Center(ChainStay_DO)    [ vectormath::addVector $Center(RearHub) [ list $project::Lugs(RearDropOut/ChainStay/Offset)  [ expr $Length(04) + $project::Lugs(RearDropOut/ChainStay/Offset_TopView)] ] ]
-            set ChainStay(00)           [ list [expr -1.0 * $Length(01)] $Length(03) ] 
-            set Center(ChainStay_00)    [ vectormath::cathetusPoint $Center(ChainStay_DO) $ChainStay(00) [expr 0.5 * $project::FrameTubes(ChainStay/WidthBB)] opposite ]
-              puts "  -> \$Center(ChainStay_DO) $Center(ChainStay_DO)"
-              
-                   
-            set p_CS_BB [list [expr -1.0 * $Length(01)] $Length(03)]                   
-                # puts "   \$p_CS_BB                   $p_CS_BB"
-    
-    
-                # -- tube profile
-            set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
-            set profile_x01   $project::FrameTubes(ChainStay/Profile/length_01)
-            set profile_y01   $project::FrameTubes(ChainStay/Profile/width_01)
-            set profile_x02   $project::FrameTubes(ChainStay/Profile/length_02)
-            set profile_y02   $project::FrameTubes(ChainStay/Profile/width_02)
-            set profile_x03   $project::FrameTubes(ChainStay/Profile/length_03)
-            set profile_y03   $project::FrameTubes(ChainStay/Profile/width_03)
-    
-    
-            set profileDef {}
-              lappend profileDef [list 0            $profile_y00]
-              lappend profileDef [list $profile_x01 $profile_y01]
-              lappend profileDef [list $profile_x02 $profile_y02]
-              lappend profileDef [list $profile_x03 $profile_y03]        
-                # puts "  -> \$profileDef $profileDef"
-            
-                # -- set profile of straight, unbent tubeprofile
-            set tubeProfile [lib_tube::init_tubeProfile $profileDef]                                    
-                # puts "  -> \$tubeProfile $tubeProfile"
-    
-    
-                # -- tube centerline
-            switch -exact $type {
-              {straight} {
-                    set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
-                    set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
-                    set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
-                    set S04_length   $project::FrameTubes(ChainStay/CenterLine/length_04)
-                    set S05_length   $project::FrameTubes(ChainStay/CenterLine/length_05)
-                    set S01_angle      0
-                    set S02_angle      0
-                    set S03_angle      0
-                    set S04_angle      0
-                    set S01_radius   320
-                    set S02_radius   320
-                    set S03_radius   320
-                    set S04_radius   320
-                    # set lib_tube::arcPrecission 50
-                  }
-              default {
-                      # -- bent                                                
-                    set S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)
-                    set S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)
-                    set S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)
-                    set S04_length   $project::FrameTubes(ChainStay/CenterLine/length_04)
-                    set S05_length   $project::FrameTubes(ChainStay/CenterLine/length_05)
-                    set S01_angle    $project::FrameTubes(ChainStay/CenterLine/angle_01)
-                    set S02_angle    $project::FrameTubes(ChainStay/CenterLine/angle_02)
-                    set S03_angle    $project::FrameTubes(ChainStay/CenterLine/angle_03)
-                    set S04_angle    $project::FrameTubes(ChainStay/CenterLine/angle_04)
-                    set S01_radius   $project::FrameTubes(ChainStay/CenterLine/radius_01)
-                    set S02_radius   $project::FrameTubes(ChainStay/CenterLine/radius_02)
-                    set S03_radius   $project::FrameTubes(ChainStay/CenterLine/radius_03)
-                    set S04_radius   $project::FrameTubes(ChainStay/CenterLine/radius_04)
-                    # set lib_tube::arcPrecission 5
-                  }
-            }
-            
-            set orient_select  left
-            set centerLineDef [list $S01_length $S02_length $S03_length $S04_length $S05_length \
-                                    $S01_angle  $S02_angle  $S03_angle  $S04_angle \
-                                    $S01_radius $S02_radius $S03_radius $S04_radius]
-                                    
-                # -- get smooth centerLine
-            set retValues [lib_tube::init_centerLine $centerLineDef] 
-            set centerLine  [lindex $retValues 0]
-            set ctrLines    [lindex $retValues 1]
-                 # puts "  -> \$centerLine $centerLine"
-                 # puts "  -> \$centerLine [llength $centerLine]"
-                 # exit
-                # -- get shape of tube
-            set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
-            set outLineRight  [lib_tube::get_tubeShape    $centerLine $tubeProfile right ]
-            set outLine       [appUtil::flatten_nestedList $outLineLeft $outLineRight]
-                # puts "\n    -> \$outLineLeft   $outLineLeft"
-                # puts "\n    -> \$outLineRight  $outLineRight"
-                # puts "\n    -> \$outLine       $outLine "
-            
-            
-                # get orientation of tube
-            set length    [vectormath::length   $Center(ChainStay_DO) $p_CS_BB]
-            set angle     [vectormath::dirAngle $Center(ChainStay_DO) $p_CS_BB]
-                  # puts "  -> \$length $length"
-                  # puts "  -> \$angle $angle"
-            set point_IS  [lib_tube::get_shapeInterSection $outLineLeft $length]       
-            set angleIS   [vectormath::dirAngle {0 0} $point_IS]
-            set angleRotation [expr $angle - $angleIS]
-                  # puts "  -> \$point_IS $point_IS"
-                  # puts "  -> \$angleIS $angleIS"
-                  # puts "  -> \$angleRotation $angleRotation"
-                # -- prepare $outLine for exprot 
-            set outLine     [vectormath::rotatePointList {0 0} $outLine $angleRotation]    
-            set outLine     [vectormath::addVectorPointList $Center(ChainStay_DO) $outLine]
-                  # $ext_cvName  create   polygon $outLine    -tags __Tube__  -fill lightgray
-               
-                # -- prepare $centerLine for export 
-            set centerLine  [appUtil::flatten_nestedList $centerLine]
-            set centerLine  [vectormath::rotatePointList {0 0} $centerLine $angleRotation]    
-            set centerLine  [vectormath::addVectorPointList $Center(ChainStay_DO) $centerLine]
-                # $ext_cvName  create   line    $centerLine -tags __CenterLine__  -fill blue
-             
-                # -- prepare $ctrLines for export 
-            set ctrLines    [appUtil::flatten_nestedList $ctrLines]
-            set ctrLines    [vectormath::rotatePointList {0 0} $ctrLines $angleRotation]    
-    
-                # $ext_cvName  create   line    $centerLine -tags __CenterLine__  -fill blue
-            
-            return [list $centerLine $outLine $ctrLines]
-        }
-        
-            
+
         
         #
         # --- set HeadTube -------------------------
