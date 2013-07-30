@@ -14,14 +14,17 @@
 	set WINDOW_Title      "cad_canvasCAD, an extension for canvas"
 
 	  
-  set BASE_Dir  [file normalize [file dirname [file normalize $::argv0]]] 
-  set APPL_ROOT_Dir [file dirname $BASE_Dir]
-  puts "   \$BASE_Dir ........ $BASE_Dir"
-  puts "   \$APPL_ROOT_Dir ... $APPL_ROOT_Dir"
+    set BASE_Dir  [file normalize [file dirname [file normalize $::argv0]]] 
+    set APPL_ROOT_Dir [file dirname $BASE_Dir]
+    puts "   \$BASE_Dir ........ $BASE_Dir"
+    puts "   \$APPL_ROOT_Dir ... $APPL_ROOT_Dir"
+    
 	lappend auto_path "$APPL_ROOT_Dir"
-	  
+    lappend auto_path "$APPL_ROOT_Dir/../vectormath"
+        
 	package require 	Tk
-	package require   canvasCAD
+    package require   vectormath
+    package require   canvasCAD
     
     
 	pack [ frame .f ] -expand yes -fill both

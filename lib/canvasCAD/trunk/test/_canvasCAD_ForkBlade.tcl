@@ -20,10 +20,12 @@
   lappend auto_path "$APPL_ROOT_Dir" 
   lappend auto_path "$APPL_ROOT_Dir/../appUtil"
   lappend auto_path "$APPL_ROOT_Dir/../bikeGeometry"
+  lappend auto_path "$APPL_ROOT_Dir/../vectormath"
   lappend auto_path "$APPL_ROOT_Dir/../extSummary"
   lappend auto_path "$APPL_ROOT_Dir/../rattleCAD_3.4/lib/app-rattleCAD"
   
   package require 	Tk
+  package require   vectormath
   package require   canvasCAD
   package require   rattleCAD
 

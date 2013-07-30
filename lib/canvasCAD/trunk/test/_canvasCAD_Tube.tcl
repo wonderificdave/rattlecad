@@ -20,11 +20,13 @@
   puts "   \$APPL_ROOT_Dir ... $APPL_ROOT_Dir"
   lappend auto_path "$APPL_ROOT_Dir" 
   lappend auto_path "$APPL_ROOT_Dir/../appUtil"
+  lappend auto_path "$APPL_ROOT_Dir/../vectormath"
   lappend auto_path "$APPL_ROOT_Dir/../bikeGeometry"
   lappend auto_path "$APPL_ROOT_Dir/../extSummary"
   lappend auto_path "$APPL_ROOT_Dir/../rattleCAD_3.4/lib/app-rattleCAD"
   
   package require 	Tk
+  package require   vectormath
   package require   canvasCAD
   package require   rattleCAD
 
@@ -88,38 +90,41 @@
 		variable drw_scale		     0.8
 		variable cv_scale		     1
     
-    variable S01_length   150
-    variable S02_length   160
-    variable S03_length   120
-    variable S04_length   100
-    variable S01_angle     -9
-    variable S02_angle      8
-    variable S03_angle     -8
-    variable S01_radius   320
-    variable S02_radius   320
-    variable S02_radius   310
-    
-    variable orient_x00    425
-    variable orient_y00    -37
-    variable orient_select  left
-    
-    
-    variable  profile_x00   0
-    variable  profile_y00  12.5
-    variable  profile_x01 150
-    variable  profile_y01  18
-    variable  profile_x02 150
-    variable  profile_y02  18
-    variable  profile_x03  75
-    variable  profile_y03  24
-    
-    
-    variable arcPrecission   5
-    #variable unbentShape
-    #variable profileDef {}
-    #     set profileDef {{0 7} {10 7} {190 9} {80 9} {70 12}}
-    #     set profileDef {{0 9} {10 7} {190 16} {80 16} {70 24}}
-    #     set profileDef {{0 7} {10 7} {190 16} {80 16} {70 24}}
+        variable S01_length   150
+        variable S02_length   160
+        variable S03_length   120
+        variable S04_length   100
+        variable S05_length   100
+        variable S01_angle     -9
+        variable S02_angle      8
+        variable S03_angle     -8
+        variable S04_angle      8
+        variable S01_radius   320
+        variable S02_radius   320
+        variable S03_radius   310
+        variable S04_radius   310
+        
+        variable orient_x00    425
+        variable orient_y00    -37
+        variable orient_select  left
+        
+        
+        variable  profile_x00   0
+        variable  profile_y00  12.5
+        variable  profile_x01 150
+        variable  profile_y01  18
+        variable  profile_x02 150
+        variable  profile_y02  18
+        variable  profile_x03  75
+        variable  profile_y03  24
+        
+        
+        variable arcPrecission   5
+        #variable unbentShape
+        #variable profileDef {}
+        #     set profileDef {{0 7} {10 7} {190 9} {80 9} {70 12}}
+        #     set profileDef {{0 9} {10 7} {190 16} {80 16} {70 24}}
+        #     set profileDef {{0 7} {10 7} {190 16} {80 16} {70 24}}
 
     
     
@@ -310,19 +315,22 @@
 				# ------------------------------------
 						# update $myCanvas ->
 				
-				set S01_length  $sketchboard::S01_length
+		set S01_length  $sketchboard::S01_length
         set S02_length  $sketchboard::S02_length
-        set S04_length  $sketchboard::S03_length                         
-        set S03_length  $sketchboard::S04_length                         
+        set S03_length  $sketchboard::S03_length                         
+        set S04_length  $sketchboard::S04_length                         
+        set S05_length  $sketchboard::S05_length                         
         set S01_angle   $sketchboard::S01_angle 
         set S02_angle   $sketchboard::S02_angle                       
         set S03_angle   $sketchboard::S03_angle                       
+        set S04_angle   $sketchboard::S04_angle                       
         set S01_radius  $sketchboard::S01_radius
-				set S02_radius  $sketchboard::S02_radius
-				set S03_radius  $sketchboard::S03_radius
-        set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length \
-                                $S01_angle  $S02_angle $S03_angle \
-                                $S01_radius $S02_radius $S03_radius]
+		set S02_radius  $sketchboard::S02_radius
+        set S03_radius  $sketchboard::S03_radius
+        set S04_radius  $sketchboard::S04_radius
+        set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
+                                $S01_angle  $S02_angle $S03_angle $S04_angle \
+                                $S01_radius $S02_radius $S03_radius $S04_radius]
                                 
             # -- get smooth centerLine
         set retValues [lib_tube::init_centerLine $centerLineDef] 
@@ -486,77 +494,80 @@
 		
 	set f_settings  [labelframe .f0.f_config.f_settings  -text "Test - Settings" ]
 		
-				labelframe  $f_settings.centerline    -text centerline
-				labelframe  $f_settings.orientation   -text orientation
-				labelframe  $f_settings.tubeprofile     -text tubeprofile
-				labelframe  $f_settings.precission  	-text precission
-				# labelframe  $f_settings.length  	-text length
-				labelframe  $f_settings.font    	-text font
-				labelframe  $f_settings.demo    	-text demo
-				labelframe  $f_settings.scale   	-text scale
+		labelframe  $f_settings.centerline    -text centerline
+		labelframe  $f_settings.orientation   -text orientation
+		labelframe  $f_settings.tubeprofile     -text tubeprofile
+		labelframe  $f_settings.precission  	-text precission
+		# labelframe  $f_settings.length  	-text length
+		labelframe  $f_settings.font    	-text font
+		labelframe  $f_settings.demo    	-text demo
+		labelframe  $f_settings.scale   	-text scale
 
-				pack  $f_settings.centerline	\
-							$f_settings.orientation		\
-							$f_settings.tubeprofile		\
-							$f_settings.precission  \
-							$f_settings.font		\
-							$f_settings.demo		\
-							$f_settings.scale   -fill x -side top 
+		pack  $f_settings.centerline	\
+					$f_settings.orientation		\
+					$f_settings.tubeprofile		\
+					$f_settings.precission  \
+					$f_settings.font		\
+					$f_settings.demo		\
+					$f_settings.scale   -fill x -side top 
 
-				create_config_line $f_settings.centerline.s01_l  "length (01):  "  sketchboard::S01_length      5  290   ;#150
-				create_config_line $f_settings.centerline.s02_l  "length (02):  "  sketchboard::S02_length     30  290  ;# 160
-				create_config_line $f_settings.centerline.s03_l  "length (03):  "  sketchboard::S03_length     80  250  ;# 115
-				create_config_line $f_settings.centerline.s04_l  "length (04):  "  sketchboard::S04_length     40  250  ;# 115
-				
+		create_config_line $f_settings.centerline.s01_l  "length (01):  "  sketchboard::S01_length      5  290   ;#150
+		create_config_line $f_settings.centerline.s02_l  "length (02):  "  sketchboard::S02_length     30  290  ;# 160
+		create_config_line $f_settings.centerline.s03_l  "length (03):  "  sketchboard::S03_length     80  250  ;# 115
+        create_config_line $f_settings.centerline.s04_l  "length (04):  "  sketchboard::S04_length     40  250  ;# 115
+        create_config_line $f_settings.centerline.s05_l  "length (05):  "  sketchboard::S05_length     40  250  ;# 115
+                		
         create_config_line $f_settings.centerline.s01_a  "   angle (01):"  sketchboard::S01_angle     -30   30
         create_config_line $f_settings.centerline.s02_a  "   angle (02):"  sketchboard::S02_angle     -30   30
         create_config_line $f_settings.centerline.s03_a  "   angle (03):"  sketchboard::S03_angle     -30   30
-
-				create_config_line $f_settings.centerline.s01_r  "  radlus (01):"  sketchboard::S01_radius     50  590   ;# 320     			
-				create_config_line $f_settings.centerline.s02_r  "  radlus (02):"  sketchboard::S02_radius     30  590   ;# 320
-				create_config_line $f_settings.centerline.s03_r  "  radlus (03):"  sketchboard::S03_radius     30  590   ;# 320
+        create_config_line $f_settings.centerline.s04_a  "   angle (04):"  sketchboard::S04_angle     -30   30
+        
+		create_config_line $f_settings.centerline.s01_r  "  radlus (01):"  sketchboard::S01_radius     50  590   ;# 320     			
+		create_config_line $f_settings.centerline.s02_r  "  radlus (02):"  sketchboard::S02_radius     30  590   ;# 320
+        create_config_line $f_settings.centerline.s03_r  "  radlus (03):"  sketchboard::S03_radius     30  590   ;# 320
+        create_config_line $f_settings.centerline.s04_r  "  radlus (04):"  sketchboard::S04_radius     30  590   ;# 320
         
 				
         create_config_line $f_settings.orientation.x_00   "        x00:  "  sketchboard::orient_x00    250  550   ;#   0
         create_config_line $f_settings.orientation.y_00   "        y00:  "  sketchboard::orient_y00   -100  100   ;#   0
 				
         
-        #create_config_line $f_settings.tubeprofile.x_00     "        x00:  "  sketchboard::profile_x00        0   0   ;#   0
-				create_config_line $f_settings.tubeprofile.y_00     "        y00:  "  sketchboard::profile_y00       10  40   ;#  12.50
-				create_config_line $f_settings.tubeprofile.x_01     "        x01:  "  sketchboard::profile_x01        5 320   ;# 150 
-				create_config_line $f_settings.tubeprofile.y_01     "        y01:  "  sketchboard::profile_y01       10  40   ;#  18
-				create_config_line $f_settings.tubeprofile.x_02     "        x02:  "  sketchboard::profile_x02      100 350   ;# 150
-				create_config_line $f_settings.tubeprofile.y_02     "        y02:  "  sketchboard::profile_y02       15  40   ;#  18
-				create_config_line $f_settings.tubeprofile.x_03     "        x03:  "  sketchboard::profile_x03       50 100   ;#  75
-				create_config_line $f_settings.tubeprofile.y_03     "        y03:  "  sketchboard::profile_y03       15  40   ;#  24
+        # create_config_line $f_settings.tubeprofile.x_00   "        x00:  "  sketchboard::profile_x00        0   0   ;#   0
+		create_config_line $f_settings.tubeprofile.y_00     "        y00:  "  sketchboard::profile_y00       10  40   ;#  12.50
+		create_config_line $f_settings.tubeprofile.x_01     "        x01:  "  sketchboard::profile_x01        5 320   ;# 150 
+		create_config_line $f_settings.tubeprofile.y_01     "        y01:  "  sketchboard::profile_y01       10  40   ;#  18
+		create_config_line $f_settings.tubeprofile.x_02     "        x02:  "  sketchboard::profile_x02      100 350   ;# 150
+		create_config_line $f_settings.tubeprofile.y_02     "        y02:  "  sketchboard::profile_y02       15  40   ;#  18
+		create_config_line $f_settings.tubeprofile.x_03     "        x03:  "  sketchboard::profile_x03       50 100   ;#  75
+		create_config_line $f_settings.tubeprofile.y_03     "        y03:  "  sketchboard::profile_y03       15  40   ;#  24
 				
         create_config_line $f_settings.precission.prec    " precission:  "  sketchboard::arcPrecission    1  15   ;#  24
 
         
 				
-				radiobutton        $f_settings.orientation.left    -text "left   "  -variable  "sketchboard::orient_select"  -value     "left"   -command   "sketchboard::update_board"
-				radiobutton        $f_settings.orientation.center  -text "center "  -variable  "sketchboard::orient_select"  -value     "center" -command   "sketchboard::update_board"
-				radiobutton        $f_settings.orientation.right   -text "right  "  -variable  "sketchboard::orient_select"  -value     "right"  -command   "sketchboard::update_board"
-																						
-				
-				create_config_line $f_settings.scale.drw_scale	" Drawing scale "  sketchboard::drw_scale	 0.2  2  
-								   $f_settings.scale.drw_scale.scl      configure   -resolution 0.1
-				create_config_line $f_settings.scale.cv_scale	" Canvas scale  "  sketchboard::cv_scale	 0.2  5.0  
-								   $f_settings.scale.cv_scale.scl      	configure   -resolution 0.1  -command "sketchboard::scale_board"
-				button  		   $f_settings.scale.recenter   -text "recenter"   -command {sketchboard::recenter_board}
-				button  		   $f_settings.scale.refit		  -text "refit"      -command {sketchboard::refit_board}
-				
-				pack  	\
-						$f_settings.orientation.left \
-						$f_settings.orientation.center \
-						$f_settings.orientation.right \
+		radiobutton        $f_settings.orientation.left    -text "left   "  -variable  "sketchboard::orient_select"  -value     "left"   -command   "sketchboard::update_board"
+		radiobutton        $f_settings.orientation.center  -text "center "  -variable  "sketchboard::orient_select"  -value     "center" -command   "sketchboard::update_board"
+		radiobutton        $f_settings.orientation.right   -text "right  "  -variable  "sketchboard::orient_select"  -value     "right"  -command   "sketchboard::update_board"
+																				
+		
+		create_config_line $f_settings.scale.drw_scale	" Drawing scale "  sketchboard::drw_scale	 0.2  2  
+						   $f_settings.scale.drw_scale.scl      configure   -resolution 0.1
+		create_config_line $f_settings.scale.cv_scale	" Canvas scale  "  sketchboard::cv_scale	 0.2  5.0  
+						   $f_settings.scale.cv_scale.scl      	configure   -resolution 0.1  -command "sketchboard::scale_board"
+		button  		   $f_settings.scale.recenter   -text "recenter"   -command {sketchboard::recenter_board}
+		button  		   $f_settings.scale.refit		  -text "refit"      -command {sketchboard::refit_board}
+		
+		pack  	\
+				$f_settings.orientation.left \
+				$f_settings.orientation.center \
+				$f_settings.orientation.right \
             -side left
-				pack  	\
-            $f_settings.scale.drw_scale \
-						$f_settings.scale.cv_scale \
-						$f_settings.scale.recenter \
-						$f_settings.scale.refit \
-					 -side top  -fill x							   						   
+		pack  	\
+                $f_settings.scale.drw_scale \
+				$f_settings.scale.cv_scale \
+				$f_settings.scale.recenter \
+				$f_settings.scale.refit \
+			 -side top  -fill x							   						   
 					 
 	pack  $f_settings  -side top -expand yes -fill both
 	 

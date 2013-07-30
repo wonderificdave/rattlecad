@@ -8,7 +8,7 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded canvasCAD  0.44 "\
+package ifneeded canvasCAD  0.45 "\
             [list source [file join $dir lib canvasCAD.tcl]]; \
             [list source [file join $dir lib canvasCAD_tdom.tcl]]; \
             [list source [file join $dir lib canvasCAD_stage.tcl]]; \
@@ -17,7 +17,6 @@ package ifneeded canvasCAD  0.44 "\
             [list source [file join $dir lib canvasCAD_IO.tcl]]; \
             [list source [file join $dir lib canvasCAD_svg_path.tcl]]; \
             [list source [file join $dir lib canvasCAD_print.tcl]]; \
-            [list source [file join $dir lib vectormath.tcl]]; \
             [list source [file join $dir lib vectorfont.tcl]]; \
             [list source [file join $dir lib dimension.tcl]]; \
    "
