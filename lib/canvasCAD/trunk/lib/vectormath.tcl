@@ -90,8 +90,8 @@
            if {$y > 0 } {
               return  90 
            } else {
-                        return -90
-                   }
+              return -90
+           }
         }
                   
         set angle  [expr atan(1.0*$y/$x)*180/$CONST_PI]
@@ -102,27 +102,27 @@
         }
     }
       
-      proc dirAngle_Coincidence {p1 p2 tolerance p_perp} {
-              set distance [checkPointCoincidence $p1 $p2 $tolerance]
-              if { $distance  == 0 } {
-                      # puts "       --> $distance / coincident  in ($tolerance)"
-                  set angle [expr [dirAngle $p1 $p_perp] - 90]
-                      # puts "           $angle"
-                  return $angle
-              } else {
-                  set angle [dirAngle $p1 $p2]
-                  return $angle
-              }
-      }    
+    proc dirAngle_Coincidence {p1 p2 tolerance p_perp} {
+          set distance [checkPointCoincidence $p1 $p2 $tolerance]
+          if { $distance  == 0 } {
+                  # puts "       --> $distance / coincident  in ($tolerance)"
+              set angle [expr [dirAngle $p1 $p_perp] - 90]
+                  # puts "           $angle"
+              return $angle
+          } else {
+              set angle [dirAngle $p1 $p2]
+              return $angle
+          }
+    }    
       
-      proc checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
-              set disctance [length $p1 $p2]
-              if { $disctance < $tolerance} {
-                  return 0
-              } else {
-                  return $disctance
-              }            
-      }
+    proc checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
+          set disctance [length $p1 $p2]
+          if { $disctance < $tolerance} {
+              return 0
+          } else {
+              return $disctance
+          }            
+    }
 
     proc mirrorPoint { p1 p2 p3 } { 
         # mirror p3 by vector(p1,p2)
@@ -308,14 +308,41 @@
           # puts "{$m1 == 0 || $m2 == 0}"  
         set dot [expr {$x1 * $x2 + $y1 * $y2}]
         set mp	[expr $m1 * $m2]
+        
         if {$mp == 0 }   { return 0 }
-        if {$dot > $mp } { return 0 }
-          # if {$dot > $mp } { set dot $mp }
-        set theta [expr {acos($dot / $mp)}]
+        
+        set quot [expr $dot/$mp]
+          # puts "\n<D>     -> $quot"
+        if {$quot >  1} {set quot  1}
+        if {$quot < -1} {set quot -1 }
+          # puts "<D>  -> $dot ?? $mp   -> $quot\n"
+        set theta [expr {acos($quot)}]
         if {$theta < 1e-5} {set theta 0}
         set theta [ expr $theta * 180 / $CONST_PI ]
+          # puts "       -> $theta"
         return $theta
     }
+     
+     
+     proc angle__ {p1 pc p3} {
+         variable CONST_PI
+         foreach {x1 y1} [subVector $p1 $pc] {x2 y2} [subVector $p3 $pc] break
+ 
+         set m1 [expr {hypot($x1,$y1)}]
+         set m2 [expr {hypot($x2,$y2)}]
+           # if {$m1 == 0 || $m2 == 0} { return 0 }      ;# Coincidental points
+           # puts "{$m1 == 0 || $m2 == 0}"  
+         set dot [expr {$x1 * $x2 + $y1 * $y2}]
+         set mp  [expr $m1 * $m2]
+         if {$mp == 0 }   { return 0 }
+         if {$dot > $mp } { return 0 }
+           # if {$dot > $mp } { set dot $mp }
+         set theta [expr {acos($dot / $mp)}]
+         if {$theta < 1e-5} {set theta 0}
+         set theta [ expr $theta * 180 / $CONST_PI ]
+         return $theta
+     } 
+     
      
                ##+##########################################################################
                #
