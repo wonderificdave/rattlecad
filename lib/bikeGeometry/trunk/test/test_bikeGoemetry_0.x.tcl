@@ -18,6 +18,7 @@ lappend auto_path           [file join $BASE_Dir ..]
 
 
     # -- Packages  ---------------
+package require   vectormath    0.1
 package require   bikeGeometry  0.17
 package require   appUtil
 

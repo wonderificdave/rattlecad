@@ -1,6 +1,6 @@
  ##+##########################################################################
  #
- # package: rattleCAD    ->    bikeGeometry.tcl
+ # package: bikeGeometry    ->    bikeGeometry.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their
@@ -32,14 +32,14 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #    namespace:  rattleCAD::frame_geometry_custom
+ #    namespace:  bikeGeometry::frame_geometry_custom
  # ---------------------------------------------------------------------------
  #
  #
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.23
+ package provide bikeGeometry 0.24
 
  namespace eval bikeGeometry {
 
