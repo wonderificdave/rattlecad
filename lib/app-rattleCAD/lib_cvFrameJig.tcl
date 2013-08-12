@@ -307,11 +307,14 @@
                                                                                         aligned     [expr    60 * $stageScale]   0 \
                                                                                         darkred ]
                             set _dim_ST_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(SeatTube)   $RearWheel(Position)   $BottomBracket(Position) ] \
-                                                                                         90   0  \
-                                                                                        darkred ]
+                                                                                                                     90   0  \
+                                                                                                                    darkred ]
+                            # set _dim_ST_Angle_Sup   [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(SeatTube)   $SeatTube(TopTube)     $RearWheel(Position) ] \
+                                                                                                                     90   0  \
+                                                                                                                    darkred ]
                             set _dim_HT_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(HeadTube)   $Steerer(Stem)   $RearWheel(Position) ] \
-                                                                                         90  10  \
-                                                                                        darkred ]
+                                                                                                                     90  10  \
+                                                                                                                    darkred ]
                                 # -- Fork Details ----------------------
                                 #
                             set _dim_HT_Fork        [ $cv_Name dimension  length  [ appUtil::flatten_nestedList  $FrameJig(HeadTube)    $help_fk] \
@@ -368,10 +371,13 @@
                             set _dim_BB_DepthJIg    [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $RearWheel(Position)    $help_bb] \
                                                                                         aligned     [expr   120 * $stageScale]   0 \
                                                                                         darkred ]
-                            set _dim_ST_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position)   $SeatPost(SeatTube)   $help_bb ] \
+                            set _dim_ST_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position)   $SeatTube(TopTube)    $help_bb ] \
                                                                                          90   0  \
                                                                                         darkred ]
-                            set _dim_ST_Angle_2     [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position)   $RearWheel(Position)   $help_bb ] \
+                            # set _dim_ST_Angle_Sup   [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position)   $help_fk              $SeatTube(TopTube) ] \
+                                                                                         90   0  \
+                                                                                        darkred ]
+                            set _dim_ST_Angle_2     [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position)   $RearWheel(Position)  $help_bb ] \
                                                                                         150  40  \
                                                                                         darkred ]
                             set _dim_HT_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(HeadTube)   $Steerer(Stem)   $BottomBracket(Position) ] \
@@ -474,17 +480,28 @@
                                 # puts "     ... $angleText / $angle"
                             set degreeText  [ expr int(floor($angleText)) ]
                             set   minute    [ expr ($angleText - $degreeText) * 60.0 ]
-                            set minuteText  [ expr int(floor($minute)) ]
+                            set minuteText  [ format "%02s" [ expr int(floor($minute)) ] ]
                                 # puts "       ->  [expr $angleText - $degreeText]"
                                 # puts "       ->  $minuteText"
                                 # puts "   -> $degreeText° <-> $minuteText\' <-" 
+                                # -- supplement Angles
+                            set angleText_sup   [ expr 180 - $angleText]
+                            set degreeText_sup  [ expr int(floor($angleText_sup)) ]
+                            if {$minuteText > 0} {
+                                set minuteText_sup [ format "%02s" [ expr int(floor(60 - 1.0*$minute))] ]
+                            } else {
+                                set minuteText_sup "00"
+                            } 
                             
-                            set textPosition_0  [ vectormath::addVector $textPosition     [list [expr 2/$stageScale] [expr (2 + $index * $lineDistance)/$stageScale]]  ] 
-                            set textPosition_1  [ vectormath::addVector $textPosition_0   [list [expr 27/$stageScale] 0] ] 
-                            set textPosition_2  [ vectormath::addVector $textPosition_1   [list [expr 17/$stageScale] 0] ] 
-                            $cv_Name create draftText $textPosition_0    -text "Angle:"                     -anchor sw -size 3.5
-                            $cv_Name create draftText $textPosition_1    -text "$angleText°"                -anchor se -size 3.5
-                            $cv_Name create draftText $textPosition_2    -text "$degreeText°$minuteText\'"  -anchor se -size 3.5
+                            set textPosition_0  [ vectormath::addVector $textPosition     [list [expr  2/$stageScale] [expr (2 + $index * $lineDistance)/$stageScale]]  ] 
+                            set textPosition_1  [ vectormath::addVector $textPosition_0   [list [expr 28/$stageScale] 0] ] 
+                            set textPosition_2  [ vectormath::addVector $textPosition_1   [list [expr 22/$stageScale] 0] ] 
+                            set textPosition_3  [ vectormath::addVector $textPosition_2   [list [expr 28/$stageScale] 0] ] 
+                            set textPosition_4  [ vectormath::addVector $textPosition_3   [list [expr 22/$stageScale] 0] ] 
+                            $cv_Name create draftText $textPosition_0    -text "Angle:"                                  -anchor sw -size 3.5
+                            $cv_Name create draftText $textPosition_1    -text "$angleText°:"                           -anchor se -size 3.5
+                            $cv_Name create draftText $textPosition_2    -text "$degreeText° $minuteText\'"              -anchor se -size 3.5
+                            $cv_Name create draftText $textPosition_3    -text "( $degreeText_sup° $minuteText_sup\' )"  -anchor se -size 3.5
                             
                             incr index
                         }

@@ -444,4 +444,8 @@
 2013.07.23  21:30   02:30    05:00   3.4.00 ... 52 ... update edit of curved chainstay
 2013.07.24  21:30   00:30    03:00   3.4.00 ... 54 ... update edit of curved chainstay
 2013.07.26  11:30   13:30    02:00   3.4.00 ... 55 ... update edit of curved chainstay
+2013.07.26  11:30   13:30    02:00   3.4.00 ... 56 ... update edit of curved chainstay
+2013.07.29  22:00   03:00    05:00   3.4.00 ... 57 ... debug angle 0.00 in curved chainstay
+2013.07.30  21:30   24:00    03:30   3.4.00 ... 58 ... extract vectormath out of bikeGeometry and canvasCAD
+2013.07.30  00:00   00:00    20:00   3.4.00 ... 64 ... modify handling of Font-Settings, User-Components-Library, Copy Concept
                             

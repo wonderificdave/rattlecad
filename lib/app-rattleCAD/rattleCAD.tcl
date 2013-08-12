@@ -42,8 +42,9 @@
   package require   tdom
   
   package require   appUtil       0.14
-  package require   bikeGeometry  0.23
-  package require   canvasCAD     0.44
+  package require   vectormath    0.4
+  package require   bikeGeometry  0.25
+  package require   canvasCAD     0.45
   package require   extSummary    0.4
   
       
@@ -65,7 +66,7 @@
                         RELEASE_Revision    {tbd}
                         RELEASE_Date        {01. May. 2012}
                         
-                        GUI_Font            {Arial 8}
+                        GUI_Font            {Helvetica 8}
                         VECTOR_Font         {}
                         Language            {english}
     
@@ -161,8 +162,8 @@
         	set ::APPL_Config(SAMPLE_Dir)       [file join    $baseDir sample]
         	set ::APPL_Config(TEST_Dir)         [file join    $baseDir _test]
         	set ::APPL_Config(USER_Dir)         [lib_file::check_user_dir rattleCAD]    
-        	set ::APPL_Config(EXPORT_Dir)       [lib_file::check_user_dir rattleCAD/export]
-        	set ::APPL_Config(EXPORT_HTML)      [lib_file::check_user_dir rattleCAD/html]
+            set ::APPL_Config(EXPORT_Dir)       [lib_file::check_user_dir rattleCAD/export]
+            set ::APPL_Config(EXPORT_HTML)      [lib_file::check_user_dir rattleCAD/html]
         	set ::APPL_Config(EXPORT_PDF)       [lib_file::check_user_dir rattleCAD/pdf]
     }
         
@@ -202,6 +203,7 @@
         puts "    rattleCAD:   [package require rattleCAD]"
         puts "    canvasCAD:   [package require canvasCAD]"
         puts "    extSummary:  [package require extSummary]"
+        puts "    vectorMath:  [package require vectormath]"
         puts "  ----------------------------------------------"
         puts "    APPL_Config(ROOT_Dir)     $::APPL_Config(ROOT_Dir)"
         puts "    APPL_Config(BASE_Dir)     $::APPL_Config(BASE_Dir)"
@@ -211,6 +213,7 @@
         puts "    APPL_Config(EXPORT_Dir)   $::APPL_Config(EXPORT_Dir)"
         puts "    APPL_Config(EXPORT_HTML)  $::APPL_Config(EXPORT_HTML)"
         puts "    APPL_Config(EXPORT_PDF)   $::APPL_Config(EXPORT_PDF)"
+        
         puts "  ----------------------------------------------"
         puts ""
 
@@ -235,13 +238,24 @@
             # -- init Parameters  ----
         set ::APPL_Config(root_InitDOM)  [ lib_file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) rattleCAD_init.xml ] ]
         puts "     ... root_InitDOM      [file join $::APPL_Config(CONFIG_Dir) rattleCAD_init.xml]"
+
           
-          
+            
+            # -- User Components Directories  --------
+        # Options/ComponentLocation
+        init_UserCompDirectories [$::APPL_Config(root_InitDOM) selectNode /root/Options/ComponentLocation]
+                 
+
+            
             # -- set bikeGeometry Fork Configuration      
         bikeGeometry::set_forkConfig [$::APPL_Config(root_InitDOM) selectNode /root/Fork]
   
           
             # -- initialize GUI ----------
+        switch $::tcl_platform(platform) {
+                    "macintosh" { set ::APPL_Config(GUI_Font)  {Helvetica 10} }
+                    "windows"   { set ::APPL_Config(GUI_Font)  $::APPL_Config(GUI_Font) }
+        }   
         init_GUI_Settings
         
             
@@ -658,18 +672,31 @@
         #            
     proc read_userInit {} {    
         set fileName    [file join $::APPL_Config(USER_Dir) _rattleCAD.init ]
+        puts ""
+        puts "     ... user_InitDOM      $fileName"
+        puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
+        puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
+        puts "        ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
+        puts ""
+        
         if {[file exists $fileName ]} {
               set ::APPL_Config(user_InitDOM)  [ lib_file::get_XMLContent     $fileName ]
-              puts ""
-              puts "     ... user_InitDOM      $fileName"
+                # puts "     ... user_InitDOM      $fileName"
                 # puts "[$::APPL_Config(user_InitDOM) asXML]"
               catch {set ::APPL_Config(TemplateType) [[$::APPL_Config(user_InitDOM) selectNodes /root/TemplateFile/text()] asXML]}
               catch {set ::APPL_Config(FrameJigType) [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameJigType/text()] asXML]}
               catch {set ::APPL_Config(GUI_Font)     [[$::APPL_Config(user_InitDOM) selectNodes /root/GUI_Font/text()]     asXML]}
               
+              
+              if {$::APPL_Config(user_InitDOM) != {}} {
+                  puts "        ----------------------------"
+                  prettyPrint_XML $::APPL_Config(user_InitDOM)
+                  puts "        ----------------------------"
+              }
               puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
               puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
               puts "        ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
+              puts "        ----------------------------"
               puts ""
         } else {
               set    fp [open $fileName w]
@@ -681,13 +708,13 @@
               puts ""
               puts "     ... user_InitDOM      $fileName"
               puts "         ------------------------"
-              puts "           ... write:"   
-              puts "                       $fileName"
+              puts "           ... write new:"   
+              puts "                           $fileName"
               puts "                   ... done"
               
               read_userInit
         }
-    }    
+    }
     
     
     #-------------------------------------------------------------------------
@@ -795,11 +822,11 @@
             append  message "\n"
             append  message "\n    e.g.:\n"
             append  message "\n         \[Windows\] C:\\Program Files\\rattleCAD\\"
-            append  message "\n                                     .\\3.2.78.03"
+            append  message "\n                                     .\\3.4.00.60"
             append  message "\n                                     .\\rattleCAD.tcl"
             append  message "\n"
             append  message "\n         \[Linux\]   /opt/rattleCAD/"
-            append  message "\n                                     ./3.2.78.03"
+            append  message "\n                                     ./3.4.00.60"
             append  message "\n                                     ./rattleCAD.tcl"
             append  message "\n"
             append  message "\n                            your rattleCAD!"
@@ -810,6 +837,25 @@
     }
 
 
+    #-------------------------------------------------------------------------
+        #  check User Components Directories
+        #
+    proc init_UserCompDirectories {xmlNode} {
+
+          # puts "[$xmlNode asXML]"
+        foreach keyNode [$xmlNode selectNode component] {
+              # puts "     -> [$keyNode asXML]"
+            set pathString [$keyNode getAttribute dir]
+              # puts "     -> $pathString"
+            lib_file::check_user_dir rattleCAD/$pathString 
+        }
+        set suprDir     [lib_file::check_user_dir rattleCAD/components/surprise]
+        set sourceDir   [file join $::APPL_Config(BASE_Dir) _style]
+        catch {file copy [file join $sourceDir Tcl_logo.svg]       $suprDir}
+        catch {file copy [file join $sourceDir rattleCAD_logo.svg] $suprDir}
+    }
+
+
      #-------------------------------------------------------------------------
        #  debug_out
        #   
@@ -817,3 +863,24 @@
         appDebug t $msg $args
     }    
     
+    
+    #-------------------------------------------------------------------------
+       #   http://computer-programming-forum.com/57-tcl/aea710a848418614.htm
+       #
+    proc prettyPrint_XML {dom} {
+      set s ""
+      set str [$dom asXML]
+      set sep \n
+      foreach chunk [split $str $sep] {
+        if {[string length $s]>0} {
+          append s "$sep$chunk"
+        } else {
+          set s $chunk
+        }
+        if {[info complete $s]} {
+          if {$s == {}} continue
+          puts "          $s"
+          set s ""
+        }
+      }
+    }   

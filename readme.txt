@@ -1,4 +1,55 @@
 
+
+3.4.00.64  - 2013.08.11
+-------------------------------------------------------------------------------
+    feature:
+        ... transfer geometry of an existing bike into rattleCAD
+            File -> Copy Concept
+
+
+3.4.00.63  - 2013.08.10
+-------------------------------------------------------------------------------
+    feature:
+        ... allow hide/unhide tabs  lib_gui::notebook_switchTab 
+
+
+3.4.00.62  - 2013.08.09
+-------------------------------------------------------------------------------
+    debug/feature:
+        ... modify button display in canvas tabs 
+
+
+3.4.00.61  - 2013.08.09
+-------------------------------------------------------------------------------
+    feature:
+        ... supplementary angles in parameter table in frame jig drawings 
+            lib_cvFrameJig.tcl
+
+3.4.00.60  - 2013.08.05
+-------------------------------------------------------------------------------
+    debug/feature:
+        ... personal components library and an example
+
+
+3.4.00.59  - 2013.08.04
+-------------------------------------------------------------------------------
+    debug/feature:
+        ... set APPL(GUI_Font) from "Arial 8" to "Helvetica 8" for "windows"
+            and "Helvetica 10" for "macintosh"
+
+
+3.4.00.58  - 2013.07.30
+-------------------------------------------------------------------------------
+    refactor:
+        ... extract vectormath - Library out of bikeGeometry and canvasCAD
+
+
+3.4.00.57  - 2013.07.29
+-------------------------------------------------------------------------------
+    debug:
+        ... handle angle 0.00 in curved ChainStays 
+
+
 3.4.00.56  - 2013.07.26
 -------------------------------------------------------------------------------
     feature:

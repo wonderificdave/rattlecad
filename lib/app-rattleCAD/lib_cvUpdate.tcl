@@ -50,6 +50,53 @@
 
 
         switch $cv_Name {
+            lib_gui::cv_Custom02 {
+                        #
+                        # -- copy geometry
+                        #
+                        #
+                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    $cv_Name        clean_StageContent
+                        #
+                    update_cv_Parameter               $cv_Name $xy
+                        #
+                    bikeRendering::createBaseline     $cv_Name $xy
+                        #
+                    createDimension                   $cv_Name $xy    point_seat
+                    #createDimension                   $cv_Name $xy    cline_frame
+                    createDimension                   $cv_Name $xy    point_frame
+                    #createDimension                   $cv_Name $xy    geometry_bg
+                        #
+                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel
+                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel
+                    bikeRendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost
+                      #
+                    bikeRendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
+                    bikeRendering::createFrame_Tubes  $cv_Name $xy
+                      #
+                    bikeRendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet
+                    bikeRendering::createDecoration   $cv_Name $xy    Stem
+                    bikeRendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
+                    bikeRendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
+                        #
+                        # bikeRendering::createFrame_Centerline $cv_Name $xy    {} {} {baseLine}
+                        #
+                    bikeRendering::create_copyConcept $cv_Name $xy  
+                        #
+                    createDimension                   $cv_Name $xy    concept_bg
+                    createDimension                   $cv_Name $xy    concept_fg
+                        #
+                    update_renderCanvas               $cv_Name
+                        #
+                    createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
+                        #                      
+                }
             lib_gui::cv_Custom00 {
                         #
                         # -- base geometry
