@@ -1,8 +1,9 @@
+
  ##+##########################################################################
  #
- # package: vectormath	->	vectormath.tcl.tcl
+ # package: vectormath	->	vectormath.tcl
  #
- #   canvasCAD is software of Manfred ROSENBERGER
+ #   vectormath is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their 
  #       own Licenses.
  # 
@@ -11,17 +12,6 @@
  # The author  hereby grant permission to use,  copy, modify, distribute,
  # and  license this  software  and its  documentation  for any  purpose,
  # provided that  existing copyright notices  are retained in  all copies
- # #
- #   canvasCAD is software of Manfred ROSENBERGER
- #       based on tclTk, BWidgets and tdom on their 
- #       own Licenses.
- # 
- # Copyright (c) Manfred ROSENBERGER, 2010/10/24
- #
- # The author  hereby grant permission to use,  copy, modify, distribute,
- # and  license this  software  and its  documentation  for any  purpose,
- # provided that  existing copyright notices  are retained in  all copies
- # and that  this notice  is included verbatim  in any  distributions. No
  # and that  this notice  is included verbatim  in any  distributions. No
  # written agreement, license, or royalty  fee is required for any of the
  # authorized uses.  Modifications to this software may be copyrighted by
@@ -43,12 +33,12 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #	namespace:  canvasCAD::vectormath
+ #	namespace:  vectormath
  # ---------------------------------------------------------------------------
  #
  #
 
-  package provide vectormath 0.1
+  package provide vectormath 0.4
   
   namespace eval vectormath {
    
@@ -114,27 +104,27 @@
         }
     }
       
-      proc dirAngle_Coincidence {p1 p2 tolerance p_perp} {
-              set distance [checkPointCoincidence $p1 $p2 $tolerance]
-              if { $distance  == 0 } {
-                      # puts "       --> $distance / coincident  in ($tolerance)"
-                  set angle [expr [dirAngle $p1 $p_perp] - 90]
-                      # puts "           $angle"
-                  return $angle
-              } else {
-                  set angle [dirAngle $p1 $p2]
-                  return $angle
-              }
-      }    
+    proc dirAngle_Coincidence {p1 p2 tolerance p_perp} {
+            set distance [checkPointCoincidence $p1 $p2 $tolerance]
+            if { $distance  == 0 } {
+                    # puts "       --> $distance / coincident  in ($tolerance)"
+                set angle [expr [dirAngle $p1 $p_perp] - 90]
+                    # puts "           $angle"
+                return $angle
+            } else {
+                set angle [dirAngle $p1 $p2]
+                return $angle
+            }
+    }    
       
-      proc checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
+    proc checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
               set disctance [length $p1 $p2]
               if { $disctance < $tolerance} {
                   return 0
               } else {
                   return $disctance
               }            
-      }
+    }
 
     proc mirrorPoint { p1 p2 p3 } { 
         # mirror p3 by vector(p1,p2)
@@ -161,8 +151,23 @@
 
     proc distancePerp { p1 p2 p3 } { 
         # perpendicular distance from vector(p1,p2) through p3 
-        set p4		[ intersectPerp $p1 $p2 $p3]
-        return 		[ length $p3 $p4 ]
+        set p4      [ intersectPerp $p1 $p2 $p3]
+        return      [ length $p3 $p4 ]
+    }
+
+    proc offsetOrientation { p1 p2 p3 } { 
+          # check if <p3> is on left or right side of line <p1,p2>
+          # right ->   1
+          # online ->  0
+          # left  ->  -1
+        set angle_1_2 [ dirAngle $p1 $p2]
+        set angle_2_3 [ dirAngle $p2 $p3]
+        set angleIS [ angle $p1 $p2 $p3 ]
+          # puts "   -> offsetOrientation:  { $p1 / $p2 / $p3 } -> $angle_1_2 / $angle_2_3"
+          # if {$angleIS < 0}   [expr 360.0 + $angleIS]
+        if {$angle_1_2 > $angle_2_3}  {return  1} ;# right side
+        if {$angle_1_2 < $angle_2_3}  {return -1} ;# left side
+        return  0
     }
 
     proc length { p1 p2 } { 
@@ -250,6 +255,24 @@
         return [list [expr $x*$s] [expr $y*$s] ]
     }
     
+    
+    proc angle_Triangle {a b c} {
+        # returns alpha as opposite Angle of a
+        #
+        variable CONST_PI
+        foreach length $a $b $c {
+            if {$length == 0} {
+                return 0
+            }
+        }
+        set cosAlpha [ expr ($a*$a - $b*$b - $c*$c) / (-2.0*$b*$c) ]
+        set alpha    [expr acos($cosAlpha)*180/$CONST_PI]
+        puts "   -> $alpha"
+        return $alpha
+    }
+    
+    
+    
 
      ##+##############################################################################
      #
@@ -269,7 +292,7 @@
         set p2 [lindex $v1 1]
         set p3 [lindex $v2 0]
         set p4 [lindex $v2 1]
-              return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
+        return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
     } 
     proc intersectPoint {p1 p2 p3 p4   {errorMode {}} } {
         return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
@@ -320,14 +343,21 @@
           # puts "{$m1 == 0 || $m2 == 0}"  
         set dot [expr {$x1 * $x2 + $y1 * $y2}]
         set mp	[expr $m1 * $m2]
+        
         if {$mp == 0 }   { return 0 }
-        if {$dot > $mp } { return 0 }
-          # if {$dot > $mp } { set dot $mp }
-        set theta [expr {acos($dot / $mp)}]
+        
+        set quot [expr $dot/$mp]
+          # puts "\n<D>     -> $quot"
+        if {$quot >  1} {set quot  1}
+        if {$quot < -1} {set quot -1 }
+          # puts "<D>  -> $dot ?? $mp   -> $quot\n"
+        set theta [expr {acos($quot)}]
         if {$theta < 1e-5} {set theta 0}
         set theta [ expr $theta * 180 / $CONST_PI ]
+          # puts "       -> $theta"
         return $theta
     }
+
      
                ##+##########################################################################
                #
