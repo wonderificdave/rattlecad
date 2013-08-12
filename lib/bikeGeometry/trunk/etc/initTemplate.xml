@@ -214,10 +214,18 @@
             <FrontWheel>
                 <diagonal>600.00</diagonal>
                 <horizontal>0.00</horizontal>
+                <Radius>0.00</Radius>
             </FrontWheel>
             <RearWheel>
                 <horizontal>0.00</horizontal>
+                <Radius>0.00</Radius>
             </RearWheel>
+            <Control>              
+                <HandleBar_FW>0.00</HandleBar_FW>
+                <HandleBar_BB>0.00</HandleBar_BB>
+                <SeatPost_HB>0.00</SeatPost_HB>
+                <SeatPost_BB>0.00</SeatPost_BB>
+            </Control>
         </Length>
         
         <Angle>

@@ -1073,6 +1073,45 @@
                 project::setValue Result(Length/RearWheel/horizontal) value $value
 
 
+                # --- RearWheel/Radius --------------------------------
+                #
+            set rimDiameter   [ project::getValue Component(Wheel/Rear/RimDiameter) value ]
+            set tyreHeight    [ project::getValue Component(Wheel/Rear/TyreHeight)  value ]
+            set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
+                     puts "                  ... $value"
+                project::setValue Result(Length/RearWheel/Radius value $value
+              
+                # --- FrontWheel/Radius -------------------------------
+                #
+            set rimDiameter   [ project::getValue Component(Wheel/Front/RimDiameter) value ]
+            set tyreHeight    [ project::getValue Component(Wheel/Front/TyreHeight)  value ]
+            set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
+                     puts "                  ... $value"
+                project::setValue Result(Length/FrontWheel/Radius value $value
+
+  
+
+                # --- Control - Lengths ------------------------------- 
+                #           for copy Concept of existing Bike 
+                #
+            set value         [vectormath::length  $HandleBar(Position) $FrontWheel(Position)   ]
+                set value       [ format "%.3f" $value ]
+                # puts "                  ... $value"
+                project::setValue Result(Length/Control/HandleBar_FW) value $value
+            set value         [vectormath::length  $HandleBar(Position) {0 0}]
+                set value       [ format "%.3f" $value ]
+                # puts "                  ... $value"
+                project::setValue Result(Length/Control/HandleBar_BB) value $value                      
+            set value         [vectormath::length  $SeatPost(Saddle)    $HandleBar(Position)   ]
+                set value       [ format "%.3f" $value ]
+                # puts "                  ... $value"
+                project::setValue Result(Length/Control/SeatPost_HB)  value $value
+            set value         [vectormath::length  $SeatPost(Saddle)    {0 0}]
+                set value       [ format "%.3f" $value ]
+                # puts "                  ... $value"
+                project::setValue Result(Length/Control/SeatPost_BB)  value $value                       
+            
+
             set BB_Position             {0 0}
             set SeatStay(SeatTube)      [ bikeGeometry::get_Object     SeatStay/End            position ]
             set TopTube(SeatTube)       [ bikeGeometry::get_Object     TopTube/Start           position ]
@@ -1117,8 +1156,8 @@
             set RimBrakeRadius  [ expr 0.5 * $RearWheel(RimDiameter) ]
 
             set pt_00           $RearWheel(Position)
-            set pt_01           [split [ project::getValue Result(Tubes/SeatStay/Start)    position ] , ]
-            set pt_02           [split [ project::getValue Result(Tubes/SeatStay/End)    position ] , ]
+            set pt_01           [split [ project::getValue Result(Tubes/SeatStay/Start)      position ] , ]
+            set pt_02           [split [ project::getValue Result(Tubes/SeatStay/End)        position ] , ]
             set pt_03           [split [ project::getValue Result(Tubes/SeatStay/Polygon)    polygon 8 ] , ]
             set pt_04           [split [ project::getValue Result(Tubes/SeatStay/Polygon)    polygon 9 ] , ]
             set pt_05           [ vectormath::intersectPerp    $pt_04 $pt_03 $pt_00 ]    ;# point on SeatStay through RearWheel

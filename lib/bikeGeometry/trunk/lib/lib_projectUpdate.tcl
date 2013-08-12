@@ -1163,25 +1163,25 @@
                         }
                 {3.4.00} {
                                 # -- get Fork Dropout Rendering
-                                    puts "                           ... update File ... /root/Rendering/ForkDropOut"
+                                 puts "                           ... update File ... /root/Rendering/ForkDropOut"
                           set node            [$projectDOM selectNode /root/Rendering/ForkDropOut]
                           set node_Rendering  [$projectDOM selectNode /root/Rendering]
                                 # puts [$node asXML]
                           if {$node == {}} {
-                            puts "                                           ... front"
+                                 puts "                                           ... front"
                             $node_Rendering appendXML  "<ForkDropOut>front</ForkDropOut>"
                           }
                           
-                          # -- get 5th bent-Position for ChainStay
+                                # -- get 5th bent-Position for ChainStay
                           set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine]
-                          set node [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05]
+                          set node       [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05]
                           if {$node == {}} {
                                   puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine"
                                   $parentNode appendXML  "<length_05>05.00</length_05>"
                                   $parentNode appendXML  "<angle_04>0.00</angle_04>"
                                   $parentNode appendXML  "<radius_04>320.00</radius_04>"
-                          }
-   
+                          }                        
+                          
                         }       
                         
                 {ab-xy} {	set node {}
