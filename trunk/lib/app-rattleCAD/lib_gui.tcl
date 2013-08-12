@@ -64,10 +64,14 @@
             
         set mainframe_Menue {
             "&File"   all file 0 {
-                {command "&New"                 {}  "New Project File"      {Ctrl n}      -command { lib_file::newProject_xml } }
-                {command "&Open"                {}  "0pen Project File"     {Ctrl o}      -command { lib_file::openProject_xml } }
-                {command "&Save"                {}  "Save Project File"     {Ctrl s}      -command { lib_file::saveProject_xml } }
-                {command "Save &As ..."         {}  "Save Project File As"  {CtrlAlt s}   -command { lib_file::saveProject_xml saveAs} }
+                {command "&New"             {}  "New Project File"      {Ctrl n}      -command { lib_file::newProject_xml } }
+                {command "&Open"            {}  "0pen Project File"     {Ctrl o}      -command { lib_file::openProject_xml } }
+                {command "&Save"            {}  "Save Project File"     {Ctrl s}      -command { lib_file::saveProject_xml } }
+                {command "Save &As ..."     {}  "Save Project File As"  {CtrlAlt s}   -command { lib_file::saveProject_xml saveAs} }
+                
+                {separator}
+                
+                {command "&Copy Concept"    {}  "Copy Geometry"         {Ctrl c}      -command { lib_gui::notebook_switchTab  cv_Custom02} }
                 
                 {separator}
                 
@@ -196,6 +200,7 @@
                 pack $noteBook_top -expand yes  -fill both  
             
                 # ---     create and register any canvasCAD - canvas in lib_gui::notebookCanvas
+            lib_gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Copy Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
             lib_gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
             lib_gui::create_canvasCAD  $noteBook_top  cv_Custom10  "  Frame Details  "      A4  0.2  25  -bd 2  -bg white  -relief sunken
             lib_gui::create_canvasCAD  $noteBook_top  cv_Custom20  "  ChainStay Details  "  A2  1.0  25  -bd 2  -bg white  -relief sunken
@@ -205,9 +210,10 @@
             lib_gui::create_canvasCAD  $noteBook_top  cv_Custom60  "  Tube Miter  "         A4  1.0  25  -bd 2  -bg white  -relief sunken
             lib_gui::create_canvasCAD  $noteBook_top  cv_Custom70  "  Frame - Jig  "        A4  0.2  25  -bd 2  -bg white  -relief sunken
             
-            $noteBook_top add [frame $noteBook_top.components]     -text "... Components" 
-            $noteBook_top add [frame $noteBook_top.report]         -text "... info" 
+            $noteBook_top add   [frame $noteBook_top.components]     -text "... Components" 
+            $noteBook_top add   [frame $noteBook_top.report]         -text "... info" 
             
+            $noteBook_top hide  0 ; # hide per default: cv_Custom02  "  Copy Concept   "
             
                 # ---     modify dimension precision in Frame Drafting ; updates current and default precision
             #lib_gui::cv_Custom40 setPrecision 2 force
@@ -232,7 +238,7 @@
             # $noteBook_top select $noteBook_top.cv_Custom20
             
             $noteBook_top select $noteBook_top.cv_Custom30
-
+            
                 # ---     return
             return $noteBook_top
     }
@@ -350,6 +356,7 @@
             
             switch -exact -- $varName {
                 cv_Custom00 -
+                cv_Custom02 -
                 cv_Custom10 -
                 cv_Custom20 -
                 cv_Custom30 -
@@ -384,11 +391,31 @@
             
             foreach index [array names notebookCanvas] {
                 if {$index == $varName} {
-                      # puts "$index $notebookCanvas($index) "
+                      # puts "$index $varName -> $notebookCanvas($index) "
                     return $notebookCanvas($index)
                 }
             }
     }
+    #-------------------------------------------------------------------------
+        #  get notebook id    
+        #
+     proc notebook_getTabInfo {varName} {
+             variable noteBook_top       
+               # puts "\n --------"
+               # puts "[$noteBook_top tabs]"
+             set i 0
+             foreach index [$noteBook_top tabs] {
+                 set tabWidget "$noteBook_top.$varName"
+                 if {$index == $tabWidget} {
+                     # puts "$index $varName -> $tabWidget"
+                     return [list $i $index]
+                 }
+                 incr i
+             }
+             return {}
+     }
+    
+    
     #-------------------------------------------------------------------------
        #  get notebook window    
        #
@@ -557,7 +584,29 @@
             }
             $varName clean_StageContent
     }
-
+    
+    
+    #-------------------------------------------------------------------------
+        #  switch notebook-Tab  
+        #
+    proc notebook_switchTab {cvTab} {
+        variable noteBook_top
+          # puts ""
+          # puts " ---------------"
+          # puts " notebook_switchTab"
+        set tabInfo [notebook_getTabInfo $cvTab]
+        set tabID       [lindex $tabInfo 0]
+        set tabWidget   [lindex $tabInfo 1]
+        set tabState   [$noteBook_top tab  $tabID -state]
+        
+        if {$tabState == {hidden}} {
+            $noteBook_top add    $tabWidget
+            $noteBook_top select $tabID
+        } else {
+            $noteBook_top hide   $tabID
+        }
+        return
+    }
 
 
     #-------------------------------------------------------------------------
@@ -844,16 +893,16 @@
             }
                 # puts "   <D> [$cv find withtag __NB_Button__]"
             
+            catch { destroy $cv.buttonFrame }
+            frame   $cv.buttonFrame            
+                # button  $cv.buttonFrame.bt -text test
+                # pack $cv.buttonFrame.bt
+            
+            
             set idx 0
             foreach cv_Button $cv_ButtonList {
-                puts "          ... $cv_Button"
-                set buttonCount [llength [$cv find withtag __NB_Button__]]
-                    # puts $buttonCount
-                set x_Position  7
                 set y_Position  [expr 19 + $idx * 25]
                 incr idx
-                    
-                
                 switch -regexp $cv_Button {
                         changeFormatScale {
                                     if {$type != {default}} {
@@ -862,69 +911,56 @@
                                         set buttonText "Format & Scale"
                                     }
                                     # -- create a Button to change Format and Scale of Stage
-                                    catch { destroy $cv.button_FormatScale }
-                                    catch { button  $cv.button_FormatScale \
-                                                    -text $buttonText \
-                                                    -command [format {lib_gui::change_FormatScale %s %s %s} $cv $y_Position $type ]                                
-                                            $cv create window $x_Position $y_Position \
-                                                    -window $cv.button_FormatScale \
-                                                    -anchor w \
-                                                    -tags {__Button__Format_Scale__ __NB_Button__}
-                                    }
+                                    catch { destroy $cv.buttonFrame.button_FormatScale }
+                                    button  $cv.buttonFrame.button_FormatScale \
+                                            -text $buttonText \
+                                            -command [format {lib_gui::change_FormatScale %s %s %s} $cv $y_Position $type ]
+                                    pack $cv.buttonFrame.button_FormatScale -fill x
                                 }
                         TubingCheckAngles {
                                     # -- create a Button to execute tubing_checkAngles
-                                    catch { destroy $cv.button_TCA }
-                                    catch { button  $cv.button_TCA \
-                                                    -text "check Frame Angles" \
-                                                    -command [format {lib_gui::tubing_checkAngles %s} $cv]                                
-                                            $cv create window $x_Position $y_Position \
-                                                    -window $cv.button_TCA \
-                                                    -anchor w \
-                                                    -tags {__Button__TCA__ __NB_Button__}
-                                    }
+                                    catch { destroy $cv.buttonFrame.button_TCA }
+                                    button  $cv.buttonFrame.button_TCA \
+                                            -text "check Frame Angles" \
+                                            -command [format {lib_gui::tubing_checkAngles %s} $cv]                                
+                                    pack $cv.buttonFrame.button_TCA         -fill x
                                 }
                         ChainStayRendering {
                                     # -- create a Button to set ChainStayRendering
-                                    catch { destroy $cv.button_CSR }
-                                    catch { button  $cv.button_CSR \
-                                                    -text "switch: straight/bent/off" \
-                                                    -command [format {lib_gui::rendering_ChainStay %s} $cv]                                
-                                            $cv create window $x_Position $y_Position \
-                                                    -window $cv.button_CSR \
-                                                    -anchor w \
-                                                    -tags {__Button__CSR__ __NB_Button__}
-                                    }
+                                    catch { destroy $cv.buttonFrame.button_CSR }
+                                    button  $cv.buttonFrame.button_CSR \
+                                            -text "switch: straight/bent/off" \
+                                            -command [format {lib_gui::rendering_ChainStay %s} $cv]                                
+                                    pack $cv.buttonFrame.button_CSR         -fill x
                                 }
                         changeFrameJigVariant {
                                     # -- create a Button to set FrameJigVersion
-                                    catch { destroy $cv.button_CSR }
-                                    catch { button  $cv.button_CSR \
-                                                    -text "FrameJig" \
-                                                    -command [format {lib_gui::change_FrameJig %s %s} $cv $y_Position ]
-                                                    # -command [format {lib_gui::change_FrameJig %s} $cv]                                
-                                            $cv create window $x_Position $y_Position \
-                                                    -window $cv.button_CSR \
-                                                    -anchor w \
-                                                    -tags {__Button__FJV__ __NB_Button__}
-                                    }
+                                    catch { destroy $cv.buttonFrame.button_CSR }
+                                    button  $cv.buttonFrame.button_CSR \
+                                            -text "FrameJig" \
+                                            -font $::APPL_Config(GUI_Font) \
+                                            -command [format {lib_gui::change_FrameJig %s %s} $cv $y_Position ]                           
+                                    pack $cv.buttonFrame.button_CSR         -fill x
                                 }
                         Reference2Custom {
                                     # -- create a Button to execute geometry_reference2personal
-                                    catch { destroy $cv.button_R2C }
-                                    catch { button  $cv.button_R2C \
-                                                    -text "copy settings to Base Geometry" \
-                                                    -command lib_gui::geometry_reference2personal                                
-                                            $cv create window $x_Position $y_Position \
-                                                    -window $cv.button_R2C \
-                                                    -anchor w \
-                                                    -tags {__Button__R2C__ __NB_Button__}
-                                    }
+                                    catch { destroy $cv.buttonFrame.button_R2C }
+                                    button  $cv.buttonFrame.button_R2C \
+                                            -text "copy settings to Base Geometry" \
+                                            -command lib_gui::geometry_reference2personal                                
+                                    pack $cv.buttonFrame.button_R2C         -fill x
                                 }
                 }
             }
-    }
-
+            
+            $cv create window 7 8 \
+                -window $cv.buttonFrame \
+                -anchor nw \
+                -tags {__NB_Button__}
+            pack append $cv.buttonFrame
+            
+    }            
+            
 
     #-------------------------------------------------------------------------
        #  update Personal Geometry with parameters of Reference Geometry 
@@ -1184,6 +1220,7 @@
                         }
             }
     }
+
 
     proc global_kb_Binding {ab} {
             variable noteBook_top
