@@ -119,11 +119,15 @@
         </ForkBlade>
         
         <Rim>
-            <rim inch="28&#8221;" metric="622" standard="ETRTO-Road" />
-            <rim inch="26&#8221;" metric="559" standard="ETRTO-MTB"  />
-            <rim inch="26&#8221;" metric="571" standard="ETRTO-Tria" />
+            <rim inch="28&#8221;"   metric="622" standard="Road/MTB" />
+            <rim inch="27,5&#8221;" metric="584" standard="MTB"  />
+            <rim inch="26&#8221;"   metric="559" standard="MTB"  />
+            <rim inch="26&#8221;"   metric="571" standard="Tria" />
             <separator/>
+            <rim inch="28&#8221;" metric="622" standard="ETRTO" />
             <rim inch="26&#8221;" metric="590" standard="ETRTO" />
+            <rim inch="26&#8221;" metric="571" standard="ETRTO" />
+            <rim inch="26&#8221;" metric="559" standard="ETRTO"  />
             <rim inch="24&#8221;" metric="507" standard="ETRTO" />
             <rim inch="20&#8221;" metric="451" standard="ETRTO" />
             <rim inch="20&#8221;" metric="406" standard="ETRTO" />
@@ -133,15 +137,15 @@
             <rim inch="16&#8221;" metric="330" standard="ETRTO" />
             <rim inch="16&#8221;" metric="305" standard="ETRTO" />
             <separator/>	
-            <rim inch="28&#8221;" metric="635" standard="french" />
-            <rim inch="27&#8221;" metric="630" standard="english" />
-            <rim inch="26&#8221;" metric="584" standard="french" />
-            <rim inch="24&#8221;" metric="540" standard="french" /> 
-            <rim inch="22&#8221;" metric="490" standard="french" />
-            <rim inch="22&#8221;" metric="440" standard="french" />
-            <rim inch="20&#8221;" metric="390" standard="french" />
-            <rim inch="16&#8221;" metric="340" standard="french" />
-            <rim inch="14&#8221;" metric="298" standard="french" />
+            <rim inch="28&#8221;" metric="635" standard="french-700B" />
+            <rim inch="27&#8221;" metric="630" standard="english-27x?" />
+            <rim inch="26&#8221;" metric="584" standard="french-650B" />
+            <rim inch="24&#8221;" metric="540" standard="french-640A" /> 
+            <rim inch="22&#8221;" metric="490" standard="french-55ßA" />
+            <rim inch="22&#8221;" metric="440" standard="french-500A" />
+            <rim inch="20&#8221;" metric="390" standard="french-450A" />
+            <rim inch="16&#8221;" metric="340" standard="french-400A" />
+            <rim inch="14&#8221;" metric="298" standard="french-350A" />
         </Rim>
 
         <TubeSet>
