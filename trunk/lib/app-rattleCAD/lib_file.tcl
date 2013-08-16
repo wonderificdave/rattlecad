@@ -79,10 +79,12 @@
                 puts "                   ... done"
 
                 # -- read new File
-            set ::APPL_Config(root_ProjectDOM) [lib_file::get_XMLContent $fileName show]
+            set ::APPL_Config(root_ProjectDOM)     [lib_file::get_XMLContent $fileName show]
                 #
             bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
-                
+                #
+            set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
+                                
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             set_window_title $fileName
                 #
@@ -128,11 +130,10 @@
                         
                     set ::APPL_Config(PROJECT_File) $fileName
                     set ::APPL_Config(PROJECT_Save) [clock milliseconds]
-
-		    
+                    set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
+        
         		        #
         		    lib_gui::notebook_updateCanvas	force	    
-		    
 
                         # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
                     if {$windowTitle == {}} {
@@ -179,12 +180,14 @@
                 set ::APPL_Config(PROJECT_Name)     "Template $type"
                 set ::APPL_Config(PROJECT_File)     "Template $type"  
                 set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
+                set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
                     # puts " <D> -> \$::APPL_Config(PROJECT_Name)  $::APPL_Config(PROJECT_Name)"
                     # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
+
                     #
-	        lib_gui::notebook_updateCanvas force
-	            #
-	        set_window_title $::APPL_Config(PROJECT_Name)
+	            lib_gui::notebook_updateCanvas force
+	                #
+	            set_window_title $::APPL_Config(PROJECT_Name)
             } else {
                 tk_messageBox -message "... could not load template: $window_title"
             }
@@ -309,7 +312,7 @@
                 default     {    return}
             }
 
-            # --- set xml-File Attributes
+                # --- set Project(modified)
             set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
             set project::Project(rattleCADVersion)     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
  
@@ -377,6 +380,19 @@
             }
             set root [lib_file::get_XMLContent $fileName]
             project::import_ProjectSubset $root
+            
+            # --- set APPL_Config(canvasCAD_Update)
+            set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
+            
+            lib_gui::notebook_updateCanvas force
+
+                #
+            lib_gui::open_configPanel  refresh
+            
+                # -- fill tree
+                #
+            lib_cfg_report::fillTree [bikeGeometry::get_projectXML] root
+
     }
 
 

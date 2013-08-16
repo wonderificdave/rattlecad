@@ -513,6 +513,10 @@
             
                 # -- update stage content if parameters changed
                     # puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Config(canvasCAD_Update)\n"
+            puts "\n"
+            puts "    canvasUpdate($varName):  $canvasUpdate($varName)"
+            puts "          vs.  $::APPL_Config(canvasCAD_Update)"
+            puts "          or   \$project::Project(modified) $project::Project(modified)\n"
             if { $mode == {} } {
                     if { $canvasUpdate($varName) < $::APPL_Config(canvasCAD_Update) } {
                         puts "\n       ... notebook_updateCanvas ... update $varName\n"
