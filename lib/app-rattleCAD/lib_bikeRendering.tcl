@@ -995,7 +995,8 @@
             set FrontWheel          [ bikeGeometry::get_Object     FrontWheel              position    $BB_Position ]
             set SeatPost_Saddle     [ bikeGeometry::get_Object     SeatPostSaddle          position    $BB_Position ]
             set HandleBar           [ bikeGeometry::get_Object     HandleBar               position    $BB_Position ]
-             
+            set SeatTube_Ground     [ bikeGeometry::get_Object     SeatTubeGround          position    $BB_Position ]
+            set Steerer_Ground      [ bikeGeometry::get_Object     SteererGround           position    $BB_Position ]
                 
                 # ------ centerlines
                 # linetype
@@ -1006,6 +1007,16 @@
                 #    red
                 #    darkorange
                 #    orange
+                #
+                
+            set line(colour) gray50
+            set line(width) 0.5
+                # -----------------------------------                          
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $SeatTube_Ground   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $Steerer_Ground    $FrontWheel        ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+                                    
+            
+            
             set line(colour) orange
             set line(width) 1.0
                 # -----------------------------------                          
