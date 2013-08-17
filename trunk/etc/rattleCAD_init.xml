@@ -61,7 +61,7 @@
             <component key="Component/BottleCage/SeatTube/File"			  dir="components/bottle_cage/left" 	 />
             <component key="Component/BottleCage/DownTube/File" 		  dir="components/bottle_cage/right" 	 />
             <component key="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
-            <component key="Logo/File"                                dir="components/logo" 	         />
+            <component key="Component/Logo/File"                      dir="components/logo" 	         />
         </ComponentLocation>
         
         <TemplateType>
