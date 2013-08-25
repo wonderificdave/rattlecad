@@ -249,6 +249,7 @@
                 <RimDiameter>622.00</RimDiameter>
                 <RimHeight>25.00</RimHeight>
                 <TyreHeight>23.00</TyreHeight>
+                <TyreWidth>21.00</TyreWidth>
                 <HubWidth>130.00</HubWidth>
                 <FirstSprocket>15</FirstSprocket>
             </Rear>
