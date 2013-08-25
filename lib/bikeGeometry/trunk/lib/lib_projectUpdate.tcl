@@ -1164,8 +1164,8 @@
                 {3.4.00} {
                                 # -- get Fork Dropout Rendering
                                  puts "                           ... update File ... /root/Rendering/ForkDropOut"
-                          set node            [$projectDOM selectNode /root/Rendering/ForkDropOut]
                           set node_Rendering  [$projectDOM selectNode /root/Rendering]
+                          set node            [$projectDOM selectNode /root/Rendering/ForkDropOut]
                                 # puts [$node asXML]
                           if {$node == {}} {
                                  puts "                                           ... front"
@@ -1181,6 +1181,17 @@
                                   $parentNode appendXML  "<angle_04>0.00</angle_04>"
                                   $parentNode appendXML  "<radius_04>320.00</radius_04>"
                           }                        
+
+                          
+                                  # -- get 5th bent-Position for ChainStay
+                            set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
+                            set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidth]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
+                                    set tyreHeight [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()] nodeValue] 
+                                    $parentNode appendXML  "<TyreWidth>$tyreHeight</TyreWidth>"
+                            }                        
+                    
                           
                         }       
                         
