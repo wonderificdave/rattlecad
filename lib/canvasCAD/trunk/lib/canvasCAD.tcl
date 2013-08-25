@@ -55,7 +55,7 @@
  #
 
 
-package provide canvasCAD 0.45
+package provide canvasCAD 0.46
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -571,6 +571,9 @@ package require tdom
                 polygon    -
                 rectangle -
                 oval    {       set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }        
+                ovalarc {       set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] 
+                                set type         arc
+                        }        
                 arc -
                 circle    {    
                             set new_args     [ flatten_nestedList $args ]
