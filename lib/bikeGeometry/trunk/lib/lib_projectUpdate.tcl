@@ -1183,7 +1183,7 @@
                           }                        
 
                           
-                                  # -- get 5th bent-Position for ChainStay
+                                  # -- get TyreWidth for ChainStay Details
                             set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
                             set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidth]
                             if {$node == {}} {
@@ -1191,6 +1191,30 @@
                                     set tyreHeight [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()] nodeValue] 
                                     $parentNode appendXML  "<TyreWidth>$tyreHeight</TyreWidth>"
                             }                        
+ 
+ 
+                                   # -- get TyreWidth for ChainStay Details
+                            set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
+                            set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidth]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
+                                    set tyreHeight [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()] nodeValue] 
+                                    $parentNode appendXML  "<TyreWidth>$tyreHeight</TyreWidth>"
+                            }                        
+                    
+                          
+                                    # -- get TyreWidthRadius for ChainStay Details
+                            set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
+                            set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidthRadius]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
+                                    set rimDiameter [[$projectDOM selectNode /root/Component/Wheel/Rear/RimDiameter/text()] nodeValue] 
+                                    set tyreHeight  [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()]  nodeValue] 
+                                    set tyreRadius  [expr 0.5 * ($rimDiameter + $tyreHeight)]
+                                    $parentNode appendXML  "<TyreWidthRadius>$tyreRadius</TyreWidthRadius>"
+                            }                        
+            
+                  
                     
                           
                         }       
