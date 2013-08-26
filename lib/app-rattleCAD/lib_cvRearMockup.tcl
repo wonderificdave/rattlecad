@@ -99,7 +99,9 @@
             set Length(03)              [ expr $Length(02) - $project::Lugs(BottomBracket/ChainStay/Offset_TopView) ]
             set Length(04)              [ expr 0.5 * $project::Component(Wheel/Rear/HubWidth) ]
             set Length(05)              [ expr 0.5 * $project::Component(Wheel/Rear/HubWidth) + $project::Lugs(RearDropOut/ChainStay/Offset_TopView)]
+            set Length(06)              [ expr 0.5 * $project::Component(Wheel/Rear/RimDiameter) + $project::Component(Wheel/Rear/TyreHeight) - $project::Component(Wheel/Rear/TyreWidthRadius)]
 
+            
             set Center(BottomBracket)   {0 0}
             set Center(Dim_BBWidth_01)  [ list $Length(00) [expr -1.0 * $Length(02)] ]
             set Center(Dim_BBWidth_02)  [ list $Length(00) $Length(02) ]
@@ -114,11 +116,12 @@
             set Center(CL_RearHub_01)   [ list [expr -1 * $Length(ChainStay)] [expr -1.0 * $Length(04) -15] ]
             set Center(CL_RearHub_02)   [ list [expr -1 * $Length(ChainStay)] [expr $Length(04) + 15] ]    
             set Center(DropOut)         [ list [expr -1 * $Length(ChainStay)] $Length(04) ]
-            set Center(Tyre)            [ vectormath::addVector $Center(RearHub) [ list [expr 0.5 * ($project::Component(Wheel/Rear/RimDiameter) + $project::Component(Wheel/Rear/TyreHeight))] 0 ] ]
-            set Center(Rim)             [ vectormath::addVector $Center(RearHub) [ list [expr 0.5 *  $project::Component(Wheel/Rear/RimDiameter)] 0 ] ]
-            set Center(Dim_WheelRadius) [ vectormath::addVector $Center(Tyre)    [ list [expr 0.5 *  $project::Component(Wheel/Rear/TyreHeight)] 0 ] ]
-            set Center(Dim_Tyre_01)     [ vectormath::addVector $Center(Tyre)    [ list 0 [expr  0.5 * $project::Component(Wheel/Rear/TyreWidth)] ] ]
-            set Center(Dim_Tyre_02)     [ vectormath::addVector $Center(Tyre)    [ list 0 [expr -0.5 * $project::Component(Wheel/Rear/TyreWidth)] 0 ] ]
+            set Center(Tyre)            [ vectormath::addVector $Center(RearHub)    [ list [expr 0.5 * ($project::Component(Wheel/Rear/RimDiameter) + $project::Component(Wheel/Rear/TyreHeight))] 0 ] ]
+            set Center(Rim)             [ vectormath::addVector $Center(RearHub)    [ list [expr 0.5 *  $project::Component(Wheel/Rear/RimDiameter)] 0 ] ]
+            set Center(TyreWidth)       [ vectormath::addVector $Center(RearHub)    [ list $project::Component(Wheel/Rear/TyreWidthRadius) 0 ] ]
+            set Center(Dim_WheelRadius) [ vectormath::addVector $Center(Tyre)       [ list [expr 0.5 *  $project::Component(Wheel/Rear/TyreHeight)] 0 ] ]
+            set Center(Dim_Tyre_01)     [ vectormath::addVector $Center(TyreWidth)  [ list 0 [expr  0.5 * $project::Component(Wheel/Rear/TyreWidth)] ] ]
+            set Center(Dim_Tyre_02)     [ vectormath::addVector $Center(TyreWidth)  [ list 0 [expr -0.5 * $project::Component(Wheel/Rear/TyreWidth)] 0 ] ]
             
             
             set Center(ChainStay_DO)    [ vectormath::addVector $Center(RearHub) [ list $project::Lugs(RearDropOut/ChainStay/Offset)  [ expr $Length(04) + $project::Lugs(RearDropOut/ChainStay/Offset_TopView)] ] ]
@@ -144,6 +147,10 @@
 
                 # -- create DropOuts
             create_DropOut
+            
+                # -- create Tyre
+            create_Tyre
+            
 
                # -- create Bottom Bracket - Outer Shell
             set retValues [get_BottomBracket]
@@ -242,29 +249,21 @@
             $cv_Name create circle      $Center(BottomBracket)  -radius 3   -outline red         -width 1.0        -tags __CenterLine__
             $cv_Name create circle      $Center(RearHub)        -radius 3   -outline blue        -width 1.0        -tags __CenterLine__
 
-
-                # -- tyre Representation 
-            set tyre_RadiusHeight [expr 0.5 * $project::Component(Wheel/Rear/TyreHeight)]
-            set tyre_RadiusWidth  [expr 0.5 * $project::Component(Wheel/Rear/TyreWidth)]
-            set tyre_00    [vectormath::addVector $Center(Tyre) [list $tyre_RadiusHeight [expr -1.0*$tyre_RadiusWidth] ]]
-            set tyre_01    [vectormath::addVector $Center(Tyre) [list [expr -1.0*$tyre_RadiusHeight] $tyre_RadiusWidth ]]
-            set clearMatrix   [appUtil::flatten_nestedList  $tyre_00 $tyre_01 ]                     
-            $cv_Name create ovalarc     $clearMatrix       -start 240  -extent 240 -style arc \
-                                                                            -outline blue        -width 1.0        -tags {__Component__}
-
-
                 # -- dimensions
                 #
 
                 # -- Wheel radius
             set _dim_Wh_Radius          [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_WheelRadius) $Center(CL_RearHub_01) ] \
-                                                                    horizontal      [expr   40 * $stageScale]   [expr -80 * $stageScale]  \
+                                                                    horizontal      [expr   45 * $stageScale]   [expr -80 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Rim_Radius         [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Rim) $Center(CL_RearHub_01) ] \
-                                                                    horizontal      [expr   30 * $stageScale]   [expr   0 * $stageScale]  \
+                                                                    horizontal      [expr   35 * $stageScale]   [expr   0 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Tyre_Height        [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_WheelRadius) $Center(Rim) ] \
-                                                                    horizontal      [expr   30 * $stageScale]   [expr   0 * $stageScale]  \
+                                                                    horizontal      [expr   35 * $stageScale]   [expr   0 * $stageScale]  \
+                                                                    gray50 ]                                                                                                              
+            set _dim_Tyre_CapHeight     [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_WheelRadius) $Center(TyreWidth) ] \
+                                                                    horizontal      [expr   25 * $stageScale]   [expr  20 * $stageScale]  \
                                                                     gray50 ]                                                                                                              
             set _dim_Sprocket_CL        [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_RearHub_02) $Center(SprocketClearance) ] \
                                                                     horizontal      [expr  -25 * $stageScale]   [expr  -5 * $stageScale]  \
@@ -273,10 +272,16 @@
                                                                     vertical        [expr   65 * $stageScale]   [expr  20 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Tyre_Width         [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_Tyre_01) $Center(Dim_Tyre_02) ] \
-                                                                    vertical        [expr   30 * $stageScale]   [expr   3 * $stageScale]  \
-                                                                    $Colour(primary) ]                                                                                                           
-                   rattleCAD::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Width       
+                                                                    vertical        [expr   35 * $stageScale]   [expr   3 * $stageScale]  \
+                                                                    $Colour(primary) ]  
+            set _dim_Tyre_Radius        [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(TyreWidth) $Center(CL_RearHub_01) ] \
+                                                                    horizontal      [expr   25 * $stageScale]   [expr  50 * $stageScale]  \
+                                                                    $Colour(primary) ]   
+                   rattleCAD::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Width
                    $cv_Name bind $_dim_Tyre_Width        <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/TyreWidth) ]
+                   rattleCAD::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Radius       
+                   $cv_Name bind $_dim_Tyre_Radius       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/TyreWidthRadius) ]
+
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
                 # -- ChainStay length
@@ -376,6 +381,37 @@
 
     }
     
+    proc rattleCAD::cv_custom::create_Tyre {} {
+            upvar  1 cv_Name        ext_cvName              
+            upvar  1 Length         ext_Length
+            upvar  1 Center         ext_Center
+            upvar  1 ClearCassette  ext_ClearCassette
+    
+            # -- tyre Representation 
+            set tyre_RadiusHeight $ext_Length(06)
+            set tyre_RadiusWidth  [expr 0.5 * $project::Component(Wheel/Rear/TyreWidth)]
+            set tyre_00    [vectormath::addVector $ext_Center(TyreWidth) [list $tyre_RadiusHeight [expr -1.0*$tyre_RadiusWidth] ]]
+            set tyre_01    [vectormath::addVector $ext_Center(TyreWidth) [list [expr -1.0*$tyre_RadiusHeight] $tyre_RadiusWidth ]]
+            set ovalMatrix   [appUtil::flatten_nestedList  $tyre_00 $tyre_01 ]                     
+            
+            set pt_01      [vectormath::addVector  $ext_Center(TyreWidth) {-10 0}]
+            set pt_02      [vectormath::addVector  $ext_Center(Rim)        {-8  0}]
+            set tyre_03    [vectormath::addVector  $ext_Center(TyreWidth)   {0 -1} $tyre_RadiusWidth]
+            set tyre_04    [vectormath::addVector  $pt_01                   {0 -1} $tyre_RadiusWidth]
+            set tyre_05    [vectormath::addVector  $pt_02                   {0 -1} 9]
+            set tyre_06    [vectormath::addVector  $pt_02                   {0  1} 9]
+            set tyre_07    [vectormath::addVector  $pt_01                   {0  1} $tyre_RadiusWidth]
+            set tyre_08    [vectormath::addVector  $ext_Center(TyreWidth)   {0  1} $tyre_RadiusWidth]
+            set polygonMatrix  [appUtil::flatten_nestedList  $tyre_03 $tyre_04  $tyre_05 $tyre_06 $tyre_07 $tyre_08 ]
+            
+            $ext_cvName create oval      $ovalMatrix      -fill gray     -width 1.0  -tags {__Component__}
+            $ext_cvName create polygon   $polygonMatrix   -fill gray     -width 1.0  -tags {__Component__}
+            
+            $ext_cvName create ovalarc   $ovalMatrix      -outline black -width 1.0  -tags {__Component__} \
+                                                          -start 270     -extent 180       -style arc
+            $ext_cvName create line      $polygonMatrix   -fill black    -width 1.0  -tags {__Component__}
+                                                                                                                                                                                                                                                        
+    }    
     
 
     proc rattleCAD::cv_custom::create_RearHub {} {   
@@ -598,14 +634,17 @@
             set polygon     {}
                 
                 # -- Tyre clearance
-                    set clearRadius [ expr  0.5 * $project::Component(Wheel/Rear/TyreHeight) + $project::Rendering(RearMockup/TyreClearance) ]
+                    set tyreHeight  $ext_Length(06)
+                    set clearRadius [ expr  $tyreHeight + $project::Rendering(RearMockup/TyreClearance) ]
                     set clearWidth  [ expr  0.5 * $project::Component(Wheel/Rear/TyreWidth)  + $project::Rendering(RearMockup/TyreClearance) ]
-                    set pt_99       [ vectormath::addVector  $ext_Center(Tyre)  {0 -1} $clearRadius ]
+                    set pt_99       [ vectormath::addVector  $ext_Center(TyreWidth)  {0 -1} $clearRadius ]
                     set pt_98       [ vectormath::addVector  $pt_99  {-70 0} ]
             lappend polygon     $pt_98  $pt_99
                     set angle 0
                     while {$angle <= 90} {
-                        set pt_tmp  [ vectormath::rotatePoint  $ext_Center(Tyre) $pt_99 $angle]
+                        set pt_tmp  [ vectormath::rotatePoint  $ext_Center(TyreWidth) $pt_99 $angle]
+                        puts "   -> $ext_Center(Tyre)   /  $$ext_Center(TyreWidth)"
+                        # TyreWidth
                         lappend polygon     $pt_tmp
                         incr angle 10
                     }
@@ -711,11 +750,11 @@
                 # -- Tyre Clearance
             # set ratio             [expr $project::Component(Wheel/Rear/TyreWidth)/$project::Component(Wheel/Rear/TyreHeight)]
             set radius_y      [expr  0.5 * $project::Component(Wheel/Rear/TyreWidth)  + $project::Rendering(RearMockup/TyreClearance) ]
-            set radius_x      [expr  0.5 * $project::Component(Wheel/Rear/TyreHeight) + $project::Rendering(RearMockup/TyreClearance) ]
-            set tyre_00       [vectormath::addVector $ext_Center(Tyre) [list $radius_x [expr -1.0*$radius_y] ]]
-            set tyre_01       [vectormath::addVector $ext_Center(Tyre) [list [expr -1.0*$radius_x] $radius_y ]]                     
+            set radius_x      [expr  $ext_Length(06)                                  + $project::Rendering(RearMockup/TyreClearance) ]
+            set tyre_00       [vectormath::addVector $ext_Center(TyreWidth) [list $radius_x [expr -1.0*$radius_y] ]]
+            set tyre_01       [vectormath::addVector $ext_Center(TyreWidth) [list [expr -1.0*$radius_x] $radius_y ]]                     
             set clearMatrix   [appUtil::flatten_nestedList  $tyre_00 $tyre_01 ]
-            $ext_cvName create ovalarc  $clearMatrix       -start 250  -extent 110 -style arc -outline red  -tags __CenterLine__
+            $ext_cvName create ovalarc  $clearMatrix       -start 250  -extent 220 -style arc -outline red  -tags __CenterLine__
             
                 # -- ChainWheel Clearance
             set radius  $project::Rendering(RearMockup/ChainWheelClearance)
