@@ -32,12 +32,12 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #  namespace:  rattleCAD::bikeRendering
+ #  namespace:  rattleCAD::rendering
  # ---------------------------------------------------------------------------
  #
  #
 
- namespace eval bikeRendering {
+ namespace eval rattleCAD::rendering {
 
 
     proc createBaseline {cv_Name BB_Position {colour {gray}}} {
@@ -108,11 +108,11 @@
                             set HandleBar(object)       [ $cv_Name readSVG $HandleBar(file) $HandleBar(position) -5  __HandleBar__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $HandleBar(object)
                             if {$updateCommand != {}}   { $cv_Name bind    $HandleBar(object)    <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name \
                                                                                     {   file://Component(HandleBar/File) \
                                                                                     }   {HandleBar Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $HandleBar(object)
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $HandleBar(object)
                                     }
                             }
                     DerailleurRear {
@@ -122,11 +122,11 @@
                             set Derailleur(object)      [ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  0  __DerailleurRear__ ]
                                                         $cv_Name addtag  __Decoration__ withtag $Derailleur(object)
                             if {$updateCommand != {}} { $cv_Name bind    $Derailleur(object)    <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   file://Component(Derailleur/Rear/File)    \
                                                                                     }   {DerailleurRear Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $Derailleur(object)
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Derailleur(object)
                                     }
                             }
                     DerailleurRear_ctr {
@@ -145,13 +145,13 @@
                             set Derailleur(object)      [ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  $angle  __DerailleurFront__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Derailleur(object)
                             if {$updateCommand != {}}   { $cv_Name bind    $Derailleur(object)    <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   file://Component(Derailleur/Front/File)    \
                                                                                         Component(Derailleur/Front/Distance) \
                                                                                         Component(Derailleur/Front/Offset) \
                                                                                     }  {DerailleurFront Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $Derailleur(object)
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Derailleur(object)
                                     }
                             }
                     CrankSet {
@@ -165,23 +165,23 @@
                                     set CrankSet(object)        [ create_customCrank  $cv_Name  $CrankSet(position) ]
                                                                   $cv_Name addtag  __Decoration__ withtag $CrankSet(object)
                                     if {$updateCommand != {}}   { $cv_Name bind    $CrankSet(object)    <Double-ButtonPress-1> \
-                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                             {   file://Component(CrankSet/File) \
                                                                                                 Component(CrankSet/Length) \
                                                                                                 text://Component(CrankSet/ChainRings)
                                                                                             }   {Crankset:  Parameter}
                                                                             ]
-                                                                  lib_gui::object_CursorBinding     $cv_Name    $CrankSet(object)
+                                                                  rattleCAD::gui::object_CursorBinding     $cv_Name    $CrankSet(object)
                                         }
                                 } else {
                                     set CrankSet(object)        [ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __CrankSet__ ]
                                                                   $cv_Name addtag  __Decoration__ withtag $CrankSet(object)
                                     if {$updateCommand != {}}     { $cv_Name bind    $CrankSet(object)    <Double-ButtonPress-1> \
-                                                                            [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                             {   file://Component(CrankSet/File) \
                                                                                             }   {CrankSet Parameter} \
                                                                             ]
-                                                                  lib_gui::object_CursorBinding     $cv_Name    $CrankSet(object)
+                                                                  rattleCAD::gui::object_CursorBinding     $cv_Name    $CrankSet(object)
                                         }
                                 }
                             }
@@ -190,11 +190,11 @@
                             set SeatPost(polygon)         [ bikeGeometry::get_Object SeatPost polygon $BB_Position ]
                             set SeatPost(object)        [ $cv_Name create polygon $SeatPost(polygon) -fill white  -outline black  -tags __Decoration__ ]
                             if {$updateCommand != {}}     { $cv_Name bind    $SeatPost(object)   <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   Component(SeatPost/Diameter)    \
                                                                                     }   {SeatPost Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $SeatPost(object)
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $SeatPost(object)
                                     }
                             }
 
@@ -211,14 +211,14 @@
                                             set RearBrake(object)       [ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __RearBrake__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $RearBrake(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $RearBrake(object)    <Double-ButtonPress-1> \
-                                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                                     {  list://Rendering(Brake/Rear@SELECT_BrakeType) \
                                                                                                         file://Component(Brake/Rear/File)    \
                                                                                                         Component(Brake/Rear/LeverLength)    \
                                                                                                         Component(Brake/Rear/Offset)    \
                                                                                                     }  {RearBrake Parameter} \
                                                                                     ]
-                                                                          lib_gui::object_CursorBinding     $cv_Name    $RearBrake(object)
+                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $RearBrake(object)
                                                     }
                                                 }
                                         default {}
@@ -239,14 +239,14 @@
                                             set FrontBrake(object)      [ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __FrontBrake__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $FrontBrake(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $FrontBrake(object)    <Double-ButtonPress-1> \
-                                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                                     {   list://Rendering(Brake/Front@SELECT_BrakeType) \
                                                                                                         file://Component(Brake/Front/File)    \
                                                                                                         Component(Brake/Front/LeverLength)    \
                                                                                                         Component(Brake/Front/Offset)    \
                                                                                                     }   {FrontBrake Parameter} \
                                                                                     ]
-                                                                          lib_gui::object_CursorBinding     $cv_Name    $FrontBrake(object)
+                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $FrontBrake(object)
                                                     }
                                             }
                                         default {}
@@ -272,11 +272,11 @@
                                             set BottleCage(object)      [ $cv_Name readSVG $BottleCage(file) $bc_position $st_angle  __BottleCage_ST__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $BottleCage(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $BottleCage(object)    <Double-ButtonPress-1> \
-                                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                                     {   list://Rendering(BottleCage/SeatTube@SELECT_BottleCage) \
                                                                                                     }   {BottleCage SeatTube Parameter} \
                                                                                     ]
-                                                                          lib_gui::object_CursorBinding     $cv_Name    $BottleCage(object)
+                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
                                             }
                                 }
 
@@ -295,11 +295,11 @@
                                             set BottleCage(object)      [ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __BottleCage_DT__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $BottleCage(object)
                                             if {$updateCommand != {}}   { $cv_Name bind $BottleCage(object)    <Double-ButtonPress-1> \
-                                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                                     {   list://Rendering(BottleCage/DownTube@SELECT_BottleCage) \
                                                                                                     }   {BottleCage DownTube-Upper Parameter} \
                                                                                     ]
-                                                                          lib_gui::object_CursorBinding     $cv_Name    $BottleCage(object)
+                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
                                             }
                                 }
 
@@ -318,11 +318,11 @@
                                             set BottleCage(object)      [ $cv_Name readSVG $BottleCage(file) $bc_position $dt_angle  __BottleCage_DT_L__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $BottleCage(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $BottleCage(object)    <Double-ButtonPress-1> \
-                                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                                     {   list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) \
                                                                                                     }   {BottleCage DownTube-Lower Parameter} \
                                                                                     ]
-                                                                          lib_gui::object_CursorBinding     $cv_Name    $BottleCage(object)
+                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
                                             }
                                 }
 
@@ -334,12 +334,12 @@
                             set Saddle(object)          [ $cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Saddle__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Saddle(object)
                             if {$updateCommand != {}}   { $cv_Name bind $Saddle(object)    <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   file://Component(Saddle/File) \
                                                                                         Component(Saddle/LengthNose) \
                                                                                     }   {Saddle Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $Saddle(object)
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Saddle(object)
                                     }
                             }
                     HeadSet {
@@ -347,22 +347,22 @@
                             set HeadSet(polygon)        [ bikeGeometry::get_Object HeadSet/Top polygon $BB_Position  ]
                             set HeadSet(object)         [ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
                             if {$updateCommand != {}}   { $cv_Name bind $HeadSet(object)    <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   Component(HeadSet/Height/Top) \
                                                                                         Component(HeadSet/Diameter) \
                                                                                     }  {HeadSet Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $HeadSet(object)
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $HeadSet(object)
                                     }
                             set HeadSet(polygon)        [ bikeGeometry::get_Object HeadSet/Bottom polygon $BB_Position ]
                             set HeadSet(object)         [ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
                             if {$updateCommand != {}}   { $cv_Name bind $HeadSet(object)    <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   Component(HeadSet/Height/Bottom)\
                                                                                         Component(HeadSet/Diameter)        \
                                                                                     }  {HeadSet Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $HeadSet(object)
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $HeadSet(object)
                                     }
                             }
                     Stem {
@@ -382,11 +382,11 @@
                             set Logo(object)            [ $cv_Name readSVG $Logo(file) $Logo(position)    $Logo(Angle)  __Logo__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Logo(object)
                             if {$updateCommand != {}}   { $cv_Name bind $Logo(object)     <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   file://Component(Logo/File)    \
                                                                                     }   {Logo Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $Logo(object)
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Logo(object)
                                     }
                     }
                     RearWheel {     # --- create RearWheel -----------------
@@ -401,11 +401,11 @@
                                                             $cv_Name create circle  $Hub(position)  -radius 45                                          -tags {__Decoration__ __Hub__}      -fill white
                                                             $cv_Name create circle  $Hub(position)  -radius 23                                          -tags {__Decoration__}              -fill white
                             if {$updateCommand != {}}   { $cv_Name bind $my_Rim <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {     Component(Wheel/Rear/RimHeight)        \
                                                                                     }     {RearWheel Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $my_Rim
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $my_Rim
                                     }
                             }
                     FrontWheel {    # --- create FrontWheel ----------------
@@ -420,11 +420,11 @@
                                                             $cv_Name create circle  $Hub(position)  -radius 20                                          -tags {__Decoration__ __Hub__}      -fill white
                                                             $cv_Name create circle  $Hub(position)  -radius 4.5                                         -tags {__Decoration__}              -fill white
                             if {$updateCommand != {}}   { $cv_Name bind    $my_Rim    <Double-ButtonPress-1> \
-                                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {     Component(Wheel/Front/RimHeight)        \
                                                                                     }     {FrontWheel Parameter} \
                                                                     ]
-                                                          lib_gui::object_CursorBinding     $cv_Name    $my_Rim
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $my_Rim
                                     }
                             }
                     RearWheel_Rep    {
@@ -519,11 +519,11 @@
         set HeadTube(object)        [ $cv_Name create polygon $HeadTube(polygon) -fill $tubeColour -outline black  -tags __HeadTube__]
                                       $cv_Name addtag  __Frame__ withtag $HeadTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $HeadTube(object)   <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   FrameTubes(HeadTube/Diameter)    \
                                                                     }  {HeadTube Parameter}
                                                     ]
-                                      lib_gui::object_CursorBinding    $cv_Name    $HeadTube(object)
+                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $HeadTube(object)
                 }
 
             # --- create DownTube --------------------
@@ -531,13 +531,13 @@
         set DownTube(object)        [ $cv_Name create polygon $DownTube(polygon) -fill $tubeColour -outline black  -tags __DownTube__]
                                       $cv_Name addtag  __Frame__ withtag $DownTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $DownTube(object)    <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   FrameTubes(DownTube/DiameterHT)  \
                                                                         FrameTubes(DownTube/DiameterBB)  \
                                                                         FrameTubes(DownTube/TaperLength) \
                                                                     }  {DownTube Parameter}
                                                     ]
-                                      lib_gui::object_CursorBinding    $cv_Name    $DownTube(object)
+                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $DownTube(object)
                 }
 
             # --- create SeatTube --------------------
@@ -545,14 +545,14 @@
         set SeatTube(object)        [ $cv_Name create polygon $SeatTube(polygon) -fill $tubeColour -outline black  -tags __SeatTube__]
                                       $cv_Name addtag  __Frame__ withtag $SeatTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $SeatTube(object)   <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   Lugs(SeatTube/SeatStay/MiterDiameter) \
                                                                         FrameTubes(SeatTube/DiameterTT)   \
                                                                         FrameTubes(SeatTube/DiameterBB)   \
                                                                         FrameTubes(SeatTube/TaperLength)  \
                                                                     }  {SeatTube Parameter}
                                                     ]
-                                      lib_gui::object_CursorBinding    $cv_Name    $SeatTube(object)
+                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $SeatTube(object)
                 }
 
             # --- create TopTube ---------------------
@@ -560,14 +560,14 @@
         set TopTube(object)         [ $cv_Name create polygon $TopTube(polygon) -fill $tubeColour -outline black  -tags __TopTube__]
                                       $cv_Name addtag  __Frame__ withtag $TopTube(object)
         if {$updateCommand != {}}   { $cv_Name bind    $TopTube(object)    <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   FrameTubes(TopTube/DiameterHT)   \
                                                                         FrameTubes(TopTube/DiameterST)   \
                                                                         FrameTubes(TopTube/TaperLength)  \
                                                                         Custom(TopTube/Angle)        \
                                                                     }  {TopTube Parameter}
                                                     ]
-                                      lib_gui::object_CursorBinding    $cv_Name    $TopTube(object)
+                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $TopTube(object)
                 }
 
             # --- create Rear Dropout ----------------
@@ -591,7 +591,7 @@
         set ChainStay(object)       [ $cv_Name create polygon $ChainStay(polygon) -fill $tubeColour -outline black  -tags __ChainStay__]
                                       $cv_Name addtag  __Frame__ withtag $ChainStay(object)
         if {$updateCommand != {}}   { $cv_Name bind    $ChainStay(object)    <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   FrameTubes(ChainStay/DiameterSS)      \
                                                                         FrameTubes(ChainStay/Height)    \
                                                                         FrameTubes(ChainStay/HeightBB)  \
@@ -600,7 +600,7 @@
                                                                         Lugs(RearDropOut/ChainStay/Offset)  \
                                                                     }  {Chainstay Parameter}
                                                     ]
-                                      lib_gui::object_CursorBinding    $cv_Name    $ChainStay(object)
+                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $ChainStay(object)
                 }
 
             # --- create SeatStay --------------------
@@ -608,7 +608,7 @@
         set SeatStay(object)        [ $cv_Name create polygon $SeatStay(polygon) -fill $tubeColour -outline black  -tags __SeatStay__]
                                       $cv_Name addtag  __Frame__ withtag $SeatStay(object)
         if {$updateCommand != {}}   { $cv_Name bind    $SeatStay(object)    <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   Lugs(SeatTube/SeatStay/MiterDiameter) \
                                                                         FrameTubes(SeatStay/DiameterST)   \
                                                                         FrameTubes(SeatStay/DiameterCS)   \
@@ -618,7 +618,7 @@
                                                                         Lugs(RearDropOut/SeatStay/Offset)   \
                                                                     }  {SeatStay Parameter}
                                                     ]
-                                      lib_gui::object_CursorBinding    $cv_Name    $SeatStay(object)
+                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $SeatStay(object)
                 }
                 
             # --- Rear Dropout in front of Chain- and SeatStay 
@@ -628,7 +628,7 @@
             # --- handle Rear Dropout - properties ---
                                       $cv_Name addtag  __Frame__ withtag $RearDropout(object)
                             if {$updateCommand != {}}   { $cv_Name bind     $RearDropout(object)    <Double-ButtonPress-1> \
-                                                        [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                        [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   file://Lugs(RearDropOut/File)            \
                                                                         list://Lugs(RearDropOut/Direction@SELECT_DropOutDirection)  \
                                                                         list://Rendering(RearDropOut@SELECT_DropOutPosition)    \
@@ -641,7 +641,7 @@
                                                                         Lugs(RearDropOut/ChainStay/Offset)  \
                                                                     }  {RearDropout Parameter} \
                                                         ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $RearDropout(object)
+                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $RearDropout(object)
                 }                
                 
                 
@@ -656,12 +656,12 @@
         $cv_Name addtag $BottomBracket(object) withtag $BottomBracket(object_1)
         $cv_Name addtag $BottomBracket(object) withtag $BottomBracket(object_2)
         if {$updateCommand != {}}   { $cv_Name bind    __BottomBracket__    <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   Lugs(BottomBracket/Diameter/outside)   \
                                                                         Lugs(BottomBracket/Diameter/inside))   \
                                                                     }  {BottomBracket Diameter}
                                                     ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $BottomBracket(object)
+                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $BottomBracket(object)
                 }
     }
 
@@ -881,7 +881,7 @@
                       switch -glob $Rendering(Fork) {
                           SteelLugged {
                                     $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   list://Rendering(ForkBlade@SELECT_ForkBladeType) \
                                                                         Component(Fork/Blade/Width)            \
                                                                         Component(Fork/Blade/DiameterDO)    \
@@ -890,17 +890,17 @@
                                                                         Component(Fork/Blade/EndLength)    \
                                                                     }  {ForkBlade Parameter} \
                                                     ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
+                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
                           }
                           default {}
                       }
                 }
             selectable {            $cv_Name bind $ForkBlade(object)  <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   list://Rendering(Fork@SELECT_ForkType) \
                                                                     }  {ForkType Select} \
                                                     ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
+                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
                 }            default {}
         }                                                   
 
@@ -916,7 +916,7 @@
                        switch $Rendering(Fork) {
                             SteelLugged {            
                                     $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   list://Rendering(Fork@SELECT_ForkType) \
                                                                         file://Component(Fork/Crown/File)    \
                                                                         Component(Fork/Crown/Brake/Angle)     \
@@ -928,21 +928,21 @@
                                   }
                             default {            
                                     $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   list://Rendering(Fork@SELECT_ForkType) \
                                                                     }  {ForkCrown Parameter} \
                                                     ]
                                   }
                         }
-                        lib_gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
+                        rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
                         
                 }      
             selectable {            $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   list://Rendering(Fork@SELECT_ForkType) \
                                                                     }  {ForkType Select} \
                                                     ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
+                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
                 }
             default {}
         }
@@ -956,14 +956,14 @@
         switch -exact $updateCommand {
             editable { if {$Rendering(Fork) == {SteelLugged}} {           
                                       $cv_Name bind $ForkDropout(object)  <Double-ButtonPress-1> \
-                                                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                     {   file://Component(Fork/DropOut/File)    \
                                                                         list://Rendering(ForkDropOut@SELECT_DropOutPosition)
                                                                         Component(Fork/DropOut/Offset)     \
                                                                         Component(Fork/DropOut/OffsetPerp) \
                                                                     }  {ForkDropout Parameter} \
                                                     ]
-                                      lib_gui::object_CursorBinding     $cv_Name    $ForkDropout(object)
+                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkDropout(object)
                        }
                 }
             default {}
@@ -1204,25 +1204,25 @@
             
                     # --- bindings -----------
             foreach item {steerer fork bottombracket} {
-                lib_gui::object_CursorBinding     $cv_Name    $item 
+                rattleCAD::gui::object_CursorBinding     $cv_Name    $item 
             }
             
             $cv_Name bind  steerer        <Double-ButtonPress-1>  \
-                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                 {   Component(Stem/Angle)  \
                                     Component(Stem/Length) \
                                     Component(Fork/Height) \
                                     Component(Fork/Rake) }                {Steerer/Fork:  Settings}]
     
             $cv_Name bind  fork           <Double-ButtonPress-1>  \
-                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                 {   Component(Stem/Angle)  \
                                     Component(Stem/Length) \
                                     Component(Fork/Height) \
                                     Component(Fork/Rake) }                {Steerer/Fork:  Settings}]
     
             $cv_Name bind  bottombracket  <Double-ButtonPress-1>  \
-                    [list projectUpdate::createEdit  %x %y  $cv_Name  \
+                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                 {   Custom(BottomBracket/Depth) \
                                     Result(Length/BottomBracket/Height) } {BottomBracket:  Settings}]
        

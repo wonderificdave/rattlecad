@@ -1,6 +1,6 @@
  ##+##########################################################################te
  #
- # package: rattleCAD   ->  lib_comp_library.tcl
+ # package: rattleCAD   ->  lib_config.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their
@@ -32,12 +32,12 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #  namespace:  rattleCAD::lib_comp_library
+ #  namespace:  rattleCAD::config
  # ---------------------------------------------------------------------------
  #
  #
 
- namespace eval lib_config {
+ namespace eval rattleCAD::config {
 
     variable    cfg_Position    {}
 
@@ -301,14 +301,14 @@
                                 label $fileFrame.lb -text "  Select ForkType:"
                                   # puts "\n  \$fileFrame $fileFrame  \$xPath $xPath\n"
                                   # puts "     SELECT_ForkType"
-                                set listBoxContent [ projectUpdate::get_listBoxContent SELECT_ForkType Rendering(Fork))]
+                                set listBoxContent [ rattleCAD::update::get_listBoxContent SELECT_ForkType Rendering(Fork))]
                                 foreach entry $listBoxContent {
                                     puts "         ... $entry"
                                 }
                             }
                             default {
                                 label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"
-                                set listBoxContent [lib_file::get_componentAlternatives  $xPath]
+                                set listBoxContent [rattleCAD::file::get_componentAlternatives  $xPath]
                             }
                         }
                         ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
@@ -426,7 +426,7 @@
 
                         set fileFrame [frame $menueFrame.sf.lf_01.f_$i]
                         label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"
-                        set alternatives [lib_file::get_componentAlternatives  $xPath]
+                        set alternatives [rattleCAD::file::get_componentAlternatives  $xPath]
 
                         ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
                                                     -values $alternatives   -width 30
@@ -510,7 +510,7 @@
                 set key [lindex [split $targetVar ::] 2]
                 bikeGeometry::set_Value $key $compFile force
                 set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
-                cv_custom::update [lib_gui::current_canvasCAD]
+                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
             }
                 # puts "    ListboxEvent ... done"
             
@@ -859,7 +859,7 @@
             if {$_array eq {Result}} {
                 eval set $targetVar $oldValue
                 bikeGeometry::set_resultParameter $_array $_name $newValue
-                cv_custom::update [lib_gui::current_canvasCAD]
+                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
                 return
             }
 
@@ -870,7 +870,7 @@
                 # bikeGeometry::set_Value $key $newValue
                 # eval set $targetVar $newValue
 
-            cv_custom::update [lib_gui::current_canvasCAD]
+            rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
 
             return
      }
@@ -953,9 +953,9 @@
 
 
     proc tubing_checkAngles {} {
-            set lib_gui::checkAngles {on}
-            lib_gui::select_canvasCAD   cv_Custom10
-            cv_custom::update           [lib_gui::current_canvasCAD]
+            set rattleCAD::gui::checkAngles {on}
+            rattleCAD::gui::select_canvasCAD   cv_Custom10
+            rattleCAD::cv_custom::update           [rattleCAD::gui::current_canvasCAD]
     }
 
 
@@ -985,7 +985,7 @@
                                 bikeGeometry::set_Value $key $value
                                     # eval set $targetVar $value
                                     # project::remove_tracing
-                                cv_custom::update [lib_gui::current_canvasCAD]
+                                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
                             }
                         }
             }
@@ -1042,11 +1042,11 @@
                 # bikeGeometry::set_Value $xPath $configValue($xPath)
         }
 
-        set cv          [ $lib_gui::noteBook_top select ]
-        set varName     [ lib_gui::notebook_getVarName $cv ]
+        set cv          [ $rattleCAD::gui::noteBook_top select ]
+        set varName     [ rattleCAD::gui::notebook_getVarName $cv ]
         if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 
-        bikeGeometry::updateConfig       $varName   cv_custom::update    _update_
+        bikeGeometry::updateConfig       $varName   rattleCAD::cv_custom::update    _update_
     }
 
 

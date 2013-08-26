@@ -32,62 +32,62 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #    namespace:  rattleCAD::cv_custom::update
+ #    namespace:  rattleCAD::rattleCAD::cv_custom::update
  # ---------------------------------------------------------------------------
  #
  #
 
 
 
-    proc cv_custom::update {cv_Name {keepPosition {reset}}} {
+    proc rattleCAD::cv_custom::update {cv_Name {keepPosition {reset}}} {
 
         variable     bottomCanvasBorder
 
             puts ""
             puts "   -------------------------------"
-            puts "    cv_custom::update"
+            puts "    rattleCAD::cv_custom::update"
             puts "       cv_Name:         $cv_Name"
 
 
         switch $cv_Name {
-            lib_gui::cv_Custom02 {
+            rattleCAD::gui::cv_Custom02 {
                         #
                         # -- copy geometry
                         #
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                     $cv_Name        clean_StageContent
                         #
                     update_cv_Parameter               $cv_Name $xy
                         #
-                    bikeRendering::createBaseline     $cv_Name $xy
+                    rattleCAD::rendering::createBaseline     $cv_Name $xy
                         #
                     createDimension                   $cv_Name $xy    point_seat
                     #createDimension                   $cv_Name $xy    cline_frame
                     createDimension                   $cv_Name $xy    point_frame
                     #createDimension                   $cv_Name $xy    geometry_bg
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel
-                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel
-                    bikeRendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                       #
-                    bikeRendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
-                    bikeRendering::createFrame_Tubes  $cv_Name $xy
+                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
+                    rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
                       #
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet
-                    bikeRendering::createDecoration   $cv_Name $xy    Stem
-                    bikeRendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HeadSet
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Stem
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
                         #
-                        # bikeRendering::createFrame_Centerline $cv_Name $xy    {} {} {baseLine}
+                        # rattleCAD::rendering::createFrame_Centerline $cv_Name $xy    {} {} {baseLine}
                         #
-                    bikeRendering::create_copyConcept $cv_Name $xy  
+                    rattleCAD::rendering::create_copyConcept $cv_Name $xy  
                         #
                     createDimension                   $cv_Name $xy    concept_bg
                     createDimension                   $cv_Name $xy    concept_fg
@@ -97,23 +97,23 @@
                     createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #                      
                 }
-            lib_gui::cv_Custom00 {
+            rattleCAD::gui::cv_Custom00 {
                         #
                         # -- base geometry
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                     $cv_Name        clean_StageContent
                         #
                     update_cv_Parameter               $cv_Name $xy
                         #
-                    bikeRendering::createBaseline     $cv_Name $xy
+                    rattleCAD::rendering::createBaseline     $cv_Name $xy
                         #
                     createDimension                   $cv_Name $xy    point_seat
                     createDimension                   $cv_Name $xy    cline_frame
                     createDimension                   $cv_Name $xy    point_frame
                     createDimension                   $cv_Name $xy    geometry_bg
                         #
-                    bikeRendering::createFrame_Centerline $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
+                    rattleCAD::rendering::createFrame_Centerline $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
                         #
                     createDimension                   $cv_Name $xy    point_personal
                     createDimension                   $cv_Name $xy    point_crank
@@ -124,32 +124,32 @@
                     createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
-            lib_gui::cv_Custom10 {
+            rattleCAD::gui::cv_Custom10 {
                         #
                         # -- frame - details
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame ]
                     $cv_Name        clean_StageContent
                         #
                     update_cv_Parameter                         $cv_Name $xy
                         #
                     createLugRep                                $cv_Name $xy
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost                editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Rep
-                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost                editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
                         #
-                    bikeRendering::createFork_Rep     $cv_Name $xy    editable   ;# $updateCommand
-                    bikeRendering::createFrame_Tubes  $cv_Name $xy    editable   ;# $updateCommand
+                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy    editable   ;# $updateCommand
+                    rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy    editable   ;# $updateCommand
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo                    editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Pos
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr      editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    Saddle                  editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet                 editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage              editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    Stem
-                    bikeRendering::createDecoration   $cv_Name $xy    LegClearance_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo                    editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Pos
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr      editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Saddle                  editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HeadSet                 editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage              editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Stem
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    LegClearance_Rep
                         #
                     createCenterline                  $cv_Name $xy    Saddle
                         #
@@ -176,23 +176,23 @@
                     createDimensionType               $cv_Name $xy    TopHeadTube_Angle       editable   ;# $updateCommand
                     createDimensionType               $cv_Name $xy    BottleCage              editable   ;# $updateCommand
                         #
-                        # bikeRendering::debug_geometry   $cv_Name $xy
+                        # rattleCAD::rendering::debug_geometry   $cv_Name $xy
                         #
                     update_renderCanvas               $cv_Name
                         #
                     createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
-                    lib_gui::notebook_createButton    $cv_Name        TubingCheckAngles
+                    rattleCAD::gui::notebook_createButton    $cv_Name        TubingCheckAngles
                         #
                 }
-            lib_gui::cv_Custom20 {
+            rattleCAD::gui::cv_Custom20 {
                         #
                         # -- rear - mockup
                         #
                     set stageScale  [$cv_Name getNodeAttr Stage scale]
                     set stageFormat [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -204,17 +204,17 @@
                         #
                     $cv_Name         centerContent    { 0  5}          {__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
                         #
-                    lib_gui::notebook_createButton    $cv_Name         {changeFormatScale}
+                    rattleCAD::gui::notebook_createButton    $cv_Name         {changeFormatScale}
                         #
                 }
-            lib_gui::cv_Custom40 {
+            rattleCAD::gui::cv_Custom40 {
                         #
                         # -- frame - drafting
                         #
                     set stageScale  [$cv_Name getNodeAttr Stage scale]
                     set stageFormat [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -223,17 +223,17 @@
                     createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Rep
-                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
                         #
-                    bikeRendering::createFork_Rep     $cv_Name $xy
-                    bikeRendering::createFrame_Tubes  $cv_Name $xy
+                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy
+                    rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel_Pos
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr
-                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage
-                    bikeRendering::createDecoration   $cv_Name $xy    LegClearance_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Pos
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    LegClearance_Rep
                         #
                     createCenterline                  $cv_Name $xy
                         #
@@ -244,10 +244,10 @@
                         #
                     update_renderCanvas               $cv_Name
                         #
-                    lib_gui::notebook_createButton    $cv_Name        changeFormatScale
+                    rattleCAD::gui::notebook_createButton    $cv_Name        changeFormatScale
                         #
                 }
-            lib_gui::cv_Custom30 {
+            rattleCAD::gui::cv_Custom30 {
                         #
                         # -- dimension summary
                         #
@@ -257,7 +257,7 @@
                         #   puts "\n\n"
                         #   puts "   \$stageFormat: $stageFormat"
                         #   puts "   \$factor:      $factor"
-                    set xy             [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy             [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                         #
                         #   puts "   \$xy:          $xy"
                     foreach {x y} $xy break
@@ -274,23 +274,23 @@
                     createDimension                   $cv_Name $xy    point_seat
                     createDimension                   $cv_Name $xy    point_center
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel
-                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel
-                    bikeRendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                       #
-                    bikeRendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
-                    bikeRendering::createFrame_Tubes  $cv_Name $xy
+                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
+                    rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
                       #
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet
-                    bikeRendering::createDecoration   $cv_Name $xy    Stem
-                    bikeRendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HeadSet
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Stem
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
                         #
                     createDimension                   $cv_Name $xy    cline_angle
                         #
@@ -298,60 +298,60 @@
                         #
                     createDimension                   $cv_Name $xy    summary_fg
                         #
-                    bikeRendering::createBaseline     $cv_Name $xy    black
+                    rattleCAD::rendering::createBaseline     $cv_Name $xy    black
                         #
                     update_renderCanvas               $cv_Name
                         #
                     createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
-                    lib_gui::notebook_createButton    $cv_Name        changeFormatScale   format
+                    rattleCAD::gui::notebook_createButton    $cv_Name        changeFormatScale   format
                         #
                 }
-            lib_gui::cv_Custom50 {
+            rattleCAD::gui::cv_Custom50 {
                         #
                         # -- assembly
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                         #
                     $cv_Name        clean_StageContent
                         #
-                    bikeRendering::createBaseline     $cv_Name $xy
+                    rattleCAD::rendering::createBaseline     $cv_Name $xy
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel       editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel      editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel       editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel      editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                         #
-                    bikeRendering::createFork_Rep     $cv_Name $xy    selectable                  ;# $updateCommand
-                    bikeRendering::createFrame_Tubes  $cv_Name $xy
-                    bikeRendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
+                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy    selectable                  ;# $updateCommand
+                    rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet
-                    bikeRendering::createDecoration   $cv_Name $xy    Stem
-                    bikeRendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HeadSet
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Stem
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HandleBar       editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
                         #
                     update_renderCanvas               $cv_Name
                         #
                     createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
-            lib_gui::cv_Custom60 {
+            rattleCAD::gui::cv_Custom60 {
                         #
                         # -- tubemiter
                         #
                     $cv_Name        clean_StageContent
                         #
-                    bikeRendering::createTubemiter    $cv_Name { 80 190}  TopTube_Seat
-                    bikeRendering::createTubemiter    $cv_Name {200 190}  TopTube_Head
-                    bikeRendering::createTubemiter    $cv_Name { 80 105}  DownTube_Head
-                    bikeRendering::createTubemiter    $cv_Name {180 105}  SeatStay_02
-                    bikeRendering::createTubemiter    $cv_Name {250 105}  SeatStay_01
-                    bikeRendering::createTubemiter    $cv_Name {220  15}  Reference
+                    rattleCAD::rendering::createTubemiter    $cv_Name { 80 190}  TopTube_Seat
+                    rattleCAD::rendering::createTubemiter    $cv_Name {200 190}  TopTube_Head
+                    rattleCAD::rendering::createTubemiter    $cv_Name { 80 105}  DownTube_Head
+                    rattleCAD::rendering::createTubemiter    $cv_Name {180 105}  SeatStay_02
+                    rattleCAD::rendering::createTubemiter    $cv_Name {250 105}  SeatStay_01
+                    rattleCAD::rendering::createTubemiter    $cv_Name {220  15}  Reference
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
                         #
                     update_renderCanvas               $cv_Name
@@ -359,14 +359,14 @@
                     createWaterMark                   $cv_Name $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
-            lib_gui::cv_Custom70 {
+            rattleCAD::gui::cv_Custom70 {
                         #
                         # -- drafting - framejig
                         #
                     set stageScale      [$cv_Name getNodeAttr Stage scale]
                     set stageFormat     [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy              [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
+                    set xy              [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
                         #
                     $cv_Name            clean_StageContent
                         #
@@ -379,35 +379,35 @@
                         #
                     $cv_Name         centerContent    {0  15}         {__Frame__  __Decoration__  __CenterLine__  __Dimension__}
                         #
-                    lib_gui::notebook_createButton    $cv_Name        {changeFormatScale changeFrameJigVariant}
+                    rattleCAD::gui::notebook_createButton    $cv_Name        {changeFormatScale changeFrameJigVariant}
                         #
                 }
-            lib_gui::cv_Custom99 {
+            rattleCAD::gui::cv_Custom99 {
                         #
                         # -- component in ConfigPanel
                         #
-                    set xy          [cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
                         #
                     $cv_Name        clean_StageContent
                         #
-                    bikeRendering::createBaseline     $cv_Name $xy
+                    rattleCAD::rendering::createBaseline     $cv_Name $xy
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    RearWheel           editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    FrontWheel          editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    Brake               editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    SeatPost
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel           editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel          editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake               editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                         #
-                    bikeRendering::createFork_Rep     $cv_Name $xy
-                    bikeRendering::createFrame_Tubes  $cv_Name $xy
-                    bikeRendering::createDecoration   $cv_Name $xy    BottleCage         editable   ;# $updateCommand
+                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy
+                    rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage         editable   ;# $updateCommand
                         #
-                    bikeRendering::createDecoration   $cv_Name $xy    Saddle             editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    HeadSet
-                    bikeRendering::createDecoration   $cv_Name $xy    Stem
-                    bikeRendering::createDecoration   $cv_Name $xy    HandleBar          editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurRear     editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    DerailleurFront    editable   ;# $updateCommand
-                    bikeRendering::createDecoration   $cv_Name $xy    CrankSet           editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Saddle             editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HeadSet
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Stem
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    HandleBar          editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear     editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurFront    editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CrankSet           editable   ;# $updateCommand
                         #
                     createWaterMark                         $cv_Name         $::APPL_Config(PROJECT_File)    [bikeGeometry::project_attribute modified]
                         #
@@ -424,7 +424,7 @@
 
      #-------------------------------------------------------------------------
 	     #  return BottomBracket coords
-    proc cv_custom::get_BottomBracket_Position {cv_Name bottomCanvasBorder {keepPosition {reset}} {option {bicycle}} {stageScale {}}} {
+    proc rattleCAD::cv_custom::get_BottomBracket_Position {cv_Name bottomCanvasBorder {keepPosition {reset}} {option {bicycle}} {stageScale {}}} {
 	    
 	    variable  Position
 	    
