@@ -32,12 +32,12 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #  namespace:  rattleCAD::lib_comp_library
+ #  namespace:  rattleCAD::comp_library
  # ---------------------------------------------------------------------------
  #
  #
 
- namespace eval lib_comp_library {
+ namespace eval rattleCAD::comp_library {
 
     variable    compCanvas      {}
     variable    menueFrame      {}
@@ -185,7 +185,7 @@
         set compCanvas  [ canvasCAD::newCanvas    cv_Component $canvasFrame.cv  "Components" 550 550 A3 1  40  -bd 2   -bg lightgray  -relief sunken ]
         set tabID       [string map {/ . } [string map {. /} $w] ]
             # puts "\n  ... register:  $tabID $compCanvas"
-        lib_gui::register_external_canvasCAD $tabID $compCanvas
+        rattleCAD::gui::register_external_canvasCAD $tabID $compCanvas
        
             # -- TreeView bindings       
         bind $tree_System <<TreeviewOpen>>   [list [namespace current]::::populateTree %W]

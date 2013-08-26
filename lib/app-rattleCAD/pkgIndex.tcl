@@ -9,7 +9,9 @@
 # full path name of this file's directory.
 
 package ifneeded   rattleCAD  3.4 "\ 
-        [list source  [file join $dir rattleCAD.tcl]]; \ 
+        [list source  [file join $dir lib__model.tcl]]; \
+        [list source  [file join $dir lib__control.tcl]]; \
+        [list source  [file join $dir lib__view.tcl]]; \
         [list source  [file join $dir lib_file.tcl]]; \
         [list source  [file join $dir lib_gui.tcl]]; \
         [list source  [file join $dir lib_cfgReport.tcl]]; \
@@ -24,6 +26,7 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir lib_cvUpdate.tcl]]; \
         [list source  [file join $dir lib_test.tcl]]; \
         [list source  [file join $dir lib_tool.tcl]]; \
+        [list source  [file join $dir rattleCAD.tcl]]; \ 
    "
 
  # .. unused since 3.1.00

@@ -36,14 +36,15 @@
  # ---------------------------------------------------------------------------
  #
  # 
-
+ 
+ 
   package require   Tk            8.5
   package require   BWidget         
   package require   tdom
   
   package require   appUtil       0.14
   package require   vectormath    0.4
-  package require   bikeGeometry  0.25
+  package require   bikeGeometry  0.27
   package require   canvasCAD     0.45
   package require   extSummary    0.4
   
@@ -111,8 +112,10 @@
     array set APPL_CompLocation {}
 
   
+    namespace eval rattleCAD {}
 
-    
+ 
+ 
   ###########################################################################
   #
   #         F  -  U  -  N  -  C  -  T  -  I  -  O  -  N  -  S 
@@ -161,10 +164,10 @@
         	set ::APPL_Config(IMAGE_Dir)        [file join    $baseDir image ]
         	set ::APPL_Config(SAMPLE_Dir)       [file join    $baseDir sample]
         	set ::APPL_Config(TEST_Dir)         [file join    $baseDir _test]
-        	set ::APPL_Config(USER_Dir)         [lib_file::check_user_dir rattleCAD]    
-            set ::APPL_Config(EXPORT_Dir)       [lib_file::check_user_dir rattleCAD/export]
-            set ::APPL_Config(EXPORT_HTML)      [lib_file::check_user_dir rattleCAD/html]
-        	set ::APPL_Config(EXPORT_PDF)       [lib_file::check_user_dir rattleCAD/pdf]
+        	set ::APPL_Config(USER_Dir)         [rattleCAD::file::check_user_dir rattleCAD]    
+            set ::APPL_Config(EXPORT_Dir)       [rattleCAD::file::check_user_dir rattleCAD/export]
+            set ::APPL_Config(EXPORT_HTML)      [rattleCAD::file::check_user_dir rattleCAD/html]
+        	set ::APPL_Config(EXPORT_PDF)       [rattleCAD::file::check_user_dir rattleCAD/pdf]
     }
         
 	
@@ -236,7 +239,7 @@
           
           
             # -- init Parameters  ----
-        set ::APPL_Config(root_InitDOM)  [ lib_file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) rattleCAD_init.xml ] ]
+        set ::APPL_Config(root_InitDOM)  [ rattleCAD::file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) rattleCAD_init.xml ] ]
         puts "     ... root_InitDOM      [file join $::APPL_Config(CONFIG_Dir) rattleCAD_init.xml]"
 
           
@@ -264,7 +267,7 @@
         puts "     ... TemplateInit      $::APPL_Config(TemplateInit)"
             
         
-        set ::APPL_Config(root_ProjectDOM)    [lib_file::get_XMLContent     $::APPL_Config(TemplateInit)]
+        set ::APPL_Config(root_ProjectDOM)    [rattleCAD::file::get_XMLContent     $::APPL_Config(TemplateInit)]
           
         proc __unused {} {
                 # -- status messages --------
@@ -319,10 +322,10 @@
         # -- set standard font ------------
         option add *font $::APPL_Config(GUI_Font)
         
-        lib_gui::binding_copyClass      Spinbox mySpinbox
-        lib_gui::binding_removeOnly     mySpinbox [list <Clear>]
-            # lib_gui::binding_reportBindings Text
-            # lib_gui::binding_reportBindings mySpinbox
+        rattleCAD::gui::binding_copyClass      Spinbox mySpinbox
+        rattleCAD::gui::binding_removeOnly     mySpinbox [list <Clear>]
+            # rattleCAD::gui::binding_reportBindings Text
+            # rattleCAD::gui::binding_reportBindings mySpinbox
         
           
             
@@ -367,7 +370,7 @@
             
             
              # ---     create Mainframe  -----
-        set    mainframe  [ lib_gui::create_MainFrame ]
+        set    mainframe  [ rattleCAD::gui::create_MainFrame ]
             pack $mainframe  -fill both  -expand yes  -side top 
         set    indicator  [$mainframe addindicator -textvariable "::APPL_Config(PROJECT_Name)"  -anchor w]
             $indicator  configure -relief flat
@@ -377,7 +380,7 @@
             # ---     Button-bar frame  --------
         set bb_frame [ frame $frame.f1  -relief sunken        -bd 1  ]
             pack  $bb_frame  -padx 0  -pady 3  -expand no   -fill x
-        lib_gui::create_ButtonBar $bb_frame 
+        rattleCAD::gui::create_ButtonBar $bb_frame 
           
         
             # ---     notebook frame  -------
@@ -385,7 +388,7 @@
             pack  $nb_frame  -padx 0  -pady 0  -expand yes  -fill both
             
             # ---     notebook  -------------
-        lib_gui::create_Notebook $nb_frame
+        rattleCAD::gui::create_Notebook $nb_frame
           
         
         
@@ -408,7 +411,7 @@
             puts "\n"
             puts " ====== startup   F I L E ========================"
             puts "        ... [file normalize $startupProject]\n"
-            lib_file::openProject_xml $startupProject    [file tail $startupProject] 
+            rattleCAD::file::openProject_xml $startupProject    [file tail $startupProject] 
         }
         
           
@@ -420,17 +423,17 @@
         wm minsize . [winfo width  .]   [winfo height  .]
            
             # -- keyboard bindings -----------------------
-        lib_gui::global_kb_Binding ab
+        rattleCAD::gui::global_kb_Binding ab
         
              # -- window binding -----------------------
-        bind . <Configure> [list lib_gui::check_windowSize]
+        bind . <Configure> [list rattleCAD::gui::check_windowSize]
         bind . <Destroy> {
             # http://www.tek-tips.com/viewthread.cfm?qid=339303
             # Test if the toplevel (in this case ".")
             # received the event.
               # puts "         check: bind . <DESTROY> %W"
             if {[string equal %W "."]} {
-               lib_gui::exit_rattleCAD yesno bind_Destroy
+               rattleCAD::gui::exit_rattleCAD yesno bind_Destroy
             }
         } 
           
@@ -439,7 +442,7 @@
         set_window_title                 $::APPL_Config(PROJECT_Name)
             
             # -- open config panel -----------------------
-        # lib_config::create . .cfg
+        # rattleCAD::config::create . .cfg
         
             # -- status message -----------
           # appUtil::appDebug p
@@ -473,7 +476,7 @@
                 set name    [ $child getAttribute {name} ]
                 set source    [ $child getAttribute {src} ]
                     # puts "   $name  $source"
-                set lib_gui::iconArray($name) [ image create photo -file $APPL_Config(IMAGE_Dir)/$source ]
+                set rattleCAD::gui::iconArray($name) [ image create photo -file $APPL_Config(IMAGE_Dir)/$source ]
             }
             set ::cfg_panel [image create photo -file $APPL_Config(IMAGE_Dir)/cfg_panel.gif]
 
@@ -481,8 +484,8 @@
                 # --- fill CANVAS - Array
                 #
             set node    [ $root_InitDOM selectNodes /root/lib_gui/geometry/canvas ]
-            set lib_gui::canvasGeometry(width)     [ $node getAttribute {width} ]
-            set lib_gui::canvasGeometry(height)    [ $node getAttribute {height} ]    
+            set rattleCAD::gui::canvasGeometry(width)     [ $node getAttribute {width} ]
+            set rattleCAD::gui::canvasGeometry(height)    [ $node getAttribute {height} ]    
         
                 
                 # --- get TemplateFile - Names
@@ -512,7 +515,7 @@
                 
                 # --- get Template - File to load
                 #
-            set APPL_Config(TemplateInit) [lib_file::getTemplateFile   $APPL_Config(TemplateType)]
+            set APPL_Config(TemplateInit) [rattleCAD::file::getTemplateFile   $APPL_Config(TemplateType)]
                 
                 
                 # --- fill ListBox Values   list_TemplateTypes
@@ -680,7 +683,7 @@
         puts ""
         
         if {[file exists $fileName ]} {
-              set ::APPL_Config(user_InitDOM)  [ lib_file::get_XMLContent     $fileName ]
+              set ::APPL_Config(user_InitDOM)  [ rattleCAD::file::get_XMLContent     $fileName ]
                 # puts "     ... user_InitDOM      $fileName"
                 # puts "[$::APPL_Config(user_InitDOM) asXML]"
               catch {set ::APPL_Config(TemplateType) [[$::APPL_Config(user_InitDOM) selectNodes /root/TemplateFile/text()] asXML]}
@@ -847,9 +850,9 @@
               # puts "     -> [$keyNode asXML]"
             set pathString [$keyNode getAttribute dir]
               # puts "     -> $pathString"
-            lib_file::check_user_dir rattleCAD/$pathString 
+            rattleCAD::file::check_user_dir rattleCAD/$pathString 
         }
-        set suprDir     [lib_file::check_user_dir rattleCAD/components/surprise]
+        set suprDir     [rattleCAD::file::check_user_dir rattleCAD/components/surprise]
         set sourceDir   [file join $::APPL_Config(BASE_Dir) _style]
         catch {file copy [file join $sourceDir Tcl_logo.svg]       $suprDir}
         catch {file copy [file join $sourceDir rattleCAD_logo.svg] $suprDir}

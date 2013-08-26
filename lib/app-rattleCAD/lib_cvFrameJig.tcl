@@ -38,15 +38,15 @@
  #
 
 
-    proc cv_custom::createFrameJig {cv_Name  xy   stageScale  frameJigType} {
-            bikeRendering::createDecoration       $cv_Name $xy    RearWheel_Rep
-            bikeRendering::createDecoration       $cv_Name $xy    FrontWheel_Rep
+    proc rattleCAD::cv_custom::createFrameJig {cv_Name  xy   stageScale  frameJigType} {
+            rattleCAD::rendering::createDecoration       $cv_Name $xy    RearWheel_Rep
+            rattleCAD::rendering::createDecoration       $cv_Name $xy    FrontWheel_Rep
                 #
-            bikeRendering::createFrame_Tubes      $cv_Name $xy
+            rattleCAD::rendering::createFrame_Tubes      $cv_Name $xy
                 #
-            bikeRendering::createDecoration       $cv_Name $xy    Logo
+            rattleCAD::rendering::createDecoration       $cv_Name $xy    Logo
                 #
-            bikeRendering::createDecoration       $cv_Name $xy    DerailleurRear_ctr
+            rattleCAD::rendering::createDecoration       $cv_Name $xy    DerailleurRear_ctr
                 #
             createCenterline                            $cv_Name $xy
                 #
@@ -55,7 +55,7 @@
             createDimension                             $cv_Name $xy    cline_brake
             
                 #
-              # puts " <D> ..... cv_custom::createFrameJig $frameJigType"
+              # puts " <D> ..... rattleCAD::cv_custom::createFrameJig $frameJigType"
             switch -exact $frameJigType {
                 nuremberg -
                 vogeltanz {       
@@ -87,7 +87,7 @@
     }
 
 
-    proc cv_custom::get_FrameJig {frameJigType} {
+    proc rattleCAD::cv_custom::get_FrameJig {frameJigType} {
             variable FrameJig
             variable RearWheel
             variable FrontWheel
@@ -168,7 +168,7 @@
  
  
 
-    proc cv_custom::createJigDimension {cv_Name BB_Position type {active {on}}} {
+    proc rattleCAD::cv_custom::createJigDimension {cv_Name BB_Position type {active {on}}} {
 
             variable    stageScale
 
@@ -449,7 +449,7 @@
     }
 
 
-    proc cv_custom::createParameterTable {cv_Name stageScale} {
+    proc rattleCAD::cv_custom::createParameterTable {cv_Name stageScale} {
             variable FrameJig
             variable RearWheel
             variable BottomBracket
@@ -462,7 +462,7 @@
                                             
                 # puts "  -> $cv_Name"
             switch -exact $cv_Name {
-                lib_gui::cv_Custom70 {    
+                rattleCAD::gui::cv_Custom70 {    
                         #    set help_fk             [ vectormath::intersectPoint                $Steerer(Fork)        $Steerer(Stem)   $FrontWheel(Position) $RearWheel(Position) ]
 
                         set index 0

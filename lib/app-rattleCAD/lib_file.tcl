@@ -37,7 +37,7 @@
  #
  #
 
- namespace eval lib_file {
+ namespace eval rattleCAD::file {
 
 
     #-------------------------------------------------------------------------
@@ -58,7 +58,7 @@
             }
 
                 # -- read from domConfig
-            set domConfig  [ lib_file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad_default) ] ]
+            set domConfig  [ rattleCAD::file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad_default) ] ]
                     # 20111229 ...
 
                 # --- set xml-File Attributes
@@ -79,7 +79,7 @@
                 puts "                   ... done"
 
                 # -- read new File
-            set ::APPL_Config(root_ProjectDOM)     [lib_file::get_XMLContent $fileName show]
+            set ::APPL_Config(root_ProjectDOM)     [rattleCAD::file::get_XMLContent $fileName show]
                 #
             bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                 #
@@ -88,9 +88,9 @@
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             set_window_title $fileName
                 #
-            lib_gui::notebook_updateCanvas
+            rattleCAD::gui::notebook_updateCanvas
                 #
-            lib_gui::open_configPanel  refresh
+            rattleCAD::gui::open_configPanel  refresh
 
     }
 
@@ -117,7 +117,7 @@
                 # puts "   openProject_xml - fileName:   $fileName"
             if { [file readable $fileName ] } {
                     
-                    set ::APPL_Config(root_ProjectDOM)    [lib_file::get_XMLContent $fileName show]
+                    set ::APPL_Config(root_ProjectDOM)    [rattleCAD::file::get_XMLContent $fileName show]
                     set rattleCAD_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
                     
                     puts "\n"
@@ -133,7 +133,7 @@
                     set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
         
         		        #
-        		    lib_gui::notebook_updateCanvas	force	    
+        		    rattleCAD::gui::notebook_updateCanvas	force	    
 
                         # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
                     if {$windowTitle == {}} {
@@ -144,11 +144,11 @@
 
             }
                 #
-            lib_gui::open_configPanel  refresh
+            rattleCAD::gui::open_configPanel  refresh
             
                 # -- fill tree
                 #
-            lib_cfg_report::fillTree [bikeGeometry::get_projectXML] root
+            rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectXML] root
 
 
             
@@ -173,7 +173,7 @@
             set template_file    [ getTemplateFile $type ]
             puts "         ... template_file:   $template_file"
             if { [file readable $template_file ] } {
-                set ::APPL_Config(root_ProjectDOM)     [lib_file::get_XMLContent $template_file show]
+                set ::APPL_Config(root_ProjectDOM)     [rattleCAD::file::get_XMLContent $template_file show]
                     #
                 bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                     #
@@ -185,7 +185,7 @@
                     # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
 
                     #
-	            lib_gui::notebook_updateCanvas force
+	            rattleCAD::gui::notebook_updateCanvas force
 	                #
 	            set_window_title $::APPL_Config(PROJECT_Name)
             } else {
@@ -193,11 +193,11 @@
             }
 
                 #
-            lib_gui::open_configPanel  refresh
+            rattleCAD::gui::open_configPanel  refresh
             
                 # -- fill tree
                 #
-            lib_cfg_report::fillTree [bikeGeometry::get_projectXML] root
+            rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectXML] root
     }
 
 
@@ -353,7 +353,7 @@
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             set_window_title $windowTitle
                 #
-            lib_gui::notebook_updateCanvas
+            rattleCAD::gui::notebook_updateCanvas
             
                 #
             puts "\n"
@@ -378,20 +378,20 @@
             } else {
                 return
             }
-            set root [lib_file::get_XMLContent $fileName]
+            set root [rattleCAD::file::get_XMLContent $fileName]
             project::import_ProjectSubset $root
             
             # --- set APPL_Config(canvasCAD_Update)
             set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
             
-            lib_gui::notebook_updateCanvas force
+            rattleCAD::gui::notebook_updateCanvas force
 
                 #
-            lib_gui::open_configPanel  refresh
+            rattleCAD::gui::open_configPanel  refresh
             
                 # -- fill tree
                 #
-            lib_cfg_report::fillTree [bikeGeometry::get_projectXML] root
+            rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectXML] root
 
     }
 
@@ -423,7 +423,7 @@
                 # -- fill tree
                 #
             if {$show != {}} {
-                # lib_cfg_report::fillTree "$root" root
+                # rattleCAD::cfg_report::fillTree "$root" root
             }
 
                 #
@@ -439,7 +439,7 @@
     proc open_URL {url} {
             puts ""
             puts "   -------------------------------"
-            puts "    lib_file::open_URL"
+            puts "    rattleCAD::file::open_URL"
             puts "            url:        $url"
 
             eval exec [auto_execok start] \"\" [list $url] &
@@ -454,7 +454,7 @@
 
             puts ""
             puts "   -------------------------------"
-            puts "    lib_file::open_localFile"
+            puts "    rattleCAD::file::open_localFile"
             puts "       fileName:        $fileName"
 
             if {![file exists $fileName]} {
@@ -785,7 +785,7 @@
                 foreach pdfFile $pdf_fileList {
                     puts "\n"
                     puts "      ... open $pdfFile"
-                    catch {lib_file::openFile_byExtension "$pdfFile"}
+                    catch {rattleCAD::file::openFile_byExtension "$pdfFile"}
                 }
             }
             puts "    ------------------------------------------------"

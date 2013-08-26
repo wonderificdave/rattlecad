@@ -1,6 +1,6 @@
  ##+##########################################################################
  #
- # package: rattleCAD   ->  lib_version_info.tcl
+ # package: rattleCAD   ->  lib_test.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their 
@@ -32,11 +32,11 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
  #
  # ---------------------------------------------------------------------------
- #  namespace:  rattleCAD::version_info
+ #  namespace:  rattleCAD::test
  # ---------------------------------------------------------------------------
  #
  # 
- namespace eval rattleCAD_Test {
+ namespace eval rattleCAD::test {
  
    
     proc controlDemo {{testProcedure {}}} {
@@ -86,27 +86,27 @@
        wm deiconify .
        
        # -- update display -----------
-       lib_gui::notebook_refitCanvas
+       rattleCAD::gui::notebook_refitCanvas
        
        # -- integration test ---------
        set openFile         [file join  $TEST_Dir sample __test_Integration_02.xml]
        puts "          ... $openFile\n"
-       lib_file::openProject_xml   $openFile
+       rattleCAD::file::openProject_xml   $openFile
        
        
        puts "\n\n === export  pdf / html  ===\n"
-       lib_gui::export_Project      pdf
+       rattleCAD::gui::export_Project      pdf
        wm deiconify .
        update
-       lib_gui::export_Project      html
+       rattleCAD::gui::export_Project      html
        wm deiconify .        
        update
        
        
        puts "\n\n === export  svg / dxf /ps  ===\n"
-       lib_gui::notebook_exportSVG  $::APPL_Config(EXPORT_Dir) no
-       lib_gui::notebook_exportDXF  $::APPL_Config(EXPORT_Dir) no
-       lib_gui::notebook_exportPS   $::APPL_Config(EXPORT_Dir) no
+       rattleCAD::gui::notebook_exportSVG  $::APPL_Config(EXPORT_Dir) no
+       rattleCAD::gui::notebook_exportDXF  $::APPL_Config(EXPORT_Dir) no
+       rattleCAD::gui::notebook_exportPS   $::APPL_Config(EXPORT_Dir) no
        wm deiconify .
        update
        
@@ -123,31 +123,31 @@
        } {       
            set openFile     [file join  $TEST_Dir sample $thisFile]
            puts "          ... $openFile\n"
-           lib_file::openProject_xml   $openFile 
+           rattleCAD::file::openProject_xml   $openFile 
            wm deiconify .
            #update          
        }
        
               
        puts "\n\n === open config Panel  ===\n"           
-       set cfgPanel [lib_gui::open_configPanel]
+       set cfgPanel [rattleCAD::gui::open_configPanel]
        puts "    ... $cfgPanel"
        
        
        puts "\n\n === open not existing file  ===\n"  
        set openFile     [file join  $TEST_Dir sample _ghost_powerkid_20.xml]
        puts "          ... $openFile\n"
-       lib_file::openProject_xml   $openFile               
+       rattleCAD::file::openProject_xml   $openFile               
        
        
        puts "\n\n === create Information  ===\n"      
-       version_info::create  .v_info 0
+       rattleCAD::version_info::create  .v_info 0
        
        puts "\n\n === create Help  ===\n"
-       version_info::create  .v_info 1
+       rattleCAD::version_info::create  .v_info 1
        
        puts "\n\n === create Environment  ===\n"
-       version_info::create  .v_info 2
+       rattleCAD::version_info::create  .v_info 2
        
        puts "\n\n === create_intro  ===\n"        
        create_intro .intro
@@ -174,15 +174,15 @@
         puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
         puts "" 
 
-        # lib_file::saveProject_xml saveAs    
+        # rattleCAD::file::saveProject_xml saveAs    
         
         # -- update display -----------
-        lib_gui::notebook_refitCanvas
+        rattleCAD::gui::notebook_refitCanvas
         
         foreach fileName [lsort [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml]] {
             puts "\n     open Sample File:"
         puts "          .... $fileName\n"
-            lib_file::openProject_xml   $fileName
+            rattleCAD::file::openProject_xml   $fileName
         after 100
         }
           # -- open previous opened File   
@@ -190,13 +190,13 @@
         puts "\n            ... $currentFile"
         switch -exact $currentFile {
             {Template Road} {
-                lib_gui::load_Template  Road
+                rattleCAD::gui::load_Template  Road
             }        
             {Template MTB} {
-                lib_gui::load_Template  MTB
+                rattleCAD::gui::load_Template  MTB
             }
             default {
-                lib_file::openProject_xml   $currentFile    
+                rattleCAD::file::openProject_xml   $currentFile    
             }
         }    
     
@@ -225,11 +225,11 @@
             # proc setValue {arrayName type args}
             # proc getValue {arrayName type args}
             
-        # lib_gui::select_canvasCAD   cv_Custom00
+        # rattleCAD::gui::select_canvasCAD   cv_Custom00
         
         # -- update display -----------
-        lib_gui::notebook_refitCanvas
-        cv_custom::update [lib_gui::current_canvasCAD]
+        rattleCAD::gui::notebook_refitCanvas
+        rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
         
         
         # -- morphing -----------------
@@ -300,11 +300,11 @@
                    set xPath       [lindex $myValues($arrayIndex) 0]
                    set paramValue  [lindex $myValues($arrayIndex) $listIndex]
                    puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
-                       # projectUpdate::set_Value $xPath $paramValue
+                       # rattleCAD::update::set_Value $xPath $paramValue
                    bikeGeometry::set_Value $xPath $paramValue
                    incr arrayIndex 
                }
-               cv_custom::update [lib_gui::current_canvasCAD] keep
+               rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD] keep
                set  arrayIndex 0
                incr listIndex
            }

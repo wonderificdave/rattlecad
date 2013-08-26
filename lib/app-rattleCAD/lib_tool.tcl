@@ -1,6 +1,6 @@
  ##+##########################################################################
  #
- # package: rattleCAD    ->    lib_gui.tcl
+ # package: rattleCAD    ->    lib_tool.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their 
@@ -32,13 +32,13 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
  #
  # ---------------------------------------------------------------------------
- #    namespace:  rattleCAD::lib_gui
+ #    namespace:  rattleCAD::tool
  # ---------------------------------------------------------------------------
  #
  # 
  
  
- namespace eval lib_tool {
+ namespace eval rattleCAD::tool {
 
     proc check_runTime {} {
         set nameofExecutable [info nameofexecutable]

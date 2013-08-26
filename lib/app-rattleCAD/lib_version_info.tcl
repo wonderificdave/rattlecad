@@ -36,7 +36,7 @@
  # ---------------------------------------------------------------------------
  #
  # 
- namespace eval version_info {
+ namespace eval rattleCAD::version_info {
  
 
    

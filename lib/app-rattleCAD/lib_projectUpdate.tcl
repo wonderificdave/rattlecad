@@ -1,6 +1,6 @@
  ##+##########################################################################
  #
- # package: rattleCAD    ->    lib_frame_geometryUpdate.tcl
+ # package: rattleCAD    ->    lib_projectUpdate.tcl
  #
  #   canvasCAD is software of Manfred ROSENBERGER
  #       based on tclTk, BWidgets and tdom on their
@@ -32,13 +32,13 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #    namespace:  rattleCAD::frame_geometry
+ #    namespace:  rattleCAD::projectUpdate
  # ---------------------------------------------------------------------------
  #
  #
 
  
- namespace eval projectUpdate {
+ namespace eval rattleCAD::update {
  
     package require appUtil 0.9
 
@@ -124,7 +124,7 @@
                 # --- title definition ---
                     set cvTitle            [label  $cvTitleFrame.label -text "${title}"  -bg gray60  -fg white -font "Helvetica 8 bold" -justify left]
                         pack $cvTitle -side left
-                    set    cvClose         [button $cvTitleFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+                    set    cvClose         [button $cvTitleFrame.close -image $rattleCAD::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
                         pack $cvClose -side right -pady 2
                     #
                 # --- parameter to edit ---
@@ -247,7 +247,7 @@
              $cvEntry configure -command \
                           "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
              if {$index == {oneLine}} {
-                 set    cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+                 set    cvClose [button $cvContentFrame.close -image $rattleCAD::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
                  grid    $cvLabel $cvEntry $cvClose -sticky news
              } else {
                  grid    $cvLabel $cvEntry -sticky news
@@ -280,7 +280,7 @@
                  # $cvEntry configure -command \
                      "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
              if {$index == {oneLine}} {
-                 set    cvClose [button $cvContentFrame.close -image $lib_gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+                 set    cvClose [button $cvContentFrame.close -image $rattleCAD::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
                  grid    $cvLabel $cvEntry $cvClose -sticky news
                      # grid  $cvLabel $cvEntry $cvUpdate $cvClose -sticky news
              } else {
@@ -333,7 +333,7 @@
              $cvCBox configure -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::_updateValue($key)]
 
              if {$index == {oneLine}} {
-                     set    cvClose [ button         $cvFrame.close   -image $lib_gui::iconArray(iconClose) -command [list [namespace current]::closeEdit $cv $cvEdit]]
+                     set    cvClose [ button         $cvFrame.close   -image $rattleCAD::gui::iconArray(iconClose) -command [list [namespace current]::closeEdit $cv $cvEdit]]
                      grid    $cvLabel $cvCBox $cvClose   -sticky news
                      grid    $cvFrame                    -sticky news    -padx 1
              } else {
@@ -381,7 +381,7 @@
     proc get_listBoxContent {type {key {}}} {      
             set listBoxContent {}
             switch -exact $type {
-                    {SELECT_File} {             set listBoxContent [lib_file::get_componentAlternatives  $key] }
+                    {SELECT_File} {             set listBoxContent [rattleCAD::file::get_componentAlternatives  $key] }
                     {SELECT_Rim} {              set listBoxContent $::APPL_Config(list_Rims) }
                     {SELECT_ForkType} {         set listBoxContent $::APPL_Config(list_ForkTypes) }
                     {SELECT_ForkBladeType} {    set listBoxContent $::APPL_Config(list_ForkBladeTypes) }
@@ -434,7 +434,7 @@
                       
                           # set_Value xpath $_updateValue($xpath)
                           # project::remove_tracing
-                      cv_custom::update [lib_gui::current_canvasCAD]
+                      rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
                   }
           }
         
