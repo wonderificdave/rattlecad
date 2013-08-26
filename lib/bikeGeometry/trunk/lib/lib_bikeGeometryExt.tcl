@@ -211,7 +211,7 @@
               # puts "  -> \$profileDef $profileDef"
           
               # -- set profile of straight, unbent tubeprofile
-          set tubeProfile [lib_tube::init_tubeProfile $profileDef]                                    
+          set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]                                    
               # puts "  -> \$tubeProfile $tubeProfile"
   
   
@@ -231,7 +231,7 @@
                   set S02_radius   320
                   set S03_radius   320
                   set S04_radius   320
-                  # set lib_tube::arcPrecission 50
+                  # set bikeGeometry::tube::arcPrecission 50
                 }
             default {
                     # -- bent                                                
@@ -248,7 +248,7 @@
                   set S02_radius   $project::FrameTubes(ChainStay/CenterLine/radius_02)
                   set S03_radius   $project::FrameTubes(ChainStay/CenterLine/radius_03)
                   set S04_radius   $project::FrameTubes(ChainStay/CenterLine/radius_04)
-                  # set lib_tube::arcPrecission 5
+                  # set bikeGeometry::tube::arcPrecission 5
                 }
           }
           
@@ -258,15 +258,15 @@
                                   $S01_radius $S02_radius $S03_radius $S04_radius]
                                   
               # -- get smooth centerLine
-          set retValues     [lib_tube::init_centerLine $centerLineDef] 
+          set retValues     [bikeGeometry::tube::init_centerLine $centerLineDef] 
           set centerLine    [lindex $retValues 0]
           set ctrLines      [lindex $retValues 1]
                # puts "  -> \$centerLine $centerLine"
                # puts "  -> \$centerLine [llength $centerLine]"
                # exit
               # -- get shape of tube
-          set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
-          set outLineRight  [lib_tube::get_tubeShape    $centerLine $tubeProfile right ]
+          set outLineLeft   [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile left  ]
+          set outLineRight  [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile right ]
           set outLine       [appUtil::flatten_nestedList $outLineLeft $outLineRight]
               # puts "\n    -> \$outLineLeft   $outLineLeft"
               # puts "\n    -> \$outLineRight  $outLineRight"
@@ -278,7 +278,7 @@
           set angle     [vectormath::dirAngle $Center(ChainStay_DO) $p_CS_BB]
                 # puts "  -> \$length $length"
                 # puts "  -> \$angle $angle"
-          set point_IS  [lib_tube::get_shapeInterSection $outLineLeft $length]       
+          set point_IS  [bikeGeometry::tube::get_shapeInterSection $outLineLeft $length]       
           set angleIS   [vectormath::dirAngle {0 0} $point_IS]
           set angleRotation [expr $angle - $angleIS]
                 # puts "  -> \$point_IS $point_IS"
@@ -580,7 +580,7 @@
                                                   [list 500                     $Fork(BladeWith)] \
                                             ]
         
-                                    set retValue [lib_tube::get_ForkBlade $dict_ForkBlade]
+                                    set retValue [bikeGeometry::tube::get_ForkBlade $dict_ForkBlade]
                                     
                                     set outLine         [lindex $retValue 0]
                                     set centerLine      [lindex $retValue 1]
@@ -647,7 +647,7 @@
                                                       [list 500                       $myFork(BladeWith)] \
                                                 ]
             
-                                        set retValue [lib_tube::get_ForkBlade $dict_ForkBlade]
+                                        set retValue [bikeGeometry::tube::get_ForkBlade $dict_ForkBlade]
                                         
                                         set outLine         [lindex $retValue 0]
                                         set centerLine      [lindex $retValue 1]
@@ -1433,7 +1433,7 @@
                           [list 500                     $Fork(BladeWith)] \
                     ]
 
-            set retValue [lib_tube::get_ForkBlade $dict_ForkBlade]
+            set retValue [bikeGeometry::tube::get_ForkBlade $dict_ForkBlade]
             
             set outLine         [lindex $retValue 0]
             set centerLine      [lindex $retValue 1]

@@ -38,7 +38,7 @@
  # 
  
  
-namespace eval lib_tube {
+namespace eval bikeGeometry::tube {
 
     variable arcPrecission 5 ;# number of segments per arc
     
@@ -493,7 +493,7 @@ namespace eval lib_tube {
               
 
                 # -- set profile of bent tube
-              set tubeProfile [lib_tube::init_tubeProfile $profileDef]              
+              set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]              
                   # puts "   -> \$profileDef   $profileDef"
                   # puts "   -> \$tubeProfile  $tubeProfile"
             }
@@ -548,7 +548,7 @@ namespace eval lib_tube {
                                       $S01_radius $S02_radius $S03_radius  $S04_radius] 
                                       
               # -- set profile of straight tube       
-              set tubeProfile [lib_tube::init_tubeProfile $profileDef]                          
+              set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]                          
                   # puts "   -> \$profileDef   $profileDef"
                   # puts "   -> \$tubeProfile  $tubeProfile"
             }
@@ -646,7 +646,7 @@ namespace eval lib_tube {
                   lappend profileDef [list 250 36]
                   lappend profileDef [list 250 36]
                   lappend profileDef [list 250 36]       
-              set tubeProfile [lib_tube::init_tubeProfile $profileDef]                 
+              set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]                 
                   # puts "   -> \$profileDef   $profileDef"
                   # puts "   -> \$tubeProfile  $tubeProfile"
             }
@@ -669,13 +669,13 @@ namespace eval lib_tube {
         set dropOutAngle  [expr $angleRotation - $headTube_Angle]
                                 
             # -- get smooth centerLine
-        set retValues [lib_tube::init_centerLine $centerLineDef] 
+        set retValues [bikeGeometry::tube::init_centerLine $centerLineDef] 
         set centerLine  [lindex $retValues 0]
         set ctrLines    [lindex $retValues 1]
         
             # -- draw shape of tube
-        set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
-        set outLineRight  [lib_tube::get_tubeShape    $centerLine $tubeProfile right ]
+        set outLineLeft   [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile left  ]
+        set outLineRight  [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile right ]
         set outLine       [appUtil::flatten_nestedList $outLineLeft $outLineRight]
         set angleRotation [expr $angleRotation - $headTube_Angle]
         set brakeDefLine  [lrange $outLineRight 0 1]
