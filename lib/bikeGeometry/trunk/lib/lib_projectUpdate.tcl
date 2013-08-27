@@ -1215,6 +1215,17 @@
                             }                        
             
                   
+                                    # -- get Rendering Saddle/Offset
+                            set parentNode [$projectDOM selectNode /root/Rendering]
+                            set node       [$projectDOM selectNode /root/Rendering/Saddle]
+                            if {$node == {}} {
+                                    puts "                           ... update File ... /root/Rendering/Saddle"
+                                     $parentNode appendXML  "<Saddle>
+                                                                 <Offset_X>0.00</Offset_X>
+                                                                 <Offset_Y>0.00</Offset_Y>
+                                                             </Saddle>"
+                            }                        
+    
                     
                           
                         }       
