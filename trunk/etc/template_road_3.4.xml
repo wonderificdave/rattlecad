@@ -320,7 +320,7 @@
         <ForkDropOut>front</ForkDropOut>
         <ChainStay>straight</ChainStay>
         <Saddle>
-            <Offset_X>-5.00</Offset_X>
+            <Offset_X>5.00</Offset_X>
             <Offset_Y>0.00</Offset_Y>
         </Saddle>
         <RearMockup>

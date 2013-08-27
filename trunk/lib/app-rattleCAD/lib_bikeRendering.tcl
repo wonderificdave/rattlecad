@@ -331,7 +331,7 @@
                                 # --- create Saddle --------------------
                             set Saddle(position)        [ bikeGeometry::get_Object        Saddle  position        $BB_Position ]
                             set Saddle(file)            [ checkFileString $project::Component(Saddle/File) ]
-                            set SaddlePosition          [ vectormath::addVector $Saddle(position) [list [expr -1.0 * $project::Rendering(Saddle/Offset_X)] $project::Rendering(Saddle/Offset_Y) ] ]
+                            set SaddlePosition          [ vectormath::addVector $Saddle(position) [list $project::Rendering(Saddle/Offset_X) $project::Rendering(Saddle/Offset_Y) ] ]
                             set Saddle(object)          [ $cv_Name readSVG $Saddle(file) $SaddlePosition   0  __Saddle__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Saddle(object)
                             if {$updateCommand != {}}   { $cv_Name bind $Saddle(object)    <Double-ButtonPress-1> \
@@ -1143,16 +1143,15 @@
     
                 # ------ saddle representation
                     set saddle_polygon {}
-                    set x_04   $project::Component(Saddle/LengthNose)
+                    set x_04   [ expr $project::Component(Saddle/LengthNose) + $project::Rendering(Saddle/Offset_X) ]
                     set x_03   [ expr $x_04 - 20 ]
                     set x_02   [ expr $x_04 - 30 ]
-                    set x_01   [ expr $project::Component(Saddle/LengthNose) - $project::Component(Saddle/Length) ]
+                    set x_01   [ expr $x_04 - $project::Component(Saddle/Length)]
                     foreach xy [ list [list $x_01 4] {0 0} [list $x_02 -1] [list $x_03 -5] [list $x_04 -12] ] {
                         set saddle_polygon [ lappend saddle_polygon [vectormath::addVector $Saddle $xy ] ]
                     }
-            $cv_Name create line  $saddle_polygon                                                               -fill gray60  -width 1.0      -tags {__CenterLine__    saddle}
-            # $cv_Name create circle  $SeatPost_Saddle    -radius 20    -fill white    -tags __Frame__ -outline darkred
-    
+            $cv_Name create line  $saddle_polygon        -fill gray60  -width 1.0      -tags {__CenterLine__    saddle}
+
     
                 # puts "  $highlightList "
                 # --- highlightList

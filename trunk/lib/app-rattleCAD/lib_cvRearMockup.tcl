@@ -138,9 +138,9 @@
             set ChainStay(96)           [ list [expr -1.0 * ($Length(ChainStay) - $project::Lugs(RearDropOut/ChainStay/Offset))] [expr  1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
                                         
 
-                # -- create CrankArm & RearHub
-            create_CrankArm
+                # -- create RearHub
             create_RearHub
+            create_CrankArm
             
                 # -- ChainStay Area      
             create_ClearArea
@@ -377,6 +377,13 @@
                     $cv_Name bind $_dim_CrankArmWidth   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(CrankSet/ArmWidth) ]
                     $cv_Name bind $_dim_ChainLine       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(CrankSet/ChainLine) ]
            
+           
+           
+                # -- create CrankArm
+            #create_CrankArm
+            $cv_Name raise {__CrankArm__}
+            
+            
             return           
 
     }
@@ -558,7 +565,7 @@
             set polygon         [ appUtil::flatten_nestedList   $pt_10  $pt_11  $pt_12  $pt_13 \
                                                                 $pt_20  $pt_21  $pt_22  $pt_23  $pt_24  $pt_25] 
             
-            set componentCrank  [ $ext_cvName create polygon         $polygon    -fill gray -outline black  -tags  __Component__ ]
+            set componentCrank  [ $ext_cvName create polygon         $polygon    -fill gray -outline black  -tags  {__Component__ __CrankArm__}]
             
             
            rattleCAD::gui::object_CursorBinding    $ext_cvName $componentCrank
@@ -570,7 +577,7 @@
                                                 
                 # -- centerline of pedal axis
             $ext_cvName create centerline     [ appUtil::flatten_nestedList $pt_00 $pt_03 ] \
-                                                                             -fill gray50       -width 0.25     -tags __CenterLine__
+                                                                             -fill gray50       -width 0.25     -tags {__CenterLine__ __CrankArm__}
 
 
                 # -- global points
@@ -606,7 +613,7 @@
                     set cw_object       [ get_ChainWheel $teethCount  $chainWheelWidth  $chainWheelPos ]
                     set cw_clearance    [ lindex $cw_object 0 ]
                     set cw_polygon      [ lindex $cw_object 1 ]
-                    $ext_cvName create polygon     $cw_polygon     -fill gray -outline black  -tags __Component__ 
+                    $ext_cvName create polygon     $cw_polygon     -fill gray -outline black  -tags {__Component__ __CrankArm__} 
                 
                         # -- position of next chainwheel
                     set chainWheelPos   [ vectormath::addVector $chainWheelPos {0 1} $chainWheelDistance ]
