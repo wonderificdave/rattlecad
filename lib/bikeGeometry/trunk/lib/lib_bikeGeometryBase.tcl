@@ -234,7 +234,7 @@
                        set Saddle(Saddle_Height) 0
                 }
             set Saddle(Position)        [ list [expr -1.0*$Saddle(Distance)]  $Saddle(Height) ]
-            set Saddle(Nose)            [ vectormath::addVector  $Saddle(Position) [list $project::Component(Saddle/LengthNose) -15] ]
+            set Saddle(Nose)            [ vectormath::addVector  $Saddle(Position) [list [expr $project::Component(Saddle/LengthNose) + $project::Rendering(Saddle/Offset_X)] -15] ]
 
                 #
                 # --- get SaddleMount - Position

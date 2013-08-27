@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.29
+ package provide bikeGeometry 0.30
 
  namespace eval bikeGeometry {
 
@@ -737,11 +737,13 @@
                       set newValue                [set_Value $xpath  $value format ]
                       set delta                   [expr -1.0 * ($newValue - $oldValue) ]
               
-                        # --- set HandleBar(Distance)
+                        
+                        # --- set Component(Saddle/LengthNose)
                         #
-                      set newValue                [expr $project::Component(Saddle/LengthNose) + $delta ]
-                      set xpath                   Component/Saddle/LengthNose
-                      set_Value                   $xpath     $newValue
+                      set newValue                [expr $project::Rendering(Saddle/Offset_X) + $delta ]
+                      set xpath                   Rendering/Saddle/Offset_X
+                      set_Value                   $xpath     $newValue                        
+
                       return
                   }
                   
