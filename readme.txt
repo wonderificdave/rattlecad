@@ -1,9 +1,15 @@
 
 
+3.4.00.74  - 2013.08.27
+-------------------------------------------------------------------------------
+    refactor:
+        ... ChainStay-Details: position CrankArm on top
+
+
 3.4.00.73  - 2013.08.27
 -------------------------------------------------------------------------------
     feature:
-        ... edit rendering position of saddle, saddle_d
+        ... modify parametrization of tyre-Geometry in ChainStay-Details
 
 
 3.4.00.72  - 2013.08.26
