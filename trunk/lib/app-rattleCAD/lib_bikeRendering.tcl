@@ -331,12 +331,15 @@
                                 # --- create Saddle --------------------
                             set Saddle(position)        [ bikeGeometry::get_Object        Saddle  position        $BB_Position ]
                             set Saddle(file)            [ checkFileString $project::Component(Saddle/File) ]
-                            set Saddle(object)          [ $cv_Name readSVG $Saddle(file) $Saddle(position)   0  __Saddle__ ]
+                            set SaddlePosition          [ vectormath::addVector $Saddle(position) [list [expr -1.0 * $project::Rendering(Saddle/Offset_X)] $project::Rendering(Saddle/Offset_Y) ] ]
+                            set Saddle(object)          [ $cv_Name readSVG $Saddle(file) $SaddlePosition   0  __Saddle__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Saddle(object)
                             if {$updateCommand != {}}   { $cv_Name bind $Saddle(object)    <Double-ButtonPress-1> \
                                                                     [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   file://Component(Saddle/File) \
                                                                                         Component(Saddle/LengthNose) \
+                                                                                        Rendering(Saddle/Offset_X) \
+                                                                                        Rendering(Saddle/Offset_Y) \
                                                                                     }   {Saddle Parameter} \
                                                                     ]
                                                           rattleCAD::gui::object_CursorBinding     $cv_Name    $Saddle(object)
