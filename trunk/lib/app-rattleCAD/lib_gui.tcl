@@ -71,7 +71,7 @@
                 
                 {separator}
                 
-                {command "&Copy Concept"    {}  "Copy Geometry"         {Ctrl c}      -command { rattleCAD::gui::notebook_switchTab  cv_Custom02} }
+                {command "&Copy Concept"    {}  "Copy Geometry"         {Ctrl k}      -command { rattleCAD::gui::notebook_switchTab  cv_Custom02} }
                 
                 {separator}
                 
