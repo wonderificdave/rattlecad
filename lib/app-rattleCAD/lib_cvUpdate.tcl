@@ -204,6 +204,8 @@
                         #
                     $cv_Name         centerContent    { 0  5}          {__Decoration__  __CenterLine__  __Dimension__  __Frame__  __Tube__  __Lug__  __Component__ }
                         #
+                    update_renderCanvas               $cv_Name
+                        #    
                     rattleCAD::gui::notebook_createButton    $cv_Name         {changeFormatScale}
                         #
                 }

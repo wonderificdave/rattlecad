@@ -138,7 +138,7 @@
             set ChainStay(96)           [ list [expr -1.0 * ($Length(ChainStay) - $project::Lugs(RearDropOut/ChainStay/Offset))] [expr  1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
                                         
 
-                # -- create RearHub
+                # -- create RearHub & CrankArm (position CrankArm on top at the end of procedure
             create_RearHub
             create_CrankArm
             
@@ -182,10 +182,11 @@
                                       foreach {x y}  $ChainStay(polygon) {
                                               lappend polygon_opposite $x [expr -1.0 * $y]
                                       }  
-                                  set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite     -fill gray -outline black  -tags __Tube__ ]
+                                  set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite     -fill gray -outline black  -tags {__Tube__} ]
 
                                       #$ext_cvName  create   polygon $outLine    -tags __Tube__         -fill lightgray
                                       #$ext_cvName  create   line    $centerLine -tags __CenterLine__   -fill blue
+                                      #$ext_cvName  create   polygon      ...                           -fill gray -outline black  
                                     
                                   rattleCAD::gui::object_CursorBinding   $cv_Name    $tube_CS_CLine
                                   rattleCAD::gui::object_CursorBinding   $cv_Name    $tube_CS_left
@@ -411,6 +412,14 @@
             set tyre_08    [vectormath::addVector  $ext_Center(TyreWidth)   {0  1} $tyre_RadiusWidth]
             set polygonMatrix  [appUtil::flatten_nestedList  $tyre_03 $tyre_04  $tyre_05 $tyre_06 $tyre_07 $tyre_08 ]
             
+            set tyre_04    [vectormath::addVector  $ext_Center(TyreWidth)   {0 -1} $tyre_RadiusWidth]
+            set tyre_05    [vectormath::addVector  $ext_Center(RearHub)     [list 30 [expr -1.0 * $tyre_RadiusWidth] ] ]
+            set tyre_06    [vectormath::addVector  $ext_Center(RearHub)     {1 0}  35 ]
+            set tyre_07    [vectormath::addVector  $ext_Center(RearHub)     [list -35 $tyre_RadiusWidth] ]
+            set tyre_08    [vectormath::addVector  $ext_Center(TyreWidth)   {0 1} $tyre_RadiusWidth]
+            set polygonMatrix  [appUtil::flatten_nestedList  $tyre_04  $tyre_05 $tyre_06 $tyre_07 $tyre_08 ]
+            
+            
             $ext_cvName create oval      $ovalMatrix      -fill gray     -width 1.0  -tags {__Component__}
             $ext_cvName create polygon   $polygonMatrix   -fill gray     -width 1.0  -tags {__Component__}
             
@@ -430,6 +439,13 @@
                 set length03                [ expr 0.5 *  18]
                 set pointList               [ vectormath::addVectorPointList $ext_Center(RearHub) [list [expr -1*$length03] [expr -1*$ext_Length(04)] $length03 $ext_Length(04)] ]
             set hubRep          [ $ext_cvName create rectangle   $pointList            -outline blue     -width 1.0    -tags __CenterLine__ ]
+                     
+            
+               # -- rear hub representation
+            set RearHub(file)   [ rattleCAD::rendering::checkFileString {etc:hub/rattleCAD_rear.svg} ]
+            set RearHub(object) [ $ext_cvName readSVG $RearHub(file) $ext_Center(RearHub)  0  __HubRear__ ]
+                                  $ext_cvName addtag  __Decoration__ withtag $RearHub(object)
+            
             
                 # -- create first Sprocket of Cassete
             set sp_position     [ vectormath::addVector  $ext_Center(RearHub) {0 1} [ expr $ext_Length(04) - 3 ] ]
@@ -836,7 +852,7 @@
         
         set pointList [appUtil::flatten_nestedList $p00 $p01 $p02 $p03 $p04   $p14 $p13 $p12 $p11 $p10]   
         
-        $ext_cvName  create   polygon $pointList                              -tags __CenterLine__   -outline black  -fill white
+        $ext_cvName  create   polygon $pointList                              -tags __CenterLine__   -outline black  -fill lightgray
         $ext_cvName  create   centerline    [appUtil::flatten_nestedList $p0 $p4] -tags __CenterLine__   -fill gray
         
         set textPosition [vectormath::addVector $p0  [list -70 -2.5]]
