@@ -188,7 +188,7 @@
                     SeatPost {
                                 # --- create SeatPost ------------------
                             set SeatPost(polygon)         [ bikeGeometry::get_Object SeatPost polygon $BB_Position ]
-                            set SeatPost(object)        [ $cv_Name create polygon $SeatPost(polygon) -fill white  -outline black  -tags __Decoration__ ]
+                            set SeatPost(object)          [ $cv_Name create polygon $SeatPost(polygon) -fill white  -outline black  -tags __Decoration__ ]
                             if {$updateCommand != {}}     { $cv_Name bind    $SeatPost(object)   <Double-ButtonPress-1> \
                                                                     [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
                                                                                     {   Component(SeatPost/Diameter)    \
