@@ -118,5 +118,8 @@
             ... by Paul Wyganowski from 
                   http://wyganowskiframes.com/?attachment_id=189
             
-            
-            
+       logo/rosenberger.svg
+          ./selberbruzzler.svg
+          ./bohemian.svg
+          ./puch          
+             ... free to use. Ownership kept by their creators
