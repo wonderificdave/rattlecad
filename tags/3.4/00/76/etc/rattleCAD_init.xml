@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <rattleCAD>
+        <Version>3.3.00</Version>
+        <Name>rattleCAD_init</Name>
+        <modified>2012.03.02/12:00</modified>
+    </rattleCAD>
+	
+    <!-- Startup Settings -->
+    <lib_gui>
+      <geometry>
+        <canvas width="900" height="650"/>
+      </geometry>
+      <images directory="image">
+        <image name="open"			    src="open.gif" />
+        <image name="save"			    src="save.gif" />
+        <image name="print_ps"		  src="print_ps.gif" />
+        <image name="print_svg"		  src="print_svg.gif" />
+        <image name="print_dxf"		  src="print_dxf.gif" />
+        <image name="print_html"		src="print_html.gif" />
+        <image name="print_pdf"		  src="print_pdf.gif" />
+        <image name="clear"			    src="clean.gif" />
+        <image name="update"		    src="update.gif" />
+        <image name="reset_r"		    src="reset_road.gif" />
+        <image name="reset_o"		    src="reset_offroad.gif" />
+        <image name="scale_p"		    src="scale_plus.gif" />
+        <image name="scale_m"		    src="scale_minus.gif" />
+        <image name="resize"		    src="resize.gif" />
+        <image name="exit"     		  src="exit.gif" />
+        <image name="cfg_panel"		  src="cfg_panel.gif" />
+        <image name="config_panel"  src="config_panel.gif" />
+        <image name="iconClose" 	  src="iconClose.gif" />
+        <image name="confirm" 		  src="confirm.gif" />
+      </images>
+    </lib_gui>	
+    
+    
+    <Startup>
+        <TemplateFile>Road</TemplateFile>
+        <FrameJigType>rattleCAD</FrameJigType>
+    </Startup>
+    
+    <Template>
+        <Road>template_road_3.4.xml</Road>
+        <MTB>template_mtb_3.4.xml</MTB>
+    </Template>
+
+    <Options>
+    
+        <ComponentLocation>
+            <component key="Component/Fork/Crown/File"					      dir="components/fork/crown"      />
+            <component key="Component/Fork/DropOut/File"				      dir="components/fork/dropout"    />
+            <component key="Lugs/RearDropOut/File"					          dir="components/dropout"		     />
+            <component key="Component/Brake/Front/File"					      dir="components/brake/front"     />
+            <component key="Component/Brake/Rear/File"					      dir="components/brake/rear"      />
+            <component key="Component/HandleBar/File"					        dir="components/handlebar"       />
+            <component key="Component/Saddle/File"  					        dir="components/saddle"          />
+            <component key="Component/CrankSet/File"					        dir="components/crankset"        />
+            <component key="Component/Derailleur/Front/File"			    dir="components/derailleur/front"/>
+            <component key="Component/Derailleur/Rear/File"				    dir="components/derailleur/rear" />
+            <component key="Component/BottleCage/SeatTube/File"			  dir="components/bottle_cage/left" 	 />
+            <component key="Component/BottleCage/DownTube/File" 		  dir="components/bottle_cage/right" 	 />
+            <component key="Component/BottleCage/DownTube_Lower/File"	dir="components/bottle_cage/left" 	 />
+            <component key="Component/Logo/File"                      dir="components/logo" 	         />
+            <component key="Component/Hub/File"                       dir="components/hub" 	         />
+        </ComponentLocation>
+        
+        <TemplateType>
+            <Road/>
+            <MTB/>
+        </TemplateType>
+      
+        <FrameJigType>
+            <rattleCAD/>
+            <vienna/>
+            <nuremberg/>
+            <geldersheim/>
+            <!--rattleCAD/>
+            <selberbruzzler/>
+            <vogeltanz/-->
+        </FrameJigType>
+        
+        <Brake>
+            <Rim/>
+            <Disc/>
+            <off/>
+        </Brake>
+
+        <DropOutDirection>
+            <Chainstay/>
+            <horizontal/>
+        </DropOutDirection>
+
+        <DropOutPosition>
+            <front/>
+            <behind/>
+        </DropOutPosition>
+
+        <BottleCage>
+            <BrazeOn/>
+            <Cage/>
+            <Bottle/>
+            <off/>
+        </BottleCage>
+
+        <ChainStay>
+            <straight/>
+            <bent/>
+            <off/>
+        </ChainStay>
+
+        <Binary_OnOff>
+            <on/>
+            <off/>
+        </Binary_OnOff>
+
+        <ForkBlade>
+            <straight/>
+            <bent/>
+        </ForkBlade>
+        
+        <Rim>
+            <rim inch="28&#8221;"   metric="622" standard="Road/MTB" />
+            <rim inch="27,5&#8221;" metric="584" standard="MTB"  />
+            <rim inch="26&#8221;"   metric="559" standard="MTB"  />
+            <rim inch="26&#8221;"   metric="571" standard="Tria" />
+            <separator/>
+            <rim inch="28&#8221;" metric="622" standard="ETRTO" />
+            <rim inch="26&#8221;" metric="590" standard="ETRTO" />
+            <rim inch="26&#8221;" metric="571" standard="ETRTO" />
+            <rim inch="26&#8221;" metric="559" standard="ETRTO"  />
+            <rim inch="24&#8221;" metric="507" standard="ETRTO" />
+            <rim inch="20&#8221;" metric="451" standard="ETRTO" />
+            <rim inch="20&#8221;" metric="406" standard="ETRTO" />
+            <rim inch="18&#8221;" metric="355" standard="ETRTO" />
+            <rim inch="18&#8221;" metric="349" standard="ETRTO" />
+            <rim inch="18&#8221;" metric="340" standard="ETRTO" />
+            <rim inch="16&#8221;" metric="330" standard="ETRTO" />
+            <rim inch="16&#8221;" metric="305" standard="ETRTO" />
+            <separator/>	
+            <rim inch="28&#8221;" metric="635" standard="french-700B" />
+            <rim inch="27&#8221;" metric="630" standard="english-27x?" />
+            <rim inch="26&#8221;" metric="584" standard="french-650B" />
+            <rim inch="24&#8221;" metric="540" standard="french-640A" /> 
+            <rim inch="22&#8221;" metric="490" standard="french-55ßA" />
+            <rim inch="22&#8221;" metric="440" standard="french-500A" />
+            <rim inch="20&#8221;" metric="390" standard="french-450A" />
+            <rim inch="16&#8221;" metric="340" standard="french-400A" />
+            <rim inch="14&#8221;" metric="298" standard="french-350A" />
+        </Rim>
+
+        <TubeSet>
+            <Vintage>
+                <TopTube  DiameterST="25.4" DiameterHT="25.4" TaperLength="300.0" />
+                <DownTube DiameterBB="28.6" DiameterHT="28.6" TaperLength="300.0" />
+                <SeatTube DiameterBB="28.6" DiameterTT="28.6" TaperLength="300.0" />
+                <HeadTube Diameter="31.8" />
+            </Vintage>
+            <Standard>
+                <TopTube  DiameterST="28.6" DiameterHT="28.6" TaperLength="300.0" />
+                <DownTube DiameterBB="31.8" DiameterHT="31.8" TaperLength="300.0" />
+                <SeatTube DiameterBB="28.6" DiameterTT="28.6" TaperLength="300.0" />
+                <HeadTube Diameter="31.8" />
+            </Standard>
+            <Oversize>
+                <TopTube  DiameterST="31.8" DiameterHT="31.8" TaperLength="300.0" />
+                <DownTube DiameterBB="34.9" DiameterHT="34.9" TaperLength="300.0" />
+                <SeatTube DiameterBB="31.8" DiameterTT="31.8" TaperLength="300.0" />
+                <HeadTube Diameter="36.0" />
+            </Oversize>
+            <Tapered> 
+                <TopTube  DiameterST="28.6" DiameterHT="28.6" TaperLength="300.0" />
+                <DownTube DiameterBB="34.9" DiameterHT="31.8" TaperLength="300.0" />
+                <SeatTube DiameterBB="31.8" DiameterTT="28.6" TaperLength="300.0" />
+                <HeadTube Diameter="36.0" />
+            </Tapered>
+        </TubeSet>
+            
+    </Options>
+
+        
+		<Fork>
+
+        <SteelLuggedMAX>
+            <Crown>
+              <File>fork/crown/longshen_max_36_5.svg</File>
+              <Brake>
+                <Offset>20.00</Offset>
+                <Angle>0.00</Angle>
+              </Brake>
+              <Blade>
+                <Offset>35.00</Offset>
+                <OffsetPerp>3.50</OffsetPerp>
+              </Blade>
+            </Crown>
+            <Blade>
+              <Width>36.00</Width>
+              <DiameterDO>14.00</DiameterDO>
+              <TaperLength>250.00</TaperLength>
+              <BendRadius>350.00</BendRadius>
+              <EndLength>10.00</EndLength>
+            </Blade>
+            <Brake>
+              <Offset>28.00</Offset>
+            </Brake>
+            <DropOut>
+              <File>fork/dropout/dropout_14.svg</File>
+              <Offset>20.00</Offset>
+              <OffsetPerp>0.00</OffsetPerp>
+            </DropOut>
+        </SteelLuggedMAX>
+
+        <SteelLugged></SteelLugged>
+        
+        <Composite>    
+            <Crown>
+              <File>fork/_composite/fork_crown.svg</File>
+              <Brake>
+                <Offset>20.00</Offset>
+                <Angle>0.00</Angle>
+              </Brake>
+              <Blade>
+                <Offset>45.00</Offset>
+                <OffsetPerp>-4.50</OffsetPerp>
+              </Blade>
+            </Crown>
+            <Blade>
+              <Width>50.00</Width>
+              <DiameterDO>21.00</DiameterDO>
+            </Blade>
+            <Brake>
+              <Offset>34.00</Offset>
+            </Brake>					<DropOut>
+            <File>fork/_composite/dropout.svg</File>
+              <Offset>20.00</Offset>
+            </DropOut>
+        </Composite>
+
+        
+        <_Suspension>
+            <Crown>
+              <File>fork/_suspension/fork_crown.svg</File>
+              <Brake>
+                <Offset>20.00</Offset>
+                <Angle>0.00</Angle>
+              </Brake>
+            </Crown>
+            <Leg>
+              <Offset>200.00</Offset>
+              <OffsetPerp>21.00</OffsetPerp>
+              <Diameter>38.00</Diameter>
+            </Leg>
+        </_Suspension>
+
+        <Suspension_20>
+            <Geometry>
+              <Rake>40.00</Rake>
+            </Geometry>
+            <DropOut>
+              <File>fork/_suspension/suspension_bridge_20.svg</File>
+            </DropOut>
+            <Brake>
+              <Offset>25.00</Offset>
+            </Brake>
+        </Suspension_20>
+        
+        <Suspension_26>
+            <Geometry>
+              <Rake>40.00</Rake>
+            </Geometry>
+            <DropOut>
+              <File>fork/_suspension/suspension_bridge_26.svg</File>
+            </DropOut>
+            <Brake>
+              <Offset>25.00</Offset>
+            </Brake>
+        </Suspension_26>
+        
+        <Suspension_28>   
+            <Geometry>
+              <Rake>40.00</Rake>
+            </Geometry>
+            <DropOut>
+              <File>fork/_suspension/suspension_bridge_28.svg</File>
+            </DropOut>
+            <Brake>
+              <Offset>25.00</Offset>
+            </Brake>
+        </Suspension_28>
+        
+        <Suspension_29>   
+            <Geometry>
+              <Rake>45.00</Rake>
+            </Geometry>
+            <DropOut>
+              <File>fork/_suspension/suspension_bridge_29.svg</File>
+            </DropOut>
+            <Brake>
+              <Offset>25.00</Offset>
+            </Brake>
+        </Suspension_29>
+
+		</Fork>
+  
+</root>
