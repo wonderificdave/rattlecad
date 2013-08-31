@@ -1,5 +1,11 @@
 
 
+3.4.00.76  - 2013.08.31
+-------------------------------------------------------------------------------
+    feature:
+        ... add SELBERBRUZZLER-Logo to logo-Library
+
+
 3.4.00.75  - 2013.08.29
 -------------------------------------------------------------------------------
     feature:
@@ -15,19 +21,19 @@
 3.4.00.73  - 2013.08.27
 -------------------------------------------------------------------------------
     feature:
-        ... modify parametrization of tyre-Geometry in ChainStay-Details
+        ... modify saddle parameterisation 
 
 
 3.4.00.72  - 2013.08.26
 -------------------------------------------------------------------------------
     feature:
-        ... modify parametrization of tyre-Geometry in ChainStay-Details
+        ... modify parameterisation of tyre-Geometry in ChainStay-Details
 
 
 3.4.00.71  - 2013.08.26
 -------------------------------------------------------------------------------
     refactor:
-        ... move rattleCAD-libraries into rattleCAD-Namespade parenthood
+        ... move rattleCAD-libraries into rattleCAD-namespace parenthood
 
 
 3.4.00.70  - 2013.08.26
