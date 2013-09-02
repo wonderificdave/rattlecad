@@ -229,12 +229,37 @@
               <DiameterDO>21.00</DiameterDO>
             </Blade>
             <Brake>
-              <Offset>36.00</Offset>
+              <Offset>34.00</Offset>
             </Brake>					<DropOut>
             <File>fork/_composite/dropout.svg</File>
               <Offset>20.00</Offset>
             </DropOut>
         </Composite>
+		
+		<Composite_TUSK>    
+            <Crown>
+              <File>fork/_composite/fork_crown_tusk.svg</File>
+              <Brake>
+                <Offset>20.00</Offset>
+                <Angle>0.00</Angle>
+              </Brake>
+              <Blade>
+                <Offset>45.00</Offset>
+                <OffsetPerp>-4.50</OffsetPerp>
+              </Blade>
+            </Crown>
+            <Blade>
+              <Width>50.00</Width>
+              <DiameterDO>21.00</DiameterDO>
+            </Blade>
+            <Brake>
+              <Offset>36.00</Offset>
+            </Brake>					<DropOut>
+            <File>fork/_composite/dropout.svg</File>
+              <Offset>20.00</Offset>
+            </DropOut>
+        </Composite_TUSK>
+
 
         
         <_Suspension>
