@@ -675,8 +675,8 @@
 
                                         set myFork(BladeBrakeOffset)  [[ $domInit selectNodes /root/Fork/SteelLuggedMAX/Brake/Offset]  asText ]                                        
  
-                                    }
-                            Composite   {
+                                    }                            
+                            Composite  {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_compositeFork ]
                                         
                                         set pt_60  [ vectormath::rotateLine $pt_00  20.5 [expr  90 - $HeadTube(Angle)]]
@@ -717,7 +717,7 @@
 
                 #
                 # --- set Fork Crown ----------------------
-                    set Fork(CrownDirection)    $Steerer(Direction)
+            set Fork(CrownDirection)    $Steerer(Direction)
             project::setValue Result(Lugs/ForkCrown/Direction)        direction    $Fork(CrownDirection)
     }
 
@@ -1524,15 +1524,15 @@
             set domInit $project::initDOM
                 # set domInit $::APPL_Config(root_InitDOM)
                 
-            set FrontWheel(position)    [ bikeGeometry::get_Object        FrontWheel        position    {0 0}]
+            set FrontWheel(position)    [ bikeGeometry::get_Object        FrontWheel       position    {0 0}]
             set Steerer_Fork(position)  [ bikeGeometry::get_Object        Steerer/Start    position    {0 0}]
-            set ht_direction            [ bikeGeometry::get_Object        HeadTube        direction ]
+            set ht_direction            [ bikeGeometry::get_Object        HeadTube         direction ]
 
             set Fork(BladeWith)             [ [ $domInit selectNodes /root/Fork/Composite/Blade/Width            ]  asText ]
-            set Fork(BladeDiameterDO)       [ [ $domInit selectNodes /root/Fork/Composite/Blade/DiameterDO    ]  asText ]
-            set Fork(BladeOffsetCrown)      [ [ $domInit selectNodes /root/Fork/Composite/Crown/Blade/Offset        ]  asText ]
-            set Fork(BladeOffsetCrownPerp)  [ [ $domInit selectNodes /root/Fork/Composite/Crown/Blade/OffsetPerp    ]  asText ]
-            set Fork(BladeOffsetDO)         [ [ $domInit selectNodes /root/Fork/Composite/DropOut/Offset        ]  asText ]
+            set Fork(BladeDiameterDO)       [ [ $domInit selectNodes /root/Fork/Composite/Blade/DiameterDO       ]  asText ]
+            set Fork(BladeOffsetCrown)      [ [ $domInit selectNodes /root/Fork/Composite/Crown/Blade/Offset     ]  asText ]
+            set Fork(BladeOffsetCrownPerp)  [ [ $domInit selectNodes /root/Fork/Composite/Crown/Blade/OffsetPerp ]  asText ]
+            set Fork(BladeOffsetDO)         [ [ $domInit selectNodes /root/Fork/Composite/DropOut/Offset         ]  asText ]
 
             set ht_angle            [ vectormath::angle {0 1} {0 0} $ht_direction ]
             set pt_00               [list $Fork(BladeOffsetCrownPerp) [expr -1.0*$Fork(BladeOffsetCrown)] ]
@@ -1546,29 +1546,34 @@
                     # puts "   -> pt_00  $pt_00"
                     # puts "   -> pt_01  $pt_01"
 
-            set vct_10                [ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(BladeWith)] left]
-            set vct_19                [ vectormath::parallel $pt_00 $pt_02 [expr 0.5*$Fork(BladeWith)] ]
+            set vct_10              [ vectormath::parallel $pt_00 $pt_01 [expr 0.5*$Fork(BladeWith)] left]
+            set vct_19              [ vectormath::parallel $pt_00 $pt_02 [expr 0.5*$Fork(BladeWith)] ]
                     # puts "   -> pt_00  $pt_00"
                     # puts "   -> vct_10  $vct_10"
                     # puts "   -> vct_19  $vct_19"
 
-                set help_02                    [ list 0 [lindex  $FrontWheel(position) 1] ]
-                set do_angle                [ expr 90 - [ vectormath::angle $pt_01 $FrontWheel(position) $help_02  ] ]
-                set vct_05                    [ list $Fork(BladeOffsetDO) 0 ]
-                set vct_06                    [ vectormath::rotatePoint {0 0} $vct_05 [expr 90 + $do_angle] ]
+                set help_02         [ list 0 [lindex  $FrontWheel(position) 1] ]
+                set do_angle        [ expr 90 - [ vectormath::angle $pt_01 $FrontWheel(position) $help_02  ] ]
+                set vct_05          [ list $Fork(BladeOffsetDO) 0 ]
+                set vct_06          [ vectormath::rotatePoint {0 0} $vct_05 [expr 90 + $do_angle] ]
             set pt_03               [ vectormath::addVector $FrontWheel(position)  $vct_06 ]
 
                 set vct_11          [ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] left]
-                set vct_18          [ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] ]
+                set vct_18          [ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] ]            
 
-            set polygon         [format "%s %s %s %s %s %s" \
-                                    [lindex $vct_10 0] [lindex $vct_10 1] \
-                                    [lindex $vct_11 1] [lindex $vct_18 1] \
-                                    [lindex $vct_19 1] [lindex $vct_19 0] ]
-
+                                           
+            set polygon             [list -15.4096  -80.6711 \
+                                           22.8479  -37.0065 ]                              
+            set polygon             [vectormath::rotatePointList    {0 0} $polygon  $ht_angle]                                 
+            set polygon             [vectormath::addVectorPointList $Steerer_Fork(position) $polygon  ]                                 
+            lappend polygon               [lindex [lindex $vct_11 1] 0] [lindex [lindex $vct_11 1] 1] 
+            lappend polygon               [lindex [lindex $vct_18 1] 0] [lindex [lindex $vct_18 1] 1] 
+ 
             set do_direction    [ vectormath::unifyVector $FrontWheel(position) $pt_03 ]
             project::setValue Result(Lugs/Dropout/Front/Direction)    direction    $do_direction
 
+              # tk_messageBox -message "$polygon"
+              
             return $polygon
     }
 
