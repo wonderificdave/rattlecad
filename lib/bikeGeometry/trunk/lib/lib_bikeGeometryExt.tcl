@@ -677,20 +677,36 @@
  
                                     }                            
                             Composite  {
-                                        project::setValue Result(Tubes/ForkBlade)       polygon     [ set_compositeFork ]
+                                        project::setValue Result(Tubes/ForkBlade)       polygon     [ set_compositeFork {}]
                                         
                                         set pt_60  [ vectormath::rotateLine $pt_00  20.5 [expr  90 - $HeadTube(Angle)]]
                                         set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $HeadTube(Angle)]]
                                         set Fork(BrakeOffsetDef) [project::flatten_nestedList $pt_61 $pt_60 ]
                                         
-                                        set myFork(CrownFile)         [[ $domInit selectNodes /root/Fork/Composite/Crown/File ]    asText ]                           
-                                        set myFork(DropOutFile)       [[ $domInit selectNodes /root/Fork/Composite/DropOut/File ]  asText ]
+                                        set myFork(CrownFile)         [[ $domInit selectNodes /root/Fork/Composite/Crown/File         ]  asText ]                           
+                                        set myFork(DropOutFile)       [[ $domInit selectNodes /root/Fork/Composite/DropOut/File       ]  asText ]
                                         
-                                        set myFork(CrownBrakeOffset)  [[ $domInit selectNodes /root/Fork/Composite/Crown/Brake/Offset     ]  asText ]
-                                        set myFork(CrownBrakeAngle)   [[ $domInit selectNodes /root/Fork/Composite/Crown/Brake/Angle      ]  asText ]
+                                        set myFork(CrownBrakeOffset)  [[ $domInit selectNodes /root/Fork/Composite/Crown/Brake/Offset ]  asText ]
+                                        set myFork(CrownBrakeAngle)   [[ $domInit selectNodes /root/Fork/Composite/Crown/Brake/Angle  ]  asText ]
                                         
-                                        set myFork(BladeBrakeOffset)  [[ $domInit selectNodes /root/Fork/Composite/Brake/Offset ]  asText ]  
+                                        set myFork(BladeBrakeOffset)  [[ $domInit selectNodes /root/Fork/Composite/Brake/Offset       ]  asText ]  
                                    }
+						    Composite_TUSK  {
+                                        project::setValue Result(Tubes/ForkBlade)       polygon     [ set_compositeFork TUSK]
+                                        
+                                        set pt_60  [ vectormath::rotateLine $pt_00  20.5 [expr  90 - $HeadTube(Angle)]]
+                                        set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $HeadTube(Angle)]]
+                                        set Fork(BrakeOffsetDef) [project::flatten_nestedList $pt_61 $pt_60 ]
+                                        
+                                        set myFork(CrownFile)         [[ $domInit selectNodes /root/Fork/Composite_TUSK/Crown/File         ]  asText ]                           
+                                        set myFork(DropOutFile)       [[ $domInit selectNodes /root/Fork/Composite_TUSK/DropOut/File       ]  asText ]
+                                        
+                                        set myFork(CrownBrakeOffset)  [[ $domInit selectNodes /root/Fork/Composite_TUSK/Crown/Brake/Offset ]  asText ]
+                                        set myFork(CrownBrakeAngle)   [[ $domInit selectNodes /root/Fork/Composite_TUSK/Crown/Brake/Angle  ]  asText ]
+                                        
+                                        set myFork(BladeBrakeOffset)  [[ $domInit selectNodes /root/Fork/Composite_TUSK/Brake/Offset       ]  asText ]  
+                                   }
+
                             Suspension* {
                                         project::setValue Result(Tubes/ForkBlade)       polygon     [ set_suspensionFork ]
                                         
@@ -1519,7 +1535,7 @@
 
     #-------------------------------------------------------------------------
         #  Fork Blade Polygon for composite Fork
-    proc bikeGeometry::set_compositeFork {} {
+    proc bikeGeometry::set_compositeFork {forkType} {
 
             set domInit $project::initDOM
                 # set domInit $::APPL_Config(root_InitDOM)
@@ -1562,17 +1578,24 @@
                 set vct_18          [ vectormath::parallel $pt_01 $pt_03 [expr 0.5*$Fork(BladeDiameterDO)] ]            
 
                                            
-            set polygon             [list -15.4096  -80.6711 \
-                                           22.8479  -37.0065 ]                              
-            set polygon             [vectormath::rotatePointList    {0 0} $polygon  $ht_angle]                                 
-            set polygon             [vectormath::addVectorPointList $Steerer_Fork(position) $polygon  ]                                 
-            lappend polygon               [lindex [lindex $vct_11 1] 0] [lindex [lindex $vct_11 1] 1] 
-            lappend polygon               [lindex [lindex $vct_18 1] 0] [lindex [lindex $vct_18 1] 1] 
- 
+            if {$forkType == {TUSK}} {
+				set polygon         [list -15.4096  -80.6711 \
+										   22.8479  -37.0065 ]                              
+				set polygon         [vectormath::rotatePointList    {0 0} $polygon  $ht_angle]                                 
+				set polygon         [vectormath::addVectorPointList $Steerer_Fork(position) $polygon  ]                                 
+				lappend polygon         [lindex [lindex $vct_11 1] 0] [lindex [lindex $vct_11 1] 1] 
+				lappend polygon         [lindex [lindex $vct_18 1] 0] [lindex [lindex $vct_18 1] 1] 
+            } else {
+				set polygon         [format "%s %s %s %s %s %s" \
+										[lindex $vct_10 0] [lindex $vct_10 1] \
+										[lindex $vct_11 1] [lindex $vct_18 1] \
+										[lindex $vct_19 1] [lindex $vct_19 0] ]
+			}
+			
             set do_direction    [ vectormath::unifyVector $FrontWheel(position) $pt_03 ]
             project::setValue Result(Lugs/Dropout/Front/Direction)    direction    $do_direction
 
-              # tk_messageBox -message "$polygon"
+                # tk_messageBox -message "$polygon"
               
             return $polygon
     }
