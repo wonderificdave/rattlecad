@@ -836,7 +836,7 @@
                         set do_direction            [ bikeGeometry::get_Object     Lugs/Dropout/Front     direction ]
                         set do_angle                [ expr -90 + [ vectormath::angle $do_direction {0 0} {-1 0} ] ]
                         }
-            Composite     {
+            Composite*    {
                         set ForkBlade(polygon)      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
                         set ForkCrown(file)         [ checkFileString $bikeGeometry::myFork(CrownFile) ]
                         set ForkDropout(file)       [ checkFileString $bikeGeometry::myFork(DropOutFile) ]
