@@ -229,7 +229,7 @@
               <DiameterDO>21.00</DiameterDO>
             </Blade>
             <Brake>
-              <Offset>34.00</Offset>
+              <Offset>36.00</Offset>
             </Brake>					<DropOut>
             <File>fork/_composite/dropout.svg</File>
               <Offset>20.00</Offset>
