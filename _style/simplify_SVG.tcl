@@ -38,7 +38,7 @@ exec wish "$0" "$@"
             
     variable CONST_PI [expr 4*atan(1)]
     
-    set currentVersion 3.4.00.48
+    set currentVersion "3.4.00 - AA"
 
     # -- handling puts
     # http://wiki.tcl.tk/1290
@@ -173,7 +173,7 @@ exec wish "$0" "$@"
         if {[$sourceNode hasAttribute id]} {
             $targetNode setAttribute id [$sourceNode getAttribute id]
         } else {
-            $targetNode setAttribute id [format "simplify_SVG__%6i" $svgID]
+            $targetNode setAttribute id [format "simplify_SVG__%06i" $svgID]
         }
         foreach attr [$sourceNode attributes] {
             if {$attr == {id}} continue
@@ -1272,12 +1272,13 @@ exec wish "$0" "$@"
                         }
                     polyline { # polyline class="fil0 str0" points="44.9197,137.492 47.3404,135.703 48.7804,133.101 ..."
                                 set polygonNode  [simplify_Polygon $node $parentPosition]
+                                
                                 set myNode [$flatSVG createElement polyline]
                                 $myNode setAttribute id $nodeID
                                 foreach attr [$polygonNode attributes] {
-                                    $myNode setAttribute $attr [$polygonNode hasAttribute $attr]
+                                    $myNode setAttribute $attr [$polygonNode getAttribute $attr]
                                 }
-                                $targetNode appendChild $myNode 
+                                $targetNode appendChild $myNode
                         }
                     line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
                                 set myNode  [simplify_Line $node $parentPosition]
@@ -1712,6 +1713,7 @@ exec wish "$0" "$@"
             $deepText insert end $svg
             
                 # --- working 
+            puts [$flatSVG asXML]    
             drawSVG $flatSVG $resultCanvas {15 15}
             $flatText insert end {<?xml version="1.0" encoding="UTF-8"?>}
             $flatText insert end "\n"
