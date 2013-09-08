@@ -16,11 +16,13 @@
   
   set APPL_ROOT_Dir [file dirname [file dirname [lindex $argv0]]]
   lappend auto_path "$APPL_ROOT_Dir/lib/app-canvasCAD"
+  lappend auto_path "$APPL_ROOT_Dir/lib/app-vectorMath"
   
   package require 	Tk
   package require   canvasCAD
+  package require   vectormath
   
-  set w_textReport            {}
+  set w_textReport  {}
 
   
  	
