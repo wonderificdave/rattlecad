@@ -450,5 +450,5 @@
 2013.07.30  00:00   00:00    20:00   3.4.00 ... 64 ... modify handling of Font-Settings, User-Components-Library, Copy Concept
 2013.08.25  00:00   00:00    08:00   3.4.00 ... 69 ... TyreWidth, small updates
 2013.09.02  00:00   00:00    24:00   3.4.00 ... 78 ... add Fork-Type: CompositeTUSK
-2013.09.08  09:00   10:00    01:00   3.4.00 ... 79 ... packagr require vectormath in File -> SVG-ChainWheel
+2013.09.08  09:00   10:00    01:00   3.4.00 ... 79 ... package require vectormath in File -> SVG-ChainWheel
                             
