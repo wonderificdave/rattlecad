@@ -849,7 +849,7 @@
                                                                                     aligned     [expr  150 * $stageScale]   [expr  -90 * $stageScale] \
                                                                                     gray50 ]
                             set _dim_CS_Length          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position)  $BottomBracket(Position)] \
-                                                                                    aligned     [expr  150 * $stageScale]   [expr   80 * $stageScale] \
+                                                                                    aligned     [expr  180 * $stageScale]   [expr   80 * $stageScale] \
                                                                                     gray50 ]
                             set _dim_SD_Nose_Dist       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $BottomBracket(Position) ] \
                                                                                     horizontal    [expr   60 * $stageScale]   0  \
@@ -1395,7 +1395,7 @@
                                                                 darkorange ]
                                                                 
                             set _dim_Rear_Length        [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position) $BottomBracket(Position) ] \
-                                                                aligned     [expr  150 * $stageScale]  [expr   80 * $stageScale]  \
+                                                                aligned     [expr  180 * $stageScale]  [expr   80 * $stageScale]  \
                                                                 darkorange ]                                                                        
                             set _dim_Front_Length       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position) $FrontWheel(Position) ] \
                                                                 aligned     [expr  150 * $stageScale]  [expr -150 * $stageScale]  \
