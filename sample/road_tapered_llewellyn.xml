@@ -205,7 +205,7 @@
             <Q-Factor>145.50</Q-Factor>
             <ArmWidth>13.75</ArmWidth>
             <ChainLine>43.50</ChainLine>
-            <ChainRings>39;53</ChainRings>
+            <ChainRings>39-53</ChainRings>
         </CrankSet>
         <BottleCage>
             <SeatTube>
