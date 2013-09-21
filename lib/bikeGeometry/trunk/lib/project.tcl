@@ -465,7 +465,7 @@
                 # puts "            -> current value: $value \n"
                     
             switch -exact $type {
-                    value         {}
+                    value       {}
                     direction	{	if {[llength $args] != 0} {
                                         if {[lindex $args 0] == {angle} } {
                                             puts "   \n .... will become continued \n"                                      

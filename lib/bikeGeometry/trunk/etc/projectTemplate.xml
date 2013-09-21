@@ -284,6 +284,11 @@
             </Front>
             <Rear>
                 <File>etc:derailleur/rear/shimano_RD-M773.svg</File>
+                <Pulley>
+                    <x>-8.00</x>
+                    <y>-79.00</y>
+                    <teeth>11</teeth>
+                </Pulley>
             </Rear>
         </Derailleur>
         <BottleCage>

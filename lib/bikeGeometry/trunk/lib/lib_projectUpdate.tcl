@@ -1220,14 +1220,25 @@
                             set node       [$projectDOM selectNode /root/Rendering/Saddle]
                             if {$node == {}} {
                                     puts "                           ... update File ... /root/Rendering/Saddle"
-                                     $parentNode appendXML  "<Saddle>
-                                                                 <Offset_X>0.00</Offset_X>
-                                                                 <Offset_Y>0.00</Offset_Y>
-                                                             </Saddle>"
+                                    $parentNode appendXML  "<Saddle>
+                                                                <Offset_X>0.00</Offset_X>
+                                                                <Offset_Y>0.00</Offset_Y>
+                                                            </Saddle>"
                             }                        
     
                     
-                          
+                                    # -- get Rear Derailleur Details
+                             set parentNode [$projectDOM selectNode /root/Component/Derailleur/Rear]
+                             set node       [$projectDOM selectNode /root/Component/Derailleur/Rear/Pulley]
+                             if {$node == {}} {
+                                     puts "                           ... update File ... /root/Component/Derailleur/Rear/Pulley"
+                                     $parentNode appendXML  "<Pulley>
+                                                                 <x>-8.00</x>
+                                                                 <y>-79.00</y>
+                                                                 <teeth>10</teeth>
+                                                             </Pulley>"
+                             }                        
+                    
                         }       
                         
                 {ab-xy} {	set node {}
