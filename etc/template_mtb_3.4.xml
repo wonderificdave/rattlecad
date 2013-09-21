@@ -10,9 +10,9 @@
         <!-- personal geometry based on cyclist body profile -->
         <InnerLeg_Length>850.00</InnerLeg_Length>
         <HandleBar_Distance>474.00</HandleBar_Distance>
-        <HandleBar_Height>642.00</HandleBar_Height>
+        <HandleBar_Height>635.00</HandleBar_Height>
         <Saddle_Distance>245.10</Saddle_Distance>
-        <Saddle_Height>713.30</Saddle_Height>
+        <Saddle_Height>710.00</Saddle_Height>
     </Personal>
 
     <Custom>
@@ -284,6 +284,11 @@
             </Front>
             <Rear>
                 <File>etc:derailleur/rear/shimano_RD-M773.svg</File>
+                <Pulley>
+                     <x>-2.00</x>
+                     <y>-128.00</y>
+                     <teeth>10</teeth>
+                </Pulley>
             </Rear>
         </Derailleur>
         <BottleCage>

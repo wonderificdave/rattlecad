@@ -72,7 +72,9 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                       #
-                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Chain           editable   ;# $updateCommand
+                      #
+                    rattleCAD::rendering::createFork         $cv_Name $xy    selectable                 ;# $updateCommand
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
                       #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
@@ -139,7 +141,7 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
                         #
-                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy    editable   ;# $updateCommand
+                    rattleCAD::rendering::createFork         $cv_Name $xy    editable   ;# $updateCommand
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy    editable   ;# $updateCommand
                         #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo                    editable   ;# $updateCommand
@@ -228,7 +230,7 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
                         #
-                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy
+                    rattleCAD::rendering::createFork         $cv_Name $xy
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
                         #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
@@ -281,7 +283,9 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                       #
-                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy    selectable                 ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Chain           editable   ;# $updateCommand
+                      #
+                    rattleCAD::rendering::createFork         $cv_Name $xy    selectable                 ;# $updateCommand
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
                       #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
@@ -324,11 +328,14 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                         #
-                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy    selectable                  ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Chain           editable   ;# $updateCommand
+                        #
+                    rattleCAD::rendering::createFork         $cv_Name $xy    selectable                  ;# $updateCommand
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
                         #
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Chain           editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    HeadSet
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Stem
@@ -399,7 +406,7 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake               editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                         #
-                    rattleCAD::rendering::createFork_Rep     $cv_Name $xy
+                    rattleCAD::rendering::createFork         $cv_Name $xy
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage         editable   ;# $updateCommand
                         #

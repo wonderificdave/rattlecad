@@ -10,9 +10,9 @@
         <!-- personal geometry based on cyclist body profile -->
         <InnerLeg_Length>850.00</InnerLeg_Length>
         <HandleBar_Distance>471.24</HandleBar_Distance>
-        <HandleBar_Height>646.31</HandleBar_Height>
+        <HandleBar_Height>635.00</HandleBar_Height>
         <Saddle_Distance>230.82</Saddle_Distance>
-        <Saddle_Height>718.00</Saddle_Height>
+        <Saddle_Height>710.00</Saddle_Height>
     </Personal>    
 
     <Custom>
@@ -285,6 +285,11 @@
             </Front>
             <Rear>
                 <File>etc:derailleur/rear/campagnolo_2006_short.svg</File>
+                <Pulley>
+                     <x>-8.00</x>
+                     <y>-79.00</y>
+                     <teeth>10</teeth>
+                </Pulley>
             </Rear>
         </Derailleur>
         <BottleCage>
