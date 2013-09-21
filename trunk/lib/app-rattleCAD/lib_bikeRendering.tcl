@@ -40,6 +40,23 @@
  namespace eval rattleCAD::rendering {
 
 
+    # --- check existance of File --- regarding on user/etc
+    proc checkFileString {fileString} {
+        switch -glob $fileString {
+                user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
+                etc:*   {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
+                default {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components $fileString ]}
+            }
+            # puts "            ... createDecoration::checkFileString $svgFile"
+        if {![file exists $svgFile]} {
+                    # puts "           ... does not exist, therfore .."
+                set svgFile [file join $::APPL_Config(CONFIG_Dir)/components default_exception.svg]
+        }
+            # puts "            ... createDecoration::checkFileString $svgFile"
+        return $svgFile
+    }
+
+
     proc createBaseline {cv_Name BB_Position {colour {gray}}} {
 
                 # --- get distance to Ground
@@ -79,25 +96,6 @@
             set Rendering(BottleCage_ST)    $project::Rendering(BottleCage/SeatTube)
             set Rendering(BottleCage_DT)    $project::Rendering(BottleCage/DownTube)
             set Rendering(BottleCage_DT_L)  $project::Rendering(BottleCage/DownTube_Lower)
-
-
-
-
-            # --- check existance of File --- regarding on user/etc
-            proc checkFileString {fileString} {
-                switch -glob $fileString {
-                        user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
-                        etc:*   {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
-                        default {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components $fileString ]}
-                    }
-                    # puts "            ... createDecoration::checkFileString $svgFile"
-                if {![file exists $svgFile]} {
-                            # puts "           ... does not exist, therfore .."
-                        set svgFile [file join $::APPL_Config(CONFIG_Dir)/components default_exception.svg]
-                }
-                    # puts "            ... createDecoration::checkFileString $svgFile"
-                return $svgFile
-            }
 
 
             switch $type {
@@ -162,7 +160,7 @@
                                 # puts "\n  -> \$CrankSet(file) $CrankSet(file)\n"
                             set compString [file tail $CrankSet(file)]
                             if {[file tail $CrankSet(file)] == {custom.svg}} {
-                                    set CrankSet(object)        [ create_customCrank  $cv_Name  $CrankSet(position) ]
+                                    set CrankSet(object)        [ createCrank_Custom  $cv_Name  $CrankSet(position) ]
                                                                   $cv_Name addtag  __Decoration__ withtag $CrankSet(object)
                                     if {$updateCommand != {}}   { $cv_Name bind    $CrankSet(object)    <Double-ButtonPress-1> \
                                                                             [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
@@ -185,6 +183,23 @@
                                         }
                                 }
                             }
+                    Chain {
+                                # --- create Chain -------------
+                            set Chain(object)           [ createChain  $cv_Name  $BB_Position]
+                                                          $cv_Name addtag  __Decoration__ withtag $Chain(object)
+                            if {$updateCommand != {}}   { $cv_Name bind    $Chain(object)    <Double-ButtonPress-1> \
+                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name \
+                                                                                    {   text://Component(CrankSet/ChainRings) \
+                                                                                        Component/Derailleur/Rear/Pulley/x \
+                                                                                        Component/Derailleur/Rear/Pulley/y \
+                                                                                        Component/Derailleur/Rear/Pulley/teeth \
+                                                                                    }   {Chain Parameter} \
+                                                                    ]
+                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Chain(object)
+                                    }
+                            }
+
+                    
                     SeatPost {
                                 # --- create SeatPost ------------------
                             set SeatPost(polygon)         [ bikeGeometry::get_Object SeatPost polygon $BB_Position ]
@@ -499,23 +514,6 @@
             # set tubeColour "gray90"
         set tubeColour         "white"
 
-            # --- check existance of File --- regarding on user/etc
-        proc checkFileString {fileString} {
-            switch -glob $fileString {
-                    user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
-                    etc:*   {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
-                    default {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components $fileString ]}
-                }
-                # puts "            ... createDecoration::checkFileString $svgFile"
-            if {![file exists $svgFile]} {
-                        # puts "           ... does not exist, therfore .."
-                    set svgFile [file join $::APPL_Config(CONFIG_Dir)/components default_exception.svg]
-            }
-                # puts "            ... createDecoration::checkFileString $svgFile"
-            return $svgFile
-        }
-
-
 
             # --- create HeadTube --------------------
         set HeadTube(polygon)       [ bikeGeometry::get_Object HeadTube polygon $BB_Position  ]
@@ -630,21 +628,21 @@
         }
             # --- handle Rear Dropout - properties ---
                                       $cv_Name addtag  __Frame__ withtag $RearDropout(object)
-                            if {$updateCommand != {}}   { $cv_Name bind     $RearDropout(object)    <Double-ButtonPress-1> \
-                                                        [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
-                                                                    {   file://Lugs(RearDropOut/File)            \
-                                                                        list://Lugs(RearDropOut/Direction@SELECT_DropOutDirection)  \
-                                                                        list://Rendering(RearDropOut@SELECT_DropOutPosition)    \
-                                                                        Lugs(RearDropOut/RotationOffset)    \
-                                                                        Lugs(RearDropOut/Derailleur/x)  \
-                                                                        Lugs(RearDropOut/Derailleur/y)  \
-                                                                        Lugs(RearDropOut/SeatStay/OffsetPerp)  \
-                                                                        Lugs(RearDropOut/SeatStay/Offset)   \
-                                                                        Lugs(RearDropOut/ChainStay/OffsetPerp)  \
-                                                                        Lugs(RearDropOut/ChainStay/Offset)  \
-                                                                    }  {RearDropout Parameter} \
-                                                        ]
-                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $RearDropout(object)
+        if {$updateCommand != {}}   { $cv_Name bind     $RearDropout(object)    <Double-ButtonPress-1> \
+                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                {   file://Lugs(RearDropOut/File)            \
+                                                    list://Lugs(RearDropOut/Direction@SELECT_DropOutDirection)  \
+                                                    list://Rendering(RearDropOut@SELECT_DropOutPosition)    \
+                                                    Lugs(RearDropOut/RotationOffset)    \
+                                                    Lugs(RearDropOut/Derailleur/x)  \
+                                                    Lugs(RearDropOut/Derailleur/y)  \
+                                                    Lugs(RearDropOut/SeatStay/OffsetPerp)  \
+                                                    Lugs(RearDropOut/SeatStay/Offset)   \
+                                                    Lugs(RearDropOut/ChainStay/OffsetPerp)  \
+                                                    Lugs(RearDropOut/ChainStay/Offset)  \
+                                                }  {RearDropout Parameter} \
+                                    ]
+                  rattleCAD::gui::object_CursorBinding     $cv_Name    $RearDropout(object)
                 }                
                 
                 
@@ -668,14 +666,14 @@
                 }
     }
 
-    proc create_customCrank {cv_Name BB_Position} {
+    proc createCrank_Custom {cv_Name BB_Position} {
         variable crankLength    $project::Component(CrankSet/Length)
         variable teethCount     [lindex [lsort [split $project::Component(CrankSet/ChainRings) -]] end]
         variable decoRadius     80
 
                 puts ""
                 puts "   -------------------------------"
-                puts "   create_customCrank"
+                puts "   createCrank_Custom"
                 puts "       crankLength:    $crankLength"
                 puts "       teethCount:     $teethCount"
 
@@ -761,9 +759,9 @@
         set positon_00          $BB_Position
         set positon_01          [vectormath::addVector $BB_Position [list $crankLength 0]]
 
-        set chainWheel          [$cv_Name create polygon     $polygonChainWheel            -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill white  -outline black]
+        set chainWheel          [$cv_Name create polygon     $polygonChainWheel         -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill white  -outline black]
         set chainWheelRing      [$cv_Name create circle     $positon_00                 -tags {__Decoration__ __Crankset__ __ChainWheelRing__}  -fill white  -outline black  -radius  $decoRadius ]
-        set crankArm            [$cv_Name create polygon     $polygonCrankArm            -tags {__Decoration__ __Crankset__ __CrankArm__}        -fill white  -outline black]
+        set crankArm            [$cv_Name create polygon     $polygonCrankArm           -tags {__Decoration__ __Crankset__ __CrankArm__}        -fill white  -outline black]
         set pedalMount          [$cv_Name create circle     $positon_01                 -tags {__Decoration__ __Crankset__ __PedalMount__}      -fill white  -outline black  -radius  6 ]
         set crankAxle           [$cv_Name create circle     $positon_00                 -tags {__Decoration__ __Crankset__ __PedalMount__}      -fill white  -outline black  -radius 10 ]
 
@@ -774,7 +772,7 @@
         return $tagName
     }
 
-    proc createFork_Rep {cv_Name BB_Position {updateCommand {}} } {
+    proc createFork {cv_Name BB_Position {updateCommand {}} } {
 
         set domInit     $::APPL_Config(root_InitDOM)
 
@@ -791,22 +789,6 @@
         set Rendering(ForkDropOut)  $project::Rendering(ForkDropOut)
         
                 # tk_messageBox -message "Rendering(ForkDropOut): $Rendering(ForkDropOut)"
-
-            # --- check existance of File --- regarding on user/etc
-        proc checkFileString {fileString} {
-            switch -glob $fileString {
-                    user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
-                    etc:*   {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
-                    default {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components $fileString ]}
-                }
-                # puts "            ... createDecoration::checkFileString $svgFile"
-            if {![file exists $svgFile]} {
-                        # puts "           ... does not exist, therfore .."
-                    set svgFile [file join $::APPL_Config(CONFIG_Dir)/components default_exception.svg]
-            }
-                # puts "            ... createDecoration::checkFileString $svgFile"
-            return $svgFile
-        }
 
 
             # --- create Steerer ---------------------
@@ -987,70 +969,94 @@
 
     }
 
-    proc create_copyConcept {cv_Name BB_Position} {
+    proc createChain {cv_Name BB_Position} {
+        set crankWheelTeethCount     [lindex [lsort [split $project::Component(CrankSet/ChainRings) -]] end]
+        set casetteTeethCount        15
+        set toothWith                12.7
+        
+                puts ""
+                puts "   -------------------------------"
+                puts "   createChain"
+                puts "       teethCount:     $crankWheelTeethCount / $casetteTeethCount"   
                 
-                # --- get stageScale
-            set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]
+        set Hub(position)           [ bikeGeometry::get_Object        RearWheel                     position        $BB_Position ]
+        set Derailleur(position)    [ bikeGeometry::get_Object        Lugs/Dropout/Rear/Derailleur  position          $BB_Position]
+        
+        set Pulley(x)               [ bikeGeometry::get_Value         Component/Derailleur/Rear/Pulley/x      value ]
+        set Pulley(y)               [ bikeGeometry::get_Value         Component/Derailleur/Rear/Pulley/y      value ]
+        set Pulley(teeth)           [ bikeGeometry::get_Value         Component/Derailleur/Rear/Pulley/teeth  value ]
+        set Pulley(position)        [ vectormath::addVector $Derailleur(position) [list $Pulley(x) $Pulley(y)] ]
+                puts "       Pulley:         $Pulley(x) / $Pulley(y)  $Pulley(teeth)"   
+                
+        
+            # -----------------------------
+            #   initValues
+        set crankWheelRadius    [expr $toothWith/(2*sin([expr $vectormath::CONST_PI/$crankWheelTeethCount]))]
+        set casetteWheelRadius  [expr $toothWith/(2*sin([expr $vectormath::CONST_PI/$casetteTeethCount]))]
+        set pulleyRadius        [expr $toothWith/(2*sin([expr $vectormath::CONST_PI/$Pulley(teeth)]))]
+                        
+            # -----------------------------
+            #   upper Section 
+        set deltaRadius         [expr $crankWheelRadius - $casetteWheelRadius]   
+        set p_ch_02 [vectormath::cathetusPoint $BB_Position $Hub(position) $deltaRadius close]
+          # $cv_Name create circle  $p_ch_02          -radius 150  -outline red     -tags {__debug__}  -width 1
+        set ang_02  [vectormath::dirAngle   $BB_Position $p_ch_02]
+        set p_01    [vectormath::rotateLine $Hub(position) $casetteWheelRadius $ang_02]
+        set p_03    [vectormath::rotateLine $BB_Position   $crankWheelRadius $ang_02]
+          # $cv_Name create circle  $p_ch_02          -radius 150  -outline red     -tags {__debug__}  -width 1
+          # $cv_Name create circle  $p_03             -radius  50  -outline red     -tags {__debug__}  -width 1
+        set p_03    [vectormath::subVector $p_03 [vectormath::unifyVector $p_01 $p_03 40]]
+          # $cv_Name create circle  $p_03             -radius  30  -outline red     -tags {__debug__}  -width 1
+        set p_02    [vectormath::center $p_01 $p_03]
+        
+        set polyline_00 {}
+        set p_cas   $p_01
+        set ang_cas [expr 360/$casetteTeethCount]
+        set i       [expr round(0.5 * $casetteTeethCount - 2)]
+        while {$i > 0} {
+              # puts "   $i"
+            set i [expr $i - 1]
+            set p_cas [vectormath::rotatePoint $Hub(position) $p_cas $ang_cas]
+            lappend polyline_00 $p_cas
+        }
+        set polyline_00 [lreverse $polyline_00]
+        set polyline_01         [appUtil::flatten_nestedList $polyline_00 $p_01 $p_02]     
+        set polyline_02         [appUtil::flatten_nestedList $p_02 $p_03]   
+        
+        
+            # -----------------------------
+            #   lower Section 
+          # $cv_Name create circle  $Pulley(position)      -radius 20  -outline red     -tags {__debug__}  -width 1  
+        set deltaRadius         [expr $crankWheelRadius - $pulleyRadius]   
+        set p_ch_03 [vectormath::cathetusPoint $Pulley(position) $BB_Position $deltaRadius opposite]
+          # $cv_Name create circle  $p_ch_03       -radius  80  -outline red     -tags {__debug__}  -width 1
+        set ang_03  [vectormath::dirAngle   $BB_Position $p_ch_03]   
+        set p_05    [vectormath::rotateLine $BB_Position   $crankWheelRadius $ang_03]
+          # $cv_Name create circle  $p_05          -radius  20  -outline red     -tags {__debug__}  -width 1
+        set p_06    [vectormath::rotateLine $Pulley(position) $pulleyRadius  $ang_03]
 
-                # --- get defining Point coords ----------
-            set BottomBracket       $BB_Position
-            set RearWheel           [ bikeGeometry::get_Object     RearWheel               position    $BB_Position ]
-            set FrontWheel          [ bikeGeometry::get_Object     FrontWheel              position    $BB_Position ]
-            set SeatPost_Saddle     [ bikeGeometry::get_Object     SeatPostSaddle          position    $BB_Position ]
-            set HandleBar           [ bikeGeometry::get_Object     HandleBar               position    $BB_Position ]
-            set SeatTube_Ground     [ bikeGeometry::get_Object     SeatTubeGround          position    $BB_Position ]
-            set Steerer_Ground      [ bikeGeometry::get_Object     SteererGround           position    $BB_Position ]
-                
-                # ------ centerlines
-                # linetype
-                #    centerline
-                #    line
-                # colour
-                #    darkviolet
-                #    red
-                #    darkorange
-                #    orange
-                #
-                
-            set line(colour) gray50
-            set line(width) 0.5
-                # -----------------------------------                          
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $SeatTube_Ground   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $Steerer_Ground    $FrontWheel        ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-                                    
-            
-            
-            set line(colour) orange
-            set line(width) 1.0
-                # -----------------------------------                          
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-                # ------ front triangle
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $FrontWheel        ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $FrontWheel        $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-                # ------ seat triangle
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $SeatPost_Saddle   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $SeatPost_Saddle   $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-                # ------ rear triangle
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $SeatPost_Saddle   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $BottomBracket     ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}                             
-                # ------ diagonal
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}                             
-            
-                # ------ position 
-            set position(colour)  darkred
-            set position(width)       2.0
-            set position(radius)      7.0
-                # -----------------------------------                                                     
-            $cv_Name create circle  $HandleBar          -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
-            $cv_Name create circle  $SeatPost_Saddle    -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
-            $cv_Name create circle  $BottomBracket      -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
-            $cv_Name create circle  $RearWheel          -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
-            $cv_Name create circle  $FrontWheel         -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
+        set polyline_03         [appUtil::flatten_nestedList $p_05 $p_06]     
+        
+        
+            # -----------------------------
+            #   create representation
+        set chainObject_01      [$cv_Name create line    $polyline_01       -tags {__Decoration__ __Chain__ __Chain_Section_01__}    -fill gray70  -width 2.0 ]
+        set chainObject_02      [$cv_Name create line    $polyline_02       -tags {__Decoration__ __Chain__ __Chain_Section_02__}    -fill gray70  -width 2.0 ]
+        set chainObject_03      [$cv_Name create line    $polyline_03       -tags {__Decoration__ __Chain__ __Chain_Section_03__}    -fill gray70  -width 2.0 ]
     
-            
-     }
-
-
+        set tagName myTags
+        $cv_Name addtag $tagName withtag $chainObject_01
+        $cv_Name addtag $tagName withtag $chainObject_02
+        $cv_Name addtag $tagName withtag $chainObject_03
+        
+        catch {$cv_Name lower $chainObject_01  {__Frame__}    }
+        catch {$cv_Name lower $chainObject_02  {__DerailleurFront__} }
+        catch {$cv_Name lower $chainObject_03  {__CrankSet__ __DerailleurRear__} }
+        #catch {$cv_Name lower $chainObject_03  {} }
+        return $tagName
+    }
+    
+   
     proc createFrame_Centerline {cv_Name BB_Position {highlightList_1 {}} {highlightList_2 {}} {backgroundList {}} {excludeList {}} } {
     
     
@@ -1346,6 +1352,74 @@
         }
 
     }
+    
+    proc create_copyConcept {cv_Name BB_Position} {
+                
+                # --- get stageScale
+            set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]
+
+                # --- get defining Point coords ----------
+            set BottomBracket       $BB_Position
+            set RearWheel           [ bikeGeometry::get_Object     RearWheel               position    $BB_Position ]
+            set FrontWheel          [ bikeGeometry::get_Object     FrontWheel              position    $BB_Position ]
+            set SeatPost_Saddle     [ bikeGeometry::get_Object     SeatPostSaddle          position    $BB_Position ]
+            set HandleBar           [ bikeGeometry::get_Object     HandleBar               position    $BB_Position ]
+            set SeatTube_Ground     [ bikeGeometry::get_Object     SeatTubeGround          position    $BB_Position ]
+            set Steerer_Ground      [ bikeGeometry::get_Object     SteererGround           position    $BB_Position ]
+                
+                # ------ centerlines
+                # linetype
+                #    centerline
+                #    line
+                # colour
+                #    darkviolet
+                #    red
+                #    darkorange
+                #    orange
+                #
+                
+            set line(colour) gray50
+            set line(width) 0.5
+                # -----------------------------------                          
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $SeatTube_Ground   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $Steerer_Ground    $FrontWheel        ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+                                    
+            
+            
+            set line(colour) orange
+            set line(width) 1.0
+                # -----------------------------------                          
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+                # ------ front triangle
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $FrontWheel        ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $FrontWheel        $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+                # ------ seat triangle
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $SeatPost_Saddle   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $SeatPost_Saddle   $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+                # ------ rear triangle
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $SeatPost_Saddle   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $BottomBracket     ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}                             
+                # ------ diagonal
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}                             
+            
+                # ------ position 
+            set position(colour)  darkred
+            set position(width)       2.0
+            set position(radius)      7.0
+                # -----------------------------------                                                     
+            $cv_Name create circle  $HandleBar          -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
+            $cv_Name create circle  $SeatPost_Saddle    -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
+            $cv_Name create circle  $BottomBracket      -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
+            $cv_Name create circle  $RearWheel          -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
+            $cv_Name create circle  $FrontWheel         -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
+    
+            
+     }
+
+
+    
+    
+    
 
   }
 

@@ -1,5 +1,16 @@
 
 
+3.4.00.83  - 2013.09.21
+-------------------------------------------------------------------------------
+    feature:
+        ... mockup: chain 
+    refactor:
+        ... rattleCAD::rendering - checkFileString
+        ... rattleCAD::rendering - createFork
+        ... rattleCAD::rendering - createFork
+        ... modify templates
+
+
 3.4.00.82  - 2013.09.14
 -------------------------------------------------------------------------------
     feature:
