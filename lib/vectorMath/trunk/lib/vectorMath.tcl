@@ -38,7 +38,7 @@
  #
  #
 
-  package provide vectormath 0.4
+  package provide vectormath 0.5
   
   namespace eval vectormath {
    
@@ -217,7 +217,7 @@
     proc cathetusPoint { p1 p2 cathetus {position {close}}} { 
         # return third point of rectangular triangle
         #   p3  locates perpendicular Angle
-              #       allways on right side from p1 to p2 
+        #       allways on right side from p1 to p2 
         #   position:  [close/opposite] ... given cathetus close to p1 / close to p2
         variable CONST_PI
         set hypothenuse	[ addVector $p1 $p2 -1 ] 

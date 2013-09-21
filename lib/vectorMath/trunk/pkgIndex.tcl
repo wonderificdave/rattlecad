@@ -8,6 +8,6 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded vectormath  0.4 "\
+package ifneeded vectormath  0.5 "\
             [list source [file join $dir lib vectorMath.tcl]]; \
    "
