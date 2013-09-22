@@ -45,7 +45,7 @@
   package require   appUtil       0.14
   package require   vectormath    0.5
   package require   bikeGeometry  0.33
-  package require   canvasCAD     0.46
+  package require   canvasCAD     0.47
   package require   extSummary    0.4
   
       
