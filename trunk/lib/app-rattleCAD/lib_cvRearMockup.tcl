@@ -666,7 +666,7 @@
                     set angle 0
                     while {$angle <= 90} {
                         set pt_tmp  [ vectormath::rotatePoint  $ext_Center(TyreWidth) $pt_99 $angle]
-                        puts "   -> $ext_Center(Tyre)   /  $$ext_Center(TyreWidth)"
+                        puts "   -> $ext_Center(Tyre)  /  $ext_Center(TyreWidth)"
                         # TyreWidth
                         lappend polygon     $pt_tmp
                         incr angle 10
@@ -777,6 +777,7 @@
             set tyre_00       [vectormath::addVector $ext_Center(TyreWidth) [list $radius_x [expr -1.0*$radius_y] ]]
             set tyre_01       [vectormath::addVector $ext_Center(TyreWidth) [list [expr -1.0*$radius_x] $radius_y ]]                     
             set clearMatrix   [appUtil::flatten_nestedList  $tyre_00 $tyre_01 ]
+            
             $ext_cvName create ovalarc  $clearMatrix       -start 250  -extent 220 -style arc -outline red  -tags __CenterLine__
             
                 # -- ChainWheel Clearance

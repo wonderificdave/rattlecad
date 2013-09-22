@@ -453,4 +453,6 @@
 2013.09.08  09:00   10:00    01:00   3.4.00 ... 79 ... package require vectormath in File -> SVG-ChainWheel
 2013.09.08  09:00   10:00    01:00   3.4.00 ... 80 ... debug SVG-Component(add_SVGNode), . rear derailleur: sram_red_2012.svg
 2013.09.08  21:00   01:00    04:00   3.4.00 ... 82 ... package require vectormath in File -> SVG-ChainWheel
+2013.09.21  00:00   00:00    04:00   3.4.00 ... 84 ... add chain to mockup
+2013.09.22  11:00   15:00    04:00   3.4.00 ... 85 ... support arc in svg-Export
                             
