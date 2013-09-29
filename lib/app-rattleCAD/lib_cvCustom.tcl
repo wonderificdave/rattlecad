@@ -676,7 +676,7 @@
                                     $cv_Name bind $_dim_HT_Length       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
                                     $cv_Name bind $_dim_LC_Position_x   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(TopTube/PivotPosition) ]
                                     $cv_Name bind $_dim_LC_Position_y   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Personal(InnerLeg_Length) ]
-                                    $cv_Name bind $_dim_SN_Position_x   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {Result(Length/Saddle/Offset_BB_Nose) Rendering(Saddle/Offset_X)} {Saddle Parameter}]                                 
+                                    $cv_Name bind $_dim_SN_Position_x   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {Result(Length/Saddle/Offset_BB_Nose) Component(Saddle/LengthNose) Rendering(Saddle/Offset_X)} {Saddle Parameter}]                                 
                                     $cv_Name bind $_dim_BB_Depth        <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(BottomBracket/Depth) ]
                                     $cv_Name bind $_dim_CS_Length       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
                                     $cv_Name bind $_dim_HT_Angle        <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(HeadTube/Angle) ]
