@@ -1080,6 +1080,7 @@
             set SeatStay_RearWheel  [ bikeGeometry::get_Object     SeatStay/Start          position    $BB_Position ]
             set TopTube_SeatTube    [ bikeGeometry::get_Object     TopTube/Start           position    $BB_Position ]
             set TopTube_Steerer     [ bikeGeometry::get_Object     TopTube/End             position    $BB_Position ]
+            set HeadTube_Stem       [ bikeGeometry::get_Object     HeadTube/End            position    $BB_Position ]
             set Steerer_Stem        [ bikeGeometry::get_Object     Steerer/End             position    $BB_Position ]
             set Steerer_Fork        [ bikeGeometry::get_Object     Steerer/Start           position    $BB_Position ]
             set DownTube_Steerer    [ bikeGeometry::get_Object     DownTube/End            position    $BB_Position ]
@@ -1179,6 +1180,7 @@
                 $cv_Name create circle  $RearWheel          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
                 $cv_Name create circle  $BaseCenter         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
                 $cv_Name create circle  $SeatPost_Saddle    -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+                $cv_Name create circle  $HeadTube_Stem      -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
                     # $cv_Name create circle    $SeatPost_SeatTube  -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
                     # $cv_Name create circle    $LegClearance   -radius 10  -outline $highlight(colour)
     
