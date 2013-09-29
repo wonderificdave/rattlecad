@@ -220,6 +220,9 @@
                 <horizontal>0.00</horizontal>
                 <Radius>0.00</Radius>
             </RearWheel>
+            <Personal>
+               <SaddleNose_HB>0.00</SaddleNose_HB>
+            </Personal>
             <Control>              
                 <HandleBar_FW>0.00</HandleBar_FW>
                 <HandleBar_BB>0.00</HandleBar_BB>

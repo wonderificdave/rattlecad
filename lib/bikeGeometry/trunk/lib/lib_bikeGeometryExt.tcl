@@ -949,11 +949,19 @@
             variable SeatTube
             variable SeatPost
             variable HandleBar
+            
+                    #
+                    # template of <Result>  .. </Result> is defined in
+                    # 
+                    #   /etc/initTemplate.xml
+                    # 
 
                     # puts ""
                     # puts "       ... fill_resultValues"
                     # puts "      -------------------------------"
                     # puts "           "
+                    
+         
 
 
                 # --- BottomBracket
@@ -1047,7 +1055,7 @@
 
                 # --- Saddle/Offset_HB --------------------------------
                 #
-            set position_Saddle        $Saddle(Position)
+            set position_Saddle       $Saddle(Position)
             set position_HandleBar    $HandleBar(Position)
                 set value       [ format "%.3f" [expr [lindex $position_Saddle 1] - [lindex $position_HandleBar 1]] ]
                     # puts "                  ... $value"
@@ -1056,10 +1064,15 @@
 
                 # --- Saddle/Offset_BB_Nose --------------------------------
                 #
-            set position_Nose        $Saddle(Nose)
-                set value       [ format "%.3f" [expr -1.0 * [lindex $position_Nose 0]] ]
+            set position_SaddleNose   $Saddle(Nose)
+            set position_HandleBar    $HandleBar(Position)
+                set value       [ format "%.3f" [expr -1.0 * [lindex $position_SaddleNose 0]] ]
                     # puts "                  ... $value"
                 project::setValue Result(Length/Saddle/Offset_BB_Nose) value $value
+                set value       [ expr  [lindex $position_HandleBar 0] + [expr -1.0 * [lindex $position_SaddleNose 0]] ]
+                set value       [ format "%.3f" $value ]
+                project::setValue Result(Length/Personal/SaddleNose_HB) value $value
+                                                
 
 
                 # --- WheelPosition/front/diagonal --------------------
