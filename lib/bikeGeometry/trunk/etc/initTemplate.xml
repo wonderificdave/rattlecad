@@ -399,16 +399,38 @@
             </TopTube_Head> 
             <TopTube_Seat>
                 <Polygon>0.00,0.00</Polygon>
-            </TopTube_Seat> 
+            </TopTube_Seat>
+            
             <DownTube_Head>
                 <Polygon>0.00,0.00</Polygon>
             </DownTube_Head>            
+            <DownTube_Seat>
+                <Polygon>0.00,0.00</Polygon>
+            </DownTube_Seat>            
+            <DownTube_BB_out>
+                <Polygon>0.00,0.00</Polygon>
+            </DownTube_BB_out>            
+            <DownTube_BB_in>
+                <Polygon>0.00,0.00</Polygon>
+            </DownTube_BB_in>
+            
+            <SeatTube_Down>
+                <Polygon>0.00,0.00</Polygon>
+            </SeatTube_Down>            
+            <SeatTube_BB_out>
+                <Polygon>0.00,0.00</Polygon>
+            </SeatTube_BB_out>            
+            <SeatTube_BB_in>
+                <Polygon>0.00,0.00</Polygon>
+            </SeatTube_BB_in> 
+            
             <SeatStay_01>
                 <Polygon>0.00,0.00</Polygon>
             </SeatStay_01>     
             <SeatStay_02>
                 <Polygon>0.00,0.00</Polygon>
-            </SeatStay_02>     
+            </SeatStay_02>
+            
             <Reference>
                 <Polygon>0.00,0.00</Polygon>
             </Reference>     

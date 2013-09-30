@@ -1392,25 +1392,45 @@
             variable TopTube
             variable DownTube
             variable TubeMiter
+            variable BottomBracket
 
                     set dir         [ vectormath::scalePointList {0 0} [ bikeGeometry::get_Object HeadTube direction ] -1.0 ]
                         # puts " .. \$dir $dir"
-                                                # tube_miter { diameter               direction            diameter_isect          direction_isect         isectionPoint         {side {right}} {offset {0}}  {startAngle {0}}}
-            set TubeMiter(TopTube_Head)         [ tube_miter    $TopTube(DiameterHT)  $TopTube(Direction)    $HeadTube(Diameter)        $HeadTube(Direction)    $TopTube(HeadTube)  ]
-            set TubeMiter(TopTube_Seat)         [ tube_miter    $TopTube(DiameterST)  $TopTube(Direction)    $SeatTube(DiameterTT)    $dir                      $TopTube(SeatTube)  ]
-            set TubeMiter(DownTube_Head)        [ tube_miter    $DownTube(DiameterHT) $DownTube(Direction)    $HeadTube(Diameter)        $HeadTube(Direction)    $DownTube(HeadTube) right    0    opposite]
-                    set offset        [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
+                                              # tube_miter  { diameter              direction              diameter_isect           direction_isect         isectionPoint         {side {right}} {offset {0}}  {startAngle {0}}}
+            set TubeMiter(TopTube_Head)       [ tube_miter    $TopTube(DiameterHT)  $TopTube(Direction)    $HeadTube(Diameter)      $HeadTube(Direction)    $TopTube(HeadTube)  ]
+            set TubeMiter(TopTube_Seat)       [ tube_miter    $TopTube(DiameterST)  $TopTube(Direction)    $SeatTube(DiameterTT)    $dir                    $TopTube(SeatTube)  ]
+            
+            set TubeMiter(DownTube_Head)      [ tube_miter    $DownTube(DiameterHT) $DownTube(Direction)   $HeadTube(Diameter)      $HeadTube(Direction)    $DownTube(HeadTube)      right    0    0  opposite]
+            set TubeMiter(DownTube_Seat)      [ tube_miter    $DownTube(DiameterBB) $DownTube(Direction)   $SeatTube(DiameterBB)    $SeatTube(Direction)    $SeatTube(DownTube)      ]
+            set TubeMiter(DownTube_BB_out)    [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(outside)  {0 1}                   {0 0}                    right    0   90  opposite]
+            set TubeMiter(DownTube_BB_in)     [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(inside)   {0 1}                   {0 0}                    right    0   90  opposite]
+            
+            set TubeMiter(SeatTube_Down)      [ tube_miter    $SeatTube(DiameterBB) $SeatTube(Direction)   $DownTube(DiameterBB)    $DownTube(Direction)    $SeatTube(DownTube)      ]
+            set TubeMiter(SeatTube_BB_out)    [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(outside)  {0 1}                   {0 0}                    right    0   90  opposite]
+            set TubeMiter(SeatTube_BB_in)     [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(inside)   {0 1}                   {0 0}                    right    0   90  opposite]
+                    
+                    set offset      [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
                     set dir         [ vectormath::scalePointList {0 0} [ bikeGeometry::get_Object SeatStay direction ] -1.0 ]
                         # puts " .. \$dir $dir"
-            set TubeMiter(SeatStay_01)      [ tube_miter    $SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)      $SeatTube(Direction)  $SeatStay(SeatTube)  right -$offset]
-            set TubeMiter(SeatStay_02)      [ tube_miter    $SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)      $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]
+            set TubeMiter(SeatStay_01)        [ tube_miter    $SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)      $SeatTube(Direction)  $SeatStay(SeatTube)  right -$offset]
+            set TubeMiter(SeatStay_02)        [ tube_miter    $SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)      $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]
             set TubeMiter(Reference)             { -50 0  50 0  50 10  -50 10 }
 
             project::setValue Result(TubeMiter/TopTube_Head)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Head)  ]
             project::setValue Result(TubeMiter/TopTube_Seat)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Seat)  ]
+            
             project::setValue Result(TubeMiter/DownTube_Head)       polygon     [ project::flatten_nestedList $TubeMiter(DownTube_Head) ]
+            project::setValue Result(TubeMiter/DownTube_Seat)       polygon     [ project::flatten_nestedList $TubeMiter(DownTube_Seat) ]
+            project::setValue Result(TubeMiter/DownTube_BB_out)     polygon     [ project::flatten_nestedList $TubeMiter(DownTube_BB_out) ]
+            project::setValue Result(TubeMiter/DownTube_BB_in)      polygon     [ project::flatten_nestedList $TubeMiter(DownTube_BB_in)  ]
+            
+            project::setValue Result(TubeMiter/SeatTube_Down)       polygon     [ project::flatten_nestedList $TubeMiter(SeatTube_Down) ]
+            project::setValue Result(TubeMiter/SeatTube_BB_out)     polygon     [ project::flatten_nestedList $TubeMiter(SeatTube_BB_out) ]
+            project::setValue Result(TubeMiter/SeatTube_BB_in)      polygon     [ project::flatten_nestedList $TubeMiter(SeatTube_BB_in)  ]
+            
             project::setValue Result(TubeMiter/SeatStay_01)         polygon     [ project::flatten_nestedList $TubeMiter(SeatStay_01)   ]
             project::setValue Result(TubeMiter/SeatStay_02)         polygon     [ project::flatten_nestedList $TubeMiter(SeatStay_02)   ]
+            
             project::setValue Result(TubeMiter/Reference)           polygon     [ project::flatten_nestedList $TubeMiter(Reference)     ]
     }
 
@@ -1712,8 +1732,9 @@
         #   diameter    \     \     \
         #                \     \     \ diameter_isect
         #
-    proc bikeGeometry::tube_miter { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}}  {opposite {no}}} {
+    proc bikeGeometry::tube_miter { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}}  {startAngle {0}}  {opposite {no}}} {
 
+              # puts " intersection_angle     \[vectormath::angle $direction {0 0} $direction_isect\]"
             set intersection_angle     [vectormath::angle $direction {0 0} $direction_isect]
 
                 # puts ""
@@ -1731,7 +1752,7 @@
                 # puts "       -> intersection_angle   $intersection_angle"
                 # puts [format " -> tube_miter \n   %2.f %2.f" $direction_angle $intersection_angle]
 
-            if {$opposite != {no}    } {
+            if {$opposite != {no} } {
                     set intersection_angle    [expr 180 - $intersection_angle]
                         # puts "       -> intersection_angle $intersection_angle"
             }
@@ -1742,10 +1763,12 @@
                 # set angle         [expr -180 - $startAngle]
             set loops       36
             set perimeter   [expr $radius * [vectormath::rad 360] ]
-            set coordList   [list [expr 0.5*$perimeter] -70]
+            set coordList   {}
                 # while {$angle <= [expr 180 - $startAngle]}
+                # puts " -> $diameter $direction $diameter_isect $direction_isect $isectionPoint"
             while {$angle <= 180} {
-                    set rad_Angle   [vectormath::rad $angle]
+                      # puts "  -> \$angle $angle"
+                    set rad_Angle   [vectormath::rad [expr $angle -$startAngle]]
                     set x [expr $diameter*[vectormath::rad 180]*$angle/360 ]
 
                     set h [expr $offset + $radius*sin($rad_Angle)]
@@ -1763,10 +1786,11 @@
                     set y [expr $l+$v]
                     set xy [list $x $y]
                     if {$side == {right}}  {set xy    [vectormath::rotatePoint {0 0} $xy  180]}
-                    set coordList   [lappend coordList [lindex $xy 0] [lindex $xy 1]]
+                    lappend coordList [lindex $xy 0] [lindex $xy 1]
                     set angle       [expr $angle + 360 / $loops]
             }
-            set coordList [ lappend coordList [expr -0.5*$perimeter] -70 ]
+            lappend coordList [expr -0.5*$perimeter]  -70 
+            lappend coordList [expr  0.5*$perimeter]  -70
             return $coordList
     }
 

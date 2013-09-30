@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.34
+ package provide bikeGeometry 0.35
 
  namespace eval bikeGeometry {
 
@@ -224,11 +224,17 @@
                                                 set branch "Components/$object/Polygon"
                                             }
 
-                                TubeMiter/TopTube_Head -
-                                TubeMiter/TopTube_Seat -
-                                TubeMiter/DownTube_Head -
-                                TubeMiter/SeatStay_01    -
-                                TubeMiter/SeatStay_02    -
+                                TubeMiter/TopTube_Head     -
+                                TubeMiter/TopTube_Seat     -
+                                TubeMiter/DownTube_Head    -
+                                TubeMiter/DownTube_Seat    -
+                                TubeMiter/DownTube_BB_out  -
+                                TubeMiter/DownTube_BB_in   -
+                                TubeMiter/SeatTube_Down    -
+                                TubeMiter/SeatTube_BB_out  -
+                                TubeMiter/SeatTube_BB_in   -
+                                TubeMiter/SeatStay_01      -
+                                TubeMiter/SeatStay_02      -
                                 TubeMiter/Reference {
                                                 set branch "$object/Polygon"    ; # puts " ... $branch"
                                             }
@@ -893,13 +899,20 @@
     #-------------------------------------------------------------------------
         #  get xy in a flat list of coordinates, start with    0, 1, 2, 3, ...
     proc coords_get_xy {coordlist index} {
-            if {$index == {end}} {
-                set index_y [expr [llength $coordlist] -1]
-                set index_x [expr [llength $coordlist] -2]
-            } else {
-                set index_x [ expr 2 * $index ]
-                set index_y [ expr $index_x + 1 ]
-                if {$index_y > [llength $coordlist]} { return {0 0} }
+            switch $index {
+                {end} {
+                      set index_y [expr [llength $coordlist] -1]
+                      set index_x [expr [llength $coordlist] -2]
+                    } 
+                {end-1} {
+                      set index_y [expr [llength $coordlist] -3]
+                      set index_x [expr [llength $coordlist] -4]
+                    }
+                default {
+                      set index_x [ expr 2 * $index ]
+                      set index_y [ expr $index_x + 1 ]
+                      if {$index_y > [llength $coordlist]} { return {0 0} }
+                    }
             }
             return [list [lindex $coordlist $index_x] [lindex $coordlist $index_y] ]
     }
