@@ -456,4 +456,5 @@
 2013.09.21  00:00   00:00    04:00   3.4.00 ... 84 ... add chain to mockup
 2013.09.22  11:00   15:00    04:00   3.4.00 ... 85 ... support arc in svg-Export
 2013.09.29  11:00   17:00    06:00   3.4.00 ... 86 ... modified and additional dimension SaddleNose - HandleBar
+2013.09.30  21:00   01:00    06:00   3.4.00 ... 88 ... updated tubeMiter
                             
