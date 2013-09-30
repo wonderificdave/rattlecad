@@ -1239,73 +1239,127 @@
         }
 
 
-    proc createTubemiter {cv_Name xy type} {
+    proc createTubemiter {cv_Name xy type {rotation {no}}} {
 
 
             ## -- read from domProject
                     set     minorAngle          2
                     set     majorAngle          50
+                    set     polygon_out         {}
+                    set     polygon_in          {}
+                    set     diameter_addText    {}
+                                                            
 
         switch $type {
-            TopTube_Seat {
-                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/TopTube_Seat        polygon    $xy ]
-                    set Mitter(header)      "TopTube / SeatTube"
-                    set     minorDiameter       $project::FrameTubes(TopTube/DiameterST)
-                    set     minorDirection      [ bikeGeometry::get_Object TopTube     direction ]
-                    set     majorDiameter       $project::FrameTubes(SeatTube/DiameterTT)
-                    set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
-                    set     offSet              0
-                }
             TopTube_Head {
-                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/TopTube_Head        polygon    $xy  ]
-                    set Mitter(header)      "TopTube / HeadTube"
+                    set Miter(header)       "TopTube / HeadTube"
+                    set     polygon       [ bikeGeometry::get_Object TubeMiter/TopTube_Head        polygon    {0 0}  ]
                     set     minorDiameter       $project::FrameTubes(TopTube/DiameterHT)
                     set     minorDirection      [ bikeGeometry::get_Object TopTube     direction ]
                     set     majorDiameter       $project::FrameTubes(HeadTube/Diameter)
                     set     majorDirection      [ bikeGeometry::get_Object HeadTube     direction ]
                     set     offSet              0
                 }
+            TopTube_Seat {
+                    set Miter(header)       "TopTube / SeatTube"
+                    set     polygon             [ bikeGeometry::get_Object TubeMiter/TopTube_Seat        polygon    {0 0} ]
+                    set     majorDiameter       $project::FrameTubes(SeatTube/DiameterTT)
+                    set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
+                    set     minorDiameter       $project::FrameTubes(TopTube/DiameterST)
+                    set     minorDirection      [ bikeGeometry::get_Object TopTube     direction ]
+                    set     offSet              0
+                }
             DownTube_Head {
-                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/DownTube_Head    polygon        $xy  ]
-                    set Mitter(header)      "DownTube / HeadTube"
-                    set     minorDiameter       $project::FrameTubes(DownTube/DiameterHT)
-                    set     minorDirection      [ bikeGeometry::get_Object DownTube     direction ]
+                    set Miter(header)       "DownTube / HeadTube"
+                    set     polygon             [ bikeGeometry::get_Object TubeMiter/DownTube_Head    polygon        {0 0}  ]
                     set     majorDiameter       $project::FrameTubes(HeadTube/Diameter)
                     set     majorDirection      [ bikeGeometry::get_Object HeadTube     direction ]
+                    set     minorDiameter       $project::FrameTubes(DownTube/DiameterHT)
+                    set     minorDirection      [ bikeGeometry::get_Object DownTube     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              0
                 }
+            DownTube_Seat {
+                    set Miter(header)       "DownTube / SeatTube"
+                    set     polygon             [ bikeGeometry::get_Object TubeMiter/DownTube_Seat     polygon       {0 0}  ]
+                    set     polygon_out         [ bikeGeometry::get_Object TubeMiter/DownTube_BB_out   polygon       {0 0}  ]
+                    set     polygon_in          [ bikeGeometry::get_Object TubeMiter/DownTube_BB_in    polygon       {0 0}  ]
+                    set     majorDiameter       $project::FrameTubes(DownTube/DiameterBB)
+                    set     majorDirection      [ bikeGeometry::get_Object DownTube     direction ]
+                    set     minorDiameter       $project::FrameTubes(SeatTube/DiameterBB)
+                    set     minorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
+                    set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
+                    set     offSet              0
+                    set     diameter_addText    "($project::Lugs(BottomBracket/Diameter/outside)/$project::Lugs(BottomBracket/Diameter/inside))"
+                }
+            SeatTube_Down {
+                    set Miter(header)       "SeatTube / DownTube"
+                    set     polygon             [ bikeGeometry::get_Object TubeMiter/SeatTube_Down     polygon       {0 0}  ]
+                    set     polygon_out         [ bikeGeometry::get_Object TubeMiter/SeatTube_BB_out   polygon       {0 0}  ]
+                    set     polygon_in          [ bikeGeometry::get_Object TubeMiter/SeatTube_BB_in    polygon       {0 0}  ]
+                    set     majorDiameter       $project::FrameTubes(SeatTube/DiameterBB)
+                    set     majorDirection      [ bikeGeometry::get_Object DownTube     direction ]
+                    set     minorDiameter       $project::FrameTubes(DownTube/DiameterBB)
+                    set     minorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
+                    set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
+                    set     offSet              0
+                    set     diameter_addText    "($project::Lugs(BottomBracket/Diameter/outside)/$project::Lugs(BottomBracket/Diameter/inside))"
+                }
             SeatStay_01 {
-                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/SeatStay_01        polygon        $xy  ]
-                    set Mitter(header)      "SeatStay / SeatTube"
-                    set     minorDiameter       $project::FrameTubes(SeatStay/DiameterST)
-                    set     minorDirection      [ bikeGeometry::get_Object SeatStay     direction ]
+                    set Miter(header)       "SeatStay / SeatTube"
+                    set     polygon             [ bikeGeometry::get_Object TubeMiter/SeatStay_01        polygon      {0 0}  ]
                     set     majorDiameter       $project::Lugs(SeatTube/SeatStay/MiterDiameter)
                     set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
+                    set     minorDiameter       $project::FrameTubes(SeatStay/DiameterST)
+                    set     minorDirection      [ bikeGeometry::get_Object SeatStay     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              [ format "%.3f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
                 }
             SeatStay_02 {
-                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/SeatStay_02        polygon        $xy  ]
-                    set Mitter(header)      "SeatStay / SeatTube"
-                    set     minorDiameter       $project::FrameTubes(SeatStay/DiameterST)
-                    set     minorDirection      [ bikeGeometry::get_Object SeatStay     direction ]
+                    set Miter(header)       "SeatStay / SeatTube"
+                    set     polygon             [ bikeGeometry::get_Object TubeMiter/SeatStay_02        polygon      {0 0}  ]
                     set     majorDiameter       $project::Lugs(SeatTube/SeatStay/MiterDiameter)
                     set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
+                    set     minorDiameter       $project::FrameTubes(SeatStay/DiameterST)
+                    set     minorDirection      [ bikeGeometry::get_Object SeatStay     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              [ format "%.3f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
                 }
             Reference {
-                    set Mitter(polygon)     [ bikeGeometry::get_Object TubeMiter/Reference     polygon     $xy  ]
-                    set Mitter(header)      "Reference"
+                    set Miter(header)       "Reference"
+                    set       polygon           [ bikeGeometry::get_Object TubeMiter/Reference          polygon     {0 0}  ]
                 }
             default {return}
         }
 
+        
+          # puts "  -> \$polygon     $polygon"
+          # puts "  -> \$polygon_in  $polygon_in"
+          # puts "  -> \$polygon_out $polygon_out"
+        
+        
+        catch {set polygon_out [lrange $polygon_out 0 end-2]}
+        catch {set polygon_in  [lrange $polygon_in  0 end-2]}
+        
+        if {$rotation == {no}} {
+            set Miter(polygon)      [ vectormath::addVectorPointList $xy  $polygon]
+            set Miter(polygon_out)  [ vectormath::addVectorPointList $xy  $polygon_out]
+            set Miter(polygon_in)   [ vectormath::addVectorPointList $xy  $polygon_in]
+        } else {                        
+            set       polygon       [ vectormath::rotatePointList {0 -35} $polygon    180]
+            set       polygon_out   [ vectormath::rotatePointList {0 -35} $polygon_out 180]
+            set       polygon_in    [ vectormath::rotatePointList {0 -35} $polygon_in  180]
+            set Miter(polygon)      [ vectormath::addVectorPointList $xy  $polygon]
+            set Miter(polygon_out)  [ vectormath::addVectorPointList $xy  $polygon_out]
+            set Miter(polygon_in)   [ vectormath::addVectorPointList $xy  $polygon_in]
+        }
+
                 # --- mitter polygon
                 #
-        $cv_Name create polygon $Mitter(polygon) -fill white -outline black
-
+        $cv_Name create polygon $Miter(polygon)     -fill white -outline black
+        catch {$cv_Name create line    $Miter(polygon_in)  -fill black}
+        catch {$cv_Name create line    $Miter(polygon_out) -fill black}
+        
                 # --- polygon reference lines
                 #
         switch $type {
@@ -1313,43 +1367,57 @@
             Reference {
                             # --- defining values
                             #
-                        set Mitter(text_01)     "Reference: 100.00 x 10.00 "
+                        set Miter(text_01)     "Reference: 100.00 x 10.00 "
                         set textPos     [vectormath::addVector $xy {10 3}]
-                    $cv_Name create draftText $textPos  -text $Mitter(text_01) -size 2.5
+                    $cv_Name create draftText $textPos  -text $Miter(text_01) -size 2.5
                     }
-            default {
-                        set pt_01   [ vectormath::addVector $xy {0   5} ]
-                        set pt_02   [ vectormath::addVector $xy {0 -75} ]
-                    $cv_Name create centerline     [ appUtil::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25
-                        set pt_03   [ bikeGeometry::coords_get_xy $Mitter(polygon) 0 ]
-                        set pt_03   [ vectormath::addVector $pt_03 {+5  20} ]
-                        set pt_04   [bikeGeometry::coords_get_xy $Mitter(polygon) end]
-                        set pt_04   [ vectormath::addVector $pt_04 {-5  20} ]
-                    $cv_Name create line         [ appUtil::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25
-                        set pt_05   [ vectormath::addVector $pt_03 { 0  50} ]
-                        set pt_06   [ vectormath::addVector $pt_04 { 0  50} ]
-                    $cv_Name create centerline     [ appUtil::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25
-
+            default {                   
                             # --- defining values
                             #
-                        set Mitter(text_01)     "diameter: $minorDiameter / $majorDiameter"
-                                set     minorAngle          [ vectormath::angle {0 1} {0 0} $minorDirection   ]
-                                set     majorAngle          [ vectormath::angle {0 1} {0 0} $majorDirection   ]
-                                set     angle               [ expr abs($majorAngle - $minorAngle) ]
-                                    if {$angle > 90} {set angle [expr 180 - $angle]}
-                                set     angle [ format "%.3f" $angle ]
-                                set     angleComplement     [ format "%.3f" [ expr 180 - $angle ] ]
-                        set Mitter(text_02)     "angle:  $angle / $angleComplement"
-                        set Mitter(text_03)     "offset: $offSet"
+                        set Miter(text_01)     "diameter: $majorDiameter / $minorDiameter $diameter_addText"
+                        set     minorAngle          [ vectormath::angle {0 1} {0 0} $minorDirection   ]
+                        set     majorAngle          [ vectormath::angle {0 1} {0 0} $majorDirection   ]                         
+                        set     angle               [ expr abs($majorAngle - $minorAngle) ]
+                            if {$angle > 90} {set angle [expr 180 - $angle]}
+                        set     angle [ format "%.3f" $angle ]
+                        set     angleComplement     [ format "%.3f" [ expr 180 - $angle ] ]
+                        set Miter(text_02)     "angle:  $angle / $angleComplement"
+                        set Miter(text_03)     "offset: $offSet"
+                        
+                        set pt_01   [ vectormath::addVector $xy {0  5} ]
+                        set pt_02   [ vectormath::addVector $xy {0 -75} ]
 
-                        set textPos     [vectormath::addVector $xy {-20 -48}]
-                    $cv_Name create draftText $textPos  -text $Mitter(header) -size 3.5
-                        set textPos     [vectormath::addVector $xy {-10 -55}]
-                    $cv_Name create draftText $textPos  -text $Mitter(text_01) -size 2.5
-                        set textPos     [vectormath::addVector $xy {-10 -60}]
-                    $cv_Name create draftText $textPos  -text $Mitter(text_02) -size 2.5
-                        set textPos     [vectormath::addVector $xy {-10 -65}]
-                    $cv_Name create draftText $textPos  -text $Mitter(text_03) -size 2.5
+                        if {$rotation == {no}} {                
+                                set pt_03   [ bikeGeometry::coords_get_xy $Miter(polygon) end ]
+                                set pt_03   [ vectormath::addVector $pt_03 {+5  20} ]
+                                set pt_04   [ bikeGeometry::coords_get_xy $Miter(polygon) end-1]
+                                set pt_04   [ vectormath::addVector $pt_04 {-5  20} ]
+                                set pt_05   [ vectormath::addVector $pt_03 { 0  50} ]
+                                set pt_06   [ vectormath::addVector $pt_04 { 0  50} ]
+                                set pt_11   [ vectormath::addVector $xy    {-20 -48}]
+                                set pt_12   [ vectormath::addVector $xy    {-20 -55}]
+                                set pt_13   [ vectormath::addVector $xy    {-20 -60}]
+                                set pt_14   [ vectormath::addVector $xy    {-20 -65}]                                
+                       } else {    
+                                set pt_03   [ bikeGeometry::coords_get_xy $Miter(polygon) end ]
+                                set pt_03   [ vectormath::addVector $pt_03 {-5 -20} ]
+                                set pt_04   [ bikeGeometry::coords_get_xy $Miter(polygon) end-1]
+                                set pt_04   [ vectormath::addVector $pt_04 {+5 -20} ]
+                                set pt_05   [ vectormath::addVector $pt_03 { 0 -50} ]
+                                set pt_06   [ vectormath::addVector $pt_04 { 0 -50} ] 
+                                set pt_11   [ vectormath::addVector $xy    {-20 -25}]
+                                set pt_12   [ vectormath::addVector $xy    {-20 -18}]
+                                set pt_13   [ vectormath::addVector $xy    {-20 -13}]
+                                set pt_14   [ vectormath::addVector $xy    {-20  -8}]                         }
+                    
+                    $cv_Name create centerline     [ appUtil::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25
+                    $cv_Name create line         [ appUtil::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25
+                    $cv_Name create centerline     [ appUtil::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25
+                    
+                    $cv_Name create draftText $pt_11  -text $Miter(header)  -size 3.5
+                    $cv_Name create draftText $pt_12  -text $Miter(text_01) -size 2.5
+                    $cv_Name create draftText $pt_13  -text $Miter(text_02) -size 2.5
+                    $cv_Name create draftText $pt_14  -text $Miter(text_03) -size 2.5
                 }
         }
 

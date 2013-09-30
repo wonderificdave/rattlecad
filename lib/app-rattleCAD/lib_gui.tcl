@@ -207,7 +207,7 @@
             rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom30  "  Summary   "           A4  0.2  25  -bd 2  -bg white  -relief sunken
             rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom40  "  Frame Drafting  "     A4  0.2  25  -bd 2  -bg white  -relief sunken
             rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom50  "  Mockup  "             A4  0.2  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom60  "  Tube Miter  "         A4  1.0  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom60  "  Tube Miter  "         A3  1.0  25  -bd 2  -bg white  -relief sunken
             rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom70  "  Frame - Jig  "        A4  0.2  25  -bd 2  -bg white  -relief sunken
             
             $noteBook_top add   [frame $noteBook_top.components]     -text "... Components" 

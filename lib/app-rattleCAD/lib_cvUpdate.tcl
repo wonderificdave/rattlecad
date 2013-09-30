@@ -355,12 +355,18 @@
                         #
                     $cv_Name        clean_StageContent
                         #
-                    rattleCAD::rendering::createTubemiter    $cv_Name { 80 190}  TopTube_Seat
-                    rattleCAD::rendering::createTubemiter    $cv_Name {200 190}  TopTube_Head
-                    rattleCAD::rendering::createTubemiter    $cv_Name { 80 105}  DownTube_Head
-                    rattleCAD::rendering::createTubemiter    $cv_Name {180 105}  SeatStay_02
-                    rattleCAD::rendering::createTubemiter    $cv_Name {250 105}  SeatStay_01
-                    rattleCAD::rendering::createTubemiter    $cv_Name {220  15}  Reference
+                    rattleCAD::rendering::createTubemiter    $cv_Name { 80 250}  TopTube_Head
+                    rattleCAD::rendering::createTubemiter    $cv_Name { 80 145}  TopTube_Seat   rotate
+                        #
+                    rattleCAD::rendering::createTubemiter    $cv_Name {200 250}  DownTube_Head
+                    rattleCAD::rendering::createTubemiter    $cv_Name {200 145}  DownTube_Seat  rotate
+                        #
+                    rattleCAD::rendering::createTubemiter    $cv_Name {330 145}  SeatTube_Down  rotate
+                        #
+                    rattleCAD::rendering::createTubemiter    $cv_Name {300 250}  SeatStay_02
+                    rattleCAD::rendering::createTubemiter    $cv_Name {360 250}  SeatStay_01
+                        #
+                    rattleCAD::rendering::createTubemiter    $cv_Name {325  45}  Reference
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
                         #
                     update_renderCanvas               $cv_Name
