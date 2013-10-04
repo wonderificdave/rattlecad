@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.35
+ package provide bikeGeometry 0.36
 
  namespace eval bikeGeometry {
 
@@ -752,6 +752,37 @@
 
                       return
                   }
+                  
+                {Length/Saddle/SeatTube_BB} {
+                      set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
+                      set newValue                [set_Value $xpath  $value format ]
+                      set angle_SeatTube          $project::Result(Angle/SeatTube/Direction)
+                      set pos_SeatTube_old        [ split [ project::getValue Result(Position/SeatTubeSaddle)    position] ,]
+                      set pos_Saddle_old          $Saddle(Position)
+                      
+                      set pos_SeatTube_x          [expr $newValue * cos([vectormath::rad $angle_SeatTube])]
+                      set pos_SeatTube_y          [expr $newValue * sin([vectormath::rad $angle_SeatTube])]
+                      
+                      set delta_Saddle_ST         [expr [lindex $pos_Saddle_old 0] - [lindex $pos_SeatTube_old 0]]
+                      
+                      set pos_Saddle_x            [expr $pos_SeatTube_x - $delta_Saddle_ST]
+                      set pos_Saddle_y            $pos_SeatTube_y
+                      
+                        # puts "  -> \$pos_SeatTube_old     $pos_SeatTube_old"
+                        # puts "  -> \$pos_Saddle_old       $pos_Saddle_old"
+                        # puts "  -> \$delta_Saddle_ST      $delta_Saddle_ST"
+                        # puts "  -> \$pos_Saddle_x     $pos_Saddle_x"
+                        # puts "  -> \$pos_Saddle_y     $pos_Saddle_y"
+  
+                      set project::Personal(Saddle_Distance)   [format "%.3f" $pos_Saddle_x]
+                      set_base_Parameters
+                                            
+                      set xpath                   Personal/Saddle_Height
+                      set_Value                   $xpath     $pos_Saddle_y   
+                      return                      
+                  }
+                  
+                  
                 
                 {Length/Personal/SaddleNose_HB}  {
                       set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]

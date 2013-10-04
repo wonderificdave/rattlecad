@@ -305,11 +305,11 @@
             project::setValue Result(Position/SeatTubeSaddle)       position    [ vectormath::intersectPoint [list 0 [lindex $Saddle(Position) 1] ] [list 100 [lindex $Saddle(Position) 1]] $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
 
             project::setValue Result(Lugs/Dropout/Rear/Position)    position     [expr -1*$RearWheel(Distance_X)]    $project::Custom(BottomBracket/Depth)
-                # project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
-
+               
+                # project::setValue Result(Lugs/Dropout/Rear/Derailleur)        position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
                 # project::setValue /root/Result/Lugs/Dropout/Front/Position    position     $FrontWheel(Distance_X)    [expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
-                # project::setValue /root/Result/Position/RearWheel         position    $RearWheel(Position)
-                # project::setValue /root/Result/Position/FrontWheel    position    $FrontWheel(Position)
+                # project::setValue /root/Result/Position/RearWheel             position    $RearWheel(Position)
+                # project::setValue /root/Result/Position/FrontWheel            position    $FrontWheel(Position)
 
 
 

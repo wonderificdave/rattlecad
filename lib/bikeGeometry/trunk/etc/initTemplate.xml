@@ -207,6 +207,7 @@
                 <Offset_BB_ST>0.00</Offset_BB_ST>    
                 <Offset_HB>0.00</Offset_HB>
                 <Offset_BB_Nose>0.00</Offset_BB_Nose>
+                <SeatTube_BB>0.00</SeatTube_BB>
             </Saddle>
             <BottomBracket>
                 <Height>0.00</Height>
@@ -221,7 +222,7 @@
                 <Radius>0.00</Radius>
             </RearWheel>
             <Personal>
-               <SaddleNose_HB>0.00</SaddleNose_HB>
+                <SaddleNose_HB>0.00</SaddleNose_HB>
             </Personal>
             <Control>              
                 <HandleBar_FW>0.00</HandleBar_FW>

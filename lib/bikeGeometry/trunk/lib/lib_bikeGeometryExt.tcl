@@ -1016,6 +1016,7 @@
                     # puts "                   ... [ bikeGeometry::get_Object        SeatTube TopTube    {0 0} ]"
                 set value        [ format "%.3f" [lindex $position 1] ]
                 project::setValue Result(Length/SeatTube/TubeHeight) value $value
+                    
 
 
                 # --- VirtualTopTube ----------------------------------
@@ -1037,43 +1038,61 @@
                 project::setValue Result(Length/SeatTube/VirtualLength) value $value
 
 
-                # --- Saddle/Offset_BB --------------------------------
+                # --- Saddle ------------------------------------------
                 #
-            set position    $Saddle(Position)
-                set value        [ format "%.3f" [expr -1 * [lindex $position 0]] ]
+            set position_Saddle      $Saddle(Position)   
+            set position_SaddleNose  $Saddle(Nose)            
+            set position_SeatTube    [ split [ project::getValue Result(Position/SeatTubeSaddle)    position] ,]
+            set position_HandleBar   $HandleBar(Position)
+            set position_BB          {0 0}
+                  # puts "   fill_resultValues  \$position_Saddle      $position_Saddle"
+                  # puts "   fill_resultValues  \$position_SaddleNose  $position_SaddleNose"
+                  # puts "   fill_resultValues  \$position_SeatTube    $position_SeatTube"
+                  # puts "   \$position_HandleBar   $position_HandleBar"
+                  # puts "   \$position_BB          $position_BB"
+                
+            
+                    # --- Saddle/Offset_BB --------------------------------
+                    #
+                set value        [ format "%.3f" [expr -1 * [lindex $position_Saddle 0]] ]
                     # puts "                  ... $value"
-                project::setValue Result(Length/Saddle/Offset_BB) value $value
+                # project::setValue Result(Length/Saddle/Offset_BB) value $value
+                #                  Result(Length/Saddle/Offset_BB)
 
 
-                # --- Saddle/Offset_BB_ST --------------------------------
+                # --- Saddle/Offset_BB_ST -----------------------------
                 #
-            set position_Saddle        [ project::getValue Result(Position/SeatTubeSaddle)    position]
-                set value       [ format "%.3f" [expr -1 * [lindex [split $position_Saddle ,] 0]] ]
+                set value       [ format "%.3f" [expr -1 * [lindex $position_SeatTube 0]] ]
                     # puts "                  ... $value"
                 project::setValue Result(Length/Saddle/Offset_BB_ST) value $value
 
 
-                # --- Saddle/Offset_HB --------------------------------
-                #
-            set position_Saddle       $Saddle(Position)
-            set position_HandleBar    $HandleBar(Position)
+                    # --- Saddle/Offset_HB --------------------------------
+                    #
                 set value       [ format "%.3f" [expr [lindex $position_Saddle 1] - [lindex $position_HandleBar 1]] ]
                     # puts "                  ... $value"
                 project::setValue Result(Length/Saddle/Offset_HB) value $value
 
+                
+                    # --- Personal/SeatTube_BB ------------------------
+                    #               
+                  # puts "   \$position_SeatTube  $position_SeatTube"
+                  # puts "   \$position_BB  $position_BB"
+                set value       [ vectormath::length $position_SeatTube $position_BB]
+                set value       [ format "%.3f" $value ]
+                project::setValue Result(Length/Saddle/SeatTube_BB) value $value   
 
-                # --- Saddle/Offset_BB_Nose --------------------------------
-                #
-            set position_SaddleNose   $Saddle(Nose)
-            set position_HandleBar    $HandleBar(Position)
+                
+                    # --- Personal/Offset_BB_Nose -------------------------
+                    #
                 set value       [ format "%.3f" [expr -1.0 * [lindex $position_SaddleNose 0]] ]
                     # puts "                  ... $value"
                 project::setValue Result(Length/Saddle/Offset_BB_Nose) value $value
                 set value       [ expr  [lindex $position_HandleBar 0] + [expr -1.0 * [lindex $position_SaddleNose 0]] ]
                 set value       [ format "%.3f" $value ]
                 project::setValue Result(Length/Personal/SaddleNose_HB) value $value
-                                                
 
+                
 
                 # --- WheelPosition/front/diagonal --------------------
                 #
