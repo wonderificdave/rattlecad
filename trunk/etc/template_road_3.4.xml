@@ -11,7 +11,7 @@
         <InnerLeg_Length>850.00</InnerLeg_Length>
         <HandleBar_Distance>471.24</HandleBar_Distance>
         <HandleBar_Height>635.00</HandleBar_Height>
-        <Saddle_Distance>230.82</Saddle_Distance>
+        <Saddle_Distance>217.22</Saddle_Distance>
         <Saddle_Height>710.00</Saddle_Height>
     </Personal>    
 
@@ -259,13 +259,14 @@
             <File>etc:handlebar/campagnolo_ergopower_11_a.svg</File>
         </HandleBar>
         <Saddle>
-            <File>etc:saddle/saddle_d.svg</File>
+            <File>etc:saddle/saddle_e.svg</File>
             <Height>40.00</Height>
             <Length>280.00</Length>
             <LengthNose>153.00</LengthNose>
         </Saddle>
         <SeatPost>
             <Setback>25.00</Setback>
+            <PivotOffset>45.00</PivotOffset>
             <Diameter>27.20</Diameter>
         </SeatPost>
         <CrankSet>
@@ -325,7 +326,7 @@
         <ForkDropOut>front</ForkDropOut>
         <ChainStay>straight</ChainStay>
         <Saddle>
-            <Offset_X>5.00</Offset_X>
+            <Offset_X>0.00</Offset_X>
             <Offset_Y>0.00</Offset_Y>
         </Saddle>
         <RearMockup>

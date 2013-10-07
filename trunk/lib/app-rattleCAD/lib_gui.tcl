@@ -116,6 +116,7 @@
             }
             "rattleCAD-Project"   all info 0 {
                 {command "rattleCAD WebSite"    {}  "about rattleCAD"       {}        -command { rattleCAD::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
+                {command "rattleCAD Features"   {}  "rattleCAD Features"    {}        -command { rattleCAD::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
                 {command "project@sourceforge"  {}  "sourceforge.net"       {}        -command { rattleCAD::file::open_URL {http://sourceforge.net/projects/rattlecad/index.html} } }
                 {command "like rattleCAD"       {}  "donate"                {}        -command { rattleCAD::file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
             }

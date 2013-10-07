@@ -461,4 +461,5 @@
                              98:00  1262,50        3.4.00.88      
 
 2013.10.04  20:00   23:00    03:00   3.4.00 ... 89 ... editable dimension Saddle-BB in Base Concept
+2013.10.07  00:00   00:00    08:00   3.4.00 ... 90 ... add SeatPost-PivotOffset
                              

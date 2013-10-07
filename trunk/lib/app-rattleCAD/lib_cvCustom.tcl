@@ -155,6 +155,7 @@
             set RearWheel(Position)         [ bikeGeometry::get_Object     RearWheel           position    $BB_Position ]
             set FrontWheel(Position)        [ bikeGeometry::get_Object     FrontWheel          position    $BB_Position ]
             set SeatPost(Saddle)            [ bikeGeometry::get_Object     SeatPostSaddle      position    $BB_Position ]
+            set SeatPost(PivotPosition)     [ bikeGeometry::get_Object     SeatPostPivot       position    $BB_Position ]
             set SeatPost(SeatTube)          [ bikeGeometry::get_Object     SeatPostSeatTube    position    $BB_Position ]
             set Saddle(Position)            [ bikeGeometry::get_Object     Saddle              position    $BB_Position ]
             set Saddle(Proposal)            [ bikeGeometry::get_Object     SaddleProposal      position    $BB_Position ]
@@ -303,6 +304,7 @@
                             $cv_Name create circle        $HandleBar(Position)      -radius 10  -outline darkred    -width 1.0  -tags {__CenterLine__  __CenterPoint__  personalHB}
                             $cv_Name create circle        $Saddle(Position)         -radius 10  -outline darkred    -width 1.0  -tags {__CenterLine__  __CenterPoint__  personalSaddle}
                             $cv_Name create circle        $SeatTube(Saddle)         -radius  5  -outline darkblue   -width 2.0  -tags {__CenterLine__  __CenterPoint__  personalSeat}
+                            $cv_Name create circle        $SeatPost(PivotPosition)  -radius  2  -outline darkblue   -width 2.0  -tags {__CenterLine__  __CenterPoint__  personalSeatPost}
                        }
                 point_crank {
                             $cv_Name create circle        $Position(help_91)        -radius  4  -outline gray50     -width 1.0  -tags __CenterLine__
@@ -415,6 +417,7 @@
                             set help_00            [ vectormath::addVector   $SeatTube(Ground) {-200 0} ]
                             set help_01            [ vectormath::rotatePoint $Steerer(Stem) $Steerer(Fork)  90 ]
                             set help_02            [ vectormath::addVector   $Steerer(Stem) [ vectormath::unifyVector $Steerer(Stem) $help_01 [expr  50 * $stageScale] ] ]
+                            set help_03            [ vectormath::addVector   $SeatPost(PivotPosition) {-10 0} ]
                             set help_fk            [ vectormath::addVector   $Steerer(Fork) [ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
 
                                 # colourtable: http://www.ironspider.ca/format_text/fontcolor.htm
@@ -534,17 +537,22 @@
                             set _dim_HT_Length      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Steerer(Fork)  $HeadTube(Stem) ] \
                                                                 aligned        [expr   100 * $stageScale]   0 \
                                                                 $colour(secondary) ]
-                            set _dim_SP_SetBack     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatTube(BBracket) $SeatPost(SeatTube) $SeatPost(Saddle) ] \
-                                                                perpendicular    [expr  -80 * $stageScale]  [expr -50 * $stageScale]  \
+                            set _dim_SP_SetBack     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatTube(BBracket) $SeatPost(SeatTube) $SeatPost(PivotPosition) ] \
+                                                                perpendicular    [expr  -40 * $stageScale]  [expr  50 * $stageScale]  \
                                                                 $colour(secondary) ]
 
 
-                            set _dim_Fork_Rake      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $Steerer(Stem)  $help_fk $FrontWheel(Position) ] \
+                            set _dim_Fork_Rake      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Steerer(Stem)  $help_fk $FrontWheel(Position) ] \
                                                                 perpendicular [expr  100 * $stageScale]    [expr  -80 * $stageScale] \
                                                                 $colour(secondary) ]
-                            set _dim_SD_Height      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $SeatPost(Saddle) $Saddle(Position)  ] \
+                            set _dim_SD_Height      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatPost(Saddle) $Saddle(Position)  ] \
                                                                 aligned       [expr  (-500 - $Length(Length_BB_Seat)) * $stageScale ]    [expr  -80 * $stageScale] \
                                                                 $colour(secondary) ]
+                            set _dim_SP_PivotOffset [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $help_03 $SeatPost(PivotPosition) $SeatPost(Saddle)  ] \
+                                                                perpendicular [expr  (-420 - $Length(Length_BB_Seat)) * $stageScale ]    [expr   0 * $stageScale]  \
+                                                                $colour(secondary) ]                      
+                            
+
 
                             if {$Stem(Angle) > 0} {
                                 set _dim_Stem_Angle [ $cv_Name dimension  angle        [ appUtil::flatten_nestedList  $Steerer(Stem)  $help_02 $HandleBar(Position) ] \
@@ -605,6 +613,7 @@
                                     
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_Height
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SP_SetBack
+                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SP_PivotOffset
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HT_Length
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_LC_Position_x
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_LC_Position_y
@@ -676,6 +685,7 @@
                                     
                                     $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(Saddle/Height) ]
                                     $cv_Name bind $_dim_SP_SetBack      <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(SeatPost/Setback) ]
+                                    $cv_Name bind $_dim_SP_PivotOffset  <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(SeatPost/PivotOffset) ]
                                     $cv_Name bind $_dim_HT_Length       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
                                     $cv_Name bind $_dim_LC_Position_x   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(TopTube/PivotPosition) ]
                                     $cv_Name bind $_dim_LC_Position_y   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Personal(InnerLeg_Length) ]
