@@ -1074,6 +1074,7 @@
             set Saddle_Proposal     [ bikeGeometry::get_Object     SaddleProposal          position    $BB_Position ]
             set SeatPost_Saddle     [ bikeGeometry::get_Object     SeatPostSaddle          position    $BB_Position ]
             set SeatPost_SeatTube   [ bikeGeometry::get_Object     SeatPostSeatTube        position    $BB_Position ]
+            set SeatPost_Pivot      [ bikeGeometry::get_Object     SeatPostPivot           position    $BB_Position ]
             set SeatTube_Ground     [ bikeGeometry::get_Object     SeatTubeGround          position    $BB_Position ]
             set SeatTube_BBracket   [ bikeGeometry::get_Object     SeatTube/Start          position    $BB_Position ]
             set SeatStay_SeatTube   [ bikeGeometry::get_Object     SeatStay/End            position    $BB_Position ]
@@ -1089,8 +1090,10 @@
             set Steerer_Ground      [ bikeGeometry::get_Object     SteererGround           position    $BB_Position ]
             set LegClearance        [ vectormath::addVector     $bikeGeometry::LegClearance(Position)  $BB_Position ]
     
-            set Saddle_PropRadius   [ vectormath::length                $Saddle_Proposal $BB_Position]
+            set Saddle_PropRadius   [ vectormath::length                $Saddle_Proposal   $BB_Position]
             set SeatTube_Angle      [ vectormath::angle                 $SeatPost_SeatTube $BB_Position [list -500 [lindex $BB_Position 1] ] ]
+            set SeatPost_Radius     [ vectormath::length                $SeatPost_Saddle   $SeatPost_Pivot] 
+            
     
     
                 # set debug_01      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
@@ -1108,7 +1111,7 @@
                 # ------ rearwheel representation
             $cv_Name create circle     $RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]    -outline gray60 -width 1.0    -tags {__CenterLine__    rearWheel}
                 # ------ frontwheel representation
-            $cv_Name create circle     $FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  -outline gray60    -width 1.0    -tags {__CenterLine__    frontWheel}
+            $cv_Name create circle     $FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  -outline gray60 -width 1.0    -tags {__CenterLine__    frontWheel}
     
     
                 # ------ headtube extension to ground
@@ -1120,7 +1123,7 @@
                 # ------ chainstay
             $cv_Name create line     [ appUtil::flatten_nestedList  $RearWheel            $BottomBracket    ]    -fill gray60  -width 1.0      -tags {__CenterLine__    chainstay}
                 # ------ seattube
-            $cv_Name create line     [ appUtil::flatten_nestedList  $SeatPost_SeatTube    $SeatTube_BBracket]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
+            $cv_Name create line     [ appUtil::flatten_nestedList  $SeatPost_Saddle $SeatPost_SeatTube    $SeatTube_BBracket]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
                 # ------ seatstay
             $cv_Name create line     [ appUtil::flatten_nestedList  $SeatStay_SeatTube    $RearWheel        ]    -fill gray60  -width 1.0      -tags {__CenterLine__    seatstay}
                 # ------ toptube
@@ -1133,7 +1136,7 @@
             $cv_Name create line     [ appUtil::flatten_nestedList  $Steerer_Fork         $FrontWheel       ]    -fill gray60  -width 1.0      -tags {__CenterLine__    fork}
     
                 # ------ seatpost
-            $cv_Name create line     [ appUtil::flatten_nestedList  $Saddle $SeatPost_Saddle $SeatPost_SeatTube] -fill gray60  -width 0.5      -tags {__CenterLine__    saddlemount}
+            $cv_Name create line     [ appUtil::flatten_nestedList  $Saddle $SeatPost_Saddle ] -fill gray60  -width 0.5      -tags {__CenterLine__    saddlemount}
     
                 # ------ seattube
                 # $cv_Name create line  [ appUtil::flatten_nestedList  $Saddle  $SeatPost_SeatTube   $BottomBracket     ]  \
@@ -1146,7 +1149,10 @@
                                                                                                                                -width 1.0      -tags {__CenterLine__    crankset}
                 # ------ saddle proposal
             $cv_Name create arc     $BottomBracket  -radius $Saddle_PropRadius   -start [expr 177 - $SeatTube_Angle]   -extent 6   -style arc  -outline darkmagenta \
-                                                                                                                              -width 1.0      -tags {__CenterLine__    saddleproposal}
+                                                                                                                               -width 1.0      -tags {__CenterLine__    saddleproposal}
+                # ------ seatpost pivot
+            $cv_Name create arc     $SeatPost_Pivot -radius $SeatPost_Radius     -start  55   -extent 70   -style arc  -outline darkmagenta \
+                                                                                                                               -width 1.0      -tags {__CenterLine__    saddlepivot}
     
                 # ------ saddle representation
                     set saddle_polygon {}
