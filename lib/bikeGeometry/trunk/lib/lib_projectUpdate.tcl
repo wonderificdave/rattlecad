@@ -1184,61 +1184,79 @@
 
                           
                                   # -- get TyreWidth for ChainStay Details
-                            set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
-                            set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidth]
-                            if {$node == {}} {
-                                    puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
-                                    set tyreHeight [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()] nodeValue] 
-                                    $parentNode appendXML  "<TyreWidth>$tyreHeight</TyreWidth>"
-                            }                        
- 
- 
-                                   # -- get TyreWidth for ChainStay Details
-                            set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
-                            set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidth]
-                            if {$node == {}} {
-                                    puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
-                                    set tyreHeight [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()] nodeValue] 
-                                    $parentNode appendXML  "<TyreWidth>$tyreHeight</TyreWidth>"
-                            }                        
+                          set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
+                          set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidth]
+                          if {$node == {}} {
+                                  puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
+                                  set tyreHeight [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()] nodeValue] 
+                                  $parentNode appendXML  "<TyreWidth>$tyreHeight</TyreWidth>"
+                          }                        
+
+
+                                  # -- get TyreWidth for ChainStay Details
+                          set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
+                          set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidth]
+                          if {$node == {}} {
+                                  puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
+                                  set tyreHeight [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()] nodeValue] 
+                                  $parentNode appendXML  "<TyreWidth>$tyreHeight</TyreWidth>"
+                          }                        
                     
                           
-                                    # -- get TyreWidthRadius for ChainStay Details
-                            set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
-                            set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidthRadius]
-                            if {$node == {}} {
-                                    puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
-                                    set rimDiameter [[$projectDOM selectNode /root/Component/Wheel/Rear/RimDiameter/text()] nodeValue] 
-                                    set tyreHeight  [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()]  nodeValue] 
-                                    set tyreRadius  [expr 0.5 * ($rimDiameter + $tyreHeight)]
-                                    $parentNode appendXML  "<TyreWidthRadius>$tyreRadius</TyreWidthRadius>"
-                            }                        
+                                  # -- get TyreWidthRadius for ChainStay Details
+                          set parentNode [$projectDOM selectNode /root/Component/Wheel/Rear]
+                          set node       [$projectDOM selectNode /root/Component/Wheel/Rear/TyreWidthRadius]
+                          if {$node == {}} {
+                                  puts "                           ... update File ... /root/Component/Wheel/Rear/TyreWidth"
+                                  set rimDiameter [[$projectDOM selectNode /root/Component/Wheel/Rear/RimDiameter/text()] nodeValue] 
+                                  set tyreHeight  [[$projectDOM selectNode /root/Component/Wheel/Rear/TyreHeight/text()]  nodeValue] 
+                                  set tyreRadius  [expr 0.5 * ($rimDiameter + $tyreHeight)]
+                                  $parentNode appendXML  "<TyreWidthRadius>$tyreRadius</TyreWidthRadius>"
+                          }                        
             
                   
                                     # -- get Rendering Saddle/Offset
-                            set parentNode [$projectDOM selectNode /root/Rendering]
-                            set node       [$projectDOM selectNode /root/Rendering/Saddle]
-                            if {$node == {}} {
-                                    puts "                           ... update File ... /root/Rendering/Saddle"
-                                    $parentNode appendXML  "<Saddle>
-                                                                <Offset_X>0.00</Offset_X>
-                                                                <Offset_Y>0.00</Offset_Y>
-                                                            </Saddle>"
-                            }                        
+                          set parentNode [$projectDOM selectNode /root/Rendering]
+                          set node       [$projectDOM selectNode /root/Rendering/Saddle]
+                          if {$node == {}} {
+                                  puts "                           ... update File ... /root/Rendering/Saddle"
+                                  $parentNode appendXML  "<Saddle>
+                                                              <Offset_X>0.00</Offset_X>
+                                                              <Offset_Y>0.00</Offset_Y>
+                                                          </Saddle>"
+                          }                        
     
                     
-                                    # -- get Rear Derailleur Details
-                             set parentNode [$projectDOM selectNode /root/Component/Derailleur/Rear]
-                             set node       [$projectDOM selectNode /root/Component/Derailleur/Rear/Pulley]
-                             if {$node == {}} {
-                                     puts "                           ... update File ... /root/Component/Derailleur/Rear/Pulley"
-                                     $parentNode appendXML  "<Pulley>
-                                                                 <x>-8.00</x>
-                                                                 <y>-79.00</y>
-                                                                 <teeth>10</teeth>
-                                                             </Pulley>"
-                             }                        
+                                  # -- get Rear Derailleur Details
+                          set parentNode [$projectDOM selectNode /root/Component/Derailleur/Rear]
+                          set node       [$projectDOM selectNode /root/Component/Derailleur/Rear/Pulley]
+                          if {$node == {}} {
+                                  puts "                           ... update File ... /root/Component/Derailleur/Rear/Pulley"
+                                  $parentNode appendXML  "<Pulley>
+                                                              <x>-8.00</x>
+                                                              <y>-79.00</y>
+                                                              <teeth>10</teeth>
+                                                          </Pulley>"
+                          }  
+
                     
+                                  # -- get SeatPost PivotOffset
+                          set parentNode [$projectDOM selectNode /root/Component/SeatPost]
+                          set node       [$projectDOM selectNode /root/Component/SeatPost/PivotOffset]
+                          if {$node == {}} {
+                                  puts "                           ... update File ... /root/Component/SeatPost/PivotOffset"
+                                  $parentNode appendXML  "<PivotOffset>45.00</PivotOffset>"
+                                    #
+                                  set angleNode [$projectDOM selectNode /root/Result/Angle/SeatTube/Direction/text()]
+                                    # puts "  <D> -> \$angleNode [$angleNode asXML]"
+                                  if {$angleNode != {}} {
+                                      set angle_SeatTube [$angleNode nodeValue]
+                                      if {$angle_SeatTube != 0} {
+                                          dict set postUpdate     Result      Angle/SeatTube/Direction    $angle_SeatTube
+                                      }
+                                  }
+                          }
+
                         }       
                         
                 {ab-xy} {	set node {}

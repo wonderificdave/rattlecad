@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.36
+ package provide bikeGeometry 0.38
 
  namespace eval bikeGeometry {
 
@@ -261,6 +261,7 @@
                                 Saddle -
                                 SeatPostSaddle -
                                 SeatPostSeatTube -
+                                SeatPostPivot -
                                 SaddleProposal -
                                 HandleBar -
                                 LegClearance -
@@ -538,7 +539,10 @@
                           # puts "  ... Angle/SeatTube/Direction comes here: $value"
                           # puts ""
                       set oldValue        $project::Result(Angle/SeatTube/Direction)
-                      set SP_Setback      [project::getValue Component(SeatPost/Setback)   value]
+                      set PS_SD_Heigth    [project::getValue Personal(Saddle_Height)         value]
+                      set SD_Heigth       [project::getValue Component(Saddle/Height)        value]
+                      set SP_Setback      [project::getValue Component(SeatPost/Setback)     value]
+                      set SP_PivotOffset  [project::getValue Component(SeatPost/PivotOffset) value]
                       set length_Setback  [expr $SP_Setback * sin([vectormath::rad $value])]
                       set height_Setback  [expr $SP_Setback * cos([vectormath::rad $value])]
                         # puts "    -> value $value"
@@ -546,10 +550,17 @@
                         # puts "    -> SP_Setback $SP_Setback"
                         # puts "    -> length_Setback $length_Setback"
                         # puts "    -> height_Setback $height_Setback"
-                      set ST_height       [expr [project::getValue Personal(Saddle_Height)   value] - [project::getValue Component(Saddle/Height)   value] + $height_Setback]
+                      set ST_height       [expr $PS_SD_Heigth - $SD_Heigth - $SP_PivotOffset + $height_Setback]
                       set length_SeatTube [expr $ST_height / tan([vectormath::rad $value])]
                         # puts "    -> ST_height $ST_height"
                         # puts "    -> length_SeatTube $length_SeatTube"
+                        
+                        #set length_PivOffs  [expr $SP_PivotOffset * cos([vectormath::rad $value])]
+                        #set height_PivOffs  [expr $SP_PivotOffset * sin([vectormath::rad $value])]
+                        #set ST_height       [expr [project::getValue Personal(Saddle_Height)   value] - $SD_Heigth + $height_Setback]
+                          
+                        
+                        
                   
                         # --- update value
                         #

@@ -173,6 +173,7 @@
             <SummarySize>0.00,0.00</SummarySize>
             <SeatPostSaddle>0.00,0.00</SeatPostSaddle>
             <SeatPostSeatTube>0.00,0.00</SeatPostSeatTube>
+            <SeatPostPivot>0.00,0.00</SeatPostPivot>
             <Brake>
                  <Front>
                       <Mount>0.00,0.00</Mount>

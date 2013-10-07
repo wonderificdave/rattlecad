@@ -240,9 +240,13 @@
                 # --- get SaddleMount - Position
             set SeatPost(Diameter)      $project::Component(SeatPost/Diameter)
             set SeatPost(Setback)       $project::Component(SeatPost/Setback)
+            set SeatPost(PivotOffset)   $project::Component(SeatPost/PivotOffset)
+                # 
             set SeatPost(Height)        [ expr $Saddle(Height) - $Saddle(Saddle_Height) ]
             set SeatPost(Saddle)        [ list [expr -1.0 * $Saddle(Distance)] $SeatPost(Height) ]
-                set hlp_01              [ vectormath:::cathetusPoint {0 0} $SeatPost(Saddle) [expr $SeatPost(Setback) - $SeatTube(OffsetBB)] {opposite}]
+            set SeatPost(PivotPosition) [ vectormath::addVector $SeatPost(Saddle)  [list 0 $SeatPost(PivotOffset)] -1]
+                set hlp_01              [ vectormath:::cathetusPoint {0 0} $SeatPost(PivotPosition) [expr $SeatPost(Setback) - $SeatTube(OffsetBB)] {opposite}]
+                # set hlp_01              [ vectormath:::cathetusPoint {0 0} $SeatPost(Saddle) [expr $SeatPost(Setback) - $SeatTube(OffsetBB)] {opposite}]
                 set vct_01              [ vectormath:::parallel {0 0} $hlp_01 $SeatTube(OffsetBB)]
             set SeatPost(SeatTube)      [ lindex $vct_01 1]
             set SeatTube(BottomBracket) [ lindex $vct_01 0]
@@ -297,6 +301,7 @@
             project::setValue Result(Position/HandleBar)            position    $HandleBar(Position)
             project::setValue Result(Position/SeatPostSaddle)       position    $SeatPost(Saddle)
             project::setValue Result(Position/SeatPostSeatTube)     position    $SeatPost(SeatTube)
+            project::setValue Result(Position/SeatPostPivot)        position    $SeatPost(PivotPosition)
             project::setValue Result(Position/Saddle)               position    $Saddle(Position)
             project::setValue Result(Position/SaddleProposal)       position    $Saddle(Proposal)
             project::setValue Result(Position/SaddleNose)           position    $Saddle(Nose)
