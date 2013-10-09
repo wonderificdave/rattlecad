@@ -462,4 +462,6 @@
 
 2013.10.04  20:00   23:00    03:00   3.4.00 ... 89 ... editable dimension Saddle-BB in Base Concept
 2013.10.07  00:00   00:00    08:00   3.4.00 ... 90 ... add SeatPost-PivotOffset
+2013.10.09  00:00   00:00    01:00   3.4.00 ... 91 ... editable dimension Saddle-BB to config panel
+2013.10.09  00:00   00:00    02:00   3.4.00 ... 92 ... change seatpost pivot Offset default from 45 to 40
                              

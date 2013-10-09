@@ -222,13 +222,12 @@
                 #   Alternatives
             ttk::labelframe    $menueFrame.sf.lf_03        -text "Base Concept - Alternative Values"
                 pack $menueFrame.sf.lf_03                 -side top  -fill x  -expand yes  -pady 2
-                    # 3.2.76 create_configEdit $menueFrame.sf.lf_03        Temporary(TopTube/VirtualLength)             0.20  darkblue
                     create_configEdit $menueFrame.sf.lf_03      Result(Length/TopTube/VirtualLength)    0.20  darkblue
                     create_configEdit $menueFrame.sf.lf_03      Result(Length/FrontWheel/horizontal)    0.20  darkblue
                     create_configEdit $menueFrame.sf.lf_03      Result(Length/FrontWheel/diagonal)      0.20  darkblue
-                    # create_configEdit $menueFrame.sf.lf_03    Result(Length/Saddle/Offset_BB)         0.20  darkblue
                     create_configEdit $menueFrame.sf.lf_03      Result(Length/BottomBracket/Height)     0.20  darkblue
-
+                    create_configEdit $menueFrame.sf.lf_03      Result(Length/Saddle/SeatTube_BB)       0.20  darkblue
+                    
                 # -----------------
                 #   Wheels
             ttk::labelframe $menueFrame.sf.lf_04        -text "Wheels"
