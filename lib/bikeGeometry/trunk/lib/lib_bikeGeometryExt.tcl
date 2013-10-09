@@ -799,7 +799,7 @@
                         lappend headGeom $x [expr -1.0 * $y]
                     }
                         # puts $headGeom
-                    set vct_30      [ vectormath::unifyVector $SeatPost(SeatTube) {0 0} 49.5 ]
+                    set vct_30      [ vectormath::unifyVector $SeatPost(SeatTube) {0 0} 48.5 ]
                     set vct_31      [ vectormath::unifyVector {0 0} $SeatTube(Direction) $SeatPost(PivotOffset) ]
                       # set vct_31      [ vectormath::unifyVector {0 0} $SeatTube(Direction) $SeatPost(PivotOffset) ]
                     set vct_32      [ vectormath::addVector $vct_30 $vct_31]

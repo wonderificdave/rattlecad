@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.38
+ package provide bikeGeometry 0.39
 
  namespace eval bikeGeometry {
 

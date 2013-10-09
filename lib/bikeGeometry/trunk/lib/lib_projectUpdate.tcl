@@ -1245,7 +1245,7 @@
                           set node       [$projectDOM selectNode /root/Component/SeatPost/PivotOffset]
                           if {$node == {}} {
                                   puts "                           ... update File ... /root/Component/SeatPost/PivotOffset"
-                                  $parentNode appendXML  "<PivotOffset>45.00</PivotOffset>"
+                                  $parentNode appendXML  "<PivotOffset>40.00</PivotOffset>"
                                     #
                                   set angleNode [$projectDOM selectNode /root/Result/Angle/SeatTube/Direction/text()]
                                     # puts "  <D> -> \$angleNode [$angleNode asXML]"
