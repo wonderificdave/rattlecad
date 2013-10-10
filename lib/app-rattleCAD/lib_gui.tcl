@@ -71,7 +71,7 @@
                 
                 {separator}
                 
-                {command "&Copy Concept"    {}  "Copy Geometry"         {Ctrl k}      -command { rattleCAD::gui::notebook_switchTab  cv_Custom02} }
+                {command "&Copy Reference"  {}  "Copy Reference"       {Ctrl r}     -command { rattleCAD::gui::notebook_switchTab  cv_Custom02} }
                 
                 {separator}
                 
@@ -201,7 +201,7 @@
                 pack $noteBook_top -expand yes  -fill both  
             
                 # ---     create and register any canvasCAD - canvas in rattleCAD::gui::notebookCanvas
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Copy Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Copy Reference "      A4  0.2  25  -bd 2  -bg white  -relief sunken
             rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
             rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom10  "  Frame Details  "      A4  0.2  25  -bd 2  -bg white  -relief sunken
             rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom20  "  ChainStay Details  "  A2  1.0  25  -bd 2  -bg white  -relief sunken

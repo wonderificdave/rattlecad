@@ -1429,20 +1429,22 @@
 
     }
     
-    proc create_copyConcept {cv_Name BB_Position} {
+    proc create_copyReference {cv_Name BB_Position} {
                 
                 # --- get stageScale
             set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]
 
                 # --- get defining Point coords ----------
-            set BottomBracket       $BB_Position
-            set RearWheel           [ bikeGeometry::get_Object     RearWheel               position    $BB_Position ]
-            set FrontWheel          [ bikeGeometry::get_Object     FrontWheel              position    $BB_Position ]
-            set SeatPost_Saddle     [ bikeGeometry::get_Object     SeatPostSaddle          position    $BB_Position ]
-            set HandleBar           [ bikeGeometry::get_Object     HandleBar               position    $BB_Position ]
-            set SeatTube_Ground     [ bikeGeometry::get_Object     SeatTubeGround          position    $BB_Position ]
-            set Steerer_Ground      [ bikeGeometry::get_Object     SteererGround           position    $BB_Position ]
-                
+            set BottomBracket         $BB_Position
+            set RearWheel             [ bikeGeometry::get_Object     RearWheel           position    $BB_Position ]
+            set FrontWheel            [ bikeGeometry::get_Object     FrontWheel          position    $BB_Position ]
+            set SeatPost_Saddle       [ bikeGeometry::get_Object     SeatPostSaddle      position    $BB_Position ]
+            set HandleBar             [ bikeGeometry::get_Object     HandleBar           position    $BB_Position ]
+            set SeatTube_Ground       [ bikeGeometry::get_Object     SeatTubeGround      position    $BB_Position ]
+            set Steerer_Ground        [ bikeGeometry::get_Object     SteererGround       position    $BB_Position ]
+            set Reference_HB          [ bikeGeometry::get_Object     Reference_HB        position    $BB_Position ]
+            set Reference_SN          [ bikeGeometry::get_Object     Reference_SN        position    $BB_Position ]
+           
                 # ------ centerlines
                 # linetype
                 #    centerline
@@ -1465,26 +1467,26 @@
             set line(colour) orange
             set line(width) 1.0
                 # -----------------------------------                          
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $Reference_HB      ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
                 # ------ front triangle
             $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $FrontWheel        ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $FrontWheel        $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $FrontWheel        $Reference_HB      ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
                 # ------ seat triangle
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $SeatPost_Saddle   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $SeatPost_Saddle   $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $BottomBracket     $Reference_SN      ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            $cv_Name create centerline  [ appUtil::flatten_nestedList  $Reference_SN      $Reference_HB      ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
                 # ------ rear triangle
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $SeatPost_Saddle   ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
             $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $BottomBracket     ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}                             
                 # ------ diagonal
-            $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $HandleBar         ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}                             
+            # $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $Reference_SN      ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}
+            # $cv_Name create centerline  [ appUtil::flatten_nestedList  $RearWheel         $Reference_HB      ]    -fill $line(colour)  -width $line(width)      -tags {__CenterLine__ __copyConcept__}                             
             
                 # ------ position 
             set position(colour)  darkred
             set position(width)       2.0
             set position(radius)      7.0
                 # -----------------------------------                                                     
-            $cv_Name create circle  $HandleBar          -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
-            $cv_Name create circle  $SeatPost_Saddle    -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
+            $cv_Name create circle  $Reference_HB       -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
+            $cv_Name create circle  $Reference_SN       -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
             $cv_Name create circle  $BottomBracket      -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
             $cv_Name create circle  $RearWheel          -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)
             $cv_Name create circle  $FrontWheel         -radius $position(radius)  -outline $position(colour)     -tags {__CenterLine__}  -width $position(width)

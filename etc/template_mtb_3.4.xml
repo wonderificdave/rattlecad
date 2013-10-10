@@ -45,6 +45,13 @@
             <Depth>10.0</Depth>
         </BottomBracket>
     </Custom>
+        
+    <Reference>
+        <HandleBar_BB>792.40</HandleBar_BB>
+        <HandleBar_FW>640.89</HandleBar_FW>
+        <SaddleNose_HB>543.42</SaddleNose_HB>
+        <SaddleNose_BB>712.90</SaddleNose_BB>
+    </Reference>
 
     <FrameTubes>
         <!-- frame tubes -->

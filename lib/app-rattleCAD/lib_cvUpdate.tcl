@@ -52,7 +52,7 @@
         switch $cv_Name {
             rattleCAD::gui::cv_Custom02 {
                         #
-                        # -- copy geometry
+                        # -- get reference
                         #
                         #
                     set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
@@ -63,9 +63,7 @@
                     rattleCAD::rendering::createBaseline     $cv_Name $xy
                         #
                     createDimension                   $cv_Name $xy    point_seat
-                    #createDimension                   $cv_Name $xy    cline_frame
                     createDimension                   $cv_Name $xy    point_frame
-                    #createDimension                   $cv_Name $xy    geometry_bg
                         #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel
@@ -89,10 +87,11 @@
                         #
                         # rattleCAD::rendering::createFrame_Centerline $cv_Name $xy    {} {} {baseLine}
                         #
-                    rattleCAD::rendering::create_copyConcept $cv_Name $xy  
+                    rattleCAD::rendering::create_copyReference $cv_Name $xy  
                         #
-                    createDimension                   $cv_Name $xy    concept_bg
-                    createDimension                   $cv_Name $xy    concept_fg
+                    createDimension                   $cv_Name $xy    reference_bg
+                    createDimension                   $cv_Name $xy    reference_fg
+                    createDimension                   $cv_Name $xy    point_reference
                         #
                     update_renderCanvas               $cv_Name
                         #
@@ -120,6 +119,7 @@
                     createDimension                   $cv_Name $xy    point_personal
                     createDimension                   $cv_Name $xy    point_crank
                     createDimension                   $cv_Name $xy    geometry_fg
+                    createDimension                   $cv_Name $xy    point_reference
                         #
                     update_renderCenterline           $cv_Name
                         #

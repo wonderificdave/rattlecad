@@ -122,7 +122,8 @@
               __test_Integration_02.xml   
        } {       
            set openFile     [file join  $TEST_Dir sample $thisFile]
-           puts "          ... $openFile\n"
+           puts "          ... integrationTest_00 opened"
+           puts "                 ... $openFile\n"
            rattleCAD::file::openProject_xml   $openFile 
            wm deiconify .
            #update          
