@@ -188,6 +188,8 @@
                       <Definition>0.00,0.00</Definition>
                  </Rear>
             </Brake>
+            <Reference_HB>0.00,0.00</Reference_HB>
+            <Reference_SN>0.00,0.00</Reference_SN>
         </Position>
 
         <Length>
@@ -225,12 +227,6 @@
             <Personal>
                 <SaddleNose_HB>0.00</SaddleNose_HB>
             </Personal>
-            <Control>              
-                <HandleBar_FW>0.00</HandleBar_FW>
-                <HandleBar_BB>0.00</HandleBar_BB>
-                <SeatPost_HB>0.00</SeatPost_HB>
-                <SeatPost_BB>0.00</SeatPost_BB>
-            </Control>
         </Length>
         
         <Angle>

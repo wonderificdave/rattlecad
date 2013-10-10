@@ -858,7 +858,7 @@
                             # -- 0.14 -- handled by update_projectResult
                                 #set templateRoot    [ lib_file::get_XMLContent $::APPL_Config(TemplateInit)]
                                 #set resultNode      [ $templateRoot selectNode /root/Result]
-                            puts "[$resultNode asXML]"
+                                # puts "[$resultNode asXML]"
                             foreach child       [ $resultNode childNodes ] {
                                     catch {$parentNode appendXML [$child asXML]}
                             }
@@ -1255,6 +1255,29 @@
                                           dict set postUpdate     Result      Angle/SeatTube/Direction    $angle_SeatTube
                                       }
                                   }
+                          }
+
+                    
+                                  # -- set Reference
+                          set parentNode [$projectDOM selectNode /root]
+                          set node       [$projectDOM selectNode /root/Reference]
+                          if {$node != {}} {
+                                  # node: Reference exists but does not contain node: HandleBar_BB 
+                                set checkNode  [$projectDOM selectNode /root/Reference/HandleBar_BB]
+                                if {$checkNode == {}} {
+                                    $parentNode removeChild $node
+                                    $node delete
+                                }
+                          }                          
+                          set node       [$projectDOM selectNode /root/Reference]
+                          if {$node == {}} {
+                                   puts "                           ... update File ... /root/Reference"
+                                  $parentNode appendXML  "<Reference>
+                                                              <HandleBar_BB>790.75</HandleBar_BB>
+                                                              <HandleBar_FW>583.03</HandleBar_FW>
+                                                              <SaddleNose_HB>539.70</SaddleNose_HB>
+                                                              <SaddleNose_BB>712.94</SaddleNose_BB>
+                                                          </Reference>"
                           }
 
                         }       

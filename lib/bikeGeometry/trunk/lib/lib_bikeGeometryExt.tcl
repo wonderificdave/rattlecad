@@ -102,6 +102,44 @@
             project::setValue Result(Position/SummarySize)      position    $summaryLength   $summaryHeight
 
     }
+    
+    
+        #
+        #
+        # --- set basePoints Attributes
+        #
+    proc bikeGeometry::get_Reference {} {
+
+            variable FrontWheel
+            variable BottomBracket
+            variable Reference
+            
+            set angle_current           [vectormath::angle {10 0} {0 0} $FrontWheel(Position)]
+         
+              # -- Reference HandleBar
+            set side_a                  $project::Reference(HandleBar_FW)
+            set side_b                  $project::Reference(HandleBar_BB) 
+            set side_c                  [vectormath::length {0 0} $FrontWheel(Position)]
+            set angle                   [vectormath::angle_Triangle $side_a $side_b $side_c]
+            
+            set angle_current           [expr $angle_current + $angle]
+            set Reference(HandleBar)    [vectormath::rotateLine {0 0} $project::Reference(HandleBar_BB)  $angle_current]
+              
+            project::setValue Result(Position/Reference_HB)       position    $Reference(HandleBar)
+            
+            
+            # -- Reference SaddleNose
+            set side_a                  $project::Reference(SaddleNose_HB)
+            set side_b                  $project::Reference(SaddleNose_BB) 
+            set side_c                  $project::Reference(HandleBar_BB) 
+            set angle                   [vectormath::angle_Triangle $side_a $side_b $side_c]
+            
+            set angle_current           [expr $angle_current + $angle]
+            set Reference(SaddleNose)   [vectormath::rotateLine {0 0} $project::Reference(SaddleNose_BB)  $angle_current]
+              
+            project::setValue Result(Position/Reference_SN)      position    $Reference(SaddleNose)
+         
+    }    
 
 
         #
@@ -161,7 +199,6 @@
                                             [lindex $vct_04 1] [lindex $vct_04 0] [lindex $vct_05 1] [lindex $vct_05 0] [lindex $vct_06 0] ]
             project::setValue Result(Tubes/ChainStay)   polygon     $polygon
     }
-
 
         
         #
@@ -1144,28 +1181,7 @@
             set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
                      puts "                  ... $value"
                 project::setValue Result(Length/FrontWheel/Radius value $value
-
-  
-
-                # --- Control - Lengths ------------------------------- 
-                #           for copy Concept of existing Bike 
-                #
-            set value         [vectormath::length  $HandleBar(Position) $FrontWheel(Position)   ]
-                set value       [ format "%.3f" $value ]
-                # puts "                  ... $value"
-                project::setValue Result(Length/Control/HandleBar_FW) value $value
-            set value         [vectormath::length  $HandleBar(Position) {0 0}]
-                set value       [ format "%.3f" $value ]
-                # puts "                  ... $value"
-                project::setValue Result(Length/Control/HandleBar_BB) value $value                      
-            set value         [vectormath::length  $SeatPost(Saddle)    $HandleBar(Position)   ]
-                set value       [ format "%.3f" $value ]
-                # puts "                  ... $value"
-                project::setValue Result(Length/Control/SeatPost_HB)  value $value
-            set value         [vectormath::length  $SeatPost(Saddle)    {0 0}]
-                set value       [ format "%.3f" $value ]
-                # puts "                  ... $value"
-                project::setValue Result(Length/Control/SeatPost_BB)  value $value                       
+                    
             
 
             set BB_Position             {0 0}

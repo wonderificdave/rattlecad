@@ -538,7 +538,8 @@
                     FrameTubes  -
                     Component   -
                     Lugs        -
-                    Rendering   {
+                    Rendering   -
+                    Reference   {
                                 set _name       [lrange [split $nodePath /] 3 end-1]
                                 set _nameValue  [lindex $_name 0]
                                 foreach value [lrange $_name 1 end] {

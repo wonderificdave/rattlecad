@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.39
+ package provide bikeGeometry 0.40
 
  namespace eval bikeGeometry {
 
@@ -273,7 +273,10 @@
                                 BrakeFront -
                                 BrakeRear -
                                 DerailleurMountFront -
+                                Reference_HB -
+                                Reference_SN -
                                 SummarySize {
+                                              # Result/Position/Reference_HB
                                             set branch "Position/$object"
                                         }
                                 
@@ -792,8 +795,6 @@
                       set_Value                   $xpath     $pos_Saddle_y   
                       return                      
                   }
-                  
-                  
                 
                 {Length/Personal/SaddleNose_HB}  {
                       set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
@@ -808,85 +809,6 @@
                       return 
                   }
                   
-                {Length/Control/HandleBar_FW}  {
-                      set side_a                  $value
-                      set side_b                  $project::Result(Length/Control/HandleBar_BB)
-                      set side_c                  $project::Result(Length/FrontWheel/diagonal)
-
-                      set angle                   [vectormath::angle_Triangle $side_a $side_b $side_c]
-                      set newPos                  [vectormath::rotatePoint {0 0} $FrontWheel(Position) $angle]
-                      set newPos                  [vectormath::unifyVectorPointList [list {0 0} $newPos] ]
-                      set newPos                  [vectormath::unifyVectorPointList [list {0 0} $newPos] $side_b]
-
-                      foreach {x y} $newPos break
-                      set xpath                   Personal/HandleBar_Distance)
-                      set_Value                   $xpath     [format "%.3f" $x]
-                      set xpath                   Personal/HandleBar_Height)
-                      set_Value                   $xpath     [format "%.3f" $y]
-                                                              
-                      set_resultParameter         Result     Length/FrontWheel/diagonal   $side_c
-
-                      return
-                  }
-                  
-                {Length/Control/HandleBar_BB}  {
-                      set side_a                  $project::Result(Length/Control/HandleBar_FW)
-                      set side_b                  $value
-                      set side_c                  $project::Result(Length/FrontWheel/diagonal)
-
-                      set angle                   [vectormath::angle_Triangle $side_a $side_b $side_c]
-                      set newPos                  [vectormath::rotatePoint {0 0} $FrontWheel(Position) $angle]
-                      set newPos                  [vectormath::unifyVectorPointList [list {0 0} $newPos] ]
-                      set newPos                  [vectormath::unifyVectorPointList [list {0 0} $newPos] $side_b]
-
-                      foreach {x y} $newPos break
-                      set xpath                   Personal/HandleBar_Distance)
-                      set_Value                   $xpath     [format "%.3f" $x]
-                      set xpath                   Personal/HandleBar_Height)
-                      set_Value                   $xpath     [format "%.3f" $y]
-                                                              
-                      set_resultParameter         Result     Length/FrontWheel/diagonal   $side_c
-
-                      return
-                  }
-              
-                {Length/Control/SeatPost_HB}  {
-                      set side_a                  $value
-                      set side_b                  $project::Result(Length/Control/SeatPost_BB)
-                      set side_c                  $project::Result(Length/Control/HandleBar_BB)
-                      
-                      set angle                   [vectormath::angle_Triangle $side_a $side_b $side_c]
-                      set newPos                  [vectormath::rotatePoint {0 0} $HandleBar(Position) $angle]
-                      set newPos                  [vectormath::unifyVectorPointList [list {0 0} $newPos] ]
-                      set newPos                  [vectormath::unifyVectorPointList [list {0 0} $newPos] $side_b]
-
-                      foreach {x y} $newPos break
-                      set project::Personal(Saddle_Distance)   [format "%.3f" [expr -1.0 *$x] ]
-                      set_base_Parameters
-                      set xpath                   Personal/Saddle_Height
-                      set_Value                   $xpath     [format "%.3f" [expr $y + $project::Component(Saddle/Height)] ]
-
-                      return 
-                  }
-                  
-                {Length/Control/SeatPost_BB}  {
-                      set side_a                  $project::Result(Length/Control/SeatPost_HB)
-                      set side_b                  $value
-                      set side_c                  $project::Result(Length/Control/HandleBar_BB)
-                      
-                      set angle                   [vectormath::angle_Triangle $side_a $side_b $side_c]
-                      set newPos                  [vectormath::rotatePoint {0 0} $HandleBar(Position) $angle]
-                      set newPos                  [vectormath::unifyVectorPointList [list {0 0} $newPos] ]
-                      set newPos                  [vectormath::unifyVectorPointList [list {0 0} $newPos] $side_b]
-
-                      foreach {x y} $newPos break
-                      set project::Personal(Saddle_Distance)   [format "%.3f" [expr -1.0 *$x] ]
-                      set_base_Parameters
-                      set xpath                   Personal/Saddle_Height
-                      set_Value                   $xpath     [format "%.3f" [expr $y + $project::Component(Saddle/Height)] ]
-
-                      return
-                  }
                 {Length/RearWheel/Radius}     {
                       set rimDiameter   [ project::getValue Component(Wheel/Rear/RimDiameter)  value ]
                       set tyreHeight    [ project::getValue Component(Wheel/Rear/TyreHeight)   value ]
