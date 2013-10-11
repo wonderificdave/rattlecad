@@ -9,9 +9,9 @@
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
         <InnerLeg_Length>850.00</InnerLeg_Length>
-        <HandleBar_Distance>471.24</HandleBar_Distance>
+        <HandleBar_Distance>481</HandleBar_Distance>
         <HandleBar_Height>635.00</HandleBar_Height>
-        <Saddle_Distance>217.22</Saddle_Distance>
+        <Saddle_Distance>212.69</Saddle_Distance>
         <Saddle_Height>710.00</Saddle_Height>
     </Personal>    
 
@@ -20,7 +20,7 @@
         <HeadTube>
             <PositonTT>8.50</PositonTT>
             <PositonDT>8.50</PositonDT>
-            <Angle>72.00</Angle>
+            <Angle>72.50</Angle>
         </HeadTube>
         <TopTube>
             <PivotPosition>80.00</PivotPosition>
@@ -42,7 +42,7 @@
             <Rear>410.00</Rear>
         </WheelPosition>    
         <BottomBracket>
-            <Depth>64.00</Depth>
+            <Depth>66.00</Depth>
         </BottomBracket>
     </Custom>
     
@@ -250,16 +250,16 @@
             <Front>
                 <RimDiameter>622.00</RimDiameter>
                 <RimHeight>25.00</RimHeight>
-                <TyreHeight>23.00</TyreHeight>
+                <TyreHeight>25.00</TyreHeight>
             </Front>            
             <Rear>
                 <RimDiameter>622.00</RimDiameter>
                 <RimHeight>25.00</RimHeight>
-                <TyreHeight>23.00</TyreHeight>
-                <TyreWidth>21.00</TyreWidth>
+                <TyreHeight>25.00</TyreHeight>
+                <TyreWidth>23.00</TyreWidth>
                 <TyreWidthRadius>324.00</TyreWidthRadius>
                 <HubWidth>130.00</HubWidth>
-                <FirstSprocket>15</FirstSprocket>
+                <FirstSprocket>13</FirstSprocket>
             </Rear>
         </Wheel>
         <HandleBar>
@@ -269,7 +269,7 @@
             <File>etc:saddle/saddle150_00.svg</File>
             <Height>40.00</Height>
             <Length>280.00</Length>
-            <LengthNose>153.00</LengthNose>
+            <LengthNose>150.00</LengthNose>
         </Saddle>
         <SeatPost>
             <Setback>25.00</Setback>
