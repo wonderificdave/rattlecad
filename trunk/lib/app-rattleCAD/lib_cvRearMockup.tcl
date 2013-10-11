@@ -420,12 +420,18 @@
             set polygonMatrix  [appUtil::flatten_nestedList  $tyre_04  $tyre_05 $tyre_06 $tyre_07 $tyre_08 ]
             
             
-            $ext_cvName create oval      $ovalMatrix      -fill gray     -width 1.0  -tags {__Component__}
-            $ext_cvName create polygon   $polygonMatrix   -fill gray     -width 1.0  -tags {__Component__}
+                           $ext_cvName create oval      $ovalMatrix      -fill gray     -width 1.0  -tags {__Component__}
+            set _tyreObj [ $ext_cvName create polygon   $polygonMatrix   -fill gray     -width 1.0  -tags {__Component__}]
             
-            $ext_cvName create ovalarc   $ovalMatrix      -outline black -width 1.0  -tags {__Component__} \
-                                                          -start 270     -extent 180       -style arc
-            $ext_cvName create line      $polygonMatrix   -fill black    -width 1.0  -tags {__Component__}
+                           $ext_cvName create ovalarc   $ovalMatrix      -outline black -width 1.0  -tags {__Component__} \
+                                                                         -start 270     -extent 180       -style arc
+                           $ext_cvName create line      $polygonMatrix   -fill black    -width 1.0  -tags {__Component__}
+            
+            rattleCAD::gui::object_CursorBinding     $ext_cvName    $_tyreObj
+            $ext_cvName    bind $_tyreObj    <Double-ButtonPress-1> [list rattleCAD::update::createEdit  %x %y  $ext_cvName  \
+                                                   {list://Component(Wheel/Rear/TyreWidthRadius) \
+                                                           Component(Wheel/Rear/TyreWidth) \
+                                                           Rendering(RearMockup/TyreClearance)}  {Rear Tyre Parameter}]
                                                                                                                                                                                                                                                         
     }    
     

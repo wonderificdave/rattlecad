@@ -9,9 +9,9 @@
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
         <InnerLeg_Length>850.00</InnerLeg_Length>
-        <HandleBar_Distance>474.00</HandleBar_Distance>
+        <HandleBar_Distance>481.00</HandleBar_Distance>
         <HandleBar_Height>635.00</HandleBar_Height>
-        <Saddle_Distance>217.22</Saddle_Distance>
+        <Saddle_Distance>212.69</Saddle_Distance>
         <Saddle_Height>710.00</Saddle_Height>
     </Personal>
 
@@ -231,7 +231,7 @@
         </Fork>
         <Stem>
             <Angle>-6.00</Angle>
-            <Length>110.00</Length>
+            <Length>120.00</Length>
         </Stem>
         <Brake>
             <Front>
@@ -258,7 +258,7 @@
                 <TyreWidth>45.00</TyreWidth>
                 <TyreWidthRadius>310.00</TyreWidthRadius>
                 <HubWidth>135.00</HubWidth>
-                <FirstSprocket>15</FirstSprocket>
+                <FirstSprocket>12</FirstSprocket>
             </Rear>
         </Wheel>
         <HandleBar>
@@ -268,7 +268,7 @@
             <File>etc:saddle/saddle150_00.svg</File>
             <Height>40.00</Height>
             <Length>280.00</Length>
-            <LengthNose>153.00</LengthNose>
+            <LengthNose>150.00</LengthNose>
         </Saddle>
         <SeatPost>
             <Setback>25.00</Setback>

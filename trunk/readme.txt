@@ -1,5 +1,14 @@
 
 
+3.4.00.94  - 2013.10.10
+-------------------------------------------------------------------------------
+    feature:
+        ... edit tyre representation in ChainStay Details
+    refactor:
+        ... default SadleNose Length from 153 to 150
+        ... updated templates
+
+
 3.4.00.93  - 2013.10.10
 -------------------------------------------------------------------------------
     refactor:
