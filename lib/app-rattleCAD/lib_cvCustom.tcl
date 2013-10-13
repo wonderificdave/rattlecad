@@ -1400,10 +1400,10 @@
                                                                 horizontal  [expr   70 * $stageScale]   0 \
                                                                 gray50 ]
                                                 
-                            set _dim_HT_Angle           [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $Position(BaseCenter) ] \
+                            # set _dim_HT_Angle           [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $Position(BaseCenter) ] \
                                                                 150   0  \
                                                                 gray50 ]
-                            set _dim_ST_Angle          [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList   $SeatTube(Ground)    $SeatPost(SeatTube) $help_00 ] \
+                            # set _dim_ST_Angle          [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList   $SeatTube(Ground)    $SeatPost(SeatTube) $help_00 ] \
                                                                 150   0  \
                                                                 gray50 ]
 
