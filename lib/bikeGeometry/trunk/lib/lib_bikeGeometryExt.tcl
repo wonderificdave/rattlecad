@@ -113,6 +113,43 @@
             variable FrontWheel
             variable BottomBracket
             variable Reference
+            variable Result
+            
+            #Custom(BottomBracket/Depth)
+            #Component(Wheel/Rear/RimDiameter@SELECT_Rim)
+            #Component(Wheel/Rear/TyreHeight)
+            
+            # set BB_Height    $project::Result(Length/BottomBracket/Height)
+            set BB_Height    [expr  0.5 * $project::Component(Wheel/Rear/RimDiameter) +  $project::Component(Wheel/Rear/TyreHeight) -  $project::Custom(BottomBracket/Depth)]
+            
+            set SN_Distance  [expr -1.0 * $project::Reference(SaddleNose_Distance)]
+            set SN_Height    [expr $project::Reference(SaddleNose_Height)  - $BB_Height]
+            
+            set HB_Distance  [expr $project::Reference(HandleBar_Distance) + $SN_Distance]
+            set HB_Height    [expr $project::Reference(HandleBar_Height)   - $BB_Height]
+             
+            set Reference(HandleBar)    [list $HB_Distance $HB_Height]
+            project::setValue Result(Position/Reference_HB)      position    $Reference(HandleBar)
+            
+            
+            set Reference(SaddleNose)   [list $SN_Distance $SN_Height]
+            project::setValue Result(Position/Reference_SN)      position    $Reference(SaddleNose)
+
+            
+            return
+            
+                            $cv_Name bind $_dim_HB_FW           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/HandleBar_FW) ]
+                            $cv_Name bind $_dim_HB_BB           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/HandleBar_BB) ]
+                            
+                            $cv_Name bind $_dim_SD_HB           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/SaddleNose_HB)]
+                            $cv_Name bind $_dim_SD_BB           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/SaddleNose_BB)]
+                            
+                            $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/Heigth_HB_SN)]
+            
+            
+            
+            
+            return
             
             set angle_current           [vectormath::angle {10 0} {0 0} $FrontWheel(Position)]
          
@@ -994,6 +1031,7 @@
             variable SeatTube
             variable SeatPost
             variable HandleBar
+            variable Reference
             
                     #
                     # template of <Result>  .. </Result> is defined in
@@ -1181,8 +1219,9 @@
             set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
                      puts "                  ... $value"
                 project::setValue Result(Length/FrontWheel/Radius value $value
-                    
-            
+                
+                
+
 
             set BB_Position             {0 0}
             set SeatStay(SeatTube)      [ bikeGeometry::get_Object     SeatStay/End            position ]
@@ -1200,7 +1239,37 @@
             project::setValue Result(Angle/SeatTube/SeatStay)       value    [ get_resultAngle $SeatStay(SeatTube)    $ChainSt_SeatSt_IS  $BB_Position        ]
             project::setValue Result(Angle/BottomBracket/DownTube)  value    [ get_resultAngle $BB_Position           $DownTube(Steerer)  $TopTube(SeatTube)  ]
             project::setValue Result(Angle/BottomBracket/ChainStay) value    [ get_resultAngle $BB_Position           $TopTube(SeatTube)  $ChainSt_SeatSt_IS  ]
-            project::setValue Result(Angle/SeatStay/ChainStay)      value    [ get_resultAngle $ChainSt_SeatSt_IS     $BB_Position        $SeatStay(SeatTube) ]
+            project::setValue Result(Angle/SeatStay/ChainStay)      value    [ get_resultAngle $ChainSt_SeatSt_IS     $BB_Position        $SeatStay(SeatTube) ]                
+                
+                
+                
+                # --- Reference Position ------------------------------
+                #             
+            set BB_Height    [expr  0.5 * $project::Component(Wheel/Rear/RimDiameter) +  $project::Component(Wheel/Rear/TyreHeight) -  $project::Custom(BottomBracket/Depth)]
+            set SN_Distance  [expr -1.0 * $project::Reference(SaddleNose_Distance)]
+            set SN_Height    [expr $project::Reference(SaddleNose_Height)  - $BB_Height]
+            set HB_Distance  [expr $project::Reference(HandleBar_Distance) + $SN_Distance]
+            set HB_Height    [expr $project::Reference(HandleBar_Height)   - $BB_Height]
+             
+            set Reference(HandleBar)    [list $HB_Distance $HB_Height]
+            set Reference(SaddleNose)   [list $SN_Distance $SN_Height]
+            project::setValue Result(Position/Reference_HB)      position    $Reference(HandleBar)   
+            project::setValue Result(Position/Reference_SN)      position    $Reference(SaddleNose)
+            
+            project::setValue Result(Length/Reference/HandleBar_FW)  value   [vectormath::length $Reference(HandleBar) $FrontWheel(Position)]
+            project::setValue Result(Length/Reference/HandleBar_BB)  value   [vectormath::length $Reference(HandleBar) {0 0}]
+            project::setValue Result(Length/Reference/SaddleNose_HB) value   [vectormath::length $Reference(SaddleNose) $Reference(HandleBar)]
+            project::setValue Result(Length/Reference/SaddleNose_BB) value   [vectormath::length $Reference(SaddleNose) {0 0}]
+            project::setValue Result(Length/Reference/Heigth_SN_HB)  value   [expr $SN_Height - $HB_Height]      
+
+              # puts "   ->  $project::Result(Position/Reference_HB)"
+              # puts "   ->  $project::Result(Position/Reference_SN)"
+              # puts "     ->  $project::Result(Length/Reference/HandleBar_FW)"           
+              # puts "     ->  $project::Result(Length/Reference/HandleBar_BB)"           
+              # puts "     ->  $project::Result(Length/Reference/SaddleNose_HB)"           
+              # puts "     ->  $project::Result(Length/Reference/SaddleNose_BB)"           
+              # puts "     ->  $project::Result(Length/Reference/Heigth_SN_HB)"           
+
     }
 
 

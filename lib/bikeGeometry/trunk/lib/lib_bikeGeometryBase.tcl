@@ -360,12 +360,9 @@
 
                 #
             get_Stem
-
-                #
-            fill_resultValues
             
                 #
-            get_Reference
+            fill_resultValues
             
                 #
             get_DerailleurMountFront

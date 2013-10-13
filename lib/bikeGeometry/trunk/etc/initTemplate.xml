@@ -227,6 +227,13 @@
             <Personal>
                 <SaddleNose_HB>0.00</SaddleNose_HB>
             </Personal>
+            <Reference>
+                <HandleBar_BB>0.00</HandleBar_BB>
+                <HandleBar_FW>0.00</HandleBar_FW>
+                <SaddleNose_HB>0.00</SaddleNose_HB>
+                <SaddleNose_BB>0.00</SaddleNose_BB>
+                <Heigth_SN_HB>0.00</Heigth_SN_HB>
+            </Reference>
         </Length>
         
         <Angle>

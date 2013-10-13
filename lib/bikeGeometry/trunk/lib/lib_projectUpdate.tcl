@@ -1263,20 +1263,20 @@
                           set node       [$projectDOM selectNode /root/Reference]
                           if {$node != {}} {
                                   # node: Reference exists but does not contain node: HandleBar_BB 
-                                set checkNode  [$projectDOM selectNode /root/Reference/HandleBar_BB]
+                                set checkNode  [$projectDOM selectNode /root/Reference/HandleBar_Distance]
                                 if {$checkNode == {}} {
                                     $parentNode removeChild $node
                                     $node delete
                                 }
-                          }                          
+                          }                                                   
                           set node       [$projectDOM selectNode /root/Reference]
                           if {$node == {}} {
                                    puts "                           ... update File ... /root/Reference"
                                   $parentNode appendXML  "<Reference>
-                                                              <HandleBar_BB>790.75</HandleBar_BB>
-                                                              <HandleBar_FW>583.03</HandleBar_FW>
-                                                              <SaddleNose_HB>539.70</SaddleNose_HB>
-                                                              <SaddleNose_BB>712.94</SaddleNose_BB>
+                                                              <HandleBar_Distance>543.69</HandleBar_Distance>
+                                                              <HandleBar_Height>905.00</HandleBar_Height>
+                                                              <SaddleNose_Distance>62.69</SaddleNose_Distance>
+                                                              <SaddleNose_Height>970.00</SaddleNose_Height>
                                                           </Reference>"
                           }
 

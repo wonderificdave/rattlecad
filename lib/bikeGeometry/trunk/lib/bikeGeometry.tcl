@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.40
+ package provide bikeGeometry 0.41
 
  namespace eval bikeGeometry {
 
@@ -823,6 +823,26 @@
                       set xpath         Component(Wheel/Front/TyreHeight
                       set_Value         $xpath     $newValue                
                   }
+                  
+                {Length/Reference/Heigth_SN_HB} {
+                      # puts "   -> $_name"
+                      set oldValue                $project::Result(Length/Reference/Heigth_SN_HB)
+                      set newValue                [set_Value [format "%s(%s)" $_array $_name]  $value format ]
+                      set deltaValue              [expr $newValue - $oldValue]
+                      set xpath                   Reference(HandleBar_Height)
+                      set HandleBar_Height        $project::Reference(HandleBar_Height)                              
+                      set HandleBar_Height        [expr $HandleBar_Height - $deltaValue]  
+                      set_Value         $xpath    $HandleBar_Height
+                  } 
+
+                {Length/Reference/SaddleNose_HB} {
+                      set SaddleHeight            $project::Result(Length/Reference/Heigth_SN_HB)
+                      set newValue                [set_Value [format "%s(%s)" $_array $_name]  $value format ]
+                      set Distance_HB             [ expr { sqrt( $newValue * $newValue - $SaddleHeight * $SaddleHeight ) } ]
+                      set xpath                   Reference(HandleBar_Distance)
+                      set_Value         $xpath    $Distance_HB
+                  }
+                  
       
 
                 default {
