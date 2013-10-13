@@ -1369,38 +1369,27 @@
                               
                               # -- Dimensions ------------------------
                               #  
-                            set _dim_SD_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(BaseCenter)  $Reference(SaddleNose) ] \
-                                                                vertical    [expr -660 * $stageScale]  [expr -190 * $stageScale]  \
-                                                                gray50 ]
-                            set _dim_HB_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(HandleBar)  $Position(BaseCenter) ] \
-                                                                vertical    [expr -380 * $stageScale]  [expr  230 * $stageScale]  \
-                                                                gray50 ]
-                            set _dim_SD_HB_Height       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(SaddleNose) $Reference(HandleBar)  ] \
-                                                                vertical    [expr   80 * $stageScale]  [expr  100 * $stageScale]  \
-                                                                gray50 ]
                             set _dim_BB_Depth           [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position)   $BottomBracket(Position) ] \
                                                                 vertical    [expr -100 * $stageScale]  [expr 80 * $stageScale] \
                                                                 gray50 ]
 
-                            set _dim_SD_XPosition       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(SaddleNose) $BottomBracket(Position) ] \
-                                                                horizontal  [expr -60 * $stageScale] 0 \
-                                                                gray50 ]
                             set _dim_HB_XPosition       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(HandleBar)  $BottomBracket(Position) ] \
-                                                                horizontal  [expr (60 + $length_00) * $stageScale ]    0 \
-                                                                gray50 ]
-                            set _dim_SD_HB_Length       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(SaddleNose) $Reference(HandleBar) ] \
-                                                                horizontal  [expr -230 * $stageScale ]    0 \
-                                                                gray50 ]
-                            #set _dim_SD_YPosition       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
-                                                                vertical    [expr -580 * $stageScale]  [expr -130 * $stageScale]  \
-                                                                gray50 ]
-                            #set _dim_HB_YPosition       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position) $BottomBracket(Position) ] \
-                                                                vertical    [expr -300 * $stageScale]  [expr  110 * $stageScale]  \
-                                                                gray50 ]
-                            #set _dim_SD_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  [lindex $BottomBracket(Position) 0]   [lindex $Saddle(Position) 1]  $SeatPost(Saddle) ] \
-                                                                vertical    [expr  500 * $stageScale]  [expr   80 * $stageScale] \
+                                                                horizontal  [expr (80 + $length_00) * $stageScale ]    0 \
                                                                 gray50 ]
 
+                            
+                            set _dim_HB_FW              [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $FrontWheel(Position)    $Reference(HandleBar) ] \
+                                                                aligned     [expr  100 * $stageScale]  [expr  -90 * $stageScale]  \
+                                                                gray50 ] 
+                            set _dim_HB_BB              [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(HandleBar) $BottomBracket(Position) ] \
+                                                                aligned     [expr  100 * $stageScale]  [expr    0 * $stageScale]  \
+                                                                gray50 ] 
+                            set _dim_SD_BB              [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(SaddleNose)    $BottomBracket(Position) ] \
+                                                                aligned     [expr -100 * $stageScale]  [expr 200 * $stageScale]  \
+                                                                gray50 ] 
+                                
+                            
+                            
                             set _dim_Wh_Distance        [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Ground)  $FrontWheel(Ground) ] \
                                                                 horizontal  [expr  130 * $stageScale]    0 \
                                                                 gray50 ]           
@@ -1425,12 +1414,10 @@
                                                                 aligned     [expr   70 * $stageScale]  [expr -230 * $stageScale]  \
                                                                 gray50 ]                                                                        
 
-
-                             
                         }
                     # -----------------------
-                reference_fg {                        
-  
+                reference_fg {                                                  
+                            
                             set _dim_BB_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)    $Position(BaseCenter)] \
                                                                 vertical    [expr -150 * $stageScale]  [expr  -80 * $stageScale]  \
                                                                 orange ]
@@ -1448,28 +1435,48 @@
                                                                 aligned     [expr  150 * $stageScale]  [expr -150 * $stageScale]  \
                                                                 orange ] 
                             
-                            set _dim_HB_FW              [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $FrontWheel(Position)    $Reference(HandleBar) ] \
-                                                                aligned     [expr  100 * $stageScale]  [expr  -90 * $stageScale]  \
-                                                                darkorange ] 
-                            set _dim_HB_BB              [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(HandleBar) $BottomBracket(Position) ] \
-                                                                aligned     [expr  100 * $stageScale]  [expr    0 * $stageScale]  \
-                                                                darkorange ] 
+                            
                             set _dim_SD_HB              [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(SaddleNose)    $Reference(HandleBar) ] \
-                                                                aligned     [expr -170 * $stageScale]  [expr   0 * $stageScale]  \
-                                                                darkorange ] 
-                            set _dim_SD_BB              [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(SaddleNose)    $BottomBracket(Position) ] \
-                                                                aligned     [expr -100 * $stageScale]  [expr 200 * $stageScale]  \
-                                                                darkorange ] 
+                                                                aligned     [expr -250 * $stageScale]  [expr   0 * $stageScale]  \
+                                                                darkblue ] 
+                            set _dim_SD_HB_Height       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(HandleBar) $Reference(SaddleNose) ] \
+                                                                vertical    [expr  380 * $stageScale]  [expr -100 * $stageScale]  \
+                                                                darkblue ]
+                            
+                            
+                                                                
+                                                                
+                            set _dim_SD_Distance        [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(SaddleNose) $BottomBracket(Position) ] \
+                                                                horizontal  [expr -80 * $stageScale] [expr  80 * $stageScale] \
+                                                                darkorange ]
+                            set _dim_SD_HB_Length       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(SaddleNose) $Reference(HandleBar) ] \
+                                                                horizontal  [expr -150 * $stageScale ]    0 \
+                                                                darkorange ]
+                            set _dim_SD_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(BaseCenter)  $Reference(SaddleNose) ] \
+                                                                vertical    [expr -660 * $stageScale]  [expr -190 * $stageScale]  \
+                                                                darkorange ]
+                            set _dim_HB_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Reference(HandleBar) $Position(BaseCenter) ] \
+                                                                vertical    [expr -380 * $stageScale]  [expr  230 * $stageScale]  \
+                                                                darkorange ]
+                                                                                                                                                                                                  
+                                                                
+                                                                
                             
                             rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_BB_Height
                             rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_FW_Radius
                             rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_RW_Radius
                             rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_Rear_Length
                             rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_Front_Length
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HB_FW
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HB_BB
+                            
                             rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_BB
+                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Height
+                            
+                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_Distance
+                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Length
+                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_Height
+                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HB_Height
+                            
+                            
                             
                                 # Result(Length/FrontWheel/diagonal)
                                 # Result(Length/BottomBracket/Height)
@@ -1486,11 +1493,14 @@
                             $cv_Name bind $_dim_Rear_Length     <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
                             $cv_Name bind $_dim_Front_Length    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
                             
-                            $cv_Name bind $_dim_HB_FW           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(HandleBar_FW) ]
-                            $cv_Name bind $_dim_HB_BB           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(HandleBar_BB) ]
+                            $cv_Name bind $_dim_SD_HB           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/SaddleNose_HB)]
+                            $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/Heigth_SN_HB)]
                             
-                            $cv_Name bind $_dim_SD_HB           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(SaddleNose_HB)]
-                            $cv_Name bind $_dim_SD_BB           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(SaddleNose_BB)]
+                            $cv_Name bind $_dim_SD_Distance     <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(SaddleNose_Distance) ]
+                            $cv_Name bind $_dim_SD_HB_Length    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(HandleBar_Distance) ]
+                            $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(SaddleNose_Height) ]
+                            $cv_Name bind $_dim_HB_Height       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(HandleBar_Height) ]
+                            
                             
                             #Result(Length/Control/HandleBar_FW)                            
                             #Result(Length/Control/HandleBar_BB)
