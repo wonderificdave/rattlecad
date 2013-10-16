@@ -1,5 +1,19 @@
 
 
+3.4.00.98  - 2013.10.16
+-------------------------------------------------------------------------------
+    feature:
+        ... pack rattleCAD.exe and rattleCAD.kit into the zip-File
+            ... rattleCAD.exe ... standalone runtime for Windows
+            ... rattleCAD.kit ... OS independent Tclkit
+
+
+3.4.00.97  - 2013.10.15
+-------------------------------------------------------------------------------
+    refactor:
+        ... build windows-starkit and OS-independent tclkit at every release
+
+
 3.4.00.96  - 2013.10.13
 -------------------------------------------------------------------------------
     refactor:
@@ -18,7 +32,7 @@
 3.4.00.93  - 2013.10.10
 -------------------------------------------------------------------------------
     refactor:
-        ... rename "Copy Concept" to "Get Reference"
+        ... rename "Copy Concept" to "Copy Reference"
         ... modify dimension behaviour
 
 

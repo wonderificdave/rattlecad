@@ -130,15 +130,25 @@ exec [file join $dirInit tclkit-8.5.8-win32.upx.exe] $tclScript
 	# ----------------------------------
 	#
 puts "\n ========================\n"
-puts "         compile Starkit\n"
-sdx::sdx wrap rattleCAD.exe -runtime [file join $dirInit tclkit-8.5.8-win32.upx.exe]
+puts "         compile Tclkit\n"
+sdx::sdx wrap rattleCAD.kit
+file rename rattleCAD.kit rattleCAD_${appVersion}.kit
 
 
 	# ----------------------------------
 	#
 puts "\n ========================\n"
-puts "         update build\n"
-file copy -force rattleCAD.exe $dirTrunk
+puts "         compile Starkit\n"
+sdx::sdx wrap rattleCAD.exe -runtime [file join $dirInit tclkit-8.5.8-win32.upx.exe]
+file rename rattleCAD.exe rattleCAD_${appVersion}.exe
+
+
+	# ----------------------------------
+	#
+#puts "\n ========================\n"
+#puts "         update build\n"
+#file copy -force rattleCAD_${appVersion}.kit $dirExport
+#file copy -force rattleCAD_${appVersion}.exe $dirExport
 
 
 
@@ -148,8 +158,9 @@ return $appVersion
 	#
 puts "\n ========================\n"
 puts "         run starkit\n"
-cd $dirTrunk
-exec rattleCAD.exe
+cd $dirExport
+exec  rattleCAD_${appVersion}.kit
+exec  rattleCAD_${appVersion}.exe
 
 
 	# ----------------------------------
