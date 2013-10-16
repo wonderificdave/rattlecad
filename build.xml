@@ -15,7 +15,7 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.00.96" />
+	<property name = "rattleCAD_Version" 	value = "3.4.00.98" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
@@ -220,7 +220,7 @@
 	<target   name = "make_starkit_8.5">
 	
 			<echo> </echo>
-			<echo>     ... make starkit ./___build_starkit/make_starkit.tcl</echo>
+			<echo>     ... make tclkit/starkit ./___build_starkit/make_starkit.tcl</echo>
 			<echo> </echo>
 			<exec executable = "${tcl_8.5}"   dir = "./___build_starkit">    
 				<arg value = "make_starkit.tcl" />
@@ -290,7 +290,8 @@
 			</copy>
 		  <zip destfile = "${build.dir}/rattleCAD_${rattleCAD_Version}.zip" >
    			 <zipfileset dir = "${build.dir}/${rattleCAD_Version}"   prefix = "${rattleCAD_Version}"/>
-   			 <fileset dir = "${build.dir}"   includes = "readme.txt, tclkit.ico, rattleCAD.tcl, rattleCAD.bat"/>
+   			 <fileset dir = "${build.dir}"   includes = "readme.txt, tclkit.ico, rattleCAD.tcl, rattleCAD.bat, rattleCAD_${rattleCAD_Version}.kit, rattleCAD_${rattleCAD_Version}.exe"/>
+   	  	 <!-- fileset dir = "${build.dir}"   includes = "readme.txt, tclkit.ico, rattleCAD.tcl, rattleCAD.bat"/-->
    	  </zip>
 
 	</target>

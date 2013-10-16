@@ -47,19 +47,35 @@ exec wish "$0" "$@"
     puts "\n\n ====== I N I T ============================ \n\n"
         
         # -- ::APPL_Config(BASE_Dir)  ------
-    set BASE_Dir  [file normalize [file dirname [file normalize $::argv0]]]
+    set BASE_Dir  [file normalize $::argv0]
   
         # -- redefine on Starkit  -----
         #         exception for starkit compilation
-	#        .../rattleCAD.exe
-	#        .../rattleCAD.exe
+        #        .../rattleCAD.exe
+        #        .../rattleCAD.exe
     set APPL_Type       [file tail $::argv0]    
-    switch $APPL_Type {
-        {rattleCAD__.exe} { set BASE_Dir    [file dirname $BASE_Dir] }
-	    {main.tcl} -    
-	    default           {}
+    switch -glob -- $APPL_Type {
+        {rattleCAD*.kit}   { }    
+        {main.tcl} -    
+        default           {
+           set BASE_Dir  [file dirname $BASE_Dir]
+        }
     }
 
+    proc _nono {} {
+       set BASE_Dir  [file normalize [file dirname [file normalize $::argv0]]]
+      
+            # -- redefine on Starkit  -----
+            #         exception for starkit compilation
+            #        .../rattleCAD.exe
+            #        .../rattleCAD.exe
+        set APPL_Type       [file tail $::argv0]    
+        switch $APPL_Type {
+            {rattleCAD__.exe} { set BASE_Dir    [file dirname $BASE_Dir] }
+            {main.tcl} -    
+            default           {}
+        }
+    }
 
 
         # -- Libraries  ---------------
@@ -72,21 +88,21 @@ exec wish "$0" "$@"
     
         # -- msgcat -1.5.0.tm - workaround  ----- on windows platforms
     switch $tcl_platform(platform) {
-	windows {    
-	    puts "\n     ... check registry: HKEY_CURRENT_USER\\Control Panel\\International\n "
-            package require   registry 
-	    set regPath {HKEY_CURRENT_USER\Control Panel}    
-	    if { [catch {registry keys $regPath\\International} fid] } {
-		  # puts stderr "Could not get keys of $regPath\International\n$fid"
-		  foreach key [registry keys $regPath] {
-		      puts "             $regPath\\$key"
-		  }
-		  set interPath $regPath\\International
-		  puts "\n             $interPath"
-		  registry set $interPath
-		  puts   "             ... check: clock format -> [clock format [clock seconds]]\n"
-	    } 
-	}   
+        windows {    
+            puts "\n     ... check registry: HKEY_CURRENT_USER\\Control Panel\\International\n "
+                  package require   registry 
+            set regPath {HKEY_CURRENT_USER\Control Panel}    
+            if { [catch {registry keys $regPath\\International} fid] } {
+            # puts stderr "Could not get keys of $regPath\International\n$fid"
+            foreach key [registry keys $regPath] {
+                puts "             $regPath\\$key"
+            }
+            set interPath $regPath\\International
+            puts "\n             $interPath"
+            registry set $interPath
+            puts   "             ... check: clock format -> [clock format [clock seconds]]\n"
+            } 
+        }   
     }
     
 
