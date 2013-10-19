@@ -29,12 +29,16 @@ exec wish "$0" "$@"
     
     
     puts "\n ========================\n"
-    puts "     update starkit\n"
+    puts "     update Export, Tclkit & Starkit\n"
     puts ""
     
 set dirInit    [file normalize .]
 set dirBase    [file dirname $dirInit]
 set dirExport  [file join $dirBase ___build]
+
+set tclkit_Bin tclkit8513.exe               ;# http://www.patthoyts.tk/tclkit/win32-ix86/8.5.13/
+set sdx_Kit    sdx-20110317.kit
+# set tclkit_Bin tclkit-8.5.8-win32.upx.exe
 
 
 
@@ -91,7 +95,7 @@ puts "         initialize Virtual File System\n"
 	# -- update 
 	#         http://equi4.com/starkit/sdx.html
   #
-source   [file join $dirInit  sdx-20110317.kit]
+source   [file join $dirInit  $sdx_Kit]
 package require sdx
 file copy -force [file join $dirInit rattleCAD.tcl] $dirExport
 cd $dirExport
@@ -113,18 +117,9 @@ foreach fileName [glob -directory $dirTrunk -type {d f} *] {
 }
 puts ""
 foreach fileName [glob -directory [file join $dirInit _lib] -type {d f} *] {
-    puts "                ... $fileName"
-    file copy -force $fileName [file join $dirVFS lib]
+    # puts "                ... $fileName"
+    # file copy -force $fileName [file join $dirVFS lib]
 }
-
-
-	# ----------------------------------
-	#
-puts "\n ========================\n"
-puts "         test Starkit\n"
-set tclScript [file join $dirVFS main.tcl]
-puts "                  ... tclkit-8.5.8-win32.upx.exe $tclScript"
-exec [file join $dirInit tclkit-8.5.8-win32.upx.exe] $tclScript
 
 
 	# ----------------------------------
@@ -135,20 +130,23 @@ sdx::sdx wrap rattleCAD.kit
 file rename rattleCAD.kit rattleCAD_${appVersion}.kit
 
 
+
 	# ----------------------------------
 	#
 puts "\n ========================\n"
 puts "         compile Starkit\n"
-sdx::sdx wrap rattleCAD.exe -runtime [file join $dirInit tclkit-8.5.8-win32.upx.exe]
+foreach fileName [glob -directory [file join $dirInit _lib] -type {d f} *] {
+    puts "                ... $fileName"
+    file copy -force $fileName [file join $dirVFS lib]
+}
+sdx::sdx wrap rattleCAD.exe -runtime [file join $dirInit $tclkit_Bin]
 file rename rattleCAD.exe rattleCAD_${appVersion}.exe
-
-
 	# ----------------------------------
 	#
-#puts "\n ========================\n"
-#puts "         update build\n"
-#file copy -force rattleCAD_${appVersion}.kit $dirExport
-#file copy -force rattleCAD_${appVersion}.exe $dirExport
+puts "\n ========================\n"
+puts "         test Starkit\n"
+puts "                  ... rattleCAD_${appVersion}.exe"
+
 
 
 
