@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<!-- HelloWorld als ant Build.xml //-->
+<!-- jedes Ant Skript besteht aus einem Projekt
+Pro Projekt muss ein Default Target definiert sein!
+//-->
+<project default="helloWorld">
+	<!-- jedes Ant Project besteht aus einer oder mehreren Targets, in denen
+	Tasks ausgefuehrt werden
+	Ant definiert viele Tasks : sie koennen diese einfach einsetzen
+	Welche Tasks existieren sehen Sie im Manual. Wir gehen auf einige
+	ein!
+	//-->
+	<property name="HalloText" value="Hallo Du da!"/>
+	
+	<target name="Hallo">
+		<echo>${HalloText}</echo>
+	</target>
+	
+	<target name="helloWorld">
+		<echo>Hello World</echo>
+		<echo message="und so weiter..."/>
+		<echo message="${HalloText}"/>
+	</target>
+	<target name="new one"></target>
+</project>
