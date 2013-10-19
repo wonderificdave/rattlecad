@@ -1,5 +1,14 @@
 
 
+3.4.01.00  - 2013.10.19
+-------------------------------------------------------------------------------
+    refactor:
+        ... deliver
+            ... Version/rattleCAD.tcl
+            ... rattleCAD.kit ... OS independent Tclkit, run by ActiveState Tcl
+            ... rattleCAD.exe ... standalone runtime for Windows
+
+
 3.4.00.98  - 2013.10.16
 -------------------------------------------------------------------------------
     feature:
