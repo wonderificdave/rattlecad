@@ -78,6 +78,7 @@
         button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $bikeGeometry::domFrame    }
         button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {currentProject} }
         button  $menueFrame.bt07    -text {rattleCAD - Runtime}             -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {runTime} }
+        button  $menueFrame.bt08    -text {OS - Environment}                -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {osEnv} }
         button  $menueFrame.clear   -text {clear Tree}                      -width 30   -command { rattleCAD::cfg_report::cleanupTree }
         
         pack    $menueFrame.open \
@@ -87,6 +88,7 @@
                 $menueFrame.bt04 \
                 $menueFrame.bt06 \
                 $menueFrame.bt07 \
+                $menueFrame.bt08 \
                 $menueFrame.clear \
                 -side top
 
@@ -144,6 +146,9 @@
             runTime {   
                     set var [appUtil::namespaceReport ::]
                 }
+            osEnv {
+                    set var $osEnv::registryDOM
+            }
    
             default {}
         }

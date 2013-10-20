@@ -15,7 +15,7 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.01.00" />
+	<property name = "rattleCAD_Version" 	value = "3.4.01.01" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
@@ -155,6 +155,9 @@
       </copy>
       <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/lib">
           <fileset dir = "${osEnv_home}/lib"/>
+      </copy>   
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/etc">
+          <fileset dir = "${osEnv_home}/etc"/>
       </copy>   
       <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/test">
           <fileset dir = "${osEnv_home}/test"/>
