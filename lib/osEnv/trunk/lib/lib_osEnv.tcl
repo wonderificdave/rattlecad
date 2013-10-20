@@ -38,30 +38,93 @@ exec wish "$0" "$@"
  #
   
 
-  proc osEnv::_add_ApplMimeType {mimeType} {
-      variable registryDOM
+      proc osEnv::_init_tcl_info {} {
+        variable registryDOM
+            #
+        set domNode [$registryDOM selectNode tcl]
+            #
+        puts "\n   ... init_tcl_info" 
           #
-      set applCmd [_get_mimeType_Application $mimeType]
+        puts "[info library]"
           #
-      if {$applCmd != {}} {  
-          set domNode [$registryDOM selectNode os/mime]
-              #
-          set domDOC    [$domNode ownerDocument]
-          set mimeNode  [$domDOC createElement mime]
-              #
-          $mimeNode setAttribute name $mimeType
-              #
-          $domNode appendChild $mimeNode
-              #
-          $mimeNode appendChild [$domDOC createTextNode \"$applCmd\"] 
-      }   
-  }
+        _dom_add_nameValue $domNode patchlevel  [info patchlevel]
+            # Returns the value of the global variable tcl_patchLevel;
+        _dom_add_nameValue $domNode hostname    [info hostname]
+            # Returns the name of the computer on which this invocation is being executed.
+        _dom_add_nameValue $domNode library     [info library]
+            # Returns the name of the library directory in which standard Tcl scripts are stored. 
+            # This is actually the value of the tcl_library variable and may be changed by setting 
+            # tcl_library. See the tclvars manual entry for more information.
+        _dom_add_nameValue $domNode loaded      [info loaded]         
+            # Returns a list describing all of the packages that have been loaded into interp with the load command.   
+    }
+
+
+    proc osEnv::_init_tcl_platform {} {
+        variable registryDOM
+            #
+        set domNode [$registryDOM selectNode tcl/platform]
+            #
+        puts "\n   ... init_tcl_platform" 
+        #
+        foreach key [lsort [array names ::tcl_platform]] {
+              # puts "   ... $key  $::env($key)"
+            catch {_dom_add_nameValue $domNode $key  "$::tcl_platform($key)"}
+        }
+    }
+
+    
+    proc osEnv::_init_os_env {} {
+        variable registryDOM
+            #
+        set domNode [$registryDOM selectNode os/env]
+            #
+        puts "\n   ... init_os_env" 
+        #
+        foreach key [lsort [array names ::env]] {
+              # puts "   ... $key  $::env($key)"
+            switch -glob -- $key {
+                TCLLIBPATH {
+                        puts "  -> got a PATH node: $key"
+                        puts "  $::env($key)"
+                        set dirList [split $::env($key) \;]
+                        puts "[llength $::env($key)]"
+                        catch {_dom_add_nameValue $domNode $key  {}}
+                        set parenNode [$registryDOM selectNode os/env/$key]
+                        foreach dir $::env($key) {
+                           catch {_dom_add_nameValue $parenNode value  "$dir"}
+                        }
+                    }
+                *PATH* -
+                *Path* {
+                        puts "  -> got a PATH node: $key"
+                        puts "  $::env($key)"
+                        set dirList [split $::env($key) \;]
+                        puts "[llength $dirList]"
+                        catch {_dom_add_nameValue $domNode $key  {}}
+                        set parenNode [$registryDOM selectNode os/env/$key]
+                        foreach dir $dirList {
+                           catch {_dom_add_nameValue $parenNode value  "$dir"}
+                        }
+                    }
+                default {
+                        catch {_dom_add_nameValue $domNode $key  "$::env($key)"}
+                    }
+            }  
+        }
+        # puts "  [$registryDOM asXML]"
+        # exit
+    }
+
 
   proc osEnv::_add_Executable {execName} {
       variable registryDOM
           #
+      set domDOC    [$registryDOM ownerDocument]
+          # puts "   ->  _add_Executable $execName"   
       switch -exact $execName {
-          GhostScript {
+          GhostScript -
+          gs {
               set applCmd [_get_ghostscriptExec]
           }
           default {
@@ -79,59 +142,10 @@ exec wish "$0" "$@"
               #
           $domNode appendChild $execNode
               #
-          $execNode appendChild [$domDOC createTextNode \"$applCmd\"] 
+          $execNode appendChild [$domDOC createTextNode "$applCmd"] 
       }
   } 
 
-
-  proc osEnv::_get_mimeType_Application {fileExtension} {
-            #    http://wiki.tcl.tk/557
-            # puts "\n"
-            # puts  "         get_Application: $fileExtension"
-            # puts  "       ---------------------------------------------"
-            # puts  "               tcl_version   [info tclversion]"
-            # puts  "               tcl_platform  $::tcl_platform(platform)"
-
-          set appCmd {} ;# set as default
-          switch -exact $::tcl_platform(platform) {
-              "windows" {
-                      set root HKEY_CLASSES_ROOT
-
-                          # Get the application key for HTML files
-                      set appKey [registry get $root\\$fileExtension ""]
-                          # puts  "               appKey  $appKey"
-
-                      set appCmd   {}
-                      set fileType {}
-                      catch { set appCmd   [registry get $root\\$appKey\\shell\\open\\command ""] }
-                      if {$appCmd == {}} {
-                          catch { set appCmd   [registry get $root\\$appKey\\shell\\open\\command ""] }
-                          if {$appCmd == {}} {
-                              catch { set appCmd   [registry get $root\\$appKey\\shell\\edit\\command ""] }
-                          }
-                      }
-                        # puts "     -> \$appCmd   $appCmd"
-                        # puts "     -> \$fileType $fileType"
-    
-                          
-                          # Get the command for opening HTML files
-                      if { $appCmd == {} } {
-                                  puts  "         --<E>----------------------------------------------------"
-                                  puts  "           <E> File Type: $fileExtension"
-                                  puts  "           <E> could not find a registered COMMAND for this appKey"
-                                  puts  "         --<E>----------------------------------------------------"
-                                  return
-                      }
-                          # puts  "               appCmd  $appCmd"
-                          # set appArgs           [lrange $appCmd 1 end]
-                      if {[catch {set appCmd [lindex [string map {\\ \\\\} $appCmd] 0]} eID]} {
-                          set appCmd {}
-                      }
-
-              }
-          }
-          return "$appCmd"
-  }
 
 
   proc osEnv::_get_exec_inPATH {execName} {  
@@ -157,8 +171,51 @@ exec wish "$0" "$@"
       return {}
   }
 
+   
+  proc osEnv::_init_os_mimeType {} {
+          #
+      puts "\n   ... init_os_mimeType" 
+      #
+      _add_ApplMimeType .ps
+      _add_ApplMimeType .pdf
+      _add_ApplMimeType .html
+      _add_ApplMimeType .svg
+      _add_ApplMimeType .dxf
+      _add_ApplMimeType .jpg
+      _add_ApplMimeType .gif
+  }
+
+
+  proc osEnv::_init_os_executable {} {
+          #
+      puts "\n   ... init_os_executable" 
+      #
+      _add_Executable gs         ; # {GPL Ghostscript}
+  }     
+
+
+
+  proc osEnv::_add_ApplMimeType {mimeType} {
+      variable registryDOM
+          #
+      set domDOC    [$registryDOM ownerDocument]
+      set applCmd [find_mimeType_Application $mimeType]
+          #
+      if {$applCmd != {}} {  
+          set domNode  [$registryDOM selectNode os/mime]
+              #
+          set mimeNode  [$domDOC createElement mime]
+              #
+          $mimeNode setAttribute name $mimeType
+              #
+          $domNode appendChild $mimeNode
+              #
+          $mimeNode appendChild [$domDOC createTextNode "$applCmd"] 
+      }   
+  }
+
   
-  proc osEnv::_add_nameValue {domNode nodeName nodeValue} {
+  proc osEnv::_dom_add_nameValue {domNode nodeName nodeValue} {
   
       set domDOC    [$domNode ownerDocument]
       set nameNode  [$domDOC createElement $nodeName]

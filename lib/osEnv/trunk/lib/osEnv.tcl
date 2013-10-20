@@ -44,14 +44,14 @@ exec wish "$0" "$@"
   #
   ###########################################################################
   
-  package provide osEnv 0.2
+  package provide osEnv 0.4
   
   namespace eval osEnv {
       
           # --------------------------------------------
           # initial package definition
       package require tdom
-      package require registry
+      catch {package require registry}
                   
       
       # --------------------------------------------
@@ -83,9 +83,8 @@ exec wish "$0" "$@"
           _init_tcl_platform 
           _init_os_env 
           
-          _init_os_mimeType
-          
-          _init_os_executable
+          # _init_os_mimeType
+          # _init_os_executable
           
           return $registryDOM               
       }
@@ -93,16 +92,16 @@ exec wish "$0" "$@"
       
             
       
-      proc get_defaultApp {fileExtension} {
+      proc get_mimeType_DefaultApp {fileExtension} {
           variable registryDOM
           set node [$registryDOM selectNode /root/os/mime]
           set extNode [lindex [$node find name $fileExtension] 0]
           if {$extNode != {}} {
               set defaultApp [file nativename [$extNode asText]]
-              set defaultApp [string trim $defaultApp \" ]
+              # set defaultApp [string trim $defaultApp \" ]
               return $defaultApp
           } else {
-              puts "      <E> no entry found for $ext"
+              puts "            <E> no entry found for $fileExtension"
               return {}
           }          
       }
@@ -114,15 +113,103 @@ exec wish "$0" "$@"
           set extNode [lindex [$node find name $executable] 0]
           if {$extNode != {}} {
               set thisApp [file nativename [$extNode asText]]
-              set thisApp [string trim $thisApp \" ]
+              # set thisApp [string trim $thisApp \" ]
               return $thisApp
           } else {
-              puts "      <E> no entry found for $ext"
+              puts "      <E> no entry found for $executable"
               return {}
           }          
-      }     
+      }
+
+    
+      proc register_mimeType {mimeType executable} {
+          variable registryDOM
+          set nodeName mime
+          _register_Executable $nodeName $mimeType $executable
+      }
       
-      proc open_fileDefault {fileName {altExtension {}}} {
+      
+       proc register_Executable {execName executable} {
+          variable registryDOM
+          set nodeName exec
+          _register_Executable $nodeName $execName $executable
+      }
+
+      
+      proc _register_Executable {nodeName name executable} {
+          variable registryDOM
+          set domDOC       [$registryDOM ownerDocument]      
+          set parentNode   [$registryDOM selectNode /root/os/$nodeName]
+          set thisNode     {}
+          set thisNode     [lindex [$parentNode find name $name] 0]
+                  
+          if  {$thisNode != {}} {
+              $parentNode removeChild $thisNode
+              $thisNode   delete
+          }
+          
+          set thisNode  [$domDOC  createElement $nodeName]
+              #
+          $thisNode setAttribute name $name
+              #
+          $parentNode appendChild $thisNode
+              #
+          $thisNode appendChild [$domDOC createTextNode "$executable"] 
+              # puts "[$parentNode asXML]"         
+      }   
+
+
+      proc find_mimeType_Application {fileExtension} {
+                #    http://wiki.tcl.tk/557
+                # puts "\n"
+                # puts  "         get_Application: $fileExtension"
+                # puts  "       ---------------------------------------------"
+                # puts  "               tcl_version   [info tclversion]"
+                # puts  "               tcl_platform  $::tcl_platform(platform)"
+
+              set appCmd {} ;# set as default
+              switch -exact $::tcl_platform(platform) {
+                  "windows" {
+                          set root HKEY_CLASSES_ROOT
+
+                              # Get the application key for HTML files
+                          set appKey [registry get $root\\$fileExtension ""]
+                              # puts  "               appKey  $appKey"
+
+                          set appCmd   {}
+                          set fileType {}
+                          catch { set appCmd   [registry get $root\\$appKey\\shell\\open\\command ""] }
+                          if {$appCmd == {}} {
+                              catch { set appCmd   [registry get $root\\$appKey\\shell\\open\\command ""] }
+                              if {$appCmd == {}} {
+                                  catch { set appCmd   [registry get $root\\$appKey\\shell\\edit\\command ""] }
+                              }
+                          }
+                            # puts "     -> \$appCmd   $appCmd"
+                            # puts "     -> \$fileType $fileType"
+        
+                              
+                              # Get the command for opening HTML files
+                          if { $appCmd == {} } {
+                                      puts  "         --<E>----------------------------------------------------"
+                                      puts  "           <E> File Type: $fileExtension"
+                                      puts  "           <E> could not find a registered COMMAND for this appKey"
+                                      puts  "         --<E>----------------------------------------------------"
+                                      return
+                          }
+                              # puts  "               appCmd  $appCmd"
+                              # set appArgs           [lrange $appCmd 1 end]
+                          if {[catch {set appCmd [lindex [string map {\\ \\\\} $appCmd] 0]} eID]} {
+                              set appCmd {}
+                          }
+
+                  }
+              }
+              return "$appCmd"
+      }      
+
+      
+      proc open_by_mimeType_DefaultApp {fileName {altExtension {}}} {
 
             set fileExtension   [file extension $fileName]
 
@@ -155,7 +242,7 @@ exec wish "$0" "$@"
                 set altExtension $fileExtension
             }
 
-            set fileApplication     [format "\"%s\"" [osEnv::get_defaultApp $fileExtension]]
+            set fileApplication     [format "\"%s\"" [osEnv::get_mimeType_DefaultApp $fileExtension]]
             if {$fileApplication == {}} {
                 puts  ""
                 puts  "         --<E>----------------------------------------------------"
@@ -231,105 +318,5 @@ exec wish "$0" "$@"
       }
 
      
-      
-      proc _init_tcl_info {} {
-          variable registryDOM
-              #
-          set domNode [$registryDOM selectNode tcl]
-              #
-          puts "\n   ... init_tcl_info" 
-            #
-          puts "[info library]"
-            #
-          _add_nameValue $domNode patchlevel  [info patchlevel]
-              # Returns the value of the global variable tcl_patchLevel;
-          _add_nameValue $domNode hostname    [info hostname]
-              # Returns the name of the computer on which this invocation is being executed.
-          _add_nameValue $domNode library     [info library]
-              # Returns the name of the library directory in which standard Tcl scripts are stored. 
-              # This is actually the value of the tcl_library variable and may be changed by setting 
-              # tcl_library. See the tclvars manual entry for more information.
-          _add_nameValue $domNode loaded      [info loaded]         
-              # Returns a list describing all of the packages that have been loaded into interp with the load command.   
-      }
-
-      proc _init_tcl_platform {} {
-          variable registryDOM
-              #
-          set domNode [$registryDOM selectNode tcl/platform]
-              #
-          puts "\n   ... init_tcl_platform" 
-		      #
-		      foreach key [lsort [array names ::tcl_platform]] {
-                # puts "   ... $key  $::env($key)"
-              catch {_add_nameValue $domNode $key  \"$::tcl_platform($key)\"}
-          }
-      }
-
-      proc _init_os_env {} {
-          variable registryDOM
-              #
-          set domNode [$registryDOM selectNode os/env]
-              #
-          puts "\n   ... init_os_env" 
-		      #
-          foreach key [lsort [array names ::env]] {
-                # puts "   ... $key  $::env($key)"
-              switch -glob -- $key {
-                  TCLLIBPATH {
-                          puts "  -> got a PATH node: $key"
-                          puts "  $::env($key)"
-                          set dirList [split $::env($key) \;]
-                          puts "[llength $::env($key)]"
-                          catch {_add_nameValue $domNode $key  {}}
-                          set parenNode [$registryDOM selectNode os/env/$key]
-                          foreach dir $::env($key) {
-                             catch {_add_nameValue $parenNode value  \"$dir\"}
-                          }
-                      }
-                  *PATH* -
-                  *Path* {
-                          puts "  -> got a PATH node: $key"
-                          puts "  $::env($key)"
-                          set dirList [split $::env($key) \;]
-                          puts "[llength $dirList]"
-                          catch {_add_nameValue $domNode $key  {}}
-                          set parenNode [$registryDOM selectNode os/env/$key]
-                          foreach dir $dirList {
-                             catch {_add_nameValue $parenNode value  \"$dir\"}
-                          }
-                      }
-                  default {
-                          catch {_add_nameValue $domNode $key  \"$::env($key)\"}
-                      }
-              }  
-          }
-          # puts "  [$registryDOM asXML]"
-          # exit
-      }
-      
-      proc _init_os_mimeType {} {
-              #
-          puts "\n   ... init_os_mimeType" 
-		      #
-          _add_ApplMimeType .ps
-          _add_ApplMimeType .pdf
-          _add_ApplMimeType .html
-          _add_ApplMimeType .svg
-          _add_ApplMimeType .dxf
-          _add_ApplMimeType .jpg
-          _add_ApplMimeType .gif
-      }
-
-      proc _init_os_executable {} {
-              #
-          puts "\n   ... init_os_executable" 
-		      #
-          _add_Executable GhostScript         ; # {GPL Ghostscript}
-      }     
-      
-    
-      
-      
 
   }

@@ -38,7 +38,7 @@ exec wish "$0" "$@"
  #
   
 
-  proc osEnv::_get_ghostscriptExec {} {
+  proc osEnv::get_ghostscriptExec {} {
       
       switch $::tcl_platform(platform) {
           "windows" {
@@ -80,9 +80,10 @@ exec wish "$0" "$@"
                   return {}
               }
           default {
-                  set ghostScriptName   "gs"
-                  set executable [_get_exec_inPATH $ghostScriptName]
-                  return "$executable"
+                  #set ghostScriptName   "gs"
+                  #set executable [_get_exec_inPATH $ghostScriptName]
+                  #return "$executable"
+                  return {}
               }
       }
   } 
