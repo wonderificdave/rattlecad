@@ -437,12 +437,8 @@
        #  open web URL
        #
     proc open_URL {url} {
-            puts ""
-            puts "   -------------------------------"
-            puts "    rattleCAD::file::open_URL"
-            puts "            url:        $url"
-
-            eval exec [auto_execok start] \"\" [list $url] &
+            osEnv::open_fileDefault  $url
+            return
     }
 
 
@@ -450,22 +446,8 @@
        #  open File by OS - Definition
        #
     proc open_localFile {fileName} {
-            set fileName [file normalize $fileName]
-
-            puts ""
-            puts "   -------------------------------"
-            puts "    rattleCAD::file::open_localFile"
-            puts "       fileName:        $fileName"
-
-            if {![file exists $fileName]} {
-                    puts  "         --<E>----------------------------------------------------"
-                    puts  "           <E> File : $fileName"
-                    puts  "           <E>      ... does not exist localy! "
-                    puts  "         --<E>----------------------------------------------------"
-                    return
-            }
-
-            eval exec [auto_execok start] \"\" [list $fileName] &
+            osEnv::open_fileDefault  $fileName
+            return
     }
 
 
@@ -473,118 +455,8 @@
        #  open File by Extension
        #
     proc openFile_byExtension {fileName {altExtension {}}} {
-
-            set fileExtension   [file extension $fileName]
-
-            puts "\n"
-            puts  "         openFile_byExtension:  $fileExtension ($altExtension)"
-            puts  "       ---------------------------------------------"
-            puts  "               fileName      $fileName"
-
-            if {![file exists $fileName]} {
-                    puts  "         --<E>----------------------------------------------------"
-                    puts  "           <E> File : $fileName"
-                    puts  "           <E>      ... does not exist! "
-                    puts  "         --<E>----------------------------------------------------"
-                    return
-            }
-
-                # -- handle on file extension
-                #
-            switch $altExtension {
-                {.htm} -
-                {.html} {   set fileExtension   $altExtension
-                            set fileName        "file:///$fileName"
-                        }
-                default {}
-            }
-
-            set fileApplication     [get_Application $fileExtension]
-            if {$fileApplication == {}} {
-                    puts  "         --<E>----------------------------------------------------"
-                    puts  "           <E> File : $fileName"
-                    puts  "           <E>      ... could not ge any Application! "
-                    puts  "         --<E>----------------------------------------------------"
-                    return
-            }
-            puts  "               Filetype $fileExtension opens with:"
-            puts  "                        >$fileApplication<\n"
-
-
-                # ---------------------
-                # replace %1 by fileName
-            proc percSubst { cmdString pattern substString } {
-                    # puts " --------------"
-                    # puts "        \$cmdString    >$cmdString<"
-                    # puts "        \$pattern      >$pattern<"
-                    # puts "        \$substString  >$substString<"
-                    # puts " --------------"
-                    # puts " [ string map [ list $pattern $substString ] $cmdString ]"
-                set cmdString    [ string map [ list $pattern $substString ] $cmdString ]
-                return $cmdString
-            }
-
-                # ---------------------
-                # Substitute the HTML filename into the
-                # command for %1
-            set commandString [ percSubst $fileApplication %1 $fileName ]
-            if {$commandString == $fileApplication} {
-                set commandString "$fileApplication  $fileName"
-            }
-
-                # ---------------------
-                # Double up the backslashes for eval (below)
-            puts "               ... $commandString "
-
-                # ---------------------
-                # Double up the backslashes for eval (below)
-            regsub -all {\\} $commandString  {\\\\} commandString
-
-                # ---------------------
-                # Invoke the command
-            eval exec $commandString &
-
-                # ---------------------
-                # done ...
-            puts  ""
-            puts  "                    ... done"
+            osEnv::open_fileDefault $fileName $altExtension          
             return
-    }
-
-
-    #-------------------------------------------------------------------------
-       #  get Application of File Extension
-       #    http://wiki.tcl.tk/557
-       #
-    proc get_Application {fileExtension} {
-            puts "\n"
-            puts  "         get_Application: $fileExtension"
-            puts  "       ---------------------------------------------"
-            puts  "               tcl_version   [info tclversion]"
-            puts  "               tcl_platform  $::tcl_platform(platform)"
-
-            set appCmd {} ;# set as default
-            switch $::tcl_platform(platform) {
-                "windows" {
-                        package require registry 1.1
-                        set root HKEY_CLASSES_ROOT
-
-                            # Get the application key for HTML files
-                        set appKey [registry get $root\\$fileExtension ""]
-                        puts  "               appKey  $appKey"
-
-                            # Get the command for opening HTML files
-                        if { [catch {     set appCmd [registry get $root\\$appKey\\shell\\open\\command ""]      } errMsg] } {
-                                    puts  "         --<E>----------------------------------------------------"
-                                    puts  "           <E> File Type: $fileExtension"
-                                    puts  "           <E> could not find a registered COMMAND for this appKey"
-                                    puts  "         --<E>----------------------------------------------------"
-                                    return
-                        }
-                        puts  "               appCmd  $appCmd"
-                }
-            }
-            return $appCmd
     }
 
 
@@ -646,14 +518,13 @@
               #-------------------------------------------------------------------------
                 # check ghostscript installation
                 #
-            # init_ghostScript
-            if {$canvasCAD::ghostScriptExec != {}} {
-                set ghostScript $canvasCAD::ghostScriptExec  
-                puts  "         ... $ghostScript"
-            } else {
+            set ghostScript [osEnv::get_Executable GhostScript]   
+              # puts "    -> \$ghostScript $ghostScript"
+            if {$ghostScript == {}} {
                 tk_messageBox -title "PDF Export" -message "Ghostscript Error:\n     ... could not initialize ghostScript instalation" -icon warning
                 return
-            }
+            }                        
+
         
               #-------------------------------------------------------------------------
                 # get_file_Info
@@ -757,24 +628,24 @@
                       puts $fileId " -sDEVICE=pdfwrite ^"
                       puts $fileId " -g$pg_Format ^"
                       puts $fileId " -sOutputFile=\"$outputFile\" ^"
-		      puts $fileId " -c \"$pg_Offset\" ^"
-		      puts $fileId " -dBATCH ^"
-		      foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
-			      # puts "         ... $fileKey"   
-			    set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
-			      # append fileString " " \"$inputFile\"
-			    puts $fileId "       \"$inputFile\" ^"
-		      }
+		        puts $fileId " -c \"$pg_Offset\" ^"
+		        puts $fileId " -dBATCH ^"
+		        foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
+			          # puts "         ... $fileKey"   
+			        set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
+			          # append fileString " " \"$inputFile\"
+			        puts $fileId "       \"$inputFile\" ^"
+		        }
                       	# puts -nonewline $fileId " -dBATCH $fileString "
                 close $fileId
 
                 
-		if {[catch {exec $batchFile} fid]} {
-		    tk_messageBox -title "rattleCAD - Warning" -icon warning \
-			          -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"	
-		} else {
-                    lappend pdf_fileList [file normalize $outputFile]
-		}
+        	    if {[catch {exec $batchFile} fid]} {
+        		    tk_messageBox -title "rattleCAD - Warning" -icon warning \
+        			          -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"	
+        	    } else {
+                            lappend pdf_fileList [file normalize $outputFile]
+        	    }
             }        
             
             
@@ -785,7 +656,9 @@
                 foreach pdfFile $pdf_fileList {
                     puts "\n"
                     puts "      ... open $pdfFile"
-                    catch {rattleCAD::file::openFile_byExtension "$pdfFile"}
+                      # catch {rattleCAD::file::openFile_byExtension "$pdfFile"}
+                      catch {osEnv::open_fileDefault "$pdfFile"}
+                    
                 }
             }
             puts "    ------------------------------------------------"
