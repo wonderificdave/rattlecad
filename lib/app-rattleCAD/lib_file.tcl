@@ -437,7 +437,7 @@
        #  open web URL
        #
     proc open_URL {url} {
-            osEnv::open_fileDefault  $url
+            osEnv::open_by_mimeType_DefaultApp  $url
             return
     }
 
@@ -446,7 +446,7 @@
        #  open File by OS - Definition
        #
     proc open_localFile {fileName} {
-            osEnv::open_fileDefault  $fileName
+            osEnv::open_by_mimeType_DefaultApp  $fileName
             return
     }
 
@@ -455,7 +455,7 @@
        #  open File by Extension
        #
     proc openFile_byExtension {fileName {altExtension {}}} {
-            osEnv::open_fileDefault $fileName $altExtension          
+            osEnv::open_by_mimeType_DefaultApp $fileName $altExtension          
             return
     }
 
@@ -518,7 +518,7 @@
               #-------------------------------------------------------------------------
                 # check ghostscript installation
                 #
-            set ghostScript [osEnv::get_Executable GhostScript]   
+            set ghostScript [osEnv::get_Executable gs]   
               # puts "    -> \$ghostScript $ghostScript"
             if {$ghostScript == {}} {
                 tk_messageBox -title "PDF Export" -message "Ghostscript Error:\n     ... could not initialize ghostScript instalation" -icon warning
@@ -628,24 +628,24 @@
                       puts $fileId " -sDEVICE=pdfwrite ^"
                       puts $fileId " -g$pg_Format ^"
                       puts $fileId " -sOutputFile=\"$outputFile\" ^"
-		        puts $fileId " -c \"$pg_Offset\" ^"
-		        puts $fileId " -dBATCH ^"
-		        foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
-			          # puts "         ... $fileKey"   
-			        set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
-			          # append fileString " " \"$inputFile\"
-			        puts $fileId "       \"$inputFile\" ^"
-		        }
+                puts $fileId " -c \"$pg_Offset\" ^"
+                puts $fileId " -dBATCH ^"
+                foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
+                  # puts "         ... $fileKey"   
+                set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
+                  # append fileString " " \"$inputFile\"
+                puts $fileId "       \"$inputFile\" ^"
+            }
                       	# puts -nonewline $fileId " -dBATCH $fileString "
                 close $fileId
 
                 
-        	    if {[catch {exec $batchFile} fid]} {
-        		    tk_messageBox -title "rattleCAD - Warning" -icon warning \
-        			          -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"	
-        	    } else {
+              if {[catch {exec $batchFile} fid]} {
+                tk_messageBox -title "rattleCAD - Warning" -icon warning \
+                        -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"	
+              } else {
                             lappend pdf_fileList [file normalize $outputFile]
-        	    }
+              }
             }        
             
             
@@ -657,7 +657,7 @@
                     puts "\n"
                     puts "      ... open $pdfFile"
                       # catch {rattleCAD::file::openFile_byExtension "$pdfFile"}
-                      catch {osEnv::open_fileDefault "$pdfFile"}
+                      catch {osEnv::open_by_mimeType_DefaultApp "$pdfFile"}
                     
                 }
             }

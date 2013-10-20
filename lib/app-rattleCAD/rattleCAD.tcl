@@ -47,7 +47,7 @@
   package require   bikeGeometry  0.41
   package require   canvasCAD     0.48
   package require   extSummary    0.4
-  package require   osEnv         0.2
+  package require   osEnv         0.4
   
       
   package provide   rattleCAD     3.4
@@ -125,8 +125,8 @@
 
  
     #-------------------------------------------------------------------------
-    	#  set initialze rattleCAD
-    	#
+      #  set initialze rattleCAD
+      #
     proc init_APPL_Config {baseDir} {
     
                 # -- Version Info  ----------------------
@@ -137,40 +137,61 @@
                 close $fd
             } else {
                 set message {}
-        	    append message "\n ... $::argv0"
-        	    append message "\n ... $::APPL_Config(ROOT_Dir)"
-        	    append message "\n ... $::APPL_Config(BASE_Dir)"
+              append message "\n ... $::argv0"
+              append message "\n ... $::APPL_Config(ROOT_Dir)"
+              append message "\n ... $::APPL_Config(BASE_Dir)"
         
-        	    tk_messageBox -title "tclkit.inf" -message $message
-        		
-        	    array set strinfo {
+              tk_messageBox -title "tclkit.inf" -message $message
+            
+              array set strinfo {
                       ProductVersion  {3.4.xx}
                       FileVersion     {??}
                       FileDate        {??. ???. 201?}
                 }
             }
                 # parray strinfo
-    	    
-        	    # -- Version Info  ----------------------
-        	set ::APPL_Config(RELEASE_Version)  $strinfo(ProductVersion)    ;#{3.2}
-        	set ::APPL_Config(RELEASE_Revision) $strinfo(FileVersion)       ;#{66}
-        	set ::APPL_Config(RELEASE_Date)     $strinfo(FileDate)          ;#{18. Dec. 2011}
-        	    
-        	    
-        	    
+          
+              # -- Version Info  ----------------------
+          set ::APPL_Config(RELEASE_Version)  $strinfo(ProductVersion)    ;#{3.2}
+          set ::APPL_Config(RELEASE_Revision) $strinfo(FileVersion)       ;#{66}
+          set ::APPL_Config(RELEASE_Date)     $strinfo(FileDate)          ;#{18. Dec. 2011}
+              
+              
+              
                     # -- Application Directories  -----------
-        	set ::APPL_Config(BASE_Dir)         $baseDir
-        	set ::APPL_Config(ROOT_Dir)         [file dirname $baseDir]
-        	set ::APPL_Config(CONFIG_Dir)       [file join    $baseDir etc   ]
-        	set ::APPL_Config(IMAGE_Dir)        [file join    $baseDir image ]
-        	set ::APPL_Config(SAMPLE_Dir)       [file join    $baseDir sample]
-        	set ::APPL_Config(TEST_Dir)         [file join    $baseDir _test]
-        	set ::APPL_Config(USER_Dir)         [rattleCAD::file::check_user_dir rattleCAD]    
-            set ::APPL_Config(EXPORT_Dir)       [rattleCAD::file::check_user_dir rattleCAD/export]
-            set ::APPL_Config(EXPORT_HTML)      [rattleCAD::file::check_user_dir rattleCAD/html]
-        	set ::APPL_Config(EXPORT_PDF)       [rattleCAD::file::check_user_dir rattleCAD/pdf]
-        	
-        	osEnv::init_osEnv
+          set ::APPL_Config(BASE_Dir)         $baseDir
+          set ::APPL_Config(ROOT_Dir)         [file dirname $baseDir]
+          set ::APPL_Config(CONFIG_Dir)       [file join    $baseDir etc   ]
+          set ::APPL_Config(IMAGE_Dir)        [file join    $baseDir image ]
+          set ::APPL_Config(SAMPLE_Dir)       [file join    $baseDir sample]
+          set ::APPL_Config(TEST_Dir)         [file join    $baseDir _test]
+          set ::APPL_Config(USER_Dir)         [rattleCAD::file::check_user_dir rattleCAD]    
+          set ::APPL_Config(EXPORT_Dir)       [rattleCAD::file::check_user_dir rattleCAD/export]
+          set ::APPL_Config(EXPORT_HTML)      [rattleCAD::file::check_user_dir rattleCAD/html]
+          set ::APPL_Config(EXPORT_PDF)       [rattleCAD::file::check_user_dir rattleCAD/pdf]
+          
+          osEnv::init_osEnv
+          
+          switch -glob $::tcl_platform(platform) {
+              windows {
+                      foreach mimeType {.pdf .html .svg .dxf .jpg .gif .ps} {
+                          set defaultApp {}
+                          set defaultApp [osEnv::find_mimeType_Application $mimeType]
+                          puts "         ... $mimeType -> $defaultApp"
+                          if {$defaultApp != {}} {
+                              osEnv::register_mimeType $mimeType $defaultApp
+                          }
+                      }
+                      
+                      set exec_GhostScript  [osEnv::get_ghostscriptExec]
+                      if {$exec_GhostScript != {}} {
+                          osEnv::register_Executable gs $exec_GhostScript
+                      }
+                      
+                   }
+              default {}
+          }
+          
     }
         
 	
@@ -699,16 +720,49 @@
                   prettyPrint_XML $::APPL_Config(user_InitDOM)
                   puts "        ----------------------------"
               }
-              puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
-              puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
-              puts "        ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
+              puts "          ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
+              puts "          ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
+              puts "          ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
               puts "        ----------------------------"
               puts ""
+              puts "          mime Types:"
+              puts "        ----------------------------"
+              set mimeConfig [$::APPL_Config(user_InitDOM) selectNodes /root/mime]
+              if {$mimeConfig != {}} {
+                  foreach node   [$mimeConfig childNodes] {
+                      # puts "         [$node asXML]"
+                      set key    [$node getAttribute name]
+                      set value  [[$node firstChild] nodeValue]
+                      puts "          -> $key  $value"
+                      osEnv::register_mimeType $key $value
+                  }
+              }
+              
+              puts ""
+              puts "          executables:"
+              puts "        ----------------------------"
+              set execConfig [$::APPL_Config(user_InitDOM) selectNodes /root/exec]
+              if {$execConfig != {}} {
+                  foreach node [$execConfig childNodes] {
+                      # puts "         [$node asXML]"
+                      set key    [$node getAttribute name]
+                      set value  [[$node firstChild] nodeValue]
+                      puts "          -> $key  $value"
+                      osEnv::register_Executable $key $value
+                  } 
+              }
+              
         } else {
               set    fp [open $fileName w]
               puts  $fp {<?xml version="1.0" encoding="UTF-8" ?>}
               puts  $fp {<root>}
               puts  $fp "    <GUI_Font>$::APPL_Config(GUI_Font)</GUI_Font>"
+              puts  $fp "    <mime>"
+              puts  $fp "        <mime name=\".test\">_any_executable</mime>"
+              puts  $fp "    </mime>"
+              puts  $fp "    <exec>"
+              puts  $fp "        <exec name=\"_test\">_any_executable</exec>"
+              puts  $fp "    </exec>"
               puts  $fp {</root>}
               close $fp
               puts ""
