@@ -1,5 +1,13 @@
 
 
+3.4.01.03  - 2013.10.20
+-------------------------------------------------------------------------------
+    feature:
+        ... ~/rattleCAD/_rattleCAD.init
+            ... configure mime types and executables
+            ... best to remove your current _rattleCAD.init and update values
+
+
 3.4.01.00  - 2013.10.19
 -------------------------------------------------------------------------------
     refactor:
