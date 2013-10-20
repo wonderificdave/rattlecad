@@ -474,10 +474,10 @@
                     if {[$cv itemcget $cvItem -style] == {pieslice}} {
                           # pieslice segment of a circle results in a closed figure through the center point
                         set d		"M $p_start_x $p_start_y  A $rx,$ry 0 $largeArc 0 $p_end_x $p_end_y L $cx,$cy z"                                    
-                        puts "  -> arcStyle:  pieslice"
+                        # puts "  -> arcStyle:  pieslice"
                     } else {
                         set d		"M $p_start_x $p_start_y  A $rx,$ry 0 $largeArc 0 $p_end_x $p_end_y"                                    
-                         puts " -> SVG-Export \"M $p_start_x $p_start_y  A $rx,$ry 0 $largeArc 0 $p_end_x $p_end_y\""                         
+                        # puts " -> SVG-Export \"M $p_start_x $p_start_y  A $rx,$ry 0 $largeArc 0 $p_end_x $p_end_y\""                         
                     }
                   append svgAtts		[format_itemAttribute d $d]								
 											# Bogen läuft gegen den Uhrzeigersinn
