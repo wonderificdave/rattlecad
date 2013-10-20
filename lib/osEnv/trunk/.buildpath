@@ -4,7 +4,8 @@
 	<buildpathentry kind="con" path="org.eclipse.dltk.launching.INTERPRETER_CONTAINER">
 		<attributes>
 			<attribute name="user_dependencies" value=""/>
-			<attribute name="auto_dependencies" value=""/>
+			<attribute name="auto_dependencies" value="registry|tdom"/>
 		</attributes>
 	</buildpathentry>
+	<buildpathentry combineaccessrules="false" kind="prj" path="/appUtil"/>
 </buildpath>

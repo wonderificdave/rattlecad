@@ -8,6 +8,8 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded geometry  0.1 "\
+package ifneeded osEnv  0.2 "\
             [list source [file join $dir lib osEnv.tcl]]; \
+            [list source [file join $dir lib lib_osEnv.tcl]]; \
+            [list source [file join $dir lib lib_osEnv_ghostscript.tcl]]; \
    "
