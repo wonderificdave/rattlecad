@@ -1,5 +1,32 @@
 
 
+3.4.01.05  - 2013.10.21
+-------------------------------------------------------------------------------
+    refactor:
+        ... ps-export from canvas
+		    ... pdf creation
+    feature:
+        ... provide pdf-creation under Linux
+            ... having in _rattleCAD.init
+            <root>    
+                ...
+                <mime>
+                    <mime name=".pdf">/usr/bin/evince</mime>
+                </mime>
+                <exec>
+                    <exec name="sh">/usr/bin/sh</exec>
+                    <exec name="gs">/usr/bin/gs</exec>
+                </exec>
+            </root>
+
+
+3.4.01.04  - 2013.10.21
+-------------------------------------------------------------------------------
+    debug:
+        ... handle undefined mimetypes in windows registry
+		... handle undefined Application in open_by_mimeType_DefaultApp
+
+
 3.4.01.03  - 2013.10.20
 -------------------------------------------------------------------------------
     feature:

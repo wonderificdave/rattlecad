@@ -472,13 +472,13 @@
             if { [expr [string compare "$::tcl_platform(platform)" "windows" ] == 0] } {
                     package require registry 1.1
                     set homeDir_Request [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders} {Personal}]
-		    set stringMapping [list {%USERPROFILE%} $::env(USERPROFILE)]
-		    set homeDir_Request [string map $stringMapping $homeDir_Request]
-		    	# puts "  ... -> \$homeDir_Request $homeDir_Request"
-		    set homeDir [file normalize $homeDir_Request]
-		    	# puts "  ... -> \$homeDir $homeDir"
-		    	# tk_messageBox -message "  ... -> \$homeDir $homeDir"
-		    	# puts "  ... -> \$homeDir $homeDir"
+                    set stringMapping [list {%USERPROFILE%} $::env(USERPROFILE)]
+                    set homeDir_Request [string map $stringMapping $homeDir_Request]
+                      # puts "  ... -> \$homeDir_Request $homeDir_Request"
+                    set homeDir [file normalize $homeDir_Request]
+                      # puts "  ... -> \$homeDir $homeDir"
+                      # tk_messageBox -message "  ... -> \$homeDir $homeDir"
+                      # puts "  ... -> \$homeDir $homeDir"
             } else {
                     set homeDir $::env(HOME)
             }
@@ -609,8 +609,8 @@
                         # puts "       ... \$pageHeight $pageHeight"
                         # puts "       ... \$offSet_X   $offSet_X"
                         # puts "       ... \$offSet_Y   $offSet_Y"
-                      set pg_Format   [format "%sx%s"                                   [expr 10 * $pageHeight] [expr 10 * $pageWidth]]
-                      set pg_Offset   [format "<</PageOffset \[%i %i\]>> setpagedevice" $offSet_Y $offSet_X]
+                      set pg_Format   [format "%sx%s"  [expr 10 * $pageHeight] [expr 10 * $pageWidth]]
+                        # set pg_Offset   [format "<</PageOffset \[%i %i\]>> setpagedevice" $offSet_Y $offSet_X]
                 }
                 
                 set fileName  [string map {{ } _ {.xml} {}} $::APPL_Config(PROJECT_Name)]
@@ -619,33 +619,72 @@
                 
                 #set outputFile  [file nativename [file join $exportDir summary_$fileFormat.pdf]]
                 
-                set batchFile   [file join $exportDir summary_$fileFormat.bat]
-
                 
+                  # -- create batch Files
+                  #                
+                set batchFileName  "summary_$fileFormat"
+                  # -- windows batch-file
+                set batchFile   [file join $exportDir ${batchFileName}.bat]
+
                 set fileId [open $batchFile "w"]
-                      puts $fileId "\"[file nativename $ghostScript]\" ^"
-                      puts $fileId " -dNOPAUSE ^"
-                      puts $fileId " -sDEVICE=pdfwrite ^"
-                      puts $fileId " -g$pg_Format ^"
-                      puts $fileId " -sOutputFile=\"$outputFile\" ^"
-                puts $fileId " -c \"$pg_Offset\" ^"
-                puts $fileId " -dBATCH ^"
+                    puts $fileId "\"[file nativename $ghostScript]\" ^"
+                    puts $fileId " -dNOPAUSE ^"
+                    puts $fileId " -sDEVICE=pdfwrite ^"
+                    puts $fileId " -g$pg_Format ^"
+                    puts $fileId " -sOutputFile=\"$outputFile\" ^"
+                      # puts $fileId " -c \"$pg_Offset\" ^"
+                    puts $fileId " -dBATCH ^"
                 foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
-                  # puts "         ... $fileKey"   
-                set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
-                  # append fileString " " \"$inputFile\"
-                puts $fileId "       \"$inputFile\" ^"
-            }
-                      	# puts -nonewline $fileId " -dBATCH $fileString "
+                      # puts "         ... $fileKey"   
+                    set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
+                      # append fileString " " \"$inputFile\"
+                    puts $fileId "       \"$inputFile\" ^"
+                      # puts -nonewline $fileId " -dBATCH $fileString "
+                }
                 close $fileId
+                
+                  # -- unix shell script
+                set batchFile   [file join $exportDir ${batchFileName}.sh]
+
+                set fileId [open $batchFile "w"]
+                    puts $fileId "\"[file nativename $ghostScript]\" \\"
+                    puts $fileId " -dNOPAUSE \\"
+                    puts $fileId " -sDEVICE=pdfwrite \\"
+                    puts $fileId " -g$pg_Format \\"
+                    puts $fileId " -sOutputFile=\"$outputFile\" \\"
+                      # puts $fileId " -c \"$pg_Offset\" ^"
+                    puts $fileId " -dBATCH \\"
+                foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
+                      # puts "         ... $fileKey"   
+                    set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
+                      # append fileString " " \"$inputFile\"
+                    puts $fileId "       \"$inputFile\" \\"
+                      # puts -nonewline $fileId " -dBATCH $fileString "
+                }
+                close $fileId                
 
                 
-              if {[catch {exec $batchFile} fid]} {
-                tk_messageBox -title "rattleCAD - Warning" -icon warning \
-                        -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"	
-              } else {
-                            lappend pdf_fileList [file normalize $outputFile]
-              }
+                switch  "$::tcl_platform(platform)" {
+                    {windows} {
+                              set batchFile   [file join $exportDir ${batchFileName}.bat]
+                              if {[catch {exec $batchFile} fid]} {
+                                  tk_messageBox -title "rattleCAD - Warning" -icon warning \
+                                        -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"	
+                              } else {
+                                   lappend pdf_fileList [file normalize $outputFile]
+                              }
+                          }
+                     default {
+                              set batchFile   [file join $exportDir ${batchFileName}.sh]
+                              set shellCMD [osEnv::get_Executable sh]
+                              if {[catch {exec $shellCMD $batchFile} fid]} {
+                                  tk_messageBox -title "rattleCAD - Warning" -icon warning \
+                                        -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"	
+                              } else {
+                                   lappend pdf_fileList [file normalize $outputFile]
+                              }
+                     }
+                }
             }        
             
             
@@ -657,8 +696,7 @@
                     puts "\n"
                     puts "      ... open $pdfFile"
                       # catch {rattleCAD::file::openFile_byExtension "$pdfFile"}
-                      catch {osEnv::open_by_mimeType_DefaultApp "$pdfFile"}
-                    
+                    catch {osEnv::open_by_mimeType_DefaultApp "$pdfFile"}
                 }
             }
             puts "    ------------------------------------------------"

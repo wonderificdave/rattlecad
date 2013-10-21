@@ -30,19 +30,19 @@ exec wish "$0" "$@"
   debugOut "     ... logging: $outFile\n"
  
   if {$argc > 0} {
-		debugOut "     [pwd]"
-	cd $Version
-		debugOut "     [pwd]"
-		debugOut ""
-		debugOut "     ./rattleCAD.tcl $argv"
-	eval exec tclsh  ./rattleCAD.tcl $argv
+		  debugOut "     [pwd]"
+      # cd $Version
+      # debugOut "     [pwd]"
+      debugOut ""
+      debugOut "     [format "./rattleCAD_%s.kit" $Version] $argv"
+      eval exec tclsh  [format "./rattleCAD_%s.kit" $Version] $argv
   } else {
-		debugOut "     [pwd]"
-	cd $Version    
-		debugOut "     [pwd]"
-		debugOut ""
-		debugOut "     ./rattleCAD.tcl"
-	eval exec tclsh  ./rattleCAD.tcl
+		  debugOut "     [pwd]"
+	    # cd $Version    
+		  # debugOut "     [pwd]"
+		  debugOut ""
+		  debugOut "     [format "./rattleCAD_%s.kit" $Version]"
+	    eval exec tclsh  [format "./rattleCAD_%s.kit" $Version]
   }
   
   
