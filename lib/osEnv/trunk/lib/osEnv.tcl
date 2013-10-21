@@ -44,7 +44,7 @@ exec wish "$0" "$@"
   #
   ###########################################################################
   
-  package provide osEnv 0.4
+  package provide osEnv 0.5
   
   namespace eval osEnv {
       
@@ -173,7 +173,11 @@ exec wish "$0" "$@"
                           set root HKEY_CLASSES_ROOT
 
                               # Get the application key for HTML files
-                          set appKey [registry get $root\\$fileExtension ""]
+                          set appKey {}
+                          catch {set appKey [registry get $root\\$fileExtension ""]}
+						  if {$appKey == {}} {
+						      return {}
+						  }
                               # puts  "               appKey  $appKey"
 
                           set appCmd   {}
@@ -215,7 +219,7 @@ exec wish "$0" "$@"
 
             puts "\n"
             puts  "   -------------------------------"
-            puts  "    osEnv::open_fileDefault:  $fileExtension ($altExtension)"       
+            puts  "    osEnv::open_by_mimeType_DefaultApp:  $fileExtension ($altExtension)"       
             puts  "        fileName        $fileName"
 
 
@@ -229,10 +233,10 @@ exec wish "$0" "$@"
                         }
                     default {
                             puts  ""
-                            puts  "         --<E>----------------------------------------------------"
-                            puts  "           <E> File : $fileName"
-                            puts  "           <E>      ... does not exist! "
-                            puts  "         --<E>----------------------------------------------------"
+                            puts  "            --<E>----------------------------------------------------"
+                            puts  "              <E> File : $fileName"
+                            puts  "              <E>      ... does not exist! "
+                            puts  "            --<E>----------------------------------------------------"
                             return
                         }
                 }
@@ -242,15 +246,18 @@ exec wish "$0" "$@"
                 set altExtension $fileExtension
             }
 
-            set fileApplication     [format "\"%s\"" [osEnv::get_mimeType_DefaultApp $fileExtension]]
+
+			set fileApplication     [osEnv::get_mimeType_DefaultApp $fileExtension]
             if {$fileApplication == {}} {
                 puts  ""
-                puts  "         --<E>----------------------------------------------------"
-                puts  "           <E> File : $fileName"
-                puts  "           <E>      ... could not get any Application! "
-                puts  "         --<E>----------------------------------------------------"
-                return
-            }
+                puts  "            --<E>----------------------------------------------------"
+                puts  "              <E> File : $fileName"
+                puts  "              <E>      ... could not get default Application! "
+                puts  "            --<E>----------------------------------------------------"
+                return 1
+            } else {
+			    set fileApplication     [format "\"%s\"" [osEnv::get_mimeType_DefaultApp $fileExtension]]
+			}
             
             switch $altExtension {
                 {.htm} -

@@ -47,15 +47,15 @@ exec wish "$0" "$@"
           #
         puts "[info library]"
           #
-        _dom_add_nameValue $domNode patchlevel  [info patchlevel]
+        _dom_add_nameValue $domNode patchlevel  [list [info patchlevel]]
             # Returns the value of the global variable tcl_patchLevel;
-        _dom_add_nameValue $domNode hostname    [info hostname]
+        _dom_add_nameValue $domNode hostname    [list [info hostname]]
             # Returns the name of the computer on which this invocation is being executed.
-        _dom_add_nameValue $domNode library     [info library]
+        _dom_add_nameValue $domNode library     [list [info library]]
             # Returns the name of the library directory in which standard Tcl scripts are stored. 
             # This is actually the value of the tcl_library variable and may be changed by setting 
             # tcl_library. See the tclvars manual entry for more information.
-        _dom_add_nameValue $domNode loaded      [info loaded]         
+        _dom_add_nameValue $domNode loaded      [list [info loaded]]         
             # Returns a list describing all of the packages that have been loaded into interp with the load command.   
     }
 
@@ -85,10 +85,10 @@ exec wish "$0" "$@"
               # puts "   ... $key  $::env($key)"
             switch -glob -- $key {
                 TCLLIBPATH {
-                        puts "  -> got a PATH node: $key"
-                        puts "  $::env($key)"
+                          # puts "  -> got a PATH node: $key"
+                          # puts "  $::env($key)"
                         set dirList [split $::env($key) \;]
-                        puts "[llength $::env($key)]"
+                          # puts "[llength $::env($key)]"
                         catch {_dom_add_nameValue $domNode $key  {}}
                         set parenNode [$registryDOM selectNode os/env/$key]
                         foreach dir $::env($key) {
@@ -97,10 +97,10 @@ exec wish "$0" "$@"
                     }
                 *PATH* -
                 *Path* {
-                        puts "  -> got a PATH node: $key"
-                        puts "  $::env($key)"
+                          # puts "  -> got a PATH node: $key"
+                          # puts "  $::env($key)"
                         set dirList [split $::env($key) \;]
-                        puts "[llength $dirList]"
+                          # puts "[llength $dirList]"
                         catch {_dom_add_nameValue $domNode $key  {}}
                         set parenNode [$registryDOM selectNode os/env/$key]
                         foreach dir $dirList {
@@ -217,9 +217,10 @@ exec wish "$0" "$@"
   
   proc osEnv::_dom_add_nameValue {domNode nodeName nodeValue} {
   
-      set domDOC    [$domNode ownerDocument]
+        # puts "-> _dom_add_nameValue $domNode $nodeName $nodeValue"
+	  set domDOC    [$domNode ownerDocument]
       set nameNode  [$domDOC createElement $nodeName]
-      $domNode appendChild $nameNode
+      $domNode appendChild "$nameNode"
       
 
       if {[llength $nodeValue] == 1} {
