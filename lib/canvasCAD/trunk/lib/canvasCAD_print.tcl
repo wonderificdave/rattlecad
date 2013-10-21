@@ -104,7 +104,9 @@
 						-height      $stageHeight \
 						-x           $stage_x \
 						-y           $stage_y \
-						-pageanchor  nw \
+						-pagex       0 \
+            -pagey       0 \
+            -pageanchor  nw \
 						-pagewidth   [format "%s.m" $pageWidth] \
 						-pageheight  [format "%s.m" $pageHeight] 
 					   	

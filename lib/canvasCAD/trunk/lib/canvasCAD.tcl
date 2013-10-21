@@ -53,9 +53,12 @@
  #  0.11    canvasCAD::checkPointCoincidence
  #          canvasCAD::dimension perpendicular
  #
+ #  0.49    add "-pagex 0" "-pagey 0" to printPostScript
+ #
 
 
-package provide canvasCAD 0.48
+
+package provide canvasCAD 0.49
 package require tdom
 
   # -----------------------------------------------------------------------------------
