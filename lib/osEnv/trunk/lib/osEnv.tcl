@@ -44,7 +44,7 @@ exec wish "$0" "$@"
   #
   ###########################################################################
   
-  package provide osEnv 0.5
+  package provide osEnv 0.6
   
   namespace eval osEnv {
       
@@ -175,9 +175,9 @@ exec wish "$0" "$@"
                               # Get the application key for HTML files
                           set appKey {}
                           catch {set appKey [registry get $root\\$fileExtension ""]}
-						  if {$appKey == {}} {
-						      return {}
-						  }
+                          if {$appKey == {}} {
+                              return {}
+                          }
                               # puts  "               appKey  $appKey"
 
                           set appCmd   {}
@@ -207,9 +207,21 @@ exec wish "$0" "$@"
                               set appCmd {}
                           }
 
-                  }
+                      }
+                  default {}
               }
               return "$appCmd"
+      }
+
+      proc find_OS_Application {appName} {
+          set appCmd {} ;# set as default
+          switch -exact $::tcl_platform(platform) {
+              "unix" {
+                          catch {set appCmd [exec which $appName]}
+                   }
+              default {}      
+          }
+          return "$appCmd"
       }      
 
       
