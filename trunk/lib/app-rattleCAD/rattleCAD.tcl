@@ -47,7 +47,7 @@
   package require   bikeGeometry  0.41
   package require   canvasCAD     0.49
   package require   extSummary    0.4
-  package require   osEnv         0.5
+  package require   osEnv         0.6
   
       
   package provide   rattleCAD     3.4
@@ -170,28 +170,6 @@
           set ::APPL_Config(EXPORT_HTML)      [rattleCAD::file::check_user_dir rattleCAD/html]
           set ::APPL_Config(EXPORT_PDF)       [rattleCAD::file::check_user_dir rattleCAD/pdf]
           
-          osEnv::init_osEnv
-          
-          switch -glob $::tcl_platform(platform) {
-              windows {
-                      foreach mimeType {.pdf .html .svg .dxf .jpg .gif .ps} {
-                          set defaultApp {}
-                          set defaultApp [osEnv::find_mimeType_Application $mimeType]
-                          puts "         ... $mimeType -> $defaultApp"
-                          if {$defaultApp != {}} {
-                              osEnv::register_mimeType $mimeType $defaultApp
-                          }
-                      }
-                      
-                      set exec_GhostScript  [osEnv::get_ghostscriptExec]
-                      if {$exec_GhostScript != {}} {
-                          osEnv::register_Executable gs $exec_GhostScript
-                      }
-                      
-                   }
-              default {}
-          }
-          
     }
         
 	
@@ -271,19 +249,25 @@
             # -- User Components Directories  --------
         # Options/ComponentLocation
         init_UserCompDirectories [$::APPL_Config(root_InitDOM) selectNode /root/Options/ComponentLocation]
-                 
+
 
             
             # -- set bikeGeometry Fork Configuration      
         bikeGeometry::set_forkConfig [$::APPL_Config(root_InitDOM) selectNode /root/Fork]
   
           
+          
+            # -- initialize OS ----------
+        init_OS_Settings  
+          
+
             # -- initialize GUI ----------
         switch $::tcl_platform(platform) {
                     "macintosh" { set ::APPL_Config(GUI_Font)  {Helvetica 10} }
                     "windows"   { set ::APPL_Config(GUI_Font)  $::APPL_Config(GUI_Font) }
         }   
         init_GUI_Settings
+
         
             
             # -- load template ----------
@@ -451,15 +435,12 @@
         
              # -- window binding -----------------------
         bind . <Configure> [list rattleCAD::gui::check_windowSize]
-        bind . <Destroy> {
-            # http://www.tek-tips.com/viewthread.cfm?qid=339303
-            # Test if the toplevel (in this case ".")
-            # received the event.
-              # puts "         check: bind . <DESTROY> %W"
-            if {[string equal %W "."]} {
-               rattleCAD::gui::exit_rattleCAD yesno bind_Destroy
-            }
-        } 
+        
+             # -- window delete binding -----------------------
+        wm protocol . WM_DELETE_WINDOW {
+            rattleCAD::gui::exit_rattleCAD yesnocancel
+        }
+
           
           
             # -- window title ----------------------------
@@ -484,8 +465,8 @@
 
 
     #-------------------------------------------------------------------------
-       #  load settings from etc/config_initValues.xml
-       #
+        #  load settings from etc/config_initValues.xml
+        #
     proc init_GUI_Settings {} {
         
             variable APPL_Config
@@ -694,6 +675,58 @@
     }
 
     
+    #-------------------------------------------------------------------------
+        # init OS Settings
+        #  
+    proc init_OS_Settings {} {
+    
+          osEnv::init_osEnv
+          
+          switch -glob $::tcl_platform(platform) {
+              windows {
+                      foreach mimeType {.pdf .html .svg .dxf .jpg .gif .ps} {
+                          set defaultApp {}
+                          set defaultApp [osEnv::find_mimeType_Application $mimeType]
+                          puts "         ... $mimeType -> $defaultApp"
+                          if {$defaultApp != {}} {
+                              osEnv::register_mimeType $mimeType $defaultApp
+                          }
+                      }
+                      
+                      set exec_GhostScript  [osEnv::get_ghostscriptExec]
+                      if {$exec_GhostScript != {}} {
+                          osEnv::register_Executable gs $exec_GhostScript
+                      }
+                      
+                   }
+              unix {
+                      foreach {mimeType appName} {.html firefox .svg firefox .ps evince .pdf evince .txt nedit} {
+                          puts "         ... $mimeType -> $appName "
+                          set defaultApp {}
+                          set defaultApp [osEnv::find_OS_Application $appName]
+                          puts "         ... $defaultApp"
+                          puts "         ... $mimeType -> $appName -> $defaultApp"
+                          if {$defaultApp != {}} {
+                              osEnv::register_mimeType $mimeType $defaultApp
+                          }
+                      }
+                      foreach appName {sh gs} {
+                          set defaultApp {}
+                          set defaultApp [osEnv::find_OS_Application $appName]
+                          puts "         ... $appName -> $defaultApp"
+                          if {$defaultApp != {}} {
+                              osEnv::register_Executable $appName $defaultApp
+                          }
+                      }
+
+                   }
+              default {}
+          }
+    
+    }
+
+
+        
     #-------------------------------------------------------------------------
         # check user settings in $::APPL_Config(USER_Dir)/rattleCAD_init.xml
         #            

@@ -277,9 +277,15 @@
                 puts "         ... file:       $::APPL_Config(PROJECT_File)"
                 puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
                 puts "           ... modified: $::APPL_Config(canvasCAD_Update)"
+                puts ""
+                puts "        ... type:        $type"
+                puts "        ... exitMode:    $exitMode"
 
-               
+          
+              # puts "  $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update)"
+              
             if { $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update) } {
+                
                 puts " ......... save File before exit"
                 puts "        project save:   $::APPL_Config(PROJECT_Save)"
                 puts "        project change: $::APPL_Config(canvasCAD_Update)"
@@ -288,21 +294,41 @@
                                               -icon warning \
                                               -title  "exit rattleCAD" \
                                               -message "Save current Project before EXIT"]
-                puts "      ... save Project: $decission\n"
+                puts "        ... save Project: $decission\n"
+                puts "\n"
+                
                 switch  -exact -- $decission {
-                  {yes}     { rattleCAD::file::saveProject_xml }
-                  {no}      {
-                              # even if saved or not, because of handling of bind of <Destroy>
-                              puts "      ... project exit by Command followed by  \"bind <Destroy\""
-                              set ::APPL_Config(PROJECT_Save) [clock milliseconds] 
-                              exit
-                            }
-                  {cancel}  {return}
-                  default   {}
+                    {yes}     { 
+                                # even if saved or not, because of handling of bind of <Destroy>
+                                puts "        ... save current project\n"
+                                rattleCAD::file::saveProject_xml }
+                    {no}      {
+                                # even if saved or not, because of handling of bind of <Destroy>
+                                puts "        ... exit rattleCAD withoud saving current project\n"
+                                set ::APPL_Config(PROJECT_Save) [clock milliseconds] 
+                              }
+                    {cancel}  {
+                                # leef this control - go back to rattleCAD
+                                puts "        ... exit rattleCAD canceled\n"
+                                return
+                              }
+                    default   {}
                 }
- 
+                
+                puts "\n"
+                puts "        ... check file save by date\n\n"
+                puts "  ====== e x i t   r a t t l e C A D ============== END ==\n\n"
+                exit
+                
+            } else {
+            
+                puts "\n"
+                puts "        ... save current project not required\n\n"
+                puts "  ====== e x i t   r a t t l e C A D ============== END ==\n\n"
+                exit
+                
             }
-            exit
+            
     }
 
 

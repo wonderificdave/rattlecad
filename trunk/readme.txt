@@ -1,5 +1,15 @@
 
 
+3.4.01.06  - 2013.10.22
+-------------------------------------------------------------------------------
+    debug:
+        ... exit rattleCAD on Linux
+    feature:
+        ... osEnv::find_OS_Application finds executable via Which-command
+            ... therefore extension of _rattleCAD.init not required 
+            ... but can override OS settings
+
+
 3.4.01.05  - 2013.10.21
 -------------------------------------------------------------------------------
     refactor:
