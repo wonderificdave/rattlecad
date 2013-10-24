@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-    
+
+    <os>
+        <mime></mime>
+        <exec></exec>
+        <env></env>
+    </os>
+
     <tcl>
         <platform></platform>
     </tcl>
     
-    <os>
-        <env></env>
-        <mime></mime>
-        <exec></exec>
-    </os>
-
 </root>
