@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <GUI_Font>Helvetica 8</GUI_Font>
+    <mime>
+        <mime name=".test">_any_executable</mime>
+        <mime name=".xml">D:\Programme\Notepad++\notepad++.exe</mime>
+    </mime>
+    <exec>
+        <exec name="_test">_any_executable</exec>
+        <exec name="gs">D:\Programme\gs\gs9.10\bin\gswin32c.exe</exec>
+    </exec>
+</root>
