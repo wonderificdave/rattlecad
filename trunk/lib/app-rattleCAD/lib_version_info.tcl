@@ -40,13 +40,12 @@
  
 
    
-   #-------------------------------------------------------------------------
-       #  create_config_design
-       #
-   proc create { w {tab 0}} {
+  #-------------------------------------------------------------------------
+      #  create_config_design
+       
+    proc create { w {tab 0}} {
         
-         global APPL_Config
-
+        global APPL_Config
 
         if {[winfo exists $w]} {
             wm deiconify  $w
@@ -75,291 +74,239 @@
                                            
              ;# -- intro image ----------
         set version_intro_content [::create_intro  $version_intro  content  30]
-          ;# wm  resizable  $w  0 0
+        $version_intro         configure  -borderwidth 2 
         
-             
-             
-        ;# =======================================================================
-          ;# -- version_help-------------
-          ;#
-        set version_help        [ $INFO_Notebook insert end help \
-                                           -text      "Help" ]
-             ;# -- text -----------------
-        pack [set sw_help       [ ScrolledWindow $version_help.sw] ] -fill both  -expand 1 
-
-        set help_text           [ text $sw_help.text \
-                                    -width       40 \
-                                    -height      10 \
-                                    -relief      sunken \
-                                    -wrap        none \
-                                    -background  white \
-                                    -font        $widget_font
-                               ]
-      
-             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
-        $sw_help setwidget $sw_help.text
-                                           
-             
-             
-        ;# =======================================================================
-          ;# -- version_env -------------
-          ;#
-        set version_env        [ $INFO_Notebook insert end environment \
-                                           -text      "Environment" ]
-             ;# -- text -----------------
-        pack [set sw_env       [ ScrolledWindow $version_env.sw] ] -fill both  -expand 1 
-
-        set env_text           [ text $sw_env.text \
-                                    -width       40 \
-                                    -height      10 \
-                                    -relief      sunken \
-                                    -wrap        none \
-                                    -background  white \
-                                    -font        $widget_font
-                               ]
-      
-             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
-        $sw_env setwidget $sw_env.text
-                                           
-             
-             
-        ;# =======================================================================
-          ;# -- version_license ---------
-          ;#
-        set version_license    [ $INFO_Notebook insert end license \
-                                           -text      "License" ]
-             ;# -- text -----------------
-        pack [set sw_lic       [ ScrolledWindow $version_license.sw] ] -fill both  -expand 1 
-
-        set lic_text           [ text $sw_lic.text \
-                                    -width       40 \
-                                    -height      10 \
-                                    -relief      sunken \
-                                    -wrap        none \
-                                    -background  white \
-                                    -font        $widget_font
-                               ]
-      
-             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
-        $sw_lic setwidget $sw_lic.text
-
-
-
-        ;# =======================================================================
-          ;# -- version_changelog ---------
-          ;#
-        set version_changelog  [ $INFO_Notebook insert end changelog \
-                                           -text      "ChangeLog" ]
-             ;# -- text -----------------
-        pack [set sw_chng      [ ScrolledWindow $version_changelog.sw] ] -fill both  -expand 1 
-
-        set chng_text          [ text $sw_chng.text \
-                                    -width       40 \
-                                    -height      10 \
-                                    -relief      sunken \
-                                    -wrap        none \
-                                    -background  white \
-                                    -font        $widget_font
-                               ]
-      
-             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
-        $sw_chng setwidget $sw_chng.text
-
-
-
-        ;# =======================================================================
-          ;# -- version_exclusion ---------
-          ;#
-        set version_exclusion    [ $INFO_Notebook insert end exclusion \
-                                           -text      "Exclusion" ]
-             ;# -- text -----------------
-        pack [set sw_excl      [ ScrolledWindow $version_exclusion.sw] ] -fill both  -expand 1 
-
-        set excl_text          [ text $sw_excl.text \
-                                    -width       40 \
-                                    -height      10 \
-                                    -relief      sunken \
-                                    -wrap        none \
-                                    -background  white \
-                                    -font        $widget_font
-                               ]
-      
-             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
-        $sw_excl setwidget $sw_excl.text
-
-
-
-        ;# =======================================================================
-          ;# -- insert into version_env -------------
-          ;#
-        $env_text  insert end "\n\n"
-        $env_text  insert end "  ====================================================\n"
-        $env_text  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
-        $env_text  insert end "  ====================================================\n"
-        $env_text  insert end "\n\n"
-        $env_text  insert end "   Runtime:          ... [file tail $::argv0]\n"
-        $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "     Tcl/Tk:         [info patchlevel]\n"
-        $env_text  insert end "     Exec:             [info nameofexecutable]\n"
-        $env_text  insert end "\n"
-        $env_text  insert end "       Tk:             [package require Tk]\n"
-        $env_text  insert end "       BWidget:        [package require BWidget]\n"
-        $env_text  insert end "       rattleCAD:      [package require rattleCAD]\n"
-        $env_text  insert end "       bikeGeometry:   [package require bikeGeometry]\n"
-        $env_text  insert end "       canvasCAD:      [package require canvasCAD]\n"
-        $env_text  insert end "       vectormath:     [package require vectormath]\n"  
-        $env_text  insert end "       extSummary:     [package require extSummary]\n"  
-        $env_text  insert end "       appUtil:        [package require appUtil]\n"  
-        $env_text  insert end "\n\n"
-        $env_text  insert end "   Version:\n"
-        $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "     Version:        $APPL_Config(RELEASE_Version)\n"
-        $env_text  insert end "     Revision:       $APPL_Config(RELEASE_Revision)\n"
-        $env_text  insert end "     Release Date:   $APPL_Config(RELEASE_Date)\n"
-        $env_text  insert end "\n\n"
-        $env_text  insert end "   Environment:\n"
-        $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "\n"
-        $env_text  insert end "     APPL_Config(ROOT_Dir):  \n                   ... $APPL_Config(ROOT_Dir)\n"
-        $env_text  insert end "     APPL_Config(BASE_Dir):  \n                   ... $APPL_Config(BASE_Dir)\n"
-        $env_text  insert end "     APPL_Config(CONFIG_Dir):\n                   ... $APPL_Config(CONFIG_Dir)\n"
-        $env_text  insert end "     APPL_Config(IMAGE_Dir): \n                   ... $APPL_Config(IMAGE_Dir)\n"
-        $env_text  insert end "     APPL_Config(SAMPLE_Dir):\n                   ... $APPL_Config(SAMPLE_Dir)\n"
-        $env_text  insert end "     APPL_Config(TEST_Dir):  \n                   ... $APPL_Config(TEST_Dir)\n"   
-        $env_text  insert end "     APPL_Config(USER_Dir):  \n                   ... $APPL_Config(USER_Dir)\n"
-        $env_text  insert end "\n"
-        # $env_text  insert end "     APPL_Config(USER_Init):     $APPL_Config(USER_Init)\n"
-        $env_text  insert end "\n\n"
-        $env_text  insert end "   Packages:\n"
-        $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "\n"
-        $env_text  insert end "     \$::vectorfont::font_dir\n                   ... $::vectorfont::font_dir  "
-        $env_text  insert end "\n\n\n\n"
-        $env_text  insert end "   APPL_Config:\n"
-        $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "\n"
-	foreach name [lsort [array names ::APPL_Config]] {
-	    switch -glob $name {
-		list_*  continue
-		default {}
-	    }
-	$env_text  insert end [format "     %-35s\n" APPL_Config($name): ]
-	$env_text  insert end [format "     %-15s ... %s\n" {} $::APPL_Config($name)]
-	}
-	$env_text  insert end "\n"
-	foreach name [lsort [array names ::APPL_Config]] {
-	    switch -glob $name {
-		list_*  {}
-		default continue
-	    }
-        $env_text  insert end [format "     %-35s\n" APPL_Config($name):]
-	    foreach value $::APPL_Config($name) {	
-        $env_text  insert end [format "     %-20s %s\n" "" $value]
-	    }	
-	}
-        $env_text  insert end "\n\n\n"
-        $env_text  insert end "   others:\n"
-        $env_text  insert end "  ----------------------------------------------------\n"
-        $env_text  insert end "\n"
-        $env_text  insert end "     \$::argv0:        \n                   ... $::argv0\n"	   
-	   
+        set text_help          [ create_tab $INFO_Notebook 02 "Help"        $widget_font ]
+        set text_env           [ create_tab $INFO_Notebook 03 "Environment" $widget_font ]
+        set text_osenv         [ create_tab $INFO_Notebook 04 "osEnv"       $widget_font ]
+        set text_apptil        [ create_tab $INFO_Notebook 05 "appUtil"     $widget_font ]
+        set text_license       [ create_tab $INFO_Notebook 06 "License"     $widget_font ]
+        set text_changelog     [ create_tab $INFO_Notebook 07 "ChangeLog"   $widget_font ]
+        set text_exclusion     [ create_tab $INFO_Notebook 08 "Exclusion"   $widget_font ]
         
+        fill_help               $text_help
+        fill_env                $text_env
+        fill_osenv              $text_osenv
+        fill_apptil             $text_apptil
+        fill_license            $text_license
+        fill_changelog          $text_changelog
+        fill_exclusion          $text_exclusion
         
-
-        ;# =======================================================================
-          ;# -- insert into version_help ---------
-          ;#
-        $help_text  insert end "\n\n"
-        $help_text  insert end "  ====================================================\n"
-        $help_text  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
-        $help_text  insert end "  ====================================================\n"
-        $help_text  insert end ""
-        
-        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] help.txt] r]
-        while {![eof $fd]} {
-             set line [gets $fd]
-             $help_text  insert end "    $line\n"
-        }
-        close $fd
-
-        $help_text  insert end "\n\n"
-        
-
-        
-        ;# =======================================================================
-          ;# -- insert into version_license ---------
-          ;#
-        $lic_text   insert end "\n\n"
-        $lic_text   insert end "  ====================================================\n"
-        $lic_text   insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
-        $lic_text   insert end "  ====================================================\n"
-        $lic_text   insert end ""
-        
-        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] license.txt] r]
-        while {![eof $fd]} {
-             set line [gets $fd]
-             $lic_text  insert end "    $line\n"
-        }
-        close $fd
-
-        $lic_text   insert end "\n\n"
-
-        
-
-        ;# =======================================================================
-          ;# -- insert into version_changelog ---------
-          ;#
-        $chng_text  insert end "\n\n"
-        $chng_text  insert end "  ====================================================\n"
-        $chng_text  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
-        $chng_text  insert end "  ====================================================\n"
-        $chng_text  insert end ""
-        
-        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] readme.txt] r]
-        while {![eof $fd]} {
-             set line [gets $fd]
-             $chng_text  insert end "    $line\n"
-        }
-        close $fd
-
-        $chng_text  insert end "\n\n"
-
-        
-
-        ;# =======================================================================
-          ;# -- insert into exclusion ---------
-          ;#
-        $excl_text  insert end "\n\n"
-        $excl_text  insert end "  ====================================================\n"
-        $excl_text  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
-        $excl_text  insert end "  ====================================================\n"
-        $excl_text  insert end ""
-        
-        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] exclusion.txt] r]
-        while {![eof $fd]} {
-             set line [gets $fd]
-             $excl_text  insert end "    $line\n"
-        }
-        close $fd
-
-        $excl_text  insert end "\n\n"
-        
-
-                               
-        $version_intro          configure  -borderwidth 2 
-        $version_help           configure  -borderwidth 2 
-        $version_env            configure  -borderwidth 2 
-        $version_license        configure  -borderwidth 2 
-        $version_changelog      configure  -borderwidth 2 
-        $version_exclusion      configure  -borderwidth 2 
 
         $INFO_Notebook          compute_size
         $INFO_Notebook          raise [ $INFO_Notebook page $tab ]
         
         return $INFO_Notebook
-   }
-   
-   
+    }
+
+    proc create_tab {nb  index labelText font} {
+    
+        set _tab          [ $nb insert end $index \
+                                           -text      "$labelText" ]
+        $_tab             configure  -borderwidth 2
+        
+             ;# -- text -----------------
+        pack [set sw_tab  [ ScrolledWindow $_tab.sw] ] -fill both  -expand 1 
+
+        set _text         [ text $sw_tab.text \
+                                    -width       40 \
+                                    -height      10 \
+                                    -relief      sunken \
+                                    -wrap        none \
+                                    -background  white \
+                                    -font        $font
+                               ]
+      
+             ;# --- !!! IMPORTANT !!! DO NOT pack a ScrolledWindow child!!!     
+        $sw_tab setwidget $_text
+        
+        return $_text
+    }
+
+    proc fill_help {w} {    
+
+        global APPL_Config
+
+        $w    insert end "\n\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end ""
+        
+        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] help.txt] r]
+        while {![eof $fd]} {
+             set line [gets $fd]
+             $w    insert end "    $line\n"
+        }
+        close $fd
+
+        $w    insert end "\n\n"
+    }
+
+    proc fill_env {w} {    
+
+        global APPL_Config
+        
+        $w  insert end "\n\n"
+        $w  insert end "  ====================================================\n"
+        $w  insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
+        $w  insert end "  ====================================================\n"
+        $w  insert end "\n\n"
+        $w  insert end "   Runtime:          ... [file tail $::argv0]\n"
+        $w  insert end "  ----------------------------------------------------\n"
+        $w  insert end "     Tcl/Tk:         [info patchlevel]\n"
+        $w  insert end "     Exec:             [info nameofexecutable]\n"
+        $w  insert end "\n"
+        $w  insert end "       Tk:             [package require Tk]\n"
+        $w  insert end "       BWidget:        [package require BWidget]\n"
+        $w  insert end "       rattleCAD:      [package require rattleCAD]\n"
+        $w  insert end "       bikeGeometry:   [package require bikeGeometry]\n"
+        $w  insert end "       canvasCAD:      [package require canvasCAD]\n"
+        $w  insert end "       vectormath:     [package require vectormath]\n"  
+        $w  insert end "       extSummary:     [package require extSummary]\n"  
+        $w  insert end "       osEnv:          [package require osEnv]\n"  
+        $w  insert end "       appUtil:        [package require appUtil]\n"  
+        $w  insert end "\n\n"
+        $w  insert end "   Version:\n"
+        $w  insert end "  ----------------------------------------------------\n"
+        $w  insert end "     Version:        $APPL_Config(RELEASE_Version)\n"
+        $w  insert end "     Revision:       $APPL_Config(RELEASE_Revision)\n"
+        $w  insert end "     Release Date:   $APPL_Config(RELEASE_Date)\n"
+        $w  insert end "\n\n"
+        $w  insert end "   Environment:\n"
+        $w  insert end "  ----------------------------------------------------\n"
+        $w  insert end "\n"
+        $w  insert end "     APPL_Config(ROOT_Dir):  \n                   ... $APPL_Config(ROOT_Dir)\n"
+        $w  insert end "     APPL_Config(BASE_Dir):  \n                   ... $APPL_Config(BASE_Dir)\n"
+        $w  insert end "     APPL_Config(CONFIG_Dir):\n                   ... $APPL_Config(CONFIG_Dir)\n"
+        $w  insert end "     APPL_Config(IMAGE_Dir): \n                   ... $APPL_Config(IMAGE_Dir)\n"
+        $w  insert end "     APPL_Config(SAMPLE_Dir):\n                   ... $APPL_Config(SAMPLE_Dir)\n"
+        $w  insert end "     APPL_Config(TEST_Dir):  \n                   ... $APPL_Config(TEST_Dir)\n"   
+        $w  insert end "     APPL_Config(USER_Dir):  \n                   ... $APPL_Config(USER_Dir)\n"
+        $w  insert end "\n"
+        # $w  insert end "     APPL_Config(USER_Init):     $APPL_Config(USER_Init)\n"
+        $w  insert end "\n\n"
+        $w  insert end "   Packages:\n"
+        $w  insert end "  ----------------------------------------------------\n"
+        $w  insert end "\n"
+        $w  insert end "     \$::vectorfont::font_dir\n                   ... $::vectorfont::font_dir  "
+        $w  insert end "\n\n\n\n"
+        $w  insert end "   APPL_Config:\n"
+        $w  insert end "  ----------------------------------------------------\n"
+        $w  insert end "\n"
+        foreach name [lsort [array names ::APPL_Config]] {
+            switch -glob $name {
+                list_*  continue
+                default {}
+            }
+        $w  insert end [format "     %-35s\n" APPL_Config($name): ]
+        $w  insert end [format "     %-15s ... %s\n" {} $::APPL_Config($name)]
+        }
+        $w  insert end "\n"
+        foreach name [lsort [array names ::APPL_Config]] {
+            switch -glob $name {
+                list_*  {}
+                default continue
+            }
+            $w  insert end [format "     %-35s\n" APPL_Config($name):]
+            foreach value $::APPL_Config($name) {  
+                $w  insert end [format "     %-20s %s\n" "" $value]
+            }  
+        }
+        $w  insert end "\n\n\n"
+        $w  insert end "   others:\n"
+        $w  insert end "  ----------------------------------------------------\n"
+        $w  insert end "\n"
+        $w  insert end "     \$::argv0:        \n                   ... $::argv0\n"     
+    }    
+
+    proc fill_license {w} { 
+        
+        global APPL_Config
+        
+        $w     insert end "\n\n"
+        $w     insert end "  ====================================================\n"
+        $w     insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
+        $w     insert end "  ====================================================\n"
+        $w     insert end ""
+        
+        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] license.txt] r]
+        while {![eof $fd]} {
+             set line [gets $fd]
+             $w    insert end "    $line\n"
+        }
+        close $fd
+
+        $w     insert end "\n\n"
+    }
+
+    proc fill_changelog {w} { 
+        
+        global APPL_Config
+        
+        $w    insert end "\n\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end ""
+        
+        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] readme.txt] r]
+        while {![eof $fd]} {
+             set line [gets $fd]
+             $w    insert end "    $line\n"
+        }
+        close $fd
+
+        $w    insert end "\n\n"
+    }    
+
+    proc fill_exclusion {w} {    
+
+        global APPL_Config
+
+        $w    insert end "\n\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end ""
+        
+        set fd [open [file join [file dirname $::APPL_Config(CONFIG_Dir)] exclusion.txt] r]
+        while {![eof $fd]} {
+             set line [gets $fd]
+             $w    insert end "    $line\n"
+        }
+        close $fd
+
+        $w    insert end "\n\n"
+    }
+
+    proc fill_apptil {w} {    
+
+        global APPL_Config
+
+        $w    insert end "\n\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end "\n"
+        $w    insert end "[[appUtil::namespaceReport ::] asXML]"
+        $w    insert end "\n\n"
+    }
+
+    proc fill_osenv {w} {    
+
+        global APPL_Config
+
+        $w    insert end "\n\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
+        $w    insert end "  ====================================================\n"
+        $w    insert end "\n"
+        $w    insert end "[$osEnv::registryDOM asXML] \n"
+        $w    insert end "\n\n"
+    }
+
+
 
      #-------------------------------------------------------------------------
      #

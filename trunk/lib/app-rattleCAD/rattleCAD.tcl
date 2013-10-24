@@ -42,12 +42,12 @@
   package require   BWidget         
   package require   tdom
   
-  package require   appUtil       0.14
+  package require   appUtil       0.15
   package require   vectormath    0.5
   package require   bikeGeometry  0.41
   package require   canvasCAD     0.49
   package require   extSummary    0.4
-  package require   osEnv         0.6
+  package require   osEnv         0.7
   
       
   package provide   rattleCAD     3.4
