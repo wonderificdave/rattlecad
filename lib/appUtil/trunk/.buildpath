@@ -7,4 +7,5 @@
 			<attribute name="auto_dependencies" value="tdom|BWidget"/>
 		</attributes>
 	</buildpathentry>
+	<buildpathentry combineaccessrules="false" kind="prj" path="/parsetcl"/>
 </buildpath>

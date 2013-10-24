@@ -31,15 +31,20 @@ exec tclsh "$0" ${1+"$@"}
             set childNamespace_Name [string map [list $namespaceName {}] $_element]
             set _nodeName   [string map [list {::} {}] $childNamespace_Name]
             set _nodeName   [check_nodeName $_nodeName]
+                # puts "         -> $_nodeName"
                 # puts "         -> $childNamespace_Name"
-            set _node [$domDOC createElement $_nodeName]
-            $domNode appendChild $_node
-                # -- add next Level
-            _add_namespaceReport $_node $_element
+            if {[catch {set _node [$domDOC createElement $_nodeName]} err]} {
+                puts "          ... $err"
+                return
+            } else {
+                $domNode appendChild $_node
+                    # -- add next Level
+                _add_namespaceReport $_node $_element
+            }
         }
             # -- add content of current Level
         _add_namespaceContent $domNode $namespaceName
-        
+        return
     }
     
     proc appUtil::_add_namespaceContent {domNode namespaceName} {
@@ -55,9 +60,13 @@ exec tclsh "$0" ${1+"$@"}
                     set _nodeName   [string map [list $namespaceName {} {::} {}] $_element]
                     set _nodeName   [check_nodeName $_nodeName]
                         # puts "   -> \$_nodeName: $_element -> $_nodeName"
-                    set _node       [$domDOC createElement $_nodeName]
-                    $_domNode appendChild $_node
-                    _add_procArgs $_node $_element
+                    if {[catch {set _node [$domDOC createElement $_nodeName]} err]} {
+                        puts "          ... $err"
+                        return
+                    } else {
+                        $_domNode appendChild $_node
+                        _add_procArgs $_node $_element
+                    }
                 }
             } 
             
@@ -71,10 +80,14 @@ exec tclsh "$0" ${1+"$@"}
                     set _nodeName   [string map [list $namespaceName {} {::} {}] $_element]
                     set _nodeName   [check_nodeName $_nodeName]
                         # puts "   -> \$_nodeName: $_element -> $_nodeName"
-                    set _node [$domDOC createElement $_nodeName]
-                    $_domNode appendChild $_node
-                        # -- array keyValues ---------------                   
-                   _add_arraykeyValues $_node $_element
+                    if {[catch {set _node [$domDOC createElement $_nodeName]} err]} {
+                        puts "          ... $err"
+                        return
+                    } else {
+                        $_domNode appendChild $_node
+                            # -- array keyValues ---------------                   
+                       _add_arraykeyValues $_node $_element
+                   }
                 }
             }
 
@@ -88,10 +101,14 @@ exec tclsh "$0" ${1+"$@"}
                     set _nodeName   [string map [list $namespaceName {} {::} {}] $_element]
                     set _nodeName   [check_nodeName $_nodeName]
                         # puts "   -> \$_nodeName: $_element -> $_nodeName"
-                    set _node [$domDOC createElement $_nodeName]
-                    $_domNode appendChild $_node
-                        # -- add value to node
-                    _add_varValue $_node $_element
+                    if {[catch {set _node [$domDOC createElement $_nodeName]} err]} {
+                        puts "          ... $err"
+                        return
+                    } else {
+                        $_domNode appendChild $_node
+                           # -- add value to node
+                        _add_varValue $_node $_element
+                    }
                 } 
             }
     }
@@ -196,10 +213,12 @@ exec tclsh "$0" ${1+"$@"}
     }  
     
     proc check_nodeName {_name} {
-        set newName [string map {{'} {_} {.} {_} {:} {.}} $_name]
+        set newName [string map {\\ {_}   \# {_}   {%} {_}   {'} {_}   {.} {_}   {:} {.}} $_name]
+        set newName [string map {\\ {_}   \# {_}   {%} {_}   {'} {_}   {.} {_}   {:} {.}} $newName]
         if {$newName == {}} {set newName {___empty___}}
         if {$_name != $newName} {
-            puts "       -> check_nodeName: $_name / $newName"
+            # puts "       -> check_nodeName: $_name / $newName"
+            puts "               ... check_nodeName: $_name / $newName" 
         }
         return $newName
     }
