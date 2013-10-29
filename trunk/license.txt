@@ -121,5 +121,5 @@
        logo/rosenberger.svg
           ./selberbruzzler.svg
           ./bohemian.svg
-          ./puch          
+          ./puch.svg
              ... free to use. Ownership kept by their creators

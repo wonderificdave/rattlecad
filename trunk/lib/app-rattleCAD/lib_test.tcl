@@ -35,7 +35,7 @@
  #  namespace:  rattleCAD::test
  # ---------------------------------------------------------------------------
  #
- # 
+ #
  namespace eval rattleCAD::test {
  
    
@@ -206,8 +206,8 @@
      
      
     #-------------------------------------------------------------------------
-    #  demo 01
-    #     
+        #  demo 01
+        #     
     proc demo_01 {args} {
         set currentFile $::APPL_Config(PROJECT_File)
         set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
@@ -262,11 +262,11 @@
 
     }     
 
-      # -------------------------------------------------------------------------
-      #  updateGeometryValue
-      #
+    # -------------------------------------------------------------------------
+        #  updateGeometryValue
+        #
       
-      proc updateGeometryValue {args} {
+    proc updateGeometryValue {args} {
          
           set _index 0
           array set myValues {}
@@ -367,10 +367,10 @@
      
 
 
-     #-------------------------------------------------------------------------
-     #
-     #  end  namespace eval rattleCAD_Test 
-     #
+    #-------------------------------------------------------------------------
+        #
+        #  end  namespace eval rattleCAD_Test 
+        #
 
  }
   

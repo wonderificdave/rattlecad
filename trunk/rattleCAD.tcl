@@ -176,6 +176,9 @@ exec wish "$0" "$@"
 	    
     }
     
+      # -- run a debug procedure
+    rattleCAD::debug::run_debug
+
     
     #osEnv::open_fileDefault "E:/manfred/Dateien/rattleCAD/html/index.html"
     #osEnv::open_fileDefault "http://rattlecad.sourceforge.net/"

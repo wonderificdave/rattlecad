@@ -25,6 +25,7 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir lib_cvFrameJig.tcl]]; \
         [list source  [file join $dir lib_cvUpdate.tcl]]; \
         [list source  [file join $dir lib_test.tcl]]; \
+        [list source  [file join $dir lib_debug.tcl]]; \
         [list source  [file join $dir lib_tool.tcl]]; \
         [list source  [file join $dir rattleCAD.tcl]]; \ 
    "
