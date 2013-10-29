@@ -551,28 +551,6 @@
     }
 
     #-------------------------------------------------------------------------
-        #  reset undoList
-    proc reset_editList {} {
-            variable _editList
-            puts "\n   --- reset_editList -----------------------------"
-            array unset _editList
-    }
-
-    #-------------------------------------------------------------------------
-        #  print undoList 
-    proc print_editList {} {
-            variable _editList
-            variable _editList_Index         ;# current index in _editList
-            puts "\n     --- print_editList ------------------------ $_editList_Index ---"
-            foreach entry [lsort [array names _editList]] {
-                foreach {parameter oldValue newValue} $_editList($entry) break
-                puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $entry $parameter $oldValue $newValue]"
-            }
-            puts "     --- print_editList ---------------------------\n"
-        
-    }
-
-    #-------------------------------------------------------------------------
         #  exec_editList_prev 
     proc exec_editList_prev {} {
             variable _editList
@@ -623,6 +601,30 @@
             }
             puts  "   --- exec_editList_next ----- $_editList_Index --------------------\n"
 
+    }
+
+    #-------------------------------------------------------------------------
+        #  reset undoList
+    proc reset_editList {} {
+            variable _editList
+            variable _editList_Index         ;# current index in _editList
+            puts "\n   --- reset_editList -----------------------------"
+            array unset         _editList
+            set _editList_Index 0
+    }
+
+    #-------------------------------------------------------------------------
+        #  print undoList 
+    proc print_editList {} {
+            variable _editList
+            variable _editList_Index         ;# current index in _editList
+            puts "\n     --- print_editList ------------------------ $_editList_Index ---"
+            foreach entry [lsort [array names _editList]] {
+                foreach {parameter oldValue newValue} $_editList($entry) break
+                puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $entry $parameter $oldValue $newValue]"
+            }
+            puts "     --- print_editList ---------------------------\n"
+        
     }
 
     
