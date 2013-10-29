@@ -14,6 +14,8 @@
       <images directory="image">
         <image name="open"			    src="open.gif" />
         <image name="save"			    src="save.gif" />
+        <image name="backward"		  src="backward.gif" />
+        <image name="forward"		    src="forward.gif" />
         <image name="print_ps"		  src="print_ps.gif" />
         <image name="print_svg"		  src="print_svg.gif" />
         <image name="print_dxf"		  src="print_dxf.gif" />

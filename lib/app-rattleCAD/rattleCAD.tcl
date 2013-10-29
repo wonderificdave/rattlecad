@@ -47,7 +47,7 @@
   package require   bikeGeometry  0.41
   package require   canvasCAD     0.49
   package require   extSummary    0.4
-  package require   osEnv         0.7
+  package require   osEnv         0.8
   
       
   package provide   rattleCAD     3.4

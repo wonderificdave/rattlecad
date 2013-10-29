@@ -45,10 +45,10 @@
     
     #-------------------------------------------------------------------------
         #  store createEdit-widgets position
-    variable  _drag
-    array set _drag {}
-    
-    variable _updateValue   ; array set _updateValue    {}
+    variable _drag             ; array set _drag        {}
+    variable _updateValue      ; array set _updateValue {}
+    variable _editList         ; array set _editList    {}
+    variable _editList_Index  0;
       
      
 
@@ -135,9 +135,9 @@
                         create_Config $cv $cv_Name $cvEdit $cvContentFrame $index $key
                     }
                     bind $cvTitleFrame     <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
-                    bind $cvTitleFrame     <B1-Motion>         [list [namespace current]::drag         %X %Y $cv $cvEdit]
+                    bind $cvTitleFrame     <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
                     bind $cvTitle          <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
-                    bind $cvTitle          <B1-Motion>         [list [namespace current]::drag         %X %Y $cv $cvEdit]
+                    bind $cvTitle          <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
             }
 
             # --- reposition if out of canvas border ---
@@ -233,8 +233,8 @@
         }                                     
         
     }
-    
-                   
+
+         
     proc create_ValueEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {
 
                # appUtil::get_procHierarchy
@@ -269,6 +269,7 @@
              bind $cvEntry   <Leave>                 [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
              bind $cvEntry   <Double-ButtonPress-1>  [list [namespace current]::updateConfig     $cv_Name $key $cvEntry]
     }
+
     proc create_TextEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {
 
              eval set currentValue $[namespace current]::_updateValue($key)
@@ -304,6 +305,7 @@
              bind $cvEntry   <Leave>                 [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
              bind $cvEntry   <Double-ButtonPress-1>  [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
     }
+
     proc create_ListEdit {type cv cv_Name cvEdit cvContentFrame index labelText key} {
 
 
@@ -349,6 +351,7 @@
              bind $cvLabel   <B1-Motion>                 [list [namespace current]::drag         %X %Y $cv $cvEdit]
              #bind $cvLabel  <B1-Motion>                 [list [namespace current]::drag         %X %Y $cv __cvEdit__]
     }
+
     proc change_ValueEdit {textVar direction} {
                  #
                  # --- dynamic update value ---
@@ -365,7 +368,7 @@
              }
              set ::$textVar [format "%.3f" $newValue]
     }
-             
+
     proc bind_MouseWheel {textVar value} {
             set currentValue [set ::$textVar]
             set updateValue 1.0
@@ -378,6 +381,7 @@
             set newValue [expr {$currentValue + $scale * $updateValue}]
             set ::$textVar [format "%.3f" $newValue]
     }
+
     proc get_listBoxContent {type {key {}}} {      
             set listBoxContent {}
             switch -exact $type {
@@ -426,11 +430,20 @@
                       puts ""
                       puts "   -------------------------------"
                       puts "    updateConfig"
-                      puts "       updateConfig:    $_updateValue($xpath)"
+                      puts "       updateConfig:    $oldValue / $_updateValue($xpath)"
                       project::add_tracing
                           
-                      bikeGeometry::set_Value $xpath $_updateValue($xpath)
+                          # set Value
+                      set newValue [bikeGeometry::set_Value $xpath $_updateValue($xpath)]
+                          # puts "   -> \$newValue $newValue"
+                      
+                          # append _editList
+                      append_editList                       $xpath $oldValue $newValue
+                          #
+                      
+                          # set timestamp
                       set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+                          #
                       
                           # set_Value xpath $_updateValue($xpath)
                           # project::remove_tracing
@@ -445,6 +458,7 @@
           catch {focus $cvEntry}
           catch {$cvEntry selection range 0 end}
     }
+
     #-------------------------------------------------------------------------
         #  check comments in listbox   
     proc check_listBoxValue { w cv_Name xPath args} {
@@ -479,52 +493,178 @@
                   }
           }
     } 
-     
+
     #-------------------------------------------------------------------------
         #  close ProjectEdit Widget
     proc closeEdit {cv cvEdit} {
-            $cv delete $cvEdit
-            destroy $cvEdit
-            catch [ destroy .__select_box ]
+          $cv delete $cvEdit
+          destroy $cvEdit
+          catch [ destroy .__select_box ]
     }
+    
+    #-------------------------------------------------------------------------
+        #  close all ProjectEdit Widgets
+    proc close_allEdit {} {
+          # puts "  -- closeEdit: $cv $cvEdit"
+          set cv_Name {}
+          set cv_Path {}
+          catch {set cv_Name [rattleCAD::gui::current_canvasCAD]}
+            # puts "   -> $cv_Name"
+          catch {set cv_Path [ $cv_Name getNodeAttr Canvas path]}
+            # puts "   -> $cv_Path"
+          set items [$cv_Path find withtag __cvEdit__]
+            # puts "   -> $items"
+          
+          foreach cvEdit $items {
+              $cv_Path delete $cvEdit
+              destroy $cvEdit
+              catch [ destroy .__select_box ]
+          }
+    }   
+    
+
+
+    #-------------------------------------------------------------------------
+        #  append undoList
+    proc append_editList {parameter oldValue newValue} {
+          variable _editList
+          variable _editList_Index         ;# current index in _editList
+
+            # -- clear _editList ---------------------------
+            #
+          puts "\n   --- append_editList -------- $_editList_Index --------------------"
+          incr _editList_Index
+          set i    [array size _editList]; # index of the last entry in _editList
+          while {$i > $_editList_Index} {
+              puts "       <I> $i / $_editList_Index"
+              unset _editList($i)
+              incr i -1
+          }
+          
+            # -- append _editList ---------------------------
+            #
+          puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $_editList_Index $parameter $oldValue $newValue]"
+          set _editList($_editList_Index) [list $parameter $oldValue $newValue]
+          #set _editList_Index             [expr [array size _editList] -1]
+          
+          return $_editList($_editList_Index)
+    }
+
+    #-------------------------------------------------------------------------
+        #  reset undoList
+    proc reset_editList {} {
+            variable _editList
+            puts "\n   --- reset_editList -----------------------------"
+            array unset _editList
+    }
+
+    #-------------------------------------------------------------------------
+        #  print undoList 
+    proc print_editList {} {
+            variable _editList
+            variable _editList_Index         ;# current index in _editList
+            puts "\n     --- print_editList ------------------------ $_editList_Index ---"
+            foreach entry [lsort [array names _editList]] {
+                foreach {parameter oldValue newValue} $_editList($entry) break
+                puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $entry $parameter $oldValue $newValue]"
+            }
+            puts "     --- print_editList ---------------------------\n"
         
+    }
+
+    #-------------------------------------------------------------------------
+        #  exec_editList_prev 
+    proc exec_editList_prev {} {
+            variable _editList
+            variable _editList_Index
+            puts "\n"
+            puts "   --- exec_editList_prev ----- $_editList_Index --------------------"
+            close_allEdit
+            print_editList
+            if  {$_editList_Index > 0} {
+                foreach {parameter oldValue newValue} $_editList($_editList_Index) break
+                puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_editList_Index $parameter $oldValue]"
+                  # set oldValue
+                bikeGeometry::set_Value $parameter $oldValue
+                  # update canvas
+                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD] 
+                  #
+                incr _editList_Index -1
+                  #
+            } else {
+                puts "          exec_editList_prev - $_editList_Index - exception"
+            }
+            puts "   --- exec_editList_prev ----- $_editList_Index --------------------\n"
+            
+    }
+
+    #-------------------------------------------------------------------------
+        #  exec_editList_next 
+    proc exec_editList_next {} {
+            variable _editList
+            variable _editList_Index
+            puts "\n"
+            puts "   --- exec_editList_next ----- $_editList_Index --------------------"
+            close_allEdit
+            print_editList
+            incr _editList_Index
+            if  {$_editList_Index <= [array size _editList] } {
+                foreach {parameter oldValue newValue} $_editList($_editList_Index) break
+                puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_editList_Index $parameter $newValue]"
+                  # set newValue
+                bikeGeometry::set_Value $parameter $newValue
+                  # update canvas
+                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD] 
+                  #
+                # set _editList_Index [expr $_editList_Index + 1]
+                  #
+            } else {
+                puts "          exec_editList_next - $_editList_Index - exception"
+            }
+            puts  "   --- exec_editList_next ----- $_editList_Index --------------------\n"
+
+    }
+
+    
     #-------------------------------------------------------------------------
         #  binding: drag
     proc drag {x y cv id} {
-          # appUtil::get_procHierarchy
-        variable _drag
-        set dx [expr {$x - $_drag(lastx)}]
-        set dy [expr {$y - $_drag(lasty)}]
-        set cv_width  [ winfo width  $cv ]
-        set cv_height [ winfo height $cv ]
-        set id_bbox   [ $cv bbox $id ]
-        if {[lindex $id_bbox 0] < 4} {set dx  1}
-        if {[lindex $id_bbox 1] < 4} {set dy  1}
-        if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
-        if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
-    
-        $cv move $id $dx $dy
-        set _drag(lastx) $x
-        set _drag(lasty) $y
+              # appUtil::get_procHierarchy
+            variable _drag
+            set dx [expr {$x - $_drag(lastx)}]
+            set dy [expr {$y - $_drag(lasty)}]
+            set cv_width  [ winfo width  $cv ]
+            set cv_height [ winfo height $cv ]
+            set id_bbox   [ $cv bbox $id ]
+            if {[lindex $id_bbox 0] < 4} {set dx  1}
+            if {[lindex $id_bbox 1] < 4} {set dy  1}
+            if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
+            if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
+        
+            $cv move $id $dx $dy
+            set _drag(lastx) $x
+            set _drag(lasty) $y
     }
+
     #-------------------------------------------------------------------------
         #  binding: dragStart
     proc dragStart {x y} {
-          # appUtil::get_procHierarchy
-        variable _drag
-        set [namespace current]::_drag(lastx) $x
-        set [namespace current]::_drag(lasty) $y
-        puts "      ... dragStart: $x $y"
-     }
+              # appUtil::get_procHierarchy
+            variable _drag
+            set [namespace current]::_drag(lastx) $x
+            set [namespace current]::_drag(lasty) $y
+            puts "      ... dragStart: $x $y"
+    }
+
     #-------------------------------------------------------------------------
         #  create createSelectBox
     proc bind_parent_move {toplevel_widget parent} {
-          # appUtil::get_procHierarchy
-        if {![winfo exists $toplevel_widget]} return
-        set toplevel_x    [winfo rootx $parent]
-        set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
-        wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
-        wm  deiconify     $toplevel_widget
+              # appUtil::get_procHierarchy
+            if {![winfo exists $toplevel_widget]} {return}
+            set toplevel_x    [winfo rootx $parent]
+            set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
+            wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
+            wm  deiconify     $toplevel_widget
     }    
      
  } 

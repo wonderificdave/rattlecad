@@ -71,6 +71,11 @@
                 
                 {separator}
                 
+                {command "Undo"             {}  "Undo"                  {Ctrl z}     -command { rattleCAD::update::exec_editList_prev} }
+                {command "Redo"             {}  "Redo"                  {Ctrl y}     -command { rattleCAD::update::exec_editList_next} }
+                
+                {separator}
+                
                 {command "&Copy Reference"  {}  "Copy Reference"       {Ctrl r}     -command { rattleCAD::gui::notebook_switchTab  cv_Custom02} }
                 
                 {separator}
@@ -134,18 +139,21 @@
         
             Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { rattleCAD::file::openProject_xml }  
             Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { rattleCAD::file::saveProject_xml } 
+            
+            Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::update::exec_editList_prev }          
+            Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::update::exec_editList_next }          
+            
+            Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { rattleCAD::gui::notebook_updateCanvas force}  
+            Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { rattleCAD::gui::notebook_cleanCanvas} 
+              
+            Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { rattleCAD::gui::load_Template  Road }  
+            Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { rattleCAD::gui::load_Template  MTB  }  
+            
             Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { rattleCAD::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) }          
             Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { rattleCAD::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
             Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { rattleCAD::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
             Button    $tb_frame.print_htm -image  $iconArray(print_html)    -helptext "export HTML"             -command { rattleCAD::gui::export_Project      html }          
             Button    $tb_frame.print_pdf -image  $iconArray(print_pdf)     -helptext "export PDF"              -command { rattleCAD::gui::export_Project      pdf }          
-                                                         
-            Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { rattleCAD::gui::load_Template  Road }  
-            Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { rattleCAD::gui::load_Template  MTB  }  
-              
-            Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { rattleCAD::gui::notebook_cleanCanvas} 
-            Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { rattleCAD::gui::notebook_updateCanvas force}  
-              
 
             Button    $tb_frame.scale_p  -image  $iconArray(scale_p)        -helptext "scale plus"              -command { rattleCAD::gui::notebook_scaleCanvas  [expr 3.0/2] }  
             Button    $tb_frame.scale_m  -image  $iconArray(scale_m)        -helptext "scale minus"             -command { rattleCAD::gui::notebook_scaleCanvas  [expr 2.0/3] }  
@@ -158,8 +166,8 @@
             label   $tb_frame.sp1      -text   " "
             label   $tb_frame.sp2      -text   " "
             label   $tb_frame.sp3      -text   " "
-            label   $tb_frame.sp4      -text   "      "
-            label   $tb_frame.sp5      -text   " "
+            label   $tb_frame.sp4      -text   " "
+            label   $tb_frame.sp5      -text   "      "
             label   $tb_frame.sp6      -text   " "
             label   $tb_frame.sp7      -text   " "
               
@@ -169,10 +177,11 @@
                 #        $tb_frame.render   $tb_frame.sp3  \
                 #
             pack    $tb_frame.open       $tb_frame.save         $tb_frame.sp0  \
-                    $tb_frame.print_ps   $tb_frame.print_dxf    $tb_frame.print_svg     $tb_frame.sp1 \
-                    $tb_frame.print_htm  $tb_frame.print_pdf  $tb_frame.sp2  \
+                    $tb_frame.backward   $tb_frame.forward      $tb_frame.sp1  \
+                    $tb_frame.render     $tb_frame.clear        $tb_frame.sp2  \
                     $tb_frame.set_rd     $tb_frame.set_mb       $tb_frame.sp3  \
-                    $tb_frame.clear      $tb_frame.render       $tb_frame.sp4  \
+                    $tb_frame.print_ps   $tb_frame.print_dxf    $tb_frame.print_svg     $tb_frame.sp4 \
+                    $tb_frame.print_htm  $tb_frame.print_pdf    $tb_frame.sp5  \
                 -side left -fill y
                        
                 # pack    $tb_frame.exit   $tb_frame.sp6  \
@@ -276,7 +285,8 @@
                 puts ""
                 puts "         ... file:       $::APPL_Config(PROJECT_File)"
                 puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
-                puts "           ... modified: $::APPL_Config(canvasCAD_Update)"
+                puts "           ... modified: $rattleCAD::update::_editList_Index"
+                puts "                     ... $::APPL_Config(canvasCAD_Update)"
                 puts ""
                 puts "        ... type:        $type"
                 puts "        ... exitMode:    $exitMode"
@@ -292,7 +302,7 @@
 
                 set decission [tk_messageBox  -type $type \
                                               -icon warning \
-                                              -title  "exit rattleCAD" \
+                                              -title   "exit rattleCAD" \
                                               -message "Save current Project before EXIT"]
                 puts "        ... save Project: $decission\n"
                 puts "\n"
