@@ -44,7 +44,7 @@ exec wish "$0" "$@"
   #
   ###########################################################################
   
-  package provide osEnv 0.7
+  package provide osEnv 0.8
   
   namespace eval osEnv {
       

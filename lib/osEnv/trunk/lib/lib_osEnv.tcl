@@ -45,7 +45,7 @@ exec wish "$0" "$@"
             #
         puts "\n   ... init_tcl_info" 
           #
-        puts "[info library]"
+        puts "        ... [info library]"
           #
         _dom_add_nameValue $domNode patchlevel  [list [info patchlevel]]
             # Returns the value of the global variable tcl_patchLevel;
