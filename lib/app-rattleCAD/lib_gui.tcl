@@ -71,8 +71,8 @@
                 
                 {separator}
                 
-                {command "Undo"             {}  "Undo"                  {Ctrl z}     -command { rattleCAD::update::exec_editList_prev} }
-                {command "Redo"             {}  "Redo"                  {Ctrl y}     -command { rattleCAD::update::exec_editList_next} }
+                {command "Undo"             {}  "Undo"                  {Ctrl z}     -command { rattleCAD::update::changeList::previous} }
+                {command "Redo"             {}  "Redo"                  {Ctrl y}     -command { rattleCAD::update::changeList::next} }
                 
                 {separator}
                 
@@ -140,8 +140,8 @@
             Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { rattleCAD::file::openProject_xml }  
             Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { rattleCAD::file::saveProject_xml } 
             
-            Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::update::exec_editList_prev }          
-            Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::update::exec_editList_next }          
+            Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::update::changeList::previous }          
+            Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::update::changeList::next }          
             
             Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { rattleCAD::gui::notebook_updateCanvas force}  
             Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { rattleCAD::gui::notebook_cleanCanvas} 
@@ -149,12 +149,13 @@
             Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { rattleCAD::gui::load_Template  Road }  
             Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { rattleCAD::gui::load_Template  MTB  }  
             
-            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { rattleCAD::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) }          
-            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { rattleCAD::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
-            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { rattleCAD::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
             Button    $tb_frame.print_htm -image  $iconArray(print_html)    -helptext "export HTML"             -command { rattleCAD::gui::export_Project      html }          
             Button    $tb_frame.print_pdf -image  $iconArray(print_pdf)     -helptext "export PDF"              -command { rattleCAD::gui::export_Project      pdf }          
 
+            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { rattleCAD::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { rattleCAD::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { rattleCAD::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
+            
             Button    $tb_frame.scale_p  -image  $iconArray(scale_p)        -helptext "scale plus"              -command { rattleCAD::gui::notebook_scaleCanvas  [expr 3.0/2] }  
             Button    $tb_frame.scale_m  -image  $iconArray(scale_m)        -helptext "scale minus"             -command { rattleCAD::gui::notebook_scaleCanvas  [expr 2.0/3] }  
             Button    $tb_frame.resize   -image  $iconArray(resize)         -helptext "resize"                  -command { rattleCAD::gui::notebook_refitCanvas }  
@@ -180,8 +181,8 @@
                     $tb_frame.backward   $tb_frame.forward      $tb_frame.sp1  \
                     $tb_frame.render     $tb_frame.clear        $tb_frame.sp2  \
                     $tb_frame.set_rd     $tb_frame.set_mb       $tb_frame.sp3  \
-                    $tb_frame.print_ps   $tb_frame.print_dxf    $tb_frame.print_svg     $tb_frame.sp4 \
-                    $tb_frame.print_htm  $tb_frame.print_pdf    $tb_frame.sp5  \
+                    $tb_frame.print_htm  $tb_frame.print_pdf    $tb_frame.sp4  \
+                    $tb_frame.print_ps   $tb_frame.print_dxf    $tb_frame.print_svg     $tb_frame.sp5 \
                 -side left -fill y
                        
                 # pack    $tb_frame.exit   $tb_frame.sp6  \
@@ -280,12 +281,15 @@
         #  get current canvasCAD   
         #
     proc exit_rattleCAD {{type {yesnocancel}} {exitMode {}}} {   
+                
+              set changeIndex [rattleCAD::update::changeList::get_changeIndex]
+                
                 puts "\n"
                 puts "  ====== e x i t   r a t t l e C A D =============="
                 puts ""
                 puts "         ... file:       $::APPL_Config(PROJECT_File)"
                 puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
-                puts "           ... modified: $rattleCAD::update::_editList_Index"
+                puts "           ... modified: $changeIndex"
                 puts "                     ... $::APPL_Config(canvasCAD_Update)"
                 puts ""
                 puts "        ... type:        $type"
@@ -293,8 +297,9 @@
 
           
               # puts "  $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update)"
-              
-            if { $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update) } {
+              # if { $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update) } {}
+            
+            if { $changeIndex > 0 } {
                 
                 puts " ......... save File before exit"
                 puts "        project save:   $::APPL_Config(PROJECT_Save)"

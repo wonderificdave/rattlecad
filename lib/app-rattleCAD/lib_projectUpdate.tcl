@@ -47,10 +47,7 @@
         #  store createEdit-widgets position
     variable _drag             ; array set _drag        {}
     variable _updateValue      ; array set _updateValue {}
-    variable _editList         ; array set _editList    {}
-    variable _editList_Index  0;
-      
-     
+
 
   
 
@@ -438,7 +435,7 @@
                           # puts "   -> \$newValue $newValue"
                       
                           # append _editList
-                      append_editList                       $xpath $oldValue $newValue
+                      changeList::append                    $xpath $oldValue $newValue
                           #
                       
                           # set timestamp
@@ -512,7 +509,8 @@
             # puts "   -> $cv_Name"
           catch {set cv_Path [ $cv_Name getNodeAttr Canvas path]}
             # puts "   -> $cv_Path"
-          set items [$cv_Path find withtag __cvEdit__]
+          set items {}
+          catch {set items [$cv_Path find withtag __cvEdit__]}
             # puts "   -> $items"
           
           foreach cvEdit $items {
@@ -524,108 +522,7 @@
     
 
 
-    #-------------------------------------------------------------------------
-        #  append undoList
-    proc append_editList {parameter oldValue newValue} {
-          variable _editList
-          variable _editList_Index         ;# current index in _editList
 
-            # -- clear _editList ---------------------------
-            #
-          puts "\n   --- append_editList -------- $_editList_Index --------------------"
-          incr _editList_Index
-          set i    [array size _editList]; # index of the last entry in _editList
-          while {$i > $_editList_Index} {
-              puts "       <I> $i / $_editList_Index"
-              unset _editList($i)
-              incr i -1
-          }
-          
-            # -- append _editList ---------------------------
-            #
-          puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $_editList_Index $parameter $oldValue $newValue]"
-          set _editList($_editList_Index) [list $parameter $oldValue $newValue]
-          #set _editList_Index             [expr [array size _editList] -1]
-          
-          return $_editList($_editList_Index)
-    }
-
-    #-------------------------------------------------------------------------
-        #  exec_editList_prev 
-    proc exec_editList_prev {} {
-            variable _editList
-            variable _editList_Index
-            puts "\n"
-            puts "   --- exec_editList_prev ----- $_editList_Index --------------------"
-            close_allEdit
-            print_editList
-            if  {$_editList_Index > 0} {
-                foreach {parameter oldValue newValue} $_editList($_editList_Index) break
-                puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_editList_Index $parameter $oldValue]"
-                  # set oldValue
-                bikeGeometry::set_Value $parameter $oldValue
-                  # update canvas
-                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD] 
-                  #
-                incr _editList_Index -1
-                  #
-            } else {
-                puts "          exec_editList_prev - $_editList_Index - exception"
-            }
-            puts "   --- exec_editList_prev ----- $_editList_Index --------------------\n"
-            
-    }
-
-    #-------------------------------------------------------------------------
-        #  exec_editList_next 
-    proc exec_editList_next {} {
-            variable _editList
-            variable _editList_Index
-            puts "\n"
-            puts "   --- exec_editList_next ----- $_editList_Index --------------------"
-            close_allEdit
-            print_editList
-            incr _editList_Index
-            if  {$_editList_Index <= [array size _editList] } {
-                foreach {parameter oldValue newValue} $_editList($_editList_Index) break
-                puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_editList_Index $parameter $newValue]"
-                  # set newValue
-                bikeGeometry::set_Value $parameter $newValue
-                  # update canvas
-                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD] 
-                  #
-                # set _editList_Index [expr $_editList_Index + 1]
-                  #
-            } else {
-                puts "          exec_editList_next - $_editList_Index - exception"
-            }
-            puts  "   --- exec_editList_next ----- $_editList_Index --------------------\n"
-
-    }
-
-    #-------------------------------------------------------------------------
-        #  reset undoList
-    proc reset_editList {} {
-            variable _editList
-            variable _editList_Index         ;# current index in _editList
-            puts "\n   --- reset_editList -----------------------------"
-            array unset         _editList
-            set _editList_Index 0
-    }
-
-    #-------------------------------------------------------------------------
-        #  print undoList 
-    proc print_editList {} {
-            variable _editList
-            variable _editList_Index         ;# current index in _editList
-            puts "\n     --- print_editList ------------------------ $_editList_Index ---"
-            foreach entry [lsort [array names _editList]] {
-                foreach {parameter oldValue newValue} $_editList($entry) break
-                puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $entry $parameter $oldValue $newValue]"
-            }
-            puts "     --- print_editList ---------------------------\n"
-        
-    }
 
     
     #-------------------------------------------------------------------------
@@ -670,4 +567,159 @@
     }    
      
  } 
+ 
+ namespace eval rattleCAD::update::changeList {
+ 
+    variable _editList    ; array set _editList    {}
+    variable _listIndex  0;
+    
+    variable _undoStack  [format "undoStack: %2s / %2s"  $_listIndex [array size _editList]]
+      
+        #  add trace on _listIndex
+    trace add variable _editList     write   trace_editList 
+    trace add variable _listIndex    write   trace_editList 
+    
+    proc trace_editList {varname args} {        
+            # puts "\n   ->    $_listIndex / [array size _editList] "
+            # parray ::_editList
+            # print
+        ::::update_MainFrameStatus
+    }    
+    
+    
+    
+     #-------------------------------------------------------------------------
+        #  append undoList
+    proc append {parameter oldValue newValue} {
+          variable _editList
+          variable _listIndex         ;# current index in _editList
+
+            # -- clear _editList ---------------------------
+            #
+          puts "\n   --- append -------- $_listIndex --------------------"
+          incr _listIndex
+          set i    [array size _editList]; # index of the last entry in _editList
+          while {$i > $_listIndex} {
+              puts "       <I> $i / $_listIndex"
+              unset _editList($i)
+              incr i -1
+          }
+          
+            # -- append _editList ---------------------------
+            #
+          puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $_listIndex $parameter $oldValue $newValue]"
+          set _editList($_listIndex) [list $parameter $oldValue $newValue]
+            # print
+          return $_editList($_listIndex)
+    }
+
+    #-------------------------------------------------------------------------
+        #  previous 
+    proc previous {} {
+            variable _editList
+            variable _listIndex
+            puts "\n"
+            puts "   --- previous ----- $_listIndex --------------------"
+            [namespace parent]::close_allEdit
+              # print
+            if  {$_listIndex > 0} {
+                foreach {parameter oldValue newValue} $_editList($_listIndex) break
+                puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_listIndex $parameter $oldValue]"
+                  # set oldValue
+                bikeGeometry::set_Value $parameter $oldValue
+                  # update canvas
+                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD] 
+                  #
+                incr _listIndex -1
+                  #
+            } else {
+                puts "          previous - $_listIndex - exception"
+            }
+            puts "   --- previous ----- $_listIndex --------------------\n"
+            
+    }
+
+    #-------------------------------------------------------------------------
+        #  next 
+    proc next {} {
+            variable _editList
+            variable _listIndex
+            puts "\n"
+            puts "   --- next ----- $_listIndex --------------------"
+            [namespace parent]::close_allEdit
+              # print
+            incr _listIndex
+            if  {$_listIndex <= [array size _editList] } {
+                foreach {parameter oldValue newValue} $_editList($_listIndex) break
+                puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_listIndex $parameter $newValue]"
+                  # set newValue
+                bikeGeometry::set_Value $parameter $newValue
+                  # update canvas
+                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD] 
+                  #
+                # set _listIndex [expr $_listIndex + 1]
+                  #
+            } else {
+                puts "          next - $_listIndex - exception"
+            }
+            
+            if {$_listIndex > [array size _editList]} {
+                set _listIndex [array size _editList]
+            }
+            
+            puts  "   --- next ----- $_listIndex --------------------\n"
+
+    }
+
+    #-------------------------------------------------------------------------
+        #  reset undoList
+    proc reset {} {
+            variable _editList
+            variable _listIndex         ;# current index in _editList
+            puts "\n   --- reset -----------------------------"
+            #unset    _editList
+            #array   set    _editList  {}
+
+            set i [array size _editList]; # index of the last entry in _editList
+            while {$i > 0} {
+                unset _editList($i)
+                incr i -1
+            }
+            set _listIndex 0
+            [namespace parent]::close_allEdit
+            # print
+    }
+
+    #-------------------------------------------------------------------------
+        #  print undoList 
+    proc print {} {
+            variable _editList
+            variable _listIndex         ;# current index in _editList
+            puts "\n     --- print ------------------------ $_listIndex ---"
+            foreach entry [lsort [array names _editList]] {
+                foreach {parameter oldValue newValue} $_editList($entry) break
+                puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $entry $parameter $oldValue $newValue]"
+            }
+            puts "     --- print ---------------------------\n"
+        
+    }
+        
+    #-------------------------------------------------------------------------
+        #  get_undoStack
+    proc get_undoStack {} {        
+            variable _editList
+            variable _listIndex
+              # print
+            return  [list $_listIndex [array size _editList]]
+    }
+    
+            
+    #-------------------------------------------------------------------------
+        #  get_undoStack
+    proc get_changeIndex {} {        
+            variable _listIndex
+            return  $_listIndex
+    }
+
+ }
 
