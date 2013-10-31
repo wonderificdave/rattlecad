@@ -169,6 +169,12 @@
           set ::APPL_Config(EXPORT_Dir)       [rattleCAD::file::check_user_dir rattleCAD/export]
           set ::APPL_Config(EXPORT_HTML)      [rattleCAD::file::check_user_dir rattleCAD/html]
           set ::APPL_Config(EXPORT_PDF)       [rattleCAD::file::check_user_dir rattleCAD/pdf]
+                     
+                     
+                      # -- MainFrame - Indicator  -----------
+          set ::APPL_Config(MainFrameInd_Project)  {}
+          set ::APPL_Config(MainFrameInd_Status)   {}
+
           
     }
         
@@ -179,15 +185,15 @@
     proc init_rattleCAD {BASE_Dir {startupProject {}}} {
 	
             
-		###########################################################################      
-		#
-		#                 B  -  A  -  S  -  E 
-		#
-		###########################################################################
+        ###########################################################################      
+        #
+        #                 B  -  A  -  S  -  E 
+        #
+        ###########################################################################
 	    
 	    
-    	    # -- Version Info   ----------------------	    
-    	init_APPL_Config $BASE_Dir  
+    	      # -- Version Info   ----------------------	    
+    	  init_APPL_Config $BASE_Dir  
 
           
           
@@ -263,8 +269,8 @@
 
             # -- initialize GUI ----------
         switch $::tcl_platform(platform) {
-                    "macintosh" { set ::APPL_Config(GUI_Font)  {Helvetica 10} }
-                    "windows"   { set ::APPL_Config(GUI_Font)  $::APPL_Config(GUI_Font) }
+                "macintosh" { set ::APPL_Config(GUI_Font)  {Helvetica 10} }
+                "windows"   { set ::APPL_Config(GUI_Font)  $::APPL_Config(GUI_Font) }
         }   
         init_GUI_Settings
 
@@ -377,20 +383,30 @@
         } 
             
             
-             # ---     create Mainframe  -----
-        set    mainframe  [ rattleCAD::gui::create_MainFrame ]
-            pack $mainframe  -fill both  -expand yes  -side top 
-        set    indicator  [$mainframe addindicator -textvariable "::APPL_Config(PROJECT_Name)"  -anchor w]
-            $indicator  configure -relief flat
-        set frame         [$mainframe getframe]
-          
-          
-            # ---     Button-bar frame  --------
+            # ---     create Mainframe  -----
+            #
+        set   ::APPL_Config(MainFrame)  [rattleCAD::gui::create_MainFrame]
+              pack $::APPL_Config(MainFrame)  -fill both  -expand yes  -side top 
+            
+            # ---     create Indicator  -----
+        $::APPL_Config(MainFrame) addindicator -textvariable "::APPL_Config(MainFrameInd_Project)"  -anchor e  -width 30
+            # $::APPL_Config(MainFrame) addindicator -text "undoStack:"                                   -anchor e  -width 12
+        $::APPL_Config(MainFrame) addindicator -textvariable "::APPL_Config(MainFrameInd_Status)"   -anchor e  -width 20
+            [$::APPL_Config(MainFrame) getindicator 0]  configure -relief flat
+            [$::APPL_Config(MainFrame) getindicator 1]  configure -relief flat
+            # [$::APPL_Config(MainFrame) getindicator 2]  configure -relief flat
+
+
+            # ---     get MainFrame  --------
+        set    frame      [$::APPL_Config(MainFrame) getframe]
+
+
+            # ---     Button-bar frame  -----
         set bb_frame [ frame $frame.f1  -relief sunken        -bd 1  ]
             pack  $bb_frame  -padx 0  -pady 3  -expand no   -fill x
         rattleCAD::gui::create_ButtonBar $bb_frame 
-          
-        
+
+
             # ---     notebook frame  -------
         set nb_frame [ frame $frame.f2  -relief sunken        -bd 1  ]
             pack  $nb_frame  -padx 0  -pady 0  -expand yes  -fill both
@@ -421,12 +437,10 @@
             puts "        ... [file normalize $startupProject]\n"
             rattleCAD::file::openProject_xml $startupProject    [file tail $startupProject] 
         }
-        
-          
+
           
             # --------------------------------------------
             #    finalize
-             
         update 
         wm minsize . [winfo width  .]   [winfo height  .]
            
@@ -444,7 +458,8 @@
           
           
             # -- window title ----------------------------
-        set_window_title                 $::APPL_Config(PROJECT_Name)
+        update_windowTitle  
+        update_MainFrameStatus
             
             # -- open config panel -----------------------
         # rattleCAD::config::create . .cfg
@@ -821,7 +836,7 @@
         puts "  create_intro: \$APPL_Config(IMAGE_Dir)  $APPL_Config(IMAGE_Dir)"
 
         
-    proc intro_content {w cv_border} {
+        proc intro_content {w cv_border} {
       
             global APPL_Config
 
@@ -884,18 +899,41 @@
     #-------------------------------------------------------------------------
        #  set Window Title
        #
-    proc set_window_title { {filename {}} } {
+    proc update_windowTitle {{filename {}}} {
       
             # appDebug  p     
         global APPL_Config
       
-        set  prj_name  [file tail $filename]
-
-        set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision) - $prj_name"
-        set  APPL_Config(PROJECT_Name)  "$prj_name"
-        
-            # appDebug  t  "   $filename " 1      
+        if {$filename == {}} {
+            set  filename $APPL_Config(PROJECT_Name)
+        }
+        set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision) - $filename"
         wm title . $APPL_Config(WINDOW_Title)
+    }
+
+    #-------------------------------------------------------------------------
+       #  set Window Title
+       #
+    proc update_MainFrameStatus {{message {}}} {
+      
+            # appDebug  p     
+        global APPL_Config
+      
+        if {$message != {}} {
+            set  projectText  $message
+            set  statusText   {}       
+        } else {
+            foreach {index size} [rattleCAD::update::changeList::get_undoStack] break
+            set  projectText  [format "%s " [file tail $APPL_Config(PROJECT_Name)]]
+            set  statusText   [format "UndoStack: %2s / %2s"  $index $size]
+        }
+          # set  statusText   [file tail $APPL_Config(PROJECT_Name)]
+          # puts "   ---> \$projectText $projectText"
+          # puts "   ---> \$statusText  $statusText"
+        set ::APPL_Config(MainFrameInd_Project)  $projectText
+        set ::APPL_Config(MainFrameInd_Status)   $statusText
+        
+        return
     }
 
 

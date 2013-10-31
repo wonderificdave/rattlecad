@@ -43,11 +43,59 @@
     #-------------------------------------------------------------------------
         #  save File Type: xml
         #
+    proc check_saveCurrentProject {} {
+    
+              set changeIndex [rattleCAD::update::changeList::get_changeIndex]
+                
+                puts "\n"
+                puts "  ====== s a v e   c u r r e n t   P r o j e c t  ="
+                puts ""
+                puts "         ... file:       $::APPL_Config(PROJECT_File)"
+                puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
+                puts "           ... modified: $changeIndex"
+          
+              # puts "  $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update)"
+              # if { $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update) } {}
+            
+            if { $changeIndex > 0 } {
+                set retValue [tk_messageBox -title   "Save Project" -icon question \
+                            -message "... save mofificatios in Project:  $::APPL_Config(PROJECT_File)?" \
+                            -default cancel \
+                            -type    yesnocancel]
+                puts "\n           ... $retValue\n"
+                
+                switch $retValue {
+                    yes     {   saveProject_xml save
+                                return  {continue}
+                            }
+                    no      {   return  {continue}
+                            }
+                    cancel  {   return  {break}
+                            }
+                }
+            } else {
+                return 0
+            }
+    }
+    
+    
+    #-------------------------------------------------------------------------
+        #  save File Type: xml
+        #
     proc newProject_xml {} {
+    
+                
+                # --- check current Project for modification
+            if {[check_saveCurrentProject] == {break}} {
+                return
+            }            
+    
+    
                 # --- select File
             set types {
                     {{Project Files 3.x }       {.xml}  }
                 }
+                
 
                 # set userDir        [check_user_dir rattleCAD]
             set fileName     [tk_getSaveFile -initialdir $::APPL_Config(USER_Dir) -initialfile {new_Project.xml} -filetypes $types]
@@ -83,13 +131,14 @@
                 #
             bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                 #
-            rattleCAD::update::reset_editList
+            rattleCAD::update::changeList::reset
                 #
             set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
                 #
                                 
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-            set_window_title $fileName
+            update_windowTitle          $fileName
+            update_MainFrameStatus
                 #
             rattleCAD::gui::notebook_updateCanvas
                 #
@@ -103,6 +152,12 @@
         #
     proc openProject_xml { {fileName {}} {windowTitle {}} } {
 
+                # --- check current Project for modification
+            if {[check_saveCurrentProject] == {break}} {
+                return
+            }  
+            
+            
             puts "\n\n  ====== o p e n   F I L E ========================\n"
             puts "         ... fileName:        $fileName"
             puts "         ... windowTitle:     $windowTitle"
@@ -131,19 +186,20 @@
 
                     bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                         
-                    set ::APPL_Config(PROJECT_File) $fileName
-                    set ::APPL_Config(PROJECT_Save) [clock milliseconds]
+                    set ::APPL_Config(PROJECT_File)        $fileName
+                    set ::APPL_Config(PROJECT_Name)        $fileName
+                    set ::APPL_Config(PROJECT_Save)        [clock milliseconds]
                     set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
                         #
-                    rattleCAD::update::reset_editList
+                    rattleCAD::update::changeList::reset
                         #
                     rattleCAD::gui::notebook_updateCanvas  force      
 
                         # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
                     if {$windowTitle == {}} {
-                        set_window_title $fileName
+                        update_windowTitle $fileName
                     } else {
-                        set_window_title $windowTitle
+                        update_windowTitle $windowTitle
                     }
 
             }
@@ -154,7 +210,9 @@
                 #
             rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectXML] root
 
-
+                # -- update MAinFrame Indicator
+                #            
+            update_MainFrameStatus
             
                 #
             puts "\n"
@@ -171,6 +229,13 @@
         #  open Template File Type: xml
         #
     proc openTemplate_xml {type} {
+            
+                # --- check current Project for modification
+            if {[check_saveCurrentProject] == {break}} {
+                return
+            }  
+            
+            
             puts "\n"
             puts "  ====== o p e n   T E M P L A T E ================"
             puts "         ... type:    $type"
@@ -186,15 +251,17 @@
                 set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
                 set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
                     #
-                rattleCAD::update::reset_editList
+                rattleCAD::update::changeList::reset
                     #
                     # puts " <D> -> \$::APPL_Config(PROJECT_Name)  $::APPL_Config(PROJECT_Name)"
                     # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
 
                     #
-              rattleCAD::gui::notebook_updateCanvas force
-                  #
-              set_window_title $::APPL_Config(PROJECT_Name)
+                rattleCAD::gui::notebook_updateCanvas force
+                    #
+                update_windowTitle       $::APPL_Config(PROJECT_Name)
+                update_MainFrameStatus
+                
             } else {
                 tk_messageBox -message "... could not load template: $window_title"
             }
@@ -358,7 +425,8 @@
                 #
             set ::APPL_Config(PROJECT_Save) [clock milliseconds]                                            
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
-            set_window_title $windowTitle
+            update_windowTitle           $windowTitle
+            update_MainFrameStatus
                 #
             rattleCAD::gui::notebook_updateCanvas
             
@@ -391,7 +459,7 @@
             # --- set APPL_Config(canvasCAD_Update)
             set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
                 #
-            rattleCAD::update::reset_editList
+            rattleCAD::update::changeList::reset
                 #
             
             rattleCAD::gui::notebook_updateCanvas force
@@ -531,7 +599,7 @@
             set ghostScript [osEnv::get_Executable gs]   
               # puts "    -> \$ghostScript $ghostScript"
             if {$ghostScript == {}} {
-                tk_messageBox -title "PDF Export" -message "Ghostscript Error:\n     ... could not initialize ghostScript instalation" -icon warning
+                tk_messageBox -title "PDF Export" -message "Ghostscript Error:\n     ... could not initialize ghostScript installation" -icon warning
                 return
             }                        
 

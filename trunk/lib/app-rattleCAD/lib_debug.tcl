@@ -65,29 +65,29 @@
     proc run_debug02 {} {
     
             return
-            rattleCAD::update::append_editList Personal(HandleBar_Height)    635.0 640.0
-            rattleCAD::update::append_editList Personal(HandleBar_Distance)  483.0 483.0
-            rattleCAD::update::append_editList Custom(BottomBracket/Depth)    68.0  72.0
-            rattleCAD::update::append_editList Component(Fork/Height)        365.0 370.0
-            rattleCAD::update::append_editList Personal(Saddle_Height)       710.0 730.0
+            rattleCAD::update::changeList::append Personal(HandleBar_Height)    635.0 640.0
+            rattleCAD::update::changeList::append Personal(HandleBar_Distance)  483.0 483.0
+            rattleCAD::update::changeList::append Custom(BottomBracket/Depth)    68.0  72.0
+            rattleCAD::update::changeList::append Component(Fork/Height)        365.0 370.0
+            rattleCAD::update::changeList::append Personal(Saddle_Height)       710.0 730.0
             
-            # rattleCAD::update::print_editList
+            # rattleCAD::update::changeList::print
             
-            rattleCAD::update::exec_editList_prev
-            rattleCAD::update::exec_editList_prev
+            rattleCAD::update::changeList::previous
+            rattleCAD::update::changeList::previous
             
             
-            # rattleCAD::update::print_editList
+            # rattleCAD::update::changeList::print
             
-            rattleCAD::update::append_editList Personal(Saddle_Height)       710.0 720.0
+            rattleCAD::update::changeList::append Personal(Saddle_Height)       710.0 720.0
             
-            # rattleCAD::update::print_editList
+            # rattleCAD::update::changeList::print
             
-            rattleCAD::update::exec_editList_prev
-            rattleCAD::update::exec_editList_next
-            rattleCAD::update::exec_editList_next
+            rattleCAD::update::changeList::previous
+            rattleCAD::update::changeList::next
+            rattleCAD::update::changeList::next
              
-            rattleCAD::update::print_editList
+            rattleCAD::update::changeList::print
             
             
             exit
@@ -99,46 +99,46 @@
         if {$do_debug} {
             puts "   ... \$do_debug $do_debug ... run"
             
-            rattleCAD::update::append_editList Personal(HandleBar_Height)    640.0
-            rattleCAD::update::append_editList Personal(HandleBar_Distance)  483.0
-            rattleCAD::update::append_editList Custom(BottomBracket/Depth)    72.0
-            rattleCAD::update::append_editList Component(Fork/Height)        370.0
-            rattleCAD::update::append_editList Personal(Saddle_Height)       730.0
+            rattleCAD::update::changeList::append Personal(HandleBar_Height)    640.0
+            rattleCAD::update::changeList::append Personal(HandleBar_Distance)  483.0
+            rattleCAD::update::changeList::append Custom(BottomBracket/Depth)    72.0
+            rattleCAD::update::changeList::append Component(Fork/Height)        370.0
+            rattleCAD::update::changeList::append Personal(Saddle_Height)       730.0
             
-            rattleCAD::update::print_editList
-            rattleCAD::update::reset_editList
-            rattleCAD::update::print_editList
+            rattleCAD::update::changeList::print
+            rattleCAD::update::changeList::reset
+            rattleCAD::update::changeList::print
             
-            rattleCAD::update::append_editList Personal(HandleBar_Height)    640.0
-            rattleCAD::update::print_editList
-            rattleCAD::update::append_editList Personal(HandleBar_Distance)  483.0
-            rattleCAD::update::append_editList Custom(BottomBracket/Depth)    72.0
-            rattleCAD::update::append_editList Component(Fork/Height)        370.0   2
-            rattleCAD::update::append_editList Personal(Saddle_Height)       740.0
+            rattleCAD::update::changeList::append Personal(HandleBar_Height)    640.0
+            rattleCAD::update::changeList::print
+            rattleCAD::update::changeList::append Personal(HandleBar_Distance)  483.0
+            rattleCAD::update::changeList::append Custom(BottomBracket/Depth)    72.0
+            rattleCAD::update::changeList::append Component(Fork/Height)        370.0   2
+            rattleCAD::update::changeList::append Personal(Saddle_Height)       740.0
 
-            rattleCAD::update::print_editList
+            rattleCAD::update::changeList::print
             
-            rattleCAD::update::append_editList Personal(Saddle_Height)       730.0
-            rattleCAD::update::append_editList Personal(Saddle_Height)       740.0
-            rattleCAD::update::append_editList Personal(Saddle_Height)       750.0
+            rattleCAD::update::changeList::append Personal(Saddle_Height)       730.0
+            rattleCAD::update::changeList::append Personal(Saddle_Height)       740.0
+            rattleCAD::update::changeList::append Personal(Saddle_Height)       750.0
 
-            rattleCAD::update::print_editList
-            rattleCAD::update::append_editList Personal(HandleBar_Distance)  483.0   3
-            rattleCAD::update::print_editList
-            rattleCAD::update::exec_editList_prev
-            rattleCAD::update::exec_editList_prev
-            rattleCAD::update::exec_editList_prev
-            rattleCAD::update::exec_editList_prev
-            rattleCAD::update::exec_editList_prev
-            rattleCAD::update::exec_editList_next
-            rattleCAD::update::exec_editList_next
-            rattleCAD::update::exec_editList_next
+            rattleCAD::update::changeList::print
+            rattleCAD::update::changeList::append Personal(HandleBar_Distance)  483.0   3
+            rattleCAD::update::changeList::print
+            rattleCAD::update::changeList::previous
+            rattleCAD::update::changeList::previous
+            rattleCAD::update::changeList::previous
+            rattleCAD::update::changeList::previous
+            rattleCAD::update::changeList::previous
+            rattleCAD::update::changeList::next
+            rattleCAD::update::changeList::next
+            rattleCAD::update::changeList::next
 
             
         } else {
             puts "   ... \$do_debug $do_debug ... pass"
         }
-        rattleCAD::update::reset_editList
+        rattleCAD::update::changeList::reset
             
         #exit
     }
