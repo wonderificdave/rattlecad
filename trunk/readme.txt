@@ -1,5 +1,12 @@
 
 
+3.4.01.11  - 2013.12.23
+-------------------------------------------------------------------------------
+    debug:
+        ... allow comments in _rattleCAD.init
+            ... see 3.4.01.05  - 2013.10.21
+
+
 3.4.01.10  - 2013.10.30
 -------------------------------------------------------------------------------
     feature:
@@ -60,7 +67,7 @@
 -------------------------------------------------------------------------------
     debug:
         ... handle undefined mimetypes in windows registry
-		... handle undefined Application in open_by_mimeType_DefaultApp
+		    ... handle undefined Application in open_by_mimeType_DefaultApp
 
 
 3.4.01.03  - 2013.10.20

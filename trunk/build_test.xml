@@ -19,7 +19,7 @@
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
-	<property name = "tcl_8.6"   					value = "D:\Programme\TclTk_8.6\bin\tclsh" />
+	<property name = "tcl_8.6"   					value = "C:\Program Files (x86)\Tcl\8.6\bin\tclsh" />
 	
 	<property name = "vectorMath_home"   	location = "../vectorMath" />
 	<property name = "canvasCAD_home"    	location = "../canvasCAD" />
