@@ -493,10 +493,12 @@
                 #
             foreach child [ [$root_InitDOM selectNodes /root/lib_gui/images] childNodes] {            
                     # puts [ $child asXML ]
-                set name    [ $child getAttribute {name} ]
-                set source    [ $child getAttribute {src} ]
-                    # puts "   $name  $source"
-                set rattleCAD::gui::iconArray($name) [ image create photo -file $APPL_Config(IMAGE_Dir)/$source ]
+                if {[$child nodeType] == {ELEMENT_NODE}} {    
+                    set name      [ $child getAttribute {name} ]
+                    set source    [ $child getAttribute {src} ]
+                        # puts "   $name  $source"
+                    set rattleCAD::gui::iconArray($name) [ image create photo -file $APPL_Config(IMAGE_Dir)/$source ]
+                }
             }
             set ::cfg_panel [image create photo -file $APPL_Config(IMAGE_Dir)/cfg_panel.gif]
 
@@ -778,11 +780,13 @@
               set mimeConfig [$::APPL_Config(user_InitDOM) selectNodes /root/mime]
               if {$mimeConfig != {}} {
                   foreach node   [$mimeConfig childNodes] {
-                      # puts "         [$node asXML]"
-                      set key    [$node getAttribute name]
-                      set value  [[$node firstChild] nodeValue]
-                      puts "          -> $key  $value"
-                      osEnv::register_mimeType $key $value
+                      if {[$node nodeType] == {ELEMENT_NODE}} {    
+                          # puts "         [$node asXML]"
+                          set key    [$node getAttribute name]
+                          set value  [[$node firstChild] nodeValue]
+                          puts "          -> $key  $value"
+                          osEnv::register_mimeType $key $value
+                      }
                   }
               }
               
@@ -792,11 +796,13 @@
               set execConfig [$::APPL_Config(user_InitDOM) selectNodes /root/exec]
               if {$execConfig != {}} {
                   foreach node [$execConfig childNodes] {
-                      # puts "         [$node asXML]"
-                      set key    [$node getAttribute name]
-                      set value  [[$node firstChild] nodeValue]
-                      puts "          -> $key  $value"
-                      osEnv::register_Executable $key $value
+                      if {[$node nodeType] == {ELEMENT_NODE}} { 
+                          # puts "         [$node asXML]"
+                          set key    [$node getAttribute name]
+                          set value  [[$node firstChild] nodeValue]
+                          puts "          -> $key  $value"
+                          osEnv::register_Executable $key $value
+                      }
                   } 
               }
               

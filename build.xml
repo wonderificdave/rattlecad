@@ -15,11 +15,11 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.01.10" />
+	<property name = "rattleCAD_Version" 	value = "3.4.01.11" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
-	<property name = "tcl_8.6"   					value = "D:\Programme\TclTk_8.6\bin\tclsh" />
+	<property name = "tcl_8.6"   					value = "C:\Program Files (x86)\Tcl\8.6\bin\tclsh" />
 	
   <property name = "appUtil_home"       location = "../appUtil" />
 	<property name = "bikeGeometry_home"  location = "../bikeGeometry" />
