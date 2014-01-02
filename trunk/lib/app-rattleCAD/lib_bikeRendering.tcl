@@ -789,7 +789,7 @@
         set Rendering(ForkDropOut)  $project::Rendering(ForkDropOut)
         
                 # tk_messageBox -message "Rendering(ForkDropOut): $Rendering(ForkDropOut)"
-
+        # puts "\n\n  ... Rendering(Fork)         $project::Rendering(Fork) \n\n"
 
             # --- create Steerer ---------------------
         set Steerer(polygon)        [ bikeGeometry::get_Object     Steerer     polygon        $BB_Position  ]
@@ -800,7 +800,7 @@
         set RearWheel(position)     [ bikeGeometry::get_Object        RearWheel    position    $BB_Position]
 
             # --- create Fork Representation ----------------
-        puts "          ... \$Rendering(Fork) $Rendering(Fork)"
+        puts "          ... \$Rendering(Fork)    $Rendering(Fork)"
         switch -glob $Rendering(Fork) {
             SteelLugged {
                         set ForkBlade(polygon)      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
@@ -849,6 +849,9 @@
                         }
             default {}
         }
+        puts "          ... \$ForkBlade(polygon) $ForkBlade(polygon)"
+        puts "          ... \$ForkCrown(file)    $ForkCrown(file)"
+        puts "          ... \$ForkDropout(file)  $ForkDropout(file)"
 
             # --- create Fork Dropout ---------------
         if {$Rendering(ForkDropOut) == {behind}} {
