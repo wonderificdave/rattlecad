@@ -1,5 +1,16 @@
 
 
+3.4.01.12  - 2014.01.02
+-------------------------------------------------------------------------------
+    debug:
+        ... project::import_ProjectSubset
+            ... finaly run bikeGeometry::set_base_Parameters
+            ... but currently still no failure handling 
+                ... if import not completly OK
+        ... templates
+            ... remove FrameTubes/ChainStay/Width
+ 
+
 3.4.01.11  - 2013.12.23
 -------------------------------------------------------------------------------
     debug:

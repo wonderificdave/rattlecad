@@ -556,9 +556,12 @@
                 # -- update stage content if parameters changed
                     # puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Config(canvasCAD_Update)\n"
             puts "\n"
-            puts "    canvasUpdate($varName):  $canvasUpdate($varName)"
-            puts "          vs.  $::APPL_Config(canvasCAD_Update)"
-            puts "          or   \$project::Project(modified) $project::Project(modified)\n"
+            puts "   -------------------------------"
+			puts "    lib_gui::notebook_updateCanvas  "
+            puts "       \$canvasUpdate($varName)"
+			puts "          last:   $canvasUpdate($varName)  -> [clock format [expr $canvasUpdate($varName)/1000] -format {%Y.%m.%d / %H:%M:%S}]"
+            puts "          new:    $::APPL_Config(canvasCAD_Update)  -> [clock format [expr $::APPL_Config(canvasCAD_Update)/1000] -format {%Y.%m.%d / %H:%M:%S}]"
+            puts "       \$project::Project(modified) -> $project::Project(modified)\n"
             if { $mode == {} } {
                     if { $canvasUpdate($varName) < $::APPL_Config(canvasCAD_Update) } {
                         puts "\n       ... notebook_updateCanvas ... update $varName\n"

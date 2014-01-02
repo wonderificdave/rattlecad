@@ -211,47 +211,7 @@
                     rattleCAD::gui::notebook_createButton    $cv_Name         {changeFormatScale}
                         #
                 }
-            rattleCAD::gui::cv_Custom40 {
-                        #
-                        # -- frame - drafting
-                        #
-                    set stageScale  [$cv_Name getNodeAttr Stage scale]
-                    set stageFormat [$cv_Name getNodeAttr Stage format]
-                        #
-                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
-                        #
-                    $cv_Name        clean_StageContent
-                        #
-                    update_cv_Parameter               $cv_Name $xy
-                        #
-                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
-                        # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
-                        #
-                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
-                    rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
-                        #
-                    rattleCAD::rendering::createFork         $cv_Name $xy
-                    rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
-                        #
-                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
-                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Pos
-                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr
-                    rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage
-                    rattleCAD::rendering::createDecoration   $cv_Name $xy    LegClearance_Rep
-                        #
-                    createCenterline                  $cv_Name $xy
-                        #
-                    createDimension                   $cv_Name $xy    cline_brake
-                    createDimension                   $cv_Name $xy    frameDrafting_bg
-                        #
-                    $cv_Name        centerContent     { 0  25}        {__Decoration__  __CenterLine__  __Dimension__  __Frame__}
-                        #
-                    update_renderCanvas               $cv_Name
-                        #
-                    rattleCAD::gui::notebook_createButton    $cv_Name        changeFormatScale
-                        #
-                }
-            rattleCAD::gui::cv_Custom30 {
+                rattleCAD::gui::cv_Custom30 {
                         #
                         # -- dimension summary
                         #
@@ -311,6 +271,46 @@
                     createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                     rattleCAD::gui::notebook_createButton    $cv_Name        changeFormatScale   format
+                        #
+                }
+			rattleCAD::gui::cv_Custom40 {
+                        #
+                        # -- frame - drafting
+                        #
+                    set stageScale  [$cv_Name getNodeAttr Stage scale]
+                    set stageFormat [$cv_Name getNodeAttr Stage format]
+                        #
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
+                        #
+                    $cv_Name        clean_StageContent
+                        #
+                    update_cv_Parameter               $cv_Name $xy
+                        #
+                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
+                        # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
+                        #
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
+                        #
+                    rattleCAD::rendering::createFork         $cv_Name $xy
+                    rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
+                        #
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Pos
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear_ctr
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    LegClearance_Rep
+                        #
+                    createCenterline                  $cv_Name $xy
+                        #
+                    createDimension                   $cv_Name $xy    cline_brake
+                    createDimension                   $cv_Name $xy    frameDrafting_bg
+                        #
+                    $cv_Name        centerContent     { 0  25}        {__Decoration__  __CenterLine__  __Dimension__  __Frame__}
+                        #
+                    update_renderCanvas               $cv_Name
+                        #
+                    rattleCAD::gui::notebook_createButton    $cv_Name        changeFormatScale
                         #
                 }
             rattleCAD::gui::cv_Custom50 {

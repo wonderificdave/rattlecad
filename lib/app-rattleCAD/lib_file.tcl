@@ -453,8 +453,8 @@
             } else {
                 return
             }
-            set root [rattleCAD::file::get_XMLContent $fileName]
-            project::import_ProjectSubset $root
+            set content [rattleCAD::file::get_XMLContent $fileName]
+            project::import_ProjectSubset $content
             
             # --- set APPL_Config(canvasCAD_Update)
             set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
@@ -463,8 +463,8 @@
                 #
             
             rattleCAD::gui::notebook_updateCanvas force
-
                 #
+                
             rattleCAD::gui::open_configPanel  refresh
             
                 # -- fill tree
