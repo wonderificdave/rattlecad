@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.41
+ package provide bikeGeometry 0.42
 
  namespace eval bikeGeometry {
 
@@ -215,7 +215,8 @@
                 # -- default purpose
             switch -exact $index {
 
-                polygon    {    set returnValue    {}
+                polygon    {    
+				            set returnValue    {}
                             switch -exact $object {
                                 Stem             -
                                 HeadSet/Top     -

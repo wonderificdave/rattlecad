@@ -524,13 +524,15 @@
                     
               # project::remove_tracing
             
-            set setValue_Command    {}
-            set setValue_Command_OK {}
+
                 
             foreach branch  [$nodeRoot selectNodes {descendant::text()}] {
                 set nodeValue   [$branch nodeValue]
                 set nodePath    [$branch toXPath]
                 set _array      [lindex [split $nodePath /] 2]
+				
+				set setValue_Command    {}
+                set setValue_Command_OK {}
                 
                 switch -exact $_array {
                     Personal    -
@@ -557,15 +559,11 @@
                             }
                     default {}
                 }
-
+				
             }
-            
-              # project::add_tracing
-            
-            if {$setValue_Command_OK != {}} {
-                eval $setValue_Command
-            }
-            # eval [format "setValue %s(%s) value $nodeValue" $_array $_nameValue]
+			
+			# --- update Project completely
+			bikeGeometry::set_base_Parameters
 
     }
  
