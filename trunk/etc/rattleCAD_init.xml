@@ -127,10 +127,11 @@
             <rim inch="26&#8221;"   metric="559" standard="MTB"  />
             <rim inch="26&#8221;"   metric="571" standard="Tria" />
             <separator/>
+            <rim inch="36&#8221;" metric="787" standard="ETRTO" />
             <rim inch="28&#8221;" metric="622" standard="ETRTO" />
             <rim inch="26&#8221;" metric="590" standard="ETRTO" />
             <rim inch="26&#8221;" metric="571" standard="ETRTO" />
-            <rim inch="26&#8221;" metric="559" standard="ETRTO"  />
+            <rim inch="26&#8221;" metric="559" standard="ETRTO" />
             <rim inch="24&#8221;" metric="507" standard="ETRTO" />
             <rim inch="20&#8221;" metric="451" standard="ETRTO" />
             <rim inch="20&#8221;" metric="406" standard="ETRTO" />
@@ -144,7 +145,7 @@
             <rim inch="27&#8221;" metric="630" standard="english-27x?" />
             <rim inch="26&#8221;" metric="584" standard="french-650B" />
             <rim inch="24&#8221;" metric="540" standard="french-640A" /> 
-            <rim inch="22&#8221;" metric="490" standard="french-55ßA" />
+            <rim inch="22&#8221;" metric="490" standard="french-550A" />
             <rim inch="22&#8221;" metric="440" standard="french-500A" />
             <rim inch="20&#8221;" metric="390" standard="french-450A" />
             <rim inch="16&#8221;" metric="340" standard="french-400A" />
