@@ -44,7 +44,7 @@
   
   package require   appUtil       0.15
   package require   vectormath    0.5
-  package require   bikeGeometry  0.42
+  package require   bikeGeometry  0.43
   package require   canvasCAD     0.49
   package require   extSummary    0.4
   package require   osEnv         0.8
@@ -418,7 +418,8 @@
         
             # --------------------------------------------
             #    create project Object
-        bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
+        rattleCAD::control::newProject $::APPL_Config(root_ProjectDOM)
+		    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
           
           
             # --------------------------------------------
@@ -929,7 +930,7 @@
             set  projectText  $message
             set  statusText   {}       
         } else {
-            foreach {index size} [rattleCAD::update::changeList::get_undoStack] break
+            foreach {index size} [rattleCAD::control::changeList::get_undoStack] break
             set  projectText  [format "%s " [file tail $APPL_Config(PROJECT_Name)]]
             set  statusText   [format "UndoStack: %2s / %2s"  $index $size]
         }

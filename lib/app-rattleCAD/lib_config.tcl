@@ -300,7 +300,7 @@
                                 label $fileFrame.lb -text "  Select ForkType:"
                                   # puts "\n  \$fileFrame $fileFrame  \$xPath $xPath\n"
                                   # puts "     SELECT_ForkType"
-                                set listBoxContent [ rattleCAD::update::get_listBoxContent SELECT_ForkType Rendering(Fork))]
+                                set listBoxContent [ rattleCAD::view::get_listBoxContent SELECT_ForkType Rendering(Fork))]
                                 foreach entry $listBoxContent {
                                     puts "         ... $entry"
                                 }
@@ -507,9 +507,12 @@
             catch {[namespace current]::::updateCanvas $targetCanvas}
             if {$mode == {select}} {
                 set key [lindex [split $targetVar ::] 2]
-                bikeGeometry::set_Value $key $compFile force
-                set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
-                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
+                rattleCAD::control::setValue $key $compFile force
+				# bikeGeometry::set_Value $key $compFile force
+                
+				
+				#set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+                #rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
             }
                 # puts "    ListboxEvent ... done"
             
@@ -679,7 +682,8 @@
                     }
                 }
             }
-            set projectDOM  [bikeGeometry::get_projectXML]
+            # set projectDOM  [bikeGeometry::get_projectDOM]
+			set projectDOM  $rattleCAD::control::currentDOM
             recurseInsert   $projectDOM  {/}
 
             return
@@ -858,7 +862,7 @@
             if {$_array eq {Result}} {
                 eval set $targetVar $oldValue
                 bikeGeometry::set_resultParameter $_array $_name $newValue
-                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
+                rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
                 return
             }
 
@@ -869,7 +873,7 @@
                 # bikeGeometry::set_Value $key $newValue
                 # eval set $targetVar $newValue
 
-            rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
+            rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
 
             return
      }
@@ -954,7 +958,7 @@
     proc tubing_checkAngles {} {
             set rattleCAD::gui::checkAngles {on}
             rattleCAD::gui::select_canvasCAD   cv_Custom10
-            rattleCAD::cv_custom::update           [rattleCAD::gui::current_canvasCAD]
+            rattleCAD::cv_custom::updateView           [rattleCAD::gui::current_canvasCAD]
     }
 
 
@@ -981,10 +985,12 @@
                                      puts "   ... $targetVar"
                                 set key [lindex [split $targetVar :] 2]
                                      puts "   ... $key"
-                                bikeGeometry::set_Value $key $value
+                                rattleCAD::control::setValue $key $value
+                                # bikeGeometry::set_Value $key $value
                                     # eval set $targetVar $value
                                     # project::remove_tracing
-                                rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
+                                
+								# rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
                             }
                         }
             }
@@ -1045,7 +1051,7 @@
         set varName     [ rattleCAD::gui::notebook_getVarName $cv ]
         if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
 
-        bikeGeometry::updateConfig       $varName   rattleCAD::cv_custom::update    _update_
+        bikeGeometry::updateConfig       $varName   rattleCAD::cv_custom::updateView    _update_
     }
 
 
@@ -1056,8 +1062,11 @@
     proc update_Value {key newValue {mode {update}}} {
             # puts ""
             # puts "         $::APPL_Config(canvasCAD_Update)"
-        set updatedValue [bikeGeometry::set_Value $key $newValue $mode]
-        set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+        set updatedValue [rattleCAD::control::setValue $key $newValue $mode]
+         # set updatedValue [bikeGeometry::set_Value $key $newValue $mode]
+        
+		
+		# set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
             # puts "         $::APPL_Config(canvasCAD_Update)"
             # puts "       -----------------------------------"
             # puts "         \$key:           $key"

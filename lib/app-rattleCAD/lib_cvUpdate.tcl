@@ -32,20 +32,20 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #    namespace:  rattleCAD::rattleCAD::cv_custom::update
+ #    namespace:  rattleCAD::rattleCAD::cv_custom::updateView
  # ---------------------------------------------------------------------------
  #
  #
 
 
 
-    proc rattleCAD::cv_custom::update {cv_Name {keepPosition {reset}}} {
+    proc rattleCAD::cv_custom::updateView {cv_Name {keepPosition {reset}}} {
 
         variable     bottomCanvasBorder
 
             puts ""
             puts "   -------------------------------"
-            puts "    rattleCAD::cv_custom::update"
+            puts "    rattleCAD::cv_custom::updateView"
             puts "       cv_Name:         $cv_Name"
 
 

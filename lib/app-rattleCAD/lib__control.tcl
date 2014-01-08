@@ -40,4 +40,266 @@
 
 namespace eval rattleCAD::control {
 
+	variable  currentDICT         {} ;# a dictionary
+    variable  currentDOM          {} ;# a XML-Object
+    
+    variable  canvasCAD_Update    {0}
+    variable  window_Size         {0}
+    variable  window_Update       {0}
+    
+	
+	proc update {} {
+		variable currentDICT
+		variable currentDOM
+
+		if {1 ==2} {
+    		set r [catch {info level [expr [info level] - 1]} e]
+    		if {$r} {
+    			puts "Called directly by the interpreter (e.g.: .tcl on the partyline)."
+    		} else {
+    			puts "Called by ${e}."
+    		}
+		}
+	
+		set      currentDICT  [bikeGeometry::get_projectDICT]
+		set      currentDOM   [bikeGeometry::get_projectDOM]
+		
+	}
+
+
+	proc setValue {xpath value {mode {update}} {history {append}}} {
+	
+		set oldValue [[namespace current]::getValue $xpath]
+
+		if {$value == $oldValue} {
+			return
+		}
+
+		puts "   -------------------------------"
+		puts "    rattleCAD::control::setValue"
+		puts "       xpath:  $oldValue / $value"
+		project::add_tracing
+		
+		if {$mode == {update}} {
+		    set newValue  [bikeGeometry::set_Value $xpath $value]
+		} else {
+		    set newValue  [bikeGeometry::set_Value $xpath $value $mode]
+		}
+		
+		  # set value to model
+		set value [rattleCAD::control::getValue $xpath]
+		  #
+		  
+		  # append _editList
+		if {$history == {append}} {
+		    changeList::append        $xpath $oldValue $newValue
+		}
+		  #
+
+		  # update control-model
+		[namespace current]::update
+		  #
+		
+          # update timestamp
+		set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+          #
+                    
+          # update view
+        rattleCAD::cv_custom::updateView  [rattleCAD::gui::current_canvasCAD]
+          #
+		  
+		return $value
+		
+	}
+
+
+	proc getValue {xpath} {
+		variable currentDICT
+		set value     [appUtil::get_dictValue $currentDICT $xpath]
+		puts "        rattleCAD::control::getValue $xpath $value"
+		return $value
+	}
+
+
+	proc newProject {projectDOM} {
+		puts "\n"
+		puts "   -------------------------------"
+		puts "    rattleCAD::control::newProject"
+        bikeGeometry::set_newProject $projectDOM	
+		[namespace current]::update
+    }
+	
+	proc importSubset {nodeRoot} {
+			# puts "[$nodeRoot asXML]"
+		puts "\n"
+		puts "   -------------------------------"
+		puts "    rattleCAD::control::importSubset"
+        project::import_ProjectSubset $nodeRoot	
+		[namespace current]::update
+    }
+
 }
+
+
+namespace eval rattleCAD::control::changeList {
+ 
+    variable _editList    ; array set _editList    {}
+    variable _listIndex  0;
+    
+    variable _undoStack  [format "undoStack: %2s / %2s"  $_listIndex [array size _editList]]
+      
+        #  add trace on _listIndex
+    trace add variable _editList     write   trace_editList 
+    trace add variable _listIndex    write   trace_editList 
+    
+    proc trace_editList {varname args} {        
+            # puts "\n   ->    $_listIndex / [array size _editList] "
+            # parray ::_editList
+            # print
+        ::::update_MainFrameStatus
+    }    
+    
+    
+    
+     #-------------------------------------------------------------------------
+        #  append undoList
+    proc append {parameter oldValue newValue} {
+        variable _editList
+        variable _listIndex         ;# current index in _editList
+
+          # -- clear _editList ---------------------------
+          #
+        puts "\n   --- append -------- $_listIndex --------------------"
+        incr _listIndex
+        set i    [array size _editList]; # index of the last entry in _editList
+        while {$i > $_listIndex} {
+            puts "       <I> $i / $_listIndex"
+            unset _editList($i)
+            incr i -1
+        }
+        
+          # -- append _editList ---------------------------
+          #
+        puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $_listIndex $parameter $oldValue $newValue]"
+        set _editList($_listIndex) [list $parameter $oldValue $newValue]
+           
+		# print
+		
+        return $_editList($_listIndex)
+    }
+
+    #-------------------------------------------------------------------------
+        #  previous 
+    proc previous {} {
+        variable _editList
+        variable _listIndex
+        puts "\n"
+        puts "   --- previous ----- $_listIndex --------------------"
+        rattleCAD::view::close_allEdit
+		
+		# print
+        
+		if  {$_listIndex > 0} {
+            foreach {parameter oldValue newValue} $_editList($_listIndex) break
+            puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_listIndex $parameter $oldValue]"
+              # set oldValue
+            rattleCAD::control::setValue $parameter $oldValue {update} {skip}
+              #
+            incr _listIndex -1
+              #
+        } else {
+            puts "          previous - $_listIndex - exception"
+        }
+        puts "   --- previous ----- $_listIndex --------------------\n"
+            
+    }
+
+    #-------------------------------------------------------------------------
+        #  next 
+    proc next {} {
+		variable _editList
+		variable _listIndex
+		puts "\n"
+		puts "   --- next ----- $_listIndex --------------------"
+		rattleCAD::view::close_allEdit
+		
+		# print
+		
+		incr _listIndex
+		
+		if  {$_listIndex <= [array size _editList] } {
+			foreach {parameter oldValue newValue} $_editList($_listIndex) break
+			puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_listIndex $parameter $newValue]"
+			  # set newValue
+			rattleCAD::control::setValue $parameter $newValue {update} {skip}
+			  #
+		} else {
+			puts "          next - $_listIndex - exception"
+		}
+		
+		if {$_listIndex > [array size _editList]} {
+			set _listIndex [array size _editList]
+		}
+		
+		puts  "   --- next ----- $_listIndex --------------------\n"
+
+    }
+
+    #-------------------------------------------------------------------------
+        #  reset undoList
+    proc reset {} {
+		variable _editList
+		variable _listIndex         ;# current index in _editList
+		puts "\n   --- reset -----------------------------"
+		#unset    _editList
+		#array   set    _editList  {}
+
+		set i [array size _editList]; # index of the last entry in _editList
+		while {$i > 0} {
+			unset _editList($i)
+			incr i -1
+		}
+		set _listIndex 0
+		rattleCAD::view::close_allEdit
+		
+		# print
+    }
+
+    #-------------------------------------------------------------------------
+        #  print undoList 
+    proc print {} {
+		variable _editList
+		variable _listIndex         ;# current index in _editList
+		
+		# return
+		
+		puts "\n     --- print ------------------------ $_listIndex ---"
+		foreach entry [lsort [array names _editList]] {
+			foreach {parameter oldValue newValue} $_editList($entry) break
+			puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $entry $parameter $oldValue $newValue]"
+		}
+		puts "     --- print ---------------------------\n"
+        
+    }
+        
+    #-------------------------------------------------------------------------
+        #  get_undoStack
+    proc get_undoStack {} {        
+		variable _editList
+		variable _listIndex
+		  # print
+		return  [list $_listIndex [array size _editList]]
+    }
+    
+            
+    #-------------------------------------------------------------------------
+        #  get_undoStack
+    proc get_changeIndex {} {        
+		variable _listIndex
+		return  $_listIndex
+    }
+
+}
+
+
+

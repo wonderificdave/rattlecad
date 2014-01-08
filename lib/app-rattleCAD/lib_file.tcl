@@ -45,7 +45,7 @@
         #
     proc check_saveCurrentProject {} {
     
-              set changeIndex [rattleCAD::update::changeList::get_changeIndex]
+              set changeIndex [rattleCAD::control::changeList::get_changeIndex]
                 
                 puts "\n"
                 puts "  ====== s a v e   c u r r e n t   P r o j e c t  ="
@@ -129,9 +129,10 @@
                 # -- read new File
             set ::APPL_Config(root_ProjectDOM)     [rattleCAD::file::get_XMLContent $fileName show]
                 #
-            bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
+            rattleCAD::control::newProject $::APPL_Config(root_ProjectDOM)
+			    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                 #
-            rattleCAD::update::changeList::reset
+            rattleCAD::control::changeList::reset
                 #
             set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
                 #
@@ -184,14 +185,15 @@
                     puts "         ... file:       $fileName"
                     puts "         ... version:    $rattleCAD_Version"
 
-                    bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
+                    rattleCAD::control::newProject $::APPL_Config(root_ProjectDOM)
+					    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                         
                     set ::APPL_Config(PROJECT_File)        $fileName
                     set ::APPL_Config(PROJECT_Name)        $fileName
                     set ::APPL_Config(PROJECT_Save)        [clock milliseconds]
                     set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
                         #
-                    rattleCAD::update::changeList::reset
+                    rattleCAD::control::changeList::reset
                         #
                     rattleCAD::gui::notebook_updateCanvas  force      
 
@@ -208,7 +210,8 @@
             
                 # -- fill tree
                 #
-            rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectXML] root
+            rattleCAD::cfg_report::fillTree $rattleCAD::control::currentDOM root
+                # rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectDOM] root
 
                 # -- update MAinFrame Indicator
                 #            
@@ -244,14 +247,15 @@
             if { [file readable $template_file ] } {
                 set ::APPL_Config(root_ProjectDOM)     [rattleCAD::file::get_XMLContent $template_file show]
                     #
-                bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
+                rattleCAD::control::newProject $::APPL_Config(root_ProjectDOM)
+				    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                     #
                 set ::APPL_Config(PROJECT_Name)     "Template $type"
                 set ::APPL_Config(PROJECT_File)     "Template $type"  
                 set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
                 set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
                     #
-                rattleCAD::update::changeList::reset
+                rattleCAD::control::changeList::reset
                     #
                     # puts " <D> -> \$::APPL_Config(PROJECT_Name)  $::APPL_Config(PROJECT_Name)"
                     # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
@@ -271,7 +275,8 @@
             
                 # -- fill tree
                 #
-            rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectXML] root
+            rattleCAD::cfg_report::fillTree $rattleCAD::control::currentDOM root
+			    # rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectDOM] root
     }
 
 
@@ -391,7 +396,8 @@
             set project::Project(rattleCADVersion)     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
  
                 # -- read from domConfig
-            set domConfig [project::runTime_2_dom]               
+            set domConfig $rattleCAD::control::currentDOM              
+            # set domConfig [project::runTime_2_dom]               
 
                 # -- open File for writing
             if {[file exist $fileName]} {
@@ -420,7 +426,8 @@
             }
 
                 #
-            set ::APPL_Config(root_ProjectDOM) [bikeGeometry::get_projectXML]
+            set ::APPL_Config(root_ProjectDOM) $rattleCAD::control::currentDOM
+                # set ::APPL_Config(root_ProjectDOM) [bikeGeometry::get_projectDOM]
             
                 #
             set ::APPL_Config(PROJECT_Save) [clock milliseconds]                                            
@@ -454,12 +461,13 @@
                 return
             }
             set content [rattleCAD::file::get_XMLContent $fileName]
-            project::import_ProjectSubset $content
-            
+            rattleCAD::control::importSubset $content
+               # project::import_ProjectSubset $content
+			
             # --- set APPL_Config(canvasCAD_Update)
             set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
                 #
-            rattleCAD::update::changeList::reset
+            rattleCAD::control::changeList::reset
                 #
             
             rattleCAD::gui::notebook_updateCanvas force
@@ -469,7 +477,8 @@
             
                 # -- fill tree
                 #
-            rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectXML] root
+            rattleCAD::cfg_report::fillTree $rattleCAD::control::currentDOM root
+                # rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectDOM] root
 
     }
 

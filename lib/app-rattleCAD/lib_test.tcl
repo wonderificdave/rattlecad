@@ -230,7 +230,7 @@
         
         # -- update display -----------
         rattleCAD::gui::notebook_refitCanvas
-        rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
+        rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
         
         
         # -- morphing -----------------
@@ -301,11 +301,12 @@
                    set xPath       [lindex $myValues($arrayIndex) 0]
                    set paramValue  [lindex $myValues($arrayIndex) $listIndex]
                    puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
-                       # rattleCAD::update::set_Value $xPath $paramValue
-                   bikeGeometry::set_Value $xPath $paramValue
+                       # rattleCAD::view::set_Value $xPath $paramValue
+                   rattleCAD::control::setValue $xPath $paramValue
+                   # bikeGeometry::set_Value $xPath $paramValue
                    incr arrayIndex 
                }
-               rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD] keep
+               rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD] keep
                set  arrayIndex 0
                incr listIndex
            }

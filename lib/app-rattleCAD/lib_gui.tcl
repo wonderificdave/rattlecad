@@ -53,6 +53,7 @@
     variable    stageScale
 
     variable    external_canvasCAD  ;   array    set external_canvasCAD {}
+	
      
 
 
@@ -71,8 +72,8 @@
                 
                 {separator}
                 
-                {command "Undo"             {}  "Undo"                  {Ctrl z}     -command { rattleCAD::update::changeList::previous} }
-                {command "Redo"             {}  "Redo"                  {Ctrl y}     -command { rattleCAD::update::changeList::next} }
+                {command "Undo"             {}  "Undo"                  {Ctrl z}     -command { rattleCAD::control::changeList::previous} }
+                {command "Redo"             {}  "Redo"                  {Ctrl y}     -command { rattleCAD::control::changeList::next} }
                 
                 {separator}
                 
@@ -136,12 +137,12 @@
         #
     proc create_ButtonBar {tb_frame } {    
             variable iconArray
-        
+		
             Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { rattleCAD::file::openProject_xml }  
             Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { rattleCAD::file::saveProject_xml } 
             
-            Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::update::changeList::previous }          
-            Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::update::changeList::next }          
+            Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::control::changeList::previous }          
+            Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::control::changeList::next }          
             
             Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { rattleCAD::gui::notebook_updateCanvas force}  
             Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { rattleCAD::gui::notebook_cleanCanvas} 
@@ -171,7 +172,7 @@
             label   $tb_frame.sp5      -text   "      "
             label   $tb_frame.sp6      -text   " "
             label   $tb_frame.sp7      -text   " "
-              
+					
               
                 # pack    $tb_frame.open     $tb_frame.save     $tb_frame.clear    $tb_frame.print    $tb_frame.sp0  \
                 #        $tb_frame.set_rd   $tb_frame.set_mb   $tb_frame.sp2  \
@@ -282,7 +283,7 @@
         #
     proc exit_rattleCAD {{type {yesnocancel}} {exitMode {}}} {   
                 
-              set changeIndex [rattleCAD::update::changeList::get_changeIndex]
+              set changeIndex [rattleCAD::control::changeList::get_changeIndex]
                 
                 puts "\n"
                 puts "  ====== e x i t   r a t t l e C A D =============="
@@ -407,7 +408,7 @@
                 cv_Custom60 -
                 cv_Custom70 {
                         $noteBook_top select $noteBook_top.$varName
-                        rattleCAD::cv_custom::update     rattleCAD::gui::$varName 
+                        rattleCAD::cv_custom::updateView     rattleCAD::gui::$varName 
                         # rattleCAD::gui::notebook_refitCanvas
                     }
                 cv_Component {
@@ -1023,7 +1024,7 @@
             } else {
                 set rattleCAD::gui::checkAngles {off}         
             }
-            rattleCAD::cv_custom::update [rattleCAD::gui::current_canvasCAD]
+            rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
             return
     }
 
@@ -1187,8 +1188,8 @@
                                                       list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) }
                               }
             } 
-            rattleCAD::update::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}                
-            # rattleCAD::update::createEdit  5 80  $varName  rattleCAD::cv_custom::update  $listDefinition  {Rendering Settings}                
+            rattleCAD::view::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}                
+            # rattleCAD::view::createEdit  5 80  $varName  rattleCAD::cv_custom::updateView  $listDefinition  {Rendering Settings}                
     }
 
 
@@ -1327,7 +1328,7 @@
             variable canvasUpdate
             variable noteBook_top
 
-                # rattleCAD::update::createEdit
+                # rattleCAD::view::createEdit
                 #    creates window $cv.f_edit
                 #    catch <MouseWheel> for $cv.f_edit
             set currentTab [$noteBook_top select]

@@ -141,7 +141,8 @@
             #
         switch -exact $var {
             currentProject {
-                    set var [bikeGeometry::get_projectXML]
+                    # set var [bikeGeometry::get_projectDOM]
+					set var $rattleCAD::control::currentDOM
                 }
             runTime {   
                     set var [appUtil::namespaceReport ::]
