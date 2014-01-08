@@ -385,9 +385,7 @@
             
             # ----------------------------------
                 # finally update projectDOM
-            return [project::runTime_2_dom]
-            # $projectDOM
-     
+			project::runTime_2_dom
             
     }
 

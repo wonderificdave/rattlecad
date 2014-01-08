@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.42
+ package provide bikeGeometry 0.43
 
  namespace eval bikeGeometry {
 
@@ -167,18 +167,18 @@
                     }
                         # project::pdict $valueDict
             }
-            return [project::runTime_2_dom]
+            project::runTime_2_dom
     }
     #-------------------------------------------------------------------------
-        #  get current projectDOM as XML
-    proc get_projectXML {} {
-            return [project::runTime_2_dom]
+        #  get current projectDOM as DOM Object
+    proc get_projectDOM {} {
+            return $project::projectDOM
     }
     
     #-------------------------------------------------------------------------
-        #  get current projectDOM as XML
+        #  get current projectDOM as Dictionary
     proc get_projectDICT {} {
-            return [project::runTime_2_dict]
+            return $project::projectDICT
     }
 
     
@@ -343,12 +343,12 @@
                
              variable         _updateValue
          
-             #puts ""
-             #puts "   -------------------------------"
-             #puts "    setValue"
-             #puts "       xpath:           $xpath"
-             #puts "       value:           $value"
-             #puts "       mode:            $mode"
+             puts ""
+             puts "   -------------------------------"
+             puts "    set_Value"
+             puts "       xpath:           $xpath"
+             puts "       value:           $value"
+             puts "       mode:            $mode"
          
              foreach {_array _name path} [project::unifyKey $xpath] break
                  # puts "     ... $_array  $_name"
@@ -381,8 +381,8 @@
                      default {}
                  }
              }
-         
-             # --- all the exceptions done ---
+             
+			 # --- all the exceptions done ---
                  # on int list values like defined
                  # puts "<D> $xpath"
              switch $xpath {
@@ -409,8 +409,8 @@
                  default { }
              }
          
-         
-         # --- exceptions without any format-checks
+             
+             # --- exceptions without any format-checks
              # on int list values like defined
              # puts "<D> $xpath"
         
@@ -423,7 +423,7 @@
                  set _updateValue($xpath) $newValue
              }
          
-         
+             
              # --- update or return on errorID
              set checkValue {mathValue}
              if {[file dirname $xpath] == {Rendering}} {
@@ -442,7 +442,8 @@
              }
          
              puts "               ... checkValue: $checkValue "
-         
+             
+			 
              # --- update or return on errorID
              if {$checkValue == {mathValue} } {
                  if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
@@ -452,7 +453,8 @@
                      set newValue [format "%.3f" $newValue]
                  }
              }
-         
+             
+			 
              # ---------------------------
                  #  just return Parameter if required 
                  #       ... by mode: format
@@ -462,13 +464,13 @@
              }
              
     
-         
              # --------------------------------------
                  #  at least update Geometry
                  #   ... if not left earlier
                  #
              project::setValue [format "%s(%s)" $_array $_name] value $newValue
-             bikeGeometry::set_base_Parameters  
+             bikeGeometry::set_base_Parameters			 
+			 
                  # puts "" 
                  # puts "    setValue:  $argv\n" 
                  # puts "                [format "%s(%s)" $_array $_name] vs $xpath "

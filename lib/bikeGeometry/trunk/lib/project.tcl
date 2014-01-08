@@ -248,19 +248,22 @@
                             }
                     }
             }
-            return $projectDOM
+            project::runTime_2_dict
+			return $projectDOM
     }
     #-------------------------------------------------------------------------
     proc runTime_2_dict {} {
             
             variable projectDICT 
+            variable projectDOM 
             
-            set domNode [runTime_2_dom]
-                
-            #puts "\n\n"
-            #puts "     -------------------------------"
-            #puts "      projectGeometry::runTime_2_dict"
-            #puts "        ... domNode:  [$domNode nodeName]" 
+            set domNode $projectDOM
+                # set domNode [runTime_2_dom]
+			    
+            puts "\n\n"
+            puts "     -------------------------------"
+            puts "      project::runTime_2_dict"
+            puts "        ... domNode:  [$domNode nodeName]" 
 
             foreach branch [[$domNode selectNodes /[$domNode nodeName]] childNodes] {
                     # puts " 1st level:  [$branch toXPath]"
