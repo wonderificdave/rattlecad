@@ -270,6 +270,141 @@
     }
 
 
+     #-------------------------------------------------------------------------
+	     #  return BottomBracket coords
+    proc get_BottomBracket_Position {cv_Name bottomCanvasBorder {keepPosition {reset}} {option {bicycle}} {stageScale {}}} {
+	    
+	    variable  Position
+	    
+	    array set Stage          {}
+	    array set FrontWheel     {}
+	    array set RearWheel      {}
+	    array set BottomBracket  {}
+	    
+        set FrontWheel(Position)      [project::getValue Result(Position/FrontWheel)         position]
+        set FrontWheel(RimDiameter)   [project::getValue Component(Wheel/Front/RimDiameter)  value]
+        set FrontWheel(TyreHeight)    [project::getValue Component(Wheel/Front/TyreHeight)   value]
+        set FrontWheel(Radius)        [expr 0.5 * $FrontWheel(RimDiameter) + $FrontWheel(TyreHeight)] 
+                    
+        set RearWheel(Position)       [project::getValue Result(Position/RearWheel)          position]
+        set RearWheel(RimDiameter)    [project::getValue Component(Wheel/Rear/RimDiameter)   value]
+        set RearWheel(TyreHeight)     [project::getValue Component(Wheel/Front/TyreHeight)   value]
+        set RearWheel(Radius)         [expr 0.5 * $RearWheel(RimDiameter) + $RearWheel(TyreHeight)] 
+        set RearWheel(Distance_X)     [project::getValue Result(Length/RearWheel/horizontal) value]
+        
+        set BottomBracketDepth        [project::getValue Custom(BottomBracket/Depth)         value]
+        set BottomBracketHeight       [expr $RearWheel(Radius) - $BottomBracketDepth]
+        set FrameSize          [split [project::getValue Result(Position/SummarySize)        position] ,]
+        set SummaryLength             [lindex $FrameSize 0]
+        
+        
+        if {$keepPosition != {reset}} {
+                # puts "       <I> ... "
+                # puts "       <I> ...    $bottomCanvasBorder"
+                # puts "       <I> ... last value:$Position($cv_Name)"
+            set Stage(scale_curr)   [ eval $cv_Name getNodeAttr Stage  scale ]
+            set lastPos_x              [lindex $Position($cv_Name) 0]
+            set lastPos_y              [lindex $Position($cv_Name) 1]
+            set lastPosition  [list $lastPos_x $lastPos_y ]
+            
+            set lastHeight             [lindex $Position($cv_Name) 2]
+                # puts "       <I> .......... lastHeight: $lastHeight"
+                set newHeight              [expr $RearWheel(Radius) - $BottomBracketDepth ]
+                # puts "       <I> ........... newHeight:  $newHeight"
+            set diffHeight             [expr $lastHeight - $newHeight] 
+                # puts "       <I> .......... diffHeight: $diffHeight"
+                     
+            set newPosition [list $lastPos_x [expr $lastPos_y - $diffHeight] ]
+                # puts "       <I> ........ newPosition:  $newPosition"
+            return $newPosition
+        }	    
+
+	      
+          # puts "     ... \$FrontWheel(Position)     $FrontWheel(Position)"
+	      # puts "     ... \$FrontWheel(RimDiameter)  $FrontWheel(RimDiameter)"
+	      # puts "     ... \$FrontWheel(TyreHeight)   $FrontWheel(TyreHeight)"
+	      # puts "     ... \$FrontWheel(Radius)       $FrontWheel(Radius)"
+	      # puts ""
+	      # puts "     ... \$RearWheel(Position)      $RearWheel(Position)"
+	      # puts "     ... \$RearWheel(RimDiameter)   $RearWheel(RimDiameter)"
+	      # puts "     ... \$RearWheel(TyreHeight)    $RearWheel(TyreHeight)"
+	      # puts "     ... \$RearWheel(Radius)        $RearWheel(Radius)"
+	      # puts "     ... \$RearWheel(Distance_X)    $RearWheel(Distance_X)"
+	      # puts ""
+	      # puts "     ... \$BottomBracketDepth       $BottomBracketDepth"
+	      # puts "     ... \$FrameSize                $FrameSize"
+
+	    set SummaryLength        [ lindex $FrameSize 0 ]
+	    if {$option == {bicycle}} {
+            set SummaryLength    [ expr $SummaryLength + 2 * $RearWheel(Radius) ]
+    	}
+
+        #
+        # --- debug
+        # puts "----------------------------------------"
+        # puts "   get_BottomBracket_Position:"
+        # puts "        \$cv_Name               $cv_Name "
+        # puts "        \$bottomCanvasBorder    $bottomCanvasBorder "
+        # puts "        \$option                $option"
+        # puts "        \$stageScale            $stageScale"
+
+
+        #
+        # --- get canvasCAD-Stage information
+	    set Stage(width)        [ eval $cv_Name getNodeAttr Stage  width  ]
+	    set Stage(scale_curr)   [ eval $cv_Name getNodeAttr Stage  scale ]
+	    if {$stageScale != {}} {
+		    set Stage(scale)        $stageScale
+	    } else {
+		    set Stage(scale)        [ expr 0.75 * $Stage(width) / $SummaryLength ]
+	    }
+	    set Stage(scale_fmt)    [ format "%.4f" $Stage(scale) ]
+            # puts ""
+            # puts "        \$SummaryLength         $SummaryLength"
+            # puts "        \$Stage(scale_fmt)      $Stage(scale_fmt)"
+
+
+        #
+        # --- reset canvasCAD - scale to fit the content
+	    $cv_Name    setNodeAttr Stage   scale   $Stage(scale_fmt)
+
+        #
+        # ---  get unscaled width of Stage
+	    set Stage(unscaled)     [ expr ($Stage(width))/$Stage(scale_fmt) ]
+            # puts "        \$Stage(unscaled)       $Stage(unscaled)"
+
+        #
+        # ---  get border outside content to Stage
+	    set border              [ expr  0.5 *( $Stage(unscaled) - $SummaryLength ) ]
+            # puts "        \$border                $border"
+
+        #
+        # ---  get left/right/bottom border outside content to Stage
+	    set cvBorder            [ expr $bottomCanvasBorder/$Stage(scale_fmt) ]
+            # puts "        \$cvBorder              $cvBorder"
+
+        #
+        # ---  get baseLine Coordinates
+	    if {$option == {bicycle}} {
+            set BtmBracket_x        [ expr $border + $RearWheel(Radius) + $RearWheel(Distance_X) ]
+            set BtmBracket_y        [ expr $cvBorder + $BottomBracketHeight ]
+                # puts "\n -> get_BottomBracket_Position:  $cvBorder + $RearWheel(Radius) - $project::Custom(BottomBracket/Depth) "
+                # puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n"
+	    } else {
+            # puts "        \$option                $option"
+            set BtmBracket_x        [ expr $border + $RearWheel(Distance_X) ]
+            set BtmBracket_y        $cvBorder
+                # set BtmBracket_y      [ expr $bottomCanvasBorder + 50 ]
+                # puts "\n -> get_BottomBracket_Position:  $cvBorder "
+                # puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n"
+	    }
+
+            # puts "       $BtmBracket_x $BtmBracket_y"
+        set Position($cv_Name) [list $BtmBracket_x $BtmBracket_y $BottomBracketHeight]
+	    return [lrange $Position($cv_Name) 0 1]
+    }
+
+
     proc createDimension {cv_Name BB_Position type {active {on}}} {
 
             variable    stageScale
@@ -692,33 +827,33 @@
                                     }
 
 
-                                    $cv_Name bind $_dim_HB_XPosition    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Personal(HandleBar_Distance) ]
-                                    $cv_Name bind $_dim_HB_YPosition    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Personal(HandleBar_Height) ]
-                                    $cv_Name bind $_dim_SD_XPosition    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Personal(Saddle_Distance) ]
-                                    $cv_Name bind $_dim_SD_YPosition    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Personal(Saddle_Height) ]
-                                    $cv_Name bind $_dim_SN_HandleBar    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Personal/SaddleNose_HB) ]
+                                    $cv_Name bind $_dim_HB_XPosition    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Personal(HandleBar_Distance) ]
+                                    $cv_Name bind $_dim_HB_YPosition    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Personal(HandleBar_Height) ]
+                                    $cv_Name bind $_dim_SD_XPosition    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Personal(Saddle_Distance) ]
+                                    $cv_Name bind $_dim_SD_YPosition    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Personal(Saddle_Height) ]
+                                    $cv_Name bind $_dim_SN_HandleBar    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Personal/SaddleNose_HB) ]
                                     
-                                    $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(Saddle/Height) ]
-                                    $cv_Name bind $_dim_SP_SetBack      <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(SeatPost/Setback) ]
-                                    $cv_Name bind $_dim_SP_PivotOffset  <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(SeatPost/PivotOffset) ]
-                                    $cv_Name bind $_dim_HT_Length       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
-                                    $cv_Name bind $_dim_LC_Position_x   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(TopTube/PivotPosition) ]
-                                    $cv_Name bind $_dim_LC_Position_y   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Personal(InnerLeg_Length) ]
-                                    $cv_Name bind $_dim_SN_Position_x   <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {Result(Length/Saddle/Offset_BB_Nose) Component(Saddle/LengthNose) Rendering(Saddle/Offset_X)} {Saddle Parameter}]                                 
-                                    $cv_Name bind $_dim_BB_Depth        <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(BottomBracket/Depth) ]
-                                    $cv_Name bind $_dim_CS_Length       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
-                                    $cv_Name bind $_dim_HT_Angle        <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(HeadTube/Angle) ]
-                                    $cv_Name bind $_dim_Stem_Length     <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(Stem/Length) ]
-                                    $cv_Name bind $_dim_Stem_Angle      <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(Stem/Angle) ]
-                                    $cv_Name bind $_dim_Fork_Rake       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(Fork/Rake) ]
-                                    $cv_Name bind $_dim_Fork_Height     <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(Fork/Height) ]
-                                    $cv_Name bind $_dim_RW_Radius       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Rear/RimDiameter@SELECT_Rim) Component(Wheel/Rear/TyreHeight)} {Rear Wheel Parameter} ]
-                                    $cv_Name bind $_dim_FW_Radius       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Front/RimDiameter@SELECT_Rim) Component(Wheel/Front/TyreHeight)} {Front Wheel Parameter} ]
-                                    $cv_Name bind $_dim_CR_Length       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
+                                    $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Saddle/Height) ]
+                                    $cv_Name bind $_dim_SP_SetBack      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(SeatPost/Setback) ]
+                                    $cv_Name bind $_dim_SP_PivotOffset  <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(SeatPost/PivotOffset) ]
+                                    $cv_Name bind $_dim_HT_Length       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {FrameTubes(HeadTube/Length) Component(HeadSet/Height/Bottom)} {Head Tube Parameter} ]
+                                    $cv_Name bind $_dim_LC_Position_x   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Custom(TopTube/PivotPosition) ]
+                                    $cv_Name bind $_dim_LC_Position_y   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Personal(InnerLeg_Length) ]
+                                    $cv_Name bind $_dim_SN_Position_x   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {Result(Length/Saddle/Offset_BB_Nose) Component(Saddle/LengthNose) Rendering(Saddle/Offset_X)} {Saddle Parameter}]                                 
+                                    $cv_Name bind $_dim_BB_Depth        <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Custom(BottomBracket/Depth) ]
+                                    $cv_Name bind $_dim_CS_Length       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
+                                    $cv_Name bind $_dim_HT_Angle        <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Custom(HeadTube/Angle) ]
+                                    $cv_Name bind $_dim_Stem_Length     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Stem/Length) ]
+                                    $cv_Name bind $_dim_Stem_Angle      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Stem/Angle) ]
+                                    $cv_Name bind $_dim_Fork_Rake       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Fork/Rake) ]
+                                    $cv_Name bind $_dim_Fork_Height     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Fork/Height) ]
+                                    $cv_Name bind $_dim_RW_Radius       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Rear/RimDiameter@SELECT_Rim) Component(Wheel/Rear/TyreHeight)} {Rear Wheel Parameter} ]
+                                    $cv_Name bind $_dim_FW_Radius       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Front/RimDiameter@SELECT_Rim) Component(Wheel/Front/TyreHeight)} {Front Wheel Parameter} ]
+                                    $cv_Name bind $_dim_CR_Length       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
 
-                                    $cv_Name bind $_dim_ST_Angle        <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Angle/SeatTube/Direction) ]
-                                    $cv_Name bind $_dim_ST_Length       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_ST) ]
-                                    $cv_Name bind $_dim_ST_Offset       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(SeatTube/OffsetBB) ]
+                                    $cv_Name bind $_dim_ST_Angle        <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Angle/SeatTube/Direction) ]
+                                    $cv_Name bind $_dim_ST_Length       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_ST) ]
+                                    $cv_Name bind $_dim_ST_Offset       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Custom(SeatTube/OffsetBB) ]
 
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Height
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_ST_Length
@@ -731,16 +866,16 @@
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HT_Stack_Y
                                     rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_CS_LengthX
 
-                                    $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_HB) ]
-                                    $cv_Name bind $_dim_SD_ST_Length    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Saddle/SeatTube_BB) ]
-                                    $cv_Name bind $_dim_FW_Distance     <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
-                                    $cv_Name bind $_dim_FW_DistanceX    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/horizontal) ]
-                                    $cv_Name bind $_dim_BB_Height       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/BottomBracket/Height) ]
-                                    $cv_Name bind $_dim_TT_Virtual      <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/TopTube/VirtualLength) ]
-                                    $cv_Name bind $_dim_ST_Virtual      <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/SeatTube/VirtualLength) ]
-                                    $cv_Name bind $_dim_HT_Reach_X      <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/ReachLength) ]
-                                    $cv_Name bind $_dim_HT_Stack_Y      <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/StackHeight) ]
-                                    $cv_Name bind $_dim_CS_LengthX      <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/RearWheel/horizontal) ]
+                                    $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_HB) ]
+                                    $cv_Name bind $_dim_SD_ST_Length    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Saddle/SeatTube_BB) ]
+                                    $cv_Name bind $_dim_FW_Distance     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
+                                    $cv_Name bind $_dim_FW_DistanceX    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/horizontal) ]
+                                    $cv_Name bind $_dim_BB_Height       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/BottomBracket/Height) ]
+                                    $cv_Name bind $_dim_TT_Virtual      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/TopTube/VirtualLength) ]
+                                    $cv_Name bind $_dim_ST_Virtual      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/SeatTube/VirtualLength) ]
+                                    $cv_Name bind $_dim_HT_Reach_X      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/ReachLength) ]
+                                    $cv_Name bind $_dim_HT_Stack_Y      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/HeadTube/StackHeight) ]
+                                    $cv_Name bind $_dim_CS_LengthX      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/RearWheel/horizontal) ]
 
                                         #
                                         # ... proc fill_resultValues ...
@@ -1487,19 +1622,19 @@
                                 # Front Wheel Parameter:
                                 #   list://Component(Wheel/Front/RimDiameter@SELECT_Rim)
                                 #          Component(Wheel/Front/TyreHeight)
-                            $cv_Name bind $_dim_BB_Height       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/BottomBracket/Height) ]
-                            $cv_Name bind $_dim_RW_Radius       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Rear/RimDiameter@SELECT_Rim)  Result(Length/RearWheel/Radius)  } {Rear Wheel Parameter} ]
-                            $cv_Name bind $_dim_FW_Radius       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Front/RimDiameter@SELECT_Rim) Result(Length/FrontWheel/Radius) } {Front Wheel Parameter} ]
-                            $cv_Name bind $_dim_Rear_Length     <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
-                            $cv_Name bind $_dim_Front_Length    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
+                            $cv_Name bind $_dim_BB_Height       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/BottomBracket/Height) ]
+                            $cv_Name bind $_dim_RW_Radius       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Rear/RimDiameter@SELECT_Rim)  Result(Length/RearWheel/Radius)  } {Rear Wheel Parameter} ]
+                            $cv_Name bind $_dim_FW_Radius       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {list://Component(Wheel/Front/RimDiameter@SELECT_Rim) Result(Length/FrontWheel/Radius) } {Front Wheel Parameter} ]
+                            $cv_Name bind $_dim_Rear_Length     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
+                            $cv_Name bind $_dim_Front_Length    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/FrontWheel/diagonal) ]
                             
-                            $cv_Name bind $_dim_SD_HB           <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/SaddleNose_HB)]
-                            $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Result(Length/Reference/Heigth_SN_HB)]
+                            $cv_Name bind $_dim_SD_HB           <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Reference/SaddleNose_HB)]
+                            $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Reference/Heigth_SN_HB)]
                             
-                            $cv_Name bind $_dim_SD_Distance     <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(SaddleNose_Distance) ]
-                            $cv_Name bind $_dim_SD_HB_Length    <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(HandleBar_Distance) ]
-                            $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(SaddleNose_Height) ]
-                            $cv_Name bind $_dim_HB_Height       <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  Reference(HandleBar_Height) ]
+                            $cv_Name bind $_dim_SD_Distance     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Reference(SaddleNose_Distance) ]
+                            $cv_Name bind $_dim_SD_HB_Length    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Reference(HandleBar_Distance) ]
+                            $cv_Name bind $_dim_SD_Height       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Reference(SaddleNose_Height) ]
+                            $cv_Name bind $_dim_HB_Height       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Reference(HandleBar_Height) ]
                             
                             
                             #Result(Length/Control/HandleBar_FW)                            
@@ -1663,7 +1798,7 @@
                                                                                     aligned    [expr  (-110 + 0.5 * $HeadTube(Diameter)) * $stageScale]   0 \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                     {FrameTubes(HeadTube/Length)    \
                                                                                     }    {HeadTube Length}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1676,7 +1811,7 @@
                                                                                     aligned    [expr 70 * $stageScale] [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                     {Custom(TopTube/OffsetHT)    \
                                                                                     }    {HeadTube TopTube Offset}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1689,7 +1824,7 @@
                                                                                     aligned    [expr -70 * $stageScale] [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {Custom(DownTube/OffsetHT) \
                                                                                         }    {HeadTube DownTube Offset}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1702,7 +1837,7 @@
                                                                                     aligned    [expr 50 * $stageScale] [expr -50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatTube/Extension) \
                                                                                         }    {SeatTube Extension}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1720,7 +1855,7 @@
                                                                                     aligned    [expr 70 * $stageScale]   [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatStay/OffsetTT) \
                                                                                         }    {SeatStay Offset TopTube}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1741,7 +1876,7 @@
                                                                                     {perpendicular}    $dim_distance $dim_offset \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(DownTube/OffsetBB) \
                                                                                         }    {DownTube Offset BottomBracket}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1762,7 +1897,7 @@
                                                                                     {perpendicular}    $dim_distance $dim_offset \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatTube/OffsetBB) \
                                                                                         }    {SeatTube Offset BottomBracket}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1784,7 +1919,7 @@
                                                                                     darkred ]
                             }
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(TopTube/Angle) \
                                                                                         }    {TopTube Angle}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1795,7 +1930,7 @@
                                                                                     150   0 \
                                                                                     darkblue ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Result(Angle/HeadTube/TopTube) \
                                                                                         }    {HeadTube TopTube Angle}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1806,7 +1941,7 @@
                                                                                     perpendicular [expr  (-110 + 0.5 * $HeadSet(Diameter)) * $stageScale]    [expr  -80 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(Fork/Height) \
                                                                                         }    {Fork Height}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1817,7 +1952,7 @@
                                                                                     perpendicular    [expr  (-150 + 0.5 * $HeadTube(Diameter)) * $stageScale]   [expr -50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(HeadSet/Height/Top) \
                                                                                         }    {HeadSet Top Height}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1828,7 +1963,7 @@
                                                                                     perpendicular    [expr  (150 - 0.5 * $HeadSet(Diameter)) * $stageScale]   [expr 50 * $stageScale] \
                                                                                     darkred ]
                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(HeadSet/Height/Bottom) \
                                                                                         }    {HeadSet Bottom Height}]
                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1849,11 +1984,11 @@
                                                                                                     aligned            [expr    60 * $stageScale]    [expr -50 * $stageScale] \
                                                                                                     darkred ]    ;# Component(Brake/Rear/LeverLength)
                                             if {$updateCommand != {}} { $cv_Name    bind    $dimension_01    <Double-ButtonPress-1>  \
-                                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Rear/Offset) \
                                                                                                         }    {Rear Brake Offset}]
                                                                         $cv_Name    bind    $dimension_02    <Double-ButtonPress-1>  \
-                                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Rear/LeverLength) \
                                                                                                         }    {Rear Brake LeverLength}]
                                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension_01
@@ -1884,11 +2019,11 @@
 
 
                                             if {$updateCommand != {}} { $cv_Name    bind    $dimension_01    <Double-ButtonPress-1>  \
-                                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Front/Offset) \
                                                                                                         }    {Front Brake Offset}]
                                                                         $cv_Name    bind    $dimension_02    <Double-ButtonPress-1>  \
-                                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Front/LeverLength) \
                                                                                                         }    {Front Brake LeverLength}]
                                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension_01
@@ -1914,7 +2049,7 @@
                                                                                                     aligned        [expr  70 * $stageScale]    [expr  -15 * $stageScale] \
                                                                                                     darkblue ]
                                             if {$updateCommand != {}} { $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/SeatTube/OffsetBB) \
                                                                                                         }    {BottleCage SeatTube Offset}]
                                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1939,7 +2074,7 @@
                                                                                                     aligned        [expr -1.0 * (90 + $addDist) * $stageScale]    [expr  15 * $stageScale] \
                                                                                                     darkblue ]
                                             if {$updateCommand != {}} {    $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/DownTube/OffsetBB) \
                                                                                                         }    {BottleCage DownTube Offset}]
                                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1957,7 +2092,7 @@
                                                                                                     aligned        [expr -60 * $stageScale]    [expr  15 * $stageScale] \
                                                                                                     darkblue ]
                                             if {$updateCommand != {}} {    $cv_Name    bind    $dimension    <Double-ButtonPress-1>  \
-                                                                                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/DownTube_Lower/OffsetBB) \
                                                                                                         }    {BottleCage DownTube Lower Offset}]
                                                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -1981,12 +2116,12 @@
                                                                                     gray50 ]
                             if {$updateCommand != {}} { 
                                                 $cv_Name    bind    $dimension_01    <Double-ButtonPress-1>  \
-                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                 {   Lugs(RearDropOut/Derailleur/x) \
                                                                                     Lugs(RearDropOut/Derailleur/y) \
                                                                                 }  {RearDropOut Derailleur}]
                                                  $cv_Name    bind    $dimension_02    <Double-ButtonPress-1>  \
-                                                                    [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                                    [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                 {   Lugs(RearDropOut/Derailleur/x) \
                                                                                     Lugs(RearDropOut/Derailleur/y) \
                                                                                 }  {RearDropOut Derailleur}]
@@ -2033,7 +2168,7 @@
                                                                                     darkblue ]
                             if {$updateCommand != {}} {
                                         $cv_Name bind                    $dimension  \
-                                                <Double-ButtonPress-1>  [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                                                <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                     {    Custom(SeatStay/OffsetTT)        \
                                                                                     }    {SeatStay OffsetTopTube}]
                                         rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
@@ -2201,32 +2336,32 @@
 
 
         $cv_Name bind   $represent_DO       <Double-ButtonPress-1> \
-                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                         {   Lugs(RearDropOut/Angle/value) \
                                             Lugs(RearDropOut/Angle/plus_minus) }                {Lug Specification:  RearDropout}]
         $cv_Name bind   $represent_BB_01    <Double-ButtonPress-1> \
-                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                         {   Lugs(BottomBracket/DownTube/Angle/value) \
                                             Lugs(BottomBracket/DownTube/Angle/plus_minus)  }    {Lug Specification:  Seat-/DownTube}]
         $cv_Name bind   $represent_BB_02    <Double-ButtonPress-1> \
-                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                         {   Lugs(BottomBracket/ChainStay/Angle/value) \
                                             Lugs(BottomBracket/ChainStay/Angle/plus_minus) }    {Lug Specification:  SeatTube/ChainStay}]
         $cv_Name bind   $represent_SL_01    <Double-ButtonPress-1> \
-                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                         {   Lugs(SeatTube/TopTube/Angle/value) \
                                             Lugs(SeatTube/TopTube/Angle/plus_minus) }           {Lug Specification:  Seat-/TopTube}]
         $cv_Name bind   $represent_SL_02    <Double-ButtonPress-1> \
-                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                         {   Lugs(SeatTube/SeatStay/Angle/value) \
                                             Lugs(SeatTube/SeatStay/Angle/plus_minus)
                                             Lugs(SeatTube/SeatStay/MiterDiameter)}             {Lug Specification:  SeatTube/SeatStay}]
         $cv_Name bind   $represent_HL_TT    <Double-ButtonPress-1> \
-                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                         {   Lugs(HeadTube/TopTube/Angle/value) \
                                             Lugs(HeadTube/TopTube/Angle/plus_minus) }            {Lug Specification:  Top-/HeadTube}]
         $cv_Name bind   $represent_HL_DT    <Double-ButtonPress-1> \
-                            [list rattleCAD::update::createEdit  %x %y  $cv_Name  \
+                            [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                         {   Lugs(HeadTube/DownTube/Angle/value) \
                                             Lugs(HeadTube/DownTube/Angle/plus_minus) }            {Lug Specification:  Head-/DownTube}]
 

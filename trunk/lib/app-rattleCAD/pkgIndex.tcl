@@ -9,7 +9,6 @@
 # full path name of this file's directory.
 
 package ifneeded   rattleCAD  3.4 "\ 
-        [list source  [file join $dir lib__model.tcl]]; \
         [list source  [file join $dir lib__control.tcl]]; \
         [list source  [file join $dir lib__view.tcl]]; \
         [list source  [file join $dir lib_file.tcl]]; \
@@ -19,7 +18,6 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir lib_compLibrary.tcl]]; \
         [list source  [file join $dir lib_bikeRendering.tcl]]; \
         [list source  [file join $dir lib_version_info.tcl]]; \
-        [list source  [file join $dir lib_projectUpdate.tcl]]; \
         [list source  [file join $dir lib_cvCustom.tcl]]; \
         [list source  [file join $dir lib_cvRearMockup.tcl]]; \
         [list source  [file join $dir lib_cvFrameJig.tcl]]; \
@@ -32,4 +30,6 @@ package ifneeded   rattleCAD  3.4 "\
 
  # .. unused since 3.1.00
  # [list source  [file join $dir lib_control.tcl]]; 
- # [list source  [file join $dir lib_frame_ref_geometry.tcl]]; \        
+ # [list source  [file join $dir lib_frame_ref_geometry.tcl]]; \ 
+ # [list source  [file join $dir lib_projectUpdate.tcl]]; \
+         
