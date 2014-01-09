@@ -48,7 +48,8 @@ namespace eval rattleCAD::view {
     variable _drag          ; array set _drag        {}
     variable _updateValue   ; array set _updateValue {}
 
-	variable canvasUpdate   ; array set canvasUpdate   {}  
+	variable canvasUpdate   ; array set canvasUpdate {}  
+    variable canvasRefit    ; array set canvasRefit  {}  
     variable noteBook_top
 	
 
@@ -58,17 +59,24 @@ namespace eval rattleCAD::view {
 			
 			variable noteBook_top
             variable canvasUpdate
+            variable canvasRefit
             
 			set currentTab         [$rattleCAD::gui::noteBook_top select]
 			set varName            [rattleCAD::gui::notebook_getVarName $currentTab]
 			set varName            [lindex [split $varName {::}] end]
 		
             set updateDone         {no}
+			set refitDone          {no}
 			
                 # -- register each canvas
 			if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
                 set canvasUpdate($varName) [ expr $rattleCAD::control::model_Update -1 ]
 				set lastUpdate             $canvasUpdate($varName)
+            }
+           
+			if { [catch { set lastRefit $canvasRefit($varName) } msg] } {
+                set canvasRefit($varName)  [ expr $rattleCAD::control::window_Update -1 ]
+				set lastRefit              $canvasRefit($varName)
             }
            
             set timeStart     [clock milliseconds]
@@ -93,18 +101,18 @@ namespace eval rattleCAD::view {
 				}
             } else {
 					puts "\n       ... rattleCAD::view:updateView ... update $varName ... force\n"
-					fill_canvasCAD $varName
+					rattleCAD::gui::fill_canvasCAD $varName
 					set updateDone  {done}
             }
             
 
                 # -- refit stage if window size changed
-            if { $lastUpdate < $rattleCAD::control::window_Update } {
+            if { $lastRefit < $rattleCAD::control::window_Update } {
 					puts "\n       ... rattleCAD::view:updateView ... refitStage ........ $varName\n"
 					update
 					# catch {$varName refitStage}
 					rattleCAD::gui::notebook_refitCanvas
-					set updateDone  {done}       
+					set refitDone  {done}       
             }
             
                         
@@ -117,8 +125,14 @@ namespace eval rattleCAD::view {
             puts   "           ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
             
             if {$updateDone == {done}} {
-                set rattleCAD::gui::canvasUpdate($varName) [ clock milliseconds ]
+                set canvasUpdate($varName) [ clock milliseconds ]
             }
+			if {$refitDone == {done}} {
+                set canvasRefit($varName)  [ clock milliseconds ]
+            }
+			
+			puts "   -> \$canvasUpdate($varName) $canvasUpdate($varName)"
+			puts "   -> \$canvasRefit($varName)  $canvasRefit($varName)"
                         
     }
 

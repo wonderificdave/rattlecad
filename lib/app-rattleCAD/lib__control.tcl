@@ -51,6 +51,7 @@ namespace eval rattleCAD::control {
 	proc updateModel {} {
 		variable currentDICT
 		variable currentDOM
+		variable model_Update
 
 		if {1 ==2} {
     		set r [catch {info level [expr [info level] - 1]} e]
