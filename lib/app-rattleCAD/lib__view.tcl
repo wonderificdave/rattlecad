@@ -45,11 +45,87 @@ namespace eval rattleCAD::view {
     
     #-------------------------------------------------------------------------
         #  store createEdit-widgets position
-    variable _drag             ; array set _drag        {}
-    variable _updateValue      ; array set _updateValue {}
+    variable _drag          ; array set _drag        {}
+    variable _updateValue   ; array set _updateValue {}
+
+	variable canvasUpdate   ; array set canvasUpdate   {}  
+    variable noteBook_top
+	
 
 
-  
+    proc updateView {{mode {}}} {
+            # rattleCAD::gui::notebook_updateCanvas {{mode {}}} {}
+			
+			variable noteBook_top
+            variable canvasUpdate
+            
+			set currentTab         [$rattleCAD::gui::noteBook_top select]
+			set varName            [rattleCAD::gui::notebook_getVarName $currentTab]
+			set varName            [lindex [split $varName {::}] end]
+		
+            set updateDone         {no}
+			
+                # -- register each canvas
+			if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
+                set canvasUpdate($varName) [ expr $rattleCAD::control::model_Update -1 ]
+				set lastUpdate             $canvasUpdate($varName)
+            }
+           
+            set timeStart     [clock milliseconds]
+       
+            
+                # -- update stage content if parameters changed
+            puts "\n"
+            puts "   -------------------------------"
+			puts "    rattleCAD::view:updateView  "
+            puts "       \$canvasUpdate($varName)"
+			puts "          last:   $canvasUpdate($varName)  -> [clock format [expr $canvasUpdate($varName)/1000] -format {%Y.%m.%d / %H:%M:%S}]"
+            puts "          new:    $rattleCAD::control::model_Update  -> [clock format [expr $rattleCAD::control::model_Update/1000] -format {%Y.%m.%d / %H:%M:%S}]"
+            puts "       \$project::Project(modified) -> $project::Project(modified)\n"
+            
+			if { $mode == {} } {
+				if { $lastUpdate < $rattleCAD::control::model_Update } {
+					puts "\n       ... rattleCAD::view:updateView ... update $varName\n"
+					rattleCAD::gui::fill_canvasCAD $varName
+					set updateDone  {done}
+				} else {
+					puts "\n       ... rattleCAD::view:updateView ... update $varName ... not required\n"
+				}
+            } else {
+					puts "\n       ... rattleCAD::view:updateView ... update $varName ... force\n"
+					fill_canvasCAD $varName
+					set updateDone  {done}
+            }
+            
+
+                # -- refit stage if window size changed
+            if { $lastUpdate < $rattleCAD::control::window_Update } {
+					puts "\n       ... rattleCAD::view:updateView ... refitStage ........ $varName\n"
+					update
+					# catch {$varName refitStage}
+					rattleCAD::gui::notebook_refitCanvas
+					set updateDone  {done}       
+            }
+            
+                        
+            set timeEnd     [clock milliseconds]
+            set timeDiff    [expr $timeEnd - $timeStart]
+            
+            
+            puts "\n       ... time to update:"
+            puts   "           ... [format "%9.3f" $timeDiff] milliseconds"
+            puts   "           ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
+            
+            if {$updateDone == {done}} {
+                set rattleCAD::gui::canvasUpdate($varName) [ clock milliseconds ]
+            }
+                        
+    }
+
+	
+
+
+ 
 
     #-------------------------------------------------------------------------
         #  create ProjectEdit Widget
@@ -82,7 +158,8 @@ namespace eval rattleCAD::view {
 		puts ""
 
 		set x_offset 20
-		set domProject $::APPL_Config(root_ProjectDOM)
+		set domProject $rattleCAD::control::currentDOM
+		  # set domProject $::APPL_Config(root_ProjectDOM)
 		set cv      [ $cv_Name getNodeAttr Canvas path]
 		if { [catch { set cvEdit [frame $cv.f_edit -bd 2 -relief raised] } errorID ] } {
 				closeEdit $cv $cv.f_edit
@@ -146,21 +223,8 @@ namespace eval rattleCAD::view {
 		$cv move $cvEdit $dx $dy
 		  # puts "  -> reposition $dx $dy"
     }
-    
-     
-    #-------------------------------------------------------------------------
-        #  createEdit - sub procedures 
-    proc debug_compare {a b} {
-        if {$a != $b} {
-            appUtil::get_procHierarchy
-            tk_messageBox -messager "   ... pleas check this:\n      $a $b"
-        } else {
-            puts "\n ... debug_compare:"
-            puts   "       $a"
-            puts   "       $b\n"
-        }
-    }    
-          
+
+
     #-------------------------------------------------------------------------
         # create different kind of config lines
         # 
@@ -361,6 +425,23 @@ namespace eval rattleCAD::view {
         set ::$textVar [format "%.3f" $newValue]
     }
 
+
+	#-------------------------------------------------------------------------
+        #  createEdit - sub procedures 
+    proc debug_compare {a b} {
+        if {$a != $b} {
+            appUtil::get_procHierarchy
+            tk_messageBox -messager "   ... pleas check this:\n      $a $b"
+        } else {
+            puts "\n ... debug_compare:"
+            puts   "       $a"
+            puts   "       $b\n"
+        }
+    }  	
+
+
+	#-------------------------------------------------------------------------
+        #  bind MouseWheel 
     proc bind_MouseWheel {textVar value} {
         set currentValue [set ::$textVar]
         set updateValue 1.0
@@ -457,7 +538,7 @@ namespace eval rattleCAD::view {
         destroy $cvEdit
         catch [ destroy .__select_box ]
     }
-    
+
     #-------------------------------------------------------------------------
         #  close all ProjectEdit Widgets
     proc close_allEdit {} {
@@ -478,12 +559,8 @@ namespace eval rattleCAD::view {
             catch [ destroy .__select_box ]
         }
     }   
-    
 
 
-
-
-    
     #-------------------------------------------------------------------------
         #  binding: drag
     proc drag {x y cv id} {
@@ -523,7 +600,7 @@ namespace eval rattleCAD::view {
 		set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
 		wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
 		wm  deiconify     $toplevel_widget
-    }    
+    }
      
  } 
  

@@ -495,7 +495,7 @@
                 # 2010.10.15
             variable compFile
             #puts "ListboxEvent:  $w / [$w get]"
-            #puts "ListboxEvent:  $targetCanvas"
+              # puts "ListboxEvent:  $targetCanvas"
             set compFile [$w get]
                 puts ""
                 puts "   -------------------------------"
@@ -508,14 +508,8 @@
             if {$mode == {select}} {
                 set key [lindex [split $targetVar ::] 2]
                 rattleCAD::control::setValue $key $compFile force
-				# bikeGeometry::set_Value $key $compFile force
-                
-				
-				#set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
-                #rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
             }
-                # puts "    ListboxEvent ... done"
-            
+              # puts "    ListboxEvent ... done"
     }
 
     #-------------------------------------------------------------------------
@@ -682,7 +676,6 @@
                     }
                 }
             }
-            # set projectDOM  [bikeGeometry::get_projectDOM]
 			set projectDOM  $rattleCAD::control::currentDOM
             recurseInsert   $projectDOM  {/}
 
@@ -974,7 +967,6 @@
                                     # puts "   ... change value"
                                 set configValue($xPath) $oldValue
                             } else {
-                                    # project::add_tracing
                                     # puts "   ... $configValue($xPath)"
                                     # puts "      >[split $configValue($xPath) ;]<"
                                     # puts "      >[lindex [split $configValue($xPath) ;] 0]<"
@@ -986,11 +978,6 @@
                                 set key [lindex [split $targetVar :] 2]
                                      puts "   ... $key"
                                 rattleCAD::control::setValue $key $value
-                                # bikeGeometry::set_Value $key $value
-                                    # eval set $targetVar $value
-                                    # project::remove_tracing
-                                
-								# rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
                             }
                         }
             }
@@ -1013,11 +1000,9 @@
             }
 
             if {$entryVar ne ""} {
-                    # reformat value
-                    #puts " -> $::APPL_Config(canvasCAD_Update)"
+                  # reformat value
                 set $entryVar [update_Value $key $newValue format]
-                    # set $entryVar [ bikeGeometry::set_Value _any_ $value format]
-                    #puts " -> $::APPL_Config(canvasCAD_Update)"
+                  # puts " -> $rattleCAD::control::model_Update"
             }
 
      }
@@ -1033,7 +1018,6 @@
 
         foreach xPath $componentList {
              update_Value $xPath $configValue($xPath)
-                 # bikeGeometry::set_Value $xPath $configValue($xPath)
         }
 
         foreach xPath { Rendering/Fork
@@ -1044,7 +1028,6 @@
                         Rendering/BottleCage/DownTube_Lower
         } {
             update_Value $xPath $configValue($xPath)
-                # bikeGeometry::set_Value $xPath $configValue($xPath)
         }
 
         set cv          [ $rattleCAD::gui::noteBook_top select ]
@@ -1061,13 +1044,11 @@
         #    
     proc update_Value {key newValue {mode {update}}} {
             # puts ""
-            # puts "         $::APPL_Config(canvasCAD_Update)"
-        set updatedValue [rattleCAD::control::setValue $key $newValue $mode]
-         # set updatedValue [bikeGeometry::set_Value $key $newValue $mode]
-        
+            # puts "         $rattleCAD::control::model_Update"
+			
+        set updatedValue [rattleCAD::control::setValue $key $newValue $mode]        
 		
-		# set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
-            # puts "         $::APPL_Config(canvasCAD_Update)"
+            # puts "         $rattleCAD::control::model_Update"
             # puts "       -----------------------------------"
             # puts "         \$key:           $key"
             # puts "         \$newValue:      $newValue"

@@ -14,7 +14,7 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir lib_file.tcl]]; \
         [list source  [file join $dir lib_gui.tcl]]; \
         [list source  [file join $dir lib_cfgReport.tcl]]; \
-        [list source  [file join $dir lib_config.tcl]]; \
+        [list source  [file join $dir lib_configPanel.tcl]]; \
         [list source  [file join $dir lib_compLibrary.tcl]]; \
         [list source  [file join $dir lib_bikeRendering.tcl]]; \
         [list source  [file join $dir lib_version_info.tcl]]; \

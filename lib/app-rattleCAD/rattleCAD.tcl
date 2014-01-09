@@ -44,7 +44,7 @@
   
   package require   appUtil       0.15
   package require   vectormath    0.5
-  package require   bikeGeometry  0.43
+  package require   bikeGeometry  0.44
   package require   canvasCAD     0.49
   package require   extSummary    0.4
   package require   osEnv         0.8
@@ -64,52 +64,53 @@
   ###########################################################################
     
     array set APPL_Config { 
-                        RELEASE_Version     {3.4}  
-                        RELEASE_Revision    {tbd}
-                        RELEASE_Date        {01. May. 2012}
-                        
-                        GUI_Font            {Helvetica 8}
-                        VECTOR_Font         {}
-                        Language            {english}
-    
-                        USER_InitString     {_init_Template}
-                        WINDOW_Title        {}
-                        FILE_List           {}
+					RELEASE_Version     {3.4}  
+					RELEASE_Revision    {tbd}
+					RELEASE_Date        {01. May. 2012}
+					
+					GUI_Font            {Helvetica 8}
+					VECTOR_Font         {}
+					Language            {english}
 
-                        PROJECT_Name        {}
-                        PROJECT_File        {}
-                        PROJECT_Save        {0}
-                        
-                        TemplateType        {}
-                        FrameJigType        {}
+					USER_InitString     {_init_Template}
+					WINDOW_Title        {}
+					FILE_List           {}
 
-                        BASE_Dir            {}
-                        ROOT_Dir            {}
-                        CONFIG_Dir          {}
-                        IMAGE_Dir           {}
-                        TEST_Dir            {}
-                        USER_Dir            {}
-                        EXPORT_Dir          {}
-                        EXPORT_PDF          {}
-                        EXPORT_HTML         {}
-                        
-                        user_InitDOM        {}
-                        root_InitDOM        {}
-                        root_ProjectDOM     {}
-                        
-                        canvasCAD_Update    {0}
-                        window_Size         {0}
-                        window_Update       {0}
-                        
-                        list_FrameJigTypes  {}
-                        list_TemplateTypes  {}
-                        
-                        list_ForkTypes      {}
-                        list_BrakeTypes     {}
-                        list_Binary_OnOff   {}
-                        list_Rims           {}  
-                     }   
+					PROJECT_Name        {}
+					PROJECT_File        {}
+					PROJECT_Save        {0}
+					
+					TemplateType        {}
+					FrameJigType        {}
 
+					BASE_Dir            {}
+					ROOT_Dir            {}
+					CONFIG_Dir          {}
+					IMAGE_Dir           {}
+					TEST_Dir            {}
+					USER_Dir            {}
+					EXPORT_Dir          {}
+					EXPORT_PDF          {}
+					EXPORT_HTML         {}
+					
+					user_InitDOM        {}
+					root_InitDOM        {}
+					
+					list_FrameJigTypes  {}
+					list_TemplateTypes  {}
+					
+					list_ForkTypes      {}
+					list_BrakeTypes     {}
+					list_Binary_OnOff   {}
+					list_Rims           {}  
+				 }   
+                
+				  # root_ProjectDOM     {}
+				  # canvasCAD_Update    {0}
+				  # window_Size         {0}
+				  # window_Update       {0}
+
+					 
     array set APPL_CompLocation {}
 
   
@@ -281,7 +282,8 @@
         puts "     ... TemplateInit      $::APPL_Config(TemplateInit)"
             
         
-        set ::APPL_Config(root_ProjectDOM)    [rattleCAD::file::get_XMLContent     $::APPL_Config(TemplateInit)]
+        set projectDOM    [rattleCAD::file::get_XMLContent     $::APPL_Config(TemplateInit)]
+        # set ::APPL_Config(root_ProjectDOM)    [rattleCAD::file::get_XMLContent     $::APPL_Config(TemplateInit)]
           
         proc __unused {} {
                 # -- status messages --------
@@ -413,13 +415,13 @@
             
             # ---     notebook  -------------
         rattleCAD::gui::create_Notebook $nb_frame
-          
+            #
         
         
             # --------------------------------------------
             #    create project Object
-        rattleCAD::control::newProject $::APPL_Config(root_ProjectDOM)
-		    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
+        rattleCAD::control::newProject $projectDOM
+		    # 
           
           
             # --------------------------------------------
@@ -449,24 +451,18 @@
         rattleCAD::gui::global_kb_Binding ab
         
              # -- window binding -----------------------
-        bind . <Configure> [list rattleCAD::gui::check_windowSize]
+        bind . <Configure> [list rattleCAD::control::bind_windowSize]
         
              # -- window delete binding -----------------------
         wm protocol . WM_DELETE_WINDOW {
             rattleCAD::gui::exit_rattleCAD yesnocancel
         }
 
-          
-          
+
             # -- window title ----------------------------
         update_windowTitle  
         update_MainFrameStatus
             
-            # -- open config panel -----------------------
-        # rattleCAD::config::create . .cfg
-        
-            # -- status message -----------
-          # appUtil::appDebug p
           
             # -- Version Info Summary  ---------------
         puts "\n"
@@ -475,8 +471,6 @@
         puts "                             $::APPL_Config(RELEASE_Date)"
         puts "  ----------------------------------------------\n"
             
-          
-          
     }
 
 
