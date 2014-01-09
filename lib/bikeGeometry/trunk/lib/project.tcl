@@ -116,44 +116,7 @@
             }
             parentNode $node
             return "/$xPath"
-    }
-    #-------------------------------------------------------------------------
-    proc add_tracing {} {
-                # puts "\n   project::add_tracing\n"
-            #trace add     variable [namespace current]::Personal    write [namespace current]::trace_ProjectConfig
-            #trace add     variable [namespace current]::Custom      write [namespace current]::trace_ProjectConfig
-            #trace add     variable [namespace current]::Lugs        write [namespace current]::trace_ProjectConfig
-            #trace add     variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
-            #trace add     variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
-            #trace add     variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
-    }
-    proc remove_tracing {} {
-                # puts "\n   project::remove_tracing\n"
-            #trace remove  variable [namespace current]::Personal    write [namespace current]::trace_ProjectConfig
-            #trace remove  variable [namespace current]::Custom      write [namespace current]::trace_ProjectConfig
-            #trace remove  variable [namespace current]::Lugs        write [namespace current]::trace_ProjectConfig
-            #trace remove  variable [namespace current]::Component   write [namespace current]::trace_ProjectConfig
-            #trace remove  variable [namespace current]::FrameTubes  write [namespace current]::trace_ProjectConfig
-            #trace remove  variable [namespace current]::Rendering   write [namespace current]::trace_ProjectConfig
-    }
-    #-------------------------------------------------------------------------
-    proc trace_ProjectConfig {varname key operation} {
-            if {$key != ""} {
-                set varname ${varname}($key)
-            }
-            upvar $varname var
-              # appUtil::get_procHierarchy
-            
-            puts "\n\n"
-            puts "   --<trace>--------------------------"
-            puts "    trace_ProjectConfig"
-            puts "       varname:         $varname"
-            puts "       key:             $key"
-            puts "       var:             $var"
-            puts "       operation:       $operation"
-                
-            return
-    }    
+    }   
     #-------------------------------------------------------------------------
     proc dom_2_runTime {} {          
 
