@@ -54,9 +54,6 @@
                 puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
                 puts "           ... modified: $changeIndex"
           
-              # puts "  $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update)"
-              # if { $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update) } {}
-            
             if { $changeIndex > 0 } {
                 set retValue [tk_messageBox -title   "Save Project" -icon question \
                             -message "... save mofificatios in Project:  $::APPL_Config(PROJECT_File)?" \
@@ -127,21 +124,16 @@
                 puts "                   ... done"
 
                 # -- read new File
-            set ::APPL_Config(root_ProjectDOM)     [rattleCAD::file::get_XMLContent $fileName show]
+            set projectDOM     [rattleCAD::file::get_XMLContent $fileName show]
                 #
-            rattleCAD::control::newProject $::APPL_Config(root_ProjectDOM)
-			    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
-                #
-            rattleCAD::control::changeList::reset
-                #
-            set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
-                #
-                                
+            rattleCAD::control::newProject $projectDOM
+			    #
+                                                
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             update_windowTitle          $fileName
             update_MainFrameStatus
                 #
-            rattleCAD::gui::notebook_updateCanvas
+            # rattleCAD::gui::notebook_updateCanvas
                 #
             rattleCAD::gui::open_configPanel  refresh
 
@@ -167,7 +159,7 @@
             set types {
                     {{Project Files 3.x }       {.xml}  }
                 }
-                # set userDir       $::APPL_Config(USER_Dir)
+
                 # puts "   openProject_xml - types      $types"
             if {$fileName == {}} {
                 set fileName    [tk_getOpenFile -initialdir $::APPL_Config(USER_Dir) -filetypes $types]
@@ -176,8 +168,8 @@
                 # puts "   openProject_xml - fileName:   $fileName"
             if { [file readable $fileName ] } {
                     
-                    set ::APPL_Config(root_ProjectDOM)    [rattleCAD::file::get_XMLContent $fileName show]
-                    set rattleCAD_Version [[$::APPL_Config(root_ProjectDOM) selectNodes /root/Project/rattleCADVersion/text()] asXML]
+                    set projectDOM        [rattleCAD::file::get_XMLContent $fileName show]
+                    set rattleCAD_Version [[$projectDOM selectNodes /root/Project/rattleCADVersion/text()] asXML]
                     
                     puts "\n"
                     puts "  ========= o p e n   F I L E ====================="
@@ -185,19 +177,19 @@
                     puts "         ... file:       $fileName"
                     puts "         ... version:    $rattleCAD_Version"
 
-                    rattleCAD::control::newProject $::APPL_Config(root_ProjectDOM)
-					    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
+                    rattleCAD::control::newProject $projectDOM
                         
-                    set ::APPL_Config(PROJECT_File)        $fileName
+                      #
+					set ::APPL_Config(PROJECT_File)        $fileName
                     set ::APPL_Config(PROJECT_Name)        $fileName
                     set ::APPL_Config(PROJECT_Save)        [clock milliseconds]
-                    set ::APPL_Config(canvasCAD_Update)    [clock milliseconds]
-                        #
+                      #
                     rattleCAD::control::changeList::reset
-                        #
-                    rattleCAD::gui::notebook_updateCanvas  force      
+                      #
+                    # rattleCAD::gui::notebook_updateCanvas  force
+                      #					
 
-                        # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
+                      # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
                     if {$windowTitle == {}} {
                         update_windowTitle $fileName
                     } else {
@@ -205,17 +197,17 @@
                     }
 
             }
-                #
+              #
             rattleCAD::gui::open_configPanel  refresh
+			  #
             
-                # -- fill tree
-                #
+              # -- fill tree
             rattleCAD::cfg_report::fillTree $rattleCAD::control::currentDOM root
-                # rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectDOM] root
+			  #
 
-                # -- update MAinFrame Indicator
-                #            
+              # -- update MAinFrame Indicator  
             update_MainFrameStatus
+			  #
             
                 #
             puts "\n"
@@ -245,15 +237,14 @@
             set template_file    [ getTemplateFile $type ]
             puts "         ... template_file:   $template_file"
             if { [file readable $template_file ] } {
-                set ::APPL_Config(root_ProjectDOM)     [rattleCAD::file::get_XMLContent $template_file show]
+                set projectDOM     [rattleCAD::file::get_XMLContent $template_file show]
                     #
-                rattleCAD::control::newProject $::APPL_Config(root_ProjectDOM)
+                rattleCAD::control::newProject $projectDOM
 				    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                     #
                 set ::APPL_Config(PROJECT_Name)     "Template $type"
                 set ::APPL_Config(PROJECT_File)     "Template $type"  
                 set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
-                set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
                     #
                 rattleCAD::control::changeList::reset
                     #
@@ -261,7 +252,7 @@
                     # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
 
                     #
-                rattleCAD::gui::notebook_updateCanvas force
+                # rattleCAD::gui::notebook_updateCanvas force
                     #
                 update_windowTitle       $::APPL_Config(PROJECT_Name)
                 update_MainFrameStatus
@@ -426,7 +417,7 @@
             }
 
                 #
-            set ::APPL_Config(root_ProjectDOM) $rattleCAD::control::currentDOM
+            # set ::APPL_Config(root_ProjectDOM) $rattleCAD::control::currentDOM
                 # set ::APPL_Config(root_ProjectDOM) [bikeGeometry::get_projectDOM]
             
                 #
@@ -435,7 +426,7 @@
             update_windowTitle           $windowTitle
             update_MainFrameStatus
                 #
-            rattleCAD::gui::notebook_updateCanvas
+            # rattleCAD::gui::notebook_updateCanvas
             
                 #
             puts "\n"
@@ -460,25 +451,27 @@
             } else {
                 return
             }
-            set content [rattleCAD::file::get_XMLContent $fileName]
+            
+			  #
+			set content [rattleCAD::file::get_XMLContent $fileName]
             rattleCAD::control::importSubset $content
-               # project::import_ProjectSubset $content
+              # 
 			
-            # --- set APPL_Config(canvasCAD_Update)
-            set ::APPL_Config(canvasCAD_Update)    [ clock milliseconds ]
-                #
+              #
             rattleCAD::control::changeList::reset
-                #
+              #
             
-            rattleCAD::gui::notebook_updateCanvas force
-                #
+              #
+			# rattleCAD::gui::notebook_updateCanvas force
+              #
                 
-            rattleCAD::gui::open_configPanel  refresh
-            
-                # -- fill tree
-                #
+              #
+			rattleCAD::gui::open_configPanel  refresh
+              #
+			  
+              # -- fill tree
             rattleCAD::cfg_report::fillTree $rattleCAD::control::currentDOM root
-                # rattleCAD::cfg_report::fillTree [bikeGeometry::get_projectDOM] root
+              #
 
     }
 

@@ -110,7 +110,7 @@
                 {separator}
                         
                 {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
-                {command "&Update"          {}  "update Configuration"  {Ctrl u}      -command { rattleCAD::gui::notebook_updateCanvas force } }
+                {command "&Update"          {}  "update Configuration"  {Ctrl u}      -command { rattleCAD::view::updateView force } }
                                                                                                                                                             
                 {separator}
                         
@@ -144,7 +144,7 @@
             Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::control::changeList::previous }          
             Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::control::changeList::next }          
             
-            Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { rattleCAD::gui::notebook_updateCanvas force}  
+            Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { rattleCAD::view::updateView force}  
             Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { rattleCAD::gui::notebook_cleanCanvas} 
               
             Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { rattleCAD::gui::load_Template  Road }  
@@ -239,7 +239,8 @@
 
 
                 # ---     bind event to update Tab on selection
-            bind $noteBook_top <<NotebookTabChanged>> {rattleCAD::gui::notebook_updateCanvas}
+            bind $noteBook_top <<NotebookTabChanged>> {rattleCAD::view::updateView}
+              # bind $noteBook_top <<NotebookTabChanged>> {rattleCAD::gui::notebook_updateCanvas}
 
                 # ---     bind event Control-Tab and Shift-Control-Tab
             ttk::notebook::enableTraversal $noteBook_top
@@ -291,20 +292,17 @@
                 puts "         ... file:       $::APPL_Config(PROJECT_File)"
                 puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
                 puts "           ... modified: $changeIndex"
-                puts "                     ... $::APPL_Config(canvasCAD_Update)"
+                puts "                     ... $rattleCAD::control::model_Update"
                 puts ""
                 puts "        ... type:        $type"
                 puts "        ... exitMode:    $exitMode"
 
           
-              # puts "  $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update)"
-              # if { $::APPL_Config(PROJECT_Save) < $::APPL_Config(canvasCAD_Update) } {}
-            
             if { $changeIndex > 0 } {
                 
                 puts " ......... save File before exit"
                 puts "        project save:   $::APPL_Config(PROJECT_Save)"
-                puts "        project change: $::APPL_Config(canvasCAD_Update)"
+                puts "        project change: $rattleCAD::control::model_Update"
 
                 set decission [tk_messageBox  -type $type \
                                               -icon warning \
@@ -442,7 +440,7 @@
     #-------------------------------------------------------------------------
         #  get notebook id    
         #
-     proc notebook_getTabInfo {varName} {
+    proc notebook_getTabInfo {varName} {
              variable noteBook_top       
                # puts "\n --------"
                # puts "[$noteBook_top tabs]"
@@ -516,89 +514,6 @@
               # puts "   $curScale"
               # tk_messageBox -message "curScale: $curScale  /  newScale  $newScale "
             $varName scaleToCenter $newScale
-    }
-
-
-     #-------------------------------------------------------------------------
-       #  get sizeinfo:  http://www2.tcl.tk/8423
-       #
-    proc check_windowSize {} {
-            # puts "<D>   APPL_Config(window_Size):    $::APPL_Config(window_Size)"
-        set newSize [lindex [split [wm geometry .] +] 0]
-        if {![string equal $newSize $::APPL_Config(window_Size)]} {
-                set ::APPL_Config(window_Size) $newSize
-                set ::APPL_Config(window_Update) [ clock milliseconds ]
-                puts "     ... update WindowSize: $::APPL_Config(window_Update) / $::APPL_Config(window_Size)"
-        }
-    }
-
-
-    #-------------------------------------------------------------------------
-       #  update canvasCAD in current notebook-Tab  
-       #
-    proc notebook_updateCanvas {{mode {}}} {
-            variable noteBook_top
-            variable canvasUpdate
-                    
-            set currentTab              [$noteBook_top select]
-            set varName                 [notebook_getVarName $currentTab]
-            set varName                 [lindex [split $varName {::}] end]
-            
-            set updateDone              {no}
-
-            
-            if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
-                 set canvasUpdate($varName) [ expr $::APPL_Config(canvasCAD_Update) -1 ]
-            }
-            
-            set timeStart     [clock milliseconds]
-       
-            
-                # -- update stage content if parameters changed
-                    # puts "\n    canvasUpdate($varName):  $canvasUpdate($varName)    vs.  $::APPL_Config(canvasCAD_Update)\n"
-            puts "\n"
-            puts "   -------------------------------"
-			puts "    lib_gui::notebook_updateCanvas  "
-            puts "       \$canvasUpdate($varName)"
-			puts "          last:   $canvasUpdate($varName)  -> [clock format [expr $canvasUpdate($varName)/1000] -format {%Y.%m.%d / %H:%M:%S}]"
-            puts "          new:    $::APPL_Config(canvasCAD_Update)  -> [clock format [expr $::APPL_Config(canvasCAD_Update)/1000] -format {%Y.%m.%d / %H:%M:%S}]"
-            puts "       \$project::Project(modified) -> $project::Project(modified)\n"
-            if { $mode == {} } {
-                    if { $canvasUpdate($varName) < $::APPL_Config(canvasCAD_Update) } {
-                        puts "\n       ... notebook_updateCanvas ... update $varName\n"
-                        fill_canvasCAD $varName
-                        set updateDone  {done}
-                    } else {
-                        puts "\n       ... notebook_updateCanvas ... update $varName ... not required\n"
-                    }
-            } else {
-                        puts "\n       ... notebook_updateCanvas ... update $varName ... force\n"
-                        fill_canvasCAD $varName
-                        set updateDone  {done}
-            }
-            
-
-                # -- refit stage if window size changed
-            if { $canvasUpdate($varName) < $::APPL_Config(window_Update) } {
-                        puts "\n       ... notebook_updateCanvas ... refitStage ........ $varName\n"
-                        update
-                        catch {$varName refitStage}
-                        set updateDone  {done}       
-            }
-            
-                        
-            set timeEnd     [clock milliseconds]
-            set timeDiff    [expr $timeEnd - $timeStart]
-            
-            
-            puts "\n       ... time to update:"
-            puts   "           ... [format "%9.3f" $timeDiff] milliseconds"
-            puts   "           ... [format "%9.3f" [expr $timeDiff / 1000.0] ] seconds"
-            
-            if {$updateDone == {done}} {
-                set canvasUpdate($varName) [ clock milliseconds ]
-            }
-                        
     }
 
 
@@ -1148,7 +1063,8 @@
                 
             switch $answer {
                 cancel    return                
-                ok        { frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Config(root_ProjectDOM)
+                ok        { frame_geometry_reference::export_parameter_2_geometry_custom  $rattleCAD::control::currentDOM
+                            # frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Config(root_ProjectDOM)
                             rattleCAD::gui::fill_canvasCAD cv_Custom00 
                           }
             }
@@ -1214,11 +1130,16 @@
                     return
             }
                             
-            $varName formatCanvas $stageFormat $stageScale
-            set canvasUpdate($varName) [ expr $::APPL_Config(canvasCAD_Update) -1 ]
-            notebook_updateCanvas force
+              #
+			$varName formatCanvas $stageFormat $stageScale
+            set canvasUpdate($varName) [ expr $rattleCAD::control::model_Update -1 ]
+             # 
+
+            rattleCAD::view::updateView
+			  # notebook_updateCanvas force
             notebook_refitCanvas
-            notebook_updateCanvas force
+            rattleCAD::view::updateView
+			  # notebook_updateCanvas force
     }
 
     #-------------------------------------------------------------------------
@@ -1233,8 +1154,13 @@
             puts "   ... \$varName $varName"
             puts "   ... \$cv_Name $cv_Name"   
 
-            set canvasUpdate($varName) [ expr $::APPL_Config(canvasCAD_Update) -1 ]
-            rattleCAD::gui::notebook_updateCanvas force
+            set canvasUpdate($varName) [ expr $rattleCAD::control::model_Update -1 ]
+			  #
+			  
+			  #
+            rattleCAD::view::updateView force
+			  # rattleCAD::gui::notebook_updateCanvas force
+			  #
     }
     
     #-------------------------------------------------------------------------
@@ -1282,7 +1208,7 @@
             bind . <F3>     {rattleCAD::gui::notebook_scaleCanvas  [expr 2.0/3]}
             bind . <F4>     {rattleCAD::gui::notebook_scaleCanvas  [expr 3.0/2]}
             bind . <F5>     {rattleCAD::gui::notebook_refitCanvas}
-            bind . <F6>     {rattleCAD::gui::notebook_updateCanvas force}
+            bind . <F6>     {rattleCAD::view::updateView           force}
             
             bind . <Key-Up>     {rattleCAD::gui::move_Canvas    0  50 }
             bind . <Key-Down>   {rattleCAD::gui::move_Canvas    0 -50 }

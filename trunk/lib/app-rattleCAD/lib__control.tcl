@@ -43,12 +43,12 @@ namespace eval rattleCAD::control {
 	variable  currentDICT         {} ;# a dictionary
     variable  currentDOM          {} ;# a XML-Object
     
-    variable  canvasCAD_Update    {0}
-    variable  window_Size         {0}
+    variable  model_Update        {0}
     variable  window_Update       {0}
+    variable  window_Size         {0}
     
 	
-	proc update {} {
+	proc updateModel {} {
 		variable currentDICT
 		variable currentDOM
 
@@ -61,14 +61,29 @@ namespace eval rattleCAD::control {
     		}
 		}
 	
+		  # update control-model
 		set      currentDICT  [bikeGeometry::get_projectDICT]
 		set      currentDOM   [bikeGeometry::get_projectDOM]
+		  # [namespace current]::update
+		  #
 		
+          # update timestamp
+		set model_Update      [clock milliseconds]
+          # set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+          #
+                    
+          # update view
+		rattleCAD::view::updateView  
+          #
 	}
 
 
 	proc setValue {xpath value {mode {update}} {history {append}}} {
 	
+		variable currentDICT
+		variable currentDOM
+		variable model_Update
+		
 		set oldValue [[namespace current]::getValue $xpath]
 
 		if {$value == $oldValue} {
@@ -78,7 +93,6 @@ namespace eval rattleCAD::control {
 		puts "   -------------------------------"
 		puts "    rattleCAD::control::setValue"
 		puts "       xpath:  $oldValue / $value"
-		project::add_tracing
 		
 		if {$mode == {update}} {
 		    set newValue  [bikeGeometry::set_Value $xpath $value]
@@ -94,18 +108,9 @@ namespace eval rattleCAD::control {
 		if {$history == {append}} {
 		    changeList::append        $xpath $oldValue $newValue
 		}
-		  #
 
-		  # update control-model
-		[namespace current]::update
-		  #
-		
-          # update timestamp
-		set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
-          #
-                    
-          # update view
-        rattleCAD::cv_custom::updateView  [rattleCAD::gui::current_canvasCAD]
+		  # update View
+		[namespace current]::updateModel
           #
 		  
 		return $value
@@ -126,7 +131,15 @@ namespace eval rattleCAD::control {
 		puts "   -------------------------------"
 		puts "    rattleCAD::control::newProject"
         bikeGeometry::set_newProject $projectDOM	
-		[namespace current]::update
+		
+          # reset history
+		rattleCAD::control::changeList::reset
+          #
+				
+		  # update View
+		[namespace current]::updateModel
+          #
+		
     }
 	
 	proc importSubset {nodeRoot} {
@@ -134,9 +147,41 @@ namespace eval rattleCAD::control {
 		puts "\n"
 		puts "   -------------------------------"
 		puts "    rattleCAD::control::importSubset"
-        project::import_ProjectSubset $nodeRoot	
-		[namespace current]::update
+        
+		  #
+		project::import_ProjectSubset $nodeRoot	
+		  #
+		  
+		  #
+		[namespace current]::updateModel
+		  #
     }
+	
+	
+
+
+    #-------------------------------------------------------------------------
+       #  get sizeinfo:  http://www2.tcl.tk/8423
+       #
+    proc bind_windowSize {} {
+
+        set newSize [lindex [split [wm geometry .] +] 0]
+		
+        if {![string equal $newSize $rattleCAD::control::window_Size]} {
+			set rattleCAD::control::window_Size   $newSize
+			set rattleCAD::control::window_Update [clock milliseconds]
+			
+			puts "     ... update WindowSize: $rattleCAD::control::window_Update / rattleCAD::control::window_Size"
+				
+			  # update view
+			# rattleCAD::cv_custom::updateView  [rattleCAD::gui::current_canvasCAD]
+			  #
+        }
+    }	
+	
+	
+	
+	
 
 }
 
