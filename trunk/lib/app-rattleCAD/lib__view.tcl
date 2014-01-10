@@ -89,7 +89,7 @@ namespace eval rattleCAD::view {
             puts "       \$canvasUpdate($varName)"
 			puts "          last:   $canvasUpdate($varName)  -> [clock format [expr $canvasUpdate($varName)/1000] -format {%Y.%m.%d / %H:%M:%S}]"
             puts "          new:    $rattleCAD::control::model_Update  -> [clock format [expr $rattleCAD::control::model_Update/1000] -format {%Y.%m.%d / %H:%M:%S}]"
-            puts "       \$project::Project(modified) -> $project::Project(modified)\n"
+            puts "       \$rattleCAD::control::model_Update -> $$rattleCAD::control::model_Update\n"
             
 			if { $mode == {} } {
 				if { $lastUpdate < $rattleCAD::control::model_Update } {
@@ -268,14 +268,20 @@ namespace eval rattleCAD::view {
         }
             # puts "    <02>    \$type   $type"
             # puts "    <02>    \$key    $key"
-        foreach {_array _name path} [project::unifyKey $key] break
+        # foreach {_array _name path} [project::unifyKey $key] break
             # puts "    <03>    \$type   $type"
             # puts "    <03>    \$key    $key"
             # puts "    <03>    \$listName  $listName\n"
 
         
-        foreach {_array _name path} [project::unifyKey $key] break
-        set value       [project::getValue $key value]
+        # foreach {_array _name path} [project::unifyKey $key] break
+        
+		    # puts "\n  -> here I am --- $key\n"
+		set xPath [format "%s"   [string map {( /  ) ""} $key]]
+		set value       [rattleCAD::control::getValue  $xPath]
+		    # puts "\n  -> here I am --- $value    $xPath\n"
+		    # exit
+            # set value       [project::getValue $key value]
         set _updateValue($path) $value
         
         set labelText   [format "%s ( %s )" $_array \

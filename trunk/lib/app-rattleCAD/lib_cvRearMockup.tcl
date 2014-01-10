@@ -65,41 +65,41 @@
                       set   Colour(third)       orange
                       set   Colour(result)      darkblue
                 
-            set Length(ChainStay)           $project::Custom(WheelPosition/Rear)
-            set Length(CrankSet)            $project::Component(CrankSet/Length)
-            set Length(PedalMount)          [expr 0.5 * $project::Component(CrankSet/Q-Factor) ]
-            set Length(PedalEye)            $project::Component(CrankSet/PedalEye)
-            set Length(CrankSet_ArmWidth)   $project::Component(CrankSet/ArmWidth)
-            set Length(ChainLine)           $project::Component(CrankSet/ChainLine)
+            set Length(ChainStay)           [rattleCAD::control::getValue Custom/WheelPosition/Rear]
+            set Length(CrankSet)            [rattleCAD::control::getValue Component/CrankSet/Length]
+            set Length(PedalMount)          [expr 0.5 * [rattleCAD::control::getValue Component/CrankSet/Q-Factor] ]
+            set Length(PedalEye)            [rattleCAD::control::getValue Component/CrankSet/PedalEye]
+            set Length(CrankSet_ArmWidth)   [rattleCAD::control::getValue Component/CrankSet/ArmWidth]
+            set Length(ChainLine)           [rattleCAD::control::getValue Component/CrankSet/ChainLine]
 
                  #   puts "     BottomBracket(Position) -> $BottomBracket(Position)"
                  #   puts "     RearWheel(Position)    -> $RearWheel(Position)"
                  #   puts "       -> $Length(ChainStay)"
                     
-                 #   puts "     BottomBracket -> $project::Lugs(BottomBracket/Diameter/outside)"
-                 #   puts "     BottomBracket -> $project::Lugs(BottomBracket/Diameter/inside)"
-                 #   puts "     BottomBracket -> $project::Lugs(BottomBracket/Width)"
-                 #   puts "     BottomBracket -> $project::Lugs(BottomBracket/ChainStay/Offset_TopView)"
+                 #   puts "     BottomBracket -> [rattleCAD::control::getValue Lugs/BottomBracket/Diameter/outside]"
+                 #   puts "     BottomBracket -> [rattleCAD::control::getValue Lugs/BottomBracket/Diameter/inside]"
+                 #   puts "     BottomBracket -> [rattleCAD::control::getValue Lugs/BottomBracket/Width]"
+                 #   puts "     BottomBracket -> [rattleCAD::control::getValue Lugs/BottomBracket/ChainStay/Offset_TopView]"
                     
-                 #   puts "     RimDiameter   -> $project::Component(Wheel/Rear/RimDiameter)"
-                 #   puts "     RimHeight     -> $project::Component(Wheel/Rear/RimHeight)"
-                 #   puts "     TyreHeight    -> $project::Component(Wheel/Rear/TyreHeight)"
+                 #   puts "     RimDiameter   -> [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter]"
+                 #   puts "     RimHeight     -> [rattleCAD::control::getValue Component/Wheel/Rear/RimHeight]"
+                 #   puts "     TyreHeight    -> [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight]"
                     
-                 #   puts "     HubWidth      -> $project::Lugs(RearDropOut/HubWidth)"
+                 #   puts "     HubWidth      -> [rattleCAD::control::getValue Lugs/RearDropOut/HubWidth]"
                     
-                 #   puts "     ChainStay     -> $project::Lugs(RearDropOut/ChainStay/Offset)" 
-                 #   puts "     ChainStay     -> $project::Lugs(RearDropOut/ChainStay/Offset_TopView)" 
-                 #   puts "     ChainStay     -> $project::FrameTubes(ChainStay/Width)" 
+                 #   puts "     ChainStay     -> [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset]" 
+                 #   puts "     ChainStay     -> [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset_TopView]" 
+                 #   puts "     ChainStay     -> [rattleCAD::control::getValue FrameTubes/ChainStay/Width]" 
             
-            #puts "  -> profile_x04   $project::FrameTubes(ChainStay/Profile/length_04) profile_x04   $project::FrameTubes(ChainStay/Profile/length_04)"
+            #puts "  -> profile_x04   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/length_04] profile_x04   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/length_04]"
         
-            set Length(00)              [ expr 0.5 * $project::Lugs(BottomBracket/Diameter/outside) ]
-            set Length(01)              [ expr 0.5 * $project::Lugs(BottomBracket/Diameter/inside) ]
-            set Length(02)              [ expr 0.5 * $project::Lugs(BottomBracket/Width) ]
-            set Length(03)              [ expr $Length(02) - $project::Lugs(BottomBracket/ChainStay/Offset_TopView) ]
-            set Length(04)              [ expr 0.5 * $project::Component(Wheel/Rear/HubWidth) ]
-            set Length(05)              [ expr 0.5 * $project::Component(Wheel/Rear/HubWidth) + $project::Lugs(RearDropOut/ChainStay/Offset_TopView)]
-            set Length(06)              [ expr 0.5 * $project::Component(Wheel/Rear/RimDiameter) + $project::Component(Wheel/Rear/TyreHeight) - $project::Component(Wheel/Rear/TyreWidthRadius)]
+            set Length(00)              [ expr 0.5 * [rattleCAD::control::getValue Lugs/BottomBracket/Diameter/outside] ]
+            set Length(01)              [ expr 0.5 * [rattleCAD::control::getValue Lugs/BottomBracket/Diameter/inside] ]
+            set Length(02)              [ expr 0.5 * [rattleCAD::control::getValue Lugs/BottomBracket/Width] ]
+            set Length(03)              [ expr $Length(02) - [rattleCAD::control::getValue Lugs/BottomBracket/ChainStay/Offset_TopView] ]
+            set Length(04)              [ expr 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/HubWidth] ]
+            set Length(05)              [ expr 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/HubWidth] + [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset_TopView]]
+            set Length(06)              [ expr 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter] + [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight] - [rattleCAD::control::getValue Component/Wheel/Rear/TyreWidthRadius]]
 
             
             set Center(BottomBracket)   {0 0}
@@ -116,26 +116,26 @@
             set Center(CL_RearHub_01)   [ list [expr -1 * $Length(ChainStay)] [expr -1.0 * $Length(04) -15] ]
             set Center(CL_RearHub_02)   [ list [expr -1 * $Length(ChainStay)] [expr $Length(04) + 15] ]    
             set Center(DropOut)         [ list [expr -1 * $Length(ChainStay)] $Length(04) ]
-            set Center(Tyre)            [ vectormath::addVector $Center(RearHub)    [ list [expr 0.5 * ($project::Component(Wheel/Rear/RimDiameter) + $project::Component(Wheel/Rear/TyreHeight))] 0 ] ]
-            set Center(Rim)             [ vectormath::addVector $Center(RearHub)    [ list [expr 0.5 *  $project::Component(Wheel/Rear/RimDiameter)] 0 ] ]
-            set Center(TyreWidth)       [ vectormath::addVector $Center(RearHub)    [ list $project::Component(Wheel/Rear/TyreWidthRadius) 0 ] ]
-            set Center(Dim_WheelRadius) [ vectormath::addVector $Center(Tyre)       [ list [expr 0.5 *  $project::Component(Wheel/Rear/TyreHeight)] 0 ] ]
-            set Center(Dim_Tyre_01)     [ vectormath::addVector $Center(TyreWidth)  [ list 0 [expr  0.5 * $project::Component(Wheel/Rear/TyreWidth)] ] ]
-            set Center(Dim_Tyre_02)     [ vectormath::addVector $Center(TyreWidth)  [ list 0 [expr -0.5 * $project::Component(Wheel/Rear/TyreWidth)] 0 ] ]
+            set Center(Tyre)            [ vectormath::addVector $Center(RearHub)    [ list [expr 0.5 * ([rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter] + [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight])] 0 ] ]
+            set Center(Rim)             [ vectormath::addVector $Center(RearHub)    [ list [expr 0.5 *  [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter]] 0 ] ]
+            set Center(TyreWidth)       [ vectormath::addVector $Center(RearHub)    [ list [rattleCAD::control::getValue Component/Wheel/Rear/TyreWidthRadius] 0 ] ]
+            set Center(Dim_WheelRadius) [ vectormath::addVector $Center(Tyre)       [ list [expr 0.5 *  [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight]] 0 ] ]
+            set Center(Dim_Tyre_01)     [ vectormath::addVector $Center(TyreWidth)  [ list 0 [expr  0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/TyreWidth]] ] ]
+            set Center(Dim_Tyre_02)     [ vectormath::addVector $Center(TyreWidth)  [ list 0 [expr -0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/TyreWidth]] 0 ] ]
             
             
-            set Center(ChainStay_DO)    [ vectormath::addVector $Center(RearHub) [ list $project::Lugs(RearDropOut/ChainStay/Offset)  [ expr $Length(04) + $project::Lugs(RearDropOut/ChainStay/Offset_TopView)] ] ]
+            set Center(ChainStay_DO)    [ vectormath::addVector $Center(RearHub) [ list [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset]  [ expr $Length(04) + [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset_TopView]] ] ]
             set ChainStay(00)           [ list [expr -1.0 * $Length(01)] $Length(03) ] 
-            set Center(ChainStay_00)    [ vectormath::cathetusPoint $Center(ChainStay_DO) $ChainStay(00) [expr 0.5 * $project::FrameTubes(ChainStay/WidthBB)] opposite ]
-             
+            set Center(ChainStay_00)    [ vectormath::cathetusPoint $Center(ChainStay_DO) $ChainStay(00) [expr 0.5 * [rattleCAD::control::getValue FrameTubes/ChainStay/WidthBB]] opposite ]
+      
                 #   puts "   -> Center(Tyre)  $Center(Tyre)"
             
             set ChainStay(91)           [ list [expr -1.0 * $Length(ChainStay)] [expr -1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
             set ChainStay(92)           [ list [expr -1.0 * $Length(ChainStay)] [expr -1 * $Length(04)] ]   ;# dimension: Center DO
             set ChainStay(93)           [ list [expr -1.0 * $Length(01)] [expr -1 * $Length(03)] ]          ;# dimension: Chainstay outside BB
             set ChainStay(94)           [ list $Length(00)               [expr -1 * $Length(02)] ]          ;# dimension: Corner BB
-            set ChainStay(95)           [ list [expr -1.0 * ($Length(ChainStay) - $project::Lugs(RearDropOut/ChainStay/Offset))] [expr -1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
-            set ChainStay(96)           [ list [expr -1.0 * ($Length(ChainStay) - $project::Lugs(RearDropOut/ChainStay/Offset))] [expr  1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
+            set ChainStay(95)           [ list [expr -1.0 * ($Length(ChainStay) - [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset])] [expr -1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
+            set ChainStay(96)           [ list [expr -1.0 * ($Length(ChainStay) - [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset])] [expr  1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
                                         
 
                 # -- create RearHub & CrankArm (position CrankArm on top at the end of procedure
@@ -159,18 +159,18 @@
             $cv_Name create rectangle   $BB_OutSide   -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
 
                 # -- ChainStay Type
-            switch $project::Rendering(ChainStay) {
+            switch [rattleCAD::control::getValue Rendering/ChainStay] {
                    {straight_}  { set retValues [get_ChainStay straight] }
                    {bent_}      { set retValues [get_ChainStay bent]}
                    {straight}   { set retValues [bikeGeometry::get_ChainStay_RearMockup straight] }
                    {bent}       { set retValues [bikeGeometry::get_ChainStay_RearMockup bent]}
                    
                    {off}        {}
-                   default      { puts "\n  <W> ... not defined in createRearMockup: $project::Rendering(ChainStay)\n"
+                   default      { puts "\n  <W> ... not defined in createRearMockup: [rattleCAD::control::getValue Rendering/ChainStay]\n"
                                   # return
                                 }
             }
-            switch $project::Rendering(ChainStay) {
+            switch [rattleCAD::control::getValue Rendering/ChainStay] {
                    {straight}   -
                    {bent}       { set ChainStay(centerLine) [lindex $retValues 0]
                                   set ChainStay(polygon)    [lindex $retValues 1]
@@ -222,7 +222,7 @@
 
                # -- create tubeProfile Edit
                # -- create centerLine Edit
-            switch -exact $project::Rendering(ChainStay) {
+            switch -exact [rattleCAD::control::getValue Rendering/ChainStay] {
                    {bent} { create_centerLine_Edit   $ChainStay(ctrLines) {0 110}
                             create_tubeProfile_Edit  {0 145}
                           }
@@ -348,7 +348,7 @@
                     $cv_Name bind $_dim_CS_DO_Offset    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Lugs(RearDropOut/ChainStay/Offset_TopView) ]
                   
                   
-                  #$project::Lugs(RearDropOut/ChainStay/Offset)                                            
+                  #[rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset)                                            
                                                                     
                 # -- CrankSet
             set _dim_Crank_Length       [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Q_Factor) $Center(CL_BB_01) ] \
@@ -397,7 +397,7 @@
     
             # -- tyre Representation 
             set tyre_RadiusHeight $ext_Length(06)
-            set tyre_RadiusWidth  [expr 0.5 * $project::Component(Wheel/Rear/TyreWidth)]
+            set tyre_RadiusWidth  [expr 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/TyreWidth]]
             set tyre_00    [vectormath::addVector $ext_Center(TyreWidth) [list $tyre_RadiusHeight [expr -1.0*$tyre_RadiusWidth] ]]
             set tyre_01    [vectormath::addVector $ext_Center(TyreWidth) [list [expr -1.0*$tyre_RadiusHeight] $tyre_RadiusWidth ]]
             set ovalMatrix   [appUtil::flatten_nestedList  $tyre_00 $tyre_01 ]                     
@@ -455,7 +455,7 @@
             
                 # -- create first Sprocket of Cassete
             set sp_position     [ vectormath::addVector  $ext_Center(RearHub) {0 1} [ expr $ext_Length(04) - 3 ] ]
-            set sp_object       [ get_ChainWheel $project::Component(Wheel/Rear/FirstSprocket) 2 $sp_position ]
+            set sp_object       [ get_ChainWheel [rattleCAD::control::getValue Component/Wheel/Rear/FirstSprocket] 2 $sp_position ]
             set sp_polygon      [ lindex $sp_object 1 ]
             set sp_clearance    [ lindex $sp_object 2 ]
             set sprocketRep     [ $ext_cvName create polygon     $sp_polygon     -fill gray -outline black  -tags __Component__ ]
@@ -516,10 +516,10 @@
           set pos_00 [list [expr -1 * $ext_Length(ChainStay)] $ext_Length(04)]
             # puts "  \$pos_00     $pos_00"
           
-          set disc_Offset         $project::Rendering(RearMockup/DiscOffset)
-          set disc_Width          $project::Rendering(RearMockup/DiscWidth)
-          set disc_DiameterDisc   $project::Rendering(RearMockup/DiscDiameter)
-          set clearanceRadius     $project::Rendering(RearMockup/DiscClearance)
+          set disc_Offset         [rattleCAD::control::getValue Rendering/RearMockup/DiscOffset]
+          set disc_Width          [rattleCAD::control::getValue Rendering/RearMockup/DiscWidth]
+          set disc_DiameterDisc   [rattleCAD::control::getValue Rendering/RearMockup/DiscDiameter]
+          set clearanceRadius     [rattleCAD::control::getValue Rendering/RearMockup/DiscClearance]
           
           set pos_02  [vectormath::rotateLine $pos_00 $disc_Offset -90]
           set pos_01  [vectormath::rotateLine $pos_02 $disc_Width   90]
@@ -611,11 +611,11 @@
 
 
                 # -- create chainwheels
-            set chainLine           $project::Component(CrankSet/ChainLine)
+            set chainLine           [rattleCAD::control::getValue Component/CrankSet/ChainLine]
             set chainWheelDistance  5
             set chainWheelWidth     2
-            set list_ChainRings     [lsort [split $project::Component(CrankSet/ChainRings) -]]
-                # puts "  <D> create_CrankArm: $project::Component(CrankSet/ChainRings)"
+            set list_ChainRings     [lsort [split [rattleCAD::control::getValue Component/CrankSet/ChainRings] -]]
+                # puts "  <D> create_CrankArm: [rattleCAD::control::getValue Component/CrankSet/ChainRings)"
                 # puts "  <D> create_CrankArm: [llength $list_ChainRings]"
             
             switch [llength $list_ChainRings] {
@@ -664,8 +664,8 @@
                 
                 # -- Tyre clearance
                     set tyreHeight  $ext_Length(06)
-                    set clearRadius [ expr  $tyreHeight + $project::Rendering(RearMockup/TyreClearance) ]
-                    set clearWidth  [ expr  0.5 * $project::Component(Wheel/Rear/TyreWidth)  + $project::Rendering(RearMockup/TyreClearance) ]
+                    set clearRadius [ expr  $tyreHeight + [rattleCAD::control::getValue Rendering/RearMockup/TyreClearance] ]
+                    set clearWidth  [ expr  0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/TyreWidth]  + [rattleCAD::control::getValue Rendering/RearMockup/TyreClearance] ]
                     set pt_99       [ vectormath::addVector  $ext_Center(TyreWidth)  {0 -1} $clearRadius ]
                     set pt_98       [ vectormath::addVector  $pt_99  {-70 0} ]
             lappend polygon     $pt_98  $pt_99
@@ -701,24 +701,24 @@
                 # -- ChainWheel clearance
                     set name        [ lindex [array names ext_ClearChainWheel] 0 ]        
                     set pt_cw1      $ext_ClearChainWheel($name)
-                    set pt_03       [ vectormath::cathetusPoint  $pt_02  $pt_cw1  $project::Rendering(RearMockup/ChainWheelClearance) opposite ]
+                    set pt_03       [ vectormath::cathetusPoint  $pt_02  $pt_cw1  [rattleCAD::control::getValue Rendering/RearMockup/ChainWheelClearance] opposite ]
             lappend polygon     $pt_03
                     
                 # -- # -- second & third ChainWheel
                     set pt_last $pt_cw1
                     foreach name [lrange [array names ext_ClearChainWheel] 1 end] {
                             set pt_tmp  $ext_ClearChainWheel($name)
-                            set vct_tmp [ vectormath::parallel $pt_last $pt_tmp $project::Rendering(RearMockup/ChainWheelClearance) ]
+                            set vct_tmp [ vectormath::parallel $pt_last $pt_tmp [rattleCAD::control::getValue Rendering/RearMockup/ChainWheelClearance] ]
                             lappend polygon     [lindex $vct_tmp 0] [lindex $vct_tmp 1]
                             set pt_last $pt_tmp
                     }
             
                 # -- CrankArm clearance
-                    set delta       [ expr   $project::Rendering(RearMockup/CrankClearance) - $project::Rendering(RearMockup/ChainWheelClearance) ]
+                    set delta       [ expr   [rattleCAD::control::getValue Rendering/RearMockup/CrankClearance] - [rattleCAD::control::getValue Rendering/RearMockup/ChainWheelClearance] ]
                     set pt_ca       [ vectormath::cathetusPoint  $pt_last  $ext_Center(CrankArm)  $delta opposite ]
-                    set vct_tmp     [ vectormath::parallel $pt_last $pt_ca  $project::Rendering(RearMockup/ChainWheelClearance) ]
+                    set vct_tmp     [ vectormath::parallel $pt_last $pt_ca  [rattleCAD::control::getValue Rendering/RearMockup/ChainWheelClearance] ]
             lappend polygon     [ lindex $vct_tmp 0 ] [ lindex $vct_tmp 1 ]
-                    set clearRadius $project::Rendering(RearMockup/CrankClearance)
+                    set clearRadius [rattleCAD::control::getValue Rendering/RearMockup/CrankClearance]
                     set pt_st       [ vectormath::addVector  $ext_Center(CrankArm)  {0 1}  $clearRadius ]
                     set dirAngle    [ expr [vectormath::dirAngle   [lindex $vct_tmp 0] [lindex $vct_tmp 1]] -180 ]
                         # puts "     -> dirAngle $dirAngle"
@@ -734,7 +734,7 @@
             lappend polygon     $pt_04                  
             
                 # -- Casette clearance
-                    set pt_sp       [ vectormath::addVector  $ext_ClearCassette(1)  {  1   0}  $project::Rendering(RearMockup/CassetteClearance) ]
+                    set pt_sp       [ vectormath::addVector  $ext_ClearCassette(1)  {  1   0}  [rattleCAD::control::getValue Rendering/RearMockup/CassetteClearance] ]
                     
                     set pt_11       [ vectormath::addVector  $pt_sp                 {  0   2} ]
                     set pt_12       [ vectormath::addVector  $pt_11                 { 45  25} ]
@@ -777,9 +777,9 @@
 
                 
                 # -- Tyre Clearance
-            # set ratio             [expr $project::Component(Wheel/Rear/TyreWidth)/$project::Component(Wheel/Rear/TyreHeight)]
-            set radius_y      [expr  0.5 * $project::Component(Wheel/Rear/TyreWidth)  + $project::Rendering(RearMockup/TyreClearance) ]
-            set radius_x      [expr  $ext_Length(06)                                  + $project::Rendering(RearMockup/TyreClearance) ]
+            # set ratio             [expr [rattleCAD::control::getValue Component/Wheel/Rear/TyreWidth)/[rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight)]
+            set radius_y      [expr  0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/TyreWidth]  + [rattleCAD::control::getValue Rendering/RearMockup/TyreClearance] ]
+            set radius_x      [expr  $ext_Length(06)                                  + [rattleCAD::control::getValue Rendering/RearMockup/TyreClearance] ]
             set tyre_00       [vectormath::addVector $ext_Center(TyreWidth) [list $radius_x [expr -1.0*$radius_y] ]]
             set tyre_01       [vectormath::addVector $ext_Center(TyreWidth) [list [expr -1.0*$radius_x] $radius_y ]]                     
             set clearMatrix   [appUtil::flatten_nestedList  $tyre_00 $tyre_01 ]
@@ -787,7 +787,7 @@
             $ext_cvName create ovalarc  $clearMatrix       -start 250  -extent 220 -style arc -outline red  -tags __CenterLine__
             
                 # -- ChainWheel Clearance
-            set radius  $project::Rendering(RearMockup/ChainWheelClearance)
+            set radius  [rattleCAD::control::getValue Rendering/RearMockup/ChainWheelClearance]
             foreach name [array names ext_ClearChainWheel] {
                     # puts "   --> $name  $ext_ClearChainWheel($name)"
                 set position    $ext_ClearChainWheel($name)
@@ -795,12 +795,12 @@
             }
             
                 # -- CrankArm Clearance
-            set radius  $project::Rendering(RearMockup/CrankClearance)
+            set radius  [rattleCAD::control::getValue Rendering/RearMockup/CrankClearance]
             set position    $ext_Center(CrankArm)
             $ext_cvName create arc      $position  -radius $radius  -start 30  -extent 180  -style arc  -outline red  -tags __CenterLine__
             
                 # -- Casette clearance
-            set radius  $project::Rendering(RearMockup/CassetteClearance)
+            set radius  [rattleCAD::control::getValue Rendering/RearMockup/CassetteClearance]
             set position    $ext_ClearCassette(1)
             $ext_cvName create arc  $position  -radius $radius  -start 280  -extent 80  -style arc  -outline red  -tags __CenterLine__
             $ext_cvName create arc  $position  -radius $radius  -start   0  -extent 80  -style arc  -outline red  -tags __CenterLine__
@@ -825,13 +825,13 @@
             # puts "  -> create_tubeProfile_Edit: \$ext_ChainStay"
             # parray ext_ChainStay
             
-        set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
-        set profile_x01   $project::FrameTubes(ChainStay/Profile/length_01)
-        set profile_y01   $project::FrameTubes(ChainStay/Profile/width_01)
-        set profile_x02   $project::FrameTubes(ChainStay/Profile/length_02)
-        set profile_y02   $project::FrameTubes(ChainStay/Profile/width_02)
-        set profile_x03   $project::FrameTubes(ChainStay/Profile/length_03)
-        set profile_y03   $project::FrameTubes(ChainStay/Profile/width_03)    
+        set profile_y00   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/width_00]
+        set profile_x01   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/length_01]
+        set profile_y01   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/width_01]
+        set profile_x02   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/length_02]
+        set profile_y02   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/width_02]
+        set profile_x03   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/length_03]
+        set profile_y03   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/width_03]   
             
         set length  [expr $profile_x01 + $profile_x02 + $profile_x03]
         set profile_x04   [expr $ext_Length(ChainStay) - $length + 15]
@@ -977,9 +977,9 @@
         set ctrl_Points(5)  $p9 
         set ctrl_Points(6)  [vectormath::addVector $p9 {20 0}]
         
-            # $project::Lugs(BottomBracket/ChainStay/Offset_TopView
-            # [ expr 0.5 * $project::Component(Wheel/Rear/HubWidth) ]
-            set offset_dropOut [expr $project::Lugs(BottomBracket/ChainStay/Offset_TopView) + 0.5 * $project::Component(Wheel/Rear/HubWidth)]
+            # [rattleCAD::control::getValue Lugs/BottomBracket/ChainStay/Offset_TopView
+            # [ expr 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/HubWidth) ]
+            set offset_dropOut [expr [rattleCAD::control::getValue Lugs/BottomBracket/ChainStay/Offset_TopView] + 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/HubWidth] ]
         set base_p0 [list [lindex $ctrl_p0 0] [expr [lindex $ctrl_p0 1] - $offset_dropOut]]
         set base_p5 [list [lindex $ctrl_p5 0] [lindex $base_p0 1]]
         # -- draw base line
@@ -1160,8 +1160,8 @@
             upvar  1 Length     ext_Length
             upvar  1 Center     ext_Center
             
-            set length03            [ expr 0.5 * $project::Lugs(BottomBracket/Diameter/outside) ]
-            set length04            [ expr 0.5 * $project::Lugs(BottomBracket/Width) ]
+            set length03            [ expr 0.5 * [rattleCAD::control::getValue Lugs/BottomBracket/Diameter/outside] ]
+            set length04            [ expr 0.5 * [rattleCAD::control::getValue Lugs/BottomBracket/Width] ]
             
             set pointList_OutSide   [ list [expr -1*$length03] [expr -1*$length04] $length03 $length04 ]
             set pointList_InSide    [ list [expr -1*$ext_Length(01)] [expr -1*$ext_Length(02)] $ext_Length(01) $ext_Length(02) ]
@@ -1279,15 +1279,15 @@
             update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_04   $S04_angle
             
             puts "\n   -------------------------------"
-            puts "       -> S01_length   $project::FrameTubes(ChainStay/CenterLine/length_01)"
-            puts "       -> S02_length   $project::FrameTubes(ChainStay/CenterLine/length_02)"
-            puts "       -> S03_length   $project::FrameTubes(ChainStay/CenterLine/length_03)"
-            puts "       -> S04_length   $project::FrameTubes(ChainStay/CenterLine/length_04)"
-            puts "       -> S05_length   $project::FrameTubes(ChainStay/CenterLine/length_05)"
-            puts "       -> S01_angle    $project::FrameTubes(ChainStay/CenterLine/angle_01)"
-            puts "       -> S02_angle    $project::FrameTubes(ChainStay/CenterLine/angle_02)"
-            puts "       -> S03_angle    $project::FrameTubes(ChainStay/CenterLine/angle_03)"
-            puts "       -> S04_angle    $project::FrameTubes(ChainStay/CenterLine/angle_04)"
+            puts "       -> S01_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_01]"
+            puts "       -> S02_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_02]"
+            puts "       -> S03_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_03]"
+            puts "       -> S04_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_04]"
+            puts "       -> S05_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_05]"
+            puts "       -> S01_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_01]"
+            puts "       -> S02_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_02]"
+            puts "       -> S03_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_03]"
+            puts "       -> S04_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_04]"
             
               #set cv_Name     [rattleCAD::gui::current_canvasCAD]
               #rattleCAD::cv_custom::clean_StageContent   $cv_Name

@@ -793,7 +793,7 @@
                 #puts "       scale  $scale"
                 #puts "       value  $value"
 
-              # project::remove_tracing
+
 
             set targetVar   [$entry cget -textvariable]
             eval set oldValue   \$$targetVar
@@ -809,16 +809,11 @@
             return
     }
     proc selectEntry {entry} {
-
             # puts "   ... selectEntry"
-              # project::remove_tracing
-
+			
             return
     }
     proc enterEntry {entry} {
-
-              # project::remove_tracing
-
             set entryVar [$entry cget -text]
             eval set currentValue     [expr 1.0 * \$$entryVar]
             set value [format "%.3f" $currentValue]
@@ -884,7 +879,7 @@
             }
             if {$drag_Event == {release}} {
                     # -- exception for changing Result Values
-                    #       e.g.: targetVar     project::Result(Length/TopTube/VirtualLength)
+                    #       e.g.: targetVar     [rattleCAD::control::getValue Result/Length/TopTube/VirtualLength]
                 set targetVar   [$entry cget -textvariable]
                 set _array      [lindex [split $targetVar (:] 2]
                 set _name       [lindex [split $targetVar ()] 1]
