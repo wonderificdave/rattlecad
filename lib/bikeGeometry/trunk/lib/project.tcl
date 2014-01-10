@@ -406,7 +406,7 @@
                 # -- Exception on different types of direction definitions
             switch -exact $type {
                     direction     {    
-                                    if { [file tail $_name] != {polar} } {
+									if { [file tail $_name] != {polar} } {
                                         set _name	[file join $_name polar] 
                                     }
                                 }
@@ -565,31 +565,38 @@
               # just handle nodes of type ...
             switch -exact -- $nodeType {
               TEXT_NODE {
-                    set textValue [$node asText]
-                    set dictPath  [lrange [split [string trim $xPath "/"] /] 0 end-1]
+                      # set parentNode [$node parentNode]
+					  # puts "   -> [$parentNode nodeName]  <- $xPath"
+				    set textValue [$node asText]
+					set dictPath  [lrange [split [string trim $xPath "/"] /] 0 end-1]
+                      # puts "       -> $dictPath"
+                      # puts "           -> $textValue"
                     dict set projectDICT {*}${dictPath} {}
                     set_dictValue ${dictPath} ${textValue}
                     return
                   }
-              ELEMENT_NODE {
-                    foreach childNode [$node childNodes] {
+              ELEMENT_NODE {					
+					foreach childNode [$node childNodes] {
                         recurse_domTree $childNode
                     }
                   }
               default { return }
             }
+			
     }
     proc set_dictValue {dictPath dictValue} {
             variable projectDICT         
             if {[dict exists $projectDICT {*}$dictPath]} {
                   # nested dict does exist
-                if {[expr fmod([llength $dictValue],2)] < 1} {
-                    set command [format "dict set projectDICT %s {\"%s\"}" $dictPath $dictValue]
-                } else {
-                    set command [format "dict set projectDICT %s {%s}" $dictPath $dictValue]
-                }
-                {*}$command
-                return
+				set command [format "dict set projectDICT %s \{%s\}"   $dictPath ${dictValue}]
+				{*}$command
+                return ${dictValue}
+				
+					if {[expr fmod([llength ${dictValue}],2)] < 1} {
+						set command [format "dict set projectDICT %s {\"%s\"}" $dictPath ${dictValue}]
+					} else {              
+						set command [format "dict set projectDICT %s \{%s\}"   $dictPath ${dictValue}]
+					}
             }
     }
     proc get_dictValue {dictPath dictKey} {

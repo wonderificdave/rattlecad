@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.44
+ package provide bikeGeometry 0.45
 
  namespace eval bikeGeometry {
 
@@ -476,6 +476,15 @@
                  # puts "                [format "%s(%s)" $_array $_name] vs $xpath "
              return $newValue
     }
+
+
+    #-------------------------------------------------------------------------
+       #  import a subset of a project	
+	proc import_ProjectSubset {nodeRoot} {
+			project::import_ProjectSubset $nodeRoot
+	}
+
+
     #-------------------------------------------------------------------------
        #  handle modification on /root/Result/... values
     proc set_resultParameter {_array _name value} {
