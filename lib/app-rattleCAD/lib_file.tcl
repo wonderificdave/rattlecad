@@ -112,9 +112,13 @@
             [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
             # maybe new
-            set project::Project(Name)              [ file tail $fileName ]
-            set project::Project(modified)          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            set project::Project(rattleCADVersion)  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+            # set project::Project(Name)              [ file tail $fileName ]
+            # set project::Project(modified)          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            # set project::Project(rattleCADVersion)  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+            
+			set rattleCAD::control::setValue  Project/Name              [ file tail $fileName ]
+            set rattleCAD::control::setValue  Project/modified          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            set rattleCAD::control::setValue  Project/rattleCADVersion  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
                 # -- open File for writing
             set fp [open $fileName w]
@@ -372,7 +376,8 @@
                                 set ::APPL_Config(PROJECT_Name) [file tail      $fileName]
                                 
                                     # --- set xml-File Attributes
-                                set project::Project(Name)     [ file tail $fileName ]
+                                set rattleCAD::control::setValue    Project/Name     [ file tail $fileName ]
+								    # set project::Project(Name)     [ file tail $fileName ]
                                     # [ $domConfig selectNodes /root/Project/Name/text()              ]     nodeValue     [ file tail $fileName ]
 
 
@@ -383,8 +388,10 @@
             }
 
                 # --- set Project(modified)
-            set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            set project::Project(rattleCADVersion)     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+            set rattleCAD::control::setValue    Project/modified             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            set rattleCAD::control::setValue    Project/rattleCADVersion     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+                # set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+                # set project::Project(rattleCADVersion)     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
  
                 # -- read from domConfig
             set domConfig $rattleCAD::control::currentDOM              

@@ -119,10 +119,21 @@ namespace eval rattleCAD::control {
 	}
 
 
-	proc getValue {xpath} {
+	proc getValue {xpath {format {value}} args} {
+	       # key type args
 		variable currentDICT
 		set value     [appUtil::get_dictValue $currentDICT $xpath]
-		puts "        rattleCAD::control::getValue $xpath $value"
+		switch -exact $format {
+		    position  {}
+		    direction {
+			        set value [split [dict get $value polar] ,]
+					# puts "    -> getValue -> direction"
+			    }
+			polygon   {}
+			value     -
+		    default   {}
+		}
+		puts "        rattleCAD::control::getValue $xpath $value  <- $format"
 		return $value
 	}
 
@@ -150,7 +161,8 @@ namespace eval rattleCAD::control {
 		puts "    rattleCAD::control::importSubset"
         
 		  #
-		project::import_ProjectSubset $nodeRoot	
+		bikeGeometry::import_ProjectSubset $nodeRoot	
+		  # project::import_ProjectSubset $nodeRoot	
 		  #
 		  
 		  #

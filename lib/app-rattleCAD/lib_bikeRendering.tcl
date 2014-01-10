@@ -91,18 +91,22 @@
             set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]
 
                 # --- get Rendering Style
-            set Rendering(BrakeFront)       $project::Rendering(Brake/Front)
-            set Rendering(BrakeRear)        $project::Rendering(Brake/Rear)
-            set Rendering(BottleCage_ST)    $project::Rendering(BottleCage/SeatTube)
-            set Rendering(BottleCage_DT)    $project::Rendering(BottleCage/DownTube)
-            set Rendering(BottleCage_DT_L)  $project::Rendering(BottleCage/DownTube_Lower)
+                # set Rendering(BrakeFront)       [rattleCAD::control::getValue Rendering/Brake/Front]
+                # puts "    -> $Rendering(BrakeFront)"
+			set Rendering(BrakeFront)       [rattleCAD::control::getValue Rendering/Brake/Front]
+                # puts "    -> $Rendering(BrakeFront)"
+			    # puts "\n\n\n---------------------------"
+			set Rendering(BrakeRear)        [rattleCAD::control::getValue Rendering/Brake/Rear]
+            set Rendering(BottleCage_ST)    [rattleCAD::control::getValue Rendering/BottleCage/SeatTube]
+            set Rendering(BottleCage_DT)    [rattleCAD::control::getValue Rendering/BottleCage/DownTube]
+            set Rendering(BottleCage_DT_L)  [rattleCAD::control::getValue Rendering/BottleCage/DownTube_Lower]
 
 
             switch $type {
                     HandleBar {
                                 # --- create Handlebar -------------
                             set HandleBar(position)     [ bikeGeometry::get_Object  HandleBar  position    $BB_Position]
-                            set HandleBar(file)         [ checkFileString $project::Component(HandleBar/File)]
+                            set HandleBar(file)         [ checkFileString [rattleCAD::control::getValue Component/HandleBar/File]]
                             set HandleBar(object)       [ $cv_Name readSVG $HandleBar(file) $HandleBar(position) -5  __HandleBar__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $HandleBar(object)
                             if {$updateCommand != {}}   { $cv_Name bind    $HandleBar(object)    <Double-ButtonPress-1> \
@@ -116,7 +120,7 @@
                     DerailleurRear {
                                 # --- create RearDerailleur --------
                             set Derailleur(position)    [ bikeGeometry::get_Object  Lugs/Dropout/Rear/Derailleur  position        $BB_Position]
-                            set Derailleur(file)        [ checkFileString $project::Component(Derailleur/Rear/File) ]
+                            set Derailleur(file)        [ checkFileString [rattleCAD::control::getValue Component/Derailleur/Rear/File] ]
                             set Derailleur(object)      [ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  0  __DerailleurRear__ ]
                                                         $cv_Name addtag  __Decoration__ withtag $Derailleur(object)
                             if {$updateCommand != {}} { $cv_Name bind    $Derailleur(object)    <Double-ButtonPress-1> \
@@ -139,7 +143,7 @@
                                 # --- create FrontDerailleur --------
                             set Derailleur(position)    [ bikeGeometry::get_Object  DerailleurMountFront  position    $BB_Position]
                             set angle                   [ vectormath::angle {0 1} {0 0} [ bikeGeometry::get_Object SeatTube direction ] ]
-                            set Derailleur(file)        [ checkFileString $project::Component(Derailleur/Front/File) ]
+                            set Derailleur(file)        [ checkFileString [rattleCAD::control::getValue Component/Derailleur/Front/File] ]
                             set Derailleur(object)      [ $cv_Name readSVG $Derailleur(file) $Derailleur(position)  $angle  __DerailleurFront__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Derailleur(object)
                             if {$updateCommand != {}}   { $cv_Name bind    $Derailleur(object)    <Double-ButtonPress-1> \
@@ -155,7 +159,7 @@
                     CrankSet {
                                 # --- create Crankset --------------
                             set CrankSet(position)        $BB_Position
-                            set CrankSet(file)            [ checkFileString $project::Component(CrankSet/File) ]
+                            set CrankSet(file)            [ checkFileString [rattleCAD::control::getValue Component/CrankSet/File] ]
                                 # puts "\n  -> \$CrankSet(position) $CrankSet(position)\n"
                                 # puts "\n  -> \$CrankSet(file) $CrankSet(file)\n"
                             set compString [file tail $CrankSet(file)]
@@ -222,7 +226,7 @@
                                             set ss_direction    [ bikeGeometry::get_Object SeatStay direction ]
                                             set ss_angle        [ expr - [ vectormath::angle {0 1} {0 0} $ss_direction ] ]
                                             set RearBrake(position) [ bikeGeometry::get_Object  BrakeRear  position    $BB_Position]
-                                            set RearBrake(file)         [ checkFileString $project::Component(Brake/Rear/File) ]
+                                            set RearBrake(file)         [ checkFileString [rattleCAD::control::getValue Component/Brake/Rear/File] ]
                                             set RearBrake(object)       [ $cv_Name readSVG $RearBrake(file) $RearBrake(position) $ss_angle  __RearBrake__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $RearBrake(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $RearBrake(object)    <Double-ButtonPress-1> \
@@ -247,10 +251,10 @@
                                         Rim {
                                             set ht_direction    [ bikeGeometry::get_Object HeadTube direction ]
                                             set ht_angle        [ expr [ vectormath::angle {0 1} {0 0} $ht_direction ] ]
-                                            set fb_angle        $project::Component(Fork/Crown/Brake/Angle)
+                                            set fb_angle        [rattleCAD::control::getValue Component/Fork/Crown/Brake/Angle]
                                             set fb_angle        [ expr $ht_angle + $fb_angle ]
                                             set FrontBrake(position)    [ bikeGeometry::get_Object  BrakeFront  position    $BB_Position]
-                                            set FrontBrake(file)        [ checkFileString $project::Component(Brake/Front/File) ]
+                                            set FrontBrake(file)        [ checkFileString [rattleCAD::control::getValue Component/Brake/Front/File] ]
                                             set FrontBrake(object)      [ $cv_Name readSVG $FrontBrake(file) $FrontBrake(position) $fb_angle  __FrontBrake__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $FrontBrake(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $FrontBrake(object)    <Double-ButtonPress-1> \
@@ -283,7 +287,7 @@
                                             set st_angle        [ expr 180 + [ vectormath::dirAngle {0 0} $st_direction ] ]
                                             set bc_position     [ bikeGeometry::get_Object    SeatTube/BottleCage/Base    position    $BB_Position]
 
-                                                # set BottleCage(file)        [ checkFileString $project::Component(BottleCage/SeatTube/File ]  asText ] ]
+                                                # set BottleCage(file)        [ checkFileString [rattleCAD::control::getValue Component/BottleCage/SeatTube/File ]  asText ] ]
                                             set BottleCage(object)      [ $cv_Name readSVG $BottleCage(file) $bc_position $st_angle  __BottleCage_ST__ ]
                                                                           $cv_Name addtag  __Decoration__ withtag $BottleCage(object)
                                             if {$updateCommand != {}}   { $cv_Name bind    $BottleCage(object)    <Double-ButtonPress-1> \
@@ -345,8 +349,8 @@
                     Saddle {
                                 # --- create Saddle --------------------
                             set Saddle(position)        [ bikeGeometry::get_Object        Saddle  position        $BB_Position ]
-                            set Saddle(file)            [ checkFileString $project::Component(Saddle/File) ]
-                            set SaddlePosition          [ vectormath::addVector $Saddle(position) [list $project::Rendering(Saddle/Offset_X) $project::Rendering(Saddle/Offset_Y) ] ]
+                            set Saddle(file)            [ checkFileString [rattleCAD::control::getValue Component/Saddle/File] ]
+                            set SaddlePosition          [ vectormath::addVector $Saddle(position) [list [rattleCAD::control::getValue Rendering/Saddle/Offset_X] [rattleCAD::control::getValue Rendering/Saddle/Offset_Y] ] ]
                             set Saddle(object)          [ $cv_Name readSVG $Saddle(file) $SaddlePosition   0  __Saddle__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Saddle(object)
                             if {$updateCommand != {}}   { $cv_Name bind $Saddle(object)    <Double-ButtonPress-1> \
@@ -392,11 +396,13 @@
                                 # --- create Logo --------------------
                             set DownTube(Steerer)       [ bikeGeometry::get_Object      DownTube/End    position        $BB_Position ]
                             set DownTube(BBracket)      [ bikeGeometry::get_Object      DownTube/Start  position        $BB_Position ]
-                            set Logo(Angle)               $project::Result(Tubes/DownTube/Direction/degree)
-                            set Logo(Direction)         [ split $project::Result(Tubes/DownTube/Direction/polar) ,]
+                            
+							set Logo(Angle)               [rattleCAD::control::getValue Result/Tubes/DownTube/Direction/degree]
+                            set Logo(Direction)         [ split [rattleCAD::control::getValue Result/Tubes/DownTube/Direction/polar] ,]
+							    # puts "  -> \$Logo(Angle)      $Logo(Angle) "
                                 # puts "  -> \$Logo(Direction)  $Logo(Direction) "
                             set Logo(position)          [ vectormath::addVector [ vectormath::center $DownTube(BBracket) $DownTube(Steerer) ] $Logo(Direction) -90]
-                            set Logo(file)              [ checkFileString $project::Component(Logo/File) ]
+                            set Logo(file)              [ checkFileString [rattleCAD::control::getValue Component/Logo/File] ]
                             set Logo(object)            [ $cv_Name readSVG $Logo(file) $Logo(position)    $Logo(Angle)  __Logo__ ]
                                                           $cv_Name addtag  __Decoration__ withtag $Logo(object)
                             if {$updateCommand != {}}   { $cv_Name bind $Logo(object)     <Double-ButtonPress-1> \
@@ -573,12 +579,12 @@
 
             # --- create Rear Dropout ----------------
         set RearWheel(position)     [ bikeGeometry::get_Object        RearWheel    position    $BB_Position]
-        set RearDropout(file)       [ checkFileString $project::Lugs(RearDropOut/File) ]
+        set RearDropout(file)       [ checkFileString [rattleCAD::control::getValue Lugs/RearDropOut/File] ]
         set RearDropout(Rotation)   $bikeGeometry::RearDrop(RotationOffset)
         set RearDropout(Direction)  $bikeGeometry::RearDrop(Direction) 
-        set Rendering(RearDropOut)  $project::Rendering(RearDropOut)
+        set Rendering(RearDropOut)  [rattleCAD::control::getValue Rendering/RearDropOut]
             switch -exact $RearDropout(Direction) {
-                Chainstay { set do_angle [expr 180 - $RearDropout(Rotation) + $project::Result(Tubes/ChainStay/Direction/degree)]}              
+                Chainstay { set do_angle [expr 180 - $RearDropout(Rotation) + [rattleCAD::control::getValue Result/Tubes/ChainStay/Direction/degree]]}              
                 default   { set do_angle   0}
             }
             # --- Rear Dropout behind Chain- and SeatStay 
@@ -649,8 +655,8 @@
                 
 
             # --- create BottomBracket ---------------
-        set BottomBracket(outerDiameter)    $project::Lugs(BottomBracket/Diameter/outside)
-        set BottomBracket(innerDiameter)    $project::Lugs(BottomBracket/Diameter/inside)
+        set BottomBracket(outerDiameter)    [rattleCAD::control::getValue Lugs/BottomBracket/Diameter/outside]
+        set BottomBracket(innerDiameter)    [rattleCAD::control::getValue Lugs/BottomBracket/Diameter/inside]
         set BottomBracket(object_1)         [ $cv_Name create circle  $BB_Position  -radius [expr 0.5 * $BottomBracket(outerDiameter)]    -fill $tubeColour    -tags {__Frame__  __BottomBracket__  outside} ]
         set BottomBracket(object_2)         [ $cv_Name create circle  $BB_Position  -radius [expr 0.5 * $BottomBracket(innerDiameter)]    -fill $tubeColour    -tags {__Frame__  __BottomBracket__  inside} ]
         set BottomBracket(object)   __BottomBracket__
@@ -667,8 +673,8 @@
     }
 
     proc createCrank_Custom {cv_Name BB_Position} {
-        variable crankLength    $project::Component(CrankSet/Length)
-        variable teethCount     [lindex [lsort [split $project::Component(CrankSet/ChainRings) -]] end]
+        variable crankLength    [rattleCAD::control::getValue Component/CrankSet/Length]
+        variable teethCount     [lindex [lsort [split [rattleCAD::control::getValue Component/CrankSet/ChainRings] -]] end]
         variable decoRadius     80
 
                 puts ""
@@ -784,12 +790,12 @@
         set tubeColour      "white"
 
             # --- get Rendering Style
-        set Rendering(Fork)         $project::Rendering(Fork)
-        set Rendering(ForkBlade)    $project::Rendering(ForkBlade)
-        set Rendering(ForkDropOut)  $project::Rendering(ForkDropOut)
+        set Rendering(Fork)         [rattleCAD::control::getValue Rendering/Fork]
+        set Rendering(ForkBlade)    [rattleCAD::control::getValue Rendering/ForkBlade]
+        set Rendering(ForkDropOut)  [rattleCAD::control::getValue Rendering/ForkDropOut]
         
                 # tk_messageBox -message "Rendering(ForkDropOut): $Rendering(ForkDropOut)"
-        # puts "\n\n  ... Rendering(Fork)         $project::Rendering(Fork) \n\n"
+        # puts "\n\n  ... Rendering(Fork)         [rattleCAD::control::getValue Rendering/Fork) \n\n"
 
             # --- create Steerer ---------------------
         set Steerer(polygon)        [ bikeGeometry::get_Object     Steerer     polygon        $BB_Position  ]
@@ -840,7 +846,7 @@
                         set ForkCrown(file)         [ checkFileString $bikeGeometry::myFork(CrownFile) ]
                         set ForkDropout(file)       [ checkFileString $bikeGeometry::myFork(DropOutFile) ]
                         set Suspension_ForkRake     [[ $domInit     selectNodes /root/Fork/Suspension_$forkSize/Geometry/Rake ]  asText ]
-                        set Project_ForkRake        $project::Component(Fork/Rake)
+                        set Project_ForkRake        [rattleCAD::control::getValue Component/Fork/Rake]
                         set do_direction            [ bikeGeometry::get_Object     HeadTube    direction ]
                         set do_angle                [ vectormath::angle {0 1} {0 0} $do_direction ]
                         set offset                  [ expr $Project_ForkRake-$Suspension_ForkRake]
@@ -973,7 +979,7 @@
     }
 
     proc createChain {cv_Name BB_Position} {
-        set crankWheelTeethCount     [lindex [lsort [split $project::Component(CrankSet/ChainRings) -]] end]
+        set crankWheelTeethCount     [lindex [lsort [split [rattleCAD::control::getValue Component/CrankSet/ChainRings] -]] end]
         set casetteTeethCount        15
         set toothWith                12.7
         
@@ -1068,7 +1074,7 @@
     
     
                 # --- get defining Values ----------
-            set CrankSetLength            $project::Component(CrankSet/Length)
+            set CrankSetLength            [rattleCAD::control::getValue Component/CrankSet/Length]
                 # --- get defining Point coords ----------
             set BottomBracket       $BB_Position
             set RearWheel           [ bikeGeometry::get_Object     RearWheel               position    $BB_Position ]
@@ -1105,10 +1111,10 @@
                 # $cv_Name create circle  $debug_01  -radius 20  -fill white  -tags __Frame__ -outline darkred
     
     
-            set RimDiameter_Front   $project::Component(Wheel/Front/RimDiameter)
-            set TyreHeight_Front    $project::Component(Wheel/Front/TyreHeight)
-            set RimDiameter_Rear    $project::Component(Wheel/Rear/RimDiameter)
-            set TyreHeight_Rear     $project::Component(Wheel/Rear/TyreHeight)
+            set RimDiameter_Front   [rattleCAD::control::getValue Component/Wheel/Front/RimDiameter]
+            set TyreHeight_Front    [rattleCAD::control::getValue Component/Wheel/Front/TyreHeight]
+            set RimDiameter_Rear    [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter]
+            set TyreHeight_Rear     [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight]
     
     
                 # ------ rearwheel representation
@@ -1159,10 +1165,10 @@
     
                 # ------ saddle representation
                     set saddle_polygon {}
-                    set x_04   [ expr $project::Component(Saddle/LengthNose) + $project::Rendering(Saddle/Offset_X) ]
+                    set x_04   [ expr [rattleCAD::control::getValue Component/Saddle/LengthNose] + [rattleCAD::control::getValue Rendering/Saddle/Offset_X] ]
                     set x_03   [ expr $x_04 - 20 ]
                     set x_02   [ expr $x_04 - 30 ]
-                    set x_01   [ expr $x_04 - $project::Component(Saddle/Length)]
+                    set x_01   [ expr $x_04 - [rattleCAD::control::getValue Component/Saddle/Length]]
                     foreach xy [ list [list $x_01 4] {0 0} [list $x_02 -1] [list $x_03 -5] [list $x_04 -12] ] {
                         set saddle_polygon [ lappend saddle_polygon [vectormath::addVector $Saddle $xy ] ]
                     }
@@ -1263,27 +1269,27 @@
             TopTube_Head {
                     set Miter(header)       "TopTube / HeadTube"
                     set     polygon       [ bikeGeometry::get_Object TubeMiter/TopTube_Head        polygon    {0 0}  ]
-                    set     minorDiameter       $project::FrameTubes(TopTube/DiameterHT)
+                    set     minorDiameter       [rattleCAD::control::getValue FrameTubes(TopTube/DiameterHT]
                     set     minorDirection      [ bikeGeometry::get_Object TopTube     direction ]
-                    set     majorDiameter       $project::FrameTubes(HeadTube/Diameter)
+                    set     majorDiameter       [rattleCAD::control::getValue FrameTubes/HeadTube/Diameter]
                     set     majorDirection      [ bikeGeometry::get_Object HeadTube     direction ]
                     set     offSet              0
                 }
             TopTube_Seat {
                     set Miter(header)       "TopTube / SeatTube"
                     set     polygon             [ bikeGeometry::get_Object TubeMiter/TopTube_Seat        polygon    {0 0} ]
-                    set     majorDiameter       $project::FrameTubes(SeatTube/DiameterTT)
+                    set     majorDiameter       [rattleCAD::control::getValue FrameTubes/SeatTube/DiameterTT]
                     set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
-                    set     minorDiameter       $project::FrameTubes(TopTube/DiameterST)
+                    set     minorDiameter       [rattleCAD::control::getValue FrameTubes/TopTube/DiameterST]
                     set     minorDirection      [ bikeGeometry::get_Object TopTube     direction ]
                     set     offSet              0
                 }
             DownTube_Head {
                     set Miter(header)       "DownTube / HeadTube"
                     set     polygon             [ bikeGeometry::get_Object TubeMiter/DownTube_Head    polygon        {0 0}  ]
-                    set     majorDiameter       $project::FrameTubes(HeadTube/Diameter)
+                    set     majorDiameter       [rattleCAD::control::getValue FrameTubes/HeadTube/Diameter]
                     set     majorDirection      [ bikeGeometry::get_Object HeadTube     direction ]
-                    set     minorDiameter       $project::FrameTubes(DownTube/DiameterHT)
+                    set     minorDiameter       [rattleCAD::control::getValue FrameTubes/DownTube/DiameterHT]
                     set     minorDirection      [ bikeGeometry::get_Object DownTube     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              0
@@ -1293,33 +1299,33 @@
                     set     polygon             [ bikeGeometry::get_Object TubeMiter/DownTube_Seat     polygon       {0 0}  ]
                     set     polygon_out         [ bikeGeometry::get_Object TubeMiter/DownTube_BB_out   polygon       {0 0}  ]
                     set     polygon_in          [ bikeGeometry::get_Object TubeMiter/DownTube_BB_in    polygon       {0 0}  ]
-                    set     majorDiameter       $project::FrameTubes(DownTube/DiameterBB)
+                    set     majorDiameter       [rattleCAD::control::getValue FrameTubes/DownTube/DiameterBB]
                     set     majorDirection      [ bikeGeometry::get_Object DownTube     direction ]
-                    set     minorDiameter       $project::FrameTubes(SeatTube/DiameterBB)
+                    set     minorDiameter       [rattleCAD::control::getValue FrameTubes/SeatTube/DiameterBB]
                     set     minorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              0
-                    set     diameter_addText    "($project::Lugs(BottomBracket/Diameter/outside)/$project::Lugs(BottomBracket/Diameter/inside))"
+                    set     diameter_addText    "([rattleCAD::control::getValue Lugs/BottomBracket/Diameter/outside]/[rattleCAD::control::getValue Lugs/BottomBracket/Diameter/inside])"
                 }
             SeatTube_Down {
                     set Miter(header)       "SeatTube / DownTube"
                     set     polygon             [ bikeGeometry::get_Object TubeMiter/SeatTube_Down     polygon       {0 0}  ]
                     set     polygon_out         [ bikeGeometry::get_Object TubeMiter/SeatTube_BB_out   polygon       {0 0}  ]
                     set     polygon_in          [ bikeGeometry::get_Object TubeMiter/SeatTube_BB_in    polygon       {0 0}  ]
-                    set     majorDiameter       $project::FrameTubes(SeatTube/DiameterBB)
+                    set     majorDiameter       [rattleCAD::control::getValue FrameTubes/SeatTube/DiameterBB]
                     set     majorDirection      [ bikeGeometry::get_Object DownTube     direction ]
-                    set     minorDiameter       $project::FrameTubes(DownTube/DiameterBB)
+                    set     minorDiameter       [rattleCAD::control::getValue FrameTubes/DownTube/DiameterBB]
                     set     minorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              0
-                    set     diameter_addText    "($project::Lugs(BottomBracket/Diameter/outside)/$project::Lugs(BottomBracket/Diameter/inside))"
+                    set     diameter_addText    "([rattleCAD::control::getValue Lugs/BottomBracket/Diameter/outside]/[rattleCAD::control::getValue Lugs/BottomBracket/Diameter/inside])"
                 }
             SeatStay_01 {
                     set Miter(header)       "SeatStay / SeatTube"
                     set     polygon             [ bikeGeometry::get_Object TubeMiter/SeatStay_01        polygon      {0 0}  ]
-                    set     majorDiameter       $project::Lugs(SeatTube/SeatStay/MiterDiameter)
+                    set     majorDiameter       [rattleCAD::control::getValue Lugs/SeatTube/SeatStay/MiterDiameter]
                     set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
-                    set     minorDiameter       $project::FrameTubes(SeatStay/DiameterST)
+                    set     minorDiameter       [rattleCAD::control::getValue FrameTubes/SeatStay/DiameterST]
                     set     minorDirection      [ bikeGeometry::get_Object SeatStay     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              [ format "%.3f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
@@ -1327,9 +1333,9 @@
             SeatStay_02 {
                     set Miter(header)       "SeatStay / SeatTube"
                     set     polygon             [ bikeGeometry::get_Object TubeMiter/SeatStay_02        polygon      {0 0}  ]
-                    set     majorDiameter       $project::Lugs(SeatTube/SeatStay/MiterDiameter)
+                    set     majorDiameter       [rattleCAD::control::getValue Lugs/SeatTube/SeatStay/MiterDiameter]
                     set     majorDirection      [ bikeGeometry::get_Object SeatTube     direction ]
-                    set     minorDiameter       $project::FrameTubes(SeatStay/DiameterST)
+                    set     minorDiameter       [rattleCAD::control::getValue FrameTubes/SeatStay/DiameterST]
                     set     minorDirection      [ bikeGeometry::get_Object SeatStay     direction ]
                     set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
                     set     offSet              [ format "%.3f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]

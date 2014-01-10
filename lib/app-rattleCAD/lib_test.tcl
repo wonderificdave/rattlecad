@@ -275,7 +275,8 @@
               set _name     [lindex [split $arrayName ()] 1]
               set xPath     [format "%s/%s" $_array $_name]
                
-              set currentValue  [project::getValue $arrayName value]
+              set currentValue  [rattleCAD::control::getValue  $arrayName value]
+                # set currentValue  [project::getValue $arrayName value]
               set valueList [[namespace current]::demoValues $currentValue $left $right $end]
                
               set myValues($_index) [appUtil::flatten_nestedList $xPath $valueList]
