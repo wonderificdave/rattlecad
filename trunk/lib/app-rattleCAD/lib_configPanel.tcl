@@ -51,7 +51,106 @@
     variable    compCanvas      {}
     variable    frameCanvas     {}
     
-    variable   projectDOM
+    variable    projectDOM
+	
+	variable Personal  ;    array set Personal {
+									HandleBar_Distance   {a}
+									HandleBar_Height     {b}
+									Saddle_Distance      {c}
+									Saddle_Height        {d}
+									InnerLeg_Length      {e}
+	                            }
+	variable Custom    ;    array set Custom {
+									WheelPosition/Rear    {a}
+									BottomBracket/Depth   {b}
+									TopTube/PivotPosition {c}
+                                    TopTube/OffsetHT      {d}
+									DownTube/OffsetHT     {e}
+									SeatTube/Extension    {f}
+									SeatStay/OffsetTT     {g}
+									TopTube/Angle         {h}
+									HeadTube/Angle        {i}
+									DownTube/OffsetBB	  {j}
+	                            }
+	variable Component ;    array set Component {
+									SeatPost/Setback      {a}
+									Fork/Rake             {b}
+									Fork/Height           {c}
+									Stem/Angle            {d}
+									Stem/Length           {e}
+									Wheel/Rear/RimDiameter   {} 
+									Wheel/Rear/TyreHeight    {}
+									Wheel/Front/RimDiameter  {} 
+									Wheel/Front/TyreHeight	 {}
+									HeadSet/Height/Bottom    {}
+	                            }
+	variable Result    ;    array set Result {
+									Length/TopTube/VirtualLength   {b}
+									Length/FrontWheel/horizontal   {bb}
+									Length/FrontWheel/diagonal     {b}
+									Length/BottomBracket/Height    {bb}
+									Length/Saddle/SeatTube_BB      {b}
+									Angle/HeadTube/TopTube         {bb}
+	                            }
+	variable Lugs       ;    array set Lugs {
+									HeadTube/TopTube/Angle/value               {a}
+									HeadTube/TopTube/Angle/plus_minus          {b}
+									HeadTube/DownTube/Angle/value              {c}
+									HeadTube/DownTube/Angle/plus_minus         {d}
+									BottomBracket/DownTube/Angle/value         {e}
+									BottomBracket/DownTube/Angle/plus_minus    {f}
+									BottomBracket/ChainStay/Angle/value        {g}
+									BottomBracket/ChainStay/Angle/plus_minus   {h}
+									RearDropOut/Angle/value                    {i}
+									RearDropOut/Angle/plus_minus               {j}
+									SeatTube/SeatStay/Angle/value              {k}
+									SeatTube/SeatStay/Angle/plus_minus 		   {l}
+	                            }
+	variable FrameTubes ;    array set FrameTubes {
+									HeadTube/Length                            {}
+	                            } 
+	
+
+    proc init_configValues {} {
+	
+			variable Personal     	
+			variable Custom      	
+			variable Component     	
+			variable Result       	
+			variable Lugs         	
+			variable FrameTubes 
+
+			
+			puts "\n\n configPanel - Update \n\n"
+			# foreach arrayNameComplete [appUtil::_childArrays {::rattleCAD::config}] {}
+			foreach arrayNameComplete [appUtil::_childArrays [namespace current]] {
+				puts "    -> $arrayNameComplete"
+				set arrayName [lindex [split $arrayNameComplete :] end]
+				foreach key [lsort [array names $arrayNameComplete]] {
+					set value [rattleCAD::control::getValue $arrayName/$key]
+					puts "        -> $key   -> $value"
+					
+					#puts " <D>           $::rattleCAD::config::Component(Fork/Height)"
+					set command [format "set %s(%s) %s" $arrayName $key $value]
+					{*}$command
+					
+					#puts "  set value \$$arrayName($key)]
+					set value [array get $arrayName $key]
+					puts "    -> [lindex $value 1]"
+					# eval set value [set $arrayName($key)]
+					#{*}$command
+					#puts " <D>           $arrayName/$key $value"
+					#puts " <D>           $::rattleCAD::config::Component(Fork/Heigh)"
+				}
+			}	
+					puts " <D>           $Component(Fork/Height)"
+					puts " <D>           $::rattleCAD::config::Component(Fork/Height)"
+			
+			update
+			# exit
+	
+	
+	}
 
 
     #-------------------------------------------------------------------------
@@ -180,7 +279,9 @@
        #  add content 01
        #
     proc add_Basic {w} {
-                #
+            
+				
+				#
                 # add content
                 #
             set     menueFrame  [ frame $w.f_menue  -relief flat -bd 1]
@@ -266,7 +367,7 @@
                 #   Tube Details
             ttk::labelframe    $menueFrame.sf.lf_01        -text "Tube Details"
                 pack $menueFrame.sf.lf_01                  -side top  -fill x  -expand yes  -pady 2
-                    create_configEdit_title $menueFrame.sf.lf_01  {HeadTube - Length}               FrameTubes(HeadTube/Length)         0.20  darkred
+                    create_configEdit_title $menueFrame.sf.lf_01    {HeadTube - Length}             FrameTubes(HeadTube/Length)         0.20  darkred
                     create_configEdit_title $menueFrame.sf.lf_01    {HeadTube/TopTube - Angle}      Result(Angle/HeadTube/TopTube)      0.02  darkblue
                     create_configEdit_title $menueFrame.sf.lf_01    {HeadTube/TopTube - Offset}     Custom(TopTube/OffsetHT)            0.20  darkred
                     create_configEdit_title $menueFrame.sf.lf_01    {HeadTube/DownTube - Offset}    Custom(DownTube/OffsetHT)           0.20  darkred
@@ -274,7 +375,7 @@
                     create_configEdit_title $menueFrame.sf.lf_01    {SeatTube - Extension}          Custom(SeatTube/Extension)          0.20  darkred
                     create_configEdit_title $menueFrame.sf.lf_01    {TopTube/SeatStay - Offset}     Custom(SeatStay/OffsetTT)           0.20  darkred
                     create_configEdit_title $menueFrame.sf.lf_01    {TopTube - Angle}               Custom(TopTube/Angle)               0.20  darkred
-                    create_configEdit_title $menueFrame.sf.lf_01    {DownTube/BB - Offset}          Custom(DownTube/OffsetBB)          0.20  darkred
+                    create_configEdit_title $menueFrame.sf.lf_01    {DownTube/BB - Offset}          Custom(DownTube/OffsetBB)           0.20  darkred
 
 
                 # -----------------
@@ -292,7 +393,7 @@
                         set _name   [string range $xPath [string length $_array/] end]
 
                         incr i 1
-                        puts "       ... $xPath  $configValue($xPath)"
+                        # puts "       ... $xPath  $configValue($xPath)"
 
                         set fileFrame [frame $menueFrame.sf.lf_09.f_$i]
                         switch -exact $xPath {
@@ -421,7 +522,7 @@
                         set _name   [string range $xPath [string length $_array/] end]
 
                         incr i 1
-                        puts "       ... $xPath  $configValue($xPath)"
+                        #puts "       ... $xPath  $configValue($xPath)"
 
                         set fileFrame [frame $menueFrame.sf.lf_01.f_$i]
                         label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"
@@ -623,7 +724,7 @@
     #-------------------------------------------------------------------------
        #  create config_line
        #
-    proc init_configValues {} {
+    proc init_configValues__ {} {
 
             variable componentList
             variable projectDOM
@@ -687,9 +788,18 @@
        #  binding on config_line
        #
     proc change_ValueEdit {textVar scale direction} {
-            #
+            
+			variable Personal     	
+			variable Custom      	
+			variable Component     	
+			variable Result       	
+			variable Lugs         	
+			variable FrameTubes 			
+			
+			#
             # --- dynamic update value ---
-                set currentValue [set ::$textVar]
+                puts "  <D>  \$textVar $textVar [set $textVar]"
+				set currentValue [set $textVar]
                 # puts "    -> $direction"
                 # puts "    -> $scale"
             #
@@ -699,7 +809,7 @@
                         "Down"      {set newValue [expr {$currentValue - $scale}]}
                         "default"   {return}
                 }
-                set ::$textVar [format "%.3f" $newValue]
+                set $textVar [format "%.3f" $newValue]
     }
 
     #-------------------------------------------------------------------------
@@ -714,14 +824,25 @@
        #
     proc create_configEdit {w _arrayName scale {color {}}} {
 
-            variable    rdials_list
-            variable    configValue
+			variable Personal     	
+			variable Custom      	
+			variable Component     	
+			variable Result       	
+			variable Lugs         	
+			variable FrameTubes 
+
+			  # puts "  <D>  \$FrameTubes(HeadTube/Length):   $FrameTubes(HeadTube/Length)"
+
+			variable    rdials_list
+              # variable    configValue
             set _array [lindex [split $_arrayName (] 0]
             set _name  [lindex [split $_arrayName ()] 1]
 
 
             set xPath       [format "%s/%s" $_array $_name]
-            eval set configValue($xPath)    [format "$%s::%s(%s)" project $_array $_name]
+            # eval set configValue($xPath)    [format "$%s(%s)" $_array $_name]
+			puts "   -> [format "$%s(%s)" $_array $_name]     <--- $xPath  <- $_array $_name "
+              # eval set configValue($xPath)    [format "$%s::%s(%s)" project $_array $_name]
             set labelString $_name
 
 
@@ -739,6 +860,8 @@
             if {[string length $labelString] > 33} {
                 set labelString "[string range $labelString 0 29] .."
             }
+			set     textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
+			
             label   $cfgFrame.sp    -text ""      \
                             -bd 1
             label   $cfgFrame.lb    -text "   $labelString "      \
@@ -746,10 +869,12 @@
                             -bd 1  -anchor w
 
             entry   $cfgFrame.cfg    \
-                            -textvariable [format "project::%s(%s)"  $_array $_name] \
+                            -textvariable $textvariable \
                             -width 10  \
                             -bd 1  -justify right -bg white
                             # e.g.: project::Result(Length/TopTube/VirtualLength)
+							# -textvariable [format "project::%s(%s)"  $_array $_name]
+            puts "     create_configEdit:  \$textvariable $textvariable"                  
 
 
             if {$color != {}} {
@@ -760,7 +885,7 @@
 
             lappend rdials_list [expr [llength $rdials_list] + 1]
 
-            bind $cfgFrame.cfg <Key>        [list [namespace current]::change_ValueEdit [namespace current]::configValue($xPath) $scale %K]
+            bind $cfgFrame.cfg <Key>        [list [namespace current]::change_ValueEdit $textvariable $scale %K]
             bind $cfgFrame.cfg <Enter>      [list [namespace current]::enterEntry  $cfgFrame.cfg]
             bind $cfgFrame.cfg <Leave>      [list [namespace current]::leaveEntry  $cfgFrame.cfg]
             bind $cfgFrame.cfg <Return>     [list [namespace current]::leaveEntry  $cfgFrame.cfg]
@@ -814,16 +939,32 @@
             return
     }
     proc enterEntry {entry} {
-            set entryVar [$entry cget -text]
+            
+			variable Personal     	
+			variable Custom      	
+			variable Component     	
+			variable Result       	
+			variable Lugs         	
+			variable FrameTubes
+
+			set entryVar [$entry cget -text]
             eval set currentValue     [expr 1.0 * \$$entryVar]
             set value [format "%.3f" $currentValue]
-            set [namespace current]::configValue(entry) $value
+            # set [namespace current]::configValue(entry) $value
 
             return
     }
     proc leaveEntry {entry} {
-
-            set targetVar   [$entry cget -textvariable]
+    
+			variable Personal     	
+			variable Custom      	
+			variable Component     	
+			variable Result       	
+			variable Lugs         	
+			variable FrameTubes 
+			
+			set targetVar   [$entry cget -textvariable]
+	    puts "   -> $targetVar"
             set _array      [lindex [split $targetVar (:] 2]
             set _name       [lindex [split $targetVar ()] 1]
 
@@ -831,7 +972,12 @@
             eval set newValue   \$$entryVar
             set newValue     [expr 1.0 * [string map {, .} $newValue]]
 
-            eval set oldValue    $[namespace current]::configValue(entry)
+            rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
+
+        puts "  <D> return"
+		return
+		
+			# eval set oldValue    $[namespace current]::configValue(entry)
                     # puts "     \$oldValue $oldValue"
                     # puts "     \$newValue $newValue"
                     # puts "[$entry cget -text]"
@@ -898,13 +1044,13 @@
     proc create_config_cBox {w _arrayName contentList} {
 
             variable    cboxList
-            variable    configValue
+            # variable    configValue
             set _array [lindex [split $_arrayName (] 0]
             set _name [lindex [split $_arrayName ()] 1]
 
 
             set xPath       [format "%s/%s" $_array $_name]
-            eval set configValue($xPath)    [format "$%s::%s(%s)" project $_array $_name]
+            #eval set configValue($xPath)    [format "$%s::%s(%s)" project $_array $_name]
             set labelString $_name
 
                 # --------------
@@ -922,16 +1068,21 @@
             if {[string length $labelString] > 29} {
                 set labelString "[string range $labelString 0 26] .."
             }
-            label   $cfgFrame.lb    -text "   $labelString:"      \
+            
+			#set     textvariable [format "%s(%s)"  $_array $_name]
+			set     textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
+			
+			label   $cfgFrame.lb    -text "   $labelString:"      \
                             -bd 1  -anchor w
 
             ttk::combobox $cfgFrame.cb \
-                            -textvariable [namespace current]::configValue($xPath) \
+                            -textvariable $textvariable \
                             -values $contentList    \
                             -width 17 \
                             -height 10 \
-                            -justify right \
-                            -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::configValue($xPath)]
+                            -justify right 
+							
+                            #-postcommand [list eval set [namespace current]::oldValue \$[namespace current]::configValue($xPath)]
 
 
             lappend cboxList $cfgFrame.cb
@@ -946,21 +1097,23 @@
     proc tubing_checkAngles {} {
             set rattleCAD::gui::checkAngles {on}
             rattleCAD::gui::select_canvasCAD   cv_Custom10
-            rattleCAD::cv_custom::updateView           [rattleCAD::gui::current_canvasCAD]
+            rattleCAD::cv_custom::updateView   [rattleCAD::gui::current_canvasCAD]
     }
 
 
     proc check_Value { w xPath targetVar} {
 
-            variable configValue
-            variable oldValue
+            #variable configValue
+            # variable oldValue
+        #puts "  <D> return"
+		#return
     
              switch $xPath {
                     {Component/Wheel/Rear/RimDiameter} -
                     {Component/Wheel/Front/RimDiameter} {
                             if {[string range $configValue($xPath) 0 3] == "----"} {
                                     # puts "   ... change value"
-                                set configValue($xPath) $oldValue
+                                # set configValue($xPath) $oldValue
                             } else {
                                     # puts "   ... $configValue($xPath)"
                                     # puts "      >[split $configValue($xPath) ;]<"
@@ -968,19 +1121,22 @@
                                 set value [string trim [lindex [split $configValue($xPath) ;] 0]]
                                 set value [format "%.3f" $value]
                                 set configValue($xPath)  $value
-                                     puts "   ... $configValue($xPath)"
+                                     #puts "   ... $configValue($xPath)"
                                      puts "   ... $targetVar"
                                 set key [lindex [split $targetVar :] 2]
                                      puts "   ... $key"
                                 rattleCAD::control::setValue $key $value
                             }
                         }
+					default {
+					        puts " ... check_Value: $xpath"
+					    }
             }
     }
     #-------------------------------------------------------------------------
        #  update Config
        #
-    proc registerUpdate {{entryVar ""}  {value {0}} } {
+    proc registerUpdate__ {{entryVar ""}  {value {0}} } {
 
                     puts "\n"
                     puts "  -------------------------------------------"
@@ -1008,7 +1164,10 @@
        #
     proc update_Rendering {} {
 
-        variable componentList
+        puts "  <D> return"
+		return
+		
+		variable componentList
         variable configValue
 
         foreach xPath $componentList {
