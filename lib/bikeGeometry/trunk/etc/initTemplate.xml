@@ -150,9 +150,9 @@
 
     </Fork>
 
-
-    <Result>
-        <!-- resulting values -->
+	
+	<Result>		
+		
         <Position>
             <BottomBracket>0.00,0.00</BottomBracket>
             <FrontWheel>0.00,0.00</FrontWheel>
@@ -219,10 +219,12 @@
                 <diagonal>600.00</diagonal>
                 <horizontal>0.00</horizontal>
                 <Radius>0.00</Radius>
+				<Diameter>0.00</Diameter>
             </FrontWheel>
             <RearWheel>
                 <horizontal>0.00</horizontal>
                 <Radius>0.00</Radius>
+				<Diameter>0.00</Diameter>
             </RearWheel>
             <Personal>
                 <SaddleNose_HB>0.00</SaddleNose_HB>
@@ -442,4 +444,5 @@
         </TubeMiter>
     </Result>
 
+	
 </root>

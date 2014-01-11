@@ -228,7 +228,9 @@
             puts "      project::runTime_2_dict"
             puts "        ... domNode:  [$domNode nodeName]" 
 
-            foreach branch [[$domNode selectNodes /[$domNode nodeName]] childNodes] {
+              # -- update Config and Result Values
+			  #
+			foreach branch [[$domNode selectNodes /[$domNode nodeName]] childNodes] {
                     # puts " 1st level:  [$branch toXPath]"
                     # just care about nodes of type ELEMENT_NODE
                     #  or be aware of comments at this level
@@ -240,7 +242,31 @@
                     # fill the dictionary
                 recurse_domTree $branchNode
             }
-            return $projectDICT 
+			
+						
+			  # -- add Runtime to projectDICT
+			  #
+			  # foreach arrayName { Personal  Custom  FrameTubes  Component  Lugs  Rendering  Reference  Result } {}
+			foreach arrayNameComplete [appUtil::_childArrays {::bikeGeometry}] {
+			        # puts "      -> $arrayNameComplete"
+				    # set arrayName  [format "%s::%s" [namespace current] $arrayName]
+				foreach key [lsort [array names $arrayNameComplete]] {
+					  # -> get value
+					set command [format "set value $%s(%s)" $arrayNameComplete $key]
+					  # puts "          -> $command"
+					eval $command
+					  # puts "      -> $key -> $value"
+                    set arrayName [lindex [split $arrayNameComplete ::] end]
+                    set dictPath  [split [string trim Runtime/$arrayName/$key "/"] /]
+                      # puts "       -> $dictPath"
+                    set_dictValue ${dictPath} ${value}
+                      # return
+				}
+			}
+			          # puts "   -> Runtime"
+				      # puts "        -> Runtime FrameTubes Tubes TopTube -> [get_dictValue {Runtime FrameTubes Tubes TopTube} Direction]"
+              # exit
+			return ${projectDICT}
     }    
     #-------------------------------------------------------------------------
         # unifyKey 
@@ -584,21 +610,15 @@
             }
 			
     }
-    proc set_dictValue {dictPath dictValue} {
-            variable projectDICT         
-            if {[dict exists $projectDICT {*}$dictPath]} {
-                  # nested dict does exist
-				set command [format "dict set projectDICT %s \{%s\}"   $dictPath ${dictValue}]
-				{*}$command
-                return ${dictValue}
-				
-					if {[expr fmod([llength ${dictValue}],2)] < 1} {
-						set command [format "dict set projectDICT %s {\"%s\"}" $dictPath ${dictValue}]
-					} else {              
-						set command [format "dict set projectDICT %s \{%s\}"   $dictPath ${dictValue}]
-					}
-            }
-    }
+    proc set_dictValue {dictPath dictValue args} {
+            variable projectDICT
+            
+			set command [format "dict set projectDICT %s \{%s\}"   $dictPath ${dictValue}]
+			    # puts "            ........ set value: $command"
+			{*}$command
+			    # dict set projectDICT Runtime ChainStay CenterLine angle_01 {-8.000}
+			return
+    }    
     proc get_dictValue {dictPath dictKey} {
               variable projectDICT  
               set value "___undefined___"
@@ -610,6 +630,7 @@
         # see  http://wiki.tcl.tk/23526
         #
     proc pdict { d {i 0} {p "  "} {s " -> "} } {
+	          # set ouputList {}
             set errorInfo $::errorInfo
             set errorCode $::errorCode
                 set fRepExist [expr {0 < [llength\
@@ -628,6 +649,7 @@
             }
             if {[info exists dName]} {
                 puts "dict $dName"
+				  # lappend ouputList "dict $dName"
             }
             set prefix [string repeat $p $i]
             set max 0
@@ -651,5 +673,6 @@
             set ::errorCode $errorCode
             return ""
     }
+
 
 }
