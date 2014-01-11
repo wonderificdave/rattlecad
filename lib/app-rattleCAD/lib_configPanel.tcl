@@ -53,103 +53,118 @@
     
     variable    projectDOM
 	
-	variable Personal  ;    array set Personal {
-									HandleBar_Distance   {a}
-									HandleBar_Height     {b}
-									Saddle_Distance      {c}
-									Saddle_Height        {d}
-									InnerLeg_Length      {e}
-	                            }
-	variable Custom    ;    array set Custom {
-									WheelPosition/Rear    {a}
-									BottomBracket/Depth   {b}
-									TopTube/PivotPosition {c}
-                                    TopTube/OffsetHT      {d}
-									DownTube/OffsetHT     {e}
-									SeatTube/Extension    {f}
-									SeatStay/OffsetTT     {g}
-									TopTube/Angle         {h}
-									HeadTube/Angle        {i}
-									DownTube/OffsetBB	  {j}
-	                            }
-	variable Component ;    array set Component {
-									SeatPost/Setback      {a}
-									Fork/Rake             {b}
-									Fork/Height           {c}
-									Stem/Angle            {d}
-									Stem/Length           {e}
-									Wheel/Rear/RimDiameter   {} 
-									Wheel/Rear/TyreHeight    {}
-									Wheel/Front/RimDiameter  {} 
-									Wheel/Front/TyreHeight	 {}
-									HeadSet/Height/Bottom    {}
-	                            }
-	variable Result    ;    array set Result {
-									Length/TopTube/VirtualLength   {b}
-									Length/FrontWheel/horizontal   {bb}
-									Length/FrontWheel/diagonal     {b}
-									Length/BottomBracket/Height    {bb}
-									Length/Saddle/SeatTube_BB      {b}
-									Angle/HeadTube/TopTube         {bb}
-	                            }
-	variable Lugs       ;    array set Lugs {
-									HeadTube/TopTube/Angle/value               {a}
-									HeadTube/TopTube/Angle/plus_minus          {b}
-									HeadTube/DownTube/Angle/value              {c}
-									HeadTube/DownTube/Angle/plus_minus         {d}
-									BottomBracket/DownTube/Angle/value         {e}
-									BottomBracket/DownTube/Angle/plus_minus    {f}
-									BottomBracket/ChainStay/Angle/value        {g}
-									BottomBracket/ChainStay/Angle/plus_minus   {h}
-									RearDropOut/Angle/value                    {i}
-									RearDropOut/Angle/plus_minus               {j}
-									SeatTube/SeatStay/Angle/value              {k}
-									SeatTube/SeatStay/Angle/plus_minus 		   {l}
-	                            }
-	variable FrameTubes ;    array set FrameTubes {
-									HeadTube/Length                            {}
-	                            } 
+	variable Personal
+	array set Personal {
+				HandleBar_Distance   {a}
+				HandleBar_Height     {b}
+				InnerLeg_Length      {e}
+				Saddle_Distance      {c}
+				Saddle_Height        {d}
+			}
+	variable Custom 
+	array set Custom {
+				BottomBracket/Depth   {b}
+				DownTube/OffsetBB	  {j}
+				DownTube/OffsetHT     {e}
+				HeadTube/Angle        {i}
+				SeatStay/OffsetTT     {g}
+				SeatTube/Extension    {f}
+				TopTube/Angle         {h}
+				TopTube/PivotPosition {c}
+				WheelPosition/Rear    {a}
+				TopTube/OffsetHT      {d}
+			}
+								
+	variable Component
+	array set Component {
+				Brake/Front/File         {}
+				Brake/Rear/File          {}
+				CrankSet/File            {}
+				Derailleur/Front/File    {}
+				Derailleur/Rear/File     {}
+				Fork/Crown/File          {d}
+				Fork/DropOut/File        {e}
+				Fork/Height              {c}
+				Fork/Rake                {b}
+				HandleBar/File           {}
+				HeadSet/Height/Bottom    {}
+				Saddle/File              {}									
+				SeatPost/Setback         {a}
+				Stem/Angle               {f}
+				Stem/Length              {g}
+				Wheel/Front/RimDiameter  {} 
+				Wheel/Front/TyreHeight	 {}
+				Wheel/Rear/RimDiameter   {} 
+				Wheel/Rear/TyreHeight    {}
+			}
+			
+	variable Result
+	array set Result {
+				Angle/HeadTube/TopTube         {bb}
+				Length/BottomBracket/Height    {bb}
+				Length/FrontWheel/diagonal     {b}
+				Length/FrontWheel/horizontal   {bb}
+				Length/Saddle/SeatTube_BB      {b}
+				Length/TopTube/VirtualLength   {b}
+			}
+			
+	variable Lugs
+	array set Lugs {
+				BottomBracket/ChainStay/Angle/plus_minus   {h}
+				BottomBracket/ChainStay/Angle/value        {g}
+				BottomBracket/DownTube/Angle/plus_minus    {f}
+				BottomBracket/DownTube/Angle/value         {e}
+				HeadTube/DownTube/Angle/plus_minus         {d}
+				HeadTube/DownTube/Angle/value              {c}
+				HeadTube/TopTube/Angle/plus_minus          {b}
+				HeadTube/TopTube/Angle/value               {a}
+				RearDropOut/Angle/plus_minus               {k}
+				RearDropOut/Angle/value                    {j}
+				RearDropOut/File                           {i}
+				SeatTube/SeatStay/Angle/plus_minus 		   {m}
+				SeatTube/SeatStay/Angle/value              {l}
+			}
+
+	variable FrameTubes
+	array set FrameTubes {
+				HeadTube/Length              {}
+			}
+			
+	variable Rendering
+	array set Rendering {
+				BottleCage/DownTube          {a}
+				BottleCage/DownTube          {b}
+				BottleCage/DownTube_Lower    {b}
+				BottleCage/SeatTube          {d}
+				BottleCage/SeatTube          {e}
+				BottleCage/SeatTube          {f}
+				Brake/Front                  {g}
+				Brake/Rear                   {h}
+				Fork                         {i}
+				ForkBlade                    {j}
+			} 
+								
+								
 	
 
     proc init_configValues {} {
-	
-			variable Personal     	
-			variable Custom      	
-			variable Component     	
-			variable Result       	
-			variable Lugs         	
-			variable FrameTubes 
 
-			
-			puts "\n\n configPanel - Update \n\n"
-			# foreach arrayNameComplete [appUtil::_childArrays {::rattleCAD::config}] {}
+			  # puts "\n\n init_configValues \n\n"
 			foreach arrayNameComplete [appUtil::_childArrays [namespace current]] {
-				puts "    -> $arrayNameComplete"
+				  # puts "    -> $arrayNameComplete"
 				set arrayName [lindex [split $arrayNameComplete :] end]
 				foreach key [lsort [array names $arrayNameComplete]] {
 					set value [rattleCAD::control::getValue $arrayName/$key]
-					puts "        -> $key   -> $value"
-					
-					#puts " <D>           $::rattleCAD::config::Component(Fork/Height)"
-					set command [format "set %s(%s) %s" $arrayName $key $value]
+					  # puts "        -> $key   -> $value"
+					  # puts " <D>           $::rattleCAD::config::Component(Fork/Height)"
+					set command [format "set %s(%s) %s" $arrayNameComplete $key $value]
 					{*}$command
 					
-					#puts "  set value \$$arrayName($key)]
-					set value [array get $arrayName $key]
-					puts "    -> [lindex $value 1]"
-					# eval set value [set $arrayName($key)]
-					#{*}$command
-					#puts " <D>           $arrayName/$key $value"
-					#puts " <D>           $::rattleCAD::config::Component(Fork/Heigh)"
+					set value [lindex [array get $arrayNameComplete $key] 1]
+					  # puts "       <D>  - $arrayNameComplete/$key   <- $value"
 				}
 			}	
-					puts " <D>           $Component(Fork/Height)"
-					puts " <D>           $::rattleCAD::config::Component(Fork/Height)"
-			
 			update
-			# exit
-	
-	
 	}
 
 
@@ -210,7 +225,7 @@
                 # -----------------
                 #
             bind $w        <Configure> [list [namespace current]::register_relative_position     $main $w]
-            bind $main     <Configure> [list [namespace current]::reposition_to_main              $main $w]
+            bind $main     <Configure> [list [namespace current]::reposition_to_main             $main $w]
 
                 # -----------------
                 #
@@ -254,16 +269,22 @@
 
                 # -----------------
                 # add content
-            add_Basic     $nb_Config.geometry
+            add_Basic           $nb_Config.geometry
             $nb_Config select   $nb_Config.frameDetail
             add_FrameDetails    $nb_Config.frameDetail
             $nb_Config select   $nb_Config.frameCheck
             add_FrameCheck      $nb_Config.frameCheck
             $nb_Config select   $nb_Config.bikeComp
             add_BikeComponents  $nb_Config.bikeComp
-            $nb_Config select $nb_Config.geometry
+            $nb_Config select   $nb_Config.geometry
 
-                # -----------------
+                
+				# -----------------
+                #			
+		    bind $nb_Config <<NotebookTabChanged>> [list [namespace current]::bind_notebookTabChanged  $nb_Config]
+
+				
+				# -----------------
                 #
             wm resizable    $w  0 0
                 #    wm  withdraw   $w
@@ -393,14 +414,13 @@
                         set _name   [string range $xPath [string length $_array/] end]
 
                         incr i 1
-                        # puts "       ... $xPath  $configValue($xPath)"
 
                         set fileFrame [frame $menueFrame.sf.lf_09.f_$i]
                         switch -exact $xPath {
                             Rendering/Fork {
                                 label $fileFrame.lb -text "  Select ForkType:"
-                                  # puts "\n  \$fileFrame $fileFrame  \$xPath $xPath\n"
-                                  # puts "     SELECT_ForkType"
+                                    # puts "\n  \$fileFrame $fileFrame  \$xPath $xPath\n"
+                                    # puts "     SELECT_ForkType"
                                 set listBoxContent [ rattleCAD::view::get_listBoxContent SELECT_ForkType Rendering(Fork))]
                                 foreach entry $listBoxContent {
                                     puts "         ... $entry"
@@ -411,19 +431,18 @@
                                 set listBoxContent [rattleCAD::file::get_componentAlternatives  $xPath]
                             }
                         }
-                        ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
+                        set textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
+						set value [set $textvariable]
+						puts "     -> \$textvariable $textvariable     <- $value"
+						ttk::combobox $fileFrame.cb -textvariable $textvariable \
                                                     -values $listBoxContent   -width 30
                             pack $fileFrame     -fill x -expand yes  -pady 2
                             pack $fileFrame.cb  -side right
                             pack $fileFrame.lb  -side left
 
                         set key [format "%s(%s)" $_array $_name]
-                        bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] select]
-                        bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
-
-                            # [ bikeGeometry::set_Value $xPathString $value format]
-                            # bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] select]
-                            # bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" project $_array $_name] update]
+                        bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" [namespace current] $_array $_name] select]
+                        bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_frameParts [format "%s::%s(%s)" [namespace current] $_array $_name] update]
                 }
                 
 
@@ -528,14 +547,21 @@
                         label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"
                         set alternatives [rattleCAD::file::get_componentAlternatives  $xPath]
 
-                        ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath) \
-                                                    -values $alternatives   -width 30
+                        set textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
+						set value [set $textvariable]
+						puts "     -> \$textvariable $textvariable     <- $value"
+                        
+						  # ttk::combobox $fileFrame.cb -textvariable [namespace current]::configValue($xPath)
+						ttk::combobox $fileFrame.cb -textvariable $textvariable \
+                                                   -values $alternatives   -width 30
                             pack $fileFrame     -fill x -expand yes  -pady 2
                             pack $fileFrame.cb  -side right
                             pack $fileFrame.lb  -side left
 
-                            bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
-                            bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]
+                            bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] select]
+                            bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] update]
+                            # bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
+                            # bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]
                 }
 
                 if {$compCanvas != {}} {
@@ -568,11 +594,19 @@
                         incr i 1
                         set optionFrame [frame $menueFrame.sf.lf_02.f___$i]
                         label $optionFrame.lb -text "  $label"
-                        ttk::combobox $optionFrame.cb -textvariable [namespace current]::configValue($xPath) \
-                                                    -values $::APPL_Config($listName)        -width 30
+                                                
+						set textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
+						set value [set $textvariable]
+						puts "     -> \$textvariable $textvariable     <- $value"
+                        
+						  # ttk::combobox $optionFrame.cb -textvariable [namespace current]::configValue($xPath)
+						ttk::combobox $optionFrame.cb -textvariable $textvariable \
+                             -values $::APPL_Config($listName)        -width 30
 
-                        bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
-                        bind $optionFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]
+                        bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] select]
+                        bind $optionFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] update]
+                        # bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
+                        # bind $optionFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]
                         
                         pack $optionFrame -fill x -expand yes  -pady 2
                         pack $optionFrame.cb -side right
@@ -607,8 +641,12 @@
                 puts "       mode:           $mode"
             catch {[namespace current]::::updateCanvas $targetCanvas}
             if {$mode == {select}} {
-                set key [lindex [split $targetVar ::] 2]
-                rattleCAD::control::setValue $key $compFile force
+                  # puts "   -> \$targetVar $targetVar"
+				set key [lindex [split $targetVar ::] end]
+				  # puts "   -> \$key       $key"
+				foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
+			    rattleCAD::control::setValue  $path $compFile  force
+				rattleCAD::view::close_allEdit
             }
               # puts "    ListboxEvent ... done"
     }
@@ -670,11 +708,10 @@
             # wm deiconify   $w
 
             set root_xy [split  [wm geometry $main] +]
-            set root_w     [winfo width $main]
+            set root_w    [winfo  width $main]
             set root_x    [lindex $root_xy 1]
             set root_y    [lindex $root_xy 2]
 
-            set update no
             set update no
 
             if {$root_x != [lindex $cfg_Position 0]} {set update yes}
@@ -685,6 +722,7 @@
                 yes {
                         set dx [lindex $cfg_Position 3]
                         set dy [lindex $cfg_Position 4]
+						  # puts "   -> reposition_to_main  - $w +[expr $root_x+$dx]+[expr $root_y+$dy]"
                         catch {wm geometry    $w +[expr $root_x+$dx]+[expr $root_y+$dy]}
                     }
                 resize {
@@ -721,68 +759,6 @@
             set cfg_Position [list $root_x $root_y $root_w $d_x $d_y ]
                 # puts "     ... register_relative_position $cfg_Position"
     }
-    #-------------------------------------------------------------------------
-       #  create config_line
-       #
-    proc init_configValues__ {} {
-
-            variable componentList
-            variable projectDOM
-            
-            proc recurseInsert { node parent} {
-                    # puts "    ... recurseInsert .. [$node toXPath]"
-                variable componentList
-
-                set name [$node nodeName]
-                    # puts "\n    ... recurseInsert .. name: $name"
-                switch $name {
-                    "Project" -
-                    "#text" -
-                    "#comment" -
-                    "cdata" {}
-                    default {
-                            # puts "[Tree:newItem .f.w [$node toXPath] -image idir]"
-                            # puts "    ... recurseInsert .. [$node toXPath]"
-                            foreach childNode [$node childNodes] {
-                                set name [$childNode nodeName]
-                                switch $name {
-                                    "#text" {       # puts "    ... recurseInsert .. [$node toXPath]"
-                                                set value       [$childNode asText]
-                                                set xPath       [$node toXPath]
-                                                set labelString [string map "{/} { / }" $xPath ]
-                                                set xPathString [string map "{/root/} {}" $xPath ]
-                                                    # puts "   ... $node "
-                                                    # puts "     ... $value "
-                                                    # puts "     $xPathString  $value"
-                                                if {[llength $value] == 1} {
-                                                    if {[llength [split $value ',']] == 1} {
-                                                        set [namespace current]::configValue($xPathString) [ update_Value $xPathString $value format]
-                                                            # set [namespace current]::configValue($xPathString) [ bikeGeometry::set_Value $xPathString $value format]
-                                                    }
-                                                }
-                                                if {[file tail $xPath] == {File}} {
-                                                        # puts "   [file tail $xPath]   $xPath"
-                                                        # puts "        ... [llength $componentList]"
-                                                    lappend componentList $xPathString
-                                                        # puts "        ... [llength $componentList]"
-                                                        # puts "                $componentList"
-                                                }
-
-
-                                            }
-
-                                    default { recurseInsert $childNode $node }
-                                }
-                            }
-                    }
-                }
-            }
-			set projectDOM  $rattleCAD::control::currentDOM
-            recurseInsert   $projectDOM  {/}
-
-            return
-    }
-
 
     #-------------------------------------------------------------------------
        #  binding on config_line
@@ -840,9 +816,9 @@
 
 
             set xPath       [format "%s/%s" $_array $_name]
-            # eval set configValue($xPath)    [format "$%s(%s)" $_array $_name]
+                # eval set configValue($xPath)    [format "$%s(%s)" $_array $_name]
 			puts "   -> [format "$%s(%s)" $_array $_name]     <--- $xPath  <- $_array $_name "
-              # eval set configValue($xPath)    [format "$%s::%s(%s)" project $_array $_name]
+                # eval set configValue($xPath)    [format "$%s::%s(%s)" project $_array $_name]
             set labelString $_name
 
 
@@ -886,17 +862,15 @@
             lappend rdials_list [expr [llength $rdials_list] + 1]
 
             bind $cfgFrame.cfg <Key>        [list [namespace current]::change_ValueEdit $textvariable $scale %K]
-            bind $cfgFrame.cfg <Enter>      [list [namespace current]::enterEntry  $cfgFrame.cfg]
-            bind $cfgFrame.cfg <Leave>      [list [namespace current]::leaveEntry  $cfgFrame.cfg]
-            bind $cfgFrame.cfg <Return>     [list [namespace current]::leaveEntry  $cfgFrame.cfg]
+            bind $cfgFrame.cfg <Enter>      [list [namespace current]::bind_enterEntry  $cfgFrame.cfg]
+            bind $cfgFrame.cfg <Leave>      [list [namespace current]::bind_leaveEntry  $cfgFrame.cfg]
+            bind $cfgFrame.cfg <Return>     [list [namespace current]::bind_leaveEntry  $cfgFrame.cfg]
 
-            bind $cfgFrame.cfg <Double-1>   [list [namespace current]::selectEntry $cfgFrame.cfg]  ;#
+            bind $cfgFrame.cfg <Double-1>   [list [namespace current]::bind_selectEntry $cfgFrame.cfg]  ;#
 
             bind $cfgFrame.cfg <MouseWheel> [list [namespace current]::bind_MouseWheel $cfgFrame.cfg $scale %D]  ;# move up/down
             bind $cfgFrame.cfg <Key-Up>     [list [namespace current]::bind_MouseWheel $cfgFrame.cfg $scale  1]
             bind $cfgFrame.cfg <Key-Down>   [list [namespace current]::bind_MouseWheel $cfgFrame.cfg $scale -1]
-                # bind $cfgFrame.cfg <Key-+>    [list [namespace current]::bind_MouseWheel $myEntry $scale  1]
-                # bind $cfgFrame.cfg <Key-->    [list [namespace current]::bind_MouseWheel $myEntry $scale -1]
 
 
             pack      $cfgFrame.cfg  $cfgFrame.lb $cfgFrame.sp  -side right
@@ -933,12 +907,11 @@
 
             return
     }
-    proc selectEntry {entry} {
+    proc bind_selectEntry {entry} {
             # puts "   ... selectEntry"
-			
             return
     }
-    proc enterEntry {entry} {
+    proc bind_enterEntry {entry} {
             
 			variable Personal     	
 			variable Custom      	
@@ -947,6 +920,8 @@
 			variable Lugs         	
 			variable FrameTubes
 
+			return
+			
 			set entryVar [$entry cget -text]
             eval set currentValue     [expr 1.0 * \$$entryVar]
             set value [format "%.3f" $currentValue]
@@ -954,7 +929,7 @@
 
             return
     }
-    proc leaveEntry {entry} {
+    proc bind_leaveEntry {entry} {
     
 			variable Personal     	
 			variable Custom      	
@@ -964,78 +939,33 @@
 			variable FrameTubes 
 			
 			set targetVar   [$entry cget -textvariable]
-	    puts "   -> $targetVar"
             set _array      [lindex [split $targetVar (:] 2]
             set _name       [lindex [split $targetVar ()] 1]
 
             set entryVar [$entry cget -text]
-            eval set newValue   \$$entryVar
-            set newValue     [expr 1.0 * [string map {, .} $newValue]]
+            eval set value   \$$entryVar
+            set value     [expr 1.0 * [string map {, .} $value]]
+			set value [format "%.3f" $value]
 
-            rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
-
-        puts "  <D> return"
-		return
+			set key [lindex [split $targetVar :] end]
+			  # puts "   -> \$key $key"
+			foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
+			rattleCAD::control::setValue  $path $value
+			rattleCAD::view::close_allEdit
+    }
+	proc bind_notebookTabChanged {notebook} {
+        puts "   -> $notebook"
+		puts "       -> [$notebook select] "
+		switch -exact [$notebook select] {
+		    {.cfg.f.nb.geometry}    { set target {cv_Custom00} }
+			{.cfg.f.nb.frameDetail} { set target {cv_Custom10} }
+			{.cfg.f.nb.frameCheck}  { set target {cv_Custom10} }
+			{.cfg.f.nb.bikeComp}    { set target {cv_Custom50} }
+			default {}
+		}
 		
-			# eval set oldValue    $[namespace current]::configValue(entry)
-                    # puts "     \$oldValue $oldValue"
-                    # puts "     \$newValue $newValue"
-                    # puts "[$entry cget -text]"
-
-            if {$newValue == $oldValue} {
-                puts "\n         ... compare Value $newValue == $oldValue "
-                return
-            }
-
-            puts "\n         ... compare Value $newValue <> $oldValue "
-            puts "     =================="
-            puts "         leaveEntry"
-            puts "             entry        $entry"
-            puts "             targetVar    $targetVar"
-
-            if {$_array eq {Result}} {
-                eval set $targetVar $oldValue
-                bikeGeometry::set_resultParameter $_array $_name $newValue
-                rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
-                return
-            }
-
-            set key [lindex [split $targetVar :] 2]
-                # puts "  <I> \$key $key"
-                # puts "  <I> update_Value $key $newValue"
-            update_Value $key $newValue
-                # bikeGeometry::set_Value $key $newValue
-                # eval set $targetVar $newValue
-
-            rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
-
-            return
-     }
-
-    proc rem_callback_cDial {{entryVar {}}  entry  {value {0}} {drag_Event {}} } {
-                # puts "\n entryVar:    $entryVar"
-                # puts "\n target_Var:  $target_Var"
-                # puts "\n value:       $value"
-                # puts "\n drag_Event:  $drag_Event"
-
-            set value [format "%.3f" $value]
-                # puts "\n value:       $value"
-            if {$entryVar ne ""} {
-                eval set $entryVar      $value;  # reformat value
-            }
-            if {$drag_Event == {release}} {
-                    # -- exception for changing Result Values
-                    #       e.g.: targetVar     [rattleCAD::control::getValue Result/Length/TopTube/VirtualLength]
-                set targetVar   [$entry cget -textvariable]
-                set _array      [lindex [split $targetVar (:] 2]
-                set _name       [lindex [split $targetVar ()] 1]
-                if {$_array eq {Result}} {
-                    bikeGeometry::set_resultParameter $_array $_name $value
-                } else {
-                    eval set $targetVar     $value
-                }
-            }
-     }
+		rattleCAD::gui::select_canvasCAD   $target
+    }	
 
 
     #-------------------------------------------------------------------------
@@ -1087,7 +1017,8 @@
 
             lappend cboxList $cfgFrame.cb
 
-                bind $cfgFrame.cb <<ComboboxSelected>>     [list [namespace current]::check_Value %W $xPath [format "%s::%s(%s)" project $_array $_name]]
+                bind $cfgFrame.cb <<ComboboxSelected>>     [list [namespace current]::check_Value %W $xPath [format "%s::%s(%s)" [namespace current] $_array $_name]]
+                  # bind $cfgFrame.cb <<ComboboxSelected>>     [list [namespace current]::check_Value %W $xPath [format "%s::%s(%s)" project $_array $_name]]
 
             pack      $cfgFrame.lb  -side left
             pack      $cfgFrame.cb  -side right  -fill x
@@ -1103,115 +1034,35 @@
 
     proc check_Value { w xPath targetVar} {
 
-            #variable configValue
-            # variable oldValue
-        #puts "  <D> return"
-		#return
-    
-             switch $xPath {
+			switch $xPath {
                     {Component/Wheel/Rear/RimDiameter} -
                     {Component/Wheel/Front/RimDiameter} {
-                            if {[string range $configValue($xPath) 0 3] == "----"} {
-                                    # puts "   ... change value"
-                                # set configValue($xPath) $oldValue
+                            
+							set oldValue     [rattleCAD::control::getValue $xPath]
+							set textvariable [$w cget -textvariable]
+							set textValue    [set $textvariable]
+							  # puts "  <D>  -> \$textvariable $textvariable"
+							  # puts "  <D>  -> \$textValue    $textValue"
+							  # puts "  <D>"
+							
+							if {[string range $textValue 0 3] == "----"} {
+                                set $textvariable $oldValue
+								return
                             } else {
-                                    # puts "   ... $configValue($xPath)"
-                                    # puts "      >[split $configValue($xPath) ;]<"
-                                    # puts "      >[lindex [split $configValue($xPath) ;] 0]<"
-                                set value [string trim [lindex [split $configValue($xPath) ;] 0]]
+							    set value [string trim [lindex [split $textValue ;] 0]]
                                 set value [format "%.3f" $value]
-                                set configValue($xPath)  $value
-                                     #puts "   ... $configValue($xPath)"
-                                     puts "   ... $targetVar"
-                                set key [lindex [split $targetVar :] 2]
-                                     puts "   ... $key"
-                                rattleCAD::control::setValue $key $value
-                            }
+                                     # puts "   ... $targetVar"
+                                     #set key [lindex [split $targetVar :] 2]
+                                     #     puts "   ... $key"
+                                rattleCAD::control::setValue $xPath $value
+								rattleCAD::view::close_allEdit
+								return
+						    }
                         }
 					default {
 					        puts " ... check_Value: $xpath"
 					    }
             }
     }
-    #-------------------------------------------------------------------------
-       #  update Config
-       #
-    proc registerUpdate__ {{entryVar ""}  {value {0}} } {
-
-                    puts "\n"
-                    puts "  -------------------------------------------"
-                    puts "   ... entryVar $entryVar"
-                    puts "   ... value    $value"
-
-            if {$value == 0} {
-                set textVar     $entryVar
-                # puts "    textVar     $textVar"
-                eval set value      [format "%s" $$textVar]
-                # puts "    value   $value"
-            }
-
-            if {$entryVar ne ""} {
-                  # reformat value
-                set $entryVar [update_Value $key $newValue format]
-                  # puts " -> $rattleCAD::control::model_Update"
-            }
-
-     }
-
-
-    #-------------------------------------------------------------------------
-       #  update_Rendering
-       #
-    proc update_Rendering {} {
-
-        puts "  <D> return"
-		return
-		
-		variable componentList
-        variable configValue
-
-        foreach xPath $componentList {
-             update_Value $xPath $configValue($xPath)
-        }
-
-        foreach xPath { Rendering/Fork
-                        Rendering/Brake/Front
-                        Rendering/Brake/Rear
-                        Rendering/BottleCage/SeatTube
-                        Rendering/BottleCage/DownTube
-                        Rendering/BottleCage/DownTube_Lower
-        } {
-            update_Value $xPath $configValue($xPath)
-        }
-
-        set cv          [ $rattleCAD::gui::noteBook_top select ]
-        set varName     [ rattleCAD::gui::notebook_getVarName $cv ]
-        if {[string range $varName 0 1] == {::}} { set varName [string range $varName 2 end] }
-
-        bikeGeometry::updateConfig       $varName   rattleCAD::cv_custom::updateView    _update_
-    }
-
-
-
-    #-------------------------------------------------------------------------
-        #  this is THE SETTER for the bikeGeometry library
-        #    
-    proc update_Value {key newValue {mode {update}}} {
-            # puts ""
-            # puts "         $rattleCAD::control::model_Update"
-			
-        set updatedValue [rattleCAD::control::setValue $key $newValue $mode]        
-		
-            # puts "         $rattleCAD::control::model_Update"
-            # puts "       -----------------------------------"
-            # puts "         \$key:           $key"
-            # puts "         \$newValue:      $newValue"
-            # puts "         \$mode:          $mode"
-            # puts "         \$updateValue:   $updatedValue"
-        # puts ""
-        return $updatedValue
-    }
-
-
 }
 

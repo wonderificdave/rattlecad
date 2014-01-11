@@ -269,11 +269,12 @@ namespace eval rattleCAD::view {
 
         
         
-		    # foreach {_array _name path} [project::unifyKey $key] break
-		foreach {_array _name path} [rattleCAD::control::unifyKey $key] break
 		    #
-		puts "       _array/_name/path -> $key -> $_array $_name $path"
-		
+		foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
+		    #
+		    # puts "       _array/_name/path -> $key -> $_array $_name $path"
+		    #
+			
 		    # puts "\n  -> here I am --- $key\n"
 		set xPath [format "%s"   [string map {( /  ) ""} $key]]
 		set value       [rattleCAD::control::getValue  $xPath]

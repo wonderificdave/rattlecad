@@ -4,7 +4,8 @@
 -------------------------------------------------------------------------------
     refactor:
         ... care an model/view/control
-            ... bikeGeometry::getObject to to rattleCAD::control::getObject	
+            ... refactor configPanel -> rattleCAD:config 
+			... bikeGeometry::getObject to to rattleCAD::model::getObject	
 
 
 3.4.01.18  - 2014.01.09
@@ -1165,8 +1166,9 @@
 
 3.3.04.09   - 2012.07.22 
 -------------------------------------------------------------------------------
-     feature:
-        ... resize stage on update if window size has changed   bugfix:
+    feature:
+        ... resize stage on update if window size has changed   
+    bugfix:
         ... open Config Panel
           ... config Panel crashes in 3.3.04.08
 

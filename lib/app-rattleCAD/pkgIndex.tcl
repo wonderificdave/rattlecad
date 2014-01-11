@@ -9,8 +9,9 @@
 # full path name of this file's directory.
 
 package ifneeded   rattleCAD  3.4 "\ 
-        [list source  [file join $dir lib__control.tcl]]; \
+        [list source  [file join $dir lib__model.tcl]]; \
         [list source  [file join $dir lib__view.tcl]]; \
+        [list source  [file join $dir lib__control.tcl]]; \
         [list source  [file join $dir lib_file.tcl]]; \
         [list source  [file join $dir lib_gui.tcl]]; \
         [list source  [file join $dir lib_cfgReport.tcl]]; \

@@ -9,7 +9,7 @@
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
         <InnerLeg_Length>850.00</InnerLeg_Length>
-        <HandleBar_Distance>481</HandleBar_Distance>
+        <HandleBar_Distance>481.00</HandleBar_Distance>
         <HandleBar_Height>635.00</HandleBar_Height>
         <Saddle_Distance>212.69</Saddle_Distance>
         <Saddle_Height>710.00</Saddle_Height>
