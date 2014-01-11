@@ -92,7 +92,7 @@
             
             variable myFork         ; array set myFork          {}
 
-            variable DEBUG_Geometry ; array set DEBUG_Geometry    {}
+            variable DEBUG_Geometry ; array set DEBUG_Geometry  {}
 
 
 
