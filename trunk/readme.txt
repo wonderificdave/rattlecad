@@ -1,5 +1,19 @@
 
 
+3.4.01.19  - 2014.01.10
+-------------------------------------------------------------------------------
+    refactor:
+        ... care an model/view/control
+            ... bikeGeometry::getObject to to rattleCAD::control::getObject	
+
+
+3.4.01.18  - 2014.01.09
+-------------------------------------------------------------------------------
+    refactor:
+        ... care an model/view/control
+            ... move references form project:: ... to rattleCAD::control:: ...	
+
+
 3.4.01.17  - 2014.01.08
 -------------------------------------------------------------------------------
     debug:

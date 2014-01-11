@@ -60,8 +60,13 @@
     proc createBaseline {cv_Name BB_Position {colour {gray}}} {
 
                 # --- get distance to Ground
-            set BB_Ground(position) [ vectormath::addVector $bikeGeometry::BottomBracket(Ground)  $BB_Position ]
-
+              # set BB_Ground(position) [ vectormath::addVector $bikeGeometry::BottomBracket(Ground)  $BB_Position ]
+              # puts "   -> \$BB_Ground(position) $BB_Ground(position)"
+		      # puts "   -> rattleCAD::control::getValue BottomBracket/Ground   -> [rattleCAD::control::getValue BottomBracket/Ground]"
+		    set BB_Ground(position) [ vectormath::addVector [rattleCAD::control::getValue Runtime/BottomBracket/Ground]  $BB_Position ]
+              # puts "   -> \$BB_Ground(position) $BB_Ground(position)"
+			  # exit
+		    
             set RimDiameter_Front       $bikeGeometry::FrontWheel(RimDiameter)
             set RimDiameter_Rear        $bikeGeometry::RearWheel(RimDiameter)
 
