@@ -67,6 +67,8 @@ namespace eval rattleCAD::control {
 		set      currentDOM   [bikeGeometry::get_projectDOM]
 		  # [namespace current]::update
 		  #
+		appUtil::pdict $currentDICT
+          #		
 		
           # update timestamp
 		set model_Update      [clock milliseconds]
@@ -133,10 +135,148 @@ namespace eval rattleCAD::control {
 			value     -
 		    default   {}
 		}
-		puts "        rattleCAD::control::getValue $xpath $value  <- $format"
+		  # puts "        rattleCAD::control::getValue $xpath $value  <- $format"
 		return $value
 	}
 
+	    #-------------------------------------------------------------------------
+        #  return all geometry-values to create specified tube in absolute position
+    proc get_Object {object index {centerPoint {0 0}} } {
+                # puts "   ... $object"
+                # {lindex {-1}}
+
+                # -- for debug purpose
+            if {$object == {DEBUG_Geometry}} {
+                    set returnValue    {}
+                    set pointValue $index
+                    foreach xy $pointValue {
+                        foreach {x y} [split $xy ,] break
+                        lappend returnValue $x $y  ; # puts "    ... $returnValue"
+                    }
+                    return [ vectormath::addVectorPointList  $centerPoint $returnValue ]
+            }
+
+
+                # -- default purpose
+            switch -exact $index {
+
+                polygon    {    
+				            set returnValue    {}
+                            switch -exact $object {
+                                Stem             -
+                                HeadSet/Top     -
+                                HeadSet/Bottom     -
+                                SeatPost     {
+                                                set branch "Components/$object/Polygon"
+                                            }
+
+                                TubeMiter/TopTube_Head     -
+                                TubeMiter/TopTube_Seat     -
+                                TubeMiter/DownTube_Head    -
+                                TubeMiter/DownTube_Seat    -
+                                TubeMiter/DownTube_BB_out  -
+                                TubeMiter/DownTube_BB_in   -
+                                TubeMiter/SeatTube_Down    -
+                                TubeMiter/SeatTube_BB_out  -
+                                TubeMiter/SeatTube_BB_in   -
+                                TubeMiter/SeatStay_01      -
+                                TubeMiter/SeatStay_02      -
+                                TubeMiter/Reference {
+                                                set branch "$object/Polygon"    ; # puts " ... $branch"
+                                            }
+
+                                default     {
+                                                set branch "Tubes/$object/Polygon"
+                                            }
+                            }
+                                # puts "    ... $branch"
+                            set svgList    [ project::getValue Result($branch)    polygon ]
+                            foreach xy $svgList {
+                                foreach {x y} [split $xy ,] break
+                                lappend returnValue $x $y
+                            }
+                            return [ vectormath::addVectorPointList  $centerPoint  $returnValue]
+                        }
+
+                position {
+                            set returnValue    {}
+                            switch -glob $object {
+                                BottomBracket -
+                                FrontWheel -
+                                RearWheel -
+                                Saddle -
+                                SeatPostSaddle -
+                                SeatPostSeatTube -
+                                SeatPostPivot -
+                                SaddleProposal -
+                                HandleBar -
+                                LegClearance -
+                                BottomBracketGround -
+                                SteererGround -
+                                SeatTubeGround -
+                                SeatTubeVirtualTopTube -
+                                SeatTubeSaddle -
+                                BrakeFront -
+                                BrakeRear -
+                                DerailleurMountFront -
+                                Reference_HB -
+                                Reference_SN -
+                                SummarySize {
+                                              # Result/Position/Reference_HB
+                                            set branch "Position/$object"
+                                        }
+                                
+                                Lugs/Dropout/Rear/Derailleur {
+                                            set branch "$object"
+                                        }
+
+                                Lugs/* {
+                                            set branch "$object/Position"    ; # puts " ... $branch"
+                                        }
+
+
+                                default {
+                                            # puts "   ... \$object $object"
+                                            set branch "Tubes/$object"
+                                        }
+                            }
+
+                            set pointValue    [ project::getValue Result($branch)    position ]    ; # puts "    ... $pointValue"
+
+                            foreach xy $pointValue {
+                                foreach {x y} [split $xy ,] break
+                                lappend returnValue $x $y    ; # puts "    ... $returnValue"
+                            }
+                            return [ vectormath::addVectorPointList  $centerPoint  $returnValue]
+                        }
+
+                direction {
+                            set returnValue    {}
+                                # puts " ... $object"
+                            switch -glob $object {
+                                    Lugs/* {
+                                            set branch "$object/Direction/polar"    ; # puts " ... $branch"
+                                        }
+
+                                    default {
+                                            set branch "Tubes/$object/Direction/polar"
+                                        }
+                            }
+
+                            set directionValue    [ project::getValue Result($branch)    direction ]    ; # puts "    ... $directionValue"
+                            foreach xy $directionValue {
+                                foreach {x y} [split $xy ,] break
+                                lappend returnValue $x $y   ; # puts "    ... $returnValue"
+                            }
+                            return $returnValue
+                        }
+
+                default    {             puts "   ... object_values $object $index"
+                            #eval set returnValue $[format "frameCoords::%s(%s)" $object $index]
+                            #return [ coords_addVector  $returnValue  $centerPoint]
+                        }
+            }
+    }
 
 	proc newProject {projectDOM} {
 		puts "\n"
@@ -193,7 +333,31 @@ namespace eval rattleCAD::control {
     }	
 	
 	
-	
+    proc unifyKey {key} {
+        
+        package require appUtil 0.9
+        # appUtil::get_procHierarchy
+        
+        set isArray [string first "(" $key 0]
+        if {$isArray > 1} {
+              # puts "          <D> -> got Array  $key <- ($isArray)"
+            set arrayName   [lindex [split $key (]  0]
+            set keyName     [lindex [split $key ()] 1]
+            set xPath       [format "%s/%s" $arrayName $keyName]
+              # puts "          <D> -> got Array  $arrayName $keyName"
+            return [list $arrayName $keyName $xPath]
+        } else {
+            set values      [split $key /]
+            set slashIndex  [string first {/} $key 1]
+              # puts "          <D> -> got xPath  $key <- ($isArray) <- $slashIndex"
+            set arrayName   [string range $key 0 $slashIndex-1]
+            set keyName     [string range $key $slashIndex+1 end]       
+            set xPath       [format "%s/%s" $arrayName $keyName]
+              # puts "          <D> -> got xPath  $arrayName $keyName"
+            return [list $arrayName $keyName $xPath]
+        }
+        #
+    }	
 	
 
 }
