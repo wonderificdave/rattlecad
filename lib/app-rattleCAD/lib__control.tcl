@@ -78,6 +78,12 @@ namespace eval rattleCAD::control {
           # update view
 		rattleCAD::view::updateView  
           #
+		  
+		  # configPanel - Update 
+		#rattleCAD::config::init_configValues
+
+		# puts "  <D>  \$::rattleCAD::config::Result(Angle/HeadTube/TopTube) -> $::rattleCAD::config::Result(Angle/HeadTube/TopTube)"
+		# puts "  <D>  \$rattleCAD::config::Result(Angle/HeadTube/TopTube)   -> $rattleCAD::config::Result(Angle/HeadTube/TopTube)"
 	}
 
 
