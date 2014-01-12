@@ -55,8 +55,7 @@ namespace eval rattleCAD::view {
 
 
     proc updateView {{mode {}}} {
-            # rattleCAD::gui::notebook_updateCanvas {{mode {}}} {}
-			
+            
 			variable noteBook_top
             variable canvasUpdate
             variable canvasRefit

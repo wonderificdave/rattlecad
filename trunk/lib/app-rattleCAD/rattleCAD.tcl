@@ -170,6 +170,7 @@
           set ::APPL_Config(EXPORT_Dir)       [rattleCAD::file::check_user_dir rattleCAD/export]
           set ::APPL_Config(EXPORT_HTML)      [rattleCAD::file::check_user_dir rattleCAD/html]
           set ::APPL_Config(EXPORT_PDF)       [rattleCAD::file::check_user_dir rattleCAD/pdf]
+          set ::APPL_Config(TEMPLATE_Dir)     [rattleCAD::file::check_user_dir rattleCAD/_template/rattleCAD]
                      
                      
                       # -- MainFrame - Indicator  -----------
@@ -254,9 +255,11 @@
           
             
             # -- User Components Directories  --------
-        # Options/ComponentLocation
+            #        -> Options/ComponentLocation
         init_UserCompDirectories [$::APPL_Config(root_InitDOM) selectNode /root/Options/ComponentLocation]
-
+        
+		    # users local Samples 
+		check_templateDirecty
 
             
             # -- set bikeGeometry Fork Configuration      
@@ -985,6 +988,28 @@
         set sourceDir   [file join $::APPL_Config(BASE_Dir) _style]
         catch {file copy [file join $sourceDir Tcl_logo.svg]       $suprDir}
         catch {file copy [file join $sourceDir rattleCAD_logo.svg] $suprDir}
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  check User Components Directories
+        #
+    proc check_templateDirecty {} {
+
+        puts "  ->   check_templateDirecty  "
+		puts "            ... \$::APPL_Config(TEMPLATE_Dir) $::APPL_Config(TEMPLATE_Dir)"
+		
+		if {[catch {glob -directory $::APPL_Config(TEMPLATE_Dir) *} errMsg]} {
+			foreach sampleFile [glob -directory $::APPL_Config(SAMPLE_Dir) *] {
+				puts "          -> [file normalize ${sampleFile}]"
+				file copy -force [file normalize ${sampleFile}] $::APPL_Config(TEMPLATE_Dir)
+			}
+		} else {
+            puts "\n           ... not updated, because of not empty!\n" 
+		}
+		
+		return
+
     }
 
 

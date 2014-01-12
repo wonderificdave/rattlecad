@@ -23,7 +23,9 @@ exec wish "$0" "$@"
           file delete -force $vfsDir
       }
       set buildDir [glob -directory [file normalize $baseDir] -type d *]
-      return $buildDir
+      set buildDir [string trim $buildDir \{\} ]
+        # puts "    .... ${buildDir}"
+	  return ${buildDir}
   }
 
     
@@ -58,6 +60,9 @@ set dirVFS 	   [file join [file dirname $dirTrunk] rattleCAD.vfs]
   #    
 puts "\n ========================\n"
 puts "         get Version Info\n"    
+  # puts "           ... [file join "$dirTrunk" tclkit.inf]\n"    
+  # puts "           ... [file join "$dirTrunk" tclkit.inf]\n"    
+  # puts "           ... $dirTrunk/tclkit.inf\n"    
 if {[file exists [file join $dirTrunk tclkit.inf]]} {
 		# puts " customizing strings in executable"
 		set fd [open [file join $dirTrunk tclkit.inf]]

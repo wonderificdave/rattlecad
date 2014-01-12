@@ -47,7 +47,11 @@
                 etc:*   {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components [lindex [split $fileString :] 1] ]}
                 default {   set svgFile [file join $::APPL_Config(CONFIG_Dir)/components $fileString ]}
             }
-            # puts "            ... createDecoration::checkFileString $svgFile"
+			
+            #
+		puts "            ... rattleCAD::rendering::checkFileString: $fileString"
+		puts "                        ... $svgFile"
+		    #
         if {![file exists $svgFile]} {
                     # puts "           ... does not exist, therfore .."
                 set svgFile [file join $::APPL_Config(CONFIG_Dir)/components default_exception.svg]

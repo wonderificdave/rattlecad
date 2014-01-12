@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>rattleCAD_3.4.01</name>
+	<name>rattleCAD 3.4.01</name>
 	<comment></comment>
 	<projects>
 		<project>appUtil</project>
@@ -12,11 +12,6 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>org.eclipse.dltk.core.scriptbuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
 			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
 			<triggers>full,incremental,</triggers>
 			<arguments>
@@ -24,6 +19,11 @@
 					<key>LaunchConfigHandle</key>
 					<value>&lt;project&gt;/.externalToolBuilders/build_rattleCAD_4_0.launch</value>
 				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.dltk.core.scriptbuilder</name>
+			<arguments>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
