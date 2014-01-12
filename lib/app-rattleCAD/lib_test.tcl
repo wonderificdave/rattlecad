@@ -77,89 +77,108 @@
         #
     proc integrationTest_00 {args} {
           
-       set TEST_Dir $::APPL_Config(TEST_Dir) 
-       puts "\n\n ====== integrationComplete ================ \n\n"
-       puts "   -> TEST_Dir: $TEST_Dir\n"  
-       
+		puts "\n\n ====== integrationComplete ================ \n\n"
+		puts "    --- integrationTest_00 ---\n"
+		
+		set TEST_Dir         $::APPL_Config(TEST_Dir) 
+		set SAMPLE_Dir       [file join ${TEST_Dir} sample]
+		
+		puts "        -> TEST_Dir:        $TEST_Dir"  
+		puts "        -> SAMPLE_Dir:      $SAMPLE_Dir"  
 
-       # -- keep on top --------------
-       wm deiconify .
-       
-       # -- update display -----------
-       rattleCAD::gui::notebook_refitCanvas
-       
-       # -- integration test ---------
-       set openFile         [file join  $TEST_Dir sample __test_Integration_02.xml]
-       puts "          ... $openFile\n"
-       rattleCAD::file::openProject_xml   $openFile
-       
-       
-       puts "\n\n === export  pdf / html  ===\n"
-       rattleCAD::gui::export_Project      pdf
-       wm deiconify .
-       update
-       rattleCAD::gui::export_Project      html
-       wm deiconify .        
-       update
-       
-       
-       puts "\n\n === export  svg / dxf /ps  ===\n"
-       rattleCAD::gui::notebook_exportSVG  $::APPL_Config(EXPORT_Dir) no
-       rattleCAD::gui::notebook_exportDXF  $::APPL_Config(EXPORT_Dir) no
-       rattleCAD::gui::notebook_exportPS   $::APPL_Config(EXPORT_Dir) no
-       wm deiconify .
-       update
-       
-       
-       puts "\n\n === open file  ===\n"
-       puts "   -> TEST_Dir: $TEST_Dir\n"
-       foreach thisFile { 
-              focus_cayo_expert_2010__L_56.xml focus_cayo_expert_2010__M_54.xml  focus_cayo_expert_2010__XL_58.xml \
-              columbus_max.xml \
-              _template_3.2.78.xml _template_3.2.78_offroad.xml _template_3.3.00.xml _template_3.3.02.xml \
-              _template_3.3.03.xml _template_3.3.04.xml _template_3.3.05.35.xml _template_3.3.06.xml \
-              Kid20_V7.xml  ghost_powerkid_20.xml \
-              __test_Integration_02.xml   
-       } {       
-           set openFile     [file join  $TEST_Dir sample $thisFile]
-           puts "          ... integrationTest_00 opened"
-           puts "                 ... $openFile\n"
-           rattleCAD::file::openProject_xml   $openFile 
-           wm deiconify .
-           #update          
-       }
-       
-              
-       puts "\n\n === open config Panel  ===\n"           
-       set cfgPanel [rattleCAD::configPanel::create]
-       puts "    ... $cfgPanel"
-       
-       
-       puts "\n\n === open not existing file  ===\n"  
-       set openFile     [file join  $TEST_Dir sample _ghost_powerkid_20.xml]
-       puts "          ... $openFile\n"
-       rattleCAD::file::openProject_xml   $openFile               
-       
-       
-       puts "\n\n === create Information  ===\n"      
-       rattleCAD::version_info::create  .v_info 0
-       
-       puts "\n\n === create Help  ===\n"
-       rattleCAD::version_info::create  .v_info 1
-       
-       puts "\n\n === create Environment  ===\n"
-       rattleCAD::version_info::create  .v_info 2
-       
-       puts "\n\n === create_intro  ===\n"        
-       create_intro .intro
-       after  100 destroy .intro
-   
-       
-       puts "\n\n === open Config gPanel ===\n"        
-       puts "    ... $cfgPanel"
-       
-       puts "\n\n === end ===\n"       
-       puts "   -> TEST_Dir: $TEST_Dir\n"   
+		
+		# -- keep on top --------------
+		wm deiconify .
+		
+		# -- update display -----------
+		rattleCAD::gui::notebook_refitCanvas	
+  
+		
+		# -- integration test ---------
+		set openFile         [file join  ${SAMPLE_Dir} __test_Integration_02.xml]
+		puts "          ... $openFile\n"
+		rattleCAD::file::openProject_xml   $openFile
+		
+		
+		puts "\n\n === export  pdf / html  ===\n"
+		rattleCAD::gui::export_Project      pdf
+		wm deiconify .
+		update
+		rattleCAD::gui::export_Project      html
+		wm deiconify .        
+		update
+		
+		
+		puts "\n\n === export  svg / dxf /ps  ===\n"
+		rattleCAD::gui::notebook_exportSVG  $::APPL_Config(EXPORT_Dir) no
+		rattleCAD::gui::notebook_exportDXF  $::APPL_Config(EXPORT_Dir) no
+		rattleCAD::gui::notebook_exportPS   $::APPL_Config(EXPORT_Dir) no
+		wm deiconify .
+		update
+		
+		
+		puts "\n\n === open file  ===\n"
+		puts "   -> ${SAMPLE_Dir}: ${SAMPLE_Dir}\n"
+		if {[catch {glob -directory ${SAMPLE_Dir} *.xml} errMsg]} {
+			foreach sampleFile [lsort [glob -directory ${SAMPLE_Dir} *.xml]] {
+			   set openFile     [file join  ${SAMPLE_Dir} $thisFile]
+			   puts "          ... integrationTest_00 opened"
+			   puts "                 ... $openFile\n"
+			   rattleCAD::file::openProject_xml   $openFile 
+			   wm deiconify .
+			   #update          
+			}
+		}
+
+		  # remve anytime later
+		foreach thisFile { 
+			  focus_cayo_expert_2010__L_56.xml focus_cayo_expert_2010__M_54.xml  focus_cayo_expert_2010__XL_58.xml \
+			  columbus_max.xml \
+			  _template_3.2.78.xml _template_3.2.78_offroad.xml _template_3.3.00.xml _template_3.3.02.xml \
+			  _template_3.3.03.xml _template_3.3.04.xml _template_3.3.05.35.xml _template_3.3.06.xml \
+			  Kid20_V7.xml  ghost_powerkid_20.xml \
+			  __test_Integration_02.xml   
+		} {}
+
+				
+		
+		puts "\n\n === open config Panel  ===\n"           
+		set cfgPanel [rattleCAD::configPanel::create]
+		puts "    ... $cfgPanel"
+		
+		
+		puts "\n\n === open not existing file  ===\n"  
+		set openFile     [file join  ${SAMPLE_Dir}    this_file_does_not_exist.xml]
+		puts "          ... $openFile\n"
+		rattleCAD::file::openProject_xml   $openFile   
+		
+				
+		puts "\n\n === create Information  ===\n"      
+		rattleCAD::version_info::create  .v_info 0
+		
+		puts "\n\n === create Help  ===\n"
+		rattleCAD::version_info::create  .v_info 1
+		
+		puts "\n\n === create Environment  ===\n"
+		rattleCAD::version_info::create  .v_info 2
+		
+		puts "\n\n === create_intro  ===\n"        
+		create_intro .intro
+		after  100 destroy .intro
+	   
+		
+		puts "\n\n === open Config gPanel ===\n"        
+		puts "    ... $cfgPanel"
+		
+		
+		puts "\n\n === load template road again  ===\n"  
+		puts "          ... Template  Road\n"
+        rattleCAD::gui::load_Template  Road	
+
+		
+		
+		puts "\n\n === end ===\n"       
+		puts "   -> TEST_Dir: $TEST_Dir\n"   
    }   
 
 

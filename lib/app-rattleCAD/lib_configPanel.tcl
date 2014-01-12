@@ -561,8 +561,6 @@
 
                             bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] select]
                             bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] update]
-                            # bind $fileFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
-                            # bind $fileFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]
                 }
 
                 if {$compCanvas != {}} {
@@ -606,8 +604,6 @@
 
                         bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] select]
                         bind $optionFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] update]
-                        # bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] select]
-                        # bind $optionFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" project $_array $_name] update]
                         
                         pack $optionFrame -fill x -expand yes  -pady 2
                         pack $optionFrame.cb -side right
@@ -665,26 +661,27 @@
                 puts "    updateCanvas"
                 puts "       compFile:       $compFile"
 
-            switch -glob $compFile {
-                etc:*  {  set compFile  [file join $::APPL_Config(CONFIG_Dir) components [lindex [split $compFile {:}] 1] ] }
-                user:* {  set compFile  [file join $::APPL_Config(USER_Dir)   components [lindex [split $compFile {:}] 1] ] }
+            set fileName {}
+			switch -glob $compFile {
+                etc:*  {  set fileName  [file join $::APPL_Config(CONFIG_Dir) components [lindex [split $compFile {:}] 1] ] }
+                user:* {  set fileName  [file join $::APPL_Config(USER_Dir)   components [lindex [split $compFile {:}] 1] ] }
                 default {}
             }
-                puts "       compFile:       $compFile"
+                puts "       fileName:       $fileName"
 
-            if {$compFile != {}} {
+            if {$fileName != {}} {
                 switch -regexp -- $targetCanvas {
                     cv_frameParts {
                                 # puts "            ... $frameCanvas"
                                 $frameCanvas clean_StageContent
-                                set __my_Component__        [ $frameCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
+                                set __my_Component__        [ $frameCanvas readSVG $fileName {0 0} 0  __Decoration__ ]
                                 $frameCanvas fit2Stage $__my_Component__
                                 $frameCanvas refitStage
                             }
                     cv_Components {
                                 # puts "            ... $compCanvas"
                                 $compCanvas clean_StageContent
-                                set __my_Component__        [ $compCanvas readSVG $compFile {0 0} 0  __Decoration__ ]
+                                set __my_Component__        [ $compCanvas readSVG $fileName {0 0} 0  __Decoration__ ]
                                 $compCanvas fit2Stage $__my_Component__
                                 $compCanvas refitStage
                             }

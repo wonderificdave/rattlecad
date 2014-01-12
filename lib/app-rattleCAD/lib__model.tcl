@@ -81,9 +81,9 @@ namespace eval rattleCAD::model {
 		puts "       $xpath / $value"
 		  
 		if {$mode == {update}} {
-		    set newValue  [bikeGeometry::set_Value $xpath $value]
+		    set newValue  [bikeGeometry::set_Value $xpath ${value}]
 		} else {
-		    set newValue  [bikeGeometry::set_Value $xpath $value $mode]
+		    set newValue  [bikeGeometry::set_Value $xpath ${value} $mode]
 		}
 		  
 		  #
@@ -91,7 +91,7 @@ namespace eval rattleCAD::model {
 		  #
 		
 		  #
-		return $newValue
+		return ${newValue}
 		  #
 	}
 	

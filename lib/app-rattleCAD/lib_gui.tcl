@@ -415,9 +415,11 @@
                         rattleCAD::comp_library::updateCanvas
                     }
                 __cv_Library {
-                        ::update
-                        rattleCAD::gui::notebook_refitCanvas
-                        rattleCAD::configPanel::updateCanvas
+                        # ::update
+                        # rattleCAD::gui::notebook_refitCanvas
+                        # rattleCAD::configPanel::updateCanvas
+						puts " \n\n <D> in fill_canvasCAD:   __cv_Library  \n please give a response to the developers \n"
+						tk_messageBox -message " in fill_canvasCAD:   __cv_Library  \n please give a response to the developers"
                     }
                 
             }
@@ -685,7 +687,7 @@
                 default {}
             }
 
-        $noteBook_top select $currentTab
+            $noteBook_top select $currentTab
         
             return
 
@@ -1136,10 +1138,10 @@
              # 
 
             rattleCAD::view::updateView
-			  # notebook_updateCanvas force
+			  #
             notebook_refitCanvas
             rattleCAD::view::updateView
-			  # notebook_updateCanvas force
+			  # 
     }
 
     #-------------------------------------------------------------------------
@@ -1159,7 +1161,6 @@
 			  
 			  #
             rattleCAD::view::updateView force
-			  # rattleCAD::gui::notebook_updateCanvas force
 			  #
     }
     

@@ -88,25 +88,33 @@ namespace eval rattleCAD::control {
 		puts "       xpath:  $oldValue / $value"
 		
 		if {$mode == {update}} {
-		    set newValue  [rattleCAD::model::setValue $xpath $value]
+		    set newValue  [rattleCAD::model::setValue $xpath ${value}]
 		} else {
-		    set newValue  [rattleCAD::model::setValue $xpath $value $mode]
+		    set newValue  [rattleCAD::model::setValue $xpath ${value} $mode]
 		}
 		
 		  # set value to model
-		set value [[namespace current]::getValue $xpath]
+		set newValue [[namespace current]::getValue $xpath]
 		  #
 		  
 		  # append _editList
 		if {$history == {append}} {
-		    changeList::append        $xpath $oldValue $newValue
+		    changeList::append        $xpath $oldValue ${newValue}
 		}
 
 		  # update View
 		[namespace current]::updateControl
           #
 		  
-		return $value
+		puts ""
+		puts "       \$xpath:     $xpath"
+		puts "       \$value:     $value"
+		puts "       \$oldValue:  $oldValue"
+		puts "       \$newValue:  $newValue"
+		puts "    rattleCAD::control::setValue"
+		puts "   -------------------------------"
+		
+		return $newValue
 	
 	}
 
@@ -118,7 +126,7 @@ namespace eval rattleCAD::control {
 		switch -exact $format {
 		    position  {}
 		    direction {
-			        set value [split [dict get $value polar] ,]
+			        set value [split [dict get ${value} polar] ,]
 					# puts "    -> getValue -> direction"
 			    }
 			polygon   {}
@@ -126,7 +134,7 @@ namespace eval rattleCAD::control {
 		    default   {}
 		}
 		  # puts "        rattleCAD::control::getValue $xpath $value  <- $format"
-		return $value
+		return ${value}
 	}
 
 	proc newProject {projectDOM} {
@@ -162,8 +170,7 @@ namespace eval rattleCAD::control {
 		[namespace current]::updateControl
 		  #
     }
-	
-	
+
 	proc newProject_org {projectDOM} {
 		puts "\n"
 		puts "   -------------------------------"

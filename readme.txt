@@ -1,6 +1,14 @@
 
 
-3.4.01.20  - 2014.01.10
+3.4.01.21  - 2014.01.12
+-------------------------------------------------------------------------------
+    feature:
+	    ... copy samples to APPL_Config(USER_Dir)/_templates/rattleCAD
+    debug:
+	    configPanel -> update from comboboxes on values containing " " (spaces)
+
+
+3.4.01.20  - 2014.01.12
 -------------------------------------------------------------------------------
     refactor:
         ... care an model/view/control

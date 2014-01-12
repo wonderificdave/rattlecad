@@ -112,9 +112,9 @@
             [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
 			    # -- set project meta Information
-			set rattleCAD::control::setValue  Project/Name              [ file tail $fileName ]
-            set rattleCAD::control::setValue  Project/modified          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            set rattleCAD::control::setValue  Project/rattleCADVersion  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+			rattleCAD::control::setValue  Project/Name              [ file tail $fileName ]
+            rattleCAD::control::setValue  Project/modified          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            rattleCAD::control::setValue  Project/rattleCADVersion  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
                 # -- open File for writing
             set fp [open $fileName w]
@@ -247,8 +247,6 @@
                     # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
 
                     #
-                # rattleCAD::gui::notebook_updateCanvas force
-                    #
                 update_windowTitle       $::APPL_Config(PROJECT_Name)
                 update_MainFrameStatus
                 
@@ -365,7 +363,7 @@
                                 set ::APPL_Config(PROJECT_Name) [file tail      $fileName]
                                 
                                     # --- set xml-File Attributes
-                                set rattleCAD::control::setValue    Project/Name     [ file tail $fileName ]
+                                rattleCAD::control::setValue    Project/Name     [ file tail $fileName ]
 								    # set project::Project(Name)     [ file tail $fileName ]
                                     # [ $domConfig selectNodes /root/Project/Name/text()              ]     nodeValue     [ file tail $fileName ]
 
@@ -377,8 +375,8 @@
             }
 
                 # --- set Project(modified)
-            set rattleCAD::control::setValue    Project/modified             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            set rattleCAD::control::setValue    Project/rattleCADVersion     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+            rattleCAD::control::setValue    Project/modified             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            rattleCAD::control::setValue    Project/rattleCADVersion     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
                 # set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
                 # set project::Project(rattleCADVersion)     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
  
@@ -422,7 +420,6 @@
             update_windowTitle           $windowTitle
             update_MainFrameStatus
                 #
-            # rattleCAD::gui::notebook_updateCanvas
             
                 #
             puts "\n"
@@ -681,11 +678,11 @@
                         # set pg_Offset   [format "<</PageOffset \[%i %i\]>> setpagedevice" $offSet_Y $offSet_X]
                 }
                 
-                set fileName  [string map {{ } _ {.xml} {}} $::APPL_Config(PROJECT_Name)]
+                set fileName  [file tail [file normalize $::APPL_Config(PROJECT_Name)]]
+                set fileName  [string map {{ } _ {.xml} {}} $fileName]
                 set fileName  [format "%s_%s.pdf" $fileName $fileFormat]
                 set outputFile  [file nativename [file join $exportDir $fileName]]
-                
-                #set outputFile  [file nativename [file join $exportDir summary_$fileFormat.pdf]]
+				#set outputFile  [file nativename [file join $exportDir summary_$fileFormat.pdf]]
                 
                 
                   # -- create batch Files
@@ -702,6 +699,7 @@
                     puts $fileId " -sOutputFile=\"$outputFile\" ^"
                       # puts $fileId " -c \"$pg_Offset\" ^"
                     puts $fileId " -dBATCH ^"
+					
                 foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
                       # puts "         ... $fileKey"   
                     set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
