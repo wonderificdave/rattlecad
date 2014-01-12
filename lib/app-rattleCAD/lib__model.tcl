@@ -40,7 +40,98 @@
 
 namespace eval rattleCAD::model {
 
-    proc unifyKey {key} {
+	variable  modelDICT         {} ;# a dictionary
+    variable  modelDOM          {} ;# a XML-Object
+    
+    variable  modelUpdate       {0}
+	
+	
+	
+    proc updateModel {} {
+		variable modelDICT
+		variable modelDOM
+		variable modelUpdate 
+
+		if {1 ==2} {
+    		set r [catch {info level [expr [info level] - 1]} e]
+    		if {$r} {
+    			puts "Called directly by the interpreter (e.g.: .tcl on the partyline)."
+    		} else {
+    			puts "Called by ${e}."
+    		}
+		}
+	
+		  # update control-model
+		set      modelDICT  [bikeGeometry::get_projectDICT]
+		set      modelDOM   [bikeGeometry::get_projectDOM]
+	
+		
+          # update timestamp
+		set modelUpdate     [clock milliseconds]
+          # set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+          #
+
+	}
+
+	
+	proc setValue {xpath value {mode {update}}} {
+
+		puts "   -------------------------------"
+		puts "    rattleCAD::model::setValue"
+		puts "       $xpath / $value"
+		  
+		if {$mode == {update}} {
+		    set newValue  [bikeGeometry::set_Value $xpath $value]
+		} else {
+		    set newValue  [bikeGeometry::set_Value $xpath $value $mode]
+		}
+		  
+		  #
+		[namespace current]::updateModel
+		  #
+		
+		  #
+		return $newValue
+		  #
+	}
+	
+	proc newProject {projectDOM} {
+		puts "\n"
+		puts "   -------------------------------"
+		puts "    rattleCAD::control::newProject"
+		
+		  #
+		bikeGeometry::set_newProject $projectDOM	
+		  #
+		  
+		  # update View
+		[namespace current]::updateModel
+          #
+    }
+
+	proc importSubset {nodeRoot} {
+			# puts "[$nodeRoot asXML]"
+		puts "\n"
+		puts "   -------------------------------"
+		puts "    rattleCAD::model::importSubset"
+		
+		  #
+		bikeGeometry::import_ProjectSubset $nodeRoot	
+		  #
+		  
+		  #
+		[namespace current]::updateModel
+		  #
+    }	
+	
+	
+	
+	
+	
+	
+	
+	
+	proc unifyKey {key} {
         
         package require appUtil 0.9
         # rattleCAD::model::unifyKey
@@ -63,9 +154,9 @@ namespace eval rattleCAD::model {
               # puts "          <D> -> got xPath  $arrayName $keyName"
             return [list $arrayName $keyName $xPath]
         }
-    }	
-	
-	
+    }
+
+
 	#-------------------------------------------------------------------------
         #  return all geometry-values to create specified tube in absolute position
     proc get_Object {object index {centerPoint {0 0}} } {

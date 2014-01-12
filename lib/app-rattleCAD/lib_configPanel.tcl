@@ -32,12 +32,12 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #  namespace:  rattleCAD::config
+ #  namespace:  rattleCAD::configPanel
  # ---------------------------------------------------------------------------
  #
  #
 
- namespace eval rattleCAD::config {
+ namespace eval rattleCAD::configPanel {
 
     variable    cfg_Position    {}
 
@@ -156,7 +156,7 @@
 				foreach key [lsort [array names $arrayNameComplete]] {
 					set value [rattleCAD::control::getValue $arrayName/$key]
 					  # puts "        -> $key   -> $value"
-					  # puts " <D>           $::rattleCAD::config::Component(Fork/Height)"
+					  # puts " <D>           $::rattleCAD::configPanel::Component(Fork/Height)"
 					set command [format "set %s(%s) %s" $arrayNameComplete $key $value]
 					{*}$command
 					
@@ -171,10 +171,14 @@
     #-------------------------------------------------------------------------
        #  create config widget
        #
-    proc create {main w {mode {}}} {
+       # proc create {main w {mode {}}}
+    proc create {} {
 
             variable cfg_Position
 
+			set main . 
+			set w    .cfg
+			
                 # -----------------
                 # main window information
             set root_xy [split  [wm geometry $main] +]
@@ -189,9 +193,6 @@
                     # restore if hidden
                     # puts "   ... $w allready exists!"
                 wm geometry    $w +[expr $root_x+8+$root_w]+[expr $root_y]
-                if {$mode == {refresh}} {
-                    create_Content $main $w
-                }
                 wm deiconify    $w
                 wm deiconify    $main
                 focus           $w

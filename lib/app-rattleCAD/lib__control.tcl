@@ -48,49 +48,35 @@ namespace eval rattleCAD::control {
     variable  window_Size         {0}
     
 	
-	proc updateModel {} {
+	proc updateControl {} {
+		
 		variable currentDICT
 		variable currentDOM
 		variable model_Update
-
-		if {1 ==2} {
-    		set r [catch {info level [expr [info level] - 1]} e]
-    		if {$r} {
-    			puts "Called directly by the interpreter (e.g.: .tcl on the partyline)."
-    		} else {
-    			puts "Called by ${e}."
-    		}
-		}
-	
+			
 		  # update control-model
-		set      currentDICT  [bikeGeometry::get_projectDICT]
-		set      currentDOM   [bikeGeometry::get_projectDOM]
-		  # [namespace current]::update
+		set      currentDICT   $rattleCAD::model::modelDICT
+		set      currentDOM    $rattleCAD::model::modelDOM
+		set      model_Update  $rattleCAD::model::modelUpdate 
 		  #
-		# appUtil::pdict $currentDICT
-          #		
 		
-          # update timestamp
-		set model_Update      [clock milliseconds]
-          # set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
-          #
-                    
-          # update view
+		  # configPanel - Update 
+		rattleCAD::view::init_viewValues $currentDICT
+		  #
+
+		  # configPanel - Update 
+		rattleCAD::configPanel::init_configValues
+		  # 
+		
+		  # update view
 		rattleCAD::view::updateView  
           #
 		  
-		  # configPanel - Update 
-		rattleCAD::config::init_configValues
-
+		return
 	}
 
-
 	proc setValue {xpath value {mode {update}} {history {append}}} {
-	
-		variable currentDICT
-		variable currentDOM
-		variable model_Update
-		
+
 		set oldValue [[namespace current]::getValue $xpath]
 
 		if {$value == $oldValue} {
@@ -102,13 +88,13 @@ namespace eval rattleCAD::control {
 		puts "       xpath:  $oldValue / $value"
 		
 		if {$mode == {update}} {
-		    set newValue  [bikeGeometry::set_Value $xpath $value]
+		    set newValue  [rattleCAD::model::setValue $xpath $value]
 		} else {
-		    set newValue  [bikeGeometry::set_Value $xpath $value $mode]
+		    set newValue  [rattleCAD::model::setValue $xpath $value $mode]
 		}
 		
 		  # set value to model
-		set value [rattleCAD::control::getValue $xpath]
+		set value [[namespace current]::getValue $xpath]
 		  #
 		  
 		  # append _editList
@@ -117,18 +103,18 @@ namespace eval rattleCAD::control {
 		}
 
 		  # update View
-		[namespace current]::updateModel
+		[namespace current]::updateControl
           #
 		  
 		return $value
-		
+	
 	}
-
 
 	proc getValue {xpath {format {value}} args} {
 	       # key type args
 		variable currentDICT
-		set value     [appUtil::get_dictValue $currentDICT $xpath]
+		
+		set value     [appUtil::get_dictValue $rattleCAD::model::modelDICT $xpath]
 		switch -exact $format {
 		    position  {}
 		    direction {
@@ -144,21 +130,56 @@ namespace eval rattleCAD::control {
 	}
 
 	proc newProject {projectDOM} {
+		
+		puts "\n"
+		puts "   -------------------------------"
+		puts "    rattleCAD::control::newProject"
+		  
+		  #
+		rattleCAD::model::newProject  $projectDOM	
+		  #
+		  
+          # reset history
+		[namespace current]::changeList::reset
+          #
+				
+		  # update View
+		[namespace current]::updateControl
+          #
+    }
+
+	proc importSubset {nodeRoot} {
+	      # puts "[$nodeRoot asXML]"
+		puts "\n"
+		puts "   -------------------------------"
+		puts "    rattleCAD::control::importSubset"
+		  
+		  #
+		rattleCAD::model::importSubset $nodeRoot	
+		  #
+		  
+		  #
+		[namespace current]::updateControl
+		  #
+    }
+	
+	
+	proc newProject_org {projectDOM} {
 		puts "\n"
 		puts "   -------------------------------"
 		puts "    rattleCAD::control::newProject"
         bikeGeometry::set_newProject $projectDOM	
 		
           # reset history
-		rattleCAD::control::changeList::reset
+		[namespace current]::changeList::reset
           #
 				
 		  # update View
-		[namespace current]::updateModel
+		[namespace current]::updateControl
           #
     }
 
-	proc importSubset {nodeRoot} {
+	proc importSubset_org {nodeRoot} {
 			# puts "[$nodeRoot asXML]"
 		puts "\n"
 		puts "   -------------------------------"
@@ -166,11 +187,10 @@ namespace eval rattleCAD::control {
         
 		  #
 		bikeGeometry::import_ProjectSubset $nodeRoot	
-		  # project::import_ProjectSubset $nodeRoot	
 		  #
 		  
 		  #
-		[namespace current]::updateModel
+		[namespace current]::updateControl
 		  #
     }
 	
@@ -184,11 +204,11 @@ namespace eval rattleCAD::control {
 
         set newSize [lindex [split [wm geometry .] +] 0]
 		
-        if {![string equal $newSize $rattleCAD::control::window_Size]} {
-			set rattleCAD::control::window_Size   $newSize
-			set rattleCAD::control::window_Update [clock milliseconds]
+        if {![string equal $newSize $[namespace current]::window_Size]} {
+			set [namespace current]::window_Size   $newSize
+			set [namespace current]::window_Update [clock milliseconds]
 			
-			puts "     ... update WindowSize: $rattleCAD::control::window_Update / rattleCAD::control::window_Size"
+			puts "     ... update WindowSize: $[namespace current]::window_Update / $[namespace current]::window_Size"
 				
 			  # update view
 			# rattleCAD::cv_custom::updateView  [rattleCAD::gui::current_canvasCAD]
@@ -240,9 +260,13 @@ namespace eval rattleCAD::control::changeList {
           #
         puts "           entry:  [format " (%3s) ...  %40s  %-25s / %25s"  $_listIndex $parameter $oldValue $newValue]"
         set _editList($_listIndex) [list $parameter $oldValue $newValue]
-           
+          #
+
+          #		  
 		# print
-		
+		  #
+		  
+		  #
         return $_editList($_listIndex)
     }
 
