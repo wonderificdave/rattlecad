@@ -1,5 +1,15 @@
 
 
+3.4.01.20  - 2014.01.10
+-------------------------------------------------------------------------------
+    refactor:
+        ... care an model/view/control
+            ... rattleCAD:config -> rattleCAD::configPanel
+			    ... remove open_configPanel
+			... cleanup rattleCAD::control::
+            ... prepare rattleCAD::view::
+
+
 3.4.01.19  - 2014.01.10
 -------------------------------------------------------------------------------
     refactor:

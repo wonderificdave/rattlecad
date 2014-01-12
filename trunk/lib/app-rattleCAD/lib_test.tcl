@@ -131,7 +131,7 @@
        
               
        puts "\n\n === open config Panel  ===\n"           
-       set cfgPanel [rattleCAD::gui::open_configPanel]
+       set cfgPanel [rattleCAD::configPanel::create]
        puts "    ... $cfgPanel"
        
        

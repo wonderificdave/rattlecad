@@ -136,9 +136,22 @@ namespace eval rattleCAD::view {
                         
     }
 
-	
 
+    proc init_viewValues {projectDICT} {
+	    
+		puts "\n"
+		puts "     -> init_viewValues -------------\n"
+		puts "\n"
 
+          # 
+		# appUtil::pdict $rattleCAD::control::currentDICT
+		  #
+		  
+		  #
+		# ----- to be continued
+		  #
+		
+	}
  
 
     #-------------------------------------------------------------------------
@@ -179,14 +192,15 @@ namespace eval rattleCAD::view {
 				closeEdit $cv $cv.f_edit
 				set cvEdit [frame $cv.f_edit -bd 2 -relief raised]
 		}
-		# --- create Window ---
+		
+		  # --- create Window ---
 		$cv_Name addtag __cvEdit__ withtag $cvEdit
 		$cv create window [expr $x + $x_offset] $y  -window $cvEdit  -anchor w -tags $cvEdit
 		$cv_Name addtag __cvEdit__ withtag $cvEdit
 
-		# $cv create window [expr $x + $x_offset] $y  -window $cvEdit  -anchor w -tags __cvEdit__
+		  # $cv create window [expr $x + $x_offset] $y  -window $cvEdit  -anchor w -tags __cvEdit__
 
-		# --- create WindowFrames ---
+		  # --- create WindowFrames ---
 		set cvTitleFrame    [frame $cvEdit.f_title -bg gray60  ]
 			# set cvTitleFrame       [frame $cvEdit.f_title   -bd 1 -relief flat -bg gray60]
 		set cvContentFrame       [frame $cvEdit.f_content -bd 1 -relief sunken]
@@ -194,7 +208,7 @@ namespace eval rattleCAD::view {
 				pack configure $cvTitleFrame      -fill x -padx 2 -pady 2
 				pack configure $cvContentFrame    -fill both
 
-		# --- cvContentFrame ---
+		  # --- cvContentFrame ---
 		if {[llength $_arrayNameList] == 1 } {
 				pack forget $cvTitleFrame
 				set updateMode  value
@@ -316,6 +330,7 @@ namespace eval rattleCAD::view {
                # appUtil::get_procHierarchy
 
 		eval set currentValue $[namespace current]::_updateValue($key)
+		  
 		  #
 		  # --- create cvLabel, cvEntry ---
 		set    cvLabel [label  $cvContentFrame.label_${index} -text "${labelText} : "]
@@ -330,12 +345,14 @@ namespace eval rattleCAD::view {
 		}
 		grid configure $cvLabel  -padx 3 -sticky nws
 		grid configure $cvEntry  -padx 2
+		  
 		  #
 		  # --- select entries content ---
-			if {$index == {oneLine}} {
-					focus $cvEntry
-					$cvEntry selection range 0 end
-			}
+		if {$index == {oneLine}} {
+				focus $cvEntry
+				$cvEntry selection range 0 end
+		}
+		  
 		  #
 		  # --- define bindings ---
 		bind $cvLabel   <ButtonPress-1>         [list [namespace current]::dragStart        %X %Y]
@@ -349,11 +366,13 @@ namespace eval rattleCAD::view {
     proc create_TextEdit {cv cv_Name cvEdit cvContentFrame index labelText key} {
 
         eval set currentValue $[namespace current]::_updateValue($key)
-            #
+            
+			#
             # --- create cvLabel, cvEntry ---
         set    cvLabel [label  $cvContentFrame.label_${index} -text "${labelText} : "]
         set cvEntry [entry  $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key)  -justify right  -relief sunken -bd 1  -width 10]
-            # set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key) -justify right -relief sunken -width 10 -bd 1]
+            
+			# set cvEntry [spinbox $cvContentFrame.value_${index} -textvariable [namespace current]::_updateValue($key) -justify right -relief sunken -width 10 -bd 1]
             # $cvEntry configure -command \
                 "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
         if {$index == {oneLine}} {
@@ -366,13 +385,15 @@ namespace eval rattleCAD::view {
         }
         grid configure $cvLabel  -padx 3 -sticky nws
         grid configure $cvEntry  -padx 2
-            #
+            
+			#
             # --- select entries content ---
         if {$index == {oneLine}} {
                 focus $cvEntry
                 $cvEntry selection range 0 end
         }
-            #
+            
+			#
             # --- define bindings ---
         bind $cvLabel   <ButtonPress-1>         [list [namespace current]::dragStart       %X %Y]
         bind $cvLabel   <B1-Motion>             [list [namespace current]::drag            %X %Y $cv $cvEdit]
@@ -419,7 +440,8 @@ namespace eval rattleCAD::view {
                 grid    columnconfigure     $cvFrame 1      -weight 1
                 grid    $cvFrame                    -sticky news    -padx 1     -columnspan 3
         }
-            #
+            
+			#
             # --- define bindings ---
         bind $cvCBox    <<ComboboxSelected>>        [list [namespace current]::check_listBoxValue   %W $cv_Name $key]
         bind $cvLabel   <ButtonPress-1>             [list [namespace current]::dragStart    %X %Y]
@@ -428,8 +450,8 @@ namespace eval rattleCAD::view {
     }
 
     proc change_ValueEdit {textVar direction} {
-                 #
-                 # --- dynamic update value ---
+			#
+			# --- dynamic update value ---
         set currentValue [set ::$textVar]
         set updateValue 1.0
         if {$currentValue < 20} { set updateValue 0.1 }

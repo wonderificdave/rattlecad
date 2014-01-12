@@ -100,7 +100,7 @@
                         
                 {separator}
                         
-                {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}      -command { rattleCAD::gui::open_configPanel } }
+                {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}      -command { rattleCAD::configPanel::create } }
                 
                 {separator}
                 
@@ -161,7 +161,7 @@
             Button    $tb_frame.scale_m  -image  $iconArray(scale_m)        -helptext "scale minus"             -command { rattleCAD::gui::notebook_scaleCanvas  [expr 2.0/3] }  
             Button    $tb_frame.resize   -image  $iconArray(resize)         -helptext "resize"                  -command { rattleCAD::gui::notebook_refitCanvas }  
             
-            Button    $tb_frame.cfg      -image  $iconArray(cfg_panel)      -helptext "open config Panel"       -command { rattleCAD::gui::open_configPanel } 
+            Button    $tb_frame.cfg      -image  $iconArray(cfg_panel)      -helptext "open config Panel"       -command { rattleCAD::configPanel::create } 
             Button    $tb_frame.exit     -image  $iconArray(exit)                                               -command { rattleCAD::gui::exit_rattleCAD }
               
             label   $tb_frame.sp0      -text   " "
@@ -417,7 +417,7 @@
                 __cv_Library {
                         ::update
                         rattleCAD::gui::notebook_refitCanvas
-                        rattleCAD::config::updateCanvas
+                        rattleCAD::configPanel::updateCanvas
                     }
                 
             }
@@ -1179,24 +1179,6 @@
               # puts "\n\  -> \$type:  $type"
               # puts "\n\  -> \$::APPL_Config(TemplateInit):  $::APPL_Config(TemplateInit)"
             return
-    }
-
-    #-------------------------------------------------------------------------
-       #  load Template from File
-       #
-    proc open_configPanel {{mode {}}} {
-            switch $mode {
-                {refresh} {
-                            puts "      ... open_configPanel $mode"
-                            if {[winfo exists .cfg]} {
-                                catch {rattleCAD::config::create . .cfg refresh}
-                            }
-                        }
-                default {
-                            puts "      ... open_configPanel $mode"
-                            rattleCAD::config::create . .cfg
-                        }
-            }
     }
 
 
