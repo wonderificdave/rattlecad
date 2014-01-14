@@ -211,15 +211,16 @@ namespace eval rattleCAD::control {
 
         set newSize [lindex [split [wm geometry .] +] 0]
 		
-        if {![string equal $newSize $[namespace current]::window_Size]} {
+          # puts "   -> newSize:   $newSize"
+		  # puts "   -> lastSize:  [set [namespace current]::window_Size]"
+		
+		if {![string equal $newSize [set [namespace current]::window_Size]]} {
 			set [namespace current]::window_Size   $newSize
 			set [namespace current]::window_Update [clock milliseconds]
 			
+			  # tk_messageBox -message "bind_windowSize"
 			puts "     ... update WindowSize: $[namespace current]::window_Update / $[namespace current]::window_Size"
-				
-			  # update view
-			# rattleCAD::cv_custom::updateView  [rattleCAD::gui::current_canvasCAD]
-			  #
+              #
         }
     }	
 

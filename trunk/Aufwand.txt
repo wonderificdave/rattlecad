@@ -480,4 +480,5 @@
 2014.01.10  00:00   00:00    12:00   3.4.01 ... 19 ... refactor MVC, update configPanel
 2014.01.12  14:00   17:00    03:00   3.4.01 ... 20 ... refactor MVC, update configPanel
 2014.01.12  17:00   23:00    06:00   3.4.01 ... 21 ... debug integration test, configPanel
+2014.01.14  13:00   23:30    06:00   3.4.01 ... 22 ... prevent refit canvas on update vale
                              
