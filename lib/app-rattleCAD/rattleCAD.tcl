@@ -453,10 +453,16 @@
             # -- keyboard bindings -----------------------
         rattleCAD::gui::global_kb_Binding ab
         
-             # -- window binding -----------------------
+            # -- window binding -----------------------
         bind . <Configure> [list rattleCAD::control::bind_windowSize]
+		    
+			# -- update currentView -----------------------
+		rattleCAD::control::bind_windowSize init
+		    #
+		rattleCAD::control::updateControl
+		    #
         
-             # -- window delete binding -----------------------
+            # -- window delete binding -----------------------
         wm protocol . WM_DELETE_WINDOW {
             rattleCAD::gui::exit_rattleCAD yesnocancel
         }

@@ -49,8 +49,8 @@
             }
 			
             #
-		puts "            ... rattleCAD::rendering::checkFileString: $fileString"
-		puts "                        ... $svgFile"
+		  # puts "            ... rattleCAD::rendering::checkFileString: $fileString"
+		  # puts "                        ... $svgFile"
 		    #
         if {![file exists $svgFile]} {
                     # puts "           ... does not exist, therfore .."
@@ -864,9 +864,9 @@
                         }
             default {}
         }
-        puts "          ... \$ForkBlade(polygon) [string range $ForkBlade(polygon) 0 50] ..."
-        puts "          ... \$ForkCrown(file)    $ForkCrown(file)"
-        puts "          ... \$ForkDropout(file)  $ForkDropout(file)"
+          # puts "          ... \$ForkBlade(polygon) [string range $ForkBlade(polygon) 0 50] ..."
+          # puts "          ... \$ForkCrown(file)    $ForkCrown(file)"
+          # puts "          ... \$ForkDropout(file)  $ForkDropout(file)"
 
             # --- create Fork Dropout ---------------
         if {$Rendering(ForkDropOut) == {behind}} {
@@ -992,10 +992,10 @@
         set casetteTeethCount        15
         set toothWith                12.7
         
-                puts ""
-                puts "   -------------------------------"
-                puts "   createChain"
-                puts "       teethCount:     $crankWheelTeethCount / $casetteTeethCount"   
+              # puts ""
+              # puts "   -------------------------------"
+              # puts "    createChain"
+              # puts "       teethCount:     $crankWheelTeethCount / $casetteTeethCount"   
                 
         set Hub(position)           [ bikeGeometry::get_Object        RearWheel                     position        $BB_Position ]
         set Derailleur(position)    [ bikeGeometry::get_Object        Lugs/Dropout/Rear/Derailleur  position          $BB_Position]

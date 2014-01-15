@@ -207,20 +207,41 @@ namespace eval rattleCAD::control {
     #-------------------------------------------------------------------------
        #  get sizeinfo:  http://www2.tcl.tk/8423
        #
-    proc bind_windowSize {} {
+    proc bind_windowSize {{mode {}}} {
 
-        set newSize [lindex [split [wm geometry .] +] 0]
+        variable window_Size
+		variable window_Update
+		
+		set newSize [lindex [split [wm geometry .] +] 0]
 		
           # puts "   -> newSize:   $newSize"
 		  # puts "   -> lastSize:  [set [namespace current]::window_Size]"
 		
+		if {$mode == {init}} {
+		      # puts ""
+              # puts "     ... [namespace current]::bind_windowSize: init"
+              # puts ""
+            update
+			set window_Size   $newSize
+			set window_Update [clock milliseconds]
+			  # puts "     ... [namespace current]::bind_windowSize: [set window_Size]"
+              # puts "     ... [namespace current]::bind_windowSize: [set window_Update]"
+              # puts ""
+			return
+		}
+		
 		if {![string equal $newSize [set [namespace current]::window_Size]]} {
-			set [namespace current]::window_Size   $newSize
-			set [namespace current]::window_Update [clock milliseconds]
+			  # puts ""
+              # puts "     ... [namespace current]::bind_windowSize: [set window_Update]"
+            set window_Size   $newSize
+			set window_Update [clock milliseconds]
 			
 			  # tk_messageBox -message "bind_windowSize"
-			puts "     ... update WindowSize: $[namespace current]::window_Update / $[namespace current]::window_Size"
+			  # puts "     ... [namespace current]::bind_windowSize: [set window_Size]"
+              # puts "     ... [namespace current]::bind_windowSize: [set window_Update]"
+              # puts ""
               #
+			return
         }
     }	
 
