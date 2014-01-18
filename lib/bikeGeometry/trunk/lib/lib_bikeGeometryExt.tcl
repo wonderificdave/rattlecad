@@ -188,23 +188,33 @@
 
                     set vct_angle   [ vectormath::dirAngle      $RearWheel(Position)  {0 0}]
                     set vct_xy      [ list $RearDrop(OffsetCS) [expr -1.0 * $RearDrop(OffsetCSPerp)]]
-                    set do_angle    [ expr $vct_angle - $RearDrop(RotationOffset)]
+                	set vct_xyAngle [ vectormath::dirAngle {0 0} $vct_xy]
+                	switch -exact  $RearDrop(Direction) {
+						ChainStay  -
+						Chainstay  { 
+						            set do_angle         [expr $vct_angle - $RearDrop(RotationOffset)]
+								}
+						horizontal { 
+						            set do_angle         [expr 360 - $RearDrop(RotationOffset)]
+							   }
+						default    {}
+					}    
+					
+					# set do_angle    [ expr $vct_angle - $RearDrop(RotationOffset)]
                     set vct_CS      [ vectormath::rotatePoint   {0 0}  $vct_xy  $do_angle]
                     set pt_00       [ vectormath::addVector     $RearWheel(Position)  $vct_CS]
 
                     set ChainStay(Direction)            [ vectormath::unifyVector {0 0} $pt_00 ]
             project::setValue Result(Tubes/ChainStay/Direction) direction   $pt_00
 
-            
+
                         # -- position of Rear Derailleur Mount
-                    set vct_xy      [ list [expr -1 * $RearDrop(Derailleur_x)]  [expr -1 * $RearDrop(Derailleur_y)]]
+			        set vct_xy      [ list [expr -1 * $RearDrop(Derailleur_x)]  [expr -1 * $RearDrop(Derailleur_y)]]
                     set vct_mount   [ vectormath::rotatePoint   {0 0}  $vct_xy  $do_angle]
                     set pt_mount    [ vectormath::addVector     $RearWheel(Position)  $vct_mount]
-            project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  $vct_mount ]
-            # project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
+            project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     $pt_mount
 
-            
-            
+
                         # -- exception if Tube is shorter than taper length
                     set tube_length         [ vectormath::length {0 0} $pt_00 ]
                         if { [expr $tube_length - $ChainStay(TaperLength) -110] < 0 } {
