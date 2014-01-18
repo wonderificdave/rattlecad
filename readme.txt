@@ -1,15 +1,27 @@
 
 
+3.4.01.24  - 2014.01.17
+-------------------------------------------------------------------------------
+    debug:
+	    ... dropout offset-rotation did not work for horizontal orientation
+    feature:
+		... droput: visualisation in Frame Details
+		    ... new dropouts: 
+			    ... paragon_DR0022, 
+				... paragon_DR0008
+
+
 3.4.01.23  - 2014.01.15
 -------------------------------------------------------------------------------
     debug:
-	    prevent refit canvas on update vale, refits on first change of values
+	    ... prevent refit canvas on update vale, refits on first change 
+		    of values
 
 
 3.4.01.22  - 2014.01.14
 -------------------------------------------------------------------------------
     debug:
-	    prevent refit canvas on update vale
+	    ... prevent refit canvas on update vale
 
 
 3.4.01.21  - 2014.01.12
@@ -17,7 +29,7 @@
     feature:
 	    ... copy samples to APPL_Config(USER_Dir)/_templates/rattleCAD
     debug:
-	    configPanel -> update from comboboxes on values containing " " (spaces)
+	    ... configPanel -> update from comboboxes on values containing " " (spaces)
 
 
 3.4.01.20  - 2014.01.12

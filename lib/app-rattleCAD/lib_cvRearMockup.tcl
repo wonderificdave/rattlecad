@@ -130,9 +130,9 @@
       
                 #   puts "   -> Center(Tyre)  $Center(Tyre)"
             
-            set ChainStay(91)           [ list [expr -1.0 * $Length(ChainStay)] [expr -1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
+            set ChainStay(91)           [ list [expr -1.0 * $Length(ChainStay)] [expr -1 * $Length(05)] ]   ;# dimension: ChainStay Center DO
             set ChainStay(92)           [ list [expr -1.0 * $Length(ChainStay)] [expr -1 * $Length(04)] ]   ;# dimension: Center DO
-            set ChainStay(93)           [ list [expr -1.0 * $Length(01)] [expr -1 * $Length(03)] ]          ;# dimension: Chainstay outside BB
+            set ChainStay(93)           [ list [expr -1.0 * $Length(01)] [expr -1 * $Length(03)] ]          ;# dimension: ChainStay outside BB
             set ChainStay(94)           [ list $Length(00)               [expr -1 * $Length(02)] ]          ;# dimension: Corner BB
             set ChainStay(95)           [ list [expr -1.0 * ($Length(ChainStay) - [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset])] [expr -1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
             set ChainStay(96)           [ list [expr -1.0 * ($Length(ChainStay) - [rattleCAD::control::getValue Lugs/RearDropOut/ChainStay/Offset])] [expr  1 * $Length(05)] ]   ;# dimension: Chainstay Center DO
@@ -194,13 +194,13 @@
                                    
                                   $cv_Name bind   $tube_CS_CLine    <Double-ButtonPress-1> \
                                                   [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
-                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  CenterLine}]                               
+                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {ChainStay:  CenterLine}]                               
                                   $cv_Name bind   $tube_CS_left    <Double-ButtonPress-1> \
                                                   [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
-                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  Type}]
+                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {ChainStay:  Type}]
                                   $cv_Name bind   $tube_CS_right   <Double-ButtonPress-1> \
                                                   [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
-                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {Chainstay:  Type}]
+                                                              {   list://Rendering(ChainStay@SELECT_ChainStay) } {ChainStay:  Type}]
                                 }
                    default      { set ChainStay(polygon) {} }
             }
@@ -1103,25 +1103,25 @@
                                     {   FrameTubes(ChainStay/CenterLine/angle_01) \
                                         FrameTubes(ChainStay/CenterLine/radius_01 \
                                         FrameTubes(ChainStay/CenterLine/length_01 \
-                                        FrameTubes(ChainStay/CenterLine/length_02))) }   {Chainstay:  Bent 01}]
+                                        FrameTubes(ChainStay/CenterLine/length_02))) }   {ChainStay:  Bent 01}]
         $ext_cvName bind  $ctrlArea_02    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_02) \
                                         FrameTubes(ChainStay/CenterLine/radius_02 \
                                         FrameTubes(ChainStay/CenterLine/length_02 \
-                                        FrameTubes(ChainStay/CenterLine/length_03))) }   {Chainstay:  Bent 02}]
+                                        FrameTubes(ChainStay/CenterLine/length_03))) }   {ChainStay:  Bent 02}]
         $ext_cvName bind  $ctrlArea_03    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_03) \
                                         FrameTubes(ChainStay/CenterLine/radius_03 \
                                         FrameTubes(ChainStay/CenterLine/length_03 \
-                                        FrameTubes(ChainStay/CenterLine/length_04))) }   {Chainstay:  Bent 03}]                                 
+                                        FrameTubes(ChainStay/CenterLine/length_04))) }   {ChainStay:  Bent 03}]                                 
         $ext_cvName bind  $ctrlArea_04    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_04) \
                                         FrameTubes(ChainStay/CenterLine/radius_04 \
                                         FrameTubes(ChainStay/CenterLine/length_04 \
-                                        FrameTubes(ChainStay/CenterLine/length_05))) }   {Chainstay:  Bent 04}]
+                                        FrameTubes(ChainStay/CenterLine/length_05))) }   {ChainStay:  Bent 04}]
 
 
                                

@@ -593,8 +593,10 @@
         set RearDropout(Direction)  $bikeGeometry::RearDrop(Direction) 
         set Rendering(RearDropOut)  [rattleCAD::control::getValue Rendering/RearDropOut]
             switch -exact $RearDropout(Direction) {
-                Chainstay { set do_angle [expr 180 - $RearDropout(Rotation) + [rattleCAD::control::getValue Result/Tubes/ChainStay/Direction/degree]]}              
-                default   { set do_angle   0}
+                ChainStay  -              
+                Chainstay  { set do_angle [expr 180 - $RearDropout(Rotation) + [rattleCAD::control::getValue Result/Tubes/ChainStay/Direction/degree]]}              
+                horizontal { set do_angle [expr 360 - $RearDropout(Rotation) ]}              
+                default    { set do_angle   0}
             }
             # --- Rear Dropout behind Chain- and SeatStay 
         if {$Rendering(RearDropOut) != {front}} {
@@ -614,7 +616,7 @@
                                                                         FrameTubes(ChainStay/TaperLength)   \
                                                                         Lugs(RearDropOut/ChainStay/OffsetPerp)  \
                                                                         Lugs(RearDropOut/ChainStay/Offset)  \
-                                                                    }  {Chainstay Parameter}
+                                                                    }  {ChainStay Parameter}
                                                     ]
                                       rattleCAD::gui::object_CursorBinding    $cv_Name    $ChainStay(object)
                 }
