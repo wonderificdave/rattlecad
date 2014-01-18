@@ -20,6 +20,7 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir lib_bikeRendering.tcl]]; \
         [list source  [file join $dir lib_version_info.tcl]]; \
         [list source  [file join $dir lib_cvCustom.tcl]]; \
+        [list source  [file join $dir lib_cvDimension.tcl]]; \
         [list source  [file join $dir lib_cvRearMockup.tcl]]; \
         [list source  [file join $dir lib_cvFrameJig.tcl]]; \
         [list source  [file join $dir lib_cvUpdate.tcl]]; \

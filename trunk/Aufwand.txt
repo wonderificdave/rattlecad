@@ -482,4 +482,5 @@
 2014.01.12  17:00   23:00    06:00   3.4.01 ... 21 ... debug integration test, configPanel
 2014.01.14  23:00   00:30    01:30   3.4.01 ... 22 ... prevent refit canvas on update value
 2014.01.15  23:00   24:00    01:00   3.4.01 ... 23 ... prevent refit canvas on update value
+2014.01.18  00:00   06:00    06:00   3.4.01 ... 24 ... dropout positio of rear derailleur, dropouts
                              

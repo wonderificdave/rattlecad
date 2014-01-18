@@ -89,7 +89,7 @@
         </Brake>
 
         <DropOutDirection>
-            <Chainstay/>
+            <ChainStay/>
             <horizontal/>
         </DropOutDirection>
 
