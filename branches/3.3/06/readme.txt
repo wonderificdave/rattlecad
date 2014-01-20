@@ -1,4 +1,14 @@
 
+3.4.06.38  - 2014.01.19
+-------------------------------------------------------------------------------
+    debug:
+        ... rattleCAD 3.3.06.36 did not start on Windows 8 / 64-bit
+		... remove debug "exit" in canvasCAD_print.tcl
+            ... got this error 64-bit and Windows 8
+			... nobody got this error before ?
+			    ... just wondering
+        
+		
 3.4.06.37  - 2013.03.26
 -------------------------------------------------------------------------------
     debug:

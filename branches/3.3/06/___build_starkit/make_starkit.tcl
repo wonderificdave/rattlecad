@@ -23,7 +23,9 @@ exec wish "$0" "$@"
           file delete -force $vfsDir
       }
       set buildDir [glob -directory [file normalize $baseDir] -type d *]
-      return $buildDir
+      set buildDir [string trim $buildDir \{\} ]
+        # puts "    .... ${buildDir}"
+	  return ${buildDir}
   }
 
     
