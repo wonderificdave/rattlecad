@@ -19,18 +19,6 @@ exec wish "$0" "$@"
             puts "\n       ... \$fileVersion not defined\n"
             exit
   }
-  
-  switch -exact $fileExt {
-      bat -
-      tcl {
-            set fileName "rattleCAD.$fileExt"
-            puts "       ... fileName:     $fileName"   
-          }
-      default {
-            # puts "\n       ... \$fileExt not in range !\n"
-            # exit
-          }
-  }
 
   puts "\n"
 
@@ -68,7 +56,10 @@ exec wish "$0" "$@"
       set in  [open $inFile  r]
       set out [open $outFile w]
       
-      puts "\n"
+	  puts "  -----------------------------------------------------------"
+	  puts "          \$fileName     $fileName "
+      puts "             \$inFile    $inFile"
+      puts "             \$outFile   $outFile"
 
       # line-by-line, read the original file
       switch -exact $fileName {
