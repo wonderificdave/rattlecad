@@ -480,6 +480,8 @@
             upvar  1 cv_Name    ext_cvName              
             upvar  1 Length     ext_Length
             upvar  1 Center     ext_Center
+			
+			set offset_DropOut  [rattleCAD::control::getValue  Lugs/RearDropOut/ChainStay/Offset]
             
                 set x1                  [ expr [lindex $ext_Center(RearHub) 0] -10 ]
                 set x2                  [ expr [lindex $ext_Center(RearHub) 0] +10 ]
@@ -492,7 +494,7 @@
             $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
             
                 set x1                  [ expr [lindex $ext_Center(RearHub) 0] -14 ]
-                set x2                  [ expr [lindex $ext_Center(RearHub) 0] +40 ]
+                set x2                  [ expr [lindex $ext_Center(RearHub) 0] + $offset_DropOut + 10 ]
                 set y1                  [ expr $ext_Length(04) + 1 ]
                 set y2                  [ expr $ext_Length(04) + 5 ]
                 set pointList           [ list $x1 $y1 $x2 $y2 ]
@@ -1256,7 +1258,7 @@
             set S04_angle  [expr $S04_orient * (-180 + [vectormath::angle    $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)])]
             
             proc update_ChainStayValue {xPath value} {
-                set lastValue  [rattleCAD::control::setValue $xPath ]
+                set lastValue  [rattleCAD::control::getValue $xPath ]
                   # set lastValue  [bikeGeometry::get_Value $xPath  value]
                 set diffValue  [expr abs($lastValue - $value)]
                 if {$diffValue > 1} { 

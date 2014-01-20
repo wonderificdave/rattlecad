@@ -1,35 +1,46 @@
 
 
+3.4.01.25  - 2014.01.20
+-------------------------------------------------------------------------------
+    debug:
+        ... ChainStay Details gave Error: lib_cvRearMockup.tcl
+    feature: 
+	    ... ChainStay Details, adopt visualization of dropout length for 
+		    paragon_DR2030
+	    ... dropout: paragon_DR2030
+		
+
 3.4.01.24  - 2014.01.17
 -------------------------------------------------------------------------------
     debug:
-	    ... dropout offset-rotation did not work for horizontal orientation
+        ... dropout offset-rotation did not work for horizontal orientation
     feature:
-		... droput: visualisation in Frame Details
-		    ... new dropouts: 
-			    ... paragon_DR0022, 
-				... paragon_DR0008
+        ... droput: visualisation in Frame Details
+            ... new dropouts: 
+                ... paragon_DR0022, 
+                ... paragon_DR0008
 
 
 3.4.01.23  - 2014.01.15
 -------------------------------------------------------------------------------
     debug:
-	    ... prevent refit canvas on update vale, refits on first change 
-		    of values
+        ... prevent refit canvas on update vale, refits on first change 
+            of values
 
 
 3.4.01.22  - 2014.01.14
 -------------------------------------------------------------------------------
     debug:
-	    ... prevent refit canvas on update vale
+        ... prevent refit canvas on update vale
 
 
 3.4.01.21  - 2014.01.12
 -------------------------------------------------------------------------------
     feature:
-	    ... copy samples to APPL_Config(USER_Dir)/_templates/rattleCAD
+        ... copy samples to APPL_Config(USER_Dir)/_templates/rattleCAD
     debug:
-	    ... configPanel -> update from comboboxes on values containing " " (spaces)
+        ... configPanel -> update from comboboxes on values containing 
+            " " (spaces)
 
 
 3.4.01.20  - 2014.01.12
@@ -37,8 +48,8 @@
     refactor:
         ... care an model/view/control
             ... rattleCAD:config -> rattleCAD::configPanel
-			    ... remove open_configPanel
-			... cleanup rattleCAD::control::
+                ... remove open_configPanel
+            ... cleanup rattleCAD::control::
             ... prepare rattleCAD::view::
 
 
@@ -47,21 +58,21 @@
     refactor:
         ... care an model/view/control
             ... refactor configPanel -> rattleCAD:config 
-			... bikeGeometry::getObject to to rattleCAD::model::getObject	
+            ... bikeGeometry::getObject to to rattleCAD::model::getObject    
 
 
 3.4.01.18  - 2014.01.09
 -------------------------------------------------------------------------------
     refactor:
         ... care an model/view/control
-            ... move references form project:: ... to rattleCAD::control:: ...	
+            ... move references form project:: ... to rattleCAD::control:: ...    
 
 
 3.4.01.17  - 2014.01.08
 -------------------------------------------------------------------------------
     debug:
         ... prevent refit canvas on update vale
-		
+        
 
 3.4.01.16  - 2014.01.08
 -------------------------------------------------------------------------------
@@ -146,7 +157,7 @@
 -------------------------------------------------------------------------------
     refactor:
         ... ps-export from canvas
-		    ... pdf creation
+            ... pdf creation
     feature:
         ... provide pdf-creation under Linux
             ... having in _rattleCAD.init
@@ -166,7 +177,7 @@
 -------------------------------------------------------------------------------
     debug:
         ... handle undefined mimetypes in windows registry
-		    ... handle undefined Application in open_by_mimeType_DefaultApp
+            ... handle undefined Application in open_by_mimeType_DefaultApp
 
 
 3.4.01.03  - 2013.10.20
