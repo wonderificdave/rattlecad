@@ -362,7 +362,10 @@
                       }
 
                   }
-                  exit
+                  #
+				  # exit  - nobody checked this ?!? .. does not work on windows 8 - 64 bit
+				  #
+				  #
                     # puts  "               appPATH  $appPATH"              
                     # puts  "               env(PATH) $::env(PATH)"
                   set ::env(PATH) $appPATH\;$::env(PATH)
