@@ -1,0 +1,415 @@
+            h:min
+
+2010.04.10                    03:00    Basis GUI
+2010.04.18                    01:50    add Tabs to Basis GUI, add canvasCAD
+2010.04.19                    02:00    create cfg_Report
+2010.04.20                    02:20    create cfg_Report
+2010.04.25    21:00    23:45    02:45    read xml-Projectfile
+2010.04.26    21:30    01:15   03:45    optimize application, draw first element in Custom_01
+2010.04.27    23:00    02:00    03:00    create first bicycle Geometry        
+--------------------------------------------------------------------------
+                            18:40
+
+2010.04.28    23:00    02:00   03:00    investigation on canvas features
+2010.04.29    21:00    04:00    07:00    try to handle with interp and slave        
+2010.05.09    20:00    01:00    05:00   modify dimension behaviour to become edited by doubleclick
+2010.05.10    20:00    02:00    06:00   create a modification window in canvas, update _canvasCAD
+2010.05.11    21:00    23:30    02:30   update drawing by doubleclicking dimension and edit value
+--------------------------------------------------------------------------
+                            23:30    42:10
+
+2010.05.12    20:00    21:30    01:30   update colouring and handling of complex dimensions
+2010.05.12    23:00    02:00    03:00   
+2010.05.16    20:00    24:00    04:00   representive frame on personal Tab, usability, animation
+2010.05.17    21:00    24:00    03:00   custom_01, outsourcing of frame geometry in own namespace
+2010.05.18    21:30    23:00   01:30    rename cvCustom_01 -> Geometry Settings
+2010.05.19    22:30    24:00   01:30    rename cvCustom_01 -> Geometry Settings
+--------------------------------------------------------------------------
+                            14:30    56:40
+                            
+2010.05.23    00:00    03:30   03:30    rename cvCustom_01 -> Geometry Settings
+2010.05.23    15:00    16:00   01:00    move createEdit, updateConfig, drag ... to frame_geometry
+2010.05.24    22:00    00:30   02:30    investigation to display svg content in canvas to be implemented in canvasCAD
+2010.05.25    22:30    02:30   04:00    first implementation of readSVN in canvasCAD
+2010.05.25    21:30    01:20   03:50    first implementation of readSVN in canvasCAD
+--------------------------------------------------------------------------
+                            14:50    71:30
+                            
+2010.05.27    21:00    00:30   03:30    enable printing, update, correct canvasCAD ...
+2010.05.28    19:30    20:15   00:45    update Frame Details
+2010.05.28    21:00    22:45   01:45    update Frame Details
+2010.05.29    01:30    05:45   04:15    update Frame Details
+--------------------------------------------------------------------------
+                            10:15    78:45
+                            
+2010.05.29    13:30    18:00   04:30    create RearDerailleur 
+2010.05.30    22:30    04:00   05:30    tube intersection
+2010.05.31    23:00    03:30   04:30    tube intersection 
+2010.06.02    00:30    03:30   03:00    crankset reprsesentation
+2010.06.02    23:30   02:30   03:00    crankset reprsesentation
+--------------------------------------------------------------------------
+                            20:30    109:15    rattleCAD/tags/01.20100602_a
+
+2010.06.03    16:00   20:00   04:00    adapt canvasCAD::readSVG to handle rotation angle
+2010.06.03    23:30   01:00   01:30    component saddle
+2010.06.03    23:30   01:30   04:00    create fork
+2010.06.04    21:30   23:00   01:30    create seatpost
+2010.06.05    21:45   23:30   01:45    create HeadSet bottom; divide components ...
+--------------------------------------------------------------------------
+                            12:45    122:00    rattleCAD/tags/
+
+2010.06.06    22:15   23:45   01:30    add upper headset cap, start with stem
+2010.06.07    21:00   00:30   03:30    stem
+2010.06.10    23:30   00:30   01:30    modify frame details, add dimensions
+2010.06.11    23:30   01:00   02:00    create lib: frame_visualisation
+2010.06.11    23:00   01:30   02:30    cleanup lib: frame_geometry
+--------------------------------------------------------------------------
+                            10:00    132:00    rattleCAD/tags/
+
+2010.06.14    23:30   00:30   01:00    add boot clearance
+2010.06.15    20:30   23:00   02:30    a lot of corrections vectormath::angle - exception handling
+2010.06.15    23:30   02:30   03:00    add summary tab and modify lib_framegeometry
+2010.06.16    21:00   00:00   03:00    add summary tab and modify lib_framegeometry
+--------------------------------------------------------------------------
+                            09:30    141:30    rattleCAD/tags/01.20100616_b
+
+2010.06.17    21:00   01:30   04:30    complete summary tab and combine lib_cv_custom_XX to lib_cv_custom_00
+2010.06.19    00:00   02:00   02:00    complete summary tab and combine lib_cv_custom_XX to lib_cv_custom_00
+2010.06.19    16:15   17:45    01:30    implement canvasCAD::centerLine
+2010.06.19    21:00   22:30    01:30    implement drafting frame
+2010.06.19    01:00   03:30    02:30    implement drafting frame
+2010.06.20    19:30   00:30    05:00    implement drafting frame
+--------------------------------------------------------------------------
+                            17:00    158:30    rattleCAD/tags/
+
+2010.06.21    20:30   00:30   04:00    add rear brake mount, playing arround with BWidget::NoteBook
+2010.06.22    18:30   21:30   03:00    add event to notebook tabs, inplement frame jig drafting
+2010.06.22    22:30   01:00   02:30    add fork dimension to frame detail and software cleanings
+2010.06.26    20:00   20:30   00:30    redefine RearBrakeMount in lib_frame_geometry
+2010.06.28    22:30   02:00   03:30    add decoration  RearBrake & frontBrake
+2010.06.29    21:00   24:00   03:00    add tubemitter to application
+--------------------------------------------------------------------------
+                            16:30    175:00    rattleCAD/tags/01.20100629_b
+
+2010.07.01    20:30   21:30   01:00    modify brake.svg-files and position of brakes
+2010.07.01    23:00   02:00   03:00    modify brake.svg-files and position of brakes
+2010.07.05    21:30   01:00   03:30    modify fork-representation, add new fork-crown
+2010.07.06    23:00   01:00   02:00    modify fork-blade-representation
+2010.07.07    23:00   01:00   02:00    modify fork-blade-representation
+2010.07.08    22:00   02:00   04:00    modify fork-blade-representation
+2010.07.09    22:00   01:00   03:00    add new derallieur types ... testing
+--------------------------------------------------------------------------
+                            18:30    183:30    rattleCAD/tags/01.20100709_a
+                            
+2010.09.16    23:00   00:30   03:00    build starkit
+--------------------------------------------------------------------------
+                            03:00    186:30    
+
+
+                
+3.1
+==========================================================================                
+2010.09.17    20:00   21:00   01:00    reorder tabs to integrate reference Geometry
+2010.09.19    20:00   00:30   04:30    cleanup procedures, handle USER_Dir, reference Geometry
+2010.09.20    20:15   00:45   04:30    reference Geometry ...
+2010.09.21    19:30   22:00   02:30    use reference Geometry by Button ..., starkit
+2010.09.24    23:30   02:00   02:30    modify template.xml and exchange use of Reference geometry 
+2010.09.25    12:30   13:00   01:30    add help, request before update personal geometry (3.1.03)
+--------------------------------------------------------------------------
+                            16:30    203,00
+
+2010.10.01    23:30   04:30   05:00    format and scale of stage
+2010.10.02    14:00   20:30   06:30    format and scale of stage
+2010.10.03    20:00   02:30   06:00    format and scale of stage 3.1.06a
+--------------------------------------------------------------------------
+                            17:30    220,00
+
+
+2010.10.13    00:00   01:45   01:45    3.1.08 ... user component library
+2010.10.13    21:15   23:00   01:45    3.1.08 ... user component library 3.1.08
+2010.10.14    22:30   02:00   03:30    3.1.09 ... .svg visualization
+2010.10.15    23:00   05:30   06:30    3.1.10 ... .svg visualization
+2010.10.17    21:30   23:00   01:30    3.1.12 ... .svg visualization
+2010.10.19    20:00   24:00   04:00    3.1.12.a bugfix
+2010.10.20    21:00   03:30   06:30    3.1.13 ... svg matrix
+2010.10.21    20:00   01:30   05:30    3.1.13 ... svg matrix
+--------------------------------------------------------------------------
+                            31:30    251,30
+
+--------------------------------------------------------------------------
+
+
+
+3.2
+==========================================================================                
+        add tubeset definitions
+    done: allow different fork types
+    done: add listbox for rims
+    done: APPL_Init: define a central init file to store values
+    done: add cut dimensions on downtube and toptube
+    done: Reference Geometry:  correct Fork Settings 
+    
+2010.10.23    22:00   04:00   06:00    ... render different components
+2010.10.24    12:00   13:30   01:30    ... render different components
+2010.10.24    20:00   01:00   05:00    ... render different components
+2010.10.25    17:00   22:30   05:30    ... different fork types, listbox for rims
+2010.10.26    20:00   22:00   02:00    3.2.01 ... some bugfixes ... 
+2010.10.27    20:00   22:00   02:00    3.2.02 ... some bugfixes ... add exclusion.txt
+2010.10.28    21:00   03:30   06:30    3.2.05 ... some bugfixes ... add exclusion.txt
+--------------------------------------------------------------------------
+                            22:00    280,00
+
+                            
+2010.10.29    21:00   03:00   06:00    3.2.06 ... remove reference tab. add <Result> to xml-File
+2010.10.30    10:00   12:00   02:00    
+2010.10.30    18:00   20:00   02:00    
+2010.10.30    23:00   04:00   05:00    3.2.11 ... composite Fork
+2010.11.01    21:00   23:00   02:00    3.2.12 ... print Scaling / to check .ps printing
+--------------------------------------------------------------------------
+                            17:00    297,00
+
+                            
+2010.11.04    23:00   04:00   05:00    3.2.13 ... export to svg
+2010.11.05    23:00   04:00   05:00    3.2.13 ... export to svg
+2010.11.07    14:00   17:30   03:30    3.2.14 ... export to svg
+2010.11.07    21:00   02:00   05:00    3.2.14 ... export to svg
+2010.11.08    22:00   01:00   03:00    3.2.15 ... handle mimetypes for .ps and .svg
+--------------------------------------------------------------------------
+                            21:30    318,30
+
+2010.11.09    22:00   23:00   01:00    3.2.16 ... control Panel
+2010.11.10    22:00   24:00   02:00    3.2.16 ... control Panel
+2010.11.11    22:00   04:00   06:00    3.2.16 ... control Panel
+2010.11.12    12:00   23:00   09:00    3.2.16 ... control Panel
+2010.11.13    18:00   04:00   10:00    3.2.16 ... control Panel
+2010.11.14    16:00   18:00   02:00    3.2.19 ... mouse over ...
+--------------------------------------------------------------------------
+                            30:00    348,30
+                            
+2010.11.17    22:00   01:30   03:30    3.2.22 ... bottle cage
+2010.11.18    22:00   03:30   05:30    3.2.22 ... bottle cage
+2010.11.19    14:00   18:00   04:00    3.2.22 ... bottle cage
+2010.11.19    20:00   23:00   03:00    3.2.22 ... bottle cage
+--------------------------------------------------------------------------
+                            16:00    364,30
+                            
+2010.11.26    20:00   01:30   05:30    3.2.25 ... export Results to XML
+2010.11.27    01:30   02:30   01:00    3.2.26 ... replace frameCoords::...(polygon) 
+2010.11.28    14:00   21:00    07:00    3.2.28 ... replace frameCoords::...(polygon) 
+2010.11.28    21:00   22:30    01:30    3.2.28 ... replace frameCoords::...(polygon) 
+2010.11.28    22:30    03:30    05:00    3.2.28 ... replace frameCoords::...(polygon) 
+--------------------------------------------------------------------------
+                            20:00    384,30        3.2.30
+                            
+                            
+2011.01.05    17:30   22:00   04:30    3.2.31 ... add editable dimension BB-Height
+2011.01.07    10:30   02:30   02:00    3.2.32 ... add template files for user
+2011.01.23    19:30   00:30   00:30    3.2.34 ... bugfix in info tab
+--------------------------------------------------------------------------
+                            07:00    391,30        3.2.34
+                            
+                            
+2011.02.05    23:00   06:30   07:30    3.2.35 ... add script simplifySVG.tcl
+2011.02.06    17:00   23:00   06:00    3.2.35 ... modify script simplifySVG.tcl
+2011.02.08    18:00   24:00   06:00    3.2.36 ... different suspension fork types
+--------------------------------------------------------------------------
+                            19:00    410,30        3.2.36
+
+                            
+2011.02.14    18:00   03:30   07:30    3.2.35 ... modify script simplifySVG.tcl
+2011.02.15    22:00   02:00   04:00    3.2.35 ... modify script simplifySVG.tcl
+2011.02.16    22:00   02:00   04:00    3.2.36 ... modify script simplifySVG.tcl, update canvasCAD testscripts
+--------------------------------------------------------------------------
+                            15:00    426,00        3.2.38       canvasCAD 0.7.06
+
+                            
+2011.02.18    22:00   05:00   07:00    3.2.39 ... change behaviour of steering parameters
+2011.02.19    11:00   12:30   01:30    3.2.40 ... modify read older file versions
+2011.02.22    21:00   02:00   05:00    3.2.41 ... modify xml-representation in ttk::treeview
+2011.02.24    21:00   23:30   02:30    3.2.42 ... modify xml-representation in ttk::treeview
+--------------------------------------------------------------------------
+                            16:00    442,00        3.2.42       ttk::treeview in lib_cfg_report
+
+                            
+2011.04.11    24:00   00:30   00:30    3.2.45 ... fix config panel
+2011.05.02    12:00   14:30   02:30    3.2.47 ... debug simplify_SVG.tcl in "create line"
+2011.07.18    23:30   00:00   00:30    3.2.48 ... debug Headset Parameter in Frame Tubing (Top/Bottom)
+2011.07.28    21:00   23:30   02:30    3.2.49 ... virtual TopTubeLength, dropouts, Tube taper exceptions
+2011.07.30    11:30   13:00   01:30    3.2.50 ... upload
+2011.08.08    23:30   03:30   04:30    3.2.51 ... front derailler, fix config panel(virtual TopTubeLength, Front wh distance)
+2011.08.09    21:30   01:30   04:00    3.2.52 ... front derailler % other small thing; etc: xml-Files
+2011.08.18  20.00   04.00    08:00    3.2.53 ... front derailler, campagnolo brakes
+2011.08.19  20.00   24.00    04:00    3.2.54 ... front derailler, campagnolo brakes
+
+2011.10.07  23.00   24.00    01:00    3.2.56 ... watermark, steerertube - length dimension
+--------------------------------------------------------------------------
+                            27:30    469,30        3.2.56
+                            
+2011.10.13  22.00   04.00    06:00    3.2.57 ... preview, debugging, ...
+2011.10.14  20.00   01.00    05:00    3.2.57 ... preview, rename tabs, reorder dimension...
+2011.10.16  10.00   11.30    01:30    3.2.58 ... preview, ...
+2011.10.16  22.00   00.30    02:30    3.2.60 ... debug config panel, ...
+2011.10.30  14.00   15.00    01:00    3.2.62 ... debug config panel, ...
+2011.11.02  18.00   12.00    04:00    3.2.62 ... branch _b03 ... centralize global variable APPL_Env
+2011.11.04  18.00   12.00    04:00    3.2.62 ... branch _b03 ... centralize global variable APPL_Env
+2011.11.07  21.30    01.30    04:00    3.2.64 ... update config panel, cleanup project DOM
+--------------------------------------------------------------------------
+                            28:00    497,30        3.2.64
+
+2011.11.28    22:30    24:00    01:30    3.2.65 ... open rattleCAD via -> open with
+2011.12.18     20:00    02:00    06:00    3.2.66 ... icon for starkit
+--------------------------------------------------------------------------
+                            07:30    505,00        3.2.64
+
+2011.12.28    23:30    01:00    01:30    3.2.70 ... serialize dom to array
+2011.12.30    01:00    03:00    02:00    3.2.70 ... serialize dom to array
+2011.12.30    14:00    04:00    14:00    3.2.70 ... serialize dom to array
+--------------------------------------------------------------------------
+                            17:30    522,30        3.2.70
+
+2012.01.01    20:30    06:00    11:30    3.2.71 ... new positioning of brakes based on rim Diameter
+2012.01.02    13:30    18:30    05:00    3.2.71 ... new positioning of brakes based on rim Diameter
+2012.01.02    21:00    24:00    03:00    3.2.72 ... new positioning of brakes based on rim Diameter
+2012.01.03    17:00    18:30    01:30    3.2.73 ... change mittering of downtube
+2012.01.03    23:00    05:30    06:30    3.2.74 ... update brake dimensioning
+2012.01.04    12:00    13:30    01:30    3.2.74 ... implement cv_custom::update_cv_Parameter
+--------------------------------------------------------------------------
+                            29:00    551,30        3.2.74
+
+2012.01.21    20:00    22:30    02:30    3.2.75 ... modify icon and display of watermark
+2012.01.24    22:00    24:00    02:00    3.2.76 ... implement lug-check-mode
+2012.01.26    22:30    24:30    02:00    3.2.76 ... move /root/Temporary to /root/Result/Length
+2012.01.27    22:30    23:30    03:00    3.2.76 ... implement lug-check-mode, move RearDropOut from /root/Component to /root/Lugs
+2012.01.28    21:30    02:30    05:00    3.2.76 ... implement lug-check-mode, SeatStay Mitering
+2012.01.30  18:30   19:30    01:00    3.2.76 ... update lib_config, cursor binding in entries
+2012.02.07  20:30   23:00    02:30    3.2.76 ... 04 lug check mode, add editable Offset vertical Saddle/Handlebar
+2012.02.08  21:00   02:30    05:30    3.2.76 ... 05 dxf export
+2012.02.11  24:00   05:30    05:30    3.2.76 ... 06 dxf export
+2012.02.12  13:30   18:30    05:00    3.2.76 ... 06 dxf export
+2012.02.12  21:00   01:30    04:30    3.2.76 ... 07 usability, layout
+2012.02.12  19:30   00:30    05:00    3.2.76 ... 08 usability, layout
+
+--------------------------------------------------------------------------
+                            42:30    594,00        3.2.76
+
+
+2012.02.20    21:00    24:00    03:30    3.2.78 ... 03 ... change user directory
+2012.02.23    22:00    04:00    06:00    3.2.78 ... 06 ... new icons
+2012.02.24    22:00    02:00    04:00    3.2.78 ... 08 ... keyboard bindings
+2012.02.26    01:30    02:30    01:00    3.2.78 ... 09 ... mousewheel bindings, add bottlecage dimensions
+2012.02.26    22:00    02:00    04:00    3.2.78 ... 10 ... handling Result values in lib_config
+2012.02.26    22:00    02:00    04:00    3.2.78 ... 14 ... handling events, update icons
+
+2012.03.xx    22:00    02:00    04:00    3.2.78 ... 18 ... small bugfixes
+2012.03.09    23:00    03:00    04:00    3.2.78 ... 19 ... crankset shimano hollowtech
+2012.03.11    22:00    03:00    05:00    3.2.78 ... 19 ... crankset shimano hollowtech
+2012.03.15    xx:00    xx:00    20:00    3.2.78 ... 20 ... crankset shimano hollowtech
+2012.03.15    00:00    04:00    04:00    3.2.78 ... 21 ... simplifySVG.tcl
+2012.03.18    02:00    20:00    08:00    3.2.78 ... 22 ... simplifySVG.tcl, shimano crankset, derailleur
+
+--------------------------------------------------------------------------
+                            42:30    594,00        3.2.76
+
+
+3.3
+==========================================================================                
+
+2012.04.xx                  15:00   3.3.00 ... 08 ... 
+2012.04.12  22:00   02:00   04:00   3.3.00 ... 09 ... modify seatpost display, cleanup debugs
+2012.04.19  20:00   01:00   05:00   3.3.00 ... 13 ... add Rear mockup
+2012.04.21  20:00   00:00   04:00   3.3.00 ... 14 ... add Rear mockup; change ChainStay display
+2012.04.21  11:30   14:30   03:00   3.3.00 ... 15 ... add Rear mockup; change ChainStay display
+2012.04.22  22:00   01:00   03:00   3.3.00 ... 16 ... add CrankSet display
+2012.04.24  22:00   05:00   07:00   3.3.00 ... 17 ... add ChainStay display ... dead end
+2012.04.26  22:00   02:00   04:00   3.3.00 ... 18 ... reset to 16 & modify CrankSet display ... dead end
+2012.04.27  22:00   02:00   04:00   3.3.00 ... 19
+2012.04.28  22:00   03:00   05:00   3.3.00 ... 20 ... ChainCtay Space
+2012.04.29  22:00   04:00   06:00   3.3.00 ... 22 ... open 3.2.78
+2012.05.01  15:00   19:00   04:00   3.3.00 ... 27 ... open 3.2.78, add seattube positioning of saddle
+--------------------------------------------------------------------------
+                            64:00    658,00        3.3.00.27
+
+                            
+2012.05.02  21:00   22:00   01:00   3.3.00 ... 28 ... bugfix on headtube-angle and lib_config::ListboxEvent
+2012.05.02  21:30   24:00   02:30   3.3.00 ... 29 ... bugfix on result-seattube-angle and 
+                                               30 ... add intersection dimensions on down-&seattube in framedrafting
+--------------------------------------------------------------------------
+                            3:30    661,50        3.3.00.32
+
+                             
+2012.05.12  22:30  02:30    04:00   3.3.02 ... 00 ... add dimension for saddlenose 
+                                               01 ... bugfix
+2012.05.13                  10:00   3.3.02 ... 04 ...
+--------------------------------------------------------------------------
+                            14:00    675,50        3.3.02.04
+
+                             
+2012.06.24  12:30   14:30   02:00   3.3.03 ... 00 ... add dimension for virtual seattube length 
+2012.06.24  14:30   15:30   01:00   3.3.03 ... 01 ... version updates & cleanup
+2012.06.29  19:00   24:00   05:00   3.3.03 ... 06 ... custom crankset
+2012.07.01  15:00   18:00   03:00   3.3.03 ... 06 ... custom crankset
+--------------------------------------------------------------------------
+                            11:00    686,50        3.3.03.07
+                            
+2012.07.12  01:00   05:00   04:00   3.3.04 ... 00 ... seattube offset
+2012.07.12  22:00   01:00   03:00   3.3.04 ... 01 ... rattleCAD Logo on DownTube
+2012.07.13  16:00   18:00   02:00   3.3.04 ... 02 ... additional dropout kinesis_1113.svg
+2012.07.14  12:00   13:00   01:00   3.3.04 ... 03 ... update mtb-template.xml
+2012.07.15  16:00   19:00   03:00   3.3.04 ... 04 ... resize stage on update when window is resized
+2012.07.16  22:30   23:00   00:30   3.3.04 ... 05 ... update resize stage
+2012.07.18  22:30   23:30   01:00   3.3.04 ... 06 ... bugfix File -> Rendering
+2012.07.27  20:30   01:00   05:00   3.3.04 ... 10 ... bugfix File -> Save, children_saddle, 20" suspension fork
+2012.07.29  16:30   18:30   02:00   3.3.04 ... 11 ... bugfix File -> Save - on load template
+2012.08.12  18:00   01:00   07:00   3.3.04 ... 14 ... feature: angle table in FrameJig, ° to angular dimensions
+--------------------------------------------------------------------------
+                            28:30    715,00        3.3.04.14
+
+
+2012.08.24  22:00   04:00   06:00   3.3.05 ... 01 ... feature: modified handling of rear dropout
+2012.08.28  22:00   23:00   01:00   3.3.05 ... 03 ... reorganize lib_frame_geometry.tcl
+2012.09.02  09:00   10:00   01:00   3.3.05 ... 04 ... bugfix on 3.3.05.03: lib_frame_geometry.tcl
+2012.09.15  12:00   16:00   04:00   3.3.05 ... 12 ... bugfixes and new rear dropout Paragon DR1008
+2012.09.19  20:00   21:00   01:00   3.3.05 ... 14 ... new rear dropout LLEWELLYN, handling in mockup
+2012.09.20  15:00   16:00   01:00   3.3.05 ... 15 ... bugfix ChainStay Mockup: Offset BB Perp
+2012.09.20  23:00   24:00   01:00   3.3.05 ... 16 ... feature: ask for save before exit
+2012.09.24  20:00   24:00   04:00   3.3.05 ... 22 ... feature: campagnolo_2011_UltraShift.svg
+2012.09.29  19:00   20:00   01:00   3.3.05 ... 24 ... feature: reposition Virtual TopTube
+2012.10.22  21:00   24:00   03:00   3.3.05 ... 26 ... new type of ChainStay Visualisation
+2012.10.25  21:00   02:00   05:00   3.3.05 ... 26 ... new type of ChainStay Visualisation
+2012.10.27  14:00   23:00   09:00   3.3.05 ... 26 ... new type of ChainStay Visualisation
+2012.10.28  17:00   23:00   06:00   3.3.05 ... 26 ... new type of ChainStay Visualisation
+--------------------------------------------------------------------------
+                            43:00    758,00        3.3.05.26
+
+                            
+2012.10.28  21:00   23:30   02:30   3.3.05 ... 27 ... add BrakeDisc to ChainStay Detail
+2012.10.29  22:00   23:30   01:30   3.3.05 ... 28 ... add BrakeDisc to ChainStay Detail
+2012.10.31  22:00   23:30   01:30   3.3.05 ... 29 ... change naming of ChainStay-Profile parameters
+2012.11.01  21:00   01:00   04:00   3.3.05 ... 31 ... improve usability on change ChainStay parameters
+2012.11.02  10:00   11:00   01:00   3.3.05 ... 31 ... improve usability on change ChainStay parameters
+2012.11.04  14:00   16:00   02:00   3.3.05 ... 33 ... add 3rd control-point to ChainStay
+2012.11.26  00:00   00:00   50:00   3.3.05 ... 35 ... add bent ForkBlade
+--------------------------------------------------------------------------
+                            62:30   820,50        3.3.05.26
+
+
+2012.11.27  22:00   01:00    03:00   3.3.06 ... 00 ... add bent ForkBlade
+2012.11.28  21:00   00:00    03:00   3.3.06 ... 01 ... update positioning of front brake, new dropouts
+2012.12.02  13:00   17:00    04:00   3.3.06 ... 04 ... handle different fork types
+2012.12.06  13:00   17:00    04:00   3.3.06 ... 08 ... add rear dropouts
+2012.12.12  13:00   21:00    22:00   3.3.06 ... 10 ... fix bugs: fork-rendering "Suspension" & File Save on reloaded templates
+2012.12.19  22:00   01:00    03:00   3.3.06 ... 12 ... add dropout: richardsachs_PiccoliGioielli_68.svg, richardsachs_PiccoliGioielli.svg
+2012.12.19  22:00   01:00    03:00   3.3.06 ... 14 ... change behaviour of downtube on seattube-offset
+2013.01.14  21:00   24:00    03:00   3.3.06 ... 20 ... canvasCAD 0.28: SVG:polyline: stroke-dasharray, print PS
+2013.01.26  10:00   20:00    10:00   3.3.06 ... 22 ... export project as html-Report including svg
+2013.01.31  20:00   03:00    06:00   3.3.06 ... 25 ... additional frame-jig options, option for user settings
+2013.02.01  10:00   12:00    02:00   3.3.06 ... 26 ... additional frame-jig options
+2013.02.02  21:00   05:00    08:00   3.3.06 ... 27 ... export pdf
+2013.02.03  21:00   22:00    01:00   3.3.06 ... 28 ... some cleanups
+2013.02.04  21:00   24:00    03:00   3.3.06 ... 30 ... enhance pdf-export
+2013.02.06  21:00   23:00    02:00   3.3.06 ... 33 ... handle error on update 3.3.05 files with bent fork blades
+2013.02.07  22:00   23:00    01:00   3.3.06 ... 34 ... startup_image.gif: Bicycle Fame Geometry -> Bicycle Frame Geometry
+--------------------------------------------------------------------------
+                             78,00   898,50        3.3.05.34
+
+
