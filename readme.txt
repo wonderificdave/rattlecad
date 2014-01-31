@@ -1,14 +1,21 @@
 
 
+3.4.01.26  - 2014.01.31
+-------------------------------------------------------------------------------
+    debug:
+        ... ChainStay Details: 
+            ... edit Tyre Representation gave a listbox for TyreWidthRadius
+
+
 3.4.01.25  - 2014.01.20
 -------------------------------------------------------------------------------
     debug:
         ... ChainStay Details gave Error: lib_cvRearMockup.tcl
     feature: 
-	    ... ChainStay Details, adopt visualization of dropout length for 
-		    paragon_DR2030
-	    ... dropout: paragon_DR2030
-		
+        ... ChainStay Details, adopt visualization of dropout length for 
+            paragon_DR2030
+        ... dropout: paragon_DR2030
+
 
 3.4.01.24  - 2014.01.17
 -------------------------------------------------------------------------------
