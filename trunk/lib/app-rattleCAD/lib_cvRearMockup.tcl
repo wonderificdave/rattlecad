@@ -429,9 +429,9 @@
             
             rattleCAD::gui::object_CursorBinding     $ext_cvName    $_tyreObj
             $ext_cvName    bind $_tyreObj    <Double-ButtonPress-1> [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
-                                                   {list://Component(Wheel/Rear/TyreWidthRadius) \
-                                                           Component(Wheel/Rear/TyreWidth) \
-                                                           Rendering(RearMockup/TyreClearance)}  {Rear Tyre Parameter}]
+                                                   {Component(Wheel/Rear/TyreWidthRadius) \
+                                                    Component(Wheel/Rear/TyreWidth) \
+                                                    Rendering(RearMockup/TyreClearance)}  {Rear Tyre Parameter}]
                                                                                                                                                                                                                                                         
     }    
     
@@ -466,7 +466,7 @@
             $ext_cvName bind   $hubRep    <Double-ButtonPress-1> \
                                [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                             {    Component(Wheel/Rear/HubWidth) \
-                                                text://Component(Wheel/Rear/FirstSprocket) }            {RearHub: }]                                                       
+                                                 text://Component(Wheel/Rear/FirstSprocket) }            {RearHub: }]                                                       
             
             rattleCAD::gui::object_CursorBinding    $ext_cvName $sprocketRep
             $ext_cvName bind   $sprocketRep    <Double-ButtonPress-1> \
