@@ -19,11 +19,20 @@
   puts "   \$BASE_Dir ........ $BASE_Dir"
   puts "   \$APPL_ROOT_Dir ... $APPL_ROOT_Dir"
   lappend auto_path "$APPL_ROOT_Dir" 
+  
   lappend auto_path "$APPL_ROOT_Dir/../appUtil"
   lappend auto_path "$APPL_ROOT_Dir/../vectormath"
   lappend auto_path "$APPL_ROOT_Dir/../bikeGeometry"
   lappend auto_path "$APPL_ROOT_Dir/../extSummary"
-  lappend auto_path "$APPL_ROOT_Dir/../rattleCAD_3.4/lib/app-rattleCAD"
+  lappend auto_path "$APPL_ROOT_Dir/../osEnv"
+  lappend auto_path "$APPL_ROOT_Dir/../rattleCAD 3.4.01/lib/app-rattleCAD"
+  
+  lappend auto_path "$APPL_ROOT_Dir/../app-appUtil"
+  lappend auto_path "$APPL_ROOT_Dir/../app-vectormath"
+  lappend auto_path "$APPL_ROOT_Dir/../app-bikeGeometry"
+  lappend auto_path "$APPL_ROOT_Dir/../app-extSummary"
+  lappend auto_path "$APPL_ROOT_Dir/../app-osEnv"
+  lappend auto_path "$APPL_ROOT_Dir/../app-rattleCAD"
   
   package require 	Tk
   package require   vectormath

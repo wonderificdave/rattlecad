@@ -55,10 +55,12 @@
  #
  #  0.49    add "-pagex 0" "-pagey 0" to printPostScript
  #
+ #  0.50    test-scripts: add  lappend auto_path "$APPL_ROOT_Dir/../app-vectormath"
+ #              for use in packed rattleCAD
 
 
 
-package provide canvasCAD 0.49
+package provide canvasCAD 0.50
 package require tdom
 
   # -----------------------------------------------------------------------------------

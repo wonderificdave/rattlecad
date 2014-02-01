@@ -23,6 +23,6 @@ viewBox="0 0 210 297">
   <path class="fil0 str1" d="M48.3954 146.285l0 -3.175m0 4.763l0 7.675m0 -14.025l0 -7.675m-3.175 10.85l-7.675 0m9.2625 0l3.175 0m1.5875 0l7.675 0"/>
   <polygon class="fil0 str0" points="52.8955,144.698 52.3494,142.567 50.7224,140.857 48.3955,140.198 46.4476,140.643 44.7835,142.02 43.8955,144.698 44.453,146.856 45.9761,148.489 48.3955,149.198 50.5375,148.654 52.2425,147.029 "/>
   <circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"/>
-  <circle inkscape:label="#circle24" class="fil0 str2" id="center_00" cx="58.411598" cy="120.791" r="5.0466499" sodipodi:cx="58.411598" sodipodi:cy="120.791" sodipodi:rx="5.0466499" sodipodi:ry="5.0466499" style="fill:none;stroke:#1f1a17;stroke-width:0.0762" />
+  <center id="center_00" cx="58.411598" cy="120.791" />
  </g>
 </svg>

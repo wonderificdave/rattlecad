@@ -21,6 +21,7 @@
     
 	lappend auto_path "$APPL_ROOT_Dir"
     lappend auto_path "$APPL_ROOT_Dir/../vectormath"
+    lappend auto_path "$APPL_ROOT_Dir/../app-vectormath"
         
 	package require 	Tk
     package require   vectormath
