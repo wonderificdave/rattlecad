@@ -1134,13 +1134,11 @@
                             
               #
 			$varName formatCanvas $stageFormat $stageScale
-            set canvasUpdate($varName) [ expr $rattleCAD::control::model_Update -1 ]
-             # 
+              # 
 
-            rattleCAD::view::updateView
 			  #
             notebook_refitCanvas
-            rattleCAD::view::updateView
+            rattleCAD::view::updateView force
 			  # 
     }
 
