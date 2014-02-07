@@ -90,18 +90,42 @@ namespace eval rattleCAD::view {
             puts "          new:    $rattleCAD::control::model_Update  -> [clock format [expr $rattleCAD::control::model_Update/1000] -format {%Y.%m.%d / %H:%M:%S}]"
             puts "       \$rattleCAD::control::model_Update -> $$rattleCAD::control::model_Update\n"
             
-			if { $mode == {} } {
-				if { $lastUpdate < $rattleCAD::control::model_Update } {
-					puts "\n       ... rattleCAD::view:updateView ... update $varName\n"
-					rattleCAD::gui::fill_canvasCAD $varName
-					set updateDone  {done}
-				} else {
-					puts "\n       ... rattleCAD::view:updateView ... update $varName ... not required\n"
-				}
-            } else {
-					puts "\n       ... rattleCAD::view:updateView ... update $varName ... force\n"
-					rattleCAD::gui::fill_canvasCAD $varName
-					set updateDone  {done}
+			
+            if {1 == 1} {
+                if {$mode == {force}} {
+                        puts "\n       ... rattleCAD::view:updateView ... update $varName ... force\n"
+                        rattleCAD::gui::fill_canvasCAD $varName
+                        set updateDone  {done}
+                } else {
+                    if { $lastUpdate < $rattleCAD::control::model_Update } {
+                        puts "\n       ... rattleCAD::view:updateView ... update $varName\n"
+                        rattleCAD::gui::fill_canvasCAD $varName
+                        set updateDone  {done}
+                    } else {
+                        puts "\n       ... rattleCAD::view:updateView ... update $varName ... not required\n"
+                    }
+                }
+                
+                if {$mode == {recenter}} {
+                        puts "\n       ... rattleCAD::view:updateView ... update $varName ... recenter\n"
+                        rattleCAD::gui::fill_canvasCAD $varName recenter               
+                }
+            }
+            
+            if { 1 == "orig"} {
+                if { $mode == {} } {
+                    if { $lastUpdate < $rattleCAD::control::model_Update } {
+                        puts "\n       ... rattleCAD::view:updateView ... update $varName\n"
+                        rattleCAD::gui::fill_canvasCAD $varName
+                        set updateDone  {done}
+                    } else {
+                        puts "\n       ... rattleCAD::view:updateView ... update $varName ... not required\n"
+                    }
+                } else {
+                        puts "\n       ... rattleCAD::view:updateView ... update $varName ... force\n"
+                        rattleCAD::gui::fill_canvasCAD $varName
+                        set updateDone  {done}
+                }
             }
             
 

@@ -1,5 +1,14 @@
 
 
+3.4.01.30  - 2014.02.05
+-------------------------------------------------------------------------------
+    debug: 
+        ... update: sram_red_22_2012.svg
+    feature:
+        ... dont recenter display after every edit of values
+        ... use the recenter button top right
+
+
 3.4.01.29  - 2014.02.04
 -------------------------------------------------------------------------------
     debug: 
@@ -9,7 +18,7 @@
 3.4.01.28  - 2014.02.02
 -------------------------------------------------------------------------------
     feature: 
-        ... rear derailleur: sram_red_22_2012
+        ... crankset: sram_red_22_2012.svg
         ... handlebar: sram_red_2014
 
 
@@ -204,7 +213,7 @@
 -------------------------------------------------------------------------------
     debug:
         ... handle undefined mimetypes in windows registry
-            ... handle undefined Application in open_by_mimeType_DefaultApp
+        ... handle undefined Application in open_by_mimeType_DefaultApp
 
 
 3.4.01.03  - 2013.10.20

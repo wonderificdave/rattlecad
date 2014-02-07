@@ -73,7 +73,12 @@
             variable    Length          ;  array set Length         {}
             variable    Vector          ;  array set Vector         {}
 
-
+            
+    proc unset_Position {} { 
+          # removes all position settings of any canvas 
+	    variable  Position
+        array unset Position
+    }
 
     proc get_FormatFactor {stageFormat} {
             puts ""
@@ -274,7 +279,7 @@
 
      #-------------------------------------------------------------------------
 	     #  return BottomBracket coords
-    proc get_BottomBracket_Position {cv_Name bottomCanvasBorder {keepPosition {reset}} {option {bicycle}} {stageScale {}}} {
+    proc get_BottomBracket_Position {cv_Name bottomCanvasBorder {updatePosition {recenter}} {option {bicycle}} {stageScale {}}} {
 	    
 	    variable  Position
 	    
@@ -302,7 +307,12 @@
         set SummaryLength             [lindex $FrameSize 0]
         
         
-        if {$keepPosition != {reset}} {
+        puts "  -> \$updatePosition $updatePosition"
+        if {![info exists Position($cv_Name)]} {
+           set updatePosition {recenter}
+        }
+        puts "  -> \$updatePosition $updatePosition"
+        if {$updatePosition != {recenter}} {
                 # puts "       <I> ... "
                 # puts "       <I> ...    $bottomCanvasBorder"
                 # puts "       <I> ... last value:$Position($cv_Name)"
@@ -313,7 +323,7 @@
             
             set lastHeight             [lindex $Position($cv_Name) 2]
                 # puts "       <I> .......... lastHeight: $lastHeight"
-                set newHeight              [expr $RearWheel(Radius) - $BottomBracketDepth ]
+            set newHeight              [expr $RearWheel(Radius) - $BottomBracketDepth ]
                 # puts "       <I> ........... newHeight:  $newHeight"
             set diffHeight             [expr $lastHeight - $newHeight] 
                 # puts "       <I> .......... diffHeight: $diffHeight"
