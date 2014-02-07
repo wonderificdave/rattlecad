@@ -39,7 +39,7 @@
 
 
 
-    proc rattleCAD::cv_custom::updateView {cv_Name {keepPosition {reset}}} {
+    proc rattleCAD::cv_custom::updateView {cv_Name {updatePosition {keep}}} {
 
         variable     bottomCanvasBorder
 
@@ -55,7 +55,7 @@
                         # -- get reference
                         #
                         #
-                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
                     $cv_Name        clean_StageContent
                         #
                     update_cv_Parameter               $cv_Name $xy
@@ -102,7 +102,7 @@
                         #
                         # -- base geometry
                         #
-					set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+					set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
 					$cv_Name        clean_StageContent
                         #
                     update_cv_Parameter               $cv_Name $xy
@@ -130,7 +130,7 @@
                         #
                         # -- frame - details
                         #
-                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition frame ]
                     $cv_Name        clean_StageContent
                         #
                     update_cv_Parameter                         $cv_Name $xy
@@ -194,7 +194,7 @@
                     set stageScale  [$cv_Name getNodeAttr Stage scale]
                     set stageFormat [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition frame $stageScale]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -221,7 +221,7 @@
                         #   puts "\n\n"
                         #   puts "   \$stageFormat: $stageFormat"
                         #   puts "   \$factor:      $factor"
-                    set xy             [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy             [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
                         #
                         #   puts "   \$xy:          $xy"
                     foreach {x y} $xy break
@@ -280,7 +280,7 @@
                     set stageScale  [$cv_Name getNodeAttr Stage scale]
                     set stageFormat [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition frame $stageScale]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -317,7 +317,7 @@
                         #
                         # -- assembly
                         #
-                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
                         #
                     $cv_Name        clean_StageContent
                         #
@@ -381,7 +381,7 @@
                     set stageScale      [$cv_Name getNodeAttr Stage scale]
                     set stageFormat     [$cv_Name getNodeAttr Stage format]
                         #
-                    set xy              [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition frame $stageScale]
+                    set xy              [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition frame $stageScale]
                         #
                     $cv_Name            clean_StageContent
                         #
@@ -401,7 +401,7 @@
                         #
                         # -- component in ConfigPanel
                         #
-                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $keepPosition bicycle ]
+                    set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
                         #
                     $cv_Name        clean_StageContent
                         #

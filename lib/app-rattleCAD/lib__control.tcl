@@ -150,10 +150,15 @@ namespace eval rattleCAD::control {
           # reset history
 		[namespace current]::changeList::reset
           #
-				
+			
+          # remove position value in $rattleCAD::cv_custom::Position -> do a recenter
+        rattleCAD::cv_custom::unset_Position
+          #
+            
 		  # update View
 		[namespace current]::updateControl
           #
+
     }
 
 	proc importSubset {nodeRoot} {
@@ -169,38 +174,8 @@ namespace eval rattleCAD::control {
 		  #
 		[namespace current]::updateControl
 		  #
+          
     }
-
-	proc newProject_org {projectDOM} {
-		puts "\n"
-		puts "   -------------------------------"
-		puts "    rattleCAD::control::newProject"
-        bikeGeometry::set_newProject $projectDOM	
-		
-          # reset history
-		[namespace current]::changeList::reset
-          #
-				
-		  # update View
-		[namespace current]::updateControl
-          #
-    }
-
-	proc importSubset_org {nodeRoot} {
-			# puts "[$nodeRoot asXML]"
-		puts "\n"
-		puts "   -------------------------------"
-		puts "    rattleCAD::control::importSubset"
-        
-		  #
-		bikeGeometry::import_ProjectSubset $nodeRoot	
-		  #
-		  
-		  #
-		[namespace current]::updateControl
-		  #
-    }
-	
 	
 
 

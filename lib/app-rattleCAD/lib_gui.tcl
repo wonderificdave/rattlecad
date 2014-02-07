@@ -534,6 +534,18 @@
             }
               # tk_messageBox -message "currentTab: $currentTab   /  varName  $varName"
             $varName refitStage
+              #
+            
+              # remove position value in $rattleCAD::cv_custom::Position -> do a recenter
+            rattleCAD::cv_custom::unset_Position
+              #
+              
+              #
+            rattleCAD::cv_custom::updateView     [string trimleft $varName "::"]
+              #
+              
+            return
+
     }
 
 
