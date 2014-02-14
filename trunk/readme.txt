@@ -1,5 +1,15 @@
 
 
+3.4.01.31  - 2014.02.09
+-------------------------------------------------------------------------------
+    debug: 
+        ... history of changeList updated on save File
+		... Project/modified did not update in project File
+    refactoring:
+        ... add Array:  rattleCAD::control::Session
+            ... shall replace $::APPL_Config() in the future
+
+
 3.4.01.30  - 2014.02.05
 -------------------------------------------------------------------------------
     debug: 

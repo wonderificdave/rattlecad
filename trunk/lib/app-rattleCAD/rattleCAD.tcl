@@ -156,10 +156,13 @@
           set ::APPL_Config(RELEASE_Version)  $strinfo(ProductVersion)    ;#{3.2}
           set ::APPL_Config(RELEASE_Revision) $strinfo(FileVersion)       ;#{66}
           set ::APPL_Config(RELEASE_Date)     $strinfo(FileDate)          ;#{18. Dec. 2011}
+          
+              #
+          rattleCAD::control::setSession  rattleCADVersion  "$strinfo(ProductVersion).$strinfo(FileVersion)"
+              #
               
               
-              
-                    # -- Application Directories  -----------
+              # -- Application Directories  -----------
           set ::APPL_Config(BASE_Dir)         $baseDir
           set ::APPL_Config(ROOT_Dir)         [file dirname $baseDir]
           set ::APPL_Config(CONFIG_Dir)       [file join    $baseDir etc   ]
@@ -394,7 +397,7 @@
               pack $::APPL_Config(MainFrame)  -fill both  -expand yes  -side top 
             
             # ---     create Indicator  -----
-        $::APPL_Config(MainFrame) addindicator -textvariable "::APPL_Config(MainFrameInd_Project)"  -anchor e  -width 30
+        $::APPL_Config(MainFrame) addindicator -textvariable "::APPL_Config(MainFrameInd_Project)"  -anchor e  -width 90
             # $::APPL_Config(MainFrame) addindicator -text "undoStack:"                                   -anchor e  -width 12
         $::APPL_Config(MainFrame) addindicator -textvariable "::APPL_Config(MainFrameInd_Status)"   -anchor e  -width 20
             [$::APPL_Config(MainFrame) getindicator 0]  configure -relief flat
@@ -934,7 +937,8 @@
             set  statusText   {}       
         } else {
             foreach {index size} [rattleCAD::control::changeList::get_undoStack] break
-            set  projectText  [format "%s " [file tail $APPL_Config(PROJECT_Name)]]
+              # set  projectText  [format "%s " [file tail $APPL_Config(PROJECT_Name)]]
+            set  projectText  [format "%s (%s)" [file tail $APPL_Config(PROJECT_Name)] [rattleCAD::control::getSession dateModified]]
             set  statusText   [format "UndoStack: %2s / %2s"  $index $size]
         }
           # set  statusText   [file tail $APPL_Config(PROJECT_Name)]

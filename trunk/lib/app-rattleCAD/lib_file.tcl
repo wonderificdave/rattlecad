@@ -107,14 +107,20 @@
                     # 20111229 ...
 
                 # -- set xml-File Attributes
-            [ $domConfig selectNodes /root/Project/Name/text()              ]   nodeValue   [ file tail $fileName ]
-            [ $domConfig selectNodes /root/Project/modified/text()          ]   nodeValue   [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            [ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+            rattleCAD::control::setSession  projectName          [file tail $fileName]
+            rattleCAD::control::setSession  dateModified         [clock format [clock seconds] -format {%Y.%m.%d - %H:%M:%S}]
+
+                # -- update domConfig
+            set domConfig $rattleCAD::control::currentDOM 
+                #
+            [$domConfig selectNodes /root/Project/rattleCADVersion/text()]  nodeValue [rattleCAD::control::getSession  rattleCADVersion]
+            [$domConfig selectNodes /root/Project/Name/text()]              nodeValue [rattleCAD::control::getSession  projectName]
+            [$domConfig selectNodes /root/Project/modified/text()]          nodeValue [rattleCAD::control::getSession  dateModified]
 
 			    # -- set project meta Information
-			rattleCAD::control::setValue  Project/Name              [ file tail $fileName ]
-            rattleCAD::control::setValue  Project/modified          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            rattleCAD::control::setValue  Project/rattleCADVersion  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+			# rattleCAD::control::setValue  Project/Name              [ file tail $fileName ]
+            # rattleCAD::control::setValue  Project/modified          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            # rattleCAD::control::setValue  Project/rattleCADVersion  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
                 # -- open File for writing
             set fp [open $fileName w]
@@ -165,13 +171,16 @@
             if { [file readable $fileName ] } {
                     
                     set projectDOM        [rattleCAD::file::get_XMLContent $fileName show]
-                    set rattleCAD_Version [[$projectDOM selectNodes /root/Project/rattleCADVersion/text()] asXML]
+                    set projectVersion    [[$projectDOM selectNodes /root/Project/rattleCADVersion/text()] asXML]
+                    set projectName       [[$projectDOM selectNodes /root/Project/Name/text()]             asXML]
+                    set projectModified   [[$projectDOM selectNodes /root/Project/modified/text()]         asXML]       
+                    
                     
                     puts "\n"
                     puts "  ========= o p e n   F I L E ====================="
                     puts ""
                     puts "         ... file:       $fileName"
-                    puts "         ... version:    $rattleCAD_Version"
+                    puts "         ... version:    $projectVersion"
 
                       #
 					rattleCAD::control::newProject $projectDOM
@@ -182,7 +191,11 @@
                     set ::APPL_Config(PROJECT_Name)        $fileName
                     set ::APPL_Config(PROJECT_Save)        [clock milliseconds]
                       #
-					  
+                    rattleCAD::control::setSession  projectFile       [file tail $fileName]
+                    rattleCAD::control::setSession  projectName       [file tail $fileName]
+                    rattleCAD::control::setSession  projectSave       [clock milliseconds]
+                    rattleCAD::control::setSession  dateModified      ${projectModified}
+ 					  
 					  #
                     rattleCAD::control::changeList::reset
                       #
@@ -240,6 +253,11 @@
                 set ::APPL_Config(PROJECT_Name)     "Template $type"
                 set ::APPL_Config(PROJECT_File)     "Template $type"  
                 set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
+                    #
+                rattleCAD::control::setSession  projectFile       "Template $type"
+                rattleCAD::control::setSession  projectName       "Template $type"
+                rattleCAD::control::setSession  projectSave       [expr 2 * [clock milliseconds]]
+                rattleCAD::control::setSession  dateModified      "template"
                     #
                 rattleCAD::control::changeList::reset
                     #
@@ -363,7 +381,8 @@
                                 set ::APPL_Config(PROJECT_Name) [file tail      $fileName]
                                 
                                     # --- set xml-File Attributes
-                                rattleCAD::control::setValue    Project/Name     [ file tail $fileName ]
+                                rattleCAD::control::setSession  projectName       [file tail $fileName]
+                                    # rattleCAD::control::setValue    Project/Name     [ file tail $fileName ]
 								    # set project::Project(Name)     [ file tail $fileName ]
                                     # [ $domConfig selectNodes /root/Project/Name/text()              ]     nodeValue     [ file tail $fileName ]
 
@@ -374,14 +393,36 @@
                 default     {    return}
             }
 
-                # --- set Project(modified)
-            rattleCAD::control::setValue    Project/modified             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-            rattleCAD::control::setValue    Project/rattleCADVersion     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+			    # -- set project meta Information
+            # rattleCAD::control::setSession  rattleCADVersion  "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+			# rattleCAD::control::setSession  projectName       [ file tail $fileName ]
+            # rattleCAD::control::setSession  modified          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M:S} ]
+                
+            rattleCAD::control::setSession  projectFile       [file tail $fileName]
+            rattleCAD::control::setSession  projectSave       [clock milliseconds]]
+            rattleCAD::control::setSession  dateModified      [clock format [clock seconds] -format {%Y.%m.%d - %H:%M:%S}]
+                    #
                 # set project::Project(modified)             [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
                 # set project::Project(rattleCADVersion)     "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
  
-                # -- read from domConfig
-            set domConfig $rattleCAD::control::currentDOM              
+                # -- update domConfig
+            set domConfig $rattleCAD::control::currentDOM 
+                #
+            [$domConfig selectNodes /root/Project/rattleCADVersion/text()]  nodeValue [rattleCAD::control::getSession  rattleCADVersion]
+            [$domConfig selectNodes /root/Project/Name/text()]              nodeValue [rattleCAD::control::getSession  projectName]
+            [$domConfig selectNodes /root/Project/modified/text()]          nodeValue [rattleCAD::control::getSession  dateModified]
+                #
+                
+                #set domConfig  [ rattleCAD::file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad_default) ] ]
+                    # 20111229 ...
+
+                # -- set xml-File Attributes
+            #[ $domConfig selectNodes /root/Project/Name/text()              ]   nodeValue   [ file tail $fileName ]
+            #[ $domConfig selectNodes /root/Project/modified/text()          ]   nodeValue   [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+            #[ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
+
+
+                    
             # set domConfig [project::runTime_2_dom]               
 
                 # -- open File for writing

@@ -40,13 +40,25 @@
 
 namespace eval rattleCAD::control {
 
-	variable  currentDICT         {} ;# a dictionary
-    variable  currentDOM          {} ;# a XML-Object
+	variable  currentDICT    {} ;# a dictionary
+    variable  currentDOM     {} ;# a XML-Object
     
-    variable  model_Update        {0}
-    variable  window_Update       {0}
-    variable  window_Size         {0}
+    variable  project_Saved  {0}
+    variable  project_Name   {0}
+      # ----------------- #
+    variable  model_Update   {0}
+    variable  window_Update  {0}
+    variable  window_Size    {0}
     
+    variable  Session              
+	array set Session {
+				rattleCADVersion     {}
+                dateModified         {init}
+				projectName          {}
+                projectFile          {}
+                projectSave          {}
+			}
+         
 	
 	proc updateControl {} {
 		
@@ -71,13 +83,26 @@ namespace eval rattleCAD::control {
 		  # update view
 		rattleCAD::view::updateView  
           #
-		  
+            
+          #
+        puts "\n -- <D> ---------------------\n"
+        puts "    [rattleCAD::control::getSession  projectFile]"
+        puts "    [rattleCAD::control::getSession  projectName]"
+        puts "    [rattleCAD::control::getSession  projectSave]"
+        puts "    [rattleCAD::control::getSession  dateModified]"
+        puts "    [rattleCAD::control::getSession  rattleCADVersion]"
+        puts "\n -- <D> ---------------------\n"
+          #
+    
+		  # 
 		return
 	}
 
 	proc setValue {xpath value {mode {update}} {history {append}}} {
 
-		set oldValue [[namespace current]::getValue $xpath]
+		variable  Session
+		
+        set oldValue [[namespace current]::getValue $xpath]
 
 		if {$value == $oldValue} {
 			return
@@ -87,7 +112,14 @@ namespace eval rattleCAD::control {
 		puts "    rattleCAD::control::setValue"
 		puts "       xpath:  $oldValue / $value"
 		
-		if {$mode == {update}} {
+		switch -glob $xpath {
+		    Project/* {
+			        return				
+				}
+			default {}
+		}
+		
+        if {$mode == {update}} {
 		    set newValue  [rattleCAD::model::setValue $xpath ${value}]
 		} else {
 		    set newValue  [rattleCAD::model::setValue $xpath ${value} $mode]
@@ -136,6 +168,16 @@ namespace eval rattleCAD::control {
 		  # puts "        rattleCAD::control::getValue $xpath $value  <- $format"
 		return ${value}
 	}
+    
+    proc setSession {name value} {
+        variable  Session
+        set Session($name) "${value}"
+    }
+    proc getSession {name} {
+        variable  Session
+        set value [set Session($name)] 
+        return ${value}
+    }
 
 	proc newProject {projectDOM} {
 		
