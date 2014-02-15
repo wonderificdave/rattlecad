@@ -50,13 +50,16 @@
 			puts "\n"
 			puts "  ====== s a v e   c u r r e n t   P r o j e c t  ="
 			puts ""
-			puts "         ... file:       $::APPL_Config(PROJECT_File)"
-			puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
+			puts "         ... file:       [rattleCAD::control::getSession  projectFile]"
+			puts "           ... saved:    [rattleCAD::control::getSession  projectSave]"
+			  # puts "         ... file:       $::APPL_Config(PROJECT_File)"
+			  # puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
 			puts "           ... modified: $changeIndex"
+			
           
             if { $changeIndex > 0 } {
                 set retValue [tk_messageBox -title   "Save Project" -icon question \
-                            -message "... save mofificatios in Project:  $::APPL_Config(PROJECT_File)?" \
+                            -message "... save mofificatios in Project:  [rattleCAD::control::getSession projectFile] ?" \
                             -default cancel \
                             -type    yesnocancel]
                 puts "\n           ... $retValue\n"
@@ -187,15 +190,14 @@
                       #
 					  
                       #
-					set ::APPL_Config(PROJECT_File)        $fileName
-                    set ::APPL_Config(PROJECT_Name)        $fileName
-                    set ::APPL_Config(PROJECT_Save)        [clock milliseconds]
-                      #
-                    rattleCAD::control::setSession  projectFile       [file tail $fileName]
+					# set ::APPL_Config(PROJECT_File)        $fileName
+                    # set ::APPL_Config(PROJECT_Name)        $fileName
+                    # set ::APPL_Config(PROJECT_Save)        [clock milliseconds]
+					  # 
+					rattleCAD::control::setSession  projectFile       [file normalize $fileName]
                     rattleCAD::control::setSession  projectName       [file tail $fileName]
                     rattleCAD::control::setSession  projectSave       [clock milliseconds]
                     rattleCAD::control::setSession  dateModified      ${projectModified}
- 					  
 					  #
                     rattleCAD::control::changeList::reset
                       #
@@ -221,8 +223,10 @@
             puts "\n"
             puts "    ------------------------"
             puts "    openProject_xml"   
-            puts "            $::APPL_Config(PROJECT_File)"
-            puts "            $::APPL_Config(PROJECT_Name)"
+            puts "            [rattleCAD::control::getSession projectFile] "
+            puts "            [rattleCAD::control::getSession projectName] "
+              # puts "            $::APPL_Config(PROJECT_File)"
+              # puts "            $::APPL_Config(PROJECT_Name)"
             puts "        ... done"             
             puts "\n  ====== o p e n  F I L E =========================\n\n"
     }
@@ -250,9 +254,9 @@
                 rattleCAD::control::newProject $projectDOM
 				    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
                     #
-                set ::APPL_Config(PROJECT_Name)     "Template $type"
-                set ::APPL_Config(PROJECT_File)     "Template $type"  
-                set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
+                # set ::APPL_Config(PROJECT_Name)     "Template $type"
+                # set ::APPL_Config(PROJECT_File)     "Template $type"  
+                # set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
                     #
                 rattleCAD::control::setSession  projectFile       "Template $type"
                 rattleCAD::control::setSession  projectName       "Template $type"
@@ -296,16 +300,20 @@
 
 
                 # set userDir       [check_user_dir rattleCAD]
-            if  {$::APPL_Config(PROJECT_File) != {}} {
-                set initialFile [file tail      $::APPL_Config(PROJECT_File)]
-                set initialDir  [file dirname   $::APPL_Config(PROJECT_File)]
+                # if  {$::APPL_Config(PROJECT_File) != {}} {}
+            if  {[rattleCAD::control::getSession  projectFile] != {}} {
+                set initialFile [file tail      [rattleCAD::control::getSession  projectFile]]
+                set initialDir  [file dirname   [rattleCAD::control::getSession  projectFile]]
+                  # set initialFile [file tail      $::APPL_Config(PROJECT_File)]
+                  # set initialDir  [file dirname   $::APPL_Config(PROJECT_File)]
             } else {
                 set initialFile "... empty"
                 set initialDir  "... empty"
             }
                 puts "       ... saveProject_xml - mode:            \"$mode\""
                 puts "       ... saveProject_xml - USER_Dir:        \"$::APPL_Config(USER_Dir)\""
-                puts "       ... saveProject_xml - PROJECT_Name:    \"$::APPL_Config(PROJECT_Name)\""
+                puts "       ... saveProject_xml - PROJECT_File:    \"[rattleCAD::control::getSession  projectFile]\""
+                puts "       ... saveProject_xml - PROJECT_Name:    \"[rattleCAD::control::getSession  projectName]\""
                 puts "       ... saveProject_xml - ... initialFile:     \"$initialFile\""
                 puts "       ... saveProject_xml - ... initialDir:      \"$initialDir\""
 
@@ -355,14 +363,16 @@
             }
 
                 puts "       ---------------------------"
-                puts "       ... saveProject_xml - mode:            \"$mode\""
-                puts "       ... saveProject_xml - ... initialFile: \"$initialFile\""
+                puts "       ... saveProject_xml - mode:                \"$mode\""
+                puts "       ... saveProject_xml - ... initialFile:     \"$initialFile\""
 
 
             switch $mode {
                 {save}        {
                                 # set fileName    [file join $::APPL_Config(USER_Dir) $initialFile]
-                                set fileName    [file normalize $::APPL_Config(PROJECT_File)]
+								set fileName    [file normalize [rattleCAD::control::getSession  projectFile]]
+                                # set fileName    [file normalize $::APPL_Config(PROJECT_File)]
+								
                             }
                 {saveAs}    {
                                 set fileName    [tk_getSaveFile -initialdir $::APPL_Config(USER_Dir) -initialfile $initialFile -filetypes $types]
@@ -398,7 +408,7 @@
 			# rattleCAD::control::setSession  projectName       [ file tail $fileName ]
             # rattleCAD::control::setSession  modified          [ clock format [clock seconds] -format {%Y.%m.%d %H:%M:S} ]
                 
-            rattleCAD::control::setSession  projectFile       [file tail $fileName]
+            rattleCAD::control::setSession  projectFile       [file normalize $fileName]
             rattleCAD::control::setSession  projectSave       [clock milliseconds]]
             rattleCAD::control::setSession  dateModified      [clock format [clock seconds] -format {%Y.%m.%d - %H:%M:%S}]
                     #
@@ -421,7 +431,11 @@
             #[ $domConfig selectNodes /root/Project/modified/text()          ]   nodeValue   [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
             #[ $domConfig selectNodes /root/Project/rattleCADVersion/text()  ]   nodeValue   "$::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision)"
 
-
+            puts ""
+            puts "            -> [rattleCAD::control::getSession  rattleCADVersion]"
+            puts "            -> [rattleCAD::control::getSession  projectName]"
+            puts "            -> [rattleCAD::control::getSession  dateModified]"
+            puts ""
                     
             # set domConfig [project::runTime_2_dom]               
 
@@ -432,7 +446,7 @@
                     puts $fp [$domConfig  asXML]
                     close $fp
                     puts ""
-                    puts "         ------------------------"
+                    puts "         -- update ----------------------"
                     puts "           ... write:"   
                     puts "                       $fileName"
                     puts "                   ... done"
@@ -445,7 +459,7 @@
                     puts $fp [$domConfig  asXML]
                     close $fp
                     puts ""
-                    puts "         ------------------------"
+                    puts "         -- new--------------------------"
                     puts "           ... write:"  
                     puts "                       $fileName "
                     puts "                   ... done"
@@ -456,7 +470,10 @@
                 # set ::APPL_Config(root_ProjectDOM) [bikeGeometry::get_projectDOM]
             
                 #
-            set ::APPL_Config(PROJECT_Save) [clock milliseconds]                                            
+                # set ::APPL_Config(PROJECT_Save) [clock milliseconds]
+            rattleCAD::control::setSession  projectSave       [clock milliseconds]
+                #
+				
                 # -- window title --- ::APPL_CONFIG(PROJECT_Name) ----------
             update_windowTitle           $windowTitle
             update_MainFrameStatus
@@ -466,7 +483,8 @@
             puts "\n"
             puts "    ------------------------"
             puts "    saveProject_xml"     
-            puts "            $::APPL_Config(PROJECT_File)"
+            puts "            [rattleCAD::control::getSession  projectFile]"
+              # puts "            $::APPL_Config(PROJECT_File)"
             puts "        ... done"
 
             puts "\n  ====== s a v e  F I L E =========================\n\n"

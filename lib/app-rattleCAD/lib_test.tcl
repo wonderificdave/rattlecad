@@ -186,7 +186,8 @@
         #  loopSamples
         #     
     proc loopSamples {args} {
-        set currentFile $::APPL_Config(PROJECT_File)
+        set currentFile [rattleCAD::control::getSession  projectFile]
+          # set currentFile $::APPL_Config(PROJECT_File)
         set SAMPLE_Dir  $::APPL_Config(SAMPLE_Dir)
 
         puts "\n\n  ====== l o o p   S A M P L E   F i l e s ========\n"                         
@@ -228,7 +229,8 @@
         #  demo 01
         #     
     proc demo_01 {args} {
-        set currentFile $::APPL_Config(PROJECT_File)
+        set currentFile [rattleCAD::control::getSession  projectFile]
+		  # set currentFile $::APPL_Config(PROJECT_File)
         set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
                        
         puts "\n\n  ====== D E M O N ST R A T I O N   0 1 ===========\n"                         

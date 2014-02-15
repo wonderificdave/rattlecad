@@ -1,6 +1,15 @@
 
 
-3.4.01.31  - 2014.02.09
+3.4.01.32  - 2014.02.11
+-------------------------------------------------------------------------------
+    refactoring:
+	    ... replace [bikeGeometry::project_attribute modified]
+		    ... by  [rattleCAD::control::getSession dateModified]
+    debug:
+	    ... save saved project
+
+
+3.4.01.31  - 2014.02.10
 -------------------------------------------------------------------------------
     debug: 
         ... history of changeList updated on save File

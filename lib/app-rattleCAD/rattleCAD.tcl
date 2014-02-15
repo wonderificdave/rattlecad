@@ -44,7 +44,7 @@
   
   package require   appUtil       0.15
   package require   vectormath    0.5
-  package require   bikeGeometry  0.47
+  package require   bikeGeometry  0.48
   package require   canvasCAD     0.50
   package require   extSummary    0.4
   package require   osEnv         0.8
@@ -431,11 +431,15 @@
           
           
             # --------------------------------------------
-            #    set APPL_Config(PROJECT_Name)        
-        set ::APPL_Config(PROJECT_Name)           "Template $::APPL_Config(TemplateType)"
-        set ::APPL_Config(PROJECT_File)           "Template $::APPL_Config(TemplateType)"
-        set ::APPL_Config(PROJECT_Save)           [clock milliseconds]
-          
+            #    set APPL_Config(PROJECT_Name)
+		rattleCAD::control::setSession  projectFile       "Template $::APPL_Config(TemplateType)"
+		rattleCAD::control::setSession  projectName       "Template $::APPL_Config(TemplateType)"
+		rattleCAD::control::setSession  projectSave       [clock milliseconds]
+			#
+        # set ::APPL_Config(PROJECT_Name)           "Template $::APPL_Config(TemplateType)"
+        # set ::APPL_Config(PROJECT_File)           "Template $::APPL_Config(TemplateType)"
+        # set ::APPL_Config(PROJECT_Save)           [clock milliseconds]
+            # 
           
             # --------------------------------------------
             #    check startup parameters
@@ -918,7 +922,8 @@
         global APPL_Config
       
         if {$filename == {}} {
-            set  filename $APPL_Config(PROJECT_Name)
+            set  filename [rattleCAD::control::getSession projectName]
+              # set  filename $APPL_Config(PROJECT_Name)
         }
         set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision) - $filename"
         wm title . $APPL_Config(WINDOW_Title)
@@ -938,7 +943,8 @@
         } else {
             foreach {index size} [rattleCAD::control::changeList::get_undoStack] break
               # set  projectText  [format "%s " [file tail $APPL_Config(PROJECT_Name)]]
-            set  projectText  [format "%s (%s)" [file tail $APPL_Config(PROJECT_Name)] [rattleCAD::control::getSession dateModified]]
+              # set  projectText  [format "%s (%s)" [file tail $APPL_Config(PROJECT_Name)] [rattleCAD::control::getSession dateModified]]
+            set  projectText  [format "%s (%s)" [file tail [rattleCAD::control::getSession projectName]] [rattleCAD::control::getSession dateModified]]
             set  statusText   [format "UndoStack: %2s / %2s"  $index $size]
         }
           # set  statusText   [file tail $APPL_Config(PROJECT_Name)]
