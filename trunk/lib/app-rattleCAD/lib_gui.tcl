@@ -289,8 +289,10 @@
                 puts "\n"
                 puts "  ====== e x i t   r a t t l e C A D =============="
                 puts ""
-                puts "         ... file:       $::APPL_Config(PROJECT_File)"
-                puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
+                puts "         ... file:       [rattleCAD::control::getSession  projectFile]"
+			    puts "           ... saved:    [rattleCAD::control::getSession  projectSave]"
+			      # puts "         ... file:       $::APPL_Config(PROJECT_File)"
+                  # puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
                 puts "           ... modified: $changeIndex"
                 puts "                     ... $rattleCAD::control::model_Update"
                 puts ""
@@ -301,7 +303,8 @@
             if { $changeIndex > 0 } {
                 
                 puts " ......... save File before exit"
-                puts "        project save:   $::APPL_Config(PROJECT_Save)"
+                puts "        project save:   [rattleCAD::control::getSession  projectSave]"
+                  # puts "        project save:   $::APPL_Config(PROJECT_Save)"
                 puts "        project change: $rattleCAD::control::model_Update"
 
                 set decission [tk_messageBox  -type $type \
@@ -319,7 +322,8 @@
                     {no}      {
                                 # even if saved or not, because of handling of bind of <Destroy>
                                 puts "        ... exit rattleCAD withoud saving current project\n"
-                                set ::APPL_Config(PROJECT_Save) [clock milliseconds] 
+								rattleCAD::control::setSession  projectSave  [clock milliseconds]
+                                  # set ::APPL_Config(PROJECT_Save) [clock milliseconds] 
                               }
                     {cancel}  {
                                 # leef this control - go back to rattleCAD
@@ -647,10 +651,13 @@
                               # puts "    \$APPL_Config(TemplateInit):      -> $::APPL_Config(TemplateInit)"
                               
                             # --- get project file 
-                        if {[file exists $::APPL_Config(PROJECT_File)] == 1} {
+                          # if {[file exists $::APPL_Config(PROJECT_File)] == 1} {}
+                        if {[file exists [rattleCAD::control::getSession  projectFile]] == 1} {
                               # file exists
-                            puts "             ... $::APPL_Config(PROJECT_File)"
-                            set sourceFile  $::APPL_Config(PROJECT_File)
+                            puts "             ... [rattleCAD::control::getSession  projectFile]"
+                              # puts "             ... $::APPL_Config(PROJECT_File)"
+							set sourceFile  [rattleCAD::control::getSession  projectFile]
+                              # set sourceFile  $::APPL_Config(PROJECT_File)
                         } else {
                               # file does not exists
                             puts "             ... $::APPL_Config(TemplateInit)"
