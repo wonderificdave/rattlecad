@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.47
+ package provide bikeGeometry 0.48
 
  namespace eval bikeGeometry {
 
@@ -915,7 +915,8 @@
     
     #-------------------------------------------------------------------------
         #  return project attributes
-    proc project_attribute {attribute } {
+        # -- remove Project --
+	proc __rename__project_attribute {attribute } {
             variable Project
             return $Project($attribute)
     }

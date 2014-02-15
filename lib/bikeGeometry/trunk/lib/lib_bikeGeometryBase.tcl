@@ -93,8 +93,9 @@
 
                 #
                 # --- set Project attributes
-            set Project(Project)        $project::Project(Name)
-            set Project(modified)       $project::Project(modified)
+				# -- remove Project --
+            # set Project(Project)        $project::Project(Name)
+            # set Project(modified)       $project::Project(modified)
 
                 #
                 # --- get BottomBracket (1)

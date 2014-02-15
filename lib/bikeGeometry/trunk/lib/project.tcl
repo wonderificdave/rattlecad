@@ -96,9 +96,10 @@
     #-------------------------------------------------------------------------
         #  handle Project Information
         #
-    variable Project;   array set Project {}
-         set Project(Name)      "I am new, ..."
-         set Project(modified)  [clock milliseconds]
+    # -- remove Project --
+		# variable Project;   array set Project {}
+		#      set Project(Name)      "I am new, ..."
+		#      set Project(modified)  [clock milliseconds]
     
  
     #-------------------------------------------------------------------------
