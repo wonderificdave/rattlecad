@@ -669,6 +669,7 @@
                             # --- loop through content
                               # puts "[lsort [array names notebookCanvas]]"
                         foreach cadCanv [lsort [array names notebookCanvas]] {
+                            if {$cadCanv == {cv_Custom02}} {continue}
                               # puts "   -> $cadCanv"
                             select_canvasCAD $cadCanv
                             update
@@ -685,6 +686,7 @@
                 
                 pdf {
                         foreach cadCanv [lsort [array names notebookCanvas]] {
+                            if {$cadCanv == {cv_Custom02}} {continue}
                               # puts "   -> $cadCanv"
                             select_canvasCAD $cadCanv
                             set w            [$cadCanv getNodeAttr    Canvas    path]            
@@ -870,6 +872,8 @@
             puts "       notebook_createButton:  $cv_ButtonList"
             set cv_Name [lindex [split $nb_Canvas :] end]
             set cv      [rattleCAD::gui::notebook_getWidget  $cv_Name]
+            
+            
                 # puts "  notebook_createButton $cv"
                 # puts [$cv find withtag __NB_Button__]
             foreach cv_Window [$cv find withtag __NB_Button__] {
@@ -889,7 +893,10 @@
             
             set idx 0
             foreach cv_Button $cv_ButtonList {
-                set y_Position  [expr 19 + $idx * 25]
+                set x_Position  25
+                set y_Position  25
+                  # set x_Position  [expr 10 + $idx * 25]
+                  # set y_Position  [expr 10 + $idx * 25]
                 incr idx
                 switch -regexp $cv_Button {
                         changeFormatScale {
@@ -899,53 +906,65 @@
                                         set buttonText "Format & Scale"
                                     }
                                     # -- create a Button to change Format and Scale of Stage
-                                    catch { destroy $cv.buttonFrame.button_FormatScale }
-                                    button  $cv.buttonFrame.button_FormatScale \
-                                            -text $buttonText \
-                                            -command [format {rattleCAD::gui::change_FormatScale %s %s %s} $cv $y_Position $type ]
-                                    pack $cv.buttonFrame.button_FormatScale -fill x
+                                    $nb_Canvas configCorner [format {rattleCAD::gui::change_FormatScale %s %s %s %s} $cv $x_Position $y_Position $type ]
+                                    
+                                        # catch { destroy $cv.buttonFrame.button_FormatScale }
+                                        
+                                        # button  $cv.buttonFrame.button_FormatScale \
+                                                -text $buttonText \
+                                                -command [format {rattleCAD::gui::change_FormatScale %s %s %s} $cv $y_Position $type ]
+                                        # pack $cv.buttonFrame.button_FormatScale -fill x
                                 }
                         TubingCheckAngles {
                                     # -- create a Button to execute tubing_checkAngles
-                                    catch { destroy $cv.buttonFrame.button_TCA }
-                                    button  $cv.buttonFrame.button_TCA \
-                                            -text "check Frame Angles" \
-                                            -command [format {rattleCAD::gui::tubing_checkAngles %s} $cv]                                
-                                    pack $cv.buttonFrame.button_TCA         -fill x
-                                }
-                        ChainStayRendering {
-                                    # -- create a Button to set ChainStayRendering
-                                    catch { destroy $cv.buttonFrame.button_CSR }
-                                    button  $cv.buttonFrame.button_CSR \
-                                            -text "switch: straight/bent/off" \
-                                            -command [format {rattleCAD::gui::rendering_ChainStay %s} $cv]                                
-                                    pack $cv.buttonFrame.button_CSR         -fill x
+                                    $nb_Canvas configCorner [format {rattleCAD::gui::tubing_checkAngles %s} $cv]
+                                    
+                                        # catch { destroy $cv.buttonFrame.button_TCA }
+                                        # button  $cv.buttonFrame.button_TCA \
+                                                -text "check Frame Angles" \
+                                                -command [format {rattleCAD::gui::tubing_checkAngles %s} $cv]                                
+                                        # pack $cv.buttonFrame.button_TCA         -fill x
                                 }
                         changeFrameJigVariant {
                                     # -- create a Button to set FrameJigVersion
-                                    catch { destroy $cv.buttonFrame.button_CSR }
-                                    button  $cv.buttonFrame.button_CSR \
-                                            -text "FrameJig" \
-                                            -font $::APPL_Config(GUI_Font) \
-                                            -command [format {rattleCAD::gui::change_FrameJig %s %s} $cv $y_Position ]                           
-                                    pack $cv.buttonFrame.button_CSR         -fill x
+                                    $nb_Canvas configCorner [format {rattleCAD::gui::change_FrameJig %s %s %s} $cv $x_Position $y_Position ]
+                                    
+                                        # catch { destroy $cv.buttonFrame.button_CSR }
+                                        # button  $cv.buttonFrame.button_CSR \
+                                                -text "FrameJig" \
+                                                -font $::APPL_Config(GUI_Font) \
+                                                -command [format {rattleCAD::gui::change_FrameJig %s %s} $cv $y_Position ]                           
+                                        # pack $cv.buttonFrame.button_CSR         -fill x
                                 }
-                        Reference2Custom {
+                                
+                        rem_ChainStayRendering {
+                                    # -- create a Button to set ChainStayRendering
+                                    $nb_Canvas configCorner [format {rattleCAD::gui::rendering_ChainStay %s} $cv]
+                                    
+                                        # catch { destroy $cv.buttonFrame.button_CSR }
+                                        # button  $cv.buttonFrame.button_CSR \
+                                                -text "switch: straight/bent/off" \
+                                                -command [format {rattleCAD::gui::rendering_ChainStay %s} $cv]                                
+                                        # pack $cv.buttonFrame.button_CSR         -fill x
+                                }
+                        rem_Reference2Custom {
                                     # -- create a Button to execute geometry_reference2personal
-                                    catch { destroy $cv.buttonFrame.button_R2C }
-                                    button  $cv.buttonFrame.button_R2C \
-                                            -text "copy settings to Base Geometry" \
-                                            -command rattleCAD::gui::geometry_reference2personal                                
-                                    pack $cv.buttonFrame.button_R2C         -fill x
+                                    $nb_Canvas configCorner rattleCAD::gui::geometry_reference2personal
+                                    
+                                        # catch { destroy $cv.buttonFrame.button_R2C }
+                                        # button  $cv.buttonFrame.button_R2C \
+                                                -text "copy settings to Base Geometry" \
+                                                -command rattleCAD::gui::geometry_reference2personal                                
+                                        # pack $cv.buttonFrame.button_R2C         -fill x
                                 }
                 }
             }
             
-            $cv create window 7 8 \
+            # $cv create window 7 8 \
                 -window $cv.buttonFrame \
                 -anchor nw \
                 -tags {__NB_Button__}
-            pack append $cv.buttonFrame
+            # pack append $cv.buttonFrame
             
     }            
             
@@ -968,7 +987,7 @@
     #-------------------------------------------------------------------------
        #  create menue to change scale and size of Stage 
        #
-    proc change_FormatScale {cv y {type {default}}}  {
+    proc change_FormatScale {cv x y {type {default}}}  {
     
             set cv_Name [lindex [split $cv .] end-1]
             
@@ -976,11 +995,11 @@
                 # puts "  change_FormatScale:  cv_Name: $cv_Name"
             
             set     rattleCAD::gui::stageFormat    A4
-            set     rattleCAD::gui::stageScale        0.20        
+            set     rattleCAD::gui::stageScale     0.20        
             
             if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
                     catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
-                            $cv create window 27 [expr $y+16] \
+                            $cv create window $x $y \
                                     -window $baseFrame \
                                     -anchor nw \
                                     -tags __Select__SubMenue__
@@ -1035,7 +1054,7 @@
     #-------------------------------------------------------------------------
        #  create menue to change change FrameJig Version 
        #
-    proc change_FrameJig {cv y}  {
+    proc change_FrameJig {cv x y}  {
             variable noteBook_top
             
             set cv_Name [lindex [split $cv .] end-1]
@@ -1044,7 +1063,7 @@
             
             if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
                     catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
-                            $cv create window 27 [expr $y+16] \
+                            $cv create window $x $y \
                                     -window $baseFrame \
                                     -anchor nw \
                                     -tags __Select__SubMenue__

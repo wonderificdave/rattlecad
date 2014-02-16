@@ -100,9 +100,9 @@
                                                     -xscrollcommand "$treeFrame.tree_x set" \
                                                     -yscrollcommand "$treeFrame.tree_y set" ]
             $treeWidget heading "#0"   -anchor w  -text "XML" -anchor w
-            $treeWidget column  "#0"   -width  160
+            $treeWidget column  "#0"   -width  200
             $treeWidget heading attr   -anchor w  -text "Attribute"
-            $treeWidget column  attr   -width  60
+            $treeWidget column  attr   -width  100
             $treeWidget heading value  -anchor w  -text "Value"
             $treeWidget column  value  -width  900
 

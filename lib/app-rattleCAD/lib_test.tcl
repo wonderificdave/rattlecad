@@ -99,6 +99,10 @@
 		puts "          ... $openFile\n"
 		rattleCAD::file::openProject_xml   $openFile
 		
+		set openFile         [file join  ${SAMPLE_Dir} classic_1984_SuperRecord.xml]
+		puts "          ... $openFile\n"
+		rattleCAD::file::openProject_xml   $openFile
+		
 		
 		puts "\n\n === export  pdf / html  ===\n"
 		rattleCAD::gui::export_Project      pdf
@@ -129,17 +133,6 @@
 			   #update          
 			}
 		}
-
-		  # remve anytime later
-		foreach thisFile { 
-			  focus_cayo_expert_2010__L_56.xml focus_cayo_expert_2010__M_54.xml  focus_cayo_expert_2010__XL_58.xml \
-			  columbus_max.xml \
-			  _template_3.2.78.xml _template_3.2.78_offroad.xml _template_3.3.00.xml _template_3.3.02.xml \
-			  _template_3.3.03.xml _template_3.3.04.xml _template_3.3.05.35.xml _template_3.3.06.xml \
-			  Kid20_V7.xml  ghost_powerkid_20.xml \
-			  __test_Integration_02.xml   
-		} {}
-
 				
 		
 		puts "\n\n === open config Panel  ===\n"           

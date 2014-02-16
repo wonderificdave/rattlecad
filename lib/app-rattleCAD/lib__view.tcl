@@ -52,6 +52,17 @@ namespace eval rattleCAD::view {
     variable canvasRefit    ; array set canvasRefit  {}  
     variable noteBook_top
 	
+    variable colorSet       ; array set colorSet {
+                                    frameTube      {wheat}
+                                    frameTube_OL   {black}
+                                    tyre           {gray98}
+                                    chainStay      {burlywood}
+                                    chainStay_1    {NavajoWhite3}
+                                    chainStay_2    {NavajoWhite2}
+                                    chainStay_CL   {saddle brown}
+                                    chainStayArea  {saddle brown}
+                                    components     {snow2}
+                              }
 
 
     proc updateView {{mode {}}} {

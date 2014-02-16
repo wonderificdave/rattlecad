@@ -1,5 +1,17 @@
 
 
+3.4.01.33  - 2014.02.15
+-------------------------------------------------------------------------------
+    refactoring:
+	    ... canvasCAD 0.51
+		... update: gui::notebook_createButton
+    debug:
+        ... projectNames were lost in drafting frames
+    feature:
+        ... add configCorner
+        ... coloured visualization
+    
+
 3.4.01.32  - 2014.02.11
 -------------------------------------------------------------------------------
     refactoring:
