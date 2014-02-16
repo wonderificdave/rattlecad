@@ -1,0 +1,125 @@
+
+    The rattleCAD package is open Source written by 
+        Manfred ROSENBERGER.
+
+    If you have any questions, please take a look on     
+    
+            http://sourceforge.net/projects/rattlecad/
+    
+    or send me an email:
+
+            manfred.rosenberger@gmx.net
+
+        Many thanks to the 
+           Tcl/Tk - Community
+
+        and especially to :
+           Gerhard REITHOFER   [www.tech-edv.co.at]
+           Johann  OBERDORFER
+
+
+...  is based on Tcl/Tk:
+------------------------
+
+      License: http://www.tcl.tk/software/tcltk/license.html
+
+
+
+... uses following packages and modules:
+----------------------------------------
+
+
+       rattle_cad
+      ---------------------------------------------
+            by Manfred ROSENBERGER
+
+
+
+       BWidget
+      ------------------------------------------
+            Version: 1.9 
+            http://tcllib.sourceforge.net/BWman/ 
+              ... see License of BWidgets
+
+            
+       struct
+      ------------------------------------------
+            Version: 1.12   
+            http://npg.dl.ac.uk/MIDAS/manual/ActiveTcl8.4.4.0-html/tcllib/struct/struct_tree.html 
+              ... see License of struct
+               
+                    tree-operations:
+                            http://wiki.tcl.tk/ ...
+
+       tdom
+      ------------------------------------------
+            Version: 0.8.3  
+            http://www.tdom.org/   ... owner and content of url changed
+              ... see License of tdom
+              
+                    xml-operations:
+                            http://wiki.tcl.tk/ ...
+
+       canvasCAD
+      ------------------------------------------
+            ... by Manfred ROSENBERGER
+                ... partialy based on Code from 
+                    rotate_item:
+                            kvetter@DELETETHIS.alltel.net
+                            http://wiki.tcl.tk/8595
+                    zoom:
+                            masse-navette.glfs@wanadoo.fr
+                            http://wiki.tcl.tk/4844
+                    vector algorythms:
+                            kvetter@DELETETHIS.alltel.net
+                            http://wiki.tcl.tk/8447
+                    svg-path:
+                            Greg Blair 2003-09-29
+                            Keith Vetter 2003-03-07
+                            Cubic Tension Splines: TensionSpline.tcl
+                            http://wiki.tcl.tk/10530
+                    exportDXF:
+                            John Roll 2009-03-18
+                            Writing DXF
+                            http://www2.tcl.tk/22794     
+
+       vectorfont
+      ------------------------------------------
+            ... based on Code from 
+                    Gerhard REITHOFER   [www.tech-edv.co.at]  
+                    Johann  OBERDORFER
+
+       rdial
+      ------------------------------------------
+            ... based on Code from 
+                    Gerhard REITHOFER   [www.tech-edv.co.at]  
+            ... see http://wiki.tcl.tk/26357
+
+       check_user_dir
+      ------------------------------------------
+            ... based on Code from 
+                    ???
+            ... see http://wiki.tcl.tk/3834
+
+
+
+... uses following svg - components:
+----------------------------------------
+
+       crankset/shimano_hollowtech_II.svg
+            ... iges by Simon Weishaupt
+            
+       dropout/rear_dropout_ss_wild_lilies_grow.svg
+            ... dxf  by Michael Wiedemann
+            
+       dropout/gp_wilson.svg
+            ... and
+       fork/dropout/gp_wilson.svg
+            ... by Paul Wyganowski from 
+                  http://wyganowskiframes.com/?attachment_id=189
+            
+       logo/rosenberger.svg
+          ./selberbruzzler.svg
+          ./bohemian.svg
+          ./puch.svg
+             ... free to use. Ownership kept by their creators
