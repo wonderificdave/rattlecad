@@ -156,7 +156,8 @@
             set retValues [get_BottomBracket]
             set  BB_OutSide [lindex $retValues 0]
             set  BB_InSide  [lindex $retValues 1]
-            $cv_Name create rectangle   $BB_OutSide   -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
+            $cv_Name create rectangle   $BB_OutSide   -outline blue     -fill $rattleCAD::view::colorSet(chainStay_1)  -width 1.0  -tags __Lug__
+                                                                     #  -fill lightgray 
 
                 # -- ChainStay Type
             switch [rattleCAD::control::getValue Rendering/ChainStay] {
@@ -176,13 +177,16 @@
                                   set ChainStay(polygon)    [lindex $retValues 1]
                                   set ChainStay(ctrLines)   [lindex $retValues 2]
                                     # puts "\n --> \$ChainStay(ctrLines) $ChainStay(ctrLines)"
-                                  set tube_CS_left    [ $cv_Name create polygon     $ChainStay(polygon)      -fill gray   -outline black  -tags __Tube__ ]
-                                  set tube_CS_CLine   [ $cv_Name create line        $ChainStay(centerLine)   -fill orange                 -tags __CenterLine__ ]
+                                  set tube_CS_left    [ $cv_Name create polygon     $ChainStay(polygon)      -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                                                             -outline black  -tags __Tube__ ]
+                                  set tube_CS_CLine   [ $cv_Name create line        $ChainStay(centerLine)   -fill $rattleCAD::view::colorSet(chainStay_CL) \
+                                                                                                             -tags __CenterLine__ ]
                                       set polygon_opposite {}
                                       foreach {x y}  $ChainStay(polygon) {
                                               lappend polygon_opposite $x [expr -1.0 * $y]
                                       }  
-                                  set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite     -fill gray -outline black  -tags {__Tube__} ]
+                                  set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite        -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                                                             -outline black  -tags {__Tube__} ]
 
                                       #$ext_cvName  create   polygon $outLine    -tags __Tube__         -fill lightgray
                                       #$ext_cvName  create   line    $centerLine -tags __CenterLine__   -fill blue
@@ -206,7 +210,9 @@
             }
 
                # -- finisch Bottom Bracket  - Inner Shell
-            $cv_Name create rectangle   $BB_InSide   -outline blue     -fill white  -width 1.0  -tags __Lug__
+            $cv_Name create rectangle   $BB_InSide   -outline $rattleCAD::view::colorSet(frameTube_OL) \
+                                                     -fill $rattleCAD::view::colorSet(chainStay_2) \
+                                                     -width 1.0  -tags __Lug__
 
                # -- create BrakeDisc
             set brakeDisc [create_BrakeDisc]
@@ -444,7 +450,8 @@
             
                 set length03                [ expr 0.5 *  18]
                 set pointList               [ vectormath::addVectorPointList $ext_Center(RearHub) [list [expr -1*$length03] [expr -1*$ext_Length(04)] $length03 $ext_Length(04)] ]
-            set hubRep          [ $ext_cvName create rectangle   $pointList            -outline blue     -width 1.0    -tags __CenterLine__ ]
+            set hubRep          [ $ext_cvName create rectangle   $pointList            -outline $rattleCAD::view::colorSet(frameTube_OL) \
+                                                                                       -width 1.0    -tags __CenterLine__ ]
                      
             
                # -- rear hub representation
@@ -489,18 +496,26 @@
                 set y2                  [ expr $ext_Length(04) + 6 ]
                 
                 set pointList           [ list $x1 $y1 $x2 $y2 ]
-            $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
+            $ext_cvName create rectangle   $pointList            -outline $rattleCAD::view::colorSet(frameTube_OL) \
+                                                                 -fill $rattleCAD::view::colorSet(chainStay_1)  \
+                                                                 -width 1.0  -tags __Lug__
                 set pointList           [ list $x1 [expr -1*$y1] $x2 [expr -1*$y2] ]
-            $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
+            $ext_cvName create rectangle   $pointList            -outline $rattleCAD::view::colorSet(frameTube_OL) \
+                                                                 -fill $rattleCAD::view::colorSet(chainStay_1) \
+                                                                 -width 1.0  -tags __Lug__
             
                 set x1                  [ expr [lindex $ext_Center(RearHub) 0] -14 ]
                 set x2                  [ expr [lindex $ext_Center(RearHub) 0] + $offset_DropOut + 10 ]
                 set y1                  [ expr $ext_Length(04) + 1 ]
                 set y2                  [ expr $ext_Length(04) + 5 ]
                 set pointList           [ list $x1 $y1 $x2 $y2 ]
-            $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
+            $ext_cvName create rectangle   $pointList            -outline $rattleCAD::view::colorSet(frameTube_OL) \
+                                                                 -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                 -width 1.0  -tags __Lug__
                 set pointList           [ list $x1 [expr -1*$y1] $x2 [expr -1*$y2] ]
-            $ext_cvName create rectangle   $pointList            -outline blue     -fill lightgray  -width 1.0  -tags __Lug__
+            $ext_cvName create rectangle   $pointList            -outline $rattleCAD::view::colorSet(frameTube_OL) \
+                                                                 -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                 -width 1.0  -tags __Lug__
     }
 
     proc rattleCAD::cv_custom::create_BrakeDisc {} {
@@ -754,7 +769,7 @@
                 #
             set             polygon     [ appUtil::flatten_nestedList    $polygon ]
             
-            set chainstayArea   [ $ext_cvName create polygon     $polygon     -fill lightgray -outline black  -tags __CenterLine__ ]
+            set chainstayArea   [ $ext_cvName create polygon     $polygon     -fill $rattleCAD::view::colorSet(chainStayArea) -outline black  -tags __CenterLine__ ]
 
             rattleCAD::gui::object_CursorBinding    $ext_cvName $chainstayArea
             $ext_cvName bind   $chainstayArea    <Double-ButtonPress-1> \
@@ -861,8 +876,12 @@
         
         set pointList [appUtil::flatten_nestedList $p00 $p01 $p02 $p03 $p04   $p14 $p13 $p12 $p11 $p10]   
         
-        $ext_cvName  create   polygon $pointList                              -tags __CenterLine__   -outline black  -fill lightgray
-        $ext_cvName  create   centerline    [appUtil::flatten_nestedList $p0 $p4] -tags __CenterLine__   -fill gray
+        $ext_cvName  create   polygon $pointList                                  -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                                  -outline $rattleCAD::view::colorSet(frameTube_OL) \
+                                                                                  -tags __CenterLine__
+                                                                                  
+        $ext_cvName  create   centerline    [appUtil::flatten_nestedList $p0 $p4] -fill $rattleCAD::view::colorSet(chainStay_CL) \
+                                                                                  -tags __CenterLine__   
         
         set textPosition [vectormath::addVector $p0  [list -70 -2.5]]
         set item  [$ext_cvName create draftText $textPosition -text "ChainStay Profile" -size [expr 5*$ext_stageScale]]

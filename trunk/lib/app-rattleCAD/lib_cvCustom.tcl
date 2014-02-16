@@ -636,7 +636,7 @@
                 # --- get stageScale
             set stageWidth  [ $cv_Name    getNodeAttr  Stage  width  ]
             set stageHeight [ $cv_Name    getNodeAttr  Stage  height ]
-            set stageScale  [ $cv_Name  getNodeAttr  Stage    scale  ]
+            set stageScale  [ $cv_Name    getNodeAttr  Stage  scale  ]
 
             set scaleFactor        [ expr 1 / $stageScale ]
                 if {[expr round($scaleFactor)] == $scaleFactor} {
@@ -755,7 +755,8 @@
     }
 
 
-    proc update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {decoColour2 {gray90}} } {
+    proc update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {decoColour2 {gray90}} {decoColour3 {gray95}} } {
+                           # {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {decoColour2 {gray90}}}
                 #
             foreach cv_Item [$cv_Name find withtag __Frame__] {
                 set cv_Type     [$cv_Name type $cv_Item]
@@ -772,7 +773,7 @@
             }
                 #
             foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Tyre__}] {
-                $cv_Name itemconfigure  $cv_Item -fill $tubeColour
+                $cv_Name itemconfigure  $cv_Item -fill $decoColour3
             }
             foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Rim_02__}] {
                 $cv_Name itemconfigure  $cv_Item -fill $decoColour

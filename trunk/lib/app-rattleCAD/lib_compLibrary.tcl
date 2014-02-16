@@ -328,9 +328,13 @@
           # puts "  -> listWidget: [$listWidget set $node type]"
         
         set compFile [$listWidget set $node filename]
+        puts "   ... try to open file $compFile"
+        [namespace current]::::updateCanvas
+        
         if {[catch {[namespace current]::::updateCanvas} fid]} {
             puts "   ... could not open file $compFile"
         }
+        puts "   ... tried to open file $compFile"
     }
 
 
@@ -394,17 +398,46 @@
             variable compCanvas
             variable compFile
             variable configValue
+            
+            # set currentTab [$rattleCAD::gui::noteBook_top select]
+            # set varName    [rattleCAD::gui::notebook_getVarName $currentTab]
+            set cv         [$compCanvas getPath] 
 
+            
+            
             if {$entryVar ne ""} {
                 set $entryVar $value
             }
-                puts "\n ... $compCanvas\n    ... $compFile"
+            
+            puts "\n ... $compCanvas"
+            puts "            ... $compFile"
+            # puts "            ... $currentTab"
+            # puts "            ... $varName"
+            puts "            ... $cv"
+            
             $compCanvas clean_StageContent
             [namespace current]::create_Centerline
             if {$compFile != {}} {
                 set compPosition [list $configValue(compOffset_X) [expr 1.0*$configValue(compOffset_y)]]
                 set __my_Component__        [ $compCanvas readSVG $compFile $compPosition $configValue(compAngle)  __Decoration__ ]
                 [namespace current]::moveto_StageCenter $__my_Component__
+                
+                puts "\n -- <D> -- $compCanvas --"
+
+                foreach cv_Item [$cv gettags  __Decoration__] {}
+                foreach cv_Item [$cv find withtag __Decoration__] {
+                    puts "  -> $cv_Item"
+                    set cv_Type     [$cv type $cv_Item]
+                    switch -exact $cv_Type {
+                        oval     -
+                        polygon  { $cv itemconfigure  $cv_Item -fill $rattleCAD::view::colorSet(components) }
+                        default  {}
+                    }
+                    
+                    
+                    # puts "  -> $cvItem [$cv gettags $cv_Item]"
+                }
+
             }
 
     }

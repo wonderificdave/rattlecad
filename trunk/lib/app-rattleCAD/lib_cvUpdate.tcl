@@ -182,10 +182,9 @@
                         #
                         # rattleCAD::rendering::debug_geometry   $cv_Name $xy
                         #
-                    update_renderCanvas               $cv_Name
+                    update_renderCanvas               $cv_Name        wheat
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
-                        # createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                     rattleCAD::gui::notebook_createButton    $cv_Name        TubingCheckAngles
                         #
@@ -203,7 +202,7 @@
                         #
                     update_cv_Parameter               $cv_Name $xy
                         #
-                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [rattleCAD::control::getSession dateModified]
+                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    [rattleCAD::control::getSession  projectName]  [rattleCAD::control::getSession dateModified]
                         # createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
                         #
                     createRearMockup                  $cv_Name
@@ -270,7 +269,7 @@
                         #
                     rattleCAD::rendering::createBaseline     $cv_Name $xy    black
                         #
-                    update_renderCanvas               $cv_Name
+                    update_renderCanvas               $cv_Name        wheat
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                         # createWaterMark             $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
@@ -291,7 +290,7 @@
                         #
                     update_cv_Parameter               $cv_Name $xy
                         #
-                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [rattleCAD::control::getSession dateModified]
+                    createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    [rattleCAD::control::getSession  projectName]  [rattleCAD::control::getSession dateModified]
                         # createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
                         #
@@ -314,7 +313,7 @@
                         #
                     $cv_Name        centerContent     { 0  25}        {__Decoration__  __CenterLine__  __Dimension__  __Frame__}
                         #
-                    update_renderCanvas               $cv_Name
+                    update_renderCanvas               $cv_Name         wheat
                         #
                     rattleCAD::gui::notebook_createButton    $cv_Name        changeFormatScale
                         #
@@ -395,13 +394,15 @@
                         #
                     update_cv_Parameter               $cv_Name $xy
                         #
-                    set drawingTitle    "<- $::APPL_Config(FrameJigType) ->    $::APPL_Config(PROJECT_Name)"
+                    set drawingTitle    "<- $::APPL_Config(FrameJigType) ->    [rattleCAD::control::getSession  projectName]"
                     createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    "$drawingTitle"  [rattleCAD::control::getSession dateModified]
                         # createDraftingFrame         $cv_Name        $stageFormat    [expr 1/$stageScale]    "$drawingTitle"  [bikeGeometry::project_attribute modified]
                         #
                     createFrameJig                    $cv_Name $xy    $stageScale   $::APPL_Config(FrameJigType)
                         #
                     $cv_Name         centerContent    {0  15}         {__Frame__  __Decoration__  __CenterLine__  __Dimension__}
+                        #
+                    update_renderCanvas               $cv_Name        wheat
                         #
                     rattleCAD::gui::notebook_createButton    $cv_Name        {changeFormatScale changeFrameJigVariant}
                         #
@@ -433,8 +434,8 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurFront    editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    CrankSet           editable   ;# $updateCommand
                         #
-                    createWaterMark                         $cv_Name         [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
-                        # createWaterMark                   $cv_Name         $::APPL_Config(PROJECT_File)    [bikeGeometry::project_attribute modified]
+                    createWaterMark                          $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
+                        # createWaterMark                    $cv_Name         $::APPL_Config(PROJECT_File)    [bikeGeometry::project_attribute modified]
                         #
                 }
 

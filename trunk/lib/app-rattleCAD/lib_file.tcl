@@ -110,7 +110,7 @@
                     # 20111229 ...
 
                 # -- set xml-File Attributes
-            rattleCAD::control::setSession  projectName          [file tail $fileName]
+            rattleCAD::control::setSession  projectName          [file rootname [file tail $fileName]]
             rattleCAD::control::setSession  dateModified         [clock format [clock seconds] -format {%Y.%m.%d - %H:%M:%S}]
 
                 # -- update domConfig
@@ -195,7 +195,7 @@
                     # set ::APPL_Config(PROJECT_Save)        [clock milliseconds]
 					  # 
 					rattleCAD::control::setSession  projectFile       [file normalize $fileName]
-                    rattleCAD::control::setSession  projectName       [file tail $fileName]
+                    rattleCAD::control::setSession  projectName       [file rootname [file tail $fileName]]
                     rattleCAD::control::setSession  projectSave       [clock milliseconds]
                     rattleCAD::control::setSession  dateModified      ${projectModified}
 					  #
@@ -391,7 +391,7 @@
                                 set ::APPL_Config(PROJECT_Name) [file tail      $fileName]
                                 
                                     # --- set xml-File Attributes
-                                rattleCAD::control::setSession  projectName       [file tail $fileName]
+                                rattleCAD::control::setSession  projectName       [file rootname [file tail $fileName]]
                                     # rattleCAD::control::setValue    Project/Name     [ file tail $fileName ]
 								    # set project::Project(Name)     [ file tail $fileName ]
                                     # [ $domConfig selectNodes /root/Project/Name/text()              ]     nodeValue     [ file tail $fileName ]
