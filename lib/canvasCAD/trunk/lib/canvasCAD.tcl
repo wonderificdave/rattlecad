@@ -60,7 +60,7 @@
 
 
 
-package provide canvasCAD 0.50
+package provide canvasCAD 0.51
 package require tdom
 
   # -----------------------------------------------------------------------------------
@@ -196,12 +196,12 @@ package require tdom
                                 bind $cv <Motion>         [ list canvasCAD::reportPointerPostion $name %x %y ]
                                 bind $cv <Configure>     [ namespace code [list resizeCanvas $w] ]
                                     # Set up event bindings for move canvas:
-                                bind $cv <1>                        "canvasCAD::setMark      $cv %x %y  move"
+                                bind $cv <1>                        "canvasCAD::click_B1     $cv %x %y"
                                 bind $cv <B1-Motion>                "canvasCAD::motion_B1    $cv %x %y"
-                                bind $cv <ButtonRelease-1>          "canvasCAD::release_B1   $cv %x %y  $name; $cv configure -cursor arrow"
-                                bind $cv <3>                        "canvasCAD::setMark      $cv %x %y  zoom"
-                                bind $cv <B3-Motion>                "canvasCAD::setStroke    $cv %x %y"
-                                bind $cv <ButtonRelease-3>          "canvasCAD::zoomArea     $cv %x %y  $name; $cv configure -cursor arrow"
+                                bind $cv <ButtonRelease-1>          "canvasCAD::release_B1   $cv %x %y  $name"
+                                bind $cv <3>                        "canvasCAD::click_B3     $cv %x %y"
+                                bind $cv <B3-Motion>                "canvasCAD::motion_B3    $cv %x %y"
+                                bind $cv <ButtonRelease-3>          "canvasCAD::release_B3   $cv %x %y  $name"
                             }
                 }
                 
@@ -435,6 +435,10 @@ package require tdom
                                     return [ create     $type $canvasDOMNode $CoordList $argList ]
                                     # return [ create     $type $cv_Object $CoordList $argList ]
                                 }
+                    # ------------------------   
+                configCorner {      set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    return [ configCorner::register  $canvasDOMNode  $argList ]        
+                                }                                  
                     # ------------------------            
                 dimension {         set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     set type            [lindex $argList 0]

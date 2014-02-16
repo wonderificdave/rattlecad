@@ -52,63 +52,259 @@
                         current {}
                     }   
     
-
-    #-------------------------------------------------------------------------
-        #  motion_B1; binding on MouseButton 1.
-        #
+    # -----------------------------------------------------------
+      #   mouse-events Button-1
+      #
+    proc canvasCAD::click_B1 {w x y {type {move}}} {       
+          #
+        $w configure -cursor hand2
+          #
+          
+          #
+        canvasCAD::setMark $w $x $y $type
+          #
+    }
     proc canvasCAD::motion_B1 {w x y} {
         variable  CANVAS_dragObject
         variable  CANVAS_Point
+
+          # -- check if start on __configCorner__
+        if [canvasCAD::check_configCorner $w] {
+            foreach name [array names CANVAS_Point] {
+                set CANVAS_Point($name) 0
+            }
+            # parray CANVAS_Point
+            return
+        }        
         
-        #--------------------------------------------------------
-            #  exception for dragObject
-            #  Remove area selection rectangle              set tagList [$w gettags $CANVAS_dragObject(current)]
-        set tagList [$w gettags $CANVAS_dragObject(current)]
-        if {[lsearch $tagList {__dragObject__}] > 0} {
+          # -- check for dragObject
+        if [canvasCAD::check_dragObject $w] {
               # puts "  -> dragContent "
               # puts "       ... tag-ID: $CANVAS_dragObject(current)  -> tags: [$w gettags $CANVAS_dragObject(current)]"
             canvasCAD::dragContent $w $CANVAS_dragObject(current) $x $y
-        } else {
-            canvasCAD::setStroke $w $x $y
-        }             
+            return
+        } 
+        
+          # -- default
+        canvasCAD::setRange $w $x $y
+             
     }
-    
-    
-    #-------------------------------------------------------------------------
-        #  release_B1; binding on MouseButton 1.
-        #
     proc canvasCAD::release_B1 {w x y cv_ObjectName} {
         variable  CANVAS_dragObject
-        variable  CANVAS_Point
         
-        #--------------------------------------------------------
-        #  exception for dragObject
-        #  Remove area selection rectangle              set tagList [$w gettags $CANVAS_dragObject(current)]
-        set tagList [$w gettags $CANVAS_dragObject(current)]
-        if {[lsearch $tagList {__dragObject__}] > 0} {
-              # puts "  -> dragContent "
+          # -- reset cursor
+        $w configure -cursor {}
+          #
+        
+          # -- check for configCorner
+        if [canvasCAD::check_configCorner $w] {
+            canvasCAD::configCorner::execute  $w
+            return
+        }
+          
+          # -- check for dragObject
+        if [canvasCAD::check_dragObject $w] {
               # puts "       ... tag-ID: $CANVAS_dragObject(current)  -> tags: [$w gettags $CANVAS_dragObject(current)]"
             canvasCAD::event_dragObject $w $x $y $CANVAS_dragObject(current)
+            return
+        } 
+        
+          # -- default: moveContent
+        canvasCAD::moveContent      $w $x $y $cv_ObjectName
+          #
+          
+          # -- reset CANVAS_dragObject(current)
+        set CANVAS_dragObject(current)    {}
+          #
+    }
+
+    # -----------------------------------------------------------
+      #   mouse-events Button-3
+      #
+    proc canvasCAD::click_B3 {w x y {type {zoom}}} {
+        $w configure -cursor sizing
+        canvasCAD::setMark $w $x $y $type
+    } 
+    proc canvasCAD::motion_B3 {w x y} {
+        variable  CANVAS_Point
+        
+          # -- exception if start on __configCorner__
+        if [canvasCAD::check_configCorner $w] {
+            foreach name [array names CANVAS_Point] {
+                set CANVAS_Point($name) 0
+            }
+            # parray CANVAS_Point
+            return
+        }        
+
+          # -- default
+        canvasCAD::setRange $w $x $y
+          #
+    } 
+    proc canvasCAD::release_B3 {w x y cv_ObjectName} {
+        variable  CANVAS_dragObject
+        
+          # -- reset cursor
+        $w configure -cursor {}
+          #
+          
+          # -- check for configCorner
+        if [canvasCAD::check_configCorner $w] {
+            return
+        }
+          #
+          
+          # -- default: zoom Area
+        canvasCAD::zoomArea  $w $x $y $cv_ObjectName 
+          #
+          
+          # -- reset CANVAS_dragObject(current)
+        set CANVAS_dragObject(current)    {}
+          #
+    }  
+
+    
+    
+    #-------------------------------------------------------------------------
+        #  check __configCorner__
+        #
+    proc canvasCAD::check_configCorner {w} {
+        variable  CANVAS_dragObject
+        variable  CANVAS_Point
+
+        set tagList [$w gettags $CANVAS_dragObject(current)]
+        
+        if {[lsearch $tagList {__configCorner__}] >= 0} {
+            foreach name [array names CANVAS_Point] {
+                set CANVAS_Point($name) 0
+            }
+            # parray CANVAS_Point
+            
+            # puts "\n"
+            # puts "  --------------"
+            # puts "    ... is a __configCorner__ - Object"
+            # puts "               ... $CANVAS_dragObject(current)"
+            # puts "               ... $tagList"
+            # puts "  --------------"
+            # puts "\n"
+            
+              # return 1 to use in condition
+            return 1
         } else {
-            canvasCAD::moveContent      $w $x $y $cv_ObjectName
-        }             
+              # something else
+            # puts "\n"
+            # puts "  --------------"
+            # puts "    ... is a something else - Object"
+            # puts "               ... $CANVAS_dragObject(current)"
+            # puts "               ... $tagList"
+            # puts "  --------------"
+            # puts "\n"
+            
+            return 0
+        }
+    }
+    proc canvasCAD::check_dragObject {w} {
+        variable  CANVAS_dragObject
+
+        set tagList [$w gettags $CANVAS_dragObject(current)]
+        
+        if {[lsearch $tagList {__dragObject__}] > 0} {
+              # return 1 to use in condition
+            return 1
+        } else {
+              # something else
+            return 0
+        }
+    }
+
+    
+    #-------------------------------------------------------------------------
+        #  setMark; mark the first (x,y) coordinate for moving/zooming.
+        #
+    proc canvasCAD::setMark {w x y type} {
+            variable  CANVAS_Point 
+            variable  CANVAS_dragObject
+            
+              # -- get CANVAS_Point
+            set CANVAS_Point(x0)   [$w canvasx $x]
+            set CANVAS_Point(y0)   [$w canvasy $y]
+            set CANVAS_dragObject(current)  [$w find closest $x $y]
+              # puts "\n"
+              # puts "   -- canvasCAD::setMark"
+              # puts "     -> $CANVAS_dragObject(current)"
+              # puts "\n"
+            
+              # -- exception if start on __configCorner__
+            if [check_configCorner $w] {
+                return
+            }
+            
+              # -- create line or rectangle
+            switch $type {
+                move { 
+                        $w create line      $x $y $x $y -fill red        -tag {__PointerBBox__} 
+                        set CANVAS_Point(x0) $x
+                        set CANVAS_Point(y0) $y
+                        set CANVAS_Point(x1) $x
+                        set CANVAS_Point(y1) $y
+                   }
+                zoom { 
+                        $w create rectangle $x $y $x $y -outline red     -tag {__PointerBBox__} 
+                   }
+            }
     }
 
 
     #-------------------------------------------------------------------------
-        #  canvas mouse position report
+        #  setZoom; mark the second (x,y) coordinate for moving/zooming.
         #
-    proc canvasCAD::register_dragObjects {cv objectID command referenceName} {
-          # correlates to procedure: event_dragObjects
-        variable CANVAS_dragObject
-        set CANVAS_dragObject([$cv getPath]/$objectID) [list $command $referenceName]
-    }
+    proc canvasCAD::setRange {w x y} {
+            variable  CANVAS_dragObject
+            variable  CANVAS_Point
+            
+              # -- exception if start on __configCorner__
+            if [check_configCorner $w] {
+                  # -- reset CANVAS_Point
+                foreach name [array names CANVAS_Point] {
+                    set CANVAS_Point($name) 0
+                }
+                parray CANVAS_Point
+                return
+            }
+
+              # -- default  
+		    set CANVAS_Point(x1) [$w canvasx $x]
+		    set CANVAS_Point(y1) [$w canvasy $y]
+		    $w coords {__PointerBBox__} $CANVAS_Point(x0) $CANVAS_Point(y0) $CANVAS_Point(x1) $CANVAS_Point(y1)
+              #
+    }    
     
+    #-------------------------------------------------------------------------
+        #  dragContent; move content selected by setMark
+        #   
+    proc canvasCAD::dragContent {w id x y} {
+            variable  CANVAS_Point 
+     
+            set xDiff [expr $x - $CANVAS_Point(x1)]
+            set yDiff [expr $y - $CANVAS_Point(y1)]
+            
+            set CANVAS_Point(x1) $x
+            set CANVAS_Point(y1) $y
+            
+              # puts "    -> proc canvasCAD::dragContent $w $id $x $y"
+            $w move $id $xDiff $yDiff
+            return
+    } 
+
+    #-------------------------------------------------------------------------
+        #  move defined object
+        #
     proc canvasCAD::event_dragObject {cv x y objectID} {
             variable CANVAS_dragObject
             variable CANVAS_Point
             
-            puts "      0000 -> $cv $x $y $objectID"
+              # puts "      0000 -> $cv $x $y $objectID"
+            
               # the selected item does have tag {__dragObject__}
               # $w move $CANVAS_dragObject(current)   $move_xlength $move_ylength
             set canvasDOMNode [canvasCAD::getCanvasDOMNode $cv]
@@ -119,18 +315,18 @@
             set dragScale     [expr 1.0/($wScale*$stageScale*$unitScale)]
             
               #  Determine size of move
-              puts "    -> $CANVAS_Point(x0) / $CANVAS_Point(y0)"
-              puts "    -> $x / $y"
+              # puts "    -> $CANVAS_Point(x0) / $CANVAS_Point(y0)"
+              # puts "    -> $x / $y"
             set move_xlength [expr $x-$CANVAS_Point(x0)]
             set move_ylength [expr $y-$CANVAS_Point(y0)]
-              puts "    -> $move_xlength / $move_ylength"
+              # puts "    -> $move_xlength / $move_ylength"
             set CANVAS_Point(move) [list $move_xlength $move_ylength]
             
             set CANVAS_Point(drag) [vectormath::scalePointList {0 0} $CANVAS_Point(move) $dragScale]
             
             set currentObject {}
             set currentObject [array get CANVAS_dragObject $cv/$objectID]
-                puts "      -> $currentObject    ???"
+              # puts "      -> $currentObject    ???"
             if {$currentObject != {}} {
                   # puts "      0010 -> \$currentObject $currentObject"
                 set values    [lindex $currentObject 1]
@@ -139,115 +335,10 @@
                 set reference [lindex $values 1]
                   # puts "      0012 -> \$command   $command"
                   # puts "      0012 -> \$reference $reference"
-                  puts "      0020 -> $command $reference $CANVAS_Point(move)"
+                  # puts "      0020 -> $command $reference $CANVAS_Point(move)"
                 $command $reference $CANVAS_Point(drag)
             }
     }
-
-
-	#-------------------------------------------------------------------------
-		#  canvas mouse position report
-		#
-	proc canvasCAD::reportPointerPostion { name x y} {
-			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]									 
-			set w			[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	path  ]			
-			set wScale		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	scale ]			
-			set stageScale 	[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	scale ]			
-			set stageUnit 	[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	unit  ]			
-			set unitScale	[ get_unitRefScale	$stageUnit	]
-
-			set bottomLeft [ get_BottomLeft $w ]
-			foreach {bL_x bL_y} $bottomLeft break
-			set stage_x 	[ format "%4.2f" [expr  ( [eval $w canvasx $x] - $bL_x ) /   $unitScale ] ]
-			set stage_y 	[ format "%4.2f" [expr  ( [eval $w canvasy $y] - $bL_y ) /  -$unitScale ] ]
-			set fmtScale 	[ format "%4.4f" $stageScale ]
-			set fmtOrig_x	[ format "%4.2f" [expr $stage_x/($stageScale*$wScale)]]
-			set fmtOrig_y	[ format "%4.2f" [expr $stage_y/($stageScale*$wScale)]]
-			$w delete __PointerPostion__
-			$w create text 0 0 \
-				-anchor sw -tags {__PointerPostion__} \
-				-text "scale: $fmtScale / $wScale  \[$stageUnit\]  $fmtOrig_x / $fmtOrig_y "
-				# text "\[$stageUnit\]  scale: $fmtScale: $stage_x / $stage_y  -  \[ $fmtOrig_x / $fmtOrig_y \]"
-				
-			reposition_PointerPostionReport $w
-	}
-	proc canvasCAD::reposition_PointerPostionReport { w } {
-			set repCoords	[ $w coords {__PointerPostion__} ]
-			if { $repCoords == {} } return
-			foreach {x y} $repCoords break
-			set move_x		[ expr  0 - $x + 8 ]
-			set move_y		[ expr [winfo height $w] - $y - 4 ]
-			$w move {__PointerPostion__} $move_x $move_y
-	}
-		
-	
-    
-    #-------------------------------------------------------------------------
-        #  setMark; mark the first (x,y) coordinate for moving/zooming.
-        #
-    proc canvasCAD::setMark {w x y type} {
-            variable  CANVAS_Point 
-            variable  CANVAS_dragObject
-            
-            set CANVAS_Point(x0)   [$w canvasx $x]
-            set CANVAS_Point(y0)   [$w canvasy $y]
-            set CANVAS_dragObject(current)  [$w find closest $x $y]
-                
-            switch $type {
-                move { $w create line      $x $y $x $y -fill red        -tag {__PointerBBox__} 
-                       canvasCAD::dragStart $x $y
-                       $w configure -cursor hand2
-                   }
-                zoom { $w create rectangle $x $y $x $y -outline red     -tag {__PointerBBox__} 
-                       $w configure -cursor sizing
-                   }
-            }
-    }
-    
-    
-    #-------------------------------------------------------------------------
-       #  dragStart; initial binding on same event as dragContent
-       #
-    proc canvasCAD::dragStart {x y} {
-            variable  CANVAS_Point 
-            set CANVAS_Point(x0) $x
-            set CANVAS_Point(y0) $y
-            set CANVAS_Point(x1) $x
-            set CANVAS_Point(y1) $y
-    }
-    
-    
-    #-------------------------------------------------------------------------
-        #  dragContent; move  content selected by setMark
-        #   
-    proc canvasCAD::dragContent {w id x y} {
-            variable  CANVAS_Point 
-            variable  CANVAS_dragObject
-            
-            set xDiff [expr $x - $CANVAS_Point(x1)]
-            set yDiff [expr $y - $CANVAS_Point(y1)]
-            
-            set CANVAS_Point(x1) $x
-            set CANVAS_Point(y1) $y
-            
-              # puts "    -> proc canvasCAD::dragContent $w $id $x $y"
-            $w move $id $xDiff $yDiff
-            return
-    }
-
-    
-    #-------------------------------------------------------------------------
-        #  setStroke; mark the second (x,y) coordinate for moving/zooming.
-        #
-    proc canvasCAD::setStroke {w x y} {
-            variable  CANVAS_dragObject
-            variable  CANVAS_Point
-
-		   set CANVAS_Point(x1) [$w canvasx $x]
-		   set CANVAS_Point(y1) [$w canvasy $y]
-		   $w coords {__PointerBBox__} $CANVAS_Point(x0) $CANVAS_Point(y0) $CANVAS_Point(x1) $CANVAS_Point(y1) 
-    }
-
     
 	#-------------------------------------------------------------------------
        #  moveCanvas; move  content selected by setMark and setStroke.
@@ -279,14 +370,8 @@
 				#--------------------------------------------------------
 					#  move
 			        # puts "  $cv_ObjectName $CANVAS_Point(move)"
-              # puts "       ... tag-ID: $CANVAS_dragObject(current)  -> tags: [$cv_ObjectName gettags $CANVAS_dragObject(current)]"
-			if {[lsearch -exact [$cv_ObjectName gettags $CANVAS_dragObject(current)] __dragObject__] < 0} {
-                    # the selected item does not have tag {__dragObject__}
-                $w move {__Stage__}          $move_xlength $move_ylength
-    			$w move {__StageShadow__}    $move_xlength $move_ylength
-    			$w move {__Content__}        $move_xlength $move_ylength
-                    # $w move $CANVAS_dragObject(current)   $move_xlength $move_ylength
-            } else {                
+                    # puts "       ... tag-ID: $CANVAS_dragObject(current)  -> tags: [$cv_ObjectName gettags $CANVAS_dragObject(current)]"
+			if [check_dragObject $w] {
                     # the selected item does have tag {__dragObject__}
                 $w move $CANVAS_dragObject(current)   $move_xlength $move_ylength
                 set canvasDOMNode [canvasCAD::getCanvasDOMNode $w]
@@ -299,8 +384,14 @@
                 set CANVAS_Point(drag) [vectormath::scalePointList {0 0} $CANVAS_Point(move) $dragScale]
                   # puts "  -> \$CANVAS_Point(move) $CANVAS_Point(move)"
                   # puts "  -> \$CANVAS_Point(drag) $CANVAS_Point(drag)"
-                canvasCAD::event_dragObject $w $CANVAS_dragObject(current)
-			}
+                canvasCAD::event_dragObject $w $CANVAS_dragObject(current)                  
+            } else {
+                    # the selected item does not have tag {__dragObject__}
+                $w move {__Stage__}          $move_xlength $move_ylength
+    			$w move {__StageShadow__}    $move_xlength $move_ylength
+    			$w move {__Content__}        $move_xlength $move_ylength
+                    # $w move $CANVAS_dragObject(current)   $move_xlength $move_ylength
+            }
 
 				#--------------------------------------------------------
 					#  Change the scroll region one last time, to fit the
@@ -310,9 +401,12 @@
 			
 				#--------------------------------------------------------
 					#  update reportPointerPosition
-			reportPointerPostion $cv_ObjectName 0 0			
+			reportPointerPostion $cv_ObjectName 0 0	
+
+ 				#--------------------------------------------------------
+					#  update configCorner
+            configCorner::update $w                     
     }
-	
 
 	#-------------------------------------------------------------------------
        #  zoomArea
@@ -371,7 +465,7 @@
 
 				#--------------------------------------------------------
 					#  Perform return currentfactor
-			puts "    cv_ObjectName:  $cv_ObjectName"
+			  # puts "    cv_ObjectName:  $cv_ObjectName"
 			if {$cv_ObjectName != {} } {
 					eval [format "canvasCAD::pointerScale %s %f"  $cv_ObjectName  $factor]
 			}
@@ -384,8 +478,84 @@
 			
 				#--------------------------------------------------------
 					#  update reportPointerPosition
-			reportPointerPostion $cv_ObjectName 0 0			
+			reportPointerPostion $cv_ObjectName 0 0	
+
+ 				#--------------------------------------------------------
+					#  update configCorner
+            configCorner::update $w         
+    } 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #-------------------------------------------------------------------------
+        #  canvas mouse position report
+        #
+    proc canvasCAD::register_dragObjects {cv objectID command referenceName} {
+          # correlates to procedure: event_dragObjects
+        variable CANVAS_dragObject
+        set CANVAS_dragObject([$cv getPath]/$objectID) [list $command $referenceName]
     }
+
+
+
+
+	#-------------------------------------------------------------------------
+		#  canvas mouse position report
+		#
+	proc canvasCAD::reportPointerPostion { name x y} {
+			set canvasDOMNode	[getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]									 
+			set w			[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	path  ]			
+			set wScale		[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Canvas	scale ]			
+			set stageScale 	[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	scale ]			
+			set stageUnit 	[ canvasCAD::getNodeAttribute  	$canvasDOMNode	Stage	unit  ]			
+			set unitScale	[ get_unitRefScale	$stageUnit	]
+
+			set bottomLeft [ get_BottomLeft $w ]
+			foreach {bL_x bL_y} $bottomLeft break
+			set stage_x 	[ format "%4.2f" [expr  ( [eval $w canvasx $x] - $bL_x ) /   $unitScale ] ]
+			set stage_y 	[ format "%4.2f" [expr  ( [eval $w canvasy $y] - $bL_y ) /  -$unitScale ] ]
+			set fmtScale 	[ format "%4.4f" $stageScale ]
+			set fmtOrig_x	[ format "%4.2f" [expr $stage_x/($stageScale*$wScale)]]
+			set fmtOrig_y	[ format "%4.2f" [expr $stage_y/($stageScale*$wScale)]]
+			$w delete __PointerPostion__
+			$w create text 0 0 \
+				-anchor sw -tags {__PointerPostion__} \
+				-text "scale: $fmtScale / $wScale  \[$stageUnit\]  $fmtOrig_x / $fmtOrig_y "
+				# text "\[$stageUnit\]  scale: $fmtScale: $stage_x / $stage_y  -  \[ $fmtOrig_x / $fmtOrig_y \]"
+				
+			reposition_PointerPostionReport $w
+	}
+	proc canvasCAD::reposition_PointerPostionReport { w } {
+			set repCoords	[ $w coords {__PointerPostion__} ]
+			if { $repCoords == {} } return
+			foreach {x y} $repCoords break
+			set move_x		[ expr  0 - $x + 8 ]
+			set move_y		[ expr [winfo height $w] - $y - 4 ]
+			$w move {__PointerPostion__} $move_x $move_y
+	}
+
+    
+
+    
+    
+
+
+    
+
+
+    
+	
+
+
 
 
 	proc canvasCAD::pointerScale { cv_ObjectName  {scale {}} } {           

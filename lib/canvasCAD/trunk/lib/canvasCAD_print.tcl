@@ -56,46 +56,51 @@
  		puts "               $printFile"
  		puts "            ----------------------------------------"
 		puts ""
-  	puts "               w           $w			"
+  	    puts "               w           $w			"
  		puts "               wScale      $wScale	"
  		puts "               Unit        $Unit		"
  		puts "               Format      $Format	"
  		puts "               FormatSize  $FormatSize"
  		puts ""
   	   
-    set pageWidth   [lindex $FormatSize 0]
-    set pageHeight  [lindex $FormatSize 1]
-      
-  	puts "               pageWidth   $pageWidth	"
- 		puts "               pageHeight  $pageHeight"
- 		puts ""
+        set pageWidth   [lindex $FormatSize 0]
+        set pageHeight  [lindex $FormatSize 1]
+          
+        puts "               pageWidth   $pageWidth	"
+        puts "               pageHeight  $pageHeight"
+        puts ""
 
-		# tk_messageBox -message " print_postscript"
-    set printBorder	50
-    set coords		  [$w coords __Stage__]
-    set stageSize	  [get_BBoxInfo  size  $coords ]
-    set stageWidth	[lindex $stageSize 0]
-    set stageHeight	[lindex $stageSize 1]
-    set stage_x		  [lindex $coords 0]
-    set stage_y		  [lindex $coords 1]
-      
-  	puts "               coords         $coords	"
-  	puts "               stageWidth   $stageWidth"
-  	puts "               stageHeight  $stageHeight"
-  	puts "               stage_x      $stage_x"
-  	puts "               stage_y      $stage_y"
-  	puts "               printBorder  $printBorder"
- 		puts ""
+            # tk_messageBox -message " print_postscript"
+        set printBorder	50
+        set coords		  [$w coords __Stage__]
+        set stageSize	  [get_BBoxInfo  size  $coords ]
+        set stageWidth	[lindex $stageSize 0]
+        set stageHeight	[lindex $stageSize 1]
+        set stage_x		  [lindex $coords 0]
+        set stage_y		  [lindex $coords 1]
+          
+        puts "               coords         $coords	"
+        puts "               stageWidth   $stageWidth"
+        puts "               stageHeight  $stageHeight"
+        puts "               stage_x      $stage_x"
+        puts "               stage_y      $stage_y"
+        puts "               printBorder  $printBorder"
+        puts ""
 
-		set w_name          [winfo name $w]
-		
-    set fileExtension [file extension $printFile]
-      # puts "\n\n  -> \$fileExtension $fileExtension\n\n"
-    if {$fileExtension != {.ps}} {
-        set printFile		$printFile.ps
-    }
+        set w_name          [winfo name $w]
+            
+        set fileExtension [file extension $printFile]
+          # puts "\n\n  -> \$fileExtension $fileExtension\n\n"
+        if {$fileExtension != {.ps}} {
+            set printFile		$printFile.ps
+        }
   			
- 		puts "               printFile   $printFile"
+ 		  # -- remove __configCorner__
+        canvasCAD::configCorner::deleteCorner $w
+          #
+        
+          # -- print file
+        puts "               printFile   $printFile"
  		puts ""
         
         $w postscript	-file        $printFile \
@@ -110,7 +115,13 @@
 						-pagewidth   [format "%s.m" $pageWidth] \
 						-pageheight  [format "%s.m" $pageHeight] 
 					   	
-        # start_psview  $printFile
+        
+ 		  # -- update __configCorner__
+        canvasCAD::configCorner::update $w
+          #
+        
+        
+          # start_psview  $printFile
 		if {[file exists $printFile]} {
 			return $printFile
 		} else {
@@ -270,9 +281,9 @@
           }
       }
 
-      puts "                 ... $width $height "
-      puts "                 ... $indexWidth $indexHeight "
-      puts "                 ... $resultWidth $resultHeight "
+      # puts "                 ... $width $height "
+      # puts "                 ... $indexWidth $indexHeight "
+      # puts "                 ... $resultWidth $resultHeight "
       
       if {$indexWidth != {}} {
           if {$indexHeight != {}} {

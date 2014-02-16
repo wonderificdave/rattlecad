@@ -58,7 +58,7 @@
           set svgPosition(x)  [$center_Node getAttribute cx]
           set svgPosition(y)  [$center_Node getAttribute cy]
       } else {
-          puts "     ... no id=\"center_00\""
+            # puts "     ... no id=\"center_00\""
           set svgPosition(x)  0
           set svgPosition(y)  0
       }
@@ -316,19 +316,19 @@
     #
   proc canvasCAD::exportSVG {canvasDOMNode svgFile} {
     
-      set cv      [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
-      set wScale    [ getNodeAttribute  $canvasDOMNode  Canvas   scale ]      
+      set cv           [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
+      set wScale       [ getNodeAttribute  $canvasDOMNode  Canvas   scale ]      
       set stageScale   [ getNodeAttribute  $canvasDOMNode  Stage  scale ]      
-      set stageUnit   [ getNodeAttribute  $canvasDOMNode  Stage  unit  ]      
-      set font     [ getNodeAttribute  $canvasDOMNode  Style    font  ]
-      set unitScale  [ get_unitRefScale   $stageUnit    ]
+      set stageUnit    [ getNodeAttribute  $canvasDOMNode  Stage  unit  ]      
+      set font         [ getNodeAttribute  $canvasDOMNode  Style    font  ]
+      set unitScale    [ get_unitRefScale   $stageUnit    ]
       
       set stageFormat  [ getNodeAttribute  $canvasDOMNode  Stage  format ]   
-      set stageWidth  [ getNodeAttribute  $canvasDOMNode  Stage  width  ]   
+      set stageWidth   [ getNodeAttribute  $canvasDOMNode  Stage  width  ]   
       set stageHeight  [ getNodeAttribute  $canvasDOMNode  Stage  height ]   
       
-      set scalePixel  [ getNodeAttributeRoot /root/_package_/UnitScale p ]
-      set scaleInch  [ getNodeAttributeRoot /root/_package_/UnitScale i ]
+      set scalePixel   [ getNodeAttributeRoot /root/_package_/UnitScale p ]
+      set scaleInch    [ getNodeAttributeRoot /root/_package_/UnitScale i ]
       set scaleMetric  [ getNodeAttributeRoot /root/_package_/UnitScale m ]
       
 
@@ -416,10 +416,10 @@
           
           
             # --- get attributes
-          catch {set lineColour   [format_xColor [$cv itemcget $cvItem -outline]]}  {set lineColour   gray50}
+          catch {set lineColour [format_xColor [$cv itemcget $cvItem -outline]]}    {set lineColour   gray50}
           catch {set lineWidth  [$cv itemcget $cvItem -width]}                      {set lineWidth     0.1}
-          catch {set lineDash   [$cv itemcget $cvItem -dash]}                        {set lineDash     {none}}
-          catch {set itemFill   [format_xColor [$cv itemcget $cvItem -fill]]}        {set itemFill     gray50}
+          catch {set lineDash   [$cv itemcget $cvItem -dash]}                       {set lineDash     {none}}
+          catch {set itemFill   [format_xColor [$cv itemcget $cvItem -fill]]}       {set itemFill     gray50}
           
             # --- preformat attribues
           if {$lineDash == ""} {set lineDash     {none}}
@@ -438,12 +438,12 @@
           # -------------------------
           #  handle types      
           switch -exact $cv_Type {
-							arc {
-									set svgType path
-										set cx 	  	[expr {($x0+$x1)/2}]
-										set cy 	  	[expr {($y0+$y1)/2}]
-										set rx 		  [expr {($x1-$x0)/2}]
-										set ry 		  [expr {($y1-$y0)/2}]
+              arc {
+                    set svgType path
+                        set cx 	  	[expr {($x0+$x1)/2}]
+                        set cy 	  	[expr {($y0+$y1)/2}]
+                        set rx 		[expr {($x1-$x0)/2}]
+                        set ry 		[expr {($y1-$y0)/2}]
                     
                     set angleStart	[$cv itemcget $cvItem -start]
 										set angleExtent	[$cv itemcget $cvItem -extent]
@@ -456,15 +456,15 @@
                     set p_start	[list $p_start_x $p_start_y]  
 										set p_end	  [list $p_end_x   $p_end_y]   
                     
-									append svgAtts 	[format_itemAttribute cx $cx]
-									append svgAtts 	[format_itemAttribute cy $cy]
-									append svgAtts 	[format_itemAttribute rx $rx]
-									append svgAtts 	[format_itemAttribute ry $ry]
-									append svgAtts 	[format_itemAttribute fill $itemFill "#000000"]
-									append svgAtts 	[format_itemAttribute stroke $lineColour none]
-									append svgAtts 	[format_itemAttribute stroke-width $lineWidth 0.1]
-                    # append svgAtts 	[format_itemAttribute p_start $p_start]
-                    # append svgAtts 	[format_itemAttribute p_end   $p_end]
+                    append svgAtts 	[format_itemAttribute cx $cx]
+                    append svgAtts 	[format_itemAttribute cy $cy]
+                    append svgAtts 	[format_itemAttribute rx $rx]
+                    append svgAtts 	[format_itemAttribute ry $ry]
+                    append svgAtts 	[format_itemAttribute fill $itemFill "#000000"]
+                    append svgAtts 	[format_itemAttribute stroke $lineColour none]
+                    append svgAtts 	[format_itemAttribute stroke-width $lineWidth 0.1]
+                      # append svgAtts 	[format_itemAttribute p_start $p_start]
+                      # append svgAtts 	[format_itemAttribute p_end   $p_end]
 
                     if {$angleExtent > 180} {
                         set largeArc 1
@@ -480,17 +480,17 @@
                         # puts " -> SVG-Export \"M $p_start_x $p_start_y  A $rx,$ry 0 $largeArc 0 $p_end_x $p_end_y\""                         
                     }
                   append svgAtts		[format_itemAttribute d $d]								
-											# Bogen l‰uft gegen den Uhrzeigersinn
-											# rx, ry
-											# x-axis-rotation   drehung der Ellipse
-											# large-arc-flag	den groﬂen(1) Bogen
-											# sweep-flag
-											# x, y						
-											#    * the arc starts at the current point
-											#    * the arc ends at point (x, y)
-											#    * the ellipse has the two radii (rx, ry)
-											#    * the x-axis of the ellipse is rotated by x-axis-rotation relative to the x-axis of the current coordinate system	
-							}                       
+                        # Bogen l‰uft gegen den Uhrzeigersinn
+                        # rx, ry
+                        # x-axis-rotation   drehung der Ellipse
+                        # large-arc-flag	den groﬂen(1) Bogen
+                        # sweep-flag
+                        # x, y						
+                        #    * the arc starts at the current point
+                        #    * the arc ends at point (x, y)
+                        #    * the ellipse has the two radii (rx, ry)
+                        #    * the x-axis of the ellipse is rotated by x-axis-rotation relative to the x-axis of the current coordinate system	
+              }                       
               line -
               polyline {
                   set    svgType     polyline
@@ -603,19 +603,19 @@
       
       variable dxfContent
                  
-      set cv      [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
-      set wScale    [ getNodeAttribute  $canvasDOMNode  Canvas   scale ]      
+      set cv           [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
+      set wScale       [ getNodeAttribute  $canvasDOMNode  Canvas   scale ]      
       set stageScale   [ getNodeAttribute  $canvasDOMNode  Stage  scale ]      
-      set stageUnit   [ getNodeAttribute  $canvasDOMNode  Stage  unit  ]      
-      set font     [ getNodeAttribute  $canvasDOMNode  Style    font  ]
-      set unitScale  [ get_unitRefScale   $stageUnit    ]
+      set stageUnit    [ getNodeAttribute  $canvasDOMNode  Stage  unit  ]      
+      set font         [ getNodeAttribute  $canvasDOMNode  Style    font  ]
+      set unitScale    [ get_unitRefScale   $stageUnit    ]
       
       set stageFormat  [ getNodeAttribute  $canvasDOMNode  Stage  format ]   
-      set stageWidth  [ getNodeAttribute  $canvasDOMNode  Stage  width  ]   
+      set stageWidth   [ getNodeAttribute  $canvasDOMNode  Stage  width  ]   
       set stageHeight  [ getNodeAttribute  $canvasDOMNode  Stage  height ]   
       
-      set scalePixel  [ getNodeAttributeRoot /root/_package_/UnitScale p ]
-      set scaleInch  [ getNodeAttributeRoot /root/_package_/UnitScale i ]
+      set scalePixel   [ getNodeAttributeRoot /root/_package_/UnitScale p ]
+      set scaleInch    [ getNodeAttributeRoot /root/_package_/UnitScale i ]
       set scaleMetric  [ getNodeAttributeRoot /root/_package_/UnitScale m ]
       
 
@@ -803,8 +803,8 @@
             
            
             proc dxf_rect { x y w h { t 0 } { o 0 } } {
-                        set sin_t [expr sin($t * (3.14159265358979323846 * 2 / 360))]
-                        set cos_t [expr cos($t * (3.14159265358979323846 * 2 / 360))]
+                    set sin_t [expr sin($t * (3.14159265358979323846 * 2 / 360))]
+                    set cos_t [expr cos($t * (3.14159265358979323846 * 2 / 360))]
 
                     set wdx [expr $w / 2.0 * $cos_t]
                     set wdy [expr $w / 2.0 * $sin_t]
@@ -1026,8 +1026,8 @@
           #  close DXF
                     #
                     #
-            dxf_format 0 ENDSEC              
-            dxf_format 0 EOF
+      dxf_format 0 ENDSEC              
+      dxf_format 0 EOF
     
 
         # -- cleanup canvas

@@ -123,12 +123,17 @@
 				# 	tab 4
 			.f.nb add [frame .f.nb.f4] -text "Fourth tab"
 			
-			            set f4_canvas  [labelframe .f.nb.f4.f_canvas   -text "board"  ]
+			set f4_canvas  [labelframe .f.nb.f4.f_canvas   -text "board"  ]
 			set f4_config  [frame      .f.nb.f4.f_config   ]
 
 			pack  $f4_canvas  $f4_config    -side left -expand yes -fill both
 			pack  configure   $f4_config    -fill y
+            
+            .f.nb select .f.nb.f4
+			set cv04 [canvasCAD::newCanvas cv04  $f4_canvas.cv04 	"MyCanvas_04"  880  610 	A3 0.5 40 -bd 2  -bg white  -relief sunken ]
 
+			button $f4_config.cfgCorner -text "configCorner" -command [list $cv04 configCorner [list puts [format "{execute -> %s}" $cv04]]]
+			pack $f4_config.cfgCorner 
 			button $f4_config.bt_open -text "open File" -command openFile_svg
 			pack $f4_config.bt_open 
 			button $f4_config.bt_fit -text "refit" -command {$cv04 refitStage}				
@@ -137,8 +142,6 @@
 			pack $f4_config.bt_small 
 			
 			
-			.f.nb select .f.nb.f4
-			set cv04 [canvasCAD::newCanvas cv04  $f4_canvas.cv04 	"MyCanvas_04"  880  610 	A3 0.5 40 -bd 2  -bg white  -relief sunken ]
 			# set cv03 [canvasCAD::newCanvas cv03  $f3_canvas.cv03  880  610 500  450 m 0.5 -bd 2  -bg white  -relief sunken ]
             
             set string "abc°^Ø±"
@@ -218,6 +221,27 @@
 		}
 		
 		$cv03 readSVG $file {120 200} 0 AB
+		$cv03 readSVG $file {320 400} 
+		
+	}
+			
+	#-------------------------------------------------------------------------
+		#  open File Type: xml
+		#
+	proc add_cfgCorner {cv cmd} {
+		
+		$cv configCorner ${cmd}
+        
+        
+        
+        return
+
+		if {$file == {} } {
+			set file [tk_getOpenFile]
+		}
+		
+
+        $cv03 readSVG $file {120 200} 0 AB
 		$cv03 readSVG $file {320 400} 
 		
 	}

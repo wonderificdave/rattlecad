@@ -145,7 +145,7 @@
 			set w_height [winfo height $w]
 			
 				
-			puts "     refitStage:    wScale $wScale" 	
+			  # puts "     refitStage:    wScale $wScale" 	
 				# -- get values from config variable
 				#
 			set x  		[ getNodeAttribute	$canvasDOMNode	Stage	width  ]
@@ -406,7 +406,7 @@
 
 
 
-			puts "   $canvasDOMNode -> [ getNodeAttribute	$canvasDOMNode	Stage  width   ] / [ getNodeAttribute	$canvasDOMNode	Stage  height   ]"
+			  # puts "   $canvasDOMNode -> [ getNodeAttribute	$canvasDOMNode	Stage  width   ] / [ getNodeAttribute	$canvasDOMNode	Stage  height   ]"
 			set oldWidth	[ getNodeAttribute	$canvasDOMNode		Stage  width   ]
 			set oldHeight	[ getNodeAttribute	$canvasDOMNode		Stage  height  ]
 						
@@ -419,15 +419,15 @@
 			setNodeAttribute		$canvasDOMNode		Style  linewidth	[expr 0.1* $fontSize]	
 			setNodeAttribute		$canvasDOMNode		Style  fontsize		$fontSize
 						
-			puts "   $canvasDOMNode -> [ getNodeAttribute	$canvasDOMNode	Stage  width   ] / [ getNodeAttribute	$canvasDOMNode	Stage  height   ]"
+			  # puts "   $canvasDOMNode -> [ getNodeAttribute	$canvasDOMNode	Stage  width   ] / [ getNodeAttribute	$canvasDOMNode	Stage  height   ]"
 						
 			set coords	[ $w coords {__StageShadow__} ] 
 			set coords	[ $w coords {__Stage__} ] 
-			puts "\n   -> $coords\n"
+			  # puts "\n   -> $coords\n"
 			foreach {x1 y1 x2 y2}  $coords break
 			set width 	[expr $x2 - $x1]
 			set formatScale [expr 1.0 * $stageWidth / $oldWidth]
-			puts "       ->   $stageWidth / $oldWidth  => $formatScale"
+			  # puts "       ->   $stageWidth / $oldWidth  => $formatScale"
 		
 			$w 	scale  {__Stage__}  		$x1 $y1 $formatScale $formatScale
 			$w 	scale  {__StageShadow__}  	$x1 $y1 $formatScale $formatScale
