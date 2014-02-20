@@ -559,7 +559,7 @@ namespace eval rattleCAD::view {
         switch -glob $xpath {
             {_update_} {}
             default {
-                     set newValue [rattleCAD::control::setValue $xpath $_updateValue($xpath)]
+                     set newValue [rattleCAD::control::setValue [list $xpath $_updateValue($xpath)]]
                         # puts "   -> \$newValue $newValue"                   
                 }
         }

@@ -642,7 +642,7 @@
 				set key [lindex [split $targetVar ::] end]
 				  # puts "   -> \$key       $key"
 				foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
-			    rattleCAD::control::setValue  $path $compFile  force
+			    rattleCAD::control::setValue  [list $path $compFile]  force
 				rattleCAD::view::close_allEdit
             }
               # puts "    ListboxEvent ... done"
@@ -948,7 +948,7 @@
 			set key [lindex [split $targetVar :] end]
 			  # puts "   -> \$key $key"
 			foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
-			rattleCAD::control::setValue  $path $value
+			rattleCAD::control::setValue  [list $path $value]
 			rattleCAD::view::close_allEdit
     }
 	proc bind_notebookTabChanged {notebook} {
@@ -1052,7 +1052,7 @@
                                      # puts "   ... $targetVar"
                                      #set key [lindex [split $targetVar :] 2]
                                      #     puts "   ... $key"
-                                rattleCAD::control::setValue $xPath $value
+                                rattleCAD::control::setValue [list $xPath $value]
 								rattleCAD::view::close_allEdit
 								return
 						    }

@@ -89,9 +89,10 @@
                     
                 {separator}
                 
+                {command "Stack and Reach"  {}  "Stack and Reach"       {CtrlAlt r}   -command { rattleCAD::test:::controlDemo StackandReach } }
+                {command "Integration Test" {}  "Integration Test"      {CtrlAlt i}   -command { rattleCAD::test:::controlDemo integrationTest_00} }
                 {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD::test:::controlDemo demo_01 } }
                 {command "Samples"          {}  "rattleCAD Samples"     {}            -command { rattleCAD::test:::controlDemo loopSamples } }
-                {command "Integration Test" {}  "Integration Test"      {CtrlAlt f}   -command { rattleCAD::test:::controlDemo integrationTest_00} }
                                                                                 
                 {separator}
                         

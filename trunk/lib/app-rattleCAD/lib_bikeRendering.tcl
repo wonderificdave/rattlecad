@@ -229,7 +229,7 @@
                     Brake {
                                 # --- create RearBrake -----------------
                                 if {$Rendering(BrakeRear) != {off}} {
-                                    puts "          ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
+                                      # puts "          ... \$Rendering(BrakeRear) $Rendering(BrakeRear)"
                                     switch $Rendering(BrakeRear) {
                                         Rim {
                                             set ss_direction    [ bikeGeometry::get_Object SeatStay direction ]
@@ -255,7 +255,7 @@
 
                                 # --- create FrontBrake ----------------
                                 if {$Rendering(BrakeFront) != {off}} {
-                                    puts "          ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
+                                      # puts "          ... \$Rendering(BrakeFront) $Rendering(BrakeFront)"
                                     switch $Rendering(BrakeFront) {
                                         Rim {
                                             set ht_direction    [ bikeGeometry::get_Object HeadTube direction ]
@@ -817,7 +817,7 @@
         set RearWheel(position)     [ bikeGeometry::get_Object        RearWheel    position    $BB_Position]
 
             # --- create Fork Representation ----------------
-        puts "          ... \$Rendering(Fork)    $Rendering(Fork)"
+          # puts "          ... \$Rendering(Fork)    $Rendering(Fork)"
         switch -glob $Rendering(Fork) {
             SteelLugged {
                         set ForkBlade(polygon)      [ bikeGeometry::get_Object ForkBlade polygon $BB_Position  ]
@@ -1006,7 +1006,7 @@
         set Pulley(y)               [ bikeGeometry::get_Value         Component/Derailleur/Rear/Pulley/y      value ]
         set Pulley(teeth)           [ bikeGeometry::get_Value         Component/Derailleur/Rear/Pulley/teeth  value ]
         set Pulley(position)        [ vectormath::addVector $Derailleur(position) [list $Pulley(x) $Pulley(y)] ]
-                puts "       Pulley:         $Pulley(x) / $Pulley(y)  $Pulley(teeth)"   
+               # puts "       Pulley:         $Pulley(x) / $Pulley(y)  $Pulley(teeth)"   
                 
         
             # -----------------------------

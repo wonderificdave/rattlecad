@@ -64,6 +64,12 @@
            set messageValue "... rattleCAD Principle!"
                # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
         }    
+        StackandReach {
+             # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
+           [namespace current]::stack_and_reach
+           set messageValue "... rattleCAD Stack & Reach!"
+               # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
+        }    
         default {}       
         }
         
@@ -168,11 +174,233 @@
 		puts "          ... Template  Road\n"
         rattleCAD::gui::load_Template  Road	
 
+        
+		puts "\n\n === demonstrate stack and reach  ===\n"  
+		 # stack_and_reach
 		
+
+		puts "\n\n === load template road again  ===\n"  
+		puts "          ... Template  Road\n"
+        rattleCAD::gui::load_Template  Road	
+   
 		
 		puts "\n\n === end ===\n"       
 		puts "   -> TEST_Dir: $TEST_Dir\n"   
    }   
+
+
+
+    proc stack_and_reach {} {
+    
+        set currentFile [rattleCAD::control::getSession  projectFile]
+		  # set currentFile $::APPL_Config(PROJECT_File)
+        set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
+                       
+        puts "\n\n  ====== S T A C K   A N D   R E A C H ===========\n"                         
+        puts "      currentFile  ... $currentFile"
+        puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
+        puts "" 
+     
+        set init_HB_Stack     [rattleCAD::control::getValue  Personal/HandleBar_Height]
+        set init_HB_Reach     [rattleCAD::control::getValue  Personal/HandleBar_Distance]
+        set init_SD_Height    [rattleCAD::control::getValue  Personal/Saddle_Height]
+        set init_SD_Distance  [rattleCAD::control::getValue  Personal/Saddle_Distance]
+        set init_TT_Angle     [rattleCAD::control::getValue  Custom/TopTube/Angle]
+        set init_ST_Angle     [rattleCAD::control::getValue  Result/Angle/SeatTube/Direction]
+        set init_TT_Length    [rattleCAD::control::getValue  Result/Length/TopTube/VirtualLength]
+        set init_SD_Nose      [rattleCAD::control::getValue  Result/Length/Saddle/Offset_BB_Nose]
+
+        puts "         -> \$init_HB_Stack     $init_HB_Stack"
+        puts "         -> \$init_HB_Reach     $init_HB_Reach"
+        puts "         -> \$init_SD_Height    $init_SD_Height"
+        puts "         -> \$init_SD_Distance  $init_SD_Distance"
+        puts "         -> \$init_ST_Angle     $init_ST_Angle"
+        puts "         -> \$init_SD_Nose      $init_SD_Nose"
+        puts "         -> \$init_TT_Angle     $init_TT_Angle"
+        puts "         -> \$init_TT_Length    $init_TT_Length"
+        puts ""
+        puts "        ------------------------------------------------"                                               
+        puts ""
+        
+        set targetTab    "cv_Custom10"
+        set targetCanvas "rattleCAD::gui::$targetTab"
+        set message_1    "... demonstrate behaviour of Stack and Reach vs. Seat and TopTube Length"
+          #
+        rattleCAD::gui::select_canvasCAD   $targetTab  
+          #
+              
+              #
+            # createDemoText  $targetCanvas  $message_1
+            # rattleCAD::view::updateView force
+            # update        
+            # rattleCAD::view::updateView force
+            # return
+              #
+            # tk_messageBox -title "Demonstration"  -message $message_1 
+              #
+          
+          # -- run demo
+        set direction   counterclock
+        set rangeValue  4.0
+        set maxLoops    4
+        set increment   0.4
+        set maxBoundary [expr $init_ST_Angle + 0.5*$rangeValue]
+        set minBoundary [expr $init_ST_Angle - 0.5*$rangeValue]
+        
+        
+          # -- change SeatTubeAngle and keep TopTube-Length and SaddlePosition
+          #
+        set title      "keep Seat- & TopTube Length"
+          #
+        set    message " --- keep: ----------------------------------\n" 
+        append message "          SeatTube-Length\n"
+        append message "          TopTube-Length\n" 
+        append message "          Saddle-Position (SaddleNose)\n"
+        append message "\n" 
+        append message " --- modify: --------------------------------\n" 
+        append message "       -> SeatTube-Angle\n" 
+          #
+        # tk_messageBox -title $title  -message $message 
+          #
+        set loopCount      0
+        set demo_ST_Angle  $init_ST_Angle
+        while {$loopCount <= $maxLoops} {
+              # puts "     -> run loop $loopCount <- $demo_ST_Angle"            
+            if {$minBoundary > $demo_ST_Angle} {
+                  # -- run out of boundary
+                  # puts "     -> out of minBoundary: $minBoundary"
+                set increment [expr -1.0 * $increment]
+                incr loopCount
+            } elseif {$demo_ST_Angle > $maxBoundary} {
+                  # -- run out of boundary
+                  # puts "     -> out of maxBoundary: $maxBoundary"
+                set increment [expr -1.0 * $increment]
+                incr loopCount
+            }  else {
+                  # puts "       -> increment: $minBoundary < $demo_ST_Angle < $maxBoundary > "  
+                set myList {}
+                lappend myList Result/Angle/SeatTube/Direction     $demo_ST_Angle
+                lappend myList Result/Length/TopTube/VirtualLength $init_TT_Length
+                lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
+                rattleCAD::control::setValue $myList {update} noHistory
+                createDemoText  $targetCanvas  " ... $title"
+            }
+            set demo_ST_Angle [expr $demo_ST_Angle + $increment]
+
+        }
+        
+          # -- reset SeatTube-Angle
+        set myList {}
+        lappend myList Personal/HandleBar_Height           $init_HB_Stack
+        lappend myList Personal/HandleBar_Distance         $init_HB_Reach
+        lappend myList Result/Angle/SeatTube/Direction     $init_ST_Angle
+        lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
+        rattleCAD::control::setValue $myList  {update} noHistory
+          #
+        
+          # -- change SeatTubeAngle and keep Stack & Reach and SaddlePosition
+          #
+        set title      "keep Stack and Reach"
+          #
+        set    message " --- keep: ----------------------------------\n" 
+        append message "          Stack\n"
+        append message "          Reach\n" 
+        append message "          Saddle-Position (SaddleNose)\n"
+        append message "\n" 
+        append message " --- modify: --------------------------------\n" 
+        append message "       -> SeatTube-Angle\n" 
+          #
+        # tk_messageBox -title $title  -message $message 
+          #
+        set loopCount      0
+        set demo_ST_Angle  $init_ST_Angle
+        while {$loopCount <= $maxLoops} {
+              # puts "     -> run loop $loopCount <- $demo_ST_Angle"                        
+            if {$minBoundary > $demo_ST_Angle} {
+                  # -- run out of boundary
+                  # puts "     -> out of minBoundary: $minBoundary"
+                set increment [expr -1.0 * $increment]
+                incr loopCount
+            } elseif {$demo_ST_Angle > $maxBoundary} {
+                  # -- run out of boundary
+                  # puts "     -> out of maxBoundary: $maxBoundary"
+                set increment [expr -1.0 * $increment]
+                incr loopCount
+            }  else {
+                  # puts "       -> increment: $minBoundary < $demo_ST_Angle < $maxBoundary > "  
+                set myList {}
+                lappend myList Result/Angle/SeatTube/Direction     $demo_ST_Angle
+                # lappend myList Result/Length/TopTube/VirtualLength $init_TT_Length
+                lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
+                rattleCAD::control::setValue $myList {update} noHistory
+                createDemoText  $targetCanvas  " ... $title"
+            }
+            set demo_ST_Angle [expr $demo_ST_Angle + $increment]
+
+        }
+        
+          # -- reset SeatTube-Angle
+        set myList {}
+        lappend myList Result/Angle/SeatTube/Direction     $init_ST_Angle
+        lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
+        rattleCAD::control::setValue $myList  {update} noHistory
+          #
+          
+          # -- change TopTubeAngle and keep Stack & Reach and SaddlePosition
+          #
+        set title      "modify TopTube Angle"
+          #
+        set    message " --- keep: ----------------------------------\n" 
+        append message "          Stack\n"
+        append message "          Reach\n" 
+        append message "          SeatTube-Angle\n"
+        append message "          Saddle-Position (SaddleNose)\n"
+        append message "\n" 
+        append message " --- modify: --------------------------------\n" 
+        append message "       -> TopTube-Angle\n" 
+          #
+        # tk_messageBox -title $title  -message $message 
+          #
+        set loopCount      0
+        set demo_ST_Angle  $init_ST_Angle
+        set demo_TT_Angle  $init_TT_Angle
+        while {$loopCount <= $maxLoops} {
+              # puts "     -> run loop $loopCount <- $demo_ST_Angle"                        
+            if {$minBoundary > $demo_ST_Angle} {
+                  # -- run out of boundary
+                  # puts "     -> out of minBoundary: $minBoundary"
+                set increment [expr -1.0 * $increment]
+                incr loopCount
+            } elseif {$demo_ST_Angle > $maxBoundary} {
+                  # -- run out of boundary
+                  # puts "     -> out of maxBoundary: $maxBoundary"
+                set increment [expr -1.0 * $increment]
+                incr loopCount
+            }  else {
+                  # puts "       -> increment: $minBoundary < $demo_ST_Angle < $maxBoundary > "  
+                set myList {}
+                # lappend myList Result/Angle/SeatTube/Direction     $demo_ST_Angle
+                lappend myList Custom/TopTube/Angle                $demo_TT_Angle
+                # lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
+                rattleCAD::control::setValue $myList {update} noHistory
+                createDemoText  $targetCanvas  " ... $title"
+            }
+            set demo_ST_Angle [expr $demo_ST_Angle + 0.8 * $increment]
+            set demo_TT_Angle [expr $demo_TT_Angle + 2.0 * $increment]
+        }
+        
+          # -- reset SeatTube-Angle
+          # rattleCAD::control::setValue [list Result/Angle/SeatTube/Direction     $init_ST_Angle]
+        set myList {}
+        lappend myList Result/Angle/SeatTube/Direction     $init_ST_Angle
+        lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
+        lappend myList Custom/TopTube/Angle                $init_TT_Angle
+          # puts "$myList"
+          # return
+          # puts "    -> TopTube - Angle:  $init_TT_Angle - $demo_TT_Angle"
+        rattleCAD::control::setValue $myList  {update} noHistory
+          #
+    }
 
 
     #-------------------------------------------------------------------------
@@ -226,7 +454,7 @@
 		  # set currentFile $::APPL_Config(PROJECT_File)
         set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
                        
-        puts "\n\n  ====== D E M O N ST R A T I O N   0 1 ===========\n"                         
+        puts "\n\n  ====== D E M O N S T R A T I O N   0 1 ===========\n"                         
         puts "      currentFile  ... $currentFile"
         puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
         puts "" 
@@ -274,7 +502,8 @@
 
         return
 
-    }     
+    }   
+
 
     # -------------------------------------------------------------------------
         #  updateGeometryValue
@@ -319,7 +548,7 @@
                    set paramValue  [lindex $myValues($arrayIndex) $listIndex]
                    puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
                        # rattleCAD::view::set_Value $xPath $paramValue
-                   rattleCAD::control::setValue $xPath $paramValue
+                   rattleCAD::control::setValue [list $xPath $paramValue]
                    # bikeGeometry::set_Value $xPath $paramValue
                    incr arrayIndex 
                }
@@ -383,6 +612,49 @@
         
     }     
      
+    proc createDemoText {cv_Name textText} {
+
+            # puts ""
+            # puts "   -------------------------------"
+            # puts "    rattleCAD::test::createDemoText"
+            # puts "       cv_Name:         $cv_Name"
+
+                # --- get stageScale
+            set stageFormat [ $cv_Name    getNodeAttr Stage format]
+            set stageWidth  [ $cv_Name    getNodeAttr  Stage  width  ]
+            set stageHeight [ $cv_Name    getNodeAttr  Stage  height ]
+            set stageScale  [ $cv_Name    getNodeAttr  Stage  scale  ]
+
+            set scaleFactor        [ expr 1 / $stageScale ]
+                if {[expr round($scaleFactor)] == $scaleFactor} {
+                    set formatScaleFactor        [ expr round($scaleFactor) ]
+                } else {
+                    set formatScaleFactor        [ format "%.1f" $scaleFactor ]
+                }
+
+            proc scale_toStage    {ptList factor} {
+                return [ vectormath::scalePointList {0 0} $ptList $factor ]
+            }
+
+                # --- outer border
+            set df_Border           5
+            set df_Width        [ expr $stageWidth  - 2 * $df_Border ]
+            set tb_Width          170
+            set tb_Height          20
+            set tb_BottomLeft   [ expr $stageWidth  - $df_Border  - $tb_Width ]
+            
+                # --- create Text:
+            set textSize            5
+            set textHeight            [expr $textSize * $scaleFactor ]
+
+                # --- create Text: DIN Format
+            set textPos                [scale_toStage [list [expr $df_Border + $df_Width      -   2 ] [ expr $df_Border +  3.0 ] ]    $scaleFactor]
+                # $cv_Name create circle    $textPos  -radius 50 -fill red -outline green
+            $cv_Name create draftText $textPos  -text $textText -size $textSize -anchor se
+            return
+
+     }
+
 
 
     #-------------------------------------------------------------------------

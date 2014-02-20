@@ -307,11 +307,11 @@
         set SummaryLength             [lindex $FrameSize 0]
         
         
-        puts "  -> \$updatePosition $updatePosition"
+          # puts "  -> \$updatePosition $updatePosition"
         if {![info exists Position($cv_Name)]} {
            set updatePosition {recenter}
         }
-        puts "  -> \$updatePosition $updatePosition"
+          # puts "  -> \$updatePosition $updatePosition"
         if {$updatePosition != {recenter}} {
                 # puts "       <I> ... "
                 # puts "       <I> ...    $bottomCanvasBorder"
