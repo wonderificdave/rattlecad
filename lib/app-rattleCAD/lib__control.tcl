@@ -85,64 +85,90 @@ namespace eval rattleCAD::control {
           #
             
           #
-        puts "\n -- <D> ---------------------\n"
+        puts "\n -- <D> ---------------------"
         puts "    [rattleCAD::control::getSession  projectFile]"
         puts "    [rattleCAD::control::getSession  projectName]"
         puts "    [rattleCAD::control::getSession  projectSave]"
         puts "    [rattleCAD::control::getSession  dateModified]"
         puts "    [rattleCAD::control::getSession  rattleCADVersion]"
-        puts "\n -- <D> ---------------------\n"
+        puts   " -- <D> ---------------------\n"
           #
     
 		  # 
 		return
 	}
 
-	proc setValue {xpath value {mode {update}} {history {append}}} {
+    proc setValue {xpathValueList {mode {update}} {history {append}}} {
 
 		variable  Session
-		
-        set oldValue [[namespace current]::getValue $xpath]
+        
+          # -- set Value gets xpath and value as a list
+          #           like { xpath1 value1  xpath2 value2  xpath3 value3 ...}
+        set doUpdate 0
+        foreach {xpath value} $xpathValueList {
+        
+              # puts "   -> xpath = value:   $xpath  $value"
+            set oldValue [[namespace current]::getValue $xpath]
 
-		if {$value == $oldValue} {
-			return
-		}
+            if {$value == $oldValue} {
+                continue
+            }
 
-		puts "   -------------------------------"
-		puts "    rattleCAD::control::setValue"
-		puts "       xpath:  $oldValue / $value"
-		
-		switch -glob $xpath {
-		    Project/* {
-			        return				
-				}
-			default {}
-		}
-		
-        if {$mode == {update}} {
-		    set newValue  [rattleCAD::model::setValue $xpath ${value}]
-		} else {
-		    set newValue  [rattleCAD::model::setValue $xpath ${value} $mode]
-		}
-		
-		  # set value to model
-		set newValue [[namespace current]::getValue $xpath]
-		  #
-		  
-		  # append _editList
-		if {$history == {append}} {
-		    changeList::append        $xpath $oldValue ${newValue}
-		}
-
+            puts "   -------------------------------"
+            puts "    rattleCAD::control::setValue"
+            puts "       xpath:  $oldValue / $value"
+            
+            switch -glob $xpath {
+                Project/* {
+                        continue				
+                    }
+                default {}
+            }
+            
+              # -- 1 for execute updateControl
+            set doUpdate 1
+              #
+              
+            if {$mode == {update}} {
+                set newValue  [rattleCAD::model::setValue $xpath ${value}]
+            } else {
+                set newValue  [rattleCAD::model::setValue $xpath ${value} $mode]
+            }
+            
+              # set value to model
+            set newValue [[namespace current]::getValue $xpath]
+              #
+              
+              # append _editList
+            if {$history == {append}} {
+                changeList::append        $xpath $oldValue ${newValue}
+            }
+            
+              # report update xpath
+            puts ""
+            puts "       \$xpath:     $xpath"
+            puts "       \$value:     $value"
+            puts "       \$oldValue:  $oldValue"
+            puts "       \$newValue:  $newValue"
+            puts "     -----------------------------------"
+        }
+        
+          # -- if update of view is not required
+        if {! $doUpdate} {return}
+          #        
+        
+          #
 		  # update View
 		[namespace current]::updateControl
           #
 		  
+          # -- after updating Values
+          # puts "   -- <D> ----------------------------"
+		foreach {xpath value} $xpathValueList {
+            puts "          -> $xpath -> $value"
+        }
+  
 		puts ""
-		puts "       \$xpath:     $xpath"
-		puts "       \$value:     $value"
-		puts "       \$oldValue:  $oldValue"
-		puts "       \$newValue:  $newValue"
 		puts "    rattleCAD::control::setValue"
 		puts "   -------------------------------"
 		
@@ -168,7 +194,7 @@ namespace eval rattleCAD::control {
 		  # puts "        rattleCAD::control::getValue $xpath $value  <- $format"
 		return ${value}
 	}
-    
+
     proc setSession {name value} {
         variable  Session
         set Session($name) "${value}"
@@ -331,7 +357,7 @@ namespace eval rattleCAD::control::changeList {
             foreach {parameter oldValue newValue} $_editList($_listIndex) break
             puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_listIndex $parameter $oldValue]"
               # set oldValue
-            rattleCAD::control::setValue $parameter $oldValue {update} {skip}
+            rattleCAD::control::setValue [list $parameter $oldValue] {update} {skip}
               #
             incr _listIndex -1
               #
@@ -359,7 +385,7 @@ namespace eval rattleCAD::control::changeList {
 			foreach {parameter oldValue newValue} $_editList($_listIndex) break
 			puts "           entry:  [format " (%3s) ...  %40s  %-25s"  $_listIndex $parameter $newValue]"
 			  # set newValue
-			rattleCAD::control::setValue $parameter $newValue {update} {skip}
+			rattleCAD::control::setValue [list $parameter $newValue] {update} {skip}
 			  #
 		} else {
 			puts "          next - $_listIndex - exception"

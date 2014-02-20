@@ -689,7 +689,7 @@
                     set angle 0
                     while {$angle <= 90} {
                         set pt_tmp  [ vectormath::rotatePoint  $ext_Center(TyreWidth) $pt_99 $angle]
-                        puts "   -> $ext_Center(Tyre)  /  $ext_Center(TyreWidth)"
+                        puts "             -> $ext_Center(Tyre)  /  $ext_Center(TyreWidth)"
                         # TyreWidth
                         lappend polygon     $pt_tmp
                         incr angle 10
@@ -1276,28 +1276,62 @@
             set S03_angle  [expr $S03_orient * (-180 + [vectormath::angle    $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)])]
             set S04_angle  [expr $S04_orient * (-180 + [vectormath::angle    $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)])]
             
-            proc update_ChainStayValue {xPath value} {
+            proc update_ChainStayValue_org {xPath value} {
                 set lastValue  [rattleCAD::control::getValue $xPath ]
                   # set lastValue  [bikeGeometry::get_Value $xPath  value]
                 set diffValue  [expr abs($lastValue - $value)]
                 if {$diffValue > 1} { 
                     puts "            ... update:  $xPath  $lastValue -> $value" 
-                    rattleCAD::control::setValue $xPath  $value
+                    rattleCAD::control::setValue [list $xPath  $value]
                     # bikeGeometry::set_Value $xPath  $value
                 } else {
                     puts "            ... ignore:  $xPath  $lastValue -> $value"
                 }
             }
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_01  $S01_length
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_02  $S02_length
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_03  $S03_length
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_04  $S04_length
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_05  $S05_length
+            
+            proc update_ChainStayValue {xpathValueList} {
+                set myList {}
+                foreach {xPath value} $xpathValueList { 
+                    set lastValue  [rattleCAD::control::getValue $xPath ]
+                      # set lastValue  [bikeGeometry::get_Value $xPath  value]
+                    set diffValue  [expr abs($lastValue - $value)]
+                    if {$diffValue > 1} { 
+                        puts "            ... update:  $xPath  $lastValue -> $value" 
+                        lappend myList $xPath  $value
+                        # rattleCAD::control::setValue [list $xPath  $value]
+                        # bikeGeometry::set_Value $xPath  $value
+                    } else {
+                        puts "            ... ignore:  $xPath  $lastValue -> $value"
+                    }
+                }
+                rattleCAD::control::setValue $myList
+            }
+            
+            
+            set xpathValueList {}
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_01  $S01_length
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_02  $S02_length
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_03  $S03_length
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_04  $S04_length
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_05  $S05_length
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_01   $S01_angle
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_02   $S02_angle
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_03   $S03_angle
-            update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_04   $S04_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_01   $S01_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_02   $S02_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_03   $S03_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_04   $S04_angle
+            
+            update_ChainStayValue $xpathValueList
+            
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_01  $S01_length
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_02  $S02_length
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_03  $S03_length
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_04  $S04_length
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_05  $S05_length
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_01   $S01_angle
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_02   $S02_angle
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_03   $S03_angle
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_04   $S04_angle
             
             puts "\n   -------------------------------"
             puts "       -> S01_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_01]"
