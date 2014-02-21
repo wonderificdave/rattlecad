@@ -165,28 +165,14 @@ namespace eval rattleCAD::view {
                 set canvasRefit($varName)  [ clock milliseconds ]
             }
 			
-			puts "   -> \$canvasUpdate($varName) $canvasUpdate($varName)"
-			puts "   -> \$canvasRefit($varName)  $canvasRefit($varName)"
-                        
+			puts ""
+			puts "         -> \$canvasUpdate($varName) $canvasUpdate($varName)"
+			puts "         -> \$canvasRefit($varName)  $canvasRefit($varName)\n"
+            puts "    rattleCAD::view:updateView  "
+            puts "   -------------------------------"
+          
     }
 
-
-    proc init_viewValues {projectDICT} {
-	    
-		puts "\n"
-		puts "     -> init_viewValues -------------\n"
-		puts "\n"
-
-          # 
-		# appUtil::pdict $rattleCAD::control::currentDICT
-		  #
-		  
-		  #
-		# ----- to be continued
-		  #
-		
-	}
- 
 
     #-------------------------------------------------------------------------
         #  create ProjectEdit Widget

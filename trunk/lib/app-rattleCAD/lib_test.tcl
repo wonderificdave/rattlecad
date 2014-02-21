@@ -206,8 +206,9 @@
         set init_HB_Reach     [rattleCAD::control::getValue  Personal/HandleBar_Distance]
         set init_SD_Height    [rattleCAD::control::getValue  Personal/Saddle_Height]
         set init_SD_Distance  [rattleCAD::control::getValue  Personal/Saddle_Distance]
-        set init_TT_Angle     [rattleCAD::control::getValue  Custom/TopTube/Angle]
         set init_ST_Angle     [rattleCAD::control::getValue  Result/Angle/SeatTube/Direction]
+        set init_TT_Angle     [rattleCAD::control::getValue  Custom/TopTube/Angle]
+        set init_ST_Length    [rattleCAD::control::getValue  Result/Length/SeatTube/VirtualLength]
         set init_TT_Length    [rattleCAD::control::getValue  Result/Length/TopTube/VirtualLength]
         set init_SD_Nose      [rattleCAD::control::getValue  Result/Length/Saddle/Offset_BB_Nose]
 
@@ -215,10 +216,11 @@
         puts "         -> \$init_HB_Reach     $init_HB_Reach"
         puts "         -> \$init_SD_Height    $init_SD_Height"
         puts "         -> \$init_SD_Distance  $init_SD_Distance"
+        puts "         -> \$init_ST_Length    $init_ST_Length"
         puts "         -> \$init_ST_Angle     $init_ST_Angle"
-        puts "         -> \$init_SD_Nose      $init_SD_Nose"
-        puts "         -> \$init_TT_Angle     $init_TT_Angle"
         puts "         -> \$init_TT_Length    $init_TT_Length"
+        puts "         -> \$init_TT_Angle     $init_TT_Angle"
+        puts "         -> \$init_SD_Nose      $init_SD_Nose"
         puts ""
         puts "        ------------------------------------------------"                                               
         puts ""
@@ -256,15 +258,17 @@
             if {$stepCount >= 2*$loopSteps} {
                 set stepCount 1
                 set direction [expr -1 * $direction]
+                after 500
             } else {
                 incr stepCount
             }
             
             set demo_ST_Angle [expr $demo_ST_Angle + $direction*$step_ST_Angle]
             set myList {}
-            lappend myList Result/Angle/SeatTube/Direction     $demo_ST_Angle
-            lappend myList Result/Length/TopTube/VirtualLength $init_TT_Length
-            lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
+            lappend myList Result/Angle/SeatTube/Direction      $demo_ST_Angle
+            lappend myList Result/Length/SeatTube/VirtualLength $init_ST_Length
+            lappend myList Result/Length/TopTube/VirtualLength  $init_TT_Length
+            lappend myList Result/Length/Saddle/Offset_BB_Nose  $init_SD_Nose
             rattleCAD::control::setValue $myList           {update} noHistory
             # createDemoText  $targetCanvas                  "$title"
             # puts "    -> $stepCount -> $direction -> $demo_ST_Angle"
@@ -297,6 +301,7 @@
             if {$stepCount >= 2*$loopSteps} {
                 set stepCount 1
                 set direction [expr -1 * $direction]
+                after 500
             } else {
                 incr stepCount
             }
@@ -331,12 +336,13 @@
         set loopCount      0
         set stepCount      $loopSteps
           #
-        set demo_TT_Angle  $init_TT_Angle
+        set demo_TT_Angle  [expr $init_TT_Angle]
         while {$loopCount < [expr $loopSteps * $maxLoops]} {            
             incr loopCount 
             if {$stepCount >= 2*$loopSteps} {
                 set stepCount 1
                 set direction [expr -1 * $direction]
+                after 500
             } else {
                 incr stepCount
             }
@@ -358,7 +364,10 @@
         rattleCAD::control::setValue $myList               {update} noHistory
           #
           
-          # -- remove demotText
+          # -- remove demoText
+        after 1000
+        createDemoText $targetCanvas       {... done}  
+        after 1000
         createDemoText $targetCanvas       {}  
         rattleCAD::view::updateView        force
           #
@@ -390,9 +399,9 @@
         
         foreach fileName [lsort [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml]] {
             puts "\n     open Sample File:"
-        puts "          .... $fileName\n"
+            puts "          .... $fileName\n"
             rattleCAD::file::openProject_xml   $fileName
-        after 100
+            after 1500
         }
           # -- open previous opened File   
         puts "\n      ... open previous opened file:"
@@ -476,52 +485,52 @@
         #  updateGeometryValue
         #    
     proc updateGeometryValue {args} {
+        
+        set _index 0
+        array set myValues {}
+        foreach {arrayName left right end} $args {
+            set _array    [lindex [split $arrayName (]  0]
+            set _name     [lindex [split $arrayName ()] 1]
+            set xPath     [format "%s/%s" $_array $_name]
+             
+            set currentValue  [rattleCAD::control::getValue  $xPath value]
+              # set currentValue  [project::getValue $arrayName value]
+              # puts "   -> $currentValue"
+              # return
+            set valueList [[namespace current]::demoValues $currentValue $left $right $end]
+             
+            set myValues($_index) [appUtil::flatten_nestedList $xPath $valueList]
+            incr _index
+        }
+        puts "   ..."
+        parray myValues
+        set arraySize [array size myValues]
+        puts "    ... $arraySize"
          
-          set _index 0
-          array set myValues {}
-          foreach {arrayName left right end} $args {
-              set _array    [lindex [split $arrayName (]  0]
-              set _name     [lindex [split $arrayName ()] 1]
-              set xPath     [format "%s/%s" $_array $_name]
-               
-              set currentValue  [rattleCAD::control::getValue  $xPath value]
-                # set currentValue  [project::getValue $arrayName value]
-                # puts "   -> $currentValue"
-                # return
-              set valueList [[namespace current]::demoValues $currentValue $left $right $end]
-               
-              set myValues($_index) [appUtil::flatten_nestedList $xPath $valueList]
-              incr _index
-          }
-          puts "   ..."
-          parray myValues
-          set arraySize [array size myValues]
-          puts "    ... $arraySize"
-           
-           
-          if {$arraySize > 0} {
-              set listLength [llength $myValues(0)]
-              puts "    ... $listLength"
-          } else {
-              return
-          }
-           
-           set listIndex  1
-           set arrayIndex 0
-           while {$listIndex < $listLength} {
-               while {$arrayIndex < $arraySize} {
-                   set xPath       [lindex $myValues($arrayIndex) 0]
-                   set paramValue  [lindex $myValues($arrayIndex) $listIndex]
-                   puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
-                       # rattleCAD::view::set_Value $xPath $paramValue
-                   rattleCAD::control::setValue [list $xPath $paramValue]
-                   # bikeGeometry::set_Value $xPath $paramValue
-                   incr arrayIndex 
-               }
-               rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD] keep
-               set  arrayIndex 0
-               incr listIndex
-           }
+         
+        if {$arraySize > 0} {
+            set listLength [llength $myValues(0)]
+            puts "    ... $listLength"
+        } else {
+            return
+        }
+         
+        set listIndex  1
+        set arrayIndex 0
+        while {$listIndex < $listLength} {
+            set paramValueList {}
+            while {$arrayIndex < $arraySize} {
+                set xPath       [lindex $myValues($arrayIndex) 0]
+                set paramValue  [lindex $myValues($arrayIndex) $listIndex]
+                puts "         ... $arrayIndex / $listIndex      -> $xPath : $paramValue"
+                lappend paramValueList $xPath $paramValue
+                incr arrayIndex 
+            }
+            rattleCAD::control::setValue $paramValueList
+
+            set  arrayIndex 0
+            incr listIndex
+        }
     }  
 
 

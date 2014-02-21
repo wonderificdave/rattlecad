@@ -1,5 +1,11 @@
 
 
+3.4.01.37  - 2014.02.20
+-------------------------------------------------------------------------------
+    refactoring:
+        ... Demo: File -> Stack and Reach
+        ... bikeGeometry 0.49
+
 3.4.01.36  - 2014.02.20
 -------------------------------------------------------------------------------
     refactoring:
@@ -64,7 +70,7 @@
 3.4.01.29  - 2014.02.04
 -------------------------------------------------------------------------------
     debug: 
-        ... scale of drawings did not update  -> lib_gui::notebook_formatCanvas
+        ... scale of drawings did not update -> lib_gui::notebook_formatCanvas
 
 
 3.4.01.28  - 2014.02.02
@@ -146,7 +152,7 @@
     refactor:
         ... care an model/view/control
             ... refactor configPanel -> rattleCAD:config 
-            ... bikeGeometry::getObject to to rattleCAD::model::getObject    
+            ... bikeGeometry::getObject to to rattleCAD::model::getObject
 
 
 3.4.01.18  - 2014.01.09
