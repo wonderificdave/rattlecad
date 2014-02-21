@@ -260,6 +260,7 @@
             # -- User Components Directories  --------
             #        -> Options/ComponentLocation
         init_UserCompDirectories [$::APPL_Config(root_InitDOM) selectNode /root/Options/ComponentLocation]
+
         
 		    # users local Samples 
 		check_templateDirecty
@@ -267,7 +268,6 @@
             
             # -- set bikeGeometry Fork Configuration      
         bikeGeometry::set_forkConfig [$::APPL_Config(root_InitDOM) selectNode /root/Fork]
-  
           
           
             # -- initialize OS ----------

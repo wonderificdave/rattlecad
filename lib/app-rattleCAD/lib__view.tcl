@@ -553,8 +553,10 @@ namespace eval rattleCAD::view {
           #
           # --- finaly update
           update
-          catch {focus $cvEntry}
           catch {$cvEntry selection range 0 end}
+            # removed 3.04.01.38 ... catched entry on mouse moved over 
+            # catch {focus $cvEntry}
+          
     }
 
     #-------------------------------------------------------------------------
