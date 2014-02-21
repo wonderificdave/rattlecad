@@ -487,4 +487,5 @@
 2014.02.07  22:00   01:00    03:00   3.4.01 ... 30 ... dont refit canvas on any parameter change
 2014.02.13  00:00   00:00    10:00   3.4.01 ... 32 ... message on save project
 2014.02.15  15:00   03:00    12:00   3.4.01 ... 33 ... add canvasCAD::configCorner
+2014.02.29  00:00   00:00    12:00   3.4.01 ... 36 ... add demoProcedure::stack and reach
                              

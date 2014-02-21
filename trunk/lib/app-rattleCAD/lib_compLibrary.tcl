@@ -409,8 +409,8 @@
                 set $entryVar $value
             }
             
-            puts "\n ... $compCanvas"
-            puts "            ... $compFile"
+            # puts "\n ... $compCanvas"
+            # puts "            ... $compFile"
             # puts "            ... $currentTab"
             # puts "            ... $varName"
             puts "            ... $cv"
@@ -422,11 +422,11 @@
                 set __my_Component__        [ $compCanvas readSVG $compFile $compPosition $configValue(compAngle)  __Decoration__ ]
                 [namespace current]::moveto_StageCenter $__my_Component__
                 
-                puts "\n -- <D> -- $compCanvas --"
+                # puts "\n -- <D> -- $compCanvas --"
 
                 foreach cv_Item [$cv gettags  __Decoration__] {}
                 foreach cv_Item [$cv find withtag __Decoration__] {
-                    puts "  -> $cv_Item"
+                    # puts "  -> $cv_Item"
                     set cv_Type     [$cv type $cv_Item]
                     switch -exact $cv_Type {
                         oval     -
