@@ -532,9 +532,9 @@
 
             set currentTab [$noteBook_top select]
             set varName    [notebook_getVarName $currentTab]
-                puts "  notebook_refitCanvas: varName: $varName"
+                puts "       ... notebook_refitCanvas: \$varName $varName"
             if { $varName == {} } {
-                puts "     notebook_refitCanvas::varName: $varName ... undefined"
+                puts "       ... notebook_refitCanvas: \$varName: $varName ... undefined"
                 return
             }
               # tk_messageBox -message "currentTab: $currentTab   /  varName  $varName"

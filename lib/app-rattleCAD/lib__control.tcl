@@ -62,7 +62,9 @@ namespace eval rattleCAD::control {
 	
 	proc updateControl {} {
 		
-		variable currentDICT
+		puts "\n   -------------------------------"
+        puts   "    updateControl\n"
+        variable currentDICT
 		variable currentDOM
 		variable model_Update
 			
@@ -70,10 +72,6 @@ namespace eval rattleCAD::control {
 		set      currentDICT   $rattleCAD::model::modelDICT
 		set      currentDOM    $rattleCAD::model::modelDOM
 		set      model_Update  $rattleCAD::model::modelUpdate 
-		  #
-		
-		  # configPanel - Update 
-		rattleCAD::view::init_viewValues $currentDICT
 		  #
 
 		  # configPanel - Update 
@@ -85,13 +83,15 @@ namespace eval rattleCAD::control {
           #
             
           #
-        puts "\n -- <D> ---------------------"
-        puts "    [rattleCAD::control::getSession  projectFile]"
-        puts "    [rattleCAD::control::getSession  projectName]"
-        puts "    [rattleCAD::control::getSession  projectSave]"
-        puts "    [rattleCAD::control::getSession  dateModified]"
-        puts "    [rattleCAD::control::getSession  rattleCADVersion]"
-        puts   " -- <D> ---------------------\n"
+        puts "\n"
+        puts   "      rattleCAD::control::Session:"
+        puts   "          [rattleCAD::control::getSession  projectFile]"
+        puts   "          [rattleCAD::control::getSession  projectName]"
+        puts   "          [rattleCAD::control::getSession  projectSave]"
+        puts   "          [rattleCAD::control::getSession  dateModified]"
+        puts   "          [rattleCAD::control::getSession  rattleCADVersion]\n"
+        puts   "    updateControl"
+        puts   "   -------------------------------\n"
           #
     
 		  # 
