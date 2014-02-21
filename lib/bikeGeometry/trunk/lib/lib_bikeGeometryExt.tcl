@@ -218,9 +218,9 @@
                         # -- exception if Tube is shorter than taper length
                     set tube_length         [ vectormath::length {0 0} $pt_00 ]
                         if { [expr $tube_length - $ChainStay(TaperLength) -110] < 0 } {
-                            puts "            ... exception:  ChainStay TaperLength ... $tube_length / $ChainStay(TaperLength)"
+                            # puts "            ... exception:  ChainStay TaperLength ... $tube_length / $ChainStay(TaperLength)"
                             set taper_length    [ expr $tube_length -110 ]
-                            puts "                         -> $taper_length"
+                            # puts "                         -> $taper_length"
                         } else {
                             set taper_length    $ChainStay(TaperLength)
                         }
@@ -575,9 +575,9 @@
                         # -- exception if Tube is shorter than taper length
                         set tube_length          [ vectormath::length $pt_10 $pt_00 ]
                             if { [expr $tube_length - $SeatStay(TaperLength) -50] < 0 } {
-                                puts "            ... exception:  SeatStay  TaperLength ... $tube_length / $SeatStay(TaperLength)"
+                                # puts "            ... exception:  SeatStay  TaperLength ... $tube_length / $SeatStay(TaperLength)"
                                 set taper_length    [ expr $tube_length -50 ]
-                                puts "                         -> $taper_length"
+                                # puts "                         -> $taper_length"
                             } else {
                                 set taper_length    $SeatStay(TaperLength)
                             }
@@ -1219,7 +1219,7 @@
             set rimDiameter   [ project::getValue Component(Wheel/Rear/RimDiameter) value ]
             set tyreHeight    [ project::getValue Component(Wheel/Rear/TyreHeight)  value ]
             set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
-                     puts "                  ... $value"
+                  # puts "                  ... $value"
                 project::setValue Result(Length/RearWheel/Radius value $value
               
                 # --- FrontWheel/Radius -------------------------------
@@ -1227,7 +1227,7 @@
             set rimDiameter   [ project::getValue Component(Wheel/Front/RimDiameter) value ]
             set tyreHeight    [ project::getValue Component(Wheel/Front/TyreHeight)  value ]
             set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
-                     puts "                  ... $value"
+                  # puts "                  ... $value"
                 project::setValue Result(Length/FrontWheel/Radius value $value
                 
                 

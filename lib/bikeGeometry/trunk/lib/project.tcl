@@ -176,10 +176,10 @@
             
             variable projectDOM 
             
-                puts ""
-                puts "   -------------------------------"
-                puts "    project::runTime_2_dom"
-                puts ""
+                  # puts ""
+                  # puts "   -------------------------------"
+                  # puts "    project::runTime_2_dom"
+                  # puts ""
                 
             foreach branch [[$projectDOM selectNodes /root] childNodes] {
                     
@@ -224,10 +224,10 @@
             set domNode $projectDOM
                 # set domNode [runTime_2_dom]
 			    
-            puts "\n\n"
-            puts "     -------------------------------"
-            puts "      project::runTime_2_dict"
-            puts "        ... domNode:  [$domNode nodeName]" 
+              # puts "\n\n"
+              # puts "     -------------------------------"
+              # puts "      project::runTime_2_dict"
+              # puts "        ... domNode:  [$domNode nodeName]" 
 
               # -- update Config and Result Values
 			  #

@@ -82,7 +82,7 @@
 
             set oldNode [$projectDOM selectNode /root/Result]
             if {$oldNode != {}} {
-                puts "                           ... update File ... /root/Result"
+                  # puts "                           ... update File ... /root/Result"
                 set parentNode [$oldNode parentNode]
                     # --remove old ResultNode
                 $parentNode removeChild $oldNode 

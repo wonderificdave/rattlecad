@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.48
+ package provide bikeGeometry 0.49
 
  namespace eval bikeGeometry {
 
@@ -326,7 +326,8 @@
                             return $returnValue
                         }
 
-                default    {             puts "   ... object_values $object $index"
+                default    {             
+                              # puts "   ... object_values $object $index"
                             #eval set returnValue $[format "frameCoords::%s(%s)" $object $index]
                             #return [ coords_addVector  $returnValue  $centerPoint]
                         }
@@ -339,142 +340,142 @@
         #  sets and format Value
     proc set_Value {xpath value {mode {update}}} {
      
-               # xpath: e.g.:Custom/BottomBracket/Depth
-               
-             variable         _updateValue
+              # xpath: e.g.:Custom/BottomBracket/Depth
+              
+            variable         _updateValue
          
-             puts ""
-             puts "   -------------------------------"
-             puts "    set_Value"
-             puts "       xpath:           $xpath"
-             puts "       value:           $value"
-             puts "       mode:            $mode"
+              # puts ""
+              # puts "   -------------------------------"
+              # puts "    set_Value"
+              # puts "       xpath:           $xpath"
+              # puts "       value:           $value"
+              # puts "       mode:            $mode"
          
-             foreach {_array _name path} [project::unifyKey $xpath] break
-                 # puts "     ... $_array  $_name"
+            foreach {_array _name path} [project::unifyKey $xpath] break
+                # puts "     ... $_array  $_name"
          
          
-             # --- handle xpath values ---
-                 # puts "  ... mode: $mode"
-                 
-             # --- exception on mode == force ---
-                 #  
-             if {$mode == {force}} { 
-                 eval set [format "project::%s(%s)" $_array $_name] $value
-                 bikeGeometry::set_base_Parameters
-                 return $value
-             }              
-                 
-             # --- exception for Result - Values ---
-                 #  ... loop over set_resultParameter
-                 #    if there is a Result to set
-                 #             
-             if {$mode == {update}} {
-                 # puts "  ... setValue: $xpath"
-                 switch -glob $_array {
-                     {Result} {
-                         set newValue [ string map {, .} $value]
-                         # puts "\n  ... setValue: ... Result/..."
-                         set_resultParameter $_array $_name $newValue
-                         return
-                     }
-                     default {}
-                 }
-             }
-             
-			 # --- all the exceptions done ---
-                 # on int list values like defined
-                 # puts "<D> $xpath"
-             switch $xpath {
-                 {Component/Wheel/Rear/RimDiameter} -
-                 {Component/Wheel/Front/RimDiameter} -
-                 {Lugs/RearDropOut/Direction} {
-                         set newValue    $value
-                         project::setValue [format "%s(%s)" $_array $_name] value $newValue
-                         bikeGeometry::set_base_Parameters  
-                         return $newValue
-                     }
+            # --- handle xpath values ---
+                # puts "  ... mode: $mode"
+                
+            # --- exception on mode == force ---
+                #  
+            if {$mode == {force}} { 
+                eval set [format "project::%s(%s)" $_array $_name] $value
+                bikeGeometry::set_base_Parameters
+                return $value
+            }              
+                
+            # --- exception for Result - Values ---
+                #  ... loop over set_resultParameter
+                #    if there is a Result to set
+                #             
+            if {$mode == {update}} {
+                # puts "  ... setValue: $xpath"
+                switch -glob $_array {
+                    {Result} {
+                        set newValue [ string map {, .} $value]
+                        # puts "\n  ... setValue: ... Result/..."
+                        set_resultParameter $_array $_name $newValue
+                        return
+                    }
+                    default {}
+                }
+            }
+            
+			# --- all the exceptions done ---
+                # on int list values like defined
+                # puts "<D> $xpath"
+            switch $xpath {
+                {Component/Wheel/Rear/RimDiameter} -
+                {Component/Wheel/Front/RimDiameter} -
+                {Lugs/RearDropOut/Direction} {
+                        set newValue    $value
+                        project::setValue [format "%s(%s)" $_array $_name] value $newValue
+                        bikeGeometry::set_base_Parameters  
+                        return $newValue
+                    }
          
-                 {Component/CrankSet/ChainRings} -
-                 {Component/Wheel/Rear/FirstSprocket} {
-                         set newValue [ string map {, .} $value]
-                             # puts " <D> $newValue"
-                         if {$mode == {update}} {
-                             project::setValue [format "%s(%s)" $_array $_name] value $newValue
-                         }
-                         bikeGeometry::set_base_Parameters  
-                         return $newValue
-                     }                         
+                {Component/CrankSet/ChainRings} -
+                {Component/Wheel/Rear/FirstSprocket} {
+                        set newValue [ string map {, .} $value]
+                            # puts " <D> $newValue"
+                        if {$mode == {update}} {
+                            project::setValue [format "%s(%s)" $_array $_name] value $newValue
+                        }
+                        bikeGeometry::set_base_Parameters  
+                        return $newValue
+                    }                         
          
-                 default { }
-             }
+                default { }
+            }
          
-             
-             # --- exceptions without any format-checks
-             # on int list values like defined
-             # puts "<D> $xpath"
+            
+            # --- exceptions without any format-checks
+            # on int list values like defined
+            # puts "<D> $xpath"
         
-                 # --- set new Value
-             set newValue [ string map {, .} $value]
-                 # --- check Value --- ";" ... like in APPL_RimList
-             set newValue [lindex [split $newValue ;] 0]
-                 # --- check Value --- update
-             if {$mode == {update}} {
-                 set _updateValue($xpath) $newValue
-             }
+                # --- set new Value
+            set newValue [ string map {, .} $value]
+                # --- check Value --- ";" ... like in APPL_RimList
+            set newValue [lindex [split $newValue ;] 0]
+                # --- check Value --- update
+            if {$mode == {update}} {
+                set _updateValue($xpath) $newValue
+            }
          
              
-             # --- update or return on errorID
-             set checkValue {mathValue}
-             if {[file dirname $xpath] == {Rendering}} {
-                     # puts "               ... [file dirname $xpath] "
-                 set checkValue {}
-             }
-             if {[file tail $xpath]    == {File}     } {
-                     # puts "               ... [file tail    $xpath] "
-                 set checkValue {}
-             }
+            # --- update or return on errorID
+            set checkValue {mathValue}
+            if {[file dirname $xpath] == {Rendering}} {
+                    # puts "               ... [file dirname $xpath] "
+                set checkValue {}
+            }
+            if {[file tail $xpath]    == {File}     } {
+                    # puts "               ... [file tail    $xpath] "
+                set checkValue {}
+            }
          
-             if {[lindex [split $xpath /] 0] == {Rendering}} {
-                 set checkValue {}
-                 puts "   ... Rendering: $xpath "
-                 puts "        ... $value [file tail $xpath]"
-             }
+            if {[lindex [split $xpath /] 0] == {Rendering}} {
+                set checkValue {}
+                  # puts "   ... Rendering: $xpath "
+                  # puts "        ... $value [file tail $xpath]"
+            }
          
-             puts "               ... checkValue: $checkValue "
-             
-			 
-             # --- update or return on errorID
-             if {$checkValue == {mathValue} } {
-                 if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
-                     puts "\n$errorID\n"
-                     return
-                 } else {
-                     set newValue [format "%.3f" $newValue]
-                 }
-             }
-             
-			 
-             # ---------------------------
-                 #  just return Parameter if required 
-                 #       ... by mode: format
-                 #
-             if {$mode != {update}} {
-                 return $newValue
-             }
-             
+              # puts "               ... checkValue: $checkValue "
+            
+			
+            # --- update or return on errorID
+            if {$checkValue == {mathValue} } {
+                if { [catch { set newValue [expr 1.0 * $newValue] } errorID] } {
+                    puts "\n$errorID\n"
+                    return
+                } else {
+                    set newValue [format "%.3f" $newValue]
+                }
+            }
+            
+			
+            # ---------------------------
+                #  just return Parameter if required 
+                #       ... by mode: format
+                #
+            if {$mode != {update}} {
+                return $newValue
+            }
+            
     
-             # --------------------------------------
-                 #  at least update Geometry
-                 #   ... if not left earlier
-                 #
-             project::setValue [format "%s(%s)" $_array $_name] value $newValue
-             bikeGeometry::set_base_Parameters			 
-			 
-                 # puts "" 
-                 # puts "    setValue:  $argv\n" 
-                 # puts "                [format "%s(%s)" $_array $_name] vs $xpath "
-             return $newValue
+            # --------------------------------------
+                #  at least update Geometry
+                #   ... if not left earlier
+                #
+            project::setValue [format "%s(%s)" $_array $_name] value $newValue
+            bikeGeometry::set_base_Parameters			 
+			
+                # puts "" 
+                # puts "    setValue:  $argv\n" 
+                # puts "                [format "%s(%s)" $_array $_name] vs $xpath "
+            return $newValue
     }
 
 
@@ -491,12 +492,12 @@
     
             variable         _updateValue
         
-            puts ""
-            puts "   -------------------------------"
-            puts "    set_resultParameter"
-            puts "       _array:          $_array"
-            puts "       _name:           $_name"
-            puts "       value:           $value"
+              # puts ""
+              # puts "   -------------------------------"
+              # puts "    set_resultParameter"
+              # puts "       _array:          $_array"
+              # puts "       _name:           $_name"
+              # puts "       value:           $value"
         
             variable BottomBracket
             variable HandleBar
@@ -510,7 +511,7 @@
         
         
             set xpath "$_array/$_name"
-            puts "       xpath:           $xpath"
+              # puts "       xpath:           $xpath"
         
             switch -glob $_name {
         
