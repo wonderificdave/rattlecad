@@ -81,23 +81,8 @@
                 
                 {separator}
                 
-                {command "&Export PDF"      {}  "Export PDF-Report"     {Ctrl p}      -command { rattleCAD::gui::export_Project      pdf} }
-                {command "&Export HTML"     {}  "Export HTML-Report"    {Ctrl t}      -command { rattleCAD::gui::export_Project      html} }
-                {command "&Export SVG"      {}  "Export to SVG"         {}            -command { rattleCAD::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
-                {command "&Export DXF"      {}  "Export to DXF"         {}            -command { rattleCAD::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
-                {command "&Export PS"       {}  "Export to PostScript"  {}            -command { rattleCAD::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
-                    
-                {separator}
-                
-                {command "Stack and Reach"  {}  "Stack and Reach"       {CtrlAlt r}   -command { rattleCAD::test:::controlDemo StackandReach } }
-                {command "Integration Test" {}  "Integration Test"      {CtrlAlt i}   -command { rattleCAD::test:::controlDemo integrationTest_00} }
-                {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD::test:::controlDemo demo_01 } }
-                {command "Samples"          {}  "rattleCAD Samples"     {}            -command { rattleCAD::test:::controlDemo loopSamples } }
-                                                                                
-                {separator}
-                        
                 {command "Impo&rt"          {}  "import Parameter"      {Ctrl i}      -command { rattleCAD::file::openProject_Subset_xml } }
-                {command "&Rendering"       {}  "Rendering Settings"    {}            -command { rattleCAD::gui::set_RenderingSettings } }
+                {command "&Rendering"       {}  "Rendering Settings"    {}            -command { rattleCAD::gui::change_Rendering } }
                         
                 {separator}
                         
@@ -110,22 +95,37 @@
                                 
                 {separator}
                         
-                {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
                 {command "&Update"          {}  "update Configuration"  {Ctrl u}      -command { rattleCAD::view::updateView force } }
                                                                                                                                                             
                 {separator}
                         
                 {command "E&xit"            {}  "Exit rattle_CAD"       {Ctrl x}      -command { rattleCAD::gui::exit_rattleCAD } }
             }
+            "Export"   all info 0 {
+                {command "&Export PDF"      {}  "Export PDF-Report"     {Ctrl p}      -command { rattleCAD::gui::export_Project      pdf} }
+                {command "&Export HTML"     {}  "Export HTML-Report"    {Ctrl t}      -command { rattleCAD::gui::export_Project      html} }
+                {command "&Export SVG"      {}  "Export to SVG"         {}            -command { rattleCAD::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
+                {command "&Export DXF"      {}  "Export to DXF"         {}            -command { rattleCAD::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
+                {command "&Export PS"       {}  "Export to PostScript"  {}            -command { rattleCAD::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
+            }
+            "Demo"   all info 0 {
+                {command "Samples"          {}  "Example Projects"      {}            -command { rattleCAD::test:::runDemo loopSamples } }
+                {command "Stack and Reach"  {}  "Stack and Reach"       {CtrlAlt r}   -command { rattleCAD::test:::runDemo StackandReach } }
+                {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD::test:::runDemo demo_01 } }
+                {command "Stop Demo"        {}  "Stop running Demo"     {Ctrl b}      -command { rattleCAD::test::stopDemo} }
+                {separator}      
+                {command "Integration Test" {}  "Integration Test"      {CtrlAlt i}   -command { rattleCAD::test:::runDemo integrationTest_00} }
+                {separator}      
+                {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
+            }
             "Info"   all info 0 {
                 {command "&Info"            {}  "Information"           {Ctrl w}      -command { rattleCAD::version_info::create  .v_info 0} }
                 {command "&Help"            {}  "Help"                  {Ctrl h}      -command { rattleCAD::version_info::create  .v_info 1} }
-            }
-            "rattleCAD-Project"   all info 0 {
-                {command "rattleCAD WebSite"    {}  "about rattleCAD"       {}        -command { rattleCAD::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
-                {command "rattleCAD Features"   {}  "rattleCAD Features"    {}        -command { rattleCAD::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
-                {command "project@sourceforge"  {}  "sourceforge.net"       {}        -command { rattleCAD::file::open_URL {http://sourceforge.net/projects/rattlecad/index.html} } }
-                {command "like rattleCAD"       {}  "donate"                {}        -command { rattleCAD::file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
+                {separator}
+                {command "rattleCAD WebSite"      {}  "about rattleCAD"       {}      -command { rattleCAD::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
+                {command "rattleCAD Features"     {}  "rattleCAD Features"    {}      -command { rattleCAD::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
+                {command "project @ sourceforge"  {}  "sourceforge.net"       {}      -command { rattleCAD::file::open_URL {http://sourceforge.net/projects/rattlecad} } }
+                {command "like rattleCAD"         {}  "donate"                {}      -command { rattleCAD::file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
             }
         }
         
@@ -281,7 +281,7 @@
 
 
     #-------------------------------------------------------------------------
-        #  get current canvasCAD   
+        #  exit application   
         #
     proc exit_rattleCAD {{type {yesnocancel}} {exitMode {}}} {   
                 
@@ -908,35 +908,19 @@
                                     }
                                     # -- create a Button to change Format and Scale of Stage
                                     $nb_Canvas configCorner [format {rattleCAD::gui::change_FormatScale %s %s %s %s} $cv $x_Position $y_Position $type ]
-                                    
-                                        # catch { destroy $cv.buttonFrame.button_FormatScale }
-                                        
-                                        # button  $cv.buttonFrame.button_FormatScale \
-                                                -text $buttonText \
-                                                -command [format {rattleCAD::gui::change_FormatScale %s %s %s} $cv $y_Position $type ]
-                                        # pack $cv.buttonFrame.button_FormatScale -fill x
                                 }
                         TubingCheckAngles {
                                     # -- create a Button to execute tubing_checkAngles
-                                    $nb_Canvas configCorner [format {rattleCAD::gui::tubing_checkAngles %s} $cv]
-                                    
-                                        # catch { destroy $cv.buttonFrame.button_TCA }
-                                        # button  $cv.buttonFrame.button_TCA \
-                                                -text "check Frame Angles" \
-                                                -command [format {rattleCAD::gui::tubing_checkAngles %s} $cv]                                
-                                        # pack $cv.buttonFrame.button_TCA         -fill x
+                                    $nb_Canvas configCorner [format {rattleCAD::gui::tubing_checkAngles %s} $cv]                   
                                 }
                         changeFrameJigVariant {
                                     # -- create a Button to set FrameJigVersion
                                     $nb_Canvas configCorner [format {rattleCAD::gui::change_FrameJig %s %s %s} $cv $x_Position $y_Position ]
-                                    
-                                        # catch { destroy $cv.buttonFrame.button_CSR }
-                                        # button  $cv.buttonFrame.button_CSR \
-                                                -text "FrameJig" \
-                                                -font $::APPL_Config(GUI_Font) \
-                                                -command [format {rattleCAD::gui::change_FrameJig %s %s} $cv $y_Position ]                           
-                                        # pack $cv.buttonFrame.button_CSR         -fill x
                                 }
+                        changeRendering {
+                                    # -- create a Button to set Rendering: BottleCage, Fork, ...
+                                    $nb_Canvas configCorner [format {rattleCAD::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
+                        }
                                 
                         rem_ChainStayRendering {
                                     # -- create a Button to set ChainStayRendering
@@ -1115,12 +1099,17 @@
     #-------------------------------------------------------------------------
        #  change Rendering Settings 
        #
-    proc set_RenderingSettings  {{type {}}}  {
+    proc change_Rendering  {{cv {}} {x 5} {y 20} {type {}}}  {
             variable noteBook_top
 
+            if {$cv != {}} {
+                set cv_Name [lindex [split $cv .] end-1]
+                select_canvasCAD $cv_Name
+            }
             set currentTab [$noteBook_top select]
             set varName    [notebook_getVarName $currentTab]
             set cv_Name    [notebook_getWidget  $varName]
+           
                 # puts "  notebook_refitCanvas: varName: $varName"
             if { $varName == {} } {
                     puts "     notebook_refitCanvas::varName: $varName ... undefined"

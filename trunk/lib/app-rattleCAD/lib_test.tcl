@@ -37,46 +37,91 @@
  #
  #
  namespace eval rattleCAD::test {
- 
+    variable runningStatus {off}
    
-    proc controlDemo {{testProcedure {}}} {
+    proc runDemo {{testProcedure {}}} {
+        variable runningStatus on
+        
         if {$testProcedure == {}} {
             set testProcedure   integrationTest_00     
         }  
         set timeStart    [clock milliseconds]
+        set messageValue "... runDemo started"
+          #
         
         switch -exact $testProcedure {
-        integrationTest_00    {
-               # tk_messageBox -title "integration Test" -message "... start integrationTest 00"
-           [namespace current]::integrationTest_00 
-           set messageValue "... integrationTest 00"
-               # tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
-        }
-        loopSamples {
-               # tk_messageBox -title "loop Samples" -message "... start loopSamples"
-           [namespace current]::loopSamples
-           set messageValue "... start loopSamples"        
-               # tk_messageBox -title "loop Samples" -message "... rattleCAD Samples!"
-        }    
-        demo_01 {
-             # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
-           [namespace current]::demo_01
-           set messageValue "... rattleCAD Principle!"
-               # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
-        }    
-        StackandReach {
-             # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
-           [namespace current]::stack_and_reach
-           set messageValue "... rattleCAD Stack & Reach!"
-               # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
-        }    
-        default {}       
+            integrationTest_00 {
+                      # tk_messageBox -title "integration Test" -message "... start integrationTest 00"
+                    [namespace current]::integrationTest_00 
+                    set messageValue "... integrationTest 00"
+                      # tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
+                }
+            StackandReach {
+                    while {$runningStatus != {off}} {
+                          # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
+                        [namespace current]::stack_and_reach
+                        set messageValue "... rattleCAD Stack & Reach!"
+                          # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
+                    }
+                } 
+            loopSamples {
+                    while {$runningStatus != {off}} {
+                          # tk_messageBox -title "loop Samples" -message "... start loopSamples"
+                        [namespace current]::loopSamples
+                        set messageValue "... start loopSamples"        
+                          # tk_messageBox -title "loop Samples" -message "... rattleCAD Samples!"
+                    }
+                }    
+            demo_01 {
+                    while {$runningStatus != {off}} {
+                          # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
+                        [namespace current]::demo_01
+                        set messageValue "... rattleCAD Principle!"
+                           # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
+                    }
+                }    
+   
+            default {}       
         }
         
         set timeEnd     [clock milliseconds]
         set timeUsed    [expr 0.001*($timeEnd - $timeStart)]
         tk_messageBox -title "Demonstration" -message "$messageValue\n       elapsed: $timeUsed seconds"      
-    }       
+    }
+
+    proc stopDemo {{mode {init}}} {
+        variable runningStatus
+        
+        if {$mode == {init}} {
+            if {$runningStatus != {off}} {
+                set runningStatus off
+                puts "\n"
+                puts "   ... current [namespace current]::runDemo stopped"
+                puts "\n"
+                return
+            }
+        } else {
+              # -- reset demoText
+            set targetCanvas [rattleCAD::gui::current_canvasCAD]
+            createDemoText  $targetCanvas  ""
+              #
+            return
+              #
+        }
+    }
+    
+    proc keepRunning {} {
+        variable runningStatus
+        puts "\n  ... keepRunning $runningStatus\n"
+        if {$runningStatus == {off}} {
+            puts "\n  ... stop procedure $runningStatus\n"
+            return 0; # if 0 ... failed
+        } else {
+            puts "\n  ... keep running $runningStatus\n"
+            return 1; # if 1 ... OK
+        }
+    }
+    
      
     #-------------------------------------------------------------------------
         #  integrationTest_00
@@ -198,10 +243,19 @@
 		set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
                        
         puts "\n\n  ====== S T A C K   A N D   R E A C H ===========\n"                         
-        puts "      currentFile  ... $currentFile"
-        puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
         puts "" 
-     
+        
+          #
+        set targetTab    "cv_Custom10"
+        set targetCanvas "rattleCAD::gui::$targetTab"
+          #
+        rattleCAD::gui::select_canvasCAD   $targetTab  
+        rattleCAD::view::updateView        force
+          #
+        rattleCAD::gui::load_Template      Road
+        rattleCAD::view::updateView        force
+          #
+          
         set init_HB_Stack     [rattleCAD::control::getValue  Personal/HandleBar_Height]
         set init_HB_Reach     [rattleCAD::control::getValue  Personal/HandleBar_Distance]
         set init_SD_Height    [rattleCAD::control::getValue  Personal/Saddle_Height]
@@ -224,14 +278,7 @@
         puts ""
         puts "        ------------------------------------------------"                                               
         puts ""
-        
-          #
-        set targetTab    "cv_Custom10"
-        set targetCanvas "rattleCAD::gui::$targetTab"
-          #
-        rattleCAD::gui::select_canvasCAD   $targetTab  
-        rattleCAD::view::updateView        force
-          #
+
 
           # -- set demo
         set maxLoops       6
@@ -254,6 +301,9 @@
           #
         set demo_ST_Angle  $init_ST_Angle
         while {$loopCount < [expr $loopSteps * $maxLoops]} {            
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
             incr loopCount 
             if {$stepCount >= 2*$loopSteps} {
                 set stepCount 1
@@ -297,6 +347,9 @@
           #
         set demo_ST_Angle  $init_ST_Angle
         while {$loopCount < [expr $loopSteps * $maxLoops]} {            
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
             incr loopCount 
             if {$stepCount >= 2*$loopSteps} {
                 set stepCount 1
@@ -326,7 +379,7 @@
           #
           
           #
-        set title       "... modify TopTube Angle"       
+        set title       "... change TopTube Angle"       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -338,6 +391,9 @@
           #
         set demo_TT_Angle  [expr $init_TT_Angle]
         while {$loopCount < [expr $loopSteps * $maxLoops]} {            
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
             incr loopCount 
             if {$stepCount >= 2*$loopSteps} {
                 set stepCount 1
@@ -392,12 +448,22 @@
         puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
         puts "" 
 
-        # rattleCAD::file::saveProject_xml saveAs    
+          # rattleCAD::file::saveProject_xml saveAs    
         
-        # -- update display -----------
-        rattleCAD::gui::notebook_refitCanvas
+        set targetTab    "cv_Custom30"
+        set targetCanvas "rattleCAD::gui::$targetTab"
+          #
+        rattleCAD::gui::select_canvasCAD   $targetTab  
+        rattleCAD::view::updateView        force
+          #
+        createDemoText $targetCanvas       {... demo Samples}  
+          #
         
+          #
         foreach fileName [lsort [glob -directory [file normalize $SAMPLE_Dir] -type f *.xml]] {
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
             puts "\n     open Sample File:"
             puts "          .... $fileName\n"
             rattleCAD::file::openProject_xml   $fileName
@@ -416,8 +482,13 @@
             default {
                 rattleCAD::file::openProject_xml   $currentFile    
             }
-        }    
-    
+        }
+        after 1500        
+        createDemoText $targetCanvas       {... done}  
+        after  500
+        createDemoText $targetCanvas       {}  
+        rattleCAD::view::updateView        force
+            
           # tk_messageBox -title "loop Samples" -message "... $SAMPLE_Dir!"   
     }     
 
@@ -489,6 +560,9 @@
         set _index 0
         array set myValues {}
         foreach {arrayName left right end} $args {
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
             set _array    [lindex [split $arrayName (]  0]
             set _name     [lindex [split $arrayName ()] 1]
             set xPath     [format "%s/%s" $_array $_name]

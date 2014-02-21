@@ -352,8 +352,9 @@
                     update_renderCanvas               $cv_Name
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
-                        # createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
+                    rattleCAD::gui::notebook_createButton    $cv_Name        changeRendering
+                        #   
                 }
             rattleCAD::gui::cv_Custom60 {
                         #

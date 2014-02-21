@@ -1,10 +1,26 @@
 
 
-3.4.01.37  - 2014.02.20
+3.4.01.38  - 2014.02.21
+-------------------------------------------------------------------------------
+    debug:
+        ... rattleCAD::view::updateConfig
+            ... focused entry field on mouse over left entry
+    refactoring:
+        ... add Menue -> Demo
+            ... move entries Menue -> File to Menue -> Demo:
+                ... File -> Samples
+                ... File -> Stack and Reach
+                ... File -> Demo
+                ... File -> Integration Test
+                ... File -> Intro-Image   
+
+
+3.4.01.37  - 2014.02.21
 -------------------------------------------------------------------------------
     refactoring:
         ... Demo: File -> Stack and Reach
         ... bikeGeometry 0.49
+
 
 3.4.01.36  - 2014.02.20
 -------------------------------------------------------------------------------
