@@ -302,7 +302,7 @@
         
           # -- change Saddle- and HandleBarPosition
           #
-        set title       "at first configure your Saddle position ..."
+        set title       "at first configure Saddle position ..."
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -342,7 +342,7 @@
           
           # -- change Saddle- and HandleBarPosition
           #
-        set title       "and your HandleBar ..."
+        set title       "and HandleBar ..."
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -385,7 +385,7 @@
           
           # -- use HandleBarPosition
           #
-        set title       "to configure your front geometry ..."       
+        set title       "to configure front geometry ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -423,7 +423,7 @@
           #
 
           
-        set title       "and your frame tubes ..."       
+        set title       "and frame tubes ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
