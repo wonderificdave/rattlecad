@@ -294,7 +294,7 @@
         set step_SD_Distance  5.0
         set step_SD_Height   -5.0
         set step_Stem_Length  2.5
-        set step_ST_Angle     0.5
+        set step_ST_Angle     0.35
         set step_HT_Angle     0.4        
         set step_HT_Length   -2.0    
         set step_TT_Angle     1.0
@@ -342,7 +342,7 @@
           
           # -- change Saddle- and HandleBarPosition
           #
-        set title       "and position of your HandleBar ..."
+        set title       "and your HandleBar ..."
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -385,7 +385,7 @@
           
           # -- use HandleBarPosition
           #
-        set title       "use this position for your front geometry ..."       
+        set title       "to configure your front geometry ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -423,7 +423,7 @@
           #
 
           
-        set title       "and your frame customizations ..."       
+        set title       "and your frame tubes ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -468,7 +468,7 @@
           
           # -- change SeatTubeAngle and keep TopTube-Length and SaddlePosition
           #
-        set title       "and why don't use constant Seat- and TopTube Length ..."       
+        set title       "and let me explain why don't tie on Seat- and TopTube length ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #          
