@@ -102,7 +102,7 @@
             }
         } else {
               # -- reset demoText
-            set targetCanvas [rattleCAD::gui::current_canvasCAD]
+            set targetCanvas [rattleCAD::view::gui::current_canvasCAD]
             createDemoText  $targetCanvas  ""
               #
             return
@@ -142,32 +142,32 @@
 		wm deiconify .
 		
 		# -- update display -----------
-		rattleCAD::gui::notebook_refitCanvas	
+		rattleCAD::view::gui::notebook_refitCanvas	
   
 		
 		# -- integration test ---------
 		set openFile         [file join  ${SAMPLE_Dir} __test_Integration_02.xml]
 		puts "          ... $openFile\n"
-		rattleCAD::file::openProject_xml   $openFile
+		rattleCAD::model::file::openProject_xml   $openFile
 		
 		set openFile         [file join  ${SAMPLE_Dir} classic_1984_SuperRecord.xml]
 		puts "          ... $openFile\n"
-		rattleCAD::file::openProject_xml   $openFile
+		rattleCAD::model::file::openProject_xml   $openFile
 		
 		
 		puts "\n\n === export  pdf / html  ===\n"
-		rattleCAD::gui::export_Project      pdf
+		rattleCAD::view::gui::export_Project      pdf
 		wm deiconify .
 		update
-		rattleCAD::gui::export_Project      html
+		rattleCAD::view::gui::export_Project      html
 		wm deiconify .        
 		update
 		
 		
 		puts "\n\n === export  svg / dxf /ps  ===\n"
-		rattleCAD::gui::notebook_exportSVG  $::APPL_Config(EXPORT_Dir) no
-		rattleCAD::gui::notebook_exportDXF  $::APPL_Config(EXPORT_Dir) no
-		rattleCAD::gui::notebook_exportPS   $::APPL_Config(EXPORT_Dir) no
+		rattleCAD::view::gui::notebook_exportSVG  $::APPL_Config(EXPORT_Dir) no
+		rattleCAD::view::gui::notebook_exportDXF  $::APPL_Config(EXPORT_Dir) no
+		rattleCAD::view::gui::notebook_exportPS   $::APPL_Config(EXPORT_Dir) no
 		wm deiconify .
 		update
 		
@@ -179,7 +179,7 @@
 			   set openFile     [file join  ${SAMPLE_Dir} $thisFile]
 			   puts "          ... integrationTest_00 opened"
 			   puts "                 ... $openFile\n"
-			   rattleCAD::file::openProject_xml   $openFile 
+			   rattleCAD::model::file::openProject_xml   $openFile 
 			   wm deiconify .
 			   #update          
 			}
@@ -194,7 +194,7 @@
 		puts "\n\n === open not existing file  ===\n"  
 		set openFile     [file join  ${SAMPLE_Dir}    this_file_does_not_exist.xml]
 		puts "          ... $openFile\n"
-		rattleCAD::file::openProject_xml   $openFile   
+		rattleCAD::model::file::openProject_xml   $openFile   
 		
 				
 		puts "\n\n === create Information  ===\n"      
@@ -217,7 +217,7 @@
 		
 		puts "\n\n === load template road again  ===\n"  
 		puts "          ... Template  Road\n"
-        rattleCAD::gui::load_Template  Road	
+        rattleCAD::view::gui::load_Template  Road	
 
         
 		puts "\n\n === demonstrate stack and reach  ===\n"  
@@ -226,7 +226,7 @@
 
 		puts "\n\n === load template road again  ===\n"  
 		puts "          ... Template  Road\n"
-        rattleCAD::gui::load_Template  Road	
+        rattleCAD::view::gui::load_Template  Road	
    
 		
 		puts "\n\n === end ===\n"       
@@ -247,12 +247,12 @@
         
           #
         set targetTab    "cv_Custom10"
-        set targetCanvas "rattleCAD::gui::$targetTab"
+        set targetCanvas "rattleCAD::view::gui::$targetTab"
           #
-        rattleCAD::gui::select_canvasCAD   $targetTab  
+        rattleCAD::view::gui::select_canvasCAD   $targetTab  
         rattleCAD::view::updateView        force
           #
-        rattleCAD::gui::load_Template      Road
+        rattleCAD::view::gui::load_Template      Road
         rattleCAD::view::updateView        force
           #
           
@@ -264,6 +264,8 @@
         set init_TT_Angle     [rattleCAD::control::getValue  Custom/TopTube/Angle]
         set init_HT_Length    [rattleCAD::control::getValue  FrameTubes/HeadTube/Length]
         set init_Stem_Length  [rattleCAD::control::getValue  Component/Stem/Length]
+        set init_Fork_Height  [rattleCAD::control::getValue  Component/Fork/Height]
+        set init_Fork_Rake    [rattleCAD::control::getValue  Component/Fork/Rake]
         set init_ST_Angle     [rattleCAD::control::getValue  Result/Angle/SeatTube/Direction]
         set init_ST_Length    [rattleCAD::control::getValue  Result/Length/SeatTube/VirtualLength]
         set init_TT_Length    [rattleCAD::control::getValue  Result/Length/TopTube/VirtualLength]
@@ -277,6 +279,8 @@
         puts "         -> \$init_TT_Angle     $init_TT_Angle   "
         puts "         -> \$init_HT_Length    $init_HT_Length  "
         puts "         -> \$init_Stem_Length  $init_Stem_Length"
+        puts "         -> \$init_Fork_Height  $init_Fork_Height"
+        puts "         -> \$init_Fork_Rake    $init_Fork_Rake  "
         puts "         -> \$init_ST_Angle     $init_ST_Angle   "
         puts "         -> \$init_ST_Length    $init_ST_Length  "
         puts "         -> \$init_TT_Length    $init_TT_Length  "
@@ -294,6 +298,8 @@
         set step_SD_Distance  5.0
         set step_SD_Height   -5.0
         set step_Stem_Length  2.5
+        set step_Fork_Height  3.5
+        set step_Fork_Rake    2.0
         set step_ST_Angle     0.35
         set step_HT_Angle     0.4        
         set step_HT_Length   -2.0    
@@ -302,9 +308,9 @@
         
           # -- change Saddle- and HandleBarPosition
           #
-        set title       "configure Saddle position at first ..."
+        set title       "configure Saddle position first ..."
         createDemoText  $targetCanvas  "$title"
-        after 1000
+        after 1500
           #
         
           #
@@ -385,17 +391,20 @@
           
           # -- use HandleBarPosition
           #
-        set title       "then configure front geometry ..."       
+        set title       "and then configure front geometry ..."       
         createDemoText  $targetCanvas  "$title"
-        after 1000
+        after 1500
           #
                   
           #
         set loopCount      0
         set stepCount      $loopSteps
           #
-        set demo_HT_Angle  $init_HT_Angle
-        set demo_HT_Length $init_HT_Length
+        set demo_HT_Angle    $init_HT_Angle
+        set demo_HT_Length   $init_HT_Length
+        set demo_Stem_Length $init_Stem_Length
+        set demo_Fork_Height $init_Fork_Height
+        set demo_Fork_Rake   $init_Fork_Rake  
           #
         while {$loopCount < [expr $loopSteps * $maxLoops]} {            
               # -- check \$runningStatus
@@ -410,12 +419,18 @@
                 incr stepCount
             }
             
-            set demo_HT_Angle  [expr $demo_HT_Angle  + $direction*$step_HT_Angle]
-            set demo_HT_Length [expr $demo_HT_Length + $direction*$step_HT_Length]
+            set demo_HT_Angle    [expr $demo_HT_Angle    + $direction*$step_HT_Angle]
+            set demo_HT_Length   [expr $demo_HT_Length   + $direction*$step_HT_Length]
+            set demo_Stem_Length [expr $demo_Stem_Length - $direction*$step_Stem_Length]
+            set demo_Fork_Height [expr $demo_Fork_Height + $direction*$step_Fork_Height]
+            set demo_Fork_Rake   [expr $demo_Fork_Rake   - $direction*$step_Fork_Rake]
               #
             set myList {}
-            lappend myList Custom/HeadTube/Angle               $demo_HT_Angle
-            lappend myList FrameTubes/HeadTube/Length          $demo_HT_Length
+            lappend myList Custom/HeadTube/Angle           $demo_HT_Angle
+            lappend myList FrameTubes/HeadTube/Length      $demo_HT_Length
+            lappend myList Component/Stem/Length           $demo_Stem_Length
+            lappend myList Component/Fork/Height           $demo_Fork_Height
+            lappend myList Component/Fork/Rake             $demo_Fork_Rake
               #
             rattleCAD::control::setValue $myList           {update} noHistory
               #
@@ -423,7 +438,7 @@
           #
 
           
-        set title       "and frame tubes, and ..."       
+        set title       "and frame tubes, and angles, ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -458,7 +473,7 @@
             lappend myList Result/Angle/SeatTube/Direction     $demo_ST_Angle
             lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
             lappend myList Custom/TopTube/Angle                $demo_TT_Angle
-            lappend myList FrameTubes/HeadTube/Length          $demo_HT_Length
+            # lappend myList FrameTubes/HeadTube/Length          $demo_HT_Length
               #
             rattleCAD::control::setValue $myList           {update} noHistory
               #
@@ -468,7 +483,7 @@
           
           # -- change SeatTubeAngle and keep TopTube-Length and SaddlePosition
           #
-        set title       "and let me explain why don't tie on Seat- and TopTube length ..."       
+        set title       "and let's explain why don't tie on Seat- and TopTube length ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #          
@@ -532,12 +547,12 @@
         puts "      SAMPLE_Dir  .... $SAMPLE_Dir"
         puts "" 
 
-          # rattleCAD::file::saveProject_xml saveAs    
+          # rattleCAD::model::file::saveProject_xml saveAs    
         
         set targetTab    "cv_Custom30"
-        set targetCanvas "rattleCAD::gui::$targetTab"
+        set targetCanvas "rattleCAD::view::gui::$targetTab"
           #
-        rattleCAD::gui::select_canvasCAD   $targetTab  
+        rattleCAD::view::gui::select_canvasCAD   $targetTab  
         rattleCAD::view::updateView        force
           #
         createDemoText $targetCanvas       {... demo Samples}  
@@ -550,7 +565,7 @@
               #
             puts "\n     open Sample File:"
             puts "          .... $fileName\n"
-            rattleCAD::file::openProject_xml   $fileName
+            rattleCAD::model::file::openProject_xml   $fileName
             after 1500
         }
           # -- open previous opened File   
@@ -558,13 +573,13 @@
         puts "\n            ... $currentFile"
         switch -exact $currentFile {
             {Template Road} {
-                rattleCAD::gui::load_Template  Road
+                rattleCAD::view::gui::load_Template  Road
             }        
             {Template MTB} {
-                rattleCAD::gui::load_Template  MTB
+                rattleCAD::view::gui::load_Template  MTB
             }
             default {
-                rattleCAD::file::openProject_xml   $currentFile    
+                rattleCAD::model::file::openProject_xml   $currentFile    
             }
         }
         after 1500        
@@ -598,11 +613,11 @@
             # proc setValue {arrayName type args}
             # proc getValue {arrayName type args}
             
-        # rattleCAD::gui::select_canvasCAD   cv_Custom00
+        # rattleCAD::view::gui::select_canvasCAD   cv_Custom00
         
         # -- update display -----------
-        rattleCAD::gui::notebook_refitCanvas
-        rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
+        rattleCAD::view::gui::notebook_refitCanvas
+        rattleCAD::cv_custom::updateView [rattleCAD::view::gui::current_canvasCAD]
         
         
         # -- morphing -----------------

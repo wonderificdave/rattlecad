@@ -37,7 +37,7 @@
  #
  #
 
- namespace eval rattleCAD::file {
+ namespace eval rattleCAD::model::file {
 
 
     #-------------------------------------------------------------------------
@@ -104,7 +104,7 @@
             }
 
                 # -- read from domConfig
-            set domConfig  [ rattleCAD::file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad_default) ] ]
+            set domConfig  [ rattleCAD::model::file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad_default) ] ]
                     # 20111229 ...
 
                 # -- set xml-File Attributes
@@ -131,7 +131,7 @@
                 puts "                   ... done"
 
                 # -- read new File
-            set projectDOM     [rattleCAD::file::get_XMLContent $fileName show]
+            set projectDOM     [rattleCAD::model::file::get_XMLContent $fileName show]
                 #
             rattleCAD::control::newProject $projectDOM
 			    #
@@ -171,7 +171,7 @@
                 # puts "   openProject_xml - fileName:   $fileName"
             if { [file readable $fileName ] } {
                     
-                    set projectDOM        [rattleCAD::file::get_XMLContent $fileName show]
+                    set projectDOM        [rattleCAD::model::file::get_XMLContent $fileName show]
                     set projectVersion    [[$projectDOM selectNodes /root/Project/rattleCADVersion/text()] asXML]
                     set projectName       [[$projectDOM selectNodes /root/Project/Name/text()]             asXML]
                     set projectModified   [[$projectDOM selectNodes /root/Project/modified/text()]         asXML]       
@@ -245,7 +245,7 @@
             set template_file    [ getTemplateFile $type ]
             puts "         ... template_file:   $template_file"
             if { [file readable $template_file ] } {
-                set projectDOM     [rattleCAD::file::get_XMLContent $template_file show]
+                set projectDOM     [rattleCAD::model::file::get_XMLContent $template_file show]
                     #
                 rattleCAD::control::newProject $projectDOM
 				    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
@@ -411,7 +411,7 @@
             [$domConfig selectNodes /root/Project/modified/text()]          nodeValue [rattleCAD::control::getSession  dateModified]
                 #
                 
-                #set domConfig  [ rattleCAD::file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad_default) ] ]
+                #set domConfig  [ rattleCAD::model::file::get_XMLContent     [file join $::APPL_Config(CONFIG_Dir) $::APPL_Config(TemplateRoad_default) ] ]
                     # 20111229 ...
 
                 # -- set xml-File Attributes
@@ -492,7 +492,7 @@
             }
             
 			  #
-			set content [rattleCAD::file::get_XMLContent $fileName]
+			set content [rattleCAD::model::file::get_XMLContent $fileName]
             rattleCAD::control::importSubset $content
               # 
 			
@@ -807,7 +807,7 @@
                 foreach pdfFile $pdf_fileList {
                     puts "\n"
                     puts "      ... open $pdfFile"
-                      # catch {rattleCAD::file::openFile_byExtension "$pdfFile"}
+                      # catch {rattleCAD::model::file::openFile_byExtension "$pdfFile"}
                     catch {osEnv::open_by_mimeType_DefaultApp "$pdfFile"}
                 }
             }

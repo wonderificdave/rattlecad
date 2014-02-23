@@ -71,8 +71,8 @@ namespace eval rattleCAD::view {
             variable canvasUpdate
             variable canvasRefit
             
-			set currentTab         [$rattleCAD::gui::noteBook_top select]
-			set varName            [rattleCAD::gui::notebook_getVarName $currentTab]
+			set currentTab         [$rattleCAD::view::gui::noteBook_top select]
+			set varName            [rattleCAD::view::gui::notebook_getVarName $currentTab]
 			set varName            [lindex [split $varName {::}] end]
 		
             set updateDone         {no}
@@ -105,12 +105,12 @@ namespace eval rattleCAD::view {
             if {1 == 1} {
                 if {$mode == {force}} {
                         puts "\n       ... rattleCAD::view:updateView ... update $varName ... force\n"
-                        rattleCAD::gui::fill_canvasCAD $varName
+                        rattleCAD::view::gui::fill_canvasCAD $varName
                         set updateDone  {done}
                 } else {
                     if { $lastUpdate < $rattleCAD::control::model_Update } {
                         puts "\n       ... rattleCAD::view:updateView ... update $varName\n"
-                        rattleCAD::gui::fill_canvasCAD $varName
+                        rattleCAD::view::gui::fill_canvasCAD $varName
                         set updateDone  {done}
                     } else {
                         puts "\n       ... rattleCAD::view:updateView ... update $varName ... not required\n"
@@ -119,7 +119,7 @@ namespace eval rattleCAD::view {
                 
                 if {$mode == {recenter}} {
                         puts "\n       ... rattleCAD::view:updateView ... update $varName ... recenter\n"
-                        rattleCAD::gui::fill_canvasCAD $varName recenter               
+                        rattleCAD::view::gui::fill_canvasCAD $varName recenter               
                 }
             }
             
@@ -127,14 +127,14 @@ namespace eval rattleCAD::view {
                 if { $mode == {} } {
                     if { $lastUpdate < $rattleCAD::control::model_Update } {
                         puts "\n       ... rattleCAD::view:updateView ... update $varName\n"
-                        rattleCAD::gui::fill_canvasCAD $varName
+                        rattleCAD::view::gui::fill_canvasCAD $varName
                         set updateDone  {done}
                     } else {
                         puts "\n       ... rattleCAD::view:updateView ... update $varName ... not required\n"
                     }
                 } else {
                         puts "\n       ... rattleCAD::view:updateView ... update $varName ... force\n"
-                        rattleCAD::gui::fill_canvasCAD $varName
+                        rattleCAD::view::gui::fill_canvasCAD $varName
                         set updateDone  {done}
                 }
             }
@@ -145,7 +145,7 @@ namespace eval rattleCAD::view {
 					puts "\n       ... rattleCAD::view:updateView ... refitStage ........ $varName\n"
 					update
 					# catch {$varName refitStage}
-					rattleCAD::gui::notebook_refitCanvas
+					rattleCAD::view::gui::notebook_refitCanvas
 					set refitDone  {done}       
             }
             
@@ -243,7 +243,7 @@ namespace eval rattleCAD::view {
 			# --- title definition ---
 				set cvTitle            [label  $cvTitleFrame.label -text "${title}"  -bg gray60  -fg white -font "Helvetica 8 bold" -justify left]
 					pack $cvTitle -side left
-				set    cvClose         [button $cvTitleFrame.close -image $rattleCAD::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+				set    cvClose         [button $cvTitleFrame.close -image $rattleCAD::view::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
 					pack $cvClose -side right -pady 2
 				#
 			# --- parameter to edit ---
@@ -358,7 +358,7 @@ namespace eval rattleCAD::view {
 		$cvEntry configure -command \
 					 "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
 		if {$index == {oneLine}} {
-			set    cvClose [button $cvContentFrame.close -image $rattleCAD::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+			set    cvClose [button $cvContentFrame.close -image $rattleCAD::view::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
 			grid    $cvLabel $cvEntry $cvClose -sticky news
 		} else {
 			grid    $cvLabel $cvEntry -sticky news
@@ -396,7 +396,7 @@ namespace eval rattleCAD::view {
             # $cvEntry configure -command \
                 "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
         if {$index == {oneLine}} {
-            set    cvClose [button $cvContentFrame.close -image $rattleCAD::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+            set    cvClose [button $cvContentFrame.close -image $rattleCAD::view::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
             grid    $cvLabel $cvEntry $cvClose -sticky news
                 # grid  $cvLabel $cvEntry $cvUpdate $cvClose -sticky news
         } else {
@@ -458,7 +458,7 @@ namespace eval rattleCAD::view {
         $cvCBox configure -postcommand [list eval set [namespace current]::oldValue \$[namespace current]::_updateValue($key)]
 
         if {$index == {oneLine}} {
-                set    cvClose [ button         $cvFrame.close   -image $rattleCAD::gui::iconArray(iconClose) -command [list [namespace current]::closeEdit $cv $cvEdit]]
+                set    cvClose [ button         $cvFrame.close   -image $rattleCAD::view::gui::iconArray(iconClose) -command [list [namespace current]::closeEdit $cv $cvEdit]]
                 grid    $cvLabel $cvCBox $cvClose   -sticky news
                 grid    $cvFrame                    -sticky news    -padx 1
         } else {
@@ -527,6 +527,23 @@ namespace eval rattleCAD::view {
        #  createEdit - sub procedures
     #-------------------------------------------------------------------------
            
+    
+    
+     
+    #-------------------------------------------------------------------------
+        #  switch check_TubingAngles
+        #
+    proc check_TubingAngles {} {
+        if {$rattleCAD::view::gui::checkAngles != {on}} {
+            set rattleCAD::view::gui::checkAngles {on}
+        } else {
+            set rattleCAD::view::gui::checkAngles {off}
+        }
+        rattleCAD::cv_custom::updateView         [rattleCAD::view::gui::current_canvasCAD]
+        return
+    } 
+    
+
     #-------------------------------------------------------------------------
         #  update Project               
     proc updateConfig {cv_Name xpath {cvEntry {}}} {
@@ -600,7 +617,7 @@ namespace eval rattleCAD::view {
         # puts "  -- closeEdit: $cv $cvEdit"
         set cv_Name {}
         set cv_Path {}
-        catch {set cv_Name [rattleCAD::gui::current_canvasCAD]}
+        catch {set cv_Name [rattleCAD::view::gui::current_canvasCAD]}
           # puts "   -> $cv_Name"
         catch {set cv_Path [ $cv_Name getNodeAttr Canvas path]}
           # puts "   -> $cv_Path"

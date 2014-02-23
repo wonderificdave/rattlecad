@@ -471,9 +471,9 @@
         puts "     createLugRep"
         puts "       cv_Name:         $cv_Name"
         puts "       BB_Position:     $BB_Position"
-        puts "       checkAngles:     $rattleCAD::gui::checkAngles"
+        puts "       checkAngles:     $rattleCAD::view::gui::checkAngles"
 
-        if {$rattleCAD::gui::checkAngles != {on}} {
+        if {$rattleCAD::view::gui::checkAngles != {on}} {
             puts "       ... currently switched off"
             return
         }
@@ -612,13 +612,13 @@
                             [list tk_messageBox -message "Angle in range of \[Angle - Tolerance\] and \[Angle + Tolerance\]"]
 
 
-        rattleCAD::gui::object_CursorBinding        $cv_Name    $represent_DO
-        rattleCAD::gui::object_CursorBinding        $cv_Name    $represent_BB_01
-        rattleCAD::gui::object_CursorBinding        $cv_Name    $represent_BB_02
-        rattleCAD::gui::object_CursorBinding        $cv_Name    $represent_SL_01
-        rattleCAD::gui::object_CursorBinding        $cv_Name    $represent_SL_02
-        rattleCAD::gui::object_CursorBinding        $cv_Name    $represent_HL_TT
-        rattleCAD::gui::object_CursorBinding        $cv_Name    $represent_HL_DT
+        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $represent_DO
+        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $represent_BB_01
+        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $represent_BB_02
+        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $represent_SL_01
+        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $represent_SL_02
+        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $represent_HL_TT
+        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $represent_HL_DT
 
 
     }

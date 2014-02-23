@@ -32,13 +32,13 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
  #
  # ---------------------------------------------------------------------------
- #    namespace:  rattleCAD::tool
+ #    namespace:  rattleCAD::control::tool
  # ---------------------------------------------------------------------------
  #
  # 
  
  
- namespace eval rattleCAD::tool {
+ namespace eval rattleCAD::control::tool {
 
     proc check_runTime {} {
         set nameofExecutable [info nameofexecutable]

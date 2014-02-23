@@ -318,7 +318,6 @@ namespace eval rattleCAD::model {
                 foreach child_childNode [$childNode childNodes ] {
                     if {[$child_childNode nodeType] == {ELEMENT_NODE}} {
                           # puts "    ->$childNode_Name<"
-                        if {$childNode_Name == {Rim}} {puts "   -> is Rim"}
                         switch -exact -- $childNode_Name {
                             {Rim} {
                                       # puts "    init_ListBoxValues (Rim) ->   $childNode_Name -> [$child_childNode nodeName]"
@@ -329,7 +328,7 @@ namespace eval rattleCAD::model {
                                         set value {-----------------}
                                     } else {
                                         set value [format "%s ; %s %s" $value_02 $value_01 $value_03]
-                                        puts "   -> $value   <-> $value_02 $value_01 $value_03"
+                                          # puts "   -> $value   <-> $value_02 $value_01 $value_03"
                                     }
                                     lappend valueRegistry($childNode_Name)  $value
                                 }
@@ -388,7 +387,7 @@ namespace eval rattleCAD::model {
           #
         puts "      ...   get_ComponentList $key"
           #
-        set compList [rattleCAD::file::get_componentAlternatives  $key]
+        set compList [rattleCAD::model::file::get_componentAlternatives  $key]
         return $compList
           #
           

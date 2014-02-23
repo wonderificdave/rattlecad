@@ -388,32 +388,32 @@
 
 
                             if {$active == {on}} {
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HB_XPosition
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HB_YPosition
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_XPosition
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_YPosition
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SN_HandleBar
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HB_XPosition
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HB_YPosition
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_XPosition
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_YPosition
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SN_HandleBar
                                     
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_Height
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SP_SetBack
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SP_PivotOffset
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HT_Length
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_LC_Position_x
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_LC_Position_y
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SN_Position_x
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_ST_Angle
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_ST_Length
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_ST_Offset
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_BB_Depth
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_CS_Length
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HT_Angle
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_Stem_Length
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_Stem_Angle
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_Fork_Rake
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_Fork_Height
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_RW_Radius
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_FW_Radius
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_CR_Length
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_Height
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SP_SetBack
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SP_PivotOffset
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HT_Length
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_LC_Position_x
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_LC_Position_y
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SN_Position_x
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_ST_Angle
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_ST_Length
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_ST_Offset
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_BB_Depth
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_CS_Length
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HT_Angle
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_Stem_Length
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_Stem_Angle
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_Fork_Rake
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_Fork_Height
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_RW_Radius
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_FW_Radius
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_CR_Length
                                     
                                     foreach cv_Item [list $_dim_HB_XPosition $_dim_HB_YPosition $_dim_SD_XPosition $_dim_SD_YPosition] {
                                          foreach cv_item [$cv_Name gettags $cv_Item] {
@@ -488,16 +488,16 @@
                                     $cv_Name bind $_dim_ST_Length       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_ST) ]
                                     $cv_Name bind $_dim_ST_Offset       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Custom(SeatTube/OffsetBB) ]
 
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Height
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_ST_Length
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_FW_Distance
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_FW_DistanceX
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_BB_Height
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_TT_Virtual
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_ST_Virtual
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HT_Reach_X
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HT_Stack_Y
-                                    rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_CS_LengthX
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Height
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_ST_Length
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_FW_Distance
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_FW_DistanceX
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_BB_Height
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_TT_Virtual
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_ST_Virtual
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HT_Reach_X
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HT_Stack_Y
+                                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_CS_LengthX
 
                                     $cv_Name bind $_dim_SD_HB_Height    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_HB) ]
                                     $cv_Name bind $_dim_SD_ST_Length    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Saddle/SeatTube_BB) ]
@@ -740,7 +740,7 @@
 
                             #$cv_Name create circle  [lindex $SeatTube(vct_Top) 0]        -radius 15  -outline red    -width 1        -tags __CenterLine__
                             #$cv_Name create circle  [lindex $SeatTube(vct_Top) 1]            -radius 15  -outline blue   -width 1        -tags __CenterLine__
-                            #             rattleCAD::gui::cv_Custom40 setPrecision 2 force
+                            #             rattleCAD::view::gui::cv_Custom40 setPrecision 2 force
 
 
                                 set DownTube(polygon)   [ bikeGeometry::get_Object DownTube polygon        $BB_Position  ]
@@ -988,7 +988,7 @@
                                 #
                                 # --- modify dimension precision from 1 to 2
                            # reset be 3.4.00.34
-                           #rattleCAD::gui::cv_Custom40 setPrecision 2
+                           #rattleCAD::view::gui::cv_Custom40 setPrecision 2
                                 # 
                                 set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon $BB_Position  ]
                                 set pt_01               [ bikeGeometry::coords_get_xy $TopTube(polygon)  8 ]
@@ -1007,10 +1007,10 @@
                             set _dim_SeatTube_CutLength [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $help_st_dt $pt_05] ] \
                                                                                         aligned    [expr   90 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
-                                                                                        rattleCAD::gui::cv_Custom40 setPrecision 2
+                                                                                        rattleCAD::view::gui::cv_Custom40 setPrecision 2
                                 #  --- reset dimension precision to default
                             # reset be 3.4.00.34
-                            # rattleCAD::gui::cv_Custom40 setPrecision reset
+                            # rattleCAD::view::gui::cv_Custom40 setPrecision reset
                                                                                                                                                                                 
 
 
@@ -1230,19 +1230,19 @@
                                                                 
                                                                 
                             
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_BB_Height
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_FW_Radius
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_RW_Radius
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_Rear_Length
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_Front_Length
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_BB_Height
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_FW_Radius
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_RW_Radius
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_Rear_Length
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_Front_Length
                             
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Height
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Height
                             
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_Distance
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Length
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_SD_Height
-                            rattleCAD::gui::object_CursorBinding        $cv_Name    $_dim_HB_Height
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_Distance
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_HB_Length
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_Height
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HB_Height
                             
                             
                             
@@ -1434,7 +1434,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                     {FrameTubes(HeadTube/Length)    \
                                                                                     }    {HeadTube Length}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                             }
                 HeadTube_OffsetTT {
@@ -1447,7 +1447,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                     {Custom(TopTube/OffsetHT)    \
                                                                                     }    {HeadTube TopTube Offset}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                             }
                 HeadTube_OffsetDT {
@@ -1460,7 +1460,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {Custom(DownTube/OffsetHT) \
                                                                                         }    {HeadTube DownTube Offset}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                             }
                 SeatTube_Extension {
@@ -1473,7 +1473,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatTube/Extension) \
                                                                                         }    {SeatTube Extension}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                             }
                 SeatStay_Offset {
@@ -1491,7 +1491,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatStay/OffsetTT) \
                                                                                         }    {SeatStay Offset TopTube}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                             }
                 DownTube_Offset {
@@ -1512,7 +1512,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(DownTube/OffsetBB) \
                                                                                         }    {DownTube Offset BottomBracket}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                             }
                 SeatTube_Offset {
@@ -1533,7 +1533,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(SeatTube/OffsetBB) \
                                                                                         }    {SeatTube Offset BottomBracket}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                             }
                 TopTube_Angle {
@@ -1555,7 +1555,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Custom(TopTube/Angle) \
                                                                                         }    {TopTube Angle}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                         }
                 TopHeadTube_Angle {
@@ -1566,7 +1566,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Result(Angle/HeadTube/TopTube) \
                                                                                         }    {HeadTube TopTube Angle}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                         }
                 ForkHeight {
@@ -1577,7 +1577,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(Fork/Height) \
                                                                                         }    {Fork Height}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                         }
                 HeadSet_Top {
@@ -1588,7 +1588,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(HeadSet/Height/Top) \
                                                                                         }    {HeadSet Top Height}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                         }
                 HeadSet_Bottom {
@@ -1599,7 +1599,7 @@
                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                         {    Component(HeadSet/Height/Bottom) \
                                                                                         }    {HeadSet Bottom Height}]
-                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                         }
                 Brake_Rear {
@@ -1624,8 +1624,8 @@
                                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Rear/LeverLength) \
                                                                                                         }    {Rear Brake LeverLength}]
-                                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension_01
-                                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension_02
+                                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension_01
+                                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension_02
                                                     }
                                         }
                                 }
@@ -1659,8 +1659,8 @@
                                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(Brake/Front/LeverLength) \
                                                                                                         }    {Front Brake LeverLength}]
-                                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension_01
-                                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension_02
+                                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension_01
+                                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension_02
                                                     }
                                         }
                                 }
@@ -1685,7 +1685,7 @@
                                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/SeatTube/OffsetBB) \
                                                                                                         }    {BottleCage SeatTube Offset}]
-                                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                                     }
                                                     
                                             # $cv_Name create circle $pt_01    -radius 15  -outline red    -width 1        -tags __CenterLine__
@@ -1710,7 +1710,7 @@
                                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/DownTube/OffsetBB) \
                                                                                                         }    {BottleCage DownTube Offset}]
-                                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                                     }
                             }
                             if {$Rendering(BottleCage_DT_L) != {off}} {
@@ -1728,7 +1728,7 @@
                                                                                             [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                                         {    Component(BottleCage/DownTube_Lower/OffsetBB) \
                                                                                                         }    {BottleCage DownTube Lower Offset}]
-                                                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                                     }
                             }
                         }
@@ -1796,8 +1796,8 @@
                                                                                     Lugs(RearDropOut/Derailleur/x) \
 																				    Lugs(RearDropOut/Derailleur/y) \
                                                                                 }  {RearDropOut Derailleur}]
-                                                rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension_01
-                                                rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension_02
+                                                rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension_01
+                                                rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension_02
                             }
                             
                             #            project::setValue Result(Lugs/Dropout/Rear/Derailleur)    position ]     [expr -1*$RearWheel(Distance_X)]    [rattleCAD::control::getValue Custom/BottomBracket/Depth]
@@ -1842,7 +1842,7 @@
                                                 <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
                                                                                     {    Custom(SeatStay/OffsetTT)        \
                                                                                     }    {SeatStay OffsetTopTube}]
-                                        rattleCAD::gui::object_CursorBinding        $cv_Name    $dimension
+                                        rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension
                                     }
                         }
                 default {}

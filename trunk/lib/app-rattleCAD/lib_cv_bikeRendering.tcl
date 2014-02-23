@@ -123,7 +123,7 @@
                                                                                     {   file://Component(HandleBar/File) \
                                                                                     }   {HandleBar Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $HandleBar(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $HandleBar(object)
                                     }
                             }
                     DerailleurRear {
@@ -137,7 +137,7 @@
                                                                                     {   file://Component(Derailleur/Rear/File)    \
                                                                                     }   {DerailleurRear Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Derailleur(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $Derailleur(object)
                                     }
                             }
                     DerailleurRear_ctr {
@@ -162,7 +162,7 @@
                                                                                         Component(Derailleur/Front/Offset) \
                                                                                     }  {DerailleurFront Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Derailleur(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $Derailleur(object)
                                     }
                             }
                     CrankSet {
@@ -182,7 +182,7 @@
                                                                                                 text://Component(CrankSet/ChainRings)
                                                                                             }   {Crankset:  Parameter}
                                                                             ]
-                                                                  rattleCAD::gui::object_CursorBinding     $cv_Name    $CrankSet(object)
+                                                                  rattleCAD::view::gui::object_CursorBinding     $cv_Name    $CrankSet(object)
                                         }
                                 } else {
                                     set CrankSet(object)        [ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __CrankSet__ ]
@@ -192,7 +192,7 @@
                                                                                             {   file://Component(CrankSet/File) \
                                                                                             }   {CrankSet Parameter} \
                                                                             ]
-                                                                  rattleCAD::gui::object_CursorBinding     $cv_Name    $CrankSet(object)
+                                                                  rattleCAD::view::gui::object_CursorBinding     $cv_Name    $CrankSet(object)
                                         }
                                 }
                             }
@@ -208,7 +208,7 @@
                                                                                         Component/Derailleur/Rear/Pulley/teeth \
                                                                                     }   {Chain Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Chain(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $Chain(object)
                                     }
                             }
 
@@ -222,7 +222,7 @@
                                                                                     {   Component(SeatPost/Diameter)    \
                                                                                     }   {SeatPost Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $SeatPost(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $SeatPost(object)
                                     }
                             }
 
@@ -246,7 +246,7 @@
                                                                                                         Component(Brake/Rear/Offset)    \
                                                                                                     }  {RearBrake Parameter} \
                                                                                     ]
-                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $RearBrake(object)
+                                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $RearBrake(object)
                                                     }
                                                 }
                                         default {}
@@ -274,7 +274,7 @@
                                                                                                         Component(Brake/Front/Offset)    \
                                                                                                     }   {FrontBrake Parameter} \
                                                                                     ]
-                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $FrontBrake(object)
+                                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $FrontBrake(object)
                                                     }
                                             }
                                         default {}
@@ -304,7 +304,7 @@
                                                                                                     {   list://Rendering(BottleCage/SeatTube@SELECT_BottleCage) \
                                                                                                     }   {BottleCage SeatTube Parameter} \
                                                                                     ]
-                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
+                                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
                                             }
                                 }
 
@@ -327,7 +327,7 @@
                                                                                                     {   list://Rendering(BottleCage/DownTube@SELECT_BottleCage) \
                                                                                                     }   {BottleCage DownTube-Upper Parameter} \
                                                                                     ]
-                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
+                                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
                                             }
                                 }
 
@@ -350,7 +350,7 @@
                                                                                                     {   list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) \
                                                                                                     }   {BottleCage DownTube-Lower Parameter} \
                                                                                     ]
-                                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
+                                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $BottleCage(object)
                                             }
                                 }
 
@@ -370,7 +370,7 @@
                                                                                         Rendering(Saddle/Offset_Y) \
                                                                                     }   {Saddle Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Saddle(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $Saddle(object)
                                     }
                             }
                     HeadSet {
@@ -383,7 +383,7 @@
                                                                                         Component(HeadSet/Diameter) \
                                                                                     }  {HeadSet Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $HeadSet(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $HeadSet(object)
                                     }
                             set HeadSet(polygon)        [ bikeGeometry::get_Object HeadSet/Bottom polygon $BB_Position ]
                             set HeadSet(object)         [ $cv_Name create polygon $HeadSet(polygon) -fill white -outline black  -tags __Decoration__ ]
@@ -393,7 +393,7 @@
                                                                                         Component(HeadSet/Diameter)        \
                                                                                     }  {HeadSet Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $HeadSet(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $HeadSet(object)
                                     }
                             }
                     Stem {
@@ -419,7 +419,7 @@
                                                                                     {   file://Component(Logo/File)    \
                                                                                     }   {Logo Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $Logo(object)
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $Logo(object)
                                     }
                     }
                     RearWheel {     # --- create RearWheel -----------------
@@ -438,7 +438,7 @@
                                                                                     {     Component(Wheel/Rear/RimHeight)        \
                                                                                     }     {RearWheel Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $my_Rim
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $my_Rim
                                     }
                             }
                     FrontWheel {    # --- create FrontWheel ----------------
@@ -457,7 +457,7 @@
                                                                                     {     Component(Wheel/Front/RimHeight)        \
                                                                                     }     {FrontWheel Parameter} \
                                                                     ]
-                                                          rattleCAD::gui::object_CursorBinding     $cv_Name    $my_Rim
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $my_Rim
                                     }
                             }
                     RearWheel_Rep    {
@@ -539,7 +539,7 @@
                                                                     {   FrameTubes(HeadTube/Diameter)    \
                                                                     }  {HeadTube Parameter}
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $HeadTube(object)
+                                      rattleCAD::view::gui::object_CursorBinding    $cv_Name    $HeadTube(object)
                 }
 
             # --- create DownTube --------------------
@@ -553,7 +553,7 @@
                                                                         FrameTubes(DownTube/TaperLength) \
                                                                     }  {DownTube Parameter}
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $DownTube(object)
+                                      rattleCAD::view::gui::object_CursorBinding    $cv_Name    $DownTube(object)
                 }
 
             # --- create SeatTube --------------------
@@ -568,7 +568,7 @@
                                                                         FrameTubes(SeatTube/TaperLength)  \
                                                                     }  {SeatTube Parameter}
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $SeatTube(object)
+                                      rattleCAD::view::gui::object_CursorBinding    $cv_Name    $SeatTube(object)
                 }
 
             # --- create TopTube ---------------------
@@ -583,7 +583,7 @@
                                                                         Custom(TopTube/Angle)        \
                                                                     }  {TopTube Parameter}
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $TopTube(object)
+                                      rattleCAD::view::gui::object_CursorBinding    $cv_Name    $TopTube(object)
                 }
 
             # --- create Rear Dropout ----------------
@@ -618,7 +618,7 @@
                                                                         Lugs(RearDropOut/ChainStay/Offset)  \
                                                                     }  {ChainStay Parameter}
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $ChainStay(object)
+                                      rattleCAD::view::gui::object_CursorBinding    $cv_Name    $ChainStay(object)
                 }
 
             # --- create SeatStay --------------------
@@ -636,7 +636,7 @@
                                                                         Lugs(RearDropOut/SeatStay/Offset)   \
                                                                     }  {SeatStay Parameter}
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding    $cv_Name    $SeatStay(object)
+                                      rattleCAD::view::gui::object_CursorBinding    $cv_Name    $SeatStay(object)
                 }
                 
             # --- Rear Dropout in front of Chain- and SeatStay 
@@ -659,7 +659,7 @@
                                                     Lugs(RearDropOut/ChainStay/Offset)  \
                                                 }  {RearDropout Parameter} \
                                     ]
-                  rattleCAD::gui::object_CursorBinding     $cv_Name    $RearDropout(object)
+                  rattleCAD::view::gui::object_CursorBinding     $cv_Name    $RearDropout(object)
                 }                
                 
                 
@@ -679,7 +679,7 @@
                                                                         Lugs(BottomBracket/Diameter/inside))   \
                                                                     }  {BottomBracket Diameter}
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $BottomBracket(object)
+                                      rattleCAD::view::gui::object_CursorBinding     $cv_Name    $BottomBracket(object)
                 }
     }
 
@@ -895,7 +895,7 @@
                                                                         Component(Fork/Blade/EndLength)    \
                                                                     }  {ForkBlade Parameter} \
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
+                                      rattleCAD::view::gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
                           }
                           default {}
                       }
@@ -905,7 +905,7 @@
                                                                     {   list://Rendering(Fork@SELECT_ForkType) \
                                                                     }  {ForkType Select} \
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
+                                      rattleCAD::view::gui::object_CursorBinding     $cv_Name    $ForkBlade(object)
                 }            default {}
         }                                                   
 
@@ -939,7 +939,7 @@
                                                     ]
                                   }
                         }
-                        rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
+                        rattleCAD::view::gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
                         
                 }      
             selectable {            $cv_Name bind $ForkCrown(object)  <Double-ButtonPress-1> \
@@ -947,7 +947,7 @@
                                                                     {   list://Rendering(Fork@SELECT_ForkType) \
                                                                     }  {ForkType Select} \
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
+                                      rattleCAD::view::gui::object_CursorBinding     $cv_Name    $ForkCrown(object)
                 }
             default {}
         }
@@ -968,7 +968,7 @@
                                                                         Component(Fork/DropOut/OffsetPerp) \
                                                                     }  {ForkDropout Parameter} \
                                                     ]
-                                      rattleCAD::gui::object_CursorBinding     $cv_Name    $ForkDropout(object)
+                                      rattleCAD::view::gui::object_CursorBinding     $cv_Name    $ForkDropout(object)
                        }
                 }
             default {}
@@ -1240,7 +1240,7 @@
             
                     # --- bindings -----------
             foreach item {steerer fork bottombracket} {
-                rattleCAD::gui::object_CursorBinding     $cv_Name    $item 
+                rattleCAD::view::gui::object_CursorBinding     $cv_Name    $item 
             }
             
             $cv_Name bind  steerer        <Double-ButtonPress-1>  \
