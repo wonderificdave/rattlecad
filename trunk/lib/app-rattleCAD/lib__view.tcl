@@ -429,10 +429,17 @@ namespace eval rattleCAD::view {
             #
             # --- create listBox content ---
         switch -exact $type {
-                {SELECT_File} { puts "     createEdit::create_ListEdit::SELECT_File:"}
-                default       { puts "     currentValue: $currentValue" }
+                {SELECT_File} { 
+                        puts "     createEdit::create_ListEdit::SELECT_File:"
+                        set listBoxContent [rattleCAD::control::get_listBoxContent  $type $key]
+                          # set listBoxContent [ get_listBoxContent $type $key]
+                    }
+                default { 
+                        puts "     currentValue: $currentValue" 
+                        set listBoxContent [rattleCAD::control::get_listBoxContent  $type $key]
+                    }
         }
-        set listBoxContent [ get_listBoxContent $type $key]
+          # set listBoxContent [ get_listBoxContent $type $key]
         foreach entry $listBoxContent {
             puts "         ... $entry"
         }
@@ -516,22 +523,7 @@ namespace eval rattleCAD::view {
         set ::$textVar [format "%.3f" $newValue]
     }
 
-    proc get_listBoxContent {type {key {}}} {      
-        set listBoxContent {}
-        switch -exact $type {
-            {SELECT_File} {             set listBoxContent [rattleCAD::file::get_componentAlternatives  $key] }
-            {SELECT_Rim} {              set listBoxContent $::APPL_Config(list_Rims) }
-            {SELECT_ForkType} {         set listBoxContent $::APPL_Config(list_ForkTypes) }
-            {SELECT_ForkBladeType} {    set listBoxContent $::APPL_Config(list_ForkBladeTypes) }
-            {SELECT_DropOutDirection} { set listBoxContent $::APPL_Config(list_DropOutDirections) }
-            {SELECT_DropOutPosition} {  set listBoxContent $::APPL_Config(list_DropOutPositions) }
-            {SELECT_ChainStay} {        set listBoxContent $::APPL_Config(list_ChainStay) }
-            {SELECT_BrakeType} {        set listBoxContent $::APPL_Config(list_BrakeTypes) }
-            {SELECT_BottleCage} {       set listBoxContent $::APPL_Config(list_BottleCage) }
-            {SELECT_Binary_OnOff} {     set listBoxContent $::APPL_Config(list_Binary_OnOff) }
-        }
-        return $listBoxContent
-    } 
+ 
        #  createEdit - sub procedures
     #-------------------------------------------------------------------------
            

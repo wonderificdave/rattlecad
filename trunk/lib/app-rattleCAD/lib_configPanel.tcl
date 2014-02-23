@@ -356,11 +356,13 @@
             ttk::labelframe $menueFrame.sf.lf_04        -text "Wheels"
                 pack $menueFrame.sf.lf_04               -side top  -fill x  -pady 2
 
-                    create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Rear/RimDiameter)     $::APPL_Config(list_Rims)
+                    create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Rear/RimDiameter)    $rattleCAD::model::valueRegistry(Rim)
                     create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Rear/TyreHeight)     0.20
-                    create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)  $::APPL_Config(list_Rims)
-                    create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Front/TyreHeight)     0.20
-
+                    create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)   $rattleCAD::model::valueRegistry(Rim)
+                    create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Front/TyreHeight)    0.20
+                      # create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Rear/RimDiameter)    $::APPL_Config(list_Rims)
+                      # create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)   $::APPL_Config(list_Rims)
+          
     }
     #-------------------------------------------------------------------------
        #  add content 02
@@ -422,7 +424,7 @@
                                 label $fileFrame.lb -text "  Select ForkType:"
                                     # puts "\n  \$fileFrame $fileFrame  \$xPath $xPath\n"
                                     # puts "     SELECT_ForkType"
-                                set listBoxContent [ rattleCAD::view::get_listBoxContent SELECT_ForkType Rendering(Fork))]
+                                set listBoxContent [ rattleCAD::control::get_listBoxContent SELECT_ForkType Rendering(Fork))]
                                 foreach entry $listBoxContent {
                                     puts "         ... $entry"
                                 }
@@ -585,6 +587,14 @@
                                 {BottleCage DT}     Rendering BottleCage/DownTube       list_BottleCage \
                                 {BottleCage DT L}   Rendering BottleCage/DownTube_Lower list_BottleCage \
                             }
+                set entryList { {Fork Type}         Rendering Fork                      Fork  \
+                                {Fork Blade Type}   Rendering ForkBlade                 ForkBlade  \
+                                {Brake Type Front}  Rendering Brake/Front               Brake \
+                                {Brake Type Rear}   Rendering Brake/Rear                Brake \
+                                {BottleCage ST}     Rendering BottleCage/SeatTube       BottleCage \
+                                {BottleCage DT}     Rendering BottleCage/DownTube       BottleCage \
+                                {BottleCage DT L}   Rendering BottleCage/DownTube_Lower BottleCage \
+                            }
                     set i 10
                 foreach {label _array _name listName} $entryList {
                         set xPath [format "%s/%s" $_array $_name]
@@ -600,6 +610,8 @@
                         
 						  # ttk::combobox $optionFrame.cb -textvariable [namespace current]::configValue($xPath)
 						ttk::combobox $optionFrame.cb -textvariable $textvariable \
+                             -values $rattleCAD::model::valueRegistry($listName)        -width 30
+                          # ttk::combobox $optionFrame.cb -textvariable $textvariable \
                              -values $::APPL_Config($listName)        -width 30
 
                         bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] select]

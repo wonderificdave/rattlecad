@@ -292,8 +292,6 @@
                 puts ""
                 puts "         ... file:       [rattleCAD::control::getSession  projectFile]"
 			    puts "           ... saved:    [rattleCAD::control::getSession  projectSave]"
-			      # puts "         ... file:       $::APPL_Config(PROJECT_File)"
-                  # puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
                 puts "           ... modified: $changeIndex"
                 puts "                     ... $rattleCAD::control::model_Update"
                 puts ""
@@ -305,7 +303,6 @@
                 
                 puts " ......... save File before exit"
                 puts "        project save:   [rattleCAD::control::getSession  projectSave]"
-                  # puts "        project save:   $::APPL_Config(PROJECT_Save)"
                 puts "        project change: $rattleCAD::control::model_Update"
 
                 set decission [tk_messageBox  -type $type \
@@ -648,17 +645,13 @@
                               
                               # rattleCAD::file::saveProject_xml
                               # puts "    \$APPL_Config(PROJECT_File):         Template Road"
-                              # puts "    \$APPL_Config(PROJECT_File):      -> $::APPL_Config(PROJECT_File)"
                               # puts "    \$APPL_Config(TemplateInit):      -> $::APPL_Config(TemplateInit)"
                               
                             # --- get project file 
-                          # if {[file exists $::APPL_Config(PROJECT_File)] == 1} {}
                         if {[file exists [rattleCAD::control::getSession  projectFile]] == 1} {
                               # file exists
                             puts "             ... [rattleCAD::control::getSession  projectFile]"
-                              # puts "             ... $::APPL_Config(PROJECT_File)"
 							set sourceFile  [rattleCAD::control::getSession  projectFile]
-                              # set sourceFile  $::APPL_Config(PROJECT_File)
                         } else {
                               # file does not exists
                             puts "             ... $::APPL_Config(TemplateInit)"

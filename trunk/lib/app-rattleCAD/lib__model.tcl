@@ -42,10 +42,15 @@ namespace eval rattleCAD::model {
 
 	variable  modelDICT         {} ;# a dictionary
     variable  modelDOM          {} ;# a XML-Object
-    
+      # ----------------- #	    
     variable  modelUpdate       {0}
-	
-	
+      # ----------------- #	
+    variable  compRegistry 
+    array set compRegistry       {}
+      # ----------------- #	
+    variable  valueRegistry 
+    array set valueRegistry      {}
+
 	
     proc updateModel {} {
 		variable modelDICT
@@ -297,7 +302,120 @@ namespace eval rattleCAD::model {
     }
 
 
-	
+	#-------------------------------------------------------------------------
+        #  return all geometry-values to create specified tube in absolute position
+    proc init_ListBoxValues {root_InitDOM} {    
+            #
+        variable valueRegistry
+            #
+        set optionNode    [$root_InitDOM selectNodes /root/Options]
+        foreach childNode [$optionNode childNodes ] {
+            if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                  # puts "    init_ListBoxValues -> $childNode"
+                set childNode_Name [$childNode nodeName]
+                  # puts "    init_ListBoxValues -> $childNode_Name"
+                set valueRegistry($childNode_Name) {}
+                foreach child_childNode [$childNode childNodes ] {
+                    if {[$child_childNode nodeType] == {ELEMENT_NODE}} {
+                          # puts "    ->$childNode_Name<"
+                        if {$childNode_Name == {Rim}} {puts "   -> is Rim"}
+                        switch -exact -- $childNode_Name {
+                            {Rim} {
+                                      # puts "    init_ListBoxValues (Rim) ->   $childNode_Name -> [$child_childNode nodeName]"
+                                    set value_01 [$child_childNode getAttribute inch     {}]
+                                    set value_02 [$child_childNode getAttribute metric   {}]
+                                    set value_03 [$child_childNode getAttribute standard {}]
+                                    if {$value_01 == {}} {
+                                        set value {-----------------}
+                                    } else {
+                                        set value [format "%s ; %s %s" $value_02 $value_01 $value_03]
+                                        puts "   -> $value   <-> $value_02 $value_01 $value_03"
+                                    }
+                                    lappend valueRegistry($childNode_Name)  $value
+                                }
+                            default {
+                                    puts "    init_ListBoxValues (default) -> $childNode_Name -> [$child_childNode nodeName]"
+                                    if {[string index [$child_childNode nodeName] 0 ] == {_}} continue
+                                    lappend valueRegistry($childNode_Name)  [$child_childNode nodeName]
+                                }
+                        }
+                    }
+                }
+            }
+        }
+          #
+        # puts "---"  
+          #
+        set forkNode    [$root_InitDOM selectNodes /root/Fork]
+        set childNode_Name   [$forkNode nodeName]
+        set valueRegistry($childNode_Name) {}
+        foreach child_childNode [$forkNode childNodes ] {
+            if {[$childNode nodeType] == {ELEMENT_NODE}} {            
+                          # puts "    init_ListBoxValues -> $childNode_Name -> [$child_childNode nodeName]"
+                        if {[string index [$child_childNode nodeName] 0 ] == {_}} continue
+                        lappend valueRegistry($childNode_Name)  [$child_childNode nodeName]
+            }
+        }
+          #
+          
+          # 
+          # exit          
+        # parray valueRegistry
+          # exit
+          #
+        return
+          #
+    }    
+
+    
+    proc get_ListBoxValues {key} {
+            #
+        variable valueRegistry
+            #
+        set returnValue [set valueRegistry($key)]
+          #
+        foreach value $returnValue {
+            puts "   -> get_ListBoxValues: $value"
+        }
+          #
+        return $returnValue
+          #        
+    }
+
+    proc get_ComponentList {key} {
+          #
+        variable compRegistry 
+          #
+        puts "      ...   get_ComponentList $key"
+          #
+        set compList [rattleCAD::file::get_componentAlternatives  $key]
+        return $compList
+          #
+          
+          
+          #
+        foreach listEntry $compList {
+              # puts "         ... $listEntry"
+            foreach {domain reference} [split $listEntry :] break 
+            set referenceDirName   [file dirname  $reference]
+            set referenceFileName  [file tail     $reference]
+              # puts "           ... $domain  $reference    -> $referenceDirName / $referenceFileName"
+            set myKey       [format "%s:%s  ... %s" $domain $referenceFileName $referenceDirName]
+            set compRegistry($myKey) $listEntry
+            lappend refList [list $myKey  $listEntry]
+            lappend myList  $myKey
+        }
+        set listBoxContent $myList
+        foreach listEntry $refList {
+            puts "         ... $listEntry"
+        }
+        parray compRegistry
+          #        
+
+          #
+        return $myList
+          #
+    }	
 	
 
 
