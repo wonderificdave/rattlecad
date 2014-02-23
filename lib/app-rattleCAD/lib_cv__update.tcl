@@ -50,7 +50,7 @@
 
 
         switch $cv_Name {
-            rattleCAD::gui::cv_Custom02 {
+            rattleCAD::view::gui::cv_Custom02 {
                         #
                         # -- get reference
                         #
@@ -99,7 +99,7 @@
                         # createWaterMark             $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #                      
                 }
-            rattleCAD::gui::cv_Custom00 {
+            rattleCAD::view::gui::cv_Custom00 {
                         #
                         # -- base geometry
                         #
@@ -128,7 +128,7 @@
                         # createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
-            rattleCAD::gui::cv_Custom10 {
+            rattleCAD::view::gui::cv_Custom10 {
                         #
                         # -- frame - details
                         #
@@ -186,10 +186,10 @@
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                         #
-                    rattleCAD::gui::notebook_createButton    $cv_Name        TubingCheckAngles
+                    rattleCAD::view::gui::notebook_createButton    $cv_Name        TubingCheckAngles
                         #
                 }
-            rattleCAD::gui::cv_Custom20 {
+            rattleCAD::view::gui::cv_Custom20 {
                         #
                         # -- rear - mockup
                         #
@@ -210,10 +210,10 @@
                         #
                     update_renderCanvas               $cv_Name
                         #    
-                    rattleCAD::gui::notebook_createButton    $cv_Name         {changeFormatScale}
+                    rattleCAD::view::gui::notebook_createButton    $cv_Name         {changeFormatScale}
                         #
                 }
-                rattleCAD::gui::cv_Custom30 {
+                rattleCAD::view::gui::cv_Custom30 {
                         #
                         # -- dimension summary
                         #
@@ -273,10 +273,10 @@
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                         # createWaterMark             $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
-                    rattleCAD::gui::notebook_createButton    $cv_Name        changeFormatScale   format
+                    rattleCAD::view::gui::notebook_createButton    $cv_Name        changeFormatScale   format
                         #
                 }
-			rattleCAD::gui::cv_Custom40 {
+			rattleCAD::view::gui::cv_Custom40 {
                         #
                         # -- frame - drafting
                         #
@@ -313,10 +313,10 @@
                         #
                     update_renderCanvas               $cv_Name         wheat
                         #
-                    rattleCAD::gui::notebook_createButton    $cv_Name        changeFormatScale
+                    rattleCAD::view::gui::notebook_createButton    $cv_Name        changeFormatScale
                         #
                 }
-            rattleCAD::gui::cv_Custom50 {
+            rattleCAD::view::gui::cv_Custom50 {
                         #
                         # -- assembly
                         #
@@ -351,10 +351,10 @@
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                         #
-                    rattleCAD::gui::notebook_createButton    $cv_Name        changeRendering
+                    rattleCAD::view::gui::notebook_createButton    $cv_Name        changeRendering
                         #   
                 }
-            rattleCAD::gui::cv_Custom60 {
+            rattleCAD::view::gui::cv_Custom60 {
                         #
                         # -- tubemiter
                         #
@@ -380,7 +380,7 @@
                         # createWaterMark             $cv_Name $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
-            rattleCAD::gui::cv_Custom70 {
+            rattleCAD::view::gui::cv_Custom70 {
                         #
                         # -- drafting - framejig
                         #
@@ -403,10 +403,10 @@
                         #
                     update_renderCanvas               $cv_Name        wheat
                         #
-                    rattleCAD::gui::notebook_createButton    $cv_Name        {changeFormatScale changeFrameJigVariant}
+                    rattleCAD::view::gui::notebook_createButton    $cv_Name        {changeFormatScale changeFrameJigVariant}
                         #
                 }
-            rattleCAD::gui::cv_Custom99 {
+            rattleCAD::view::gui::cv_Custom99 {
                         #
                         # -- component in ConfigPanel
                         #

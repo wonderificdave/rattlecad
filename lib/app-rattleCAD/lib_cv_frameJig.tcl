@@ -462,7 +462,7 @@
                                             
                 # puts "  -> $cv_Name"
             switch -exact $cv_Name {
-                rattleCAD::gui::cv_Custom70 {    
+                rattleCAD::view::gui::cv_Custom70 {    
                         #    set help_fk             [ vectormath::intersectPoint                $Steerer(Fork)        $Steerer(Stem)   $FrontWheel(Position) $RearWheel(Position) ]
 
                         set index 0

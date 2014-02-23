@@ -38,7 +38,7 @@
  # 
  
  
- namespace eval rattleCAD::gui {
+ namespace eval rattleCAD::view::gui {
 
     variable    canvasGeometry ;   array    set canvasGeometry {}
     variable    notebookCanvas ;   array    set notebookCanvas {}
@@ -65,10 +65,10 @@
             
         set mainframe_Menue {
             "&File"   all file 0 {
-                {command "&New"             {}  "New Project File"      {Ctrl n}      -command { rattleCAD::file::newProject_xml } }
-                {command "&Open"            {}  "0pen Project File"     {Ctrl o}      -command { rattleCAD::file::openProject_xml } }
-                {command "&Save"            {}  "Save Project File"     {Ctrl s}      -command { rattleCAD::file::saveProject_xml } }
-                {command "Save &As ..."     {}  "Save Project File As"  {CtrlAlt s}   -command { rattleCAD::file::saveProject_xml saveAs} }
+                {command "&New"             {}  "New Project File"      {Ctrl n}      -command { rattleCAD::model::file::newProject_xml } }
+                {command "&Open"            {}  "0pen Project File"     {Ctrl o}      -command { rattleCAD::model::file::openProject_xml } }
+                {command "&Save"            {}  "Save Project File"     {Ctrl s}      -command { rattleCAD::model::file::saveProject_xml } }
+                {command "Save &As ..."     {}  "Save Project File As"  {CtrlAlt s}   -command { rattleCAD::model::file::saveProject_xml saveAs} }
                 
                 {separator}
                 
@@ -77,12 +77,12 @@
                 
                 {separator}
                 
-                {command "&Copy Reference"  {}  "Copy Reference"       {Ctrl r}     -command { rattleCAD::gui::notebook_switchTab  cv_Custom02} }
+                {command "&Copy Reference"  {}  "Copy Reference"       {Ctrl r}     -command { rattleCAD::view::gui::notebook_switchTab  cv_Custom02} }
                 
                 {separator}
                 
-                {command "Impo&rt"          {}  "import Parameter"      {Ctrl i}      -command { rattleCAD::file::openProject_Subset_xml } }
-                {command "&Rendering"       {}  "Rendering Settings"    {}            -command { rattleCAD::gui::change_Rendering } }
+                {command "Impo&rt"          {}  "import Parameter"      {Ctrl i}      -command { rattleCAD::model::file::openProject_Subset_xml } }
+                {command "&Rendering"       {}  "Rendering Settings"    {}            -command { rattleCAD::view::gui::change_Rendering } }
                         
                 {separator}
                         
@@ -90,8 +90,8 @@
                 
                 {separator}
                 
-                {command "&SVG-Component"   {}  "open simplify_SVG"     {}            -command { rattleCAD::tool::start_simplifySVG } }
-                {command "&SVG-ChainWheel"  {}  "open chainWheel_SVG"   {}            -command { rattleCAD::tool::start_chainWheelSVG } }
+                {command "&SVG-Component"   {}  "open simplify_SVG"     {}            -command { rattleCAD::control::tool::start_simplifySVG } }
+                {command "&SVG-ChainWheel"  {}  "open chainWheel_SVG"   {}            -command { rattleCAD::control::tool::start_chainWheelSVG } }
                                 
                 {separator}
                         
@@ -99,14 +99,14 @@
                                                                                                                                                             
                 {separator}
                         
-                {command "E&xit"            {}  "Exit rattle_CAD"       {Ctrl x}      -command { rattleCAD::gui::exit_rattleCAD } }
+                {command "E&xit"            {}  "Exit rattle_CAD"       {Ctrl x}      -command { rattleCAD::view::gui::exit_rattleCAD } }
             }
             "Export"   all info 0 {
-                {command "&Export PDF"      {}  "Export PDF-Report"     {Ctrl p}      -command { rattleCAD::gui::export_Project      pdf} }
-                {command "&Export HTML"     {}  "Export HTML-Report"    {Ctrl t}      -command { rattleCAD::gui::export_Project      html} }
-                {command "&Export SVG"      {}  "Export to SVG"         {}            -command { rattleCAD::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
-                {command "&Export DXF"      {}  "Export to DXF"         {}            -command { rattleCAD::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
-                {command "&Export PS"       {}  "Export to PostScript"  {}            -command { rattleCAD::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
+                {command "&Export PDF"      {}  "Export PDF-Report"     {Ctrl p}      -command { rattleCAD::view::gui::export_Project      pdf} }
+                {command "&Export HTML"     {}  "Export HTML-Report"    {Ctrl t}      -command { rattleCAD::view::gui::export_Project      html} }
+                {command "&Export SVG"      {}  "Export to SVG"         {}            -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
+                {command "&Export DXF"      {}  "Export to DXF"         {}            -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
+                {command "&Export PS"       {}  "Export to PostScript"  {}            -command { rattleCAD::view::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
             }
             "Demo"   all info 0 {
                 {command "Samples"          {}  "Example Projects"      {}            -command { rattleCAD::test:::runDemo loopSamples } }
@@ -122,10 +122,10 @@
                 {command "&Info"            {}  "Information"           {Ctrl w}      -command { rattleCAD::version_info::create  .v_info 0} }
                 {command "&Help"            {}  "Help"                  {Ctrl h}      -command { rattleCAD::version_info::create  .v_info 1} }
                 {separator}
-                {command "rattleCAD WebSite"      {}  "about rattleCAD"       {}      -command { rattleCAD::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
-                {command "rattleCAD Features"     {}  "rattleCAD Features"    {}      -command { rattleCAD::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
-                {command "project @ sourceforge"  {}  "sourceforge.net"       {}      -command { rattleCAD::file::open_URL {http://sourceforge.net/projects/rattlecad} } }
-                {command "like rattleCAD"         {}  "donate"                {}      -command { rattleCAD::file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
+                {command "rattleCAD WebSite"      {}  "about rattleCAD"       {}      -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
+                {command "rattleCAD Features"     {}  "rattleCAD Features"    {}      -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
+                {command "project @ sourceforge"  {}  "sourceforge.net"       {}      -command { rattleCAD::model::file::open_URL {http://sourceforge.net/projects/rattlecad} } }
+                {command "like rattleCAD"         {}  "donate"                {}      -command { rattleCAD::model::file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
             }
         }
         
@@ -139,31 +139,31 @@
     proc create_ButtonBar {tb_frame } {    
             variable iconArray
 		
-            Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { rattleCAD::file::openProject_xml }  
-            Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { rattleCAD::file::saveProject_xml } 
+            Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { rattleCAD::model::file::openProject_xml }  
+            Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { rattleCAD::model::file::saveProject_xml } 
             
             Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::control::changeList::previous }          
             Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::control::changeList::next }          
             
             Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { rattleCAD::view::updateView force}  
-            Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { rattleCAD::gui::notebook_cleanCanvas} 
+            Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { rattleCAD::view::gui::notebook_cleanCanvas} 
               
-            Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { rattleCAD::gui::load_Template  Road }  
-            Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { rattleCAD::gui::load_Template  MTB  }  
+            Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { rattleCAD::view::gui::load_Template  Road }  
+            Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { rattleCAD::view::gui::load_Template  MTB  }  
             
-            Button    $tb_frame.print_htm -image  $iconArray(print_html)    -helptext "export HTML"             -command { rattleCAD::gui::export_Project      html }          
-            Button    $tb_frame.print_pdf -image  $iconArray(print_pdf)     -helptext "export PDF"              -command { rattleCAD::gui::export_Project      pdf }          
+            Button    $tb_frame.print_htm -image  $iconArray(print_html)    -helptext "export HTML"             -command { rattleCAD::view::gui::export_Project      html }          
+            Button    $tb_frame.print_pdf -image  $iconArray(print_pdf)     -helptext "export PDF"              -command { rattleCAD::view::gui::export_Project      pdf }          
 
-            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { rattleCAD::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) }          
-            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { rattleCAD::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
-            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { rattleCAD::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { rattleCAD::view::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
+            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
             
-            Button    $tb_frame.scale_p  -image  $iconArray(scale_p)        -helptext "scale plus"              -command { rattleCAD::gui::notebook_scaleCanvas  [expr 3.0/2] }  
-            Button    $tb_frame.scale_m  -image  $iconArray(scale_m)        -helptext "scale minus"             -command { rattleCAD::gui::notebook_scaleCanvas  [expr 2.0/3] }  
-            Button    $tb_frame.resize   -image  $iconArray(resize)         -helptext "resize"                  -command { rattleCAD::gui::notebook_refitCanvas }  
+            Button    $tb_frame.scale_p  -image  $iconArray(scale_p)        -helptext "scale plus"              -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 3.0/2] }  
+            Button    $tb_frame.scale_m  -image  $iconArray(scale_m)        -helptext "scale minus"             -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 2.0/3] }  
+            Button    $tb_frame.resize   -image  $iconArray(resize)         -helptext "resize"                  -command { rattleCAD::view::gui::notebook_refitCanvas }  
             
             Button    $tb_frame.cfg      -image  $iconArray(cfg_panel)      -helptext "open config Panel"       -command { rattleCAD::configPanel::create } 
-            Button    $tb_frame.exit     -image  $iconArray(exit)                                               -command { rattleCAD::gui::exit_rattleCAD }
+            Button    $tb_frame.exit     -image  $iconArray(exit)                                               -command { rattleCAD::view::gui::exit_rattleCAD }
               
             label   $tb_frame.sp0      -text   " "
             label   $tb_frame.sp1      -text   " "
@@ -212,16 +212,16 @@
             set noteBook_top     [ ttk::notebook $frame.nb -width $canvasGeometry(width)    -height $canvasGeometry(height) ]                
                 pack $noteBook_top -expand yes  -fill both  
             
-                # ---     create and register any canvasCAD - canvas in rattleCAD::gui::notebookCanvas
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Copy Reference "      A4  0.2  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom10  "  Frame Details  "      A4  0.2  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom20  "  ChainStay Details  "  A2  1.0  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom30  "  Summary   "           A4  0.2  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom40  "  Frame Drafting  "     A4  0.2  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom50  "  Mockup  "             A4  0.2  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom60  "  Tube Miter  "         A3  1.0  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom70  "  Frame - Jig  "        A4  0.2  25  -bd 2  -bg white  -relief sunken
+                # ---     create and register any canvasCAD - canvas in rattleCAD::view::gui::notebookCanvas
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Copy Reference "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom10  "  Frame Details  "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom20  "  ChainStay Details  "  A2  1.0  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom30  "  Summary   "           A4  0.2  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom40  "  Frame Drafting  "     A4  0.2  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom50  "  Mockup  "             A4  0.2  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom60  "  Tube Miter  "         A3  1.0  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom70  "  Frame - Jig  "        A4  0.2  25  -bd 2  -bg white  -relief sunken
             
             $noteBook_top add   [frame $noteBook_top.components]     -text "... Components" 
             $noteBook_top add   [frame $noteBook_top.report]         -text "... info" 
@@ -229,7 +229,7 @@
             $noteBook_top hide  0 ; # hide per default: cv_Custom02  "  Copy Concept   "
             
                 # ---     modify dimension precision in Frame Drafting ; updates current and default precision
-            #rattleCAD::gui::cv_Custom40 setPrecision 2 force
+            #rattleCAD::view::gui::cv_Custom40 setPrecision 2 force
                 
                 
                 # ---     fill with Report Widgets
@@ -241,7 +241,7 @@
 
                 # ---     bind event to update Tab on selection
             bind $noteBook_top <<NotebookTabChanged>> {rattleCAD::view::updateView}
-              # bind $noteBook_top <<NotebookTabChanged>> {rattleCAD::gui::notebook_updateCanvas}
+              # bind $noteBook_top <<NotebookTabChanged>> {rattleCAD::view::gui::notebook_updateCanvas}
 
                 # ---     bind event Control-Tab and Shift-Control-Tab
             ttk::notebook::enableTraversal $noteBook_top
@@ -262,12 +262,13 @@
         #  register notebookCanvas in notebook - Tabs   
         #
     proc create_canvasCAD {notebook varname title stageFormat stageScale stageBorder args} {
-            # rattleCAD::gui::create_canvasCAD  $noteBook_top  cv_Custom30  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
+            # rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom30  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
         variable canvasGeometry
         variable notebookCanvas
         
         set notebookCanvas($varname)   $notebook.$varname.cvCAD
-
+            # puts "    ... create_canvasCAD: $notebookCanvas($varname)"
+            
             # ---     add frame containing canvasCAD
         $notebook add [ frame $notebook.$varname ] -text $title 
         
@@ -316,7 +317,7 @@
                     {yes}     { 
                                 # even if saved or not, because of handling of bind of <Destroy>
                                 puts "        ... save current project\n"
-                                rattleCAD::file::saveProject_xml }
+                                rattleCAD::model::file::saveProject_xml }
                     {no}      {
                                 # even if saved or not, because of handling of bind of <Destroy>
                                 puts "        ... exit rattleCAD withoud saving current project\n"
@@ -355,7 +356,7 @@
             variable noteBook_top        
             set current_cv [$noteBook_top select]
                 # puts "        current canvasCAD: $current_cv"
-            set varName "rattleCAD::gui::[lindex [split $current_cv .] end]"
+            set varName "rattleCAD::view::gui::[lindex [split $current_cv .] end]"
                 # puts "        -> $varName"
             return $varName
     }
@@ -365,9 +366,9 @@
     proc select_canvasCAD {cv} {
             variable noteBook_top        
             
-                # puts " ... select_canvasCAD $cv"
+                puts " ... <D>  select_canvasCAD $cv"
             
-            set cvID    [format "rattleCAD::gui::%s" $cv]
+            set cvID    [format "rattleCAD::view::gui::%s" $cv]
             set cvPath  [$cvID getNodeAttr Canvas path]
             set noteBook   [winfo parent [winfo parent $cvPath]] 
                  puts "         $noteBook"
@@ -408,17 +409,17 @@
                 cv_Custom60 -
                 cv_Custom70 {
                         $noteBook_top select $noteBook_top.$varName
-                        rattleCAD::cv_custom::updateView     rattleCAD::gui::$varName 
-                        # rattleCAD::gui::notebook_refitCanvas
+                        rattleCAD::cv_custom::updateView     rattleCAD::view::gui::$varName 
+                        # rattleCAD::view::gui::notebook_refitCanvas
                     }
                 cv_Component {
                         ::update
-                        rattleCAD::gui::notebook_refitCanvas
+                        rattleCAD::view::gui::notebook_refitCanvas
                         rattleCAD::comp_library::updateCanvas
                     }
                 __cv_Library {
                         # ::update
-                        # rattleCAD::gui::notebook_refitCanvas
+                        # rattleCAD::view::gui::notebook_refitCanvas
                         # rattleCAD::configPanel::updateCanvas
 						puts " \n\n <D> in fill_canvasCAD:   __cv_Library  \n please give a response to the developers \n"
 						tk_messageBox -message " in fill_canvasCAD:   __cv_Library  \n please give a response to the developers"
@@ -470,7 +471,7 @@
             variable notebookCanvas
             variable external_canvasCAD
 
-                # -- rattleCAD::gui::notebookCanvas
+                # -- rattleCAD::view::gui::notebookCanvas
             set cvID $tabID.cvCAD
             foreach varName [array names notebookCanvas] {
                     # puts "          -> $varName $notebookCanvas($varName) "
@@ -478,7 +479,7 @@
                     return [namespace current]::$varName
                 }
             }
-                # -- rattleCAD::gui::external_canvasCAD
+                # -- rattleCAD::view::gui::external_canvasCAD
             foreach varName [array names external_canvasCAD] {
                      puts "          -> equal?: $varName  -> $external_canvasCAD($varName) "
                      puts "                 vs. $tabID   "
@@ -601,7 +602,8 @@
             set currentTab     [$noteBook_top select]
             set cv_Name        [notebook_getVarName $currentTab]           
               # set cv_ID          [lindex [string map {:: { }} $cv_Name] 1]
-            set cv_ID          [lindex [string map {:: { }} $cv_Name] 2]
+              # set cv_ID          [lindex [string map {:: { }} $cv_Name] 2] ... 3.4.01.40
+            set cv_ID          [lindex [string map {:: { }} $cv_Name] 3]
               # tk_messageBox -message " export_Project: $cv_Name / $cv_ID"
             puts "\n\n"
                   # puts "   export_Project::cv_Name: $cv_Name $cv_ID"
@@ -643,7 +645,7 @@
                         file copy -force [file join $::APPL_Config(CONFIG_Dir) html/style.css]      $::APPL_Config(EXPORT_HTML)
                         file copy -force [file join $::APPL_Config(CONFIG_Dir) html/rattleCAD.ico]  $::APPL_Config(EXPORT_HTML)
                               
-                              # rattleCAD::file::saveProject_xml
+                              # rattleCAD::model::file::saveProject_xml
                               # puts "    \$APPL_Config(PROJECT_File):         Template Road"
                               # puts "    \$APPL_Config(TemplateInit):      -> $::APPL_Config(TemplateInit)"
                               
@@ -664,7 +666,9 @@
                               # puts "[lsort [array names notebookCanvas]]"
                         foreach cadCanv [lsort [array names notebookCanvas]] {
                             if {$cadCanv == {cv_Custom02}} {continue}
-                              # puts "   -> $cadCanv"
+                                # tk_messageBox -message "   -> $cadCanv"
+                                # puts "  <D> -> $cadCanv"
+                                #  parray notebookCanvas
                             select_canvasCAD $cadCanv
                             update
                             notebook_exportSVG $exportDir noOpen
@@ -675,7 +679,7 @@
                         puts "    ------------------------------------------------"
                         puts "      ... open $indexHTML "
                         
-                        rattleCAD::file::open_localFile $indexHTML
+                        rattleCAD::model::file::open_localFile $indexHTML
                     }
                 
                 pdf {
@@ -696,7 +700,7 @@
                             $w raise {__Select__SubMenue__} all
                             update
                         }
-                        rattleCAD::file::create_summaryPDF $exportDir
+                        rattleCAD::model::file::create_summaryPDF $exportDir
                     }
 
                 default {}
@@ -762,7 +766,7 @@
                 puts ""
                 puts "      ... open $exportFile "
                 
-                rattleCAD::file::openFile_byExtension $exportFile 
+                rattleCAD::model::file::openFile_byExtension $exportFile 
             }
             puts "    ------------------------------------------------"
             puts "      ... open $exportFile "
@@ -807,11 +811,11 @@
                 puts ""
                 puts "      ... open $exportFile "
                 
-                rattleCAD::file::open_localFile $exportFile
+                rattleCAD::model::file::open_localFile $exportFile
             }
             
-                # rattleCAD::file::openFile_byExtension $exportFile
-                # rattleCAD::file::openFile_byExtension $exportFile .htm
+                # rattleCAD::model::file::openFile_byExtension $exportFile
+                # rattleCAD::model::file::openFile_byExtension $exportFile .htm
     }
 
 
@@ -851,10 +855,10 @@
                 puts ""
                 puts "      ... open $exportFile "
                 
-                rattleCAD::file::open_localFile $exportFile
+                rattleCAD::model::file::open_localFile $exportFile
             }            
-              # rattleCAD::file::open_localFile $exportFile
-              # rattleCAD::file::openFile_byExtension $exportFile .dxf
+              # rattleCAD::model::file::open_localFile $exportFile
+              # rattleCAD::model::file::openFile_byExtension $exportFile .dxf
     }
 
 
@@ -865,7 +869,7 @@
             
             puts "       notebook_createButton:  $cv_ButtonList"
             set cv_Name [lindex [split $nb_Canvas :] end]
-            set cv      [rattleCAD::gui::notebook_getWidget  $cv_Name]
+            set cv      [rattleCAD::view::gui::notebook_getWidget  $cv_Name]
             
             
                 # puts "  notebook_createButton $cv"
@@ -900,39 +904,39 @@
                                         set buttonText "Format & Scale"
                                     }
                                     # -- create a Button to change Format and Scale of Stage
-                                    $nb_Canvas configCorner [format {rattleCAD::gui::change_FormatScale %s %s %s %s} $cv $x_Position $y_Position $type ]
+                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FormatScale %s %s %s %s} $cv $x_Position $y_Position $type ]
                                 }
                         TubingCheckAngles {
                                     # -- create a Button to execute tubing_checkAngles
-                                    $nb_Canvas configCorner [format {rattleCAD::gui::tubing_checkAngles %s} $cv]                   
+                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::tubing_checkAngles %s} $cv]                   
                                 }
                         changeFrameJigVariant {
                                     # -- create a Button to set FrameJigVersion
-                                    $nb_Canvas configCorner [format {rattleCAD::gui::change_FrameJig %s %s %s} $cv $x_Position $y_Position ]
+                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameJig %s %s %s} $cv $x_Position $y_Position ]
                                 }
                         changeRendering {
                                     # -- create a Button to set Rendering: BottleCage, Fork, ...
-                                    $nb_Canvas configCorner [format {rattleCAD::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
+                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
                         }
                                 
                         rem_ChainStayRendering {
                                     # -- create a Button to set ChainStayRendering
-                                    $nb_Canvas configCorner [format {rattleCAD::gui::rendering_ChainStay %s} $cv]
+                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::rendering_ChainStay %s} $cv]
                                     
                                         # catch { destroy $cv.buttonFrame.button_CSR }
                                         # button  $cv.buttonFrame.button_CSR \
                                                 -text "switch: straight/bent/off" \
-                                                -command [format {rattleCAD::gui::rendering_ChainStay %s} $cv]                                
+                                                -command [format {rattleCAD::view::gui::rendering_ChainStay %s} $cv]                                
                                         # pack $cv.buttonFrame.button_CSR         -fill x
                                 }
                         rem_Reference2Custom {
                                     # -- create a Button to execute geometry_reference2personal
-                                    $nb_Canvas configCorner rattleCAD::gui::geometry_reference2personal
+                                    $nb_Canvas configCorner rattleCAD::view::gui::geometry_reference2personal
                                     
                                         # catch { destroy $cv.buttonFrame.button_R2C }
                                         # button  $cv.buttonFrame.button_R2C \
                                                 -text "copy settings to Base Geometry" \
-                                                -command rattleCAD::gui::geometry_reference2personal                                
+                                                -command rattleCAD::view::gui::geometry_reference2personal                                
                                         # pack $cv.buttonFrame.button_R2C         -fill x
                                 }
                 }
@@ -951,14 +955,7 @@
        #  update Personal Geometry with parameters of Reference Geometry 
        #
     proc tubing_checkAngles {cv {type {default}}} {
-        
-            if {$rattleCAD::gui::checkAngles != {on}} {
-                set rattleCAD::gui::checkAngles {on}
-            } else {
-                set rattleCAD::gui::checkAngles {off}         
-            }
-            rattleCAD::cv_custom::updateView [rattleCAD::gui::current_canvasCAD]
-            return
+            rattleCAD::view::check_TubingAngles
     }
 
 
@@ -972,8 +969,8 @@
                 # puts "  change_FormatScale:  cv: $cv"
                 # puts "  change_FormatScale:  cv_Name: $cv_Name"
             
-            set     rattleCAD::gui::stageFormat    A4
-            set     rattleCAD::gui::stageScale     0.20        
+            set     rattleCAD::view::gui::stageFormat    A4
+            set     rattleCAD::view::gui::stageScale     0.20        
             
             if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
                     catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
@@ -994,11 +991,11 @@
             
             
             set f_DIN_Format    [frame $baseFrame.select.din_Format]
-                    radiobutton $f_DIN_Format.a4 -text A4 -value A4    -variable rattleCAD::gui::stageFormat  -command {puts $rattleCAD::gui::stageFormat}
-                    radiobutton $f_DIN_Format.a3 -text A3 -value A3    -variable rattleCAD::gui::stageFormat  -command {puts $rattleCAD::gui::stageFormat}
-                    radiobutton $f_DIN_Format.a2 -text A2 -value A2    -variable rattleCAD::gui::stageFormat  -command {puts $rattleCAD::gui::stageFormat}
-                    radiobutton $f_DIN_Format.a1 -text A1 -value A1    -variable rattleCAD::gui::stageFormat  -command {puts $rattleCAD::gui::stageFormat}
-                    radiobutton $f_DIN_Format.a0 -text A0 -value A0    -variable rattleCAD::gui::stageFormat  -command {puts $rattleCAD::gui::stageFormat}
+                    radiobutton $f_DIN_Format.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
+                    radiobutton $f_DIN_Format.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
+                    radiobutton $f_DIN_Format.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
+                    radiobutton $f_DIN_Format.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
+                    radiobutton $f_DIN_Format.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
                 pack $f_DIN_Format.a4 \
                      $f_DIN_Format.a3 \
                      $f_DIN_Format.a2 \
@@ -1007,12 +1004,12 @@
             
             set f_Scale        [frame $baseFrame.select.scale]
             if {$type == {default}} {
-                    radiobutton $f_Scale.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::gui::stageScale -command {puts $rattleCAD::gui::stageScale}
-                    radiobutton $f_Scale.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::gui::stageScale -command {puts $rattleCAD::gui::stageScale}
-                    radiobutton $f_Scale.s033 -text "1:3  "     -value 0.33 -anchor w     -variable rattleCAD::gui::stageScale -command {puts $rattleCAD::gui::stageScale}
-                    radiobutton $f_Scale.s040 -text "1:2,5"     -value 0.40 -anchor w     -variable rattleCAD::gui::stageScale -command {puts $rattleCAD::gui::stageScale}
-                    radiobutton $f_Scale.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::gui::stageScale -command {puts $rattleCAD::gui::stageScale}
-                    radiobutton $f_Scale.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::gui::stageScale -command {puts $rattleCAD::gui::stageScale}
+                    radiobutton $f_Scale.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
+                    radiobutton $f_Scale.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
+                    radiobutton $f_Scale.s033 -text "1:3  "     -value 0.33 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
+                    radiobutton $f_Scale.s040 -text "1:2,5"     -value 0.40 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
+                    radiobutton $f_Scale.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
+                    radiobutton $f_Scale.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
                 pack $f_Scale.s020 \
                      $f_Scale.s025 \
                      $f_Scale.s040 \
@@ -1024,7 +1021,7 @@
             
             button  $baseFrame.update \
                         -text "update" \
-                        -command {rattleCAD::gui::notebook_formatCanvas  $rattleCAD::gui::stageFormat  $rattleCAD::gui::stageScale}
+                        -command {rattleCAD::view::gui::notebook_formatCanvas  $rattleCAD::view::gui::stageFormat  $rattleCAD::view::gui::stageScale}
             pack    $baseFrame.update -expand yes -fill x            
     }
 
@@ -1064,7 +1061,7 @@
             
             button  $baseFrame.update \
                         -text "update" \
-                        -command { rattleCAD::gui::updateFrameJig }
+                        -command { rattleCAD::view::gui::updateFrameJig }
 
             pack $baseFrame.update -expand yes -fill x            
     }
@@ -1083,7 +1080,7 @@
                 cancel    return                
                 ok        { frame_geometry_reference::export_parameter_2_geometry_custom  $rattleCAD::control::currentDOM
                             # frame_geometry_reference::export_parameter_2_geometry_custom  $::APPL_Config(root_ProjectDOM)
-                            rattleCAD::gui::fill_canvasCAD cv_Custom00 
+                            rattleCAD::view::gui::fill_canvasCAD cv_Custom00 
                           }
             }
     }
@@ -1190,7 +1187,7 @@
             variable canvasUpdate
             variable noteBook_top
 
-            rattleCAD::file::openTemplate_xml $type
+            rattleCAD::model::file::openTemplate_xml $type
             
             switch -exact $type {
                 Road { set ::APPL_Config(TemplateInit) $::APPL_Config(TemplateRoad_default) }
@@ -1207,21 +1204,21 @@
 
             # puts "\n   -----> keyboard binding \n -------------"
             bind . <F1>     {rattleCAD::version_info::create  .v_info 1}
-            bind . <F3>     {rattleCAD::gui::notebook_scaleCanvas  [expr 2.0/3]}
-            bind . <F4>     {rattleCAD::gui::notebook_scaleCanvas  [expr 3.0/2]}
-            bind . <F5>     {rattleCAD::gui::notebook_refitCanvas}
+            bind . <F3>     {rattleCAD::view::gui::notebook_scaleCanvas  [expr 2.0/3]}
+            bind . <F4>     {rattleCAD::view::gui::notebook_scaleCanvas  [expr 3.0/2]}
+            bind . <F5>     {rattleCAD::view::gui::notebook_refitCanvas}
             bind . <F6>     {rattleCAD::view::updateView           force}
             
-            bind . <Key-Up>     {rattleCAD::gui::move_Canvas    0  50 }
-            bind . <Key-Down>   {rattleCAD::gui::move_Canvas    0 -50 }
-            bind . <Key-Left>   {rattleCAD::gui::move_Canvas   50   0 }
-            bind . <Key-Right>  {rattleCAD::gui::move_Canvas  -50   0 }
+            bind . <Key-Up>     {rattleCAD::view::gui::move_Canvas    0  50 }
+            bind . <Key-Down>   {rattleCAD::view::gui::move_Canvas    0 -50 }
+            bind . <Key-Left>   {rattleCAD::view::gui::move_Canvas   50   0 }
+            bind . <Key-Right>  {rattleCAD::view::gui::move_Canvas  -50   0 }
             
-            bind . <MouseWheel>         {rattleCAD::gui::bind_MouseWheel updown    %D}  ;# move up/down
-            bind . <Shift-MouseWheel>   {rattleCAD::gui::bind_MouseWheel leftright %D}  ;# move left/right
-            bind . <Control-MouseWheel> {rattleCAD::gui::bind_MouseWheel scale     %D}  ;# scale
+            bind . <MouseWheel>         {rattleCAD::view::gui::bind_MouseWheel updown    %D}  ;# move up/down
+            bind . <Shift-MouseWheel>   {rattleCAD::view::gui::bind_MouseWheel leftright %D}  ;# move left/right
+            bind . <Control-MouseWheel> {rattleCAD::view::gui::bind_MouseWheel scale     %D}  ;# scale
             
-            # bind . <Key-Tab>    {rattleCAD::gui::notebook_nextTab}
+            # bind . <Key-Tab>    {rattleCAD::view::gui::notebook_nextTab}
             # bind . <Key-Tab>    {tk_messageBox -message "Keyboard Event: <Key-Tab>"}
             # bind . <F5>     { tk_messageBox -message "Keyboard Event: <F5>" }
     }
@@ -1289,13 +1286,13 @@
                 
             switch -exact $type {
                 updown { if {$value > 0} {set scale 1.0} else {set scale -1.0}
-                            rattleCAD::gui::move_Canvas    0  [expr $scale * 40] 
+                            rattleCAD::view::gui::move_Canvas    0  [expr $scale * 40] 
                         }
                 leftright {   if {$value > 0} {set scale 1.0} else {set scale -1.0}
-                            rattleCAD::gui::move_Canvas    [expr $scale * 40]  0 
+                            rattleCAD::view::gui::move_Canvas    [expr $scale * 40]  0 
                         }
                 scale {  if {$value > 0} {set scale 1.1} else {set scale 0.9}
-                            rattleCAD::gui::notebook_scaleCanvas $scale
+                            rattleCAD::view::gui::notebook_scaleCanvas $scale
                         }
                 default  {}
             }

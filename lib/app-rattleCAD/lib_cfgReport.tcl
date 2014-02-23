@@ -68,11 +68,11 @@
             -fill both     -side left
         pack configure $treeFrame    -expand yes
 
-        button  $menueFrame.open    -text {Open xml-File}                   -width 30   -command { rattleCAD::file::get_XMLContent {}    visualize}
+        button  $menueFrame.open    -text {Open xml-File}                   -width 30   -command { rattleCAD::model::file::get_XMLContent {}    visualize}
         button  $menueFrame.bt01    -text {canvasCAD}                       -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $canvasCAD::__packageRoot    }
         button  $menueFrame.bt02    -text {rattleCAD_init.xml}              -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $APPL_Config(root_InitDOM) }
-        button  $menueFrame.bt03    -text {Template Road}                   -width 30   -command { rattleCAD::file::get_XMLContent [rattleCAD::file::getTemplateFile Road]     visualize}
-        button  $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { rattleCAD::file::get_XMLContent [rattleCAD::file::getTemplateFile MTB ]     visualize}
+        button  $menueFrame.bt03    -text {Template Road}                   -width 30   -command { rattleCAD::model::file::get_XMLContent [rattleCAD::model::file::getTemplateFile Road]     visualize}
+        button  $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { rattleCAD::model::file::get_XMLContent [rattleCAD::model::file::getTemplateFile MTB ]     visualize}
 
 
         button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $bikeGeometry::domFrame    }
@@ -93,7 +93,7 @@
                 -side top
 
 
-            #    [rattleCAD::file::getTemplateFile    $::APPL_Config(TemplateType)]
+            #    [rattleCAD::model::file::getTemplateFile    $::APPL_Config(TemplateType)]
 
         set treeWidget  [ ttk::treeview $treeFrame.tree \
                                                     -columns "attr value" \

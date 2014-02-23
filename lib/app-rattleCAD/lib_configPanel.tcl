@@ -431,7 +431,7 @@
                             }
                             default {
                                 label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"
-                                set listBoxContent [rattleCAD::file::get_componentAlternatives  $xPath]
+                                set listBoxContent [rattleCAD::model::file::get_componentAlternatives  $xPath]
                             }
                         }
                         set textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
@@ -548,7 +548,7 @@
 
                         set fileFrame [frame $menueFrame.sf.lf_01.f_$i]
                         label $fileFrame.lb -text "  [join [lrange [lrange [split $xPath /] 1 end-1] end-1 end] {-}]:"
-                        set alternatives [rattleCAD::file::get_componentAlternatives  $xPath]
+                        set alternatives [rattleCAD::model::file::get_componentAlternatives  $xPath]
 
                         set textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
 						set value [set $textvariable]
@@ -974,7 +974,7 @@
 			default {}
 		}
 		
-		rattleCAD::gui::select_canvasCAD   $target
+		rattleCAD::view::gui::select_canvasCAD   $target
     }	
 
 
@@ -1036,9 +1036,9 @@
 
 
     proc tubing_checkAngles {} {
-            set rattleCAD::gui::checkAngles {on}
-            rattleCAD::gui::select_canvasCAD   cv_Custom10
-            rattleCAD::cv_custom::updateView   [rattleCAD::gui::current_canvasCAD]
+            rattleCAD::view::gui::select_canvasCAD   cv_Custom10
+            rattleCAD::cv_custom::updateView   [rattleCAD::view::gui::current_canvasCAD]
+            rattleCAD::view::check_TubingAngles
     }
 
 

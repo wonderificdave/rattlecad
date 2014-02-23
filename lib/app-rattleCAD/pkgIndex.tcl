@@ -9,24 +9,24 @@
 # full path name of this file's directory.
 
 package ifneeded   rattleCAD  3.4 "\ 
-        [list source  [file join $dir lib__model.tcl]]; \
-        [list source  [file join $dir lib__control.tcl]]; \
-        [list source  [file join $dir lib__view.tcl]]; \
-        [list source  [file join $dir lib_file.tcl]]; \
-        [list source  [file join $dir lib_gui.tcl]]; \
+        [list source  [file join $dir lib___model.tcl]]; \
+        [list source  [file join $dir lib___control.tcl]]; \
+        [list source  [file join $dir lib___view.tcl]]; \
+        [list source  [file join $dir lib__model_file.tcl]]; \
+        [list source  [file join $dir lib__view_gui.tcl]]; \
+        [list source  [file join $dir lib__control_tool.tcl]]; \
+        [list source  [file join $dir lib_cv__custom.tcl]]; \
+        [list source  [file join $dir lib_cv__update.tcl]]; \
+        [list source  [file join $dir lib_cv_bikeRendering.tcl]]; \
+        [list source  [file join $dir lib_cv_dimension.tcl]]; \
+        [list source  [file join $dir lib_cv_rearMockup.tcl]]; \
+        [list source  [file join $dir lib_cv_frameJig.tcl]]; \
+        [list source  [file join $dir lib_cv_compLibrary.tcl]]; \
+        [list source  [file join $dir lib_version_info.tcl]]; \
         [list source  [file join $dir lib_cfgReport.tcl]]; \
         [list source  [file join $dir lib_configPanel.tcl]]; \
-        [list source  [file join $dir lib_compLibrary.tcl]]; \
-        [list source  [file join $dir lib_bikeRendering.tcl]]; \
-        [list source  [file join $dir lib_version_info.tcl]]; \
-        [list source  [file join $dir lib_cvCustom.tcl]]; \
-        [list source  [file join $dir lib_cvDimension.tcl]]; \
-        [list source  [file join $dir lib_cvRearMockup.tcl]]; \
-        [list source  [file join $dir lib_cvFrameJig.tcl]]; \
-        [list source  [file join $dir lib_cvUpdate.tcl]]; \
         [list source  [file join $dir lib_test.tcl]]; \
         [list source  [file join $dir lib_debug.tcl]]; \
-        [list source  [file join $dir lib_tool.tcl]]; \
         [list source  [file join $dir rattleCAD.tcl]]; \ 
    "
 
