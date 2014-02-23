@@ -52,8 +52,6 @@
 			puts ""
 			puts "         ... file:       [rattleCAD::control::getSession  projectFile]"
 			puts "           ... saved:    [rattleCAD::control::getSession  projectSave]"
-			  # puts "         ... file:       $::APPL_Config(PROJECT_File)"
-			  # puts "           ... saved:    $::APPL_Config(PROJECT_Save)"
 			puts "           ... modified: $changeIndex"
 			
           
@@ -225,8 +223,6 @@
             puts "    openProject_xml"   
             puts "            [rattleCAD::control::getSession projectFile] "
             puts "            [rattleCAD::control::getSession projectName] "
-              # puts "            $::APPL_Config(PROJECT_File)"
-              # puts "            $::APPL_Config(PROJECT_Name)"
             puts "        ... done"             
             puts "\n  ====== o p e n  F I L E =========================\n\n"
     }
@@ -265,13 +261,11 @@
                     #
                 rattleCAD::control::changeList::reset
                     #
-                    # puts " <D> -> \$::APPL_Config(PROJECT_Name)  $::APPL_Config(PROJECT_Name)"
-                    # puts " <D> -> \$::APPL_Config(PROJECT_File)  $::APPL_Config(PROJECT_File)"
 
                     #
-                update_windowTitle       $::APPL_Config(PROJECT_Name)
+                update_windowTitle       [rattleCAD::control::getSession projectName]
                 update_MainFrameStatus
-                
+                    #
             } else {
                 tk_messageBox -message "... could not load template: $window_title"
             }
@@ -300,12 +294,9 @@
 
 
                 # set userDir       [check_user_dir rattleCAD]
-                # if  {$::APPL_Config(PROJECT_File) != {}} {}
             if  {[rattleCAD::control::getSession  projectFile] != {}} {
                 set initialFile [file tail      [rattleCAD::control::getSession  projectFile]]
                 set initialDir  [file dirname   [rattleCAD::control::getSession  projectFile]]
-                  # set initialFile [file tail      $::APPL_Config(PROJECT_File)]
-                  # set initialDir  [file dirname   $::APPL_Config(PROJECT_File)]
             } else {
                 set initialFile "... empty"
                 set initialDir  "... empty"
@@ -369,10 +360,7 @@
 
             switch $mode {
                 {save}        {
-                                # set fileName    [file join $::APPL_Config(USER_Dir) $initialFile]
 								set fileName    [file normalize [rattleCAD::control::getSession  projectFile]]
-                                # set fileName    [file normalize $::APPL_Config(PROJECT_File)]
-								
                             }
                 {saveAs}    {
                                 set fileName    [tk_getSaveFile -initialdir $::APPL_Config(USER_Dir) -initialfile $initialFile -filetypes $types]
@@ -484,7 +472,6 @@
             puts "    ------------------------"
             puts "    saveProject_xml"     
             puts "            [rattleCAD::control::getSession  projectFile]"
-              # puts "            $::APPL_Config(PROJECT_File)"
             puts "        ... done"
 
             puts "\n  ====== s a v e  F I L E =========================\n\n"
@@ -737,7 +724,7 @@
                         # set pg_Offset   [format "<</PageOffset \[%i %i\]>> setpagedevice" $offSet_Y $offSet_X]
                 }
                 
-                set fileName  [file tail [file normalize $::APPL_Config(PROJECT_Name)]]
+                set fileName  [rattleCAD::control::getSession projectName]
                 set fileName  [string map {{ } _ {.xml} {}} $fileName]
                 set fileName  [format "%s_%s.pdf" $fileName $fileFormat]
                 set outputFile  [file nativename [file join $exportDir $fileName]]

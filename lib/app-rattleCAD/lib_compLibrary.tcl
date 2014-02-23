@@ -199,21 +199,15 @@
     }
 
     #-------------------------------------------------------------------------
-        #  populateRoots
-        #
-    proc populateRoots {tree} {
-        foreach dir [list [file join $::APPL_Config(CONFIG_Dir) components] {R:/_devlp/_svn_local/rattleCAD_3.4.00/rattleCAD_3.4/etc/components} {E:/manfred/Dateien/rattleCAD/components}] {
-              # puts "  -> $dir"
-            set lastNode [$tree insert {} end -text $dir -values [list $dir directory]]
-            populateTree $tree $lastNode    
-        }
-    }
+        #  populateRoot
     proc populateRoot {treeWidget title baseDir} {
           # puts "  -> $baseDir"
         set lastNode [$treeWidget insert {} end -text $title -values [list $baseDir directory]]
         populateTree $treeWidget $lastNode
         $treeWidget item $lastNode -open 1
     }
+
+
 
     #-------------------------------------------------------------------------
         #  populateTree

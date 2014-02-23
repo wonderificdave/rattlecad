@@ -203,7 +203,6 @@
                     update_cv_Parameter               $cv_Name $xy
                         #
                     createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    [rattleCAD::control::getSession  projectName]  [rattleCAD::control::getSession dateModified]
-                        # createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
                         #
                     createRearMockup                  $cv_Name
                         #
@@ -291,7 +290,6 @@
                     update_cv_Parameter               $cv_Name $xy
                         #
                     createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    [rattleCAD::control::getSession  projectName]  [rattleCAD::control::getSession dateModified]
-                        # createDraftingFrame               $cv_Name        $stageFormat    [expr 1/$stageScale]    $::APPL_Config(PROJECT_Name)  [bikeGeometry::project_attribute modified]
                         # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
                         #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep

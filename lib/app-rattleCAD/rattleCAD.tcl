@@ -76,8 +76,6 @@
 					WINDOW_Title        {}
 					FILE_List           {}
 
-					PROJECT_Name        {}
-					PROJECT_File        {}
 					PROJECT_Save        {0}
 					
 					TemplateType        {}
@@ -96,14 +94,7 @@
 					user_InitDOM        {}
 					root_InitDOM        {}
 					
-					list_FrameJigTypes  {}
-					list_TemplateTypes  {}
-					
-					list_ForkTypes      {}
-					list_BrakeTypes     {}
-					list_Binary_OnOff   {}
-					list_Rims           {}  
-				 }   
+				}   
                 
 				  # root_ProjectDOM     {}
 				  # canvasCAD_Update    {0}
@@ -551,155 +542,164 @@
             set APPL_Config(TemplateInit) [rattleCAD::file::getTemplateFile   $APPL_Config(TemplateType)]
                 
                 
-                # --- fill ListBox Values   list_TemplateTypes
+                # --- init ListBox Values  
                 #
-            set APPL_Config(list_TemplateTypes) {}
-            set node_TemplateTypes [ $root_InitDOM selectNodes /root/Options/TemplateType ]
-            foreach childNode [ $node_TemplateTypes childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                    if {[string index [$childNode nodeName] 0 ] == {_}} continue
-                    lappend APPL_Config(list_TemplateTypes)  [$childNode nodeName]
-                }
-            }
-
-
-                # --- fill ListBox Values   list_FrameJigTypes
+            rattleCAD::model::init_ListBoxValues  $root_InitDOM  
                 #
-            set APPL_Config(list_FrameJigTypes) {}
-            set node_FrameJigTypes [ $root_InitDOM selectNodes /root/Options/FrameJigType ]
-            foreach childNode [ $node_FrameJigTypes childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                    if {[string index [$childNode nodeName] 0 ] == {_}} continue
-                    lappend APPL_Config(list_FrameJigTypes)  [$childNode nodeName]
-                }
-            }
-    
-    
-                # --- fill ListBox Values   list_Rims
-                #
-            set APPL_Config(list_Rims) {}
-            set node_Rims [ $root_InitDOM selectNodes /root/Options/Rim ]
-            foreach childNode [ $node_Rims childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                        set value_01 [$childNode getAttribute inch     {}]
-                        set value_02 [$childNode getAttribute metric   {}]
-                        set value_03 [$childNode getAttribute standard {}]
-                        if {$value_01 == {}} {
-                            set value {-----------------}
-                        } else {
-                            set value [format "%s ; %s %s" $value_02 $value_01 $value_03]
+                #  ... following procedures are replaced by above init_ListBoxValues
+                # 
+            if {1 == 2} { 
+                        # --- fill ListBox Values   list_TemplateTypes
+                        #
+                    set APPL_Config(list_TemplateTypes) {}
+                    set node_TemplateTypes [ $root_InitDOM selectNodes /root/Options/TemplateType ]
+                    foreach childNode [ $node_TemplateTypes childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                            if {[string index [$childNode nodeName] 0 ] == {_}} continue
+                            lappend APPL_Config(list_TemplateTypes)  [$childNode nodeName]
                         }
-                    lappend APPL_Config(list_Rims)  $value
-                }
-            }
+                    }
 
 
-                # --- fill ListBox Values   list_ForkTypes
-                #
-            set APPL_Config(list_ForkTypes) {}
-            set node_ForkTypes [ $root_InitDOM selectNodes /root/Fork ]
-            foreach childNode [ $node_ForkTypes childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                    if {[string index [$childNode nodeName] 0 ] == {_}} continue
-                    lappend APPL_Config(list_ForkTypes)  [$childNode nodeName]
-                }
-            }
-    
-    
-                # --- fill ListBox Values   list_ForkBladeTypes
-                #
-            set APPL_Config(list_ForkBladeTypes) {}
-            set node_ForkBladeTypes [ $root_InitDOM selectNodes /root/Options/ForkBlade ]
-            foreach childNode [ $node_ForkBladeTypes childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                    if {[string index [$childNode nodeName] 0 ] == {_}} continue
-                    lappend APPL_Config(list_ForkBladeTypes)  [$childNode nodeName]
-                }
-            }
+                        # --- fill ListBox Values   list_FrameJigTypes
+                        #
+                    set APPL_Config(list_FrameJigTypes) {}
+                    set node_FrameJigTypes [ $root_InitDOM selectNodes /root/Options/FrameJigType ]
+                    foreach childNode [ $node_FrameJigTypes childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                            if {[string index [$childNode nodeName] 0 ] == {_}} continue
+                            lappend APPL_Config(list_FrameJigTypes)  [$childNode nodeName]
+                        }
+                    }
+            
+            
+                        # --- fill ListBox Values   list_Rims
+                        #
+                    set APPL_Config(list_Rims) {}
+                    set node_Rims [ $root_InitDOM selectNodes /root/Options/Rim ]
+                    foreach childNode [ $node_Rims childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                                set value_01 [$childNode getAttribute inch     {}]
+                                set value_02 [$childNode getAttribute metric   {}]
+                                set value_03 [$childNode getAttribute standard {}]
+                                if {$value_01 == {}} {
+                                    set value {-----------------}
+                                } else {
+                                    set value [format "%s ; %s %s" $value_02 $value_01 $value_03]
+                                }
+                            lappend APPL_Config(list_Rims)  $value
+                        }
+                    }
 
 
-                # --- fill ListBox Values   list_DropOutDirections
-                #
-            set APPL_Config(list_DropOutDirections) {}
-            set node_DropOutDirections [ $root_InitDOM selectNodes /root/Options/DropOutDirection ]
-            foreach childNode [ $node_DropOutDirections childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                        # puts "  childNode ->   [$childNode nodeName]  "
-                    lappend APPL_Config(list_DropOutDirections)  [$childNode nodeName]
-                }
-            }
-    
-                
-                # --- fill ListBox Values   list_DropOutPositions
-                #
-            set APPL_Config(list_DropOutPositions) {}
-            set node_DropOutPositions [ $root_InitDOM selectNodes /root/Options/DropOutPosition ]
-            foreach childNode [ $node_DropOutPositions childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                        # puts "  childNode ->   [$childNode nodeName]  "
-                    lappend APPL_Config(list_DropOutPositions)  [$childNode nodeName]
-                }
-            }
-    
-                
-                # --- fill ListBox Values   list_ChainStay
-                #
-            set APPL_Config(list_ChainStay) {}
-            set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/ChainStay ]
-            foreach childNode [ $node_BrakeTypes childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                        # puts "  childNode ->   [$childNode nodeName]  "
-                    lappend APPL_Config(list_ChainStay)  [$childNode nodeName]
-                }
-            }
+                        # --- fill ListBox Values   list_ForkTypes
+                        #
+                    set APPL_Config(list_ForkTypes) {}
+                    set node_ForkTypes [ $root_InitDOM selectNodes /root/Fork ]
+                    foreach childNode [ $node_ForkTypes childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                            if {[string index [$childNode nodeName] 0 ] == {_}} continue
+                            lappend APPL_Config(list_ForkTypes)  [$childNode nodeName]
+                        }
+                    }
+            
+            
+                        # --- fill ListBox Values   list_ForkBladeTypes
+                        #
+                    set APPL_Config(list_ForkBladeTypes) {}
+                    set node_ForkBladeTypes [ $root_InitDOM selectNodes /root/Options/ForkBlade ]
+                    foreach childNode [ $node_ForkBladeTypes childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                            if {[string index [$childNode nodeName] 0 ] == {_}} continue
+                            lappend APPL_Config(list_ForkBladeTypes)  [$childNode nodeName]
+                        }
+                    }
+
+
+                        # --- fill ListBox Values   list_DropOutDirections
+                        #
+                    set APPL_Config(list_DropOutDirections) {}
+                    set node_DropOutDirections [ $root_InitDOM selectNodes /root/Options/DropOutDirection ]
+                    foreach childNode [ $node_DropOutDirections childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                                # puts "  childNode ->   [$childNode nodeName]  "
+                            lappend APPL_Config(list_DropOutDirections)  [$childNode nodeName]
+                        }
+                    }
+            
+                        
+                        # --- fill ListBox Values   list_DropOutPositions
+                        #
+                    set APPL_Config(list_DropOutPositions) {}
+                    set node_DropOutPositions [ $root_InitDOM selectNodes /root/Options/DropOutPosition ]
+                    foreach childNode [ $node_DropOutPositions childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                                # puts "  childNode ->   [$childNode nodeName]  "
+                            lappend APPL_Config(list_DropOutPositions)  [$childNode nodeName]
+                        }
+                    }
+            
+                        
+                        # --- fill ListBox Values   list_ChainStay
+                        #
+                    set APPL_Config(list_ChainStay) {}
+                    set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/ChainStay ]
+                    foreach childNode [ $node_BrakeTypes childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                                # puts "  childNode ->   [$childNode nodeName]  "
+                            lappend APPL_Config(list_ChainStay)  [$childNode nodeName]
+                        }
+                    }
+
+                    
+                        # --- fill ListBox Values   list_BrakeTypes
+                        #
+                    set APPL_Config(list_BrakeTypes) {}
+                    set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/Brake ]
+                    foreach childNode [ $node_BrakeTypes childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                                # puts "  childNode ->   [$childNode nodeName]  "
+                            lappend APPL_Config(list_BrakeTypes)  [$childNode nodeName]
+                        }
+                    }
+                    
+                        # --- fill ListBox Values   list_BottleCage
+                        #
+                    set APPL_Config(list_BottleCage) {}
+                    set node_BottleCage [ $root_InitDOM selectNodes /root/Options/BottleCage ]
+                    foreach childNode [ $node_BottleCage childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                                # puts "  childNode ->   [$childNode nodeName]  "
+                            lappend APPL_Config(list_BottleCage)  [$childNode nodeName]
+                        }
+                    }
+                    
+                        # --- fill ListBox Values   list_Binary_OnOff
+                        #
+                    set APPL_Config(list_Binary_OnOff) {}
+                    set node_Binary_OnOff [ $root_InitDOM selectNodes /root/Options/Binary_OnOff ]
+                    foreach childNode [ $node_Binary_OnOff childNodes ] {
+                        if {[$childNode nodeType] == {ELEMENT_NODE}} {
+                                # puts "  childNode ->   [$childNode nodeName]  "
+                            lappend APPL_Config(list_Binary_OnOff)  [$childNode nodeName]
+                        }
+                    }
+            }     
 
             
-                # --- fill ListBox Values   list_BrakeTypes
-                #
-            set APPL_Config(list_BrakeTypes) {}
-            set node_BrakeTypes [ $root_InitDOM selectNodes /root/Options/Brake ]
-            foreach childNode [ $node_BrakeTypes childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                        # puts "  childNode ->   [$childNode nodeName]  "
-                    lappend APPL_Config(list_BrakeTypes)  [$childNode nodeName]
-                }
-            }
-            
-                # --- fill ListBox Values   list_BottleCage
-                #
-            set APPL_Config(list_BottleCage) {}
-            set node_BottleCage [ $root_InitDOM selectNodes /root/Options/BottleCage ]
-            foreach childNode [ $node_BottleCage childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                        # puts "  childNode ->   [$childNode nodeName]  "
-                    lappend APPL_Config(list_BottleCage)  [$childNode nodeName]
-                }
-            }
-            
-                # --- fill ListBox Values   list_Binary_OnOff
-                #
-            set APPL_Config(list_Binary_OnOff) {}
-            set node_Binary_OnOff [ $root_InitDOM selectNodes /root/Options/Binary_OnOff ]
-            foreach childNode [ $node_Binary_OnOff childNodes ] {
-                if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                        # puts "  childNode ->   [$childNode nodeName]  "
-                    lappend APPL_Config(list_Binary_OnOff)  [$childNode nodeName]
-                }
-            }
-        
-                # --- fill ListBox Values   APPL_CompLocation
+                # --- fill APPL_CompLocation
                 #
             array unset ::APPL_CompLocation 
             set node_Locations [ $root_InitDOM selectNodes /root/Options/ComponentLocation ]
             foreach childNode [ $node_Locations childNodes ] {
                 if {[$childNode nodeType] == {ELEMENT_NODE}} {
-                        set key     [$childNode getAttribute key    {}]
-                        set dir       [$childNode getAttribute dir    {}]
-                    # puts "  childNode ->   [$childNode nodeName]   $xpath  $dir "
+                    set key     [$childNode getAttribute key    {}]
+                    set dir     [$childNode getAttribute dir    {}]
+                      # puts "  childNode ->   [$childNode nodeName]   $key  $dir "
                     set ::APPL_CompLocation($key) $dir
                 }
             }
-            
+
     }
 
     

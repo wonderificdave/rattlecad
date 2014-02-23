@@ -182,7 +182,7 @@
     </Options>
 
         
-		<Fork>
+	<Fork>
 
         <SteelLuggedMAX>
             <Crown>
@@ -328,6 +328,6 @@
             </Brake>
         </Suspension_29>
 
-		</Fork>
+	</Fork>
   
 </root>

@@ -49,14 +49,14 @@ namespace eval rattleCAD::control {
     variable  model_Update   {0}
     variable  window_Update  {0}
     variable  window_Size    {0}
-    
+      # ----------------- #
     variable  Session              
 	array set Session {
-				rattleCADVersion     {}
-                dateModified         {init}
-				projectName          {}
-                projectFile          {}
-                projectSave          {}
+				rattleCADVersion  {}
+                dateModified      {init}
+				projectName       {}
+                projectFile       {}
+                projectSave       {}
 			}
          
 	
@@ -288,6 +288,33 @@ namespace eval rattleCAD::control {
         }
     }	
 
+    proc get_listBoxContent {type {key {}}} {      
+        set listBoxContent {}
+        puts "    -> get_listBoxContent:  $type $key"
+        switch -exact $type {
+            {SELECT_File} {             set listBoxContent [rattleCAD::model::get_ComponentList  $key] }
+            {SELECT_Rim} {              set listBoxContent [rattleCAD::model::get_ListBoxValues  Rim] }
+            {SELECT_ForkType} {         set listBoxContent [rattleCAD::model::get_ListBoxValues  Fork] }
+            {SELECT_ForkBladeType} {    set listBoxContent [rattleCAD::model::get_ListBoxValues  ForkBlade] }
+            {SELECT_DropOutDirection} { set listBoxContent [rattleCAD::model::get_ListBoxValues  DropOutDirection] }
+            {SELECT_DropOutPosition} {  set listBoxContent [rattleCAD::model::get_ListBoxValues  DropOutPosition] }
+            {SELECT_ChainStay} {        set listBoxContent [rattleCAD::model::get_ListBoxValues  ChainStay] }
+            {SELECT_BrakeType} {        set listBoxContent [rattleCAD::model::get_ListBoxValues  Brake] }
+            {SELECT_BottleCage} {       set listBoxContent [rattleCAD::model::get_ListBoxValues  BottleCage] }
+            {SELECT_Binary_OnOff} {     set listBoxContent [rattleCAD::model::get_ListBoxValues  Binary_OnOff] }
+            
+                {__SELECT_Rim} {              set listBoxContent $::APPL_Config(list_Rims) }
+                {__SELECT_ForkType} {         set listBoxContent $::APPL_Config(list_ForkTypes) }
+                {__SELECT_ForkBladeType} {    set listBoxContent $::APPL_Config(list_ForkBladeTypes) }
+                {__SELECT_DropOutDirection} { set listBoxContent $::APPL_Config(list_DropOutDirections) }
+                {__SELECT_DropOutPosition} {  set listBoxContent $::APPL_Config(list_DropOutPositions) }
+                {__SELECT_ChainStay} {        set listBoxContent $::APPL_Config(list_ChainStay) }
+                {__SELECT_BrakeType} {        set listBoxContent $::APPL_Config(list_BrakeTypes) }
+                {__SELECT_BottleCage} {       set listBoxContent $::APPL_Config(list_BottleCage) }
+                {__SELECT_Binary_OnOff} {     set listBoxContent $::APPL_Config(list_Binary_OnOff) }
+        }
+        return $listBoxContent
+    }    
 }
 
 

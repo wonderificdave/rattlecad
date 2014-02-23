@@ -1,5 +1,19 @@
 
 
+3.4.01.39  - 2014.02.23
+-------------------------------------------------------------------------------
+    refactoring:
+        ... Demo:  File -> Stack and Reach   
+        ... sample files
+    refactoring:
+        ... remove APPL_CONFIG(PROJECT_Name, PROJECT_File, PROJECT_Save)
+        ... move   rattleCAD::view::get_listBoxContent 
+            ... to   rattleCAD::control::get_listBoxContent
+                ...  rattleCAD::model::get_ListBoxValues
+                ...  rattleCAD::model::get_ComponentList
+        ... add    rattleCAD::modelinit_ListBoxValues   
+
+
 3.4.01.38  - 2014.02.21
 -------------------------------------------------------------------------------
     debug:

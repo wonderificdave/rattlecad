@@ -2,7 +2,7 @@
     <Project>
         <rattleCADVersion>3.4.01.38</rattleCADVersion>
         <Name>simplon_phasic_56_sramRed</Name>
-        <modified>2014.02.22 - 00:21:10</modified>
+        <modified>2014.02.22 - 12:56:23</modified>
     </Project>
     <!-- reference geometry of an existing frame -->
     <!-- personal geometry based on cyclist body profile -->
@@ -179,7 +179,7 @@
             <File>etc:handlebar/sram_red_2014.svg</File>
         </HandleBar>
         <Saddle>
-            <File>saddle/saddle_c.svg</File>
+            <File>etc:saddle/saddle150_00.svg</File>
             <Height>40.00</Height>
             <Length>280.00</Length>
             <LengthNose>153.00</LengthNose>

@@ -302,7 +302,7 @@
         
           # -- change Saddle- and HandleBarPosition
           #
-        set title       "at first configure Saddle position ..."
+        set title       "configure Saddle position at first ..."
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -385,7 +385,7 @@
           
           # -- use HandleBarPosition
           #
-        set title       "to configure front geometry ..."       
+        set title       "then configure front geometry ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -423,7 +423,7 @@
           #
 
           
-        set title       "and frame tubes ..."       
+        set title       "and frame tubes, and ..."       
         createDemoText  $targetCanvas  "$title"
         after 1000
           #
@@ -525,7 +525,6 @@
         #     
     proc loopSamples {args} {
         set currentFile [rattleCAD::control::getSession  projectFile]
-          # set currentFile $::APPL_Config(PROJECT_File)
         set SAMPLE_Dir  $::APPL_Config(SAMPLE_Dir)
 
         puts "\n\n  ====== l o o p   S A M P L E   F i l e s ========\n"                         
@@ -583,7 +582,6 @@
         #     
     proc demo_01 {args} {
         set currentFile [rattleCAD::control::getSession  projectFile]
-		  # set currentFile $::APPL_Config(PROJECT_File)
         set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
                        
         puts "\n\n  ====== D E M O N S T R A T I O N   0 1 ===========\n"                         
