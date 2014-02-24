@@ -2,8 +2,11 @@
 
 3.4.01.40  - 2014.02.23
 -------------------------------------------------------------------------------
-    refactoring:
-        ... Demo:  File -> Stack and Reach   
+    feature:
+        ... Demo -> rattleCAD-Method 
+        ... Demo -> Seat/TopTube-Method 
+        ... remove:
+            ... Demo -> Stack and Reach         
     refactoring:
         ... move   rattleCAD::gui
             ... to   rattleCAD::view::gui 

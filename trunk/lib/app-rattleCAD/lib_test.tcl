@@ -56,11 +56,19 @@
                     set messageValue "... integrationTest 00"
                       # tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
                 }
-            StackandReach {
+            method_rattleCAD {
                     while {$runningStatus != {off}} {
                           # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
-                        [namespace current]::stack_and_reach
-                        set messageValue "... rattleCAD Stack & Reach!"
+                        [namespace current]::method_rattleCAD
+                        set messageValue "... rattleCAD Method!"
+                          # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
+                    }
+                } 
+            method_SeatandTopTube {
+                    while {$runningStatus != {off}} {
+                          # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
+                        [namespace current]::method_SeatandTopTube
+                        set messageValue "... Seat- and TopTube Method!"
                           # tk_messageBox -title "Demontsration" -message "... rattleCAD Principle!"
                     }
                 } 
@@ -238,15 +246,303 @@
     #-------------------------------------------------------------------------
         #  stack_and_reach
         #  
-    proc stack_and_reach {} {
+    proc method_rattleCAD {} {
         set currentFile   [rattleCAD::control::getSession  projectFile]
 		set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
                        
-        puts "\n\n  ====== S T A C K   A N D   R E A C H ===========\n"                         
+        puts "\n\n  ====== R A T T L E C A D    M E T H O D ===========\n"                         
         puts "" 
         
           #
+        set targetTab    "cv_Custom00"
+        set targetCanvas "rattleCAD::view::gui::$targetTab"
+          #
+        rattleCAD::view::gui::select_canvasCAD   $targetTab  
+        rattleCAD::view::updateView        force
+          #
+        rattleCAD::view::gui::load_Template      Road
+        rattleCAD::view::updateView        force
+          #
+          
+        set init_HB_Reach     [rattleCAD::control::getValue  Personal/HandleBar_Distance]
+        set init_HB_Stack     [rattleCAD::control::getValue  Personal/HandleBar_Height]
+        set init_SD_Distance  [rattleCAD::control::getValue  Personal/Saddle_Distance]
+        set init_SD_Height    [rattleCAD::control::getValue  Personal/Saddle_Height]
+        set init_HT_Angle     [rattleCAD::control::getValue  Custom/HeadTube/Angle]
+        set init_TT_Angle     [rattleCAD::control::getValue  Custom/TopTube/Angle]
+        set init_HT_Length    [rattleCAD::control::getValue  FrameTubes/HeadTube/Length]
+        set init_Stem_Length  [rattleCAD::control::getValue  Component/Stem/Length]
+        set init_Fork_Height  [rattleCAD::control::getValue  Component/Fork/Height]
+        set init_Fork_Rake    [rattleCAD::control::getValue  Component/Fork/Rake]
+        set init_ST_Ext       [rattleCAD::control::getValue  Custom/SeatTube/Extension]
+        set init_SS_Offset    [rattleCAD::control::getValue  Custom/SeatStay/OffsetTT]
+        set init_ST_Angle     [rattleCAD::control::getValue  Result/Angle/SeatTube/Direction]
+        set init_ST_Length    [rattleCAD::control::getValue  Result/Length/SeatTube/VirtualLength]
+        set init_TT_Length    [rattleCAD::control::getValue  Result/Length/TopTube/VirtualLength]
+        set init_SD_Nose      [rattleCAD::control::getValue  Result/Length/Saddle/Offset_BB_Nose]
+
+        puts "         -> \$init_HB_Reach     $init_HB_Reach   "
+        puts "         -> \$init_HB_Stack     $init_HB_Stack   "
+        puts "         -> \$init_SD_Distance  $init_SD_Distance"
+        puts "         -> \$init_SD_Height    $init_SD_Height  "
+        puts "         -> \$init_HT_Angle     $init_HT_Angle   "
+        puts "         -> \$init_TT_Angle     $init_TT_Angle   "
+        puts "         -> \$init_HT_Length    $init_HT_Length  "
+        puts "         -> \$init_Stem_Length  $init_Stem_Length"
+        puts "         -> \$init_Fork_Height  $init_Fork_Height"
+        puts "         -> \$init_Fork_Rake    $init_Fork_Rake  "
+        puts "         -> \$init_ST_Ext       $init_ST_Ext  "
+        puts "         -> \$init_SS_Offset    $init_SS_Offset  "
+        puts "         -> \$init_ST_Angle     $init_ST_Angle   "
+        puts "         -> \$init_ST_Length    $init_ST_Length  "
+        puts "         -> \$init_TT_Length    $init_TT_Length  "
+        puts "         -> \$init_SD_Nose      $init_SD_Nose    "
+        puts ""
+        puts "        ------------------------------------------------"                                               
+        puts ""
+
+          # -- set demo
+        set maxLoops          4
+        set loopSteps         6
+        set direction         1
+        set step_HB_Reach     6.0
+        set step_HB_Stack     2.5
+        set step_SD_Distance  5.0
+        set step_SD_Height   -5.0
+        set step_Stem_Length  2.5
+        set step_Fork_Height  3.5
+        set step_Fork_Rake    2.0
+        set step_ST_Ext       2.0
+        set step_SS_Offset    5.0
+        set step_ST_Angle     0.35
+        set step_HT_Angle     0.4        
+        set step_HT_Length   -3.0    
+        set step_TT_Angle     1.0
+          #
+        
+          # -- change Saddle- and HandleBarPosition
+          #
+        set title       "configure Saddle position ..."
+        createDemoText  $targetCanvas  "$title"
+        after 1500
+          #
+        
+          #
+        set loopCount      0
+        set stepCount      $loopSteps
+          #
+        set demo_SD_Distance  $init_SD_Distance
+        set demo_SD_Height    $init_SD_Height  
+          #
+        while {$loopCount < [expr $loopSteps * $maxLoops]} {            
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
+            incr loopCount 
+            if {$stepCount >= 2*$loopSteps} {
+                set stepCount 1
+                set direction [expr -1 * $direction]
+                after 500
+            } else {
+                incr stepCount
+            }
+            
+            set demo_SD_Distance [expr $demo_SD_Distance + $direction*$step_SD_Distance]
+            set demo_SD_Height   [expr $demo_SD_Height   + $direction*$step_SD_Height  ]
+              #
+            set myList {}
+            lappend myList Personal/Saddle_Distance        $demo_SD_Distance  
+            lappend myList Personal/Saddle_Height          $demo_SD_Height
+              #
+            rattleCAD::control::setValue $myList           {update} noHistory
+                # createDemoText  $targetCanvas                  "$title"
+                # puts "    -> $stepCount -> $direction -> $demo_ST_Angle"
+        }
+          #
+          
+          # -- change Saddle- and HandleBarPosition
+          #
+        set title       "... and HandleBar ..."
+        createDemoText  $targetCanvas  "$title"
+        after 1000
+          #
+        
+          #
+        set loopCount      0
+        set stepCount      $loopSteps
+          #
+        set demo_HB_Reach     $init_HB_Reach   
+        set demo_HB_Stack     $init_HB_Stack
+        set demo_Stem_Length  $init_Stem_Length
+          #        
+        while {$loopCount < [expr $loopSteps * $maxLoops]} {            
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
+            incr loopCount 
+            if {$stepCount >= 2*$loopSteps} {
+                set stepCount 1
+                set direction [expr -1 * $direction]
+                after 500
+            } else {
+                incr stepCount
+            }
+            
+            set demo_HB_Stack    [expr $demo_HB_Stack    + $direction*$step_HB_Stack   ]
+            set demo_HB_Reach    [expr $demo_HB_Reach    + $direction*$step_HB_Reach   ]
+            set demo_Stem_Length [expr $demo_Stem_Length + $direction*$step_Stem_Length]
+              #
+            set myList {}
+            lappend myList Personal/HandleBar_Distance     $demo_HB_Reach   
+            lappend myList Personal/HandleBar_Height       $demo_HB_Stack
+            lappend myList Component/Stem/Length           $demo_Stem_Length
+              #
+            rattleCAD::control::setValue $myList           {update} noHistory
+              #
+        }
+          #
+          
+          
+          # -- use HandleBarPosition
+          #
+        set title       "... configure front geometry ..."       
+        createDemoText  $targetCanvas  "$title"
+        after 1500
+          #
+                  
+          #
+        set loopCount      0
+        set stepCount      $loopSteps
+          #
+        set demo_HT_Angle    $init_HT_Angle
+        set demo_Stem_Length $init_Stem_Length
+        set demo_Fork_Rake   $init_Fork_Rake  
+          # set demo_Fork_Height $init_Fork_Height
+          #
+        while {$loopCount < [expr $loopSteps * $maxLoops]} {            
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
+            incr loopCount 
+            if {$stepCount >= 2*$loopSteps} {
+                set stepCount 1
+                set direction [expr -1 * $direction]
+                after 500
+            } else {
+                incr stepCount
+            }
+            
+            set demo_HT_Angle    [expr $demo_HT_Angle    + $direction*$step_HT_Angle]
+            set demo_Stem_Length [expr $demo_Stem_Length - $direction*$step_Stem_Length]
+            set demo_Fork_Rake   [expr $demo_Fork_Rake   - $direction*$step_Fork_Rake]
+              # set demo_Fork_Height [expr $demo_Fork_Height + $direction*$step_Fork_Height]
+              #
+            set myList {}
+            lappend myList Custom/HeadTube/Angle           $demo_HT_Angle
+            lappend myList Component/Stem/Length           $demo_Stem_Length
+            lappend myList Component/Fork/Rake             $demo_Fork_Rake
+              #
+            rattleCAD::control::setValue $myList           {update} noHistory
+              #
+        }
+          #
+
+          #
+        after 1000
         set targetTab    "cv_Custom10"
+        set targetCanvas "rattleCAD::view::gui::$targetTab"
+          #
+        rattleCAD::view::gui::select_canvasCAD   $targetTab  
+        rattleCAD::view::updateView        force
+          #
+ 
+          # 
+        set title       "... and refine frame tubes, and angles, and ..."       
+        createDemoText  $targetCanvas  "$title"
+        after 1000
+          #
+                  
+          #
+        set loopCount      0
+        set stepCount      $loopSteps
+          #
+        set demo_TT_Angle  $init_TT_Angle
+        set demo_HT_Length $init_HT_Length
+        set demo_ST_Ext    $init_ST_Ext
+        set demo_SS_Offset $init_SS_Offset
+          #
+        while {$loopCount < [expr 2 * $loopSteps * $maxLoops]} {            
+              # -- check \$runningStatus
+            if {![keepRunning]} {stopDemo cleanup; return}
+              #
+            incr loopCount 
+            if {$stepCount >= 2*$loopSteps} {
+                set stepCount 1
+                set direction [expr -1 * $direction]
+                after 500
+            } else {
+                incr stepCount
+            }
+            
+            set demo_TT_Angle  [expr $demo_TT_Angle  + $direction*$step_TT_Angle]
+            set demo_HT_Length [expr $demo_HT_Length - $direction*$step_HT_Length]
+            set demo_ST_Ext [expr $demo_ST_Ext - $direction*$step_ST_Ext]
+            set demo_SS_Offset [expr $demo_SS_Offset - $direction*$step_SS_Offset]
+
+              #
+            set myList {}
+            lappend myList Custom/TopTube/Angle            $demo_TT_Angle
+            lappend myList FrameTubes/HeadTube/Length      $demo_HT_Length
+            lappend myList Custom/SeatTube/Extension       $demo_ST_Ext
+            lappend myList Custom/SeatStay/OffsetTT        $demo_SS_Offset
+              #
+            rattleCAD::control::setValue $myList           {update} noHistory
+              #
+        }
+          #
+          
+          #
+        set myList {}
+        lappend myList Personal/HandleBar_Distance                   $init_HB_Reach     
+        lappend myList Personal/HandleBar_Height                     $init_HB_Stack     
+        lappend myList Personal/Saddle_Distance                      $init_SD_Distance  
+        lappend myList Personal/Saddle_Height                        $init_SD_Height    
+        lappend myList Custom/HeadTube/Angle                         $init_HT_Angle     
+        lappend myList Custom/TopTube/Angle                          $init_TT_Angle     
+        lappend myList FrameTubes/HeadTube/Length                    $init_HT_Length    
+        lappend myList Component/Stem/Length                         $init_Stem_Length  
+        lappend myList Component/Fork/Height                         $init_Fork_Height  
+        lappend myList Component/Fork/Rake                           $init_Fork_Rake         
+          #
+        rattleCAD::control::setValue $myList           {update} noHistory
+          #
+
+          
+          # -- remove demoText
+        after 1000
+        createDemoText $targetCanvas       {... clear?}  
+        after 1000
+        createDemoText $targetCanvas       {}  
+        rattleCAD::view::updateView        force
+          #
+          
+          #
+        return  
+          # 
+          
+    } 
+
+    
+    proc method_SeatandTopTube {} {
+    
+        set currentFile   [rattleCAD::control::getSession  projectFile]
+		set SAMPLE_Dir     $::APPL_Config(SAMPLE_Dir)
+                       
+        puts "\n\n  ====== W H Y   N O T   T O P -  T U B E ===========\n"                         
+        puts "" 
+        
+          #
+        set targetTab    "cv_Custom00"
         set targetCanvas "rattleCAD::view::gui::$targetTab"
           #
         rattleCAD::view::gui::select_canvasCAD   $targetTab  
@@ -308,185 +604,10 @@
         
           # -- change Saddle- and HandleBarPosition
           #
-        set title       "configure Saddle position first ..."
+        set title       "  ... keep constant Seat- and TopTube Length "
         createDemoText  $targetCanvas  "$title"
-        after 1500
-          #
+        after 1000
         
-          #
-        set loopCount      0
-        set stepCount      $loopSteps
-          #
-        set demo_SD_Distance  $init_SD_Distance
-        set demo_SD_Height    $init_SD_Height  
-          #
-        while {$loopCount < [expr $loopSteps * $maxLoops]} {            
-              # -- check \$runningStatus
-            if {![keepRunning]} {stopDemo cleanup; return}
-              #
-            incr loopCount 
-            if {$stepCount >= 2*$loopSteps} {
-                set stepCount 1
-                set direction [expr -1 * $direction]
-                after 500
-            } else {
-                incr stepCount
-            }
-            
-            set demo_SD_Distance [expr $demo_SD_Distance + $direction*$step_SD_Distance]
-            set demo_SD_Height   [expr $demo_SD_Height   + $direction*$step_SD_Height  ]
-              #
-            set myList {}
-            lappend myList Personal/Saddle_Distance        $demo_SD_Distance  
-            lappend myList Personal/Saddle_Height          $demo_SD_Height
-              #
-            rattleCAD::control::setValue $myList           {update} noHistory
-                # createDemoText  $targetCanvas                  "$title"
-                # puts "    -> $stepCount -> $direction -> $demo_ST_Angle"
-        }
-          #
-          
-          # -- change Saddle- and HandleBarPosition
-          #
-        set title       "and HandleBar ..."
-        createDemoText  $targetCanvas  "$title"
-        after 1000
-          #
-        
-          #
-        set loopCount      0
-        set stepCount      $loopSteps
-          #
-        set demo_HB_Reach     $init_HB_Reach   
-        set demo_HB_Stack     $init_HB_Stack
-        set demo_Stem_Length  $init_Stem_Length
-          #        
-        while {$loopCount < [expr $loopSteps * $maxLoops]} {            
-              # -- check \$runningStatus
-            if {![keepRunning]} {stopDemo cleanup; return}
-              #
-            incr loopCount 
-            if {$stepCount >= 2*$loopSteps} {
-                set stepCount 1
-                set direction [expr -1 * $direction]
-                after 500
-            } else {
-                incr stepCount
-            }
-            
-            set demo_HB_Stack    [expr $demo_HB_Stack    + $direction*$step_HB_Stack   ]
-            set demo_HB_Reach    [expr $demo_HB_Reach    + $direction*$step_HB_Reach   ]
-            set demo_Stem_Length [expr $demo_Stem_Length + $direction*$step_Stem_Length]
-              #
-            set myList {}
-            lappend myList Personal/HandleBar_Distance     $demo_HB_Reach   
-            lappend myList Personal/HandleBar_Height       $demo_HB_Stack
-            lappend myList Component/Stem/Length           $demo_Stem_Length
-              #
-            rattleCAD::control::setValue $myList           {update} noHistory
-              #
-        }
-          #
-          
-          
-          # -- use HandleBarPosition
-          #
-        set title       "and then configure front geometry ..."       
-        createDemoText  $targetCanvas  "$title"
-        after 1500
-          #
-                  
-          #
-        set loopCount      0
-        set stepCount      $loopSteps
-          #
-        set demo_HT_Angle    $init_HT_Angle
-        set demo_HT_Length   $init_HT_Length
-        set demo_Stem_Length $init_Stem_Length
-        set demo_Fork_Height $init_Fork_Height
-        set demo_Fork_Rake   $init_Fork_Rake  
-          #
-        while {$loopCount < [expr $loopSteps * $maxLoops]} {            
-              # -- check \$runningStatus
-            if {![keepRunning]} {stopDemo cleanup; return}
-              #
-            incr loopCount 
-            if {$stepCount >= 2*$loopSteps} {
-                set stepCount 1
-                set direction [expr -1 * $direction]
-                after 500
-            } else {
-                incr stepCount
-            }
-            
-            set demo_HT_Angle    [expr $demo_HT_Angle    + $direction*$step_HT_Angle]
-            set demo_HT_Length   [expr $demo_HT_Length   + $direction*$step_HT_Length]
-            set demo_Stem_Length [expr $demo_Stem_Length - $direction*$step_Stem_Length]
-            set demo_Fork_Height [expr $demo_Fork_Height + $direction*$step_Fork_Height]
-            set demo_Fork_Rake   [expr $demo_Fork_Rake   - $direction*$step_Fork_Rake]
-              #
-            set myList {}
-            lappend myList Custom/HeadTube/Angle           $demo_HT_Angle
-            lappend myList FrameTubes/HeadTube/Length      $demo_HT_Length
-            lappend myList Component/Stem/Length           $demo_Stem_Length
-            lappend myList Component/Fork/Height           $demo_Fork_Height
-            lappend myList Component/Fork/Rake             $demo_Fork_Rake
-              #
-            rattleCAD::control::setValue $myList           {update} noHistory
-              #
-        }
-          #
-
-          
-        set title       "and frame tubes, and angles, ..."       
-        createDemoText  $targetCanvas  "$title"
-        after 1000
-          #
-                  
-          #
-        set loopCount      0
-        set stepCount      $loopSteps
-          #
-        set demo_ST_Angle  $init_ST_Angle
-        set demo_TT_Angle  $init_TT_Angle
-        set demo_HT_Angle  $init_HT_Angle
-        set demo_HT_Length $init_HT_Length
-          #
-        while {$loopCount < [expr 2 * $loopSteps * $maxLoops]} {            
-              # -- check \$runningStatus
-            if {![keepRunning]} {stopDemo cleanup; return}
-              #
-            incr loopCount 
-            if {$stepCount >= 2*$loopSteps} {
-                set stepCount 1
-                set direction [expr -1 * $direction]
-                after 500
-            } else {
-                incr stepCount
-            }
-            
-            set demo_ST_Angle  [expr $demo_ST_Angle  + $direction*$step_ST_Angle]
-            set demo_TT_Angle  [expr $demo_TT_Angle  + $direction*$step_TT_Angle]
-            set demo_HT_Length [expr $demo_HT_Length - $direction*$step_HT_Length]
-              #
-            set myList {}
-            lappend myList Result/Angle/SeatTube/Direction     $demo_ST_Angle
-            lappend myList Result/Length/Saddle/Offset_BB_Nose $init_SD_Nose
-            lappend myList Custom/TopTube/Angle                $demo_TT_Angle
-            # lappend myList FrameTubes/HeadTube/Length          $demo_HT_Length
-              #
-            rattleCAD::control::setValue $myList           {update} noHistory
-              #
-        }
-          #
- 
-          
-          # -- change SeatTubeAngle and keep TopTube-Length and SaddlePosition
-          #
-        set title       "and let's explain why don't tie on Seat- and TopTube length ..."       
-        createDemoText  $targetCanvas  "$title"
-        after 1000
-          #          
           
           #
         set loopCount      0
@@ -520,10 +641,23 @@
         }
           #
           
+          #
+        set myList {}
+        lappend myList Personal/HandleBar_Distance                   $init_HB_Reach     
+        lappend myList Personal/HandleBar_Height                     $init_HB_Stack     
+        lappend myList Personal/Saddle_Distance                      $init_SD_Distance  
+        lappend myList Personal/Saddle_Height                        $init_SD_Height    
+        lappend myList Custom/HeadTube/Angle                         $init_HT_Angle     
+        lappend myList Custom/TopTube/Angle                          $init_TT_Angle     
+        lappend myList FrameTubes/HeadTube/Length                    $init_HT_Length    
+        lappend myList Component/Stem/Length                         $init_Stem_Length  
+        lappend myList Component/Fork/Height                         $init_Fork_Height  
+        lappend myList Component/Fork/Rake                           $init_Fork_Rake         
+          #
+        rattleCAD::control::setValue $myList           {update} noHistory
+          #
+          
           # -- remove demoText
-        after 1000
-        createDemoText $targetCanvas       {... questions?}  
-        after 1000
         createDemoText $targetCanvas       {}  
         rattleCAD::view::updateView        force
           #
@@ -813,7 +947,7 @@
                 #
             
                 # --- create Text: DIN Format
-            set textPos     [scale_toStage [list [expr $df_Border + $df_Width      -   2 ] [ expr $df_Border +  3.0 ] ]    $scaleFactor]
+            set textPos     [scale_toStage [list [expr $df_Border + $df_Width      -   2 ] [ expr $df_Border + 0 ] ]    $scaleFactor]
                 # $cv_Name create circle    $textPos  -radius 50      -fill red -outline green
             set commentText [$cv_Name create text $textPos  -text $textText -size $textHeight -anchor se -tags {__Comment__}]
                 # set commentText [$cv_Name create draftText $textPos  -text $textText -size $textSize -anchor se -tags {__Comment__}]

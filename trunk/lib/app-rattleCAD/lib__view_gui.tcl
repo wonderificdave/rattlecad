@@ -72,12 +72,12 @@
                 
                 {separator}
                 
-                {command "Undo"             {}  "Undo"                  {Ctrl z}     -command { rattleCAD::control::changeList::previous} }
-                {command "Redo"             {}  "Redo"                  {Ctrl y}     -command { rattleCAD::control::changeList::next} }
+                {command "Undo"             {}  "Undo"                  {Ctrl z}      -command { rattleCAD::control::changeList::previous} }
+                {command "Redo"             {}  "Redo"                  {Ctrl y}      -command { rattleCAD::control::changeList::next} }
                 
                 {separator}
                 
-                {command "&Copy Reference"  {}  "Copy Reference"       {Ctrl r}     -command { rattleCAD::view::gui::notebook_switchTab  cv_Custom02} }
+                {command "&Copy Reference"  {}  "Copy Reference"       {Ctrl r}       -command { rattleCAD::view::gui::notebook_switchTab  cv_Custom02} }
                 
                 {separator}
                 
@@ -110,7 +110,8 @@
             }
             "Demo"   all info 0 {
                 {command "Samples"          {}  "Example Projects"      {}            -command { rattleCAD::test:::runDemo loopSamples } }
-                {command "Stack and Reach"  {}  "Stack and Reach"       {CtrlAlt r}   -command { rattleCAD::test:::runDemo StackandReach } }
+                {command "rattleCAD Method" {}  "rattleCAD-Method"      {CtrlAlt r}   -command { rattleCAD::test:::runDemo method_rattleCAD } }
+                {command "Seat/TopTube Method" {} "Seat/TopTube-Method" {}            -command { rattleCAD::test:::runDemo method_SeatandTopTube } }
                 {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD::test:::runDemo demo_01 } }
                 {command "Stop Demo"        {}  "Stop running Demo"     {Ctrl b}      -command { rattleCAD::test::stopDemo} }
                 {separator}      
