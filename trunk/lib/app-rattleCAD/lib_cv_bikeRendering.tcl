@@ -1005,7 +1005,7 @@
         set Pulley(x)               [ bikeGeometry::get_Value         Component/Derailleur/Rear/Pulley/x      value ]
         set Pulley(y)               [ bikeGeometry::get_Value         Component/Derailleur/Rear/Pulley/y      value ]
         set Pulley(teeth)           [ bikeGeometry::get_Value         Component/Derailleur/Rear/Pulley/teeth  value ]
-        set Pulley(position)        [ vectormath::addVector $Derailleur(position) [list $Pulley(x) $Pulley(y)] ]
+        set Pulley(position)        [ vectormath::addVector $Derailleur(position) [list $Pulley(x) [expr -1.0*$Pulley(y)]] ]
                # puts "       Pulley:         $Pulley(x) / $Pulley(y)  $Pulley(teeth)"   
                 
         
@@ -1013,7 +1013,11 @@
             #   initValues
         set crankWheelRadius    [expr $toothWith/(2*sin([expr $vectormath::CONST_PI/$crankWheelTeethCount]))]
         set casetteWheelRadius  [expr $toothWith/(2*sin([expr $vectormath::CONST_PI/$casetteTeethCount]))]
-        set pulleyRadius        [expr $toothWith/(2*sin([expr $vectormath::CONST_PI/$Pulley(teeth)]))]
+        if {$Pulley(teeth) > 3} { 
+            set pulleyRadius    [expr $toothWith/(2*sin([expr $vectormath::CONST_PI/$Pulley(teeth)]))]
+        } else {
+            set pulleyRadius    [expr $toothWith/(2*sin([expr $vectormath::CONST_PI/2]))]
+        }
                         
             # -----------------------------
             #   upper Section 

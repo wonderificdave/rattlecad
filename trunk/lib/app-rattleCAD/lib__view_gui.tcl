@@ -1054,7 +1054,8 @@
             }
             
             set f_FrameJig    [frame $baseFrame.select.jigType ]
-            foreach jig $::APPL_Config(list_FrameJigTypes) {
+              # foreach jig $::APPL_Config(list_FrameJigTypes) {}
+            foreach jig $rattleCAD::model::valueRegistry(FrameJigType) {
                 radiobutton     $f_FrameJig.$jig -text $jig -value $jig  -anchor w  -variable ::APPL_Config(FrameJigType)  -command {}
                 pack $f_FrameJig.$jig -expand yes -fill x -side top
             }

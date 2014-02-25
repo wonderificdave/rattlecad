@@ -360,8 +360,7 @@
                     create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Rear/TyreHeight)     0.20
                     create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)   $rattleCAD::model::valueRegistry(Rim)
                     create_configEdit   $menueFrame.sf.lf_04    Component(Wheel/Front/TyreHeight)    0.20
-                      # create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Rear/RimDiameter)    $::APPL_Config(list_Rims)
-                      # create_config_cBox  $menueFrame.sf.lf_04    Component(Wheel/Front/RimDiameter)   $::APPL_Config(list_Rims)
+
           
     }
     #-------------------------------------------------------------------------
