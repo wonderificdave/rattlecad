@@ -172,9 +172,11 @@
                                                                 vertical    [expr -380 * $stageScale]  [expr  230 * $stageScale]  \
                                                                 gray50 ]
                             set _dim_SD_HB_Length       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Saddle(Position)      $HandleBar(Position) ] \
-                                                                horizontal    [expr  -210 * $stageScale]    0 \
+                                                                horizontal  [expr  -210 * $stageScale]    0 \
                                                                 gray50 ]
-
+                            # set _dim_SD_HB_Distance   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)  $HandleBar(Position) ] \
+                                                                aligned     [expr   -50 * $stageScale]    0 \
+                                                                gray50 ]
 
                             set _dim_Wh_Distance        [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Ground)     $FrontWheel(Ground) ] \
                                                                 horizontal  [expr  130 * $stageScale]    0 \

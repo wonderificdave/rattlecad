@@ -755,7 +755,7 @@
     }
 
 
-    proc update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {decoColour2 {gray90}} {decoColour3 {gray95}} } {
+    proc update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {compColour {gray98}} {tyreColour {gray95}} } {
                            # {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {decoColour2 {gray90}}}
                 #
             foreach cv_Item [$cv_Name find withtag __Frame__] {
@@ -773,10 +773,16 @@
             }
                 #
             foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Tyre__}] {
-                $cv_Name itemconfigure  $cv_Item -fill $decoColour3
+                $cv_Name itemconfigure  $cv_Item -fill $tyreColour
             }
             foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Rim_02__}] {
-                $cv_Name itemconfigure  $cv_Item -fill $decoColour
+                $cv_Name itemconfigure  $cv_Item -fill $compColour
+            }
+            foreach cv_Item [$cv_Name find withtag {__Decoration__ && __HandleBar__}] {
+                $cv_Name itemconfigure  $cv_Item -fill $compColour
+            }
+            foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Saddle__}] {
+                $cv_Name itemconfigure  $cv_Item -fill $compColour
             }
             
             if { 0 == 1} {

@@ -268,7 +268,7 @@
                         #
                     rattleCAD::rendering::createBaseline     $cv_Name $xy    black
                         #
-                    update_renderCanvas               $cv_Name        wheat
+                    update_renderCanvas               $cv_Name        wheat   gray98  gray93  gray93
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                         # createWaterMark             $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
@@ -318,7 +318,7 @@
                 }
             rattleCAD::view::gui::cv_Custom50 {
                         #
-                        # -- assembly
+                        # -- mockup
                         #
                     set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
                         #
@@ -350,6 +350,8 @@
                     update_renderCanvas               $cv_Name
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
+                        #
+                    update_renderCanvas               $cv_Name        wheat   gray98  gray93  gray93
                         #
                     rattleCAD::view::gui::notebook_createButton    $cv_Name        changeRendering
                         #   

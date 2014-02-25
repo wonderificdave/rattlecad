@@ -44,7 +44,7 @@
   
   package require   appUtil       0.15
   package require   vectormath    0.5
-  package require   bikeGeometry  0.49
+  package require   bikeGeometry  0.50
   package require   canvasCAD     0.51
   package require   extSummary    0.4
   package require   osEnv         0.8
@@ -280,40 +280,7 @@
             
         
         set projectDOM    [rattleCAD::model::file::get_XMLContent     $::APPL_Config(TemplateInit)]
-        # set ::APPL_Config(root_ProjectDOM)    [rattleCAD::model::file::get_XMLContent     $::APPL_Config(TemplateInit)]
-          
-        proc __unused {} {
-                # -- status messages --------
-            puts "\n     APPL_Config(list_TemplateTypes)"
-            foreach entry $::APPL_Config(list_TemplateTypes) {
-                puts "        -> $entry"
-            }
-              
-            puts "\n     APPL_Config(list_FrameJigTypes)"
-            foreach entry $::APPL_Config(list_FrameJigTypes) {
-                puts "        -> $entry"
-            }
-              
-            puts "\n     APPL_Config(list_ForkTypes)"
-            foreach entry $::APPL_Config(list_ForkTypes) {
-                puts "        -> $entry"
-            }
-              
-            puts "\n     APPL_Config(list_BrakeTypes)"
-            foreach entry $::APPL_Config(list_BrakeTypes) {
-                puts "        -> $entry"
-            }
-            
-            puts "\n     APPL_Config(list_BottleCage)"
-            foreach entry $::APPL_Config(list_BottleCage) {
-                puts "        -> $entry"
-            }
-            
-            puts "\n     APPL_Config(list_Rims)"
-            foreach entry $::APPL_Config(list_Rims) {
-                puts "        -> $entry"
-            }
-        }       
+      
 	    
         # puts "\n     APPL_CompLocation"
         foreach index [array names APPL_CompLocation] {

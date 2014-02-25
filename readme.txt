@@ -1,4 +1,16 @@
 
+3.4.01.41  - 2014.02.24
+-------------------------------------------------------------------------------
+    feature:
+        ... new sample: roadFixie.xml (SingleSpeed)
+    refactoring:
+        ... change colour mockup for summary and mockup
+        ... change direction of Component/Derailleur/Rear/Pulley/y
+            ... bikeGeometry 0.50
+    debug:
+        ... configCorner throws Error in Frame-Jig Tab
+        ... derailleur pulley teeth throws error if < 2
+ 
 
 3.4.01.40  - 2014.02.23
 -------------------------------------------------------------------------------
