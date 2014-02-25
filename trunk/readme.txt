@@ -1,10 +1,19 @@
 
+
+3.4.01.42  - 2014.02.24
+-------------------------------------------------------------------------------
+    feature:
+        ... paul components: singlespeed dropout
+    refactoring:
+        ... road_Fixie.xml (SingleSpeed)
+        
+
 3.4.01.41  - 2014.02.24
 -------------------------------------------------------------------------------
     feature:
-        ... new sample: roadFixie.xml (SingleSpeed)
+        ... new sample: road_Fixie.xml (SingleSpeed)
     refactoring:
-        ... change colour mockup for summary and mockup
+        ... change colour mapping for summary and mockup
         ... change direction of Component/Derailleur/Rear/Pulley/y
             ... bikeGeometry 0.50
     debug:
