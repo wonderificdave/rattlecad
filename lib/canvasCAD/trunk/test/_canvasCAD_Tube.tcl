@@ -342,15 +342,30 @@
                                 $S01_radius $S02_radius $S03_radius $S04_radius]
                                 
             # -- get smooth centerLine
-        set retValues [lib_tube::init_centerLine $centerLineDef] 
+        set retValues [bikeGeometry::tube::init_centerLine $centerLineDef] 
         set centerLine  [lindex $retValues 0]
         set ctrLines    [lindex $retValues 1]
         
-          # set centerLine            [lib_tube::init_centerLine $centerLineDef]
+          
+        set ctrLines_flattened    [canvasCAD::flatten_nestedList $ctrLines]
+        
+        foreach {a b} $ctrLines {
+            puts "$a $b"
+            if {$b == {}} continue
+            set a [vectormath::addVector $a {0 100}]
+            set b [vectormath::addVector $b {0 100}]
+            $myCanvas addtag {__CenterLine__}  withtag  {*}[$myCanvas  create   line  [list $a $b] -tags dimension  -fill orange ] 
+        
+        
+        }
+        puts "\n\n -> \$ctrLines_flattened  $ctrLines_flattened"
+        #exit  
+          
+          
+          # set centerLine            [bikeGeometry::tube::init_centerLine $centerLineDef]
         set centerLine_flattened  [canvasCAD::flatten_nestedList $centerLine]
                     # -- get smooth centerLine
-        
-        
+
         
         variable  profile_x00   $sketchboard::profile_x00
         variable  profile_y00   $sketchboard::profile_y00
@@ -367,7 +382,7 @@
           lappend profileDef [list $profile_x03 $profile_y03]        
         
             # -- set profile of straight, unbent tubeprofile
-        set tubeProfile [lib_tube::init_tubeProfile $profileDef]
+        set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]
         
 
         
@@ -379,8 +394,8 @@
         
         
             # -- draw shape of tube
-        set outLineLeft   [lib_tube::get_tubeShape    $centerLine $tubeProfile left  ]
-        set outLineRight  [lib_tube::get_tubeShape    $centerLine $tubeProfile right ]
+        set outLineLeft   [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile left  ]
+        set outLineRight  [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile right ]
         set outLine       [canvasCAD::flatten_nestedList $outLineLeft $outLineRight]
           # puts "\n    -> \$outLineLeft   $outLineLeft"
           # puts "\n    -> \$outLineRight  $outLineRight"
@@ -399,7 +414,7 @@
         set unbentShapeLine {}
         set x 0
         while {$x < 500} {
-          set y [lib_tube::get_tubeProfileOffset $tubeProfile $x]
+          set y [bikeGeometry::tube::get_tubeProfileOffset $tubeProfile $x]
           # set y  [lindex $xy 1]
           set y1 [expr $y + 20]
           lappend unbentShapeLine [list $x $y1]
@@ -415,13 +430,13 @@
           # puts   "  -> angle:  $angle"        
         switch -exact $orient_select {
             left {
-                set point_IS  [lib_tube::get_shapeInterSection $outLineLeft $length] 
+                set point_IS  [bikeGeometry::tube::get_shapeInterSection $outLineLeft $length] 
                 }
             center {
-                set point_IS  [lib_tube::get_shapeInterSection $centerLine $length] 
+                set point_IS  [bikeGeometry::tube::get_shapeInterSection $centerLine $length] 
                 }
             right {
-                set point_IS  [lib_tube::get_shapeInterSection [lreverse $outLineRight] $length] 
+                set point_IS  [bikeGeometry::tube::get_shapeInterSection [lreverse $outLineRight] $length] 
                 }
                     
         }
@@ -478,6 +493,185 @@
 		}		
 	}
 
+        #
+        #
+        #
+        #
+    namespace eval bikeGeometry::tube {
+
+        variable arcPrecission 5 ;# number of segments per arc
+        
+        
+        proc init_centerLine {centerLineDef} {
+            
+            variable arcPrecission
+            variable centerLineDirAngle;  array set centerLineDirAngle  {} 
+            variable centerLineRadius;    array set centerLineRadius    {} 
+            variable centerLineSegement;  array set centerLineAngle     {} 
+            variable centerLineDefLength; array set centerLineDefLength {} 
+            variable centerLinePosition;  array set centerLinePosition  {} 
+            variable centerLineEnd
+              # puts "  -> $arcPrecission"
+            
+              # --
+            foreach {S01_length S02_length S03_length S04_length S05_length \
+                     P01_angle  P02_angle  P03_angle  P04_angle \
+                     S01_radius S02_radius S03_radius S04_radius} $centerLineDef break
+                     
+                  # puts "   <D> ---- \$centerLineDef ----------"
+                  # puts $centerLineDef
+                  # puts "   <D> --------------"
+
+            set centerLineDefLength(1) $S01_length
+            set centerLineDefLength(2) $S02_length
+            set centerLineDefLength(3) $S03_length
+            set centerLineDefLength(4) $S04_length
+            set centerLineDefLength(5) $S05_length
+            
+            set centerLineAngle(0)     0
+            set centerLineAngle(1)     $P01_angle
+            set centerLineAngle(2)     $P02_angle
+            set centerLineAngle(3)     $P03_angle
+            set centerLineAngle(4)     $P04_angle
+            set centerLineAngle(5)     0
+            
+            set centerLineDirection(0) 0
+            set centerLineDirection(1) [expr $centerLineDirection(0) + $P01_angle]
+            set centerLineDirection(2) [expr $centerLineDirection(1) + $P02_angle]
+            set centerLineDirection(3) [expr $centerLineDirection(2) + $P03_angle]
+            set centerLineDirection(4) [expr $centerLineDirection(3) + $P04_angle]
+            set centerLineDirection(5) $centerLineDirection(4)
+            
+            set centerLineRadius(0)    0
+            set centerLineRadius(1)    $S01_radius
+            set centerLineRadius(2)    $S02_radius
+            set centerLineRadius(3)    $S03_radius
+            set centerLineRadius(4)    $S04_radius
+            set centerLineRadius(5)    0
+            
+            set polyLine    [list {0 0}]
+            set ctrlPoints  {}
+            
+              #
+              # puts " -> centerLineDefLength [array size centerLineDefLength]"
+              #
+            set i 0
+            while {$i <= [array size centerLineDefLength]-1} {
+                  # puts "\n"
+                  # puts " == <$i> ==========================="
+                set lastId $i
+                set nextId [expr $i+1]
+                set retValue [init_centerLineNextPosition   $polyLine $ctrlPoints\
+                                                            $centerLineRadius($lastId)  $centerLineAngle($lastId)  $centerLineDirection($lastId) \
+                                                            $centerLineDefLength($nextId) \
+                                                            $centerLineRadius($nextId)  $centerLineAngle($nextId)  $centerLineDirection($nextId)]
+                set polyLine    [lindex $retValue 0]
+                set ctrlPoints  [lindex $retValue 1] 
+                  # puts "  -> $ctrlPoints"
+                if {$i == 20} { exit }
+                
+                incr i
+                
+            }
+              #
+            set controlPoints [list {0 0}]
+            set i 0
+            foreach {start end} $ctrlPoints {
+                lappend controlPoints $start $end
+            }
+              #
+            return [list $polyLine $controlPoints]
+              #
+        }
+        
+        proc init_centerLineNextPosition {polyLine ctrlPoints lastRadius lastAngle lastDir distance nextRadius nextAngle nextDir} {
+              #
+            variable arcPrecission
+              #
+            set lastPos     [lindex $polyLine end]
+              #
+              # puts "\n -- <D> ---------------------------"
+              # puts "   -> \$lastPos    $lastPos"
+              # puts "   -> \$lastRadius $lastRadius"
+              # puts "   -> \$lastAngle  $lastAngle"
+              # puts "   -> \$lastDir    $lastDir"
+              # puts "   -> \$distance   $distance"
+              # puts "   -> \$nextRadius $nextRadius"
+              # puts "   -> \$nextAngle  $nextAngle"
+              # puts "   -> \$nextDir    $nextDir"
+
+              #
+            set lastSegment [expr abs($lastRadius * [vectormath::rad $lastAngle])]
+            set nextSegment [expr abs($nextRadius * [vectormath::rad $nextAngle])]
+              #
+            set lastArc      [expr 0.5 * $lastSegment]
+            set nextArc      [expr 0.5 * $nextSegment]
+              #        
+            
+            set offset      [expr $distance - ($lastArc + $nextArc)]
+              # puts "      -> \$offset $offset"
+            set arcStart    [vectormath::addVector $lastPos  [vectormath::rotateLine {0 0} ${offset}  ${lastDir}]]  
+            set ctrlEnd     [vectormath::addVector $arcStart [vectormath::rotateLine {0 0} ${nextArc} ${lastDir}]] 
+              #
+            lappend polyLine   $arcStart
+              #
+                  # puts "    <1>  \$lastPos                              \$arcStart"
+                  # puts "    <1>  {69.45050226731068 -2.385231474777072} {179.76990416419986 -15.896650836506808}"
+                  # puts "    <1>   $lastPos  $arcStart"
+                  # puts "    <1>         \$offset  ${offset}"
+                  # puts "    <1>         \$lastDir ${lastDir}"
+                  # puts "    <1>     ---------------------------"
+                  # puts "    <D>       distance: $distance"
+                  # puts "    <D>        lastArc: $lastArc"
+                  # puts "    <D>        nextArc: $nextArc"
+                  # puts "    <D>       -----------------------"
+                  # puts "    <D>                 [expr $distance - $lastArc - $nextArc]"
+                  # puts "    <D>       length: \$lastPos  <-> \$arcStart  [vectormath::length $lastPos  $arcStart]"
+                  # puts "    <1>     ---------------------------\n"
+
+              #
+            if {$nextAngle == 0} {   
+                lappend ctrlPoints $arcStart
+                lappend ctrlPoints $arcStart
+                  #
+                return [list $polyLine $ctrlPoints]
+            } else {
+                if {$nextAngle < 0} {
+                    set arcCenter [vectormath::addVector $arcStart [vectormath::rotateLine {0 0} $nextRadius [expr -1.0 * (90 - $lastDir)]]]
+                } else {  
+                    set arcCenter [vectormath::addVector $arcStart [vectormath::rotateLine {0 0} $nextRadius [expr (90 + $lastDir)]]]
+                }
+            }
+            
+              #
+            set nrSegments  [expr abs(round($nextSegment/$arcPrecission))]
+            if {$nrSegments < 1} {
+                  # puts "    -> nrSegments: $nrSegments"
+                set nrSegments 1
+            }
+              #
+            set deltaAngle  [expr 1.0*$nextAngle/$nrSegments]
+              # puts "  ->  Segments/Angle: $nrSegments $deltaAngle"
+            set arcEnd  $arcStart
+            set i 0
+            while {$i < $nrSegments} {
+                  set arcEnd  [vectormath::rotatePoint $arcCenter $arcEnd $deltaAngle]
+                  lappend polyLine $arcEnd
+                    # puts "  -> i/p_End:  $i  $p_End"
+                    # set pStart $p_End
+                  incr i
+            }
+            set ctrlStart [vectormath::addVector $arcEnd  [vectormath::rotateLine {0 0} ${nextArc}  [expr 180 + ${nextDir}]]] 
+              #
+            lappend ctrlPoints $ctrlEnd
+            lappend ctrlPoints $ctrlStart
+              #
+            return [list $polyLine $ctrlPoints]
+        }
+    }    
+    
+    
+    
 
 	
   #

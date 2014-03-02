@@ -852,7 +852,7 @@
           set cv_Type     [$cv type $cvItem]
           set svgCoords  {}
           set svgAtts   {}
-                    #puts "   $cv_Type"
+                    # puts "   $cv_Type"
           
           
             # --- get attributes
