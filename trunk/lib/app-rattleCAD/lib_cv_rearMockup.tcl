@@ -1257,8 +1257,103 @@
             }                      
             puts "   -------------------------------"
             
+            
+            array set lastValues {}
+                set lastValues(S01)     [vectormath::length   $ctrl_Points(0) $ctrl_Points(1)]
+                set lastValues(S02)     [vectormath::length   $ctrl_Points(1) $ctrl_Points(2)]
+                set lastValues(S03)     [vectormath::length   $ctrl_Points(2) $ctrl_Points(3)]
+                set lastValues(S04)     [vectormath::length   $ctrl_Points(3) $ctrl_Points(4)]
+                set lastValues(S05)     [vectormath::length   $ctrl_Points(4) $ctrl_Points(5)]
+                set lastValues(P00)     [set ctrl_Points(0)]
+                set lastValues(P01)     [set ctrl_Points(1)]
+                set lastValues(P02)     [set ctrl_Points(2)]
+                set lastValues(P03)     [set ctrl_Points(3)]
+                set lastValues(P04)     [set ctrl_Points(4)]
+                set lastValues(P05)     [set ctrl_Points(5)]
+
+
+            
             foreach {x y} $xy break
-            set ctrl_Points($id) [vectormath::addVector $ctrl_Points($id) [list $x [expr -1.0*$y]]]
+            if {$id == 5} {
+                  # -- this is the definition of ChainStay at the BottomBracket side
+                  #   each drag on this point shall be in direction of the last segment
+                  #   of the ChainStay and shall not influence the other definition points  
+                  #   -> so get offstet in direction of last segment by "intersectPerp"              
+                set lastLength [vectormath::length {0 0} $lastValues(P05)]
+                set newLength  [vectormath::length {0 0} $xy]
+                set refPos     [vectormath::addVector $ctrl_Points($id) [list $x [expr -1.0*$y]]]
+                set newXY      [vectormath::intersectPerp $lastValues(P04) $lastValues(P05) $refPos]
+                set ctrl_Points($id)     $newXY
+                  # puts "    -> last pos 5:  $ctrl_Points(5)"
+                  # puts "       -> lastLength:     $lastLength"
+                  # puts "       -> newLength:      $newLength"
+                  # puts "       -> \$newXY:        $newXY"
+                  # puts "    ->  new  pos 5:  $ctrl_Points(5)"
+                  # puts "\n-------------------\n\n\n\n"
+            }  else {                
+                  # ---
+                set leftID         [expr $id - 1]
+                set rightID        [expr $id + 1]
+                set leftPos        [set ctrl_Points($leftID)]
+                set rightPos       [set ctrl_Points($rightID)]
+                  # ---
+                set lastPos        [set ctrl_Points($id)]
+                set lastOffset     [vectormath::distancePerp $leftPos $lastPos $rightPos]
+                  # ---
+                set myPos          [vectormath::addVector $ctrl_Points($id) [list $x [expr -1.0*$y]]]    
+                set newOffset      [vectormath::distancePerp $leftPos $myPos $rightPos]
+                set myRadius       [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $id]]
+                set myAngle        [vectormath::angle $leftPos $myPos $rightPos]
+                set myArcLength    [expr  $myRadius * ( 2 * $vectormath::CONST_PI * $myAngle / 360)]
+                  # ---
+                set leftLength     [vectormath::length $leftPos $myPos]
+                if {$leftID > 0} {
+                    set leftRadius     [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $leftID]]
+                    set leftAngle      [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/angle_0%i"  $leftID]] 
+                } else {
+                    set leftRadius     100
+                    set leftAngle      0 
+                }
+                set leftArcLength  [expr  $leftRadius * ( 2 * $vectormath::CONST_PI * $leftAngle / 360)]
+                  # ---
+                set rightLength    [vectormath::length $myPos $rightPos]
+                if {$rightID < 5} {
+                    set rightRadius    [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $rightID]]
+                    set rightAngle     [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/angle_0%i"  $rightID]]
+                } else {
+                    set rightRadius    100
+                    set rightAngle     0
+                }
+                set rightArcLength [expr  $rightRadius * ( 2 * $vectormath::CONST_PI * $rightAngle / 360)]
+                  # ---
+                puts "\n --- <D> ---------------"
+                puts   "    -> \$lastOffset  $lastOffset"
+                puts   "    -> \$newOffset   $newOffset "
+                puts   "      --------"
+                puts   "       -> \$leftPos        $leftPos"
+                puts   "       -> \$leftLength     $leftLength"
+                puts   "       -> \$leftRadius     $leftRadius"
+                puts   "       -> \$leftAngle      $leftAngle"
+                puts   "       -> \$leftArcLength  $leftArcLength"
+                puts   "      ---"
+                puts   "       -> \$lastPos        $lastPos"
+                puts   "       -> \$myPos          $myPos"
+                puts   "       -> \$myRadius       $myRadius"
+                puts   "       -> \$myAngle        $myAngle"
+                puts   "       -> \$myArcLength    $myArcLength"
+                puts   "      ---"
+                puts   "       -> \$rightPos       $rightPos"
+                puts   "       -> \$rightLength    $rightLength"
+                puts   "       -> \$rightRadius    $rightRadius"
+                puts   "       -> \$rightAngle     $rightAngle"
+                puts   "       -> \$rightArcLength $rightArcLength"
+                puts   " --- <D> ---------------\n"
+                
+                #return
+                
+                set ctrl_Points($id) $myPos
+
+            }
     
             set S01_length   [vectormath::length   $ctrl_Points(0) $ctrl_Points(1)]
             set S02_length   [vectormath::length   $ctrl_Points(1) $ctrl_Points(2)]
@@ -1266,15 +1361,16 @@
             set S04_length   [vectormath::length   $ctrl_Points(3) $ctrl_Points(4)]
             set S05_length   [vectormath::length   $ctrl_Points(4) $ctrl_Points(5)]
             
+            
             set S01_orient [vectormath::offsetOrientation $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)]
             set S02_orient [vectormath::offsetOrientation $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)]
             set S03_orient [vectormath::offsetOrientation $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)]
             set S04_orient [vectormath::offsetOrientation $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)]
             
-            set S01_angle  [expr $S01_orient * (-180 + [vectormath::angle    $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)])]
-            set S02_angle  [expr $S02_orient * (-180 + [vectormath::angle    $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)])]
-            set S03_angle  [expr $S03_orient * (-180 + [vectormath::angle    $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)])]
-            set S04_angle  [expr $S04_orient * (-180 + [vectormath::angle    $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)])]
+            set P01_angle  [expr $S01_orient * (-180 + [vectormath::angle    $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)])]
+            set P02_angle  [expr $S02_orient * (-180 + [vectormath::angle    $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)])]
+            set P03_angle  [expr $S03_orient * (-180 + [vectormath::angle    $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)])]
+            set P04_angle  [expr $S04_orient * (-180 + [vectormath::angle    $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)])]
             
             proc update_ChainStayValue_org {xPath value} {
                 set lastValue  [rattleCAD::control::getValue $xPath ]
@@ -1315,10 +1411,10 @@
             lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_04  $S04_length
             lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_05  $S05_length
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_01   $S01_angle
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_02   $S02_angle
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_03   $S03_angle
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_04   $S04_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_01   $P01_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_02   $P02_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_03   $P03_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_04   $P04_angle
             
             update_ChainStayValue $xpathValueList
             
@@ -1328,10 +1424,10 @@
               # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_04  $S04_length
               # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_05  $S05_length
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_01   $S01_angle
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_02   $S02_angle
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_03   $S03_angle
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_04   $S04_angle
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_01   $P01_angle
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_02   $P02_angle
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_03   $P03_angle
+              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_04   $P04_angle
             
             puts "\n   -------------------------------"
             puts "       -> S01_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_01]"
@@ -1339,10 +1435,10 @@
             puts "       -> S03_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_03]"
             puts "       -> S04_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_04]"
             puts "       -> S05_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_05]"
-            puts "       -> S01_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_01]"
-            puts "       -> S02_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_02]"
-            puts "       -> S03_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_03]"
-            puts "       -> S04_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_04]"
+            puts "       -> P01_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_01]"
+            puts "       -> P02_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_02]"
+            puts "       -> P03_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_03]"
+            puts "       -> P04_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_04]"
             
               #set cv_Name     [rattleCAD::view::gui::current_canvasCAD]
               #rattleCAD::cv_custom::clean_StageContent   $cv_Name

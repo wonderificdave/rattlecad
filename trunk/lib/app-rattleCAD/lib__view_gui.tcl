@@ -120,8 +120,9 @@
                 {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
             }
             "Info"   all info 0 {
-                {command "&Info"            {}  "Information"           {Ctrl w}      -command { rattleCAD::version_info::create  .v_info 0} }
-                {command "&Help"            {}  "Help"                  {Ctrl h}      -command { rattleCAD::version_info::create  .v_info 1} }
+                {command "&Info"            {}  "Information"           {Ctrl w}      -command { rattleCAD::infoPanel::create  .v_info 0} }
+                {command "&Help"            {}  "Help"                  {Ctrl h}      -command { rattleCAD::infoPanel::create  .v_info 1} }
+                {command "ChangeLog"        {}  "ChangeLog"             {}            -command { rattleCAD::infoPanel::create  .v_info 7} }
                 {separator}
                 {command "rattleCAD WebSite"      {}  "about rattleCAD"       {}      -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
                 {command "rattleCAD Features"     {}  "rattleCAD Features"    {}      -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
@@ -1205,7 +1206,7 @@
             variable noteBook_top
 
             # puts "\n   -----> keyboard binding \n -------------"
-            bind . <F1>     {rattleCAD::version_info::create  .v_info 1}
+            bind . <F1>     {rattleCAD::infoPanel::create  .v_info 1}
             bind . <F3>     {rattleCAD::view::gui::notebook_scaleCanvas  [expr 2.0/3]}
             bind . <F4>     {rattleCAD::view::gui::notebook_scaleCanvas  [expr 3.0/2]}
             bind . <F5>     {rattleCAD::view::gui::notebook_refitCanvas}
