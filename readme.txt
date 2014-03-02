@@ -1,4 +1,11 @@
 
+3.4.01.43  - 2014.03.02
+-------------------------------------------------------------------------------
+    debug:
+        ... stabilize bent Chainstay-Edit in Chainstay-Details tab
+    refactoring:
+        ... change "Exclusion" and "ChangeLog" in Info Panel    
+
 
 3.4.01.42  - 2014.02.24
 -------------------------------------------------------------------------------

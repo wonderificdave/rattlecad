@@ -22,7 +22,7 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir lib_cv_rearMockup.tcl]]; \
         [list source  [file join $dir lib_cv_frameJig.tcl]]; \
         [list source  [file join $dir lib_cv_compLibrary.tcl]]; \
-        [list source  [file join $dir lib_version_info.tcl]]; \
+        [list source  [file join $dir lib_infoPanel.tcl]]; \
         [list source  [file join $dir lib_cfgReport.tcl]]; \
         [list source  [file join $dir lib_configPanel.tcl]]; \
         [list source  [file join $dir lib_test.tcl]]; \

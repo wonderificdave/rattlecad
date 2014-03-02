@@ -206,13 +206,13 @@
 		
 				
 		puts "\n\n === create Information  ===\n"      
-		rattleCAD::version_info::create  .v_info 0
+		rattleCAD::infoPanel::create  .v_info 0
 		
 		puts "\n\n === create Help  ===\n"
-		rattleCAD::version_info::create  .v_info 1
+		rattleCAD::infoPanel::create  .v_info 1
 		
 		puts "\n\n === create Environment  ===\n"
-		rattleCAD::version_info::create  .v_info 2
+		rattleCAD::infoPanel::create  .v_info 2
 		
 		puts "\n\n === create_intro  ===\n"        
 		create_intro .intro
