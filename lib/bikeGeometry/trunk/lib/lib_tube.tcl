@@ -149,7 +149,13 @@ namespace eval bikeGeometry::tube {
         set nextArc      [expr 0.5 * $nextSegment]
           #        
         
+          # -- get sure to have a smooth shape
         set offset      [expr $distance - ($lastArc + $nextArc)]
+        if {$offset < 0} {
+            set offset 0.5
+        }
+          #
+          
           # puts "      -> \$offset $offset"
         set arcStart    [vectormath::addVector $lastPos  [vectormath::rotateLine {0 0} ${offset}  ${lastDir}]]  
         set ctrlEnd     [vectormath::addVector $arcStart [vectormath::rotateLine {0 0} ${nextArc} ${lastDir}]] 
