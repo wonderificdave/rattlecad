@@ -1292,64 +1292,20 @@
                   # puts "\n-------------------\n\n\n\n"
             }  else {                
                   # ---
-                set leftID         [expr $id - 1]
-                set rightID        [expr $id + 1]
-                set leftPos        [set ctrl_Points($leftID)]
-                set rightPos       [set ctrl_Points($rightID)]
+                #set leftID         [expr $id - 1]
+                #set rightID        [expr $id + 1]
+                #set leftPos        [set ctrl_Points($leftID)]
+                #set rightPos       [set ctrl_Points($rightID)]
                   # ---
-                set lastPos        [set ctrl_Points($id)]
-                set lastOffset     [vectormath::distancePerp $leftPos $lastPos $rightPos]
+                #set lastPos        [set ctrl_Points($id)]
+                #set lastOffset     [vectormath::distancePerp $leftPos $lastPos $rightPos]
                   # ---
                 set myPos          [vectormath::addVector $ctrl_Points($id) [list $x [expr -1.0*$y]]]    
-                set newOffset      [vectormath::distancePerp $leftPos $myPos $rightPos]
-                set myRadius       [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $id]]
-                set myAngle        [vectormath::angle $leftPos $myPos $rightPos]
-                set myArcLength    [expr  $myRadius * ( 2 * $vectormath::CONST_PI * $myAngle / 360)]
+                #set newOffset      [vectormath::distancePerp $leftPos $myPos $rightPos]
+                #set myRadius       [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $id]]
+                #set myAngle        [vectormath::angle $leftPos $myPos $rightPos]
+                #set myArcLength    [expr  $myRadius * ( 2 * $vectormath::CONST_PI * $myAngle / 360)]
                   # ---
-                set leftLength     [vectormath::length $leftPos $myPos]
-                if {$leftID > 0} {
-                    set leftRadius     [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $leftID]]
-                    set leftAngle      [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/angle_0%i"  $leftID]] 
-                } else {
-                    set leftRadius     100
-                    set leftAngle      0 
-                }
-                set leftArcLength  [expr  $leftRadius * ( 2 * $vectormath::CONST_PI * $leftAngle / 360)]
-                  # ---
-                set rightLength    [vectormath::length $myPos $rightPos]
-                if {$rightID < 5} {
-                    set rightRadius    [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $rightID]]
-                    set rightAngle     [rattleCAD::control::getValue [format "FrameTubes/ChainStay/CenterLine/angle_0%i"  $rightID]]
-                } else {
-                    set rightRadius    100
-                    set rightAngle     0
-                }
-                set rightArcLength [expr  $rightRadius * ( 2 * $vectormath::CONST_PI * $rightAngle / 360)]
-                  # ---
-                puts "\n --- <D> ---------------"
-                puts   "    -> \$lastOffset  $lastOffset"
-                puts   "    -> \$newOffset   $newOffset "
-                puts   "      --------"
-                puts   "       -> \$leftPos        $leftPos"
-                puts   "       -> \$leftLength     $leftLength"
-                puts   "       -> \$leftRadius     $leftRadius"
-                puts   "       -> \$leftAngle      $leftAngle"
-                puts   "       -> \$leftArcLength  $leftArcLength"
-                puts   "      ---"
-                puts   "       -> \$lastPos        $lastPos"
-                puts   "       -> \$myPos          $myPos"
-                puts   "       -> \$myRadius       $myRadius"
-                puts   "       -> \$myAngle        $myAngle"
-                puts   "       -> \$myArcLength    $myArcLength"
-                puts   "      ---"
-                puts   "       -> \$rightPos       $rightPos"
-                puts   "       -> \$rightLength    $rightLength"
-                puts   "       -> \$rightRadius    $rightRadius"
-                puts   "       -> \$rightAngle     $rightAngle"
-                puts   "       -> \$rightArcLength $rightArcLength"
-                puts   " --- <D> ---------------\n"
-                
-                #return
                 
                 set ctrl_Points($id) $myPos
 
