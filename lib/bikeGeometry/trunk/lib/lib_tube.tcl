@@ -42,256 +42,173 @@ namespace eval bikeGeometry::tube {
 
     variable arcPrecission 5 ;# number of segments per arc
     
+    
     proc init_centerLine {centerLineDef} {
         
         variable arcPrecission
-        # puts "  -> $arcPrecission"
+        variable centerLineDirAngle;  array set centerLineDirAngle  {} 
+        variable centerLineRadius;    array set centerLineRadius    {} 
+        variable centerLineSegement;  array set centerLineAngle     {} 
+        variable centerLineDefLength; array set centerLineDefLength {} 
+        variable centerLinePosition;  array set centerLinePosition  {} 
+        variable centerLineEnd
+          # puts "  -> $arcPrecission"
         
+          # --
         foreach {S01_length S02_length S03_length S04_length S05_length \
-                 S01_angle  S02_angle  S03_angle  S04_angle \
+                 P01_angle  P02_angle  P03_angle  P04_angle \
                  S01_radius S02_radius S03_radius S04_radius} $centerLineDef break
+                 
+              # puts "   <D> ---- \$centerLineDef ----------"
+              # puts $centerLineDef
+              # puts "   <D> --------------"
 
-        set angle_00    0
-        set angle_01    [expr $angle_00 + $S01_angle]
-        set angle_02    [expr $angle_01 + $S02_angle]
-        set angle_03    [expr $angle_02 + $S03_angle]
-        set angle_04    [expr $angle_03 + $S04_angle]
-        set segment_01  [expr $S01_radius * $S01_angle * $vectormath::CONST_PI / 180]
-        set segment_02  [expr $S02_radius * $S02_angle * $vectormath::CONST_PI / 180]
-        set segment_03  [expr $S03_radius * $S03_angle * $vectormath::CONST_PI / 180]
-        set segment_04  [expr $S04_radius * $S04_angle * $vectormath::CONST_PI / 180]
-        set offset_01   [expr abs(0.5 * $segment_01)]
-        set offset_02   [expr abs(0.5 * $segment_02)]
-        set offset_03   [expr abs(0.5 * $segment_03)]
-        set offset_04   [expr abs(0.5 * $segment_04)]
-
-        set p_S00       {0 0}
-        set p_End       $p_S00
-        lappend basePoints  $p_End
+        set centerLineDefLength(1) $S01_length
+        set centerLineDefLength(2) $S02_length
+        set centerLineDefLength(3) $S03_length
+        set centerLineDefLength(4) $S04_length
+        set centerLineDefLength(5) $S05_length
         
-          # ============================================
-          # start-Segment
-        set p_S01 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S01_length $angle_00]]
+        set centerLineAngle(0)     0
+        set centerLineAngle(1)     $P01_angle
+        set centerLineAngle(2)     $P02_angle
+        set centerLineAngle(3)     $P03_angle
+        set centerLineAngle(4)     $P04_angle
+        set centerLineAngle(5)     0
         
-          # ============================================
-          # 1st bent-Segment
-        if {$S01_angle == 0} {
-            set angle_01    $angle_00
-            set segment_01  0
-            set offset_01   0
-            set p_S01_a     $p_S01
-            set p_S01_b     $p_S01   
-            set p_S01_ct    $p_S01   
-            set p_End       $p_S01
-            lappend basePoints $p_End
-        } else {
-            if {$S01_angle > 0} {
-                set p_End    [vectormath::addVector $p_S01  [vectormath::rotateLine {0 0} [expr -1.0 * $offset_01] $angle_00]] 
-                set p_S01_ct [vectormath::addVector $p_End  [vectormath::rotateLine {0 0} $S01_radius  90]]
-                lappend basePoints $p_End
-            } else {
-                set p_End    [vectormath::addVector $p_S01  [vectormath::rotateLine {0 0} [expr -1.0 * $offset_01] $angle_00]] 
-                set p_S01_ct [vectormath::addVector $p_End  [vectormath::rotateLine {0 0} $S01_radius -90]]
-                lappend basePoints $p_End
-            }
-            set p_S01_a $p_End
+        set centerLineDirection(0) 0
+        set centerLineDirection(1) [expr $centerLineDirection(0) + $P01_angle]
+        set centerLineDirection(2) [expr $centerLineDirection(1) + $P02_angle]
+        set centerLineDirection(3) [expr $centerLineDirection(2) + $P03_angle]
+        set centerLineDirection(4) [expr $centerLineDirection(3) + $P04_angle]
+        set centerLineDirection(5) $centerLineDirection(4)
+        
+        set centerLineRadius(0)    0
+        set centerLineRadius(1)    $S01_radius
+        set centerLineRadius(2)    $S02_radius
+        set centerLineRadius(3)    $S03_radius
+        set centerLineRadius(4)    $S04_radius
+        set centerLineRadius(5)    0
+        
+        set polyLine    [list {0 0}]
+        set ctrlPoints  {}
+        
+          #
+          # puts " -> centerLineDefLength [array size centerLineDefLength]"
+          #
+        set i 0
+        while {$i <= [array size centerLineDefLength]-1} {
+              # puts "\n"
+              # puts " == <$i> ==========================="
+            set lastId $i
+            set nextId [expr $i+1]
+            set retValue [init_centerLineNextPosition   $polyLine $ctrlPoints\
+                                                        $centerLineRadius($lastId)  $centerLineAngle($lastId)  $centerLineDirection($lastId) \
+                                                        $centerLineDefLength($nextId) \
+                                                        $centerLineRadius($nextId)  $centerLineAngle($nextId)  $centerLineDirection($nextId)]
+            set polyLine    [lindex $retValue 0]
+            set ctrlPoints  [lindex $retValue 1] 
+              # puts "  -> $ctrlPoints"
+            if {$i == 20} { exit }
             
-            set nrSegments  [expr abs(round($segment_01/$arcPrecission))]
-            if {$nrSegments < 1} {
-                # puts "    -> nrSegments: $nrSegments"
-              set nrSegments 1
-            }
-            set deltaAngle  [expr 1.0*$S01_angle/$nrSegments]
-              # puts "  ->  Segments/Angle: $nrSegments $deltaAngle"
-            set pStart  $p_End
-            set i 0
-            while {$i < $nrSegments} {
-              set p_End  [vectormath::rotatePoint $p_S01_ct $pStart $deltaAngle]
-              lappend basePoints $p_End
-                # puts "  -> i/p_End:  $i  $p_End"
-              set pStart $p_End
-              incr i
-            }
-            set p_S01_b  $p_End
-        }
-
-
-          # ============================================
-          # 2nd bent-Segment
-        if {$S01_angle == 0} { 
-            set p_S02 [vectormath::addVector $p_S01 [vectormath::rotateLine {0 0} $S02_length $angle_01]]
-        } else {
-            set length_02 [expr $S02_length - $offset_01]
-            set p_S02 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_02 $angle_01]]
-        } 
-        if {$S02_angle == 0} {
-            set angle_02    $angle_01
-            set segment_02  0
-            set offset_02   0        
-            set p_S02_a     $p_S02
-            set p_S02_b     $p_S02
-            set p_S02_ct    $p_S02
-            set p_End       $p_S02
-            lappend basePoints $p_End
-        } else {
-            if {$S02_angle < 0} {
-                set p_End    [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_02] $angle_01]]   
-                set p_S02_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S02_radius [expr -1.0*(90 - $angle_01)]]]
-            } else {
-                set p_End    [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_02] $angle_01]]   
-                set p_S02_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S02_radius [expr (90 + $angle_01)]]]
-            }
-            set p_S02_a  $p_End
+            incr i
             
-            set nrSegments  [expr abs(round($segment_02/$arcPrecission))]
-            if {$nrSegments < 1} {
-                # puts "    -> nrSegments: $nrSegments"
-              set nrSegments 1
-            }
-            set deltaAngle  [expr 1.0*$S02_angle/$nrSegments]
-              # puts "  ->  Segments/Angle: $nrSegments $deltaAngle"
-            set pStart  $p_End
-            set i 0
-            while {$i < $nrSegments} {
-              set p_End  [vectormath::rotatePoint $p_S02_ct $pStart $deltaAngle]
-              lappend basePoints $p_End
-                # puts "  -> i/p_End:  $i  $p_End"
-              set pStart $p_End
-              incr i
-            }
-            set p_S02_b  $p_End
         }
-
-
-          # ============================================
-          # 3rd bent-Segment
-        if {$S02_angle == 0} { 
-            set p_S03 [vectormath::addVector $p_S02 [vectormath::rotateLine {0 0} $S03_length $angle_02]]
-        } else {
-            set length_03 [expr $S03_length - $offset_02]
-            set p_S03 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_03 $angle_02]]
+          #
+        set controlPoints [list {0 0}]
+        set i 0
+        foreach {start end} $ctrlPoints {
+            lappend controlPoints $start $end
         }
-        if {$S03_angle == 0} {
-            set angle_03    $angle_02
-            set segment_03  0
-            set offset_03   0        
-            set p_S03_a     $p_S03
-            set p_S03_b     $p_S03
-            set p_S03_ct    $p_S03
-            set p_End       $p_S03
-            lappend basePoints $p_End
-        } else {
-            if {$S03_angle > 0} {
-                set p_End  [vectormath::addVector $p_S03 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_03] $angle_02]]   
-                set p_S03_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S03_radius [expr (90 + $angle_02)]]]
-            } else {
-                set p_End  [vectormath::addVector $p_S03 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_03] $angle_02]]   
-                set p_S03_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S03_radius [expr -1.0*(90 - $angle_02)]]]
-            }
-            set p_S03_a  $p_End
-            
-            set nrSegments  [expr abs(round($segment_03/$arcPrecission))]
-            if {$nrSegments < 1} {
-                # puts "    -> nrSegments: $nrSegments"
-              set nrSegments 1
-            }
-            set deltaAngle  [expr 1.0*$S03_angle/$nrSegments]
-              # puts "  ->  Segments/Angle: $nrSegments $deltaAngle"
-            set pStart  $p_End
-            set i 0
-            while {$i < $nrSegments} {
-              set p_End  [vectormath::rotatePoint $p_S03_ct $pStart $deltaAngle]
-              lappend basePoints $p_End
-                # puts "  -> i/p_End:  $i  $p_End"
-              set pStart $p_End
-              incr i
-            }
-            set p_S03_b  $p_End
-        }
-        
-        
-        
-        
-        
-          
-          # ============================================
-          # 4th bent-Segment
-        if {$S03_angle == 0} { 
-            set p_S04 [vectormath::addVector $p_S03 [vectormath::rotateLine {0 0} $S04_length $angle_03]]
-        } else {
-            set length_04 [expr $S04_length - $offset_03]
-            set p_S04 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_04 $angle_03]]
-        }
-        if {$S04_angle == 0} {
-            set angle_04    $angle_03
-            set segment_04  0
-            set offset_04   0        
-            set p_S04_a     $p_S04
-            set p_S04_b     $p_S04
-            set p_S04_ct    $p_S04
-            set p_End       $p_S04
-            lappend basePoints $p_End
-        } else {
-            if {$S04_angle > 0} {
-                set p_End  [vectormath::addVector $p_S04 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_04] $angle_03]]   
-                set p_S04_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S04_radius [expr (90 + $angle_03)]]]
-            } else {
-                set p_End  [vectormath::addVector $p_S04 [vectormath::rotateLine {0 0} [expr -1.0 * $offset_03] $angle_03]]   
-                set p_S04_ct [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $S04_radius [expr -1.0*(90 - $angle_03)]]]
-            }
-            set p_S04_a  $p_End
-            
-            set nrSegments  [expr abs(round($segment_04/$arcPrecission))]
-            if {$nrSegments < 1} {
-                # puts "    -> nrSegments: $nrSegments"
-              set nrSegments 1
-            }
-            set deltaAngle  [expr 1.0*$S04_angle/$nrSegments]
-              # puts "  ->  Segments/Angle: $nrSegments $deltaAngle"
-            set pStart  $p_End
-            set i 0
-            while {$i < $nrSegments} {
-              set p_End  [vectormath::rotatePoint $p_S04_ct $pStart $deltaAngle]
-              lappend basePoints $p_End
-                # puts "  -> i/p_End:  $i  $p_End"
-              set pStart $p_End
-              incr i
-            }
-            set p_S04_b  $p_End
-        }
-        
-          
-          # ============================================
-          # last-Segment
-        if {$offset_04 == 0} { 
-            set p_S05 [vectormath::addVector $p_S04 [vectormath::rotateLine {0 0} $S05_length $angle_04]]
-        } else {
-            set length_05 [expr $S05_length - $offset_04]
-            set p_S05 [vectormath::addVector $p_End [vectormath::rotateLine {0 0} $length_05 $angle_04]]
-        }
-        lappend basePoints $p_S05
-        
-        
-          # -- define controlLines
-        set ctrlPoint_00_b [vectormath::addVector $p_S00 [list  $S01_length 0]]
-        
-        set ctrlPoint_01_a [vectormath::addVector $p_S01_b [vectormath::rotateLine {0 0} $offset_01 [expr 180 + $angle_01]]]
-        set ctrlPoint_01_b [vectormath::addVector $p_S02_a [vectormath::rotateLine {0 0} $offset_02 $angle_01]]
-        
-        set ctrlPoint_02_a [vectormath::addVector $p_S02_b [vectormath::rotateLine {0 0} $offset_02 [expr 180 + $angle_02]]]
-        set ctrlPoint_02_b [vectormath::addVector $p_S03_a [vectormath::rotateLine {0 0} $offset_03 $angle_02]]
-        
-        set ctrlPoint_03_a [vectormath::addVector $p_S03_b [vectormath::rotateLine {0 0} $offset_03 [expr 180 + $angle_03]]]
-        set ctrlPoint_03_b [vectormath::addVector $p_S04_a [vectormath::rotateLine {0 0} $offset_04 $angle_03]]
-        
-        set ctrlPoint_04_a [vectormath::addVector $p_S04_b [vectormath::rotateLine {0 0} $offset_04 [expr 180 + $angle_04]]]
-        
-        set controlPoints  [list $p_S00 $ctrlPoint_00_b  $ctrlPoint_01_a $ctrlPoint_01_b $ctrlPoint_02_a $ctrlPoint_02_b $ctrlPoint_03_a $ctrlPoint_03_b $ctrlPoint_04_a $p_S05]
-
-          # puts " <D> -> $basePoints $controlPoints"
-        return [list $basePoints $controlPoints]
+          #
+        return [list $polyLine $controlPoints]
+          #
     }
+    
+    proc init_centerLineNextPosition {polyLine ctrlPoints lastRadius lastAngle lastDir distance nextRadius nextAngle nextDir} {
+          #
+        variable arcPrecission
+          #
+        set lastPos     [lindex $polyLine end]
+          #
+          # puts "\n -- <D> ---------------------------"
+          # puts "   -> \$lastPos    $lastPos"
+          # puts "   -> \$lastRadius $lastRadius"
+          # puts "   -> \$lastAngle  $lastAngle"
+          # puts "   -> \$lastDir    $lastDir"
+          # puts "   -> \$distance   $distance"
+          # puts "   -> \$nextRadius $nextRadius"
+          # puts "   -> \$nextAngle  $nextAngle"
+          # puts "   -> \$nextDir    $nextDir"
 
+          #
+        set lastSegment [expr abs($lastRadius * [vectormath::rad $lastAngle])]
+        set nextSegment [expr abs($nextRadius * [vectormath::rad $nextAngle])]
+          #
+        set lastArc      [expr 0.5 * $lastSegment]
+        set nextArc      [expr 0.5 * $nextSegment]
+          #        
+        
+        set offset      [expr $distance - ($lastArc + $nextArc)]
+          # puts "      -> \$offset $offset"
+        set arcStart    [vectormath::addVector $lastPos  [vectormath::rotateLine {0 0} ${offset}  ${lastDir}]]  
+        set ctrlEnd     [vectormath::addVector $arcStart [vectormath::rotateLine {0 0} ${nextArc} ${lastDir}]] 
+          #
+        lappend polyLine   $arcStart
+          #
+              # puts "    <1>  \$lastPos                              \$arcStart"
+              # puts "    <1>  {69.45050226731068 -2.385231474777072} {179.76990416419986 -15.896650836506808}"
+              # puts "    <1>   $lastPos  $arcStart"
+              # puts "    <1>         \$offset  ${offset}"
+              # puts "    <1>         \$lastDir ${lastDir}"
+              # puts "    <1>     ---------------------------"
+              # puts "    <D>       distance: $distance"
+              # puts "    <D>        lastArc: $lastArc"
+              # puts "    <D>        nextArc: $nextArc"
+              # puts "    <D>       -----------------------"
+              # puts "    <D>                 [expr $distance - $lastArc - $nextArc]"
+              # puts "    <D>       length: \$lastPos  <-> \$arcStart  [vectormath::length $lastPos  $arcStart]"
+              # puts "    <1>     ---------------------------\n"
+
+          #
+        if {$nextAngle == 0} {   
+            lappend ctrlPoints $arcStart
+            lappend ctrlPoints $arcStart
+              #
+            return [list $polyLine $ctrlPoints]
+        } else {
+            if {$nextAngle < 0} {
+                set arcCenter [vectormath::addVector $arcStart [vectormath::rotateLine {0 0} $nextRadius [expr -1.0 * (90 - $lastDir)]]]
+            } else {  
+                set arcCenter [vectormath::addVector $arcStart [vectormath::rotateLine {0 0} $nextRadius [expr (90 + $lastDir)]]]
+            }
+        }
+        
+          #
+        set nrSegments  [expr abs(round($nextSegment/$arcPrecission))]
+        if {$nrSegments < 1} {
+              # puts "    -> nrSegments: $nrSegments"
+            set nrSegments 1
+        }
+          #
+        set deltaAngle  [expr 1.0*$nextAngle/$nrSegments]
+          # puts "  ->  Segments/Angle: $nrSegments $deltaAngle"
+        set arcEnd  $arcStart
+        set i 0
+        while {$i < $nrSegments} {
+              set arcEnd  [vectormath::rotatePoint $arcCenter $arcEnd $deltaAngle]
+              lappend polyLine $arcEnd
+                # puts "  -> i/p_End:  $i  $p_End"
+                # set pStart $p_End
+              incr i
+        }
+        set ctrlStart [vectormath::addVector $arcEnd  [vectormath::rotateLine {0 0} ${nextArc}  [expr 180 + ${nextDir}]]] 
+          #
+        lappend ctrlPoints $ctrlEnd
+        lappend ctrlPoints $ctrlStart
+          #
+        return [list $polyLine $ctrlPoints]
+    }
 
     proc init_tubeProfile {profileDef args} {
 
@@ -477,10 +394,10 @@ namespace eval bikeGeometry::tube {
               set S03_length  10 ;#[expr [lindex $p_04 0] - 20]                       
               set S04_length  10                         
               set S05_length  10                         
-              set S01_angle   $bendAngle
-              set S02_angle   0                       
-              set S03_angle   0                       
-              set S04_angle   0                       
+              set P01_angle   $bendAngle
+              set P02_angle   0                       
+              set P03_angle   0                       
+              set P04_angle   0                       
               set S01_radius  $bendRadius
               set S02_radius  0
               set S03_radius  0            
@@ -488,7 +405,7 @@ namespace eval bikeGeometry::tube {
 
                 # -- set centerLine of bent tube
               set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
-                                      $S01_angle  $S02_angle  $S03_angle   $S04_angle \
+                                      $P01_angle  $P02_angle  $P03_angle   $P04_angle \
                                       $S01_radius $S02_radius $S03_radius  $S04_radius]              
               
 
@@ -533,10 +450,10 @@ namespace eval bikeGeometry::tube {
               set S03_length  [expr 0.20 * $length]                       
               set S04_length  [expr 0.20 * $length]                         
               set S05_length  [expr 0.20 * $length]                         
-              set S01_angle   0
-              set S02_angle   0                       
-              set S03_angle   0                       
-              set S04_angle   0                       
+              set P01_angle   0
+              set P02_angle   0                       
+              set P03_angle   0                       
+              set P04_angle   0                       
               set S01_radius  0
               set S02_radius  0
               set S03_radius  0
@@ -544,7 +461,7 @@ namespace eval bikeGeometry::tube {
 
                 # -- set centerLine of straight tube
               set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
-                                      $S01_angle  $S02_angle  $S03_angle   $S04_angle \
+                                      $P01_angle  $P02_angle  $P03_angle   $P04_angle \
                                       $S01_radius $S02_radius $S03_radius  $S04_radius] 
                                       
               # -- set profile of straight tube       
@@ -625,19 +542,19 @@ namespace eval bikeGeometry::tube {
               set S03_length  10                
               set S04_length  10                                          
               set S05_length  10                                          
-              set S01_angle   [expr -1.0 * $bendAngle * (180/$vectormath::CONST_PI)]
-              set S02_angle   0                       
-              set S03_angle   0                       
-              set S04_angle   0                       
+              set P01_angle   [expr -1.0 * $bendAngle * (180/$vectormath::CONST_PI)]
+              set P02_angle   0                       
+              set P03_angle   0                       
+              set P04_angle   0                       
               set S01_radius  $max_bendRadius
               set S02_radius  0
               set S03_radius  0  
               set S04_radius  0  
-                # puts "   -> \$S01_angle $S01_angle\n"
+                # puts "   -> \$P01_angle $P01_angle\n"
 
                 # -- set centerLine of straight tube
               set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
-                                      $S01_angle  $S02_angle  $S03_angle   $S04_angle \
+                                      $P01_angle  $P02_angle  $P03_angle   $P04_angle \
                                       $S01_radius $S02_radius $S03_radius  $S04_radius] 
                                       
               # -- set profile of straight tube                
