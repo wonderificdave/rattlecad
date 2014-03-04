@@ -1,4 +1,14 @@
 
+3.4.01.45  - 2014.03.02
+-------------------------------------------------------------------------------
+    cleanup:
+        ... remove road_bent_fork.xml from sample - directory
+    refactoring:
+        ... replace .../test/sample/classic_1984_SuperRecord
+            ... by .../test/sample/road_classic_1984_SuperRecord
+            ... now with bent stays
+        ... update .../sample/... .xml ... ChainStay purpose
+
 3.4.01.44  - 2014.03.02
 -------------------------------------------------------------------------------
     debug:

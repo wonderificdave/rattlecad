@@ -158,7 +158,7 @@
 		puts "          ... $openFile\n"
 		rattleCAD::model::file::openProject_xml   $openFile
 		
-		set openFile         [file join  ${SAMPLE_Dir} classic_1984_SuperRecord.xml]
+		set openFile         [file join  ${SAMPLE_Dir} road_classic_1984_SuperRecord.xml]
 		puts "          ... $openFile\n"
 		rattleCAD::model::file::openProject_xml   $openFile
 		

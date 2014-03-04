@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.4.01.41</rattleCADVersion>
+        <rattleCADVersion>3.4.01.45</rattleCADVersion>
         <Name>selberbruzzler_kid_20</Name>
-        <modified>2014.02.25 - 00:22:36</modified>
+        <modified>2014.03.04 - 03:45:49</modified>
     </Project>
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
@@ -76,28 +76,28 @@
             <Width>18.00</Width>
             <WidthBB>18.00</WidthBB>
             <CenterLine>
-                <length_01>150.00</length_01>
-                <length_02>140.00</length_02>
-                <length_03>75.00</length_03>
-                <length_04>10.00</length_04>
-                <angle_01>9.00</angle_01>
-                <angle_02>-5.00</angle_02>
-                <angle_03>0.00</angle_03>
-                <radius_01>320.00</radius_01>
-                <radius_02>320.00</radius_02>
+                <length_01>55.078</length_01>
+                <length_02>84.337</length_02>
+                <length_03>121.218</length_03>
+                <length_04>63.089</length_04>
+                <angle_01>-17.591</angle_01>
+                <angle_02>14.959</angle_02>
+                <angle_03>7.409</angle_03>
+                <radius_01>250.000</radius_01>
+                <radius_02>250.000</radius_02>
                 <radius_03>320.00</radius_03>
-                <length_05>05.00</length_05>
-                <angle_04>0.00</angle_04>
+                <length_05>23.853</length_05>
+                <angle_04>-2.158</angle_04>
                 <radius_04>320.00</radius_04>
             </CenterLine>
             <Profile>
                 <width_00>12.50</width_00>
                 <length_01>150.00</length_01>
                 <width_01>18.00</width_01>
-                <length_02>150.00</length_02>
+                <length_02>90.000</length_02>
                 <width_02>18.00</width_02>
-                <length_03>75.00</length_03>
-                <width_03>24.00</width_03>
+                <length_03>41.000</length_03>
+                <width_03>18.000</width_03>
             </Profile>
         </ChainStay>
     </FrameTubes>
@@ -319,7 +319,7 @@
             <DownTube>Cage</DownTube>
             <DownTube_Lower>off</DownTube_Lower>
         </BottleCage>
-        <ChainStay>s-bent</ChainStay>
+        <ChainStay>bent</ChainStay>
         <RearMockup>
             <TyreClearance>5.00</TyreClearance>
             <CrankClearance>5.00</CrankClearance>
