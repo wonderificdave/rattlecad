@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.4.01.41</rattleCADVersion>
+        <rattleCADVersion>3.4.01.45</rattleCADVersion>
         <Name>ghost_powerkid_20</Name>
-        <modified>2014.02.25 - 00:17:30</modified>
+        <modified>2014.03.04 - 03:37:43</modified>
     </Project>
     <Personal>
         <!-- personal geometry based on cyclist body profile -->

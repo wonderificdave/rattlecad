@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.4.01.41</rattleCADVersion>
+        <rattleCADVersion>3.4.01.45</rattleCADVersion>
         <Name>mtb_columbus_max</Name>
-        <modified>2014.02.25 - 00:18:11</modified>
+        <modified>2014.03.04 - 03:39:05</modified>
     </Project>
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
@@ -76,18 +76,18 @@
             <Width>16.00</Width>
             <WidthBB>16</WidthBB>
             <CenterLine>
-                <length_01>150.00</length_01>
-                <length_02>140.00</length_02>
-                <length_03>75.00</length_03>
-                <length_04>10.00</length_04>
-                <angle_01>9.00</angle_01>
-                <angle_02>-5.00</angle_02>
-                <angle_03>0.00</angle_03>
+                <length_01>56.636</length_01>
+                <length_02>125.797</length_02>
+                <length_03>100.690</length_03>
+                <length_04>60.700</length_04>
+                <angle_01>-11.160</angle_01>
+                <angle_02>8.651</angle_02>
+                <angle_03>-12.050</angle_03>
                 <radius_01>320.00</radius_01>
                 <radius_02>320.00</radius_02>
                 <radius_03>320.00</radius_03>
-                <length_05>05.00</length_05>
-                <angle_04>0.00</angle_04>
+                <length_05>55.574</length_05>
+                <angle_04>5.431</angle_04>
                 <radius_04>320.00</radius_04>
             </CenterLine>
             <Profile>
@@ -314,7 +314,7 @@
             <DownTube_Lower>off</DownTube_Lower>
         </BottleCage>
         <RearDropOut>behind</RearDropOut>
-        <ChainStay>s-bent</ChainStay>
+        <ChainStay>bent</ChainStay>
         <RearMockup>
             <TyreClearance>5.00</TyreClearance>
             <CrankClearance>5.00</CrankClearance>

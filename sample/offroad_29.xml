@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.4.01.41</rattleCADVersion>
+        <rattleCADVersion>3.4.01.45</rattleCADVersion>
         <Name>offroad_29</Name>
-        <modified>2014.02.25 - 00:18:27</modified>
+        <modified>2014.03.04 - 03:40:06</modified>
     </Project>
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
@@ -76,18 +76,18 @@
             <Width>18.00</Width>
             <WidthBB>18.00</WidthBB>
             <CenterLine>
-                <length_01>150.00</length_01>
-                <length_02>160.000</length_02>
-                <length_03>65.000</length_03>
-                <length_04>65.000</length_04>
-                <angle_01>10.000</angle_01>
-                <angle_02>-16.000</angle_02>
-                <angle_03>8.000</angle_03>
+                <length_01>64.887</length_01>
+                <length_02>139.418</length_02>
+                <length_03>100.129</length_03>
+                <length_04>74.503</length_04>
+                <angle_01>-7.468</angle_01>
+                <angle_02>8.428</angle_02>
+                <angle_03>-14.205</angle_03>
                 <radius_01>320.00</radius_01>
                 <radius_02>320.00</radius_02>
                 <radius_03>320.00</radius_03>
-                <length_05>05.00</length_05>
-                <angle_04>0.00</angle_04>
+                <length_05>50.554</length_05>
+                <angle_04>8.780</angle_04>
                 <radius_04>320.00</radius_04>
             </CenterLine>
             <Profile>
