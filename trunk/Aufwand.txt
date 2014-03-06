@@ -494,6 +494,7 @@
 
 2014.02.24  22:00   01:00    03:00   3.4.01 ... 41 ... configCorner throws Error in Frame-Jig Tab
 2014.03.02  00:00   00:00    24:00   3.4.01 ... 43 ... refactor; infoPanel, bikeGeometry::tube::init_centerLine
+2014.03.05  00:00   00:00    16:00   3.4.01 ... 46 ... bikeGeometry::tube::init_centerLine
 
 
 
