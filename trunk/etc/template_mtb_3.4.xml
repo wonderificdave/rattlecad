@@ -90,7 +90,6 @@
                 <length_02>140.00</length_02>
                 <length_03>80.00</length_03>
                 <length_04>60.00</length_04>
-                <length_05>60.00</length_05>
                 <angle_01>-7.000</angle_01>
                 <angle_02>5.000</angle_02>
                 <angle_03>-12.000</angle_03>
@@ -107,7 +106,10 @@
                 <length_02>150.00</length_02>
                 <width_02>18.00</width_02>
                 <length_03>75.00</length_03>
-                <width_03>24.00</width_03> 
+                <width_03>24.00</width_03>
+                <completeLength>410.00</completeLength>
+                <cuttingLeft>0.00</cuttingLeft>
+                <cuttingLength>390.00</cuttingLength>
             </Profile>
         </ChainStay>
     </FrameTubes>

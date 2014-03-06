@@ -290,7 +290,7 @@ namespace eval rattleCAD::control {
 
     proc get_listBoxContent {type {key {}}} {      
         set listBoxContent {}
-        puts "    -> get_listBoxContent:  $type $key"
+        puts "       -> get_listBoxContent:  $type $key"
         switch -exact $type {
             {SELECT_File} {             set listBoxContent [rattleCAD::model::get_ComponentList  $key] }
             {SELECT_Rim} {              set listBoxContent [rattleCAD::model::get_ListBoxValues  Rim] }
