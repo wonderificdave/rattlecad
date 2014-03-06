@@ -1272,7 +1272,7 @@
                         }                                                   
                         set node       [$projectDOM selectNode /root/Reference]
                         if {$node == {}} {
-                                 puts "                           ... update File ... /root/Reference"
+                                puts "                           ... update File ... /root/Reference"
                                 $parentNode appendXML  "<Reference>
                                                             <HandleBar_Distance>543.69</HandleBar_Distance>
                                                             <HandleBar_Height>905.00</HandleBar_Height>
@@ -1293,7 +1293,30 @@
                                 puts "                           ... update File ... /root/Component/Derailleur/Rear/Pulley/y"
                                 $node nodeValue $pulleyOffset
                         } 
-                        
+                                # -- set Reference
+                        set referenceNode [$projectDOM selectNode   /root/FrameTubes/ChainStay/Profile/completeLength]
+                        if {$referenceNode == {}} {
+                            puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine"
+                            set length_01  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_01/text()] nodeValue]
+                            set length_02  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_02/text()] nodeValue]
+                            set length_03  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_03/text()] nodeValue]
+                            set length_04  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_04/text()] nodeValue]
+                            set length_05  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05/text()] nodeValue]
+                            set completeLength [expr $length_01 + $length_02 + $length_03 + $length_04 + $length_05] 
+                              #
+                            set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine]
+                            set delNode    [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05]
+                              #
+                            $parentNode removeChild $delNode
+                            $delNode delete
+                              #
+                            set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/Profile]
+                              #
+                            puts "                           ... update File ... /root/FrameTubes/ChainStay/Profile"
+                            $parentNode appendXML  "<completeLength>$completeLength</completeLength>"
+                            $parentNode appendXML  "<cuttingLeft>0.00</cuttingLeft>"
+                            $parentNode appendXML  "<cuttingLength>$completeLength</cuttingLength>"
+                        }
 
                     }       
                         

@@ -55,9 +55,20 @@ namespace eval bikeGeometry::tube {
           # puts "  -> $arcPrecission"
         
           # --
-        foreach {S01_length S02_length S03_length S04_length S05_length \
-                 P01_angle  P02_angle  P03_angle  P04_angle \
-                 S01_radius S02_radius S03_radius S04_radius} $centerLineDef break
+        puts "   ->[llength $centerLineDef] < 14"
+        if {[llength $centerLineDef] < 14} {
+            foreach {S01_length S02_length S03_length S04_length S05_length \
+                     P01_angle  P02_angle  P03_angle  P04_angle \
+                     S01_radius S02_radius S03_radius S04_radius \
+                    } $centerLineDef break
+                    set cuttingLength [expr $S01_length + $S02_length + $S03_length + $S04_length + $S05_length]
+        } else {
+            foreach {S01_length S02_length S03_length S04_length S05_length \
+                     P01_angle  P02_angle  P03_angle  P04_angle \
+                     S01_radius S02_radius S03_radius S04_radius \
+                     cuttingLength\
+                    } $centerLineDef break
+        }
                  
               # puts "   <D> ---- \$centerLineDef ----------"
               # puts $centerLineDef
@@ -90,7 +101,7 @@ namespace eval bikeGeometry::tube {
         set centerLineRadius(4)    $S04_radius
         set centerLineRadius(5)    0
         
-        set polyLine    [list {0 0}]
+            set centerLine    [list {0 0}]
         set ctrlPoints  {}
         
           #
@@ -102,14 +113,14 @@ namespace eval bikeGeometry::tube {
               # puts " == <$i> ==========================="
             set lastId $i
             set nextId [expr $i+1]
-            set retValue [init_centerLineNextPosition   $polyLine $ctrlPoints\
+                set retValue [init_centerLineNextPosition   $centerLine $ctrlPoints\
                                                         $centerLineRadius($lastId)  $centerLineAngle($lastId)  $centerLineDirection($lastId) \
                                                         $centerLineDefLength($nextId) \
                                                         $centerLineRadius($nextId)  $centerLineAngle($nextId)  $centerLineDirection($nextId)]
-            set polyLine    [lindex $retValue 0]
+                set centerLine    [lindex $retValue 0]
             set ctrlPoints  [lindex $retValue 1] 
               # puts "  -> $ctrlPoints"
-            if {$i == 20} { exit }
+                #if {$i == 20} { exit }
             
             incr i
             
@@ -121,7 +132,11 @@ namespace eval bikeGeometry::tube {
             lappend controlPoints $start $end
         }
           #
-        return [list $polyLine $controlPoints]
+        set centerLineCut [cut_centerLine $centerLine $cuttingLength]
+          # puts "  -> $centerLine"
+          # puts "  -> $centerLineCut"
+          #
+        return [list $centerLine $controlPoints $centerLineCut]
           #
     }
     
@@ -214,6 +229,42 @@ namespace eval bikeGeometry::tube {
         lappend ctrlPoints $ctrlStart
           #
         return [list $polyLine $ctrlPoints]
+    }
+
+    proc cut_centerLine {centerLine length} {
+        set centerLineCut {}
+          # puts "\n ------"
+          # puts "   -> \$centerLine $centerLine"
+          # puts "   -> \$length     $length"
+          # puts " ------\n"
+        set newLength     0
+        set lastLength    0
+        set lastXY       {0 0}
+        set i 0
+        foreach {xy} $centerLine {
+            incr i
+               puts "     $i -> $xy"
+            set offset      [vectormath::length $lastXY $xy]
+               puts "               -> $offset  <- $lastXY"
+            set newLength   [expr $newLength + $offset]
+            if  {$newLength > $length} {
+                set deltaOffset  [expr $length - $lastLength]
+                set lastPosVct   [vectormath::unifyVector $lastXY $xy $deltaOffset]
+                lappend centerLineCut [vectormath::addVector $lastXY $lastPosVct]
+                return  $centerLineCut
+            } else {
+                set lastLength  $newLength
+                set lastXY      $xy
+                lappend centerLineCut $xy
+            }
+        }
+          #
+        puts "   -> [llength $centerLine]"
+        puts "   -> [llength $centerLineCut]"
+          #
+          
+          # -- exception if length is longer than the profile
+        return  $centerLineCut
     }
 
     proc init_tubeProfile {profileDef args} {
