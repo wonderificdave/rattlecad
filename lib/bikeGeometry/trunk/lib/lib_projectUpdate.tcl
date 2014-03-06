@@ -1174,12 +1174,15 @@
                         }
                         
                               # -- get 5th bent-Position for ChainStay
-                        set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine]
-                        set node       [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05]
+                        set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine]                        
+                        set node       [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/angle_04]
                         if {$node == {}} {
-                                puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine"
-                                $parentNode appendXML  "<length_05>05.00</length_05>"
+                                puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine/angle_04"
                                 $parentNode appendXML  "<angle_04>0.00</angle_04>"
+                        }                        
+                        set node       [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/radius_04]
+                        if {$node == {}} {
+                                puts "                           ... update File ... /root/FrameTubes/ChainStay/CenterLine/radius_04"
                                 $parentNode appendXML  "<radius_04>320.00</radius_04>"
                         }                        
 
@@ -1301,7 +1304,12 @@
                             set length_02  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_02/text()] nodeValue]
                             set length_03  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_03/text()] nodeValue]
                             set length_04  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_04/text()] nodeValue]
-                            set length_05  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05/text()] nodeValue]
+                            set node       [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05]
+                            if {$node != {}} {
+                                set length_05  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05/text()] nodeValue]
+                            } else {
+                                set length_05  50
+                            }
                             set completeLength [expr $length_01 + $length_02 + $length_03 + $length_04 + $length_05] 
                               #
                             set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine]

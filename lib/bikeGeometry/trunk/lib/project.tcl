@@ -623,7 +623,10 @@
     proc get_dictValue {dictPath dictKey} {
               variable projectDICT  
               set value "___undefined___"
-              catch {set value [dict get $projectDICT {*}$dictPath $dictKey]}
+              if { [catch {set value [dict get $projectDICT {*}$dictPath $dictKey]} fid]} {
+                  puts "  <E> ... $fid"
+                  # exit
+              }
                 # puts "     ... getValue: $value  <- $dictPath / $dictKey"
               return $value
     }     

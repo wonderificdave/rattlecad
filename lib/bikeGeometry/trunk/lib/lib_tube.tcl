@@ -243,9 +243,9 @@ namespace eval bikeGeometry::tube {
         set i 0
         foreach {xy} $centerLine {
             incr i
-               puts "     $i -> $xy"
+              # puts "     $i -> $xy"
             set offset      [vectormath::length $lastXY $xy]
-               puts "               -> $offset  <- $lastXY"
+              # puts "               -> $offset  <- $lastXY"
             set newLength   [expr $newLength + $offset]
             if  {$newLength > $length} {
                 set deltaOffset  [expr $length - $lastLength]
@@ -259,8 +259,8 @@ namespace eval bikeGeometry::tube {
             }
         }
           #
-        puts "   -> [llength $centerLine]"
-        puts "   -> [llength $centerLineCut]"
+        #puts "   -> [llength $centerLine]"
+        #puts "   -> [llength $centerLineCut]"
           #
           
           # -- exception if length is longer than the profile

@@ -319,7 +319,6 @@
                     set S03_radius     320
                     set S04_radius     320
                     set cuttingLength  $project::FrameTubes(ChainStay/Profile/cuttingLength)
-                    # set bikeGeometry::tube::arcPrecission 50
                   }
               default {
                       # -- bent                                                
@@ -332,8 +331,7 @@
                     set S03_radius     $project::FrameTubes(ChainStay/CenterLine/radius_03)
                     set S04_radius     $project::FrameTubes(ChainStay/CenterLine/radius_04)
                     set cuttingLength  $project::FrameTubes(ChainStay/Profile/cuttingLength)
-                    # set bikeGeometry::tube::arcPrecission 5
-                  }
+                }
             }
             
             set orient_select  left
