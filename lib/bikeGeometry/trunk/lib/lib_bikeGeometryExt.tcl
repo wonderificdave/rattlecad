@@ -305,7 +305,8 @@
             set S03_length     $project::FrameTubes(ChainStay/CenterLine/length_03)
             set S04_length     $project::FrameTubes(ChainStay/CenterLine/length_04)
             set tmp_length     [expr $S01_length + $S02_length + $S03_length + $S04_length]
-            set S05_length     [expr $project::FrameTubes(ChainStay/Profile/completeLength) - $tmp_length]
+            set max_length     $project::FrameTubes(ChainStay/Profile/completeLength)
+            set S05_length     [expr $max_length - $tmp_length]
                 #
                 
             switch -exact $type {
@@ -333,11 +334,36 @@
                     set cuttingLength  $project::FrameTubes(ChainStay/Profile/cuttingLength)
                 }
             }
-            
-            set orient_select  left
-            set centerLineDef [list $S01_length $S02_length $S03_length $S04_length $S05_length \
-                                  $S01_angle  $S02_angle  $S03_angle  $S04_angle \
-                                    $S01_radius $S02_radius $S03_radius $S04_radius $cuttingLength]
+              # --- check angle: S04_angle
+                # puts "\n --checkAngles--------"
+                # puts "     -> \$S04_length $S04_length"
+                # puts "     -> \$S04_angle  $S04_angle"
+                # puts "     -> \$S05_length $S05_length"
+                # puts " ----------"
+              # -- check S04_angle / S05_length
+            if {$S05_length < 0} {
+                set my_S04_angle  0
+                set my_S05_length 5
+            } else {
+                set my_S04_angle  $S04_angle
+                set my_S05_length $S05_length
+            }
+              # -- check cuttingLength
+            if {$cuttingLength > $max_length} {
+                set my_cuttingLength $max_length
+            } else {
+                set my_cuttingLength $cuttingLength
+            }
+              #
+            set centerLineDef [list \
+                        $S01_length $S02_length $S03_length $S04_length $my_S05_length \
+                        $S01_angle  $S02_angle  $S03_angle  $my_S04_angle \
+                        $S01_radius $S02_radius $S03_radius $S04_radius \
+                        $my_cuttingLength]
+
+              #
+              # --- why -- set orient_select  left
+
                                     
                 # -- get smooth centerLine
             set retValues     [bikeGeometry::tube::init_centerLine $centerLineDef] 
