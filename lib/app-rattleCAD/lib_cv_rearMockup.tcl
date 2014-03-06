@@ -37,10 +37,14 @@
  #
  # 
 
-    
+      #
     variable  rattleCAD::cv_custom::ctrl_Points
     array set rattleCAD::cv_custom::ctrl_Points {}
-    
+      #
+    variable  rattleCAD::cv_custom::sect_Points
+    array set rattleCAD::cv_custom::sect_Points {}
+      #
+      
     proc rattleCAD::cv_custom::createRearMockup {cv_Name} {
             
             puts ""
@@ -161,8 +165,6 @@
 
                 # -- ChainStay Type
             switch [rattleCAD::control::getValue Rendering/ChainStay] {
-                   {straight_}  { set retValues [get_ChainStay straight] }
-                   {bent_}      { set retValues [get_ChainStay bent]}
                    {straight}   { set retValues [bikeGeometry::get_ChainStay_RearMockup straight] }
                    {bent}       { set retValues [bikeGeometry::get_ChainStay_RearMockup bent]}
                    
@@ -173,20 +175,21 @@
             }
             switch [rattleCAD::control::getValue Rendering/ChainStay] {
                    {straight}   -
-                   {bent}       { set ChainStay(centerLine) [lindex $retValues 0]
-                                  set ChainStay(polygon)    [lindex $retValues 1]
-                                  set ChainStay(ctrLines)   [lindex $retValues 2]
+                   {bent}       { set ChainStay(centerLine)    [lindex $retValues 0]
+                                  set ChainStay(polygon)       [lindex $retValues 1]
+                                  set ChainStay(ctrLines)      [lindex $retValues 2]
+                                  set ChainStay(centerLineCut) [lindex $retValues 3]
                                     # puts "\n --> \$ChainStay(ctrLines) $ChainStay(ctrLines)"
-                                  set tube_CS_left    [ $cv_Name create polygon     $ChainStay(polygon)      -fill $rattleCAD::view::colorSet(chainStay) \
-                                                                                                             -outline black  -tags __Tube__ ]
-                                  set tube_CS_CLine   [ $cv_Name create line        $ChainStay(centerLine)   -fill $rattleCAD::view::colorSet(chainStay_CL) \
-                                                                                                             -tags __CenterLine__ ]
+                                  set tube_CS_left    [ $cv_Name create polygon  $ChainStay(polygon)        -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                                                            -outline black  -tags __Tube__ ]
+                                  set tube_CS_CLine   [ $cv_Name create line     $ChainStay(centerLineCut)  -fill $rattleCAD::view::colorSet(chainStay_CL) \
+                                                                                                            -tags __CenterLine__ ]
                                       set polygon_opposite {}
                                       foreach {x y}  $ChainStay(polygon) {
                                               lappend polygon_opposite $x [expr -1.0 * $y]
                                       }  
-                                  set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite        -fill $rattleCAD::view::colorSet(chainStay) \
-                                                                                                             -outline black  -tags {__Tube__} ]
+                                  set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite       -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                                                            -outline black  -tags {__Tube__} ]
 
                                       #$ext_cvName  create   polygon $outLine    -tags __Tube__         -fill lightgray
                                       #$ext_cvName  create   line    $centerLine -tags __CenterLine__   -fill blue
@@ -229,10 +232,10 @@
                # -- create tubeProfile Edit
                # -- create centerLine Edit
             switch -exact [rattleCAD::control::getValue Rendering/ChainStay] {
-                   {bent} { create_centerLine_Edit   $ChainStay(ctrLines) {0 110}
-                            create_tubeProfile_Edit  {0 145}
+                   {bent} { create_centerLine_Edit   $ChainStay(ctrLines) {0 85}
+                            create_tubeProfile_Edit  {0 140}
                           }
-                   default {create_tubeProfile_Edit  {0  95}
+                   default {create_tubeProfile_Edit  {0  90}
                           }
             }
    
@@ -440,7 +443,6 @@
                                                     Rendering(RearMockup/TyreClearance)}  {Rear Tyre Parameter}]
                                                                                                                                                                                                                                                         
     }    
-    
 
     proc rattleCAD::cv_custom::create_RearHub {} {   
             upvar  1 cv_Name        ext_cvName              
@@ -567,7 +569,6 @@
           return $object
     }
 
-
     proc rattleCAD::cv_custom::create_CrankArm {} {
             upvar  1 cv_Name            ext_cvName
             upvar  1 stageScale         ext_stageScale
@@ -689,8 +690,8 @@
                     set angle 0
                     while {$angle <= 90} {
                         set pt_tmp  [ vectormath::rotatePoint  $ext_Center(TyreWidth) $pt_99 $angle]
-                        puts "             -> $ext_Center(Tyre)  /  $ext_Center(TyreWidth)"
-                        # TyreWidth
+                          # puts "             -> $ext_Center(Tyre)  /  $ext_Center(TyreWidth)"
+                          # TyreWidth
                         lappend polygon     $pt_tmp
                         incr angle 10
                     }
@@ -781,7 +782,7 @@
                                                 Rendering(RearMockup/CassetteClearance) }            {ChainStay:  Area}]                    
              return
     }                   
- 
+
     proc rattleCAD::cv_custom::create_ControlCurves {} {
             upvar  1 cv_Name    ext_cvName
             upvar  1 stageScale ext_stageScale
@@ -826,15 +827,18 @@
     }
 
     proc rattleCAD::cv_custom::create_tubeProfile_Edit {offset} {
-          upvar  1 cv_Name    ext_cvName 
-          upvar  1 stageScale ext_stageScale
-          
-          upvar  1 Length     ext_Length
-          upvar  1 Center     ext_Center
-          upvar  1 ChainStay  ext_ChainStay
-          
-          upvar  1 Colour     ext_Colour
-          
+          #
+        variable sect_Points
+          #
+        upvar  1 cv_Name    ext_cvName 
+        upvar  1 stageScale ext_stageScale
+          #
+        upvar  1 Length     ext_Length
+        upvar  1 Center     ext_Center
+        upvar  1 ChainStay  ext_ChainStay
+          #
+        upvar  1 Colour     ext_Colour
+          #
             # puts "  -> create_tubeProfile_Edit: \$ext_Length"
             # parray  ext_Length
             # puts "  -> create_tubeProfile_Edit: \$ext_Center"
@@ -848,18 +852,26 @@
         set profile_x02   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/length_02]
         set profile_y02   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/width_02]
         set profile_x03   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/length_03]
-        set profile_y03   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/width_03]   
-            
-        set length  [expr $profile_x01 + $profile_x02 + $profile_x03]
-        set profile_x04   [expr $ext_Length(ChainStay) - $length + 15]
+        set profile_y03   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/width_03]
+        set profile_xcl   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/completeLength]
+          #
+        set cuttingLeft   [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/cuttingLeft]   
+        set cuttingLength [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/cuttingLength]   
+          #    
+        # set length       $profile_xcl
+        # set length       [expr $profile_x01 + $profile_x02 + $profile_x03]
+          # set profile_x04   [expr $ext_Length(ChainStay) - $length + 15]
         
-        # set p00  [list [expr -1 * $ext_Length(ChainStay)] 0]
-        set p0  [vectormath::addVector $ext_Center(ChainStay_DO)  $offset]
-        set p1  [vectormath::addVector $p0  [list $profile_x01 0]]
-        set p2  [vectormath::addVector $p1  [list $profile_x02 0]]
-        set p3  [vectormath::addVector $p2  [list $profile_x03 0]]
-        set p4  [vectormath::addVector $p3  [list $profile_x04 0]]
-        
+          # set p00  [list [expr -1 * $ext_Length(ChainStay)] 0]
+        set p0    [vectormath::addVector $ext_Center(ChainStay_DO)  $offset]
+        set p1    [vectormath::addVector  $p0  [list $profile_x01   0]]
+        set p2    [vectormath::addVector  $p1  [list $profile_x02   0]]
+        set p3    [vectormath::addVector  $p2  [list $profile_x03   0]]
+        set p4    [vectormath::addVector  $p0  [list $profile_xcl   0]]
+          # 
+        set p_cutLeft  [vectormath::addVector  $p0         [list $cuttingLeft   0]]
+        set p_cutRight [vectormath::addVector  $p_cutLeft  [list $cuttingLength 0]]
+          #
           # puts " .. ChainStay - TubeProfile: [appUtil::flatten_nestedList $p0 $p1 $p2 $p3 $p4]"
         
         set p00 [vectormath::addVector $p0  [list 0 [expr  0.5 * $profile_y00]]]
@@ -902,7 +914,27 @@
         $ext_cvName create circle     $p12       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
         $ext_cvName create circle     $p13       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
         
-                                                                            
+          # -- define display length
+          # set sectArea_01 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutLeft   __dragObject__]                                    
+        set sectArea_02 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutRight  __dragObject__]                                    
+          #
+          # $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_01
+        $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_02
+          #
+        set sect_Points(0)   $p0
+        set sect_Points(1)   $p_cutLeft
+        set sect_Points(2)   $p_cutRight
+          #
+          # canvasCAD::register_dragObjects   $ext_cvName    $sectArea_01   [namespace current]::move_sectPoints  1
+        canvasCAD::register_dragObjects   $ext_cvName    $sectArea_02   [namespace current]::move_sectPoints  2
+          #
+          # set tagList [$ext_cvName gettags $ctrlArea_99]
+          # puts "\n -> $tagList  \n"
+
+          # -- dimension
+        set _dim_x0          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p0 $p4 ] \
+                                                                horizontal    [expr -38 * $ext_stageScale]   0 \
+                                                                $ext_Colour(result) ]
         set _dim_x1          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p0 $p1 ] \
                                                                 horizontal    [expr -25 * $ext_stageScale]   0 \
                                                                 $ext_Colour(result) ]
@@ -912,7 +944,16 @@
         set _dim_x3          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p2 $p3 ] \
                                                                 horizontal    [expr -25 * $ext_stageScale]   0 \
                                                                 $ext_Colour(result) ]
-
+          
+          # -- cutting Length
+        # set _dim_c1        [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $sect_Points(0) $sect_Points(1) ] \
+                                                                horizontal    [expr -25 * $ext_stageScale]   0 \
+                                                                $ext_Colour(result) ]
+        set _dim_c2          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $sect_Points(1) $sect_Points(2) ] \
+                                                                horizontal    [expr  25 * $ext_stageScale]   0 \
+                                                                $ext_Colour(result) ]
+          
+          # --
         set _dim_w0          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p00 $p10 ] \
                                                                 vertical      [expr  15 * $ext_stageScale]    0 \
                                                                 $ext_Colour(result) ]
@@ -925,20 +966,31 @@
         set _dim_w3          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p03 $p13 ] \
                                                                 vertical      [expr -15 * $ext_stageScale]    0 \
                                                                 $ext_Colour(result) ]
-
+          #
+        $ext_cvName raise $sectArea_02
+          #
+          
+          #
+        rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_x0
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_x1
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_x2
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_x3
-        
+          #
+        rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_c2
+          #
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_w0
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_w1
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_w2
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_w3
-        
+          #
+        $ext_cvName bind  $_dim_x0    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/completeLength) ]
         $ext_cvName bind  $_dim_x1    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_01) ]
         $ext_cvName bind  $_dim_x2    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_02) ]
         $ext_cvName bind  $_dim_x3    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/length_03) ]
-        
+          #
+          # $ext_cvName bind $_dim_c1 <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/cuttingRight) ]
+        $ext_cvName bind  $_dim_c2    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/cuttingLength)]
+          #  
         $ext_cvName bind  $_dim_w0    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_00) ]
         $ext_cvName bind  $_dim_w1    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_01) ]
         $ext_cvName bind  $_dim_w2    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName  FrameTubes(ChainStay/Profile/width_02) ]
@@ -1000,13 +1052,17 @@
         
             # [rattleCAD::control::getValue Lugs/BottomBracket/ChainStay/Offset_TopView
             # [ expr 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/HubWidth) ]
-            set offset_dropOut [expr [rattleCAD::control::getValue Lugs/BottomBracket/ChainStay/Offset_TopView] + 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/HubWidth] ]
+        set offset_dropOut [expr [rattleCAD::control::getValue Lugs/BottomBracket/ChainStay/Offset_TopView] + 0.5 * [rattleCAD::control::getValue Component/Wheel/Rear/HubWidth] ]
+        
         set base_p0 [list [lindex $ctrl_p0 0] [expr [lindex $ctrl_p0 1] - $offset_dropOut]]
-        set base_p5 [list [lindex $ctrl_p5 0] [lindex $base_p0 1]]
+        # set base_p5 [list [lindex $ctrl_p5 0] [lindex $base_p0 1]]
+        set base_p5 [list 0 [lindex $base_p0 1]]
+        set base_p0 [vectormath::addVector $base_p0 {150 0}]
+        set base_p5 [vectormath::addVector $base_p5 { 40 0}]
         # -- draw base line
         set base_Line   [$ext_cvName create centerline [appUtil::flatten_nestedList $base_p0 $base_p5]   -tags __CenterLine__   -fill gray50]
-        
-        
+
+     
         
             # -- draw edit areas
         set ctrlArea_01 [$ext_cvName create circle       $ctrl_Points(1)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__}]
@@ -1020,7 +1076,7 @@
         set ctrlArea_12 [rattleCAD::cv_custom::create_controlField  $ext_cvName  $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)  __dragObject__]                                    
         set ctrlArea_13 [rattleCAD::cv_custom::create_controlField  $ext_cvName  $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)  __dragObject__]                                    
         set ctrlArea_14 [rattleCAD::cv_custom::create_controlField  $ext_cvName  $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)  __dragObject__]                                    
-        set ctrlArea_15 [$ext_cvName create circle       $ctrl_Points(5)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
+        # set ctrlArea_15 [$ext_cvName create circle       $ctrl_Points(5)    -radius  8.0  -outline orange    -fill gray   -width 1.0   -tags {__CenterLine__ __dragObject__}]
             # set ctrlArea_15 [rattleCAD::cv_custom::create_controlField  $ext_cvName  $ctrl_Points(4) $ctrl_Points(5) $ctrl_Points(6)  __dragObject__]                                    
                                                                                                                                                 
             # -- draw control Lines
@@ -1051,7 +1107,7 @@
         set _dim_length_04          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p6 $p7 ] \
                                             aligned    [expr -15 * $ext_stageScale]   0 \
                                             $ext_Colour(result) ]
-        set _dim_length_05          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p8 $p9 ] \
+        # set _dim_length_05        [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p8 $p9 ] \
                                             aligned    [expr -15 * $ext_stageScale]   0 \
                                             $ext_Colour(result) ]
         
@@ -1059,13 +1115,13 @@
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_02
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_03
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_04
-        rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_05
+        # rattleCAD::view::gui::object_CursorBinding   $ext_cvName    $_dim_length_05
         
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_01
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_02
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_03
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_04
-        rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_05
+        # rattleCAD::view::gui::object_CursorBinding   $ext_cvName    $_obj_line_05
         
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_01
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_02
@@ -1076,7 +1132,7 @@
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_12
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_13
         rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_14
-        rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_15
+        # rattleCAD::view::gui::object_CursorBinding   $ext_cvName    $ctrlArea_15
         
         
                                      # -- current_cv     object_ID      update_Command                        reference_Name
@@ -1084,7 +1140,7 @@
         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_12   [namespace current]::move_ctrlPoints  2
         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_13   [namespace current]::move_ctrlPoints  3
         canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_14   [namespace current]::move_ctrlPoints  4
-        canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_15   [namespace current]::move_ctrlPoints  5
+        # canvasCAD::register_dragObjects   $ext_cvName  $ctrlArea_15   [namespace current]::move_ctrlPoints  5
         
         
         $ext_cvName bind  $_dim_length_01    <Double-ButtonPress-1>  \
@@ -1099,7 +1155,7 @@
         $ext_cvName bind  $_dim_length_04    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                         FrameTubes(ChainStay/CenterLine/length_04)]
-        $ext_cvName bind  $_dim_length_05    <Double-ButtonPress-1>  \
+        # $ext_cvName bind  $_dim_length_05  <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                         FrameTubes(ChainStay/CenterLine/length_05)]
 
@@ -1115,34 +1171,33 @@
         $ext_cvName bind  $_obj_line_04    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                         FrameTubes(ChainStay/CenterLine/length_04)]
-        $ext_cvName bind  $_obj_line_05    <Double-ButtonPress-1>  \
+        # $ext_cvName bind  $_obj_line_05  <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                         FrameTubes(ChainStay/CenterLine/length_05)]
                                         
         $ext_cvName bind  $ctrlArea_01    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_01) \
-                                        FrameTubes(ChainStay/CenterLine/radius_01 \
-                                        FrameTubes(ChainStay/CenterLine/length_01 \
-                                        FrameTubes(ChainStay/CenterLine/length_02))) }   {ChainStay:  Bent 01}]
+                                        FrameTubes(ChainStay/CenterLine/radius_01) \
+                                        FrameTubes(ChainStay/CenterLine/length_01) \
+                                        FrameTubes(ChainStay/CenterLine/length_02) }   {ChainStay:  Bent 01}]
         $ext_cvName bind  $ctrlArea_02    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_02) \
-                                        FrameTubes(ChainStay/CenterLine/radius_02 \
-                                        FrameTubes(ChainStay/CenterLine/length_02 \
-                                        FrameTubes(ChainStay/CenterLine/length_03))) }   {ChainStay:  Bent 02}]
+                                        FrameTubes(ChainStay/CenterLine/radius_02) \
+                                        FrameTubes(ChainStay/CenterLine/length_02) \
+                                        FrameTubes(ChainStay/CenterLine/length_03) }   {ChainStay:  Bent 02}]
         $ext_cvName bind  $ctrlArea_03    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_03) \
-                                        FrameTubes(ChainStay/CenterLine/radius_03 \
-                                        FrameTubes(ChainStay/CenterLine/length_03 \
-                                        FrameTubes(ChainStay/CenterLine/length_04))) }   {ChainStay:  Bent 03}]                                 
+                                        FrameTubes(ChainStay/CenterLine/radius_03) \
+                                        FrameTubes(ChainStay/CenterLine/length_03) \
+                                        FrameTubes(ChainStay/CenterLine/length_04) }   {ChainStay:  Bent 03}]                                 
         $ext_cvName bind  $ctrlArea_04    <Double-ButtonPress-1>  \
                         [list rattleCAD::view::createEdit  %x %y  $ext_cvName  \
                                     {   FrameTubes(ChainStay/CenterLine/angle_04) \
-                                        FrameTubes(ChainStay/CenterLine/radius_04 \
-                                        FrameTubes(ChainStay/CenterLine/length_04 \
-                                        FrameTubes(ChainStay/CenterLine/length_05))) }   {ChainStay:  Bent 04}]
+                                        FrameTubes(ChainStay/CenterLine/radius_04) \
+                                        FrameTubes(ChainStay/CenterLine/length_04) }   {ChainStay:  Bent 04}]
 
 
                                
@@ -1175,7 +1230,6 @@
             return [list $pt_Clearance_l $polygon $pt_Clearance_r]
     }
 
-
     proc rattleCAD::cv_custom::get_BottomBracket {} {   
             upvar  1 cv_Name    ext_cvName              
             upvar  1 Length     ext_Length
@@ -1206,7 +1260,7 @@
             set xy_angle    [expr $xy_orient * (0 + [vectormath::angle    $xy1 $xy $xy2])]
                 # puts "      \$baseAngle    $baseAngle"
                 # puts "      \$xy_orient    $xy_orient"
-                 puts "      \$xy_angle     $xy_angle"
+                # puts "      \$xy_angle     $xy_angle"
             set orientAngle [expr 180 + $baseAngle + 0.5*$xy_angle]
             
                 # -- get trapez-shape of controlField
@@ -1259,11 +1313,12 @@
             
             
             array set lastValues {}
-                set lastValues(S01)     [vectormath::length   $ctrl_Points(0) $ctrl_Points(1)]
-                set lastValues(S02)     [vectormath::length   $ctrl_Points(1) $ctrl_Points(2)]
-                set lastValues(S03)     [vectormath::length   $ctrl_Points(2) $ctrl_Points(3)]
-                set lastValues(S04)     [vectormath::length   $ctrl_Points(3) $ctrl_Points(4)]
-                set lastValues(S05)     [vectormath::length   $ctrl_Points(4) $ctrl_Points(5)]
+                set lastValues(S01)     [vectormath::length   $ctrl_Points(0)  $ctrl_Points(1) ]
+                set lastValues(S02)     [vectormath::length   $ctrl_Points(1)  $ctrl_Points(2) ]
+                set lastValues(S03)     [vectormath::length   $ctrl_Points(2)  $ctrl_Points(3) ]
+                set lastValues(S04)     [vectormath::length   $ctrl_Points(3)  $ctrl_Points(4) ]
+                set lastValues(S05)     [vectormath::length   $ctrl_Points(4)  $ctrl_Points(5) ]
+                
                 set lastValues(P00)     [set ctrl_Points(0)]
                 set lastValues(P01)     [set ctrl_Points(1)]
                 set lastValues(P02)     [set ctrl_Points(2)]
@@ -1271,10 +1326,9 @@
                 set lastValues(P04)     [set ctrl_Points(4)]
                 set lastValues(P05)     [set ctrl_Points(5)]
 
-
             
             foreach {x y} $xy break
-            if {$id == 5} {
+            if {$id == 99} {
                   # -- this is the definition of ChainStay at the BottomBracket side
                   #   each drag on this point shall be in direction of the last segment
                   #   of the ChainStay and shall not influence the other definition points  
@@ -1311,43 +1365,31 @@
 
             }
     
-            set S01_length   [vectormath::length   $ctrl_Points(0) $ctrl_Points(1)]
-            set S02_length   [vectormath::length   $ctrl_Points(1) $ctrl_Points(2)]
-            set S03_length   [vectormath::length   $ctrl_Points(2) $ctrl_Points(3)]
-            set S04_length   [vectormath::length   $ctrl_Points(3) $ctrl_Points(4)]
-            set S05_length   [vectormath::length   $ctrl_Points(4) $ctrl_Points(5)]
-            
-            
+            set S01_length      [vectormath::length   $ctrl_Points(0) $ctrl_Points(1) ]
+            set S02_length      [vectormath::length   $ctrl_Points(1) $ctrl_Points(2) ]
+            set S03_length      [vectormath::length   $ctrl_Points(2) $ctrl_Points(3) ]
+            set S04_length      [vectormath::length   $ctrl_Points(3) $ctrl_Points(4) ]
+            set S05_length      [vectormath::length   $ctrl_Points(4) $ctrl_Points(5) ]
+              #            
             set S01_orient [vectormath::offsetOrientation $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)]
             set S02_orient [vectormath::offsetOrientation $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)]
             set S03_orient [vectormath::offsetOrientation $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)]
             set S04_orient [vectormath::offsetOrientation $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)]
-            
+              #
             set P01_angle  [expr $S01_orient * (-180 + [vectormath::angle    $ctrl_Points(0) $ctrl_Points(1) $ctrl_Points(2)])]
             set P02_angle  [expr $S02_orient * (-180 + [vectormath::angle    $ctrl_Points(1) $ctrl_Points(2) $ctrl_Points(3)])]
             set P03_angle  [expr $S03_orient * (-180 + [vectormath::angle    $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)])]
             set P04_angle  [expr $S04_orient * (-180 + [vectormath::angle    $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)])]
-            
-            proc update_ChainStayValue_org {xPath value} {
-                set lastValue  [rattleCAD::control::getValue $xPath ]
-                  # set lastValue  [bikeGeometry::get_Value $xPath  value]
-                set diffValue  [expr abs($lastValue - $value)]
-                if {$diffValue > 1} { 
-                    puts "            ... update:  $xPath  $lastValue -> $value" 
-                    rattleCAD::control::setValue [list $xPath  $value]
-                    # bikeGeometry::set_Value $xPath  $value
-                } else {
-                    puts "            ... ignore:  $xPath  $lastValue -> $value"
-                }
-            }
-            
-            proc update_ChainStayValue {xpathValueList} {
+              #
+            proc update_ctrlPointValues {xpathValueList} {
                 set myList {}
                 foreach {xPath value} $xpathValueList { 
+                    puts "   -> $xPath $value"
                     set lastValue  [rattleCAD::control::getValue $xPath ]
+                    puts "     ->   $lastValue"
                       # set lastValue  [bikeGeometry::get_Value $xPath  value]
                     set diffValue  [expr abs($lastValue - $value)]
-                    if {$diffValue > 1} { 
+                    if {$diffValue > 0.1} { 
                         puts "            ... update:  $xPath  $lastValue -> $value" 
                         lappend myList $xPath  $value
                         # rattleCAD::control::setValue [list $xPath  $value]
@@ -1358,43 +1400,31 @@
                 }
                 rattleCAD::control::setValue $myList
             }
-            
-            
+              #
             set xpathValueList {}
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_01  $S01_length
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_02  $S02_length
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_03  $S03_length
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_04  $S04_length
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_05  $S05_length
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_01   $P01_angle
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_02   $P02_angle
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_03   $P03_angle
-            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_04   $P04_angle
-            
-            update_ChainStayValue $xpathValueList
-            
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_01  $S01_length
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_02  $S02_length
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_03  $S03_length
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_04  $S04_length
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/length_05  $S05_length
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_01   $P01_angle
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_02   $P02_angle
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_03   $P03_angle
-              # update_ChainStayValue FrameTubes/ChainStay/CenterLine/angle_04   $P04_angle
-            
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_01        $S01_length
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_02        $S02_length
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_03        $S03_length
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/length_04        $S04_length
+              #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_01         $P01_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_02         $P02_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_03         $P03_angle
+            lappend xpathValueList FrameTubes/ChainStay/CenterLine/angle_04         $P04_angle
+              #
+            update_ctrlPointValues $xpathValueList
+              #
+              
+             
             puts "\n   -------------------------------"
-            puts "       -> S01_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_01]"
-            puts "       -> S02_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_02]"
-            puts "       -> S03_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_03]"
-            puts "       -> S04_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_04]"
-            puts "       -> S05_length   [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_05]"
-            puts "       -> P01_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_01]"
-            puts "       -> P02_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_02]"
-            puts "       -> P03_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_03]"
-            puts "       -> P04_angle    [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_04]"
+            puts "       -> S01_length     [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_01]"
+            puts "       -> S02_length     [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_02]"
+            puts "       -> S03_length     [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_03]"
+            puts "       -> S04_length     [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/length_04]"
+            puts "       -> P01_angle      [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_01]"
+            puts "       -> P02_angle      [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_02]"
+            puts "       -> P03_angle      [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_03]"
+            puts "       -> P04_angle      [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_04]"
             
               #set cv_Name     [rattleCAD::view::gui::current_canvasCAD]
               #rattleCAD::cv_custom::clean_StageContent   $cv_Name
@@ -1402,4 +1432,99 @@
             
             return
     }
+
+    proc rattleCAD::cv_custom::create_sectionField {cv_Name xy {tag {}}} {
+            set width   8
+            set height 18
+            foreach {x y} $xy break
+            set x0 [expr $x]
+            set x1 [expr $x - 0.5 * $width]
+            set x2 [expr $x + 0.5 * $width]
+            set y0 [expr $y]
+            set y1 [expr $y - 0.7 * $height]
+            set y2 [expr $y - 1.0 * $height]
+              # set coordList [appUtil::flatten_nestedList $x1 $y1  $x2 $y1  $x2 $y2  $x1 $y2]
+            set coordList [appUtil::flatten_nestedList $x1 $y1  $x0 $y0  $x2 $y1  $x0 $y2]
+            set ctrlPolygon [$cv_Name create polygon     $coordList   -outline red    -fill lightgray   -width 2.0   -tags [list __CenterLine__ $tag]]
+            set returnObj   $ctrlPolygon
+            
+                # -- return controlField
+            return $returnObj    
+    
+    }
+
+    proc rattleCAD::cv_custom::move_sectPoints {id xy} {
+            variable sect_Points
+            variable ctrl_Points
+            puts "\n   -------------------------------"
+            puts "    rattleCAD::cv_custom::move_sectPoints"
+            puts "       id:              $id"
+            puts "       xy:              $xy"
+            puts "   -------------------------------"
+            foreach key [lsort [array names sect_Points]] {
+                puts "          $key           $sect_Points($key)"
+            }                      
+            puts "   -------------------------------"
+            
+              #
+            array set lastValues {}
+                set lastValues(S01)     [vectormath::length   $sect_Points(0)  $sect_Points(1) ]
+                set lastValues(S02)     [vectormath::length   $sect_Points(1)  $sect_Points(2) ]
+                
+                set lastValues(C00)     [set sect_Points(0)]
+                set lastValues(C01)     [set sect_Points(1)]
+                set lastValues(C02)     [set sect_Points(2)]
+              # ---
+                  
+              #    
+            foreach {x y} $xy break
+              #
+            set myPos           [vectormath::addVector $sect_Points($id) [list $x [expr -1.0*$y]]]
+            set sect_Points($id) $myPos            
+              # ---
+            set cuttingLeft     [vectormath::length  $sect_Points(0) $sect_Points(1) ]
+            set cuttingLength   [vectormath::length  $sect_Points(1) $sect_Points(2) ]
+              #
+              
+              #
+            proc update_sectPointValues {xpathValueList} {
+                set myList {}
+                foreach {xPath value} $xpathValueList { 
+                    set lastValue  [rattleCAD::control::getValue $xPath ]
+                      # set lastValue  [bikeGeometry::get_Value $xPath  value]
+                    set diffValue  [expr abs($lastValue - $value)]
+                    if {$diffValue > 0.1} { 
+                        puts "            ... update:  $xPath  $lastValue -> $value" 
+                        lappend myList $xPath  $value
+                        # rattleCAD::control::setValue [list $xPath  $value]
+                        # bikeGeometry::set_Value $xPath  $value
+                    } else {
+                        puts "            ... ignore:  $xPath  $lastValue -> $value"
+                    }
+                }
+                rattleCAD::control::setValue $myList
+            }
+              #
+              
+              #
+            set xpathValueList {}
+              #
+            lappend xpathValueList FrameTubes/ChainStay/Profile/cuttingLeft       $cuttingLeft
+            lappend xpathValueList FrameTubes/ChainStay/Profile/cuttingLength     $cuttingLength
+              #
+            update_sectPointValues $xpathValueList
+              #
+            
+            puts "\n   -------------------------------"
+            puts "       -> cuttingLeft    [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/cuttingLeft]"
+            puts "       -> cuttingLength  [rattleCAD::control::getValue FrameTubes/ChainStay/Profile/cuttingLength]"
+            
+              #set cv_Name     [rattleCAD::view::gui::current_canvasCAD]
+              #rattleCAD::cv_custom::clean_StageContent   $cv_Name
+            rattleCAD::cv_custom::updateView [rattleCAD::view::gui::current_canvasCAD]
+            
+            return
+    }
+
+
 

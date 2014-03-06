@@ -1191,7 +1191,7 @@
             variable noteBook_top
 
             rattleCAD::model::file::openTemplate_xml $type
-            
+              #
             switch -exact $type {
                 Road { set ::APPL_Config(TemplateInit) $::APPL_Config(TemplateRoad_default) }
                 MTB  { set ::APPL_Config(TemplateInit) $::APPL_Config(TemplateMTB_default) }

@@ -1,5 +1,12 @@
 
-3.4.01.45  - 2014.03.02
+3.4.01.46  - 2014.03.04
+-------------------------------------------------------------------------------
+    refactoring:
+        ... displayed ChainStay length in ChainStay Details depending 
+            on BottomBracket Position 
+
+
+3.4.01.45  - 2014.03.03
 -------------------------------------------------------------------------------
     cleanup:
         ... remove road_bent_fork.xml from sample - directory

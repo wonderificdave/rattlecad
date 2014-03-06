@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.4.01.45</rattleCADVersion>
+        <rattleCADVersion>3.4.01.46</rattleCADVersion>
         <Name>selberbruzzler_kid_20</Name>
-        <modified>2014.03.04 - 03:45:49</modified>
+        <modified>2014.03.06 - 02:19:40</modified>
     </Project>
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
@@ -86,7 +86,6 @@
                 <radius_01>250.000</radius_01>
                 <radius_02>250.000</radius_02>
                 <radius_03>320.00</radius_03>
-                <length_05>23.853</length_05>
                 <angle_04>-2.158</angle_04>
                 <radius_04>320.00</radius_04>
             </CenterLine>
@@ -98,6 +97,9 @@
                 <width_02>18.00</width_02>
                 <length_03>41.000</length_03>
                 <width_03>18.000</width_03>
+                <completeLength>347.57500000000005</completeLength>
+                <cuttingLeft>0.00</cuttingLeft>
+                <cuttingLength>274.466</cuttingLength>
             </Profile>
         </ChainStay>
     </FrameTubes>

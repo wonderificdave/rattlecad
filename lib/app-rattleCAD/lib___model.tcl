@@ -374,7 +374,7 @@ namespace eval rattleCAD::model {
         set returnValue [set valueRegistry($key)]
           #
         foreach value $returnValue {
-            puts "   -> get_ListBoxValues: $value"
+            puts "       -> get_ListBoxValues: $value"
         }
           #
         return $returnValue
