@@ -1,5 +1,11 @@
 
-3.4.01.46  - 2014.03.04
+3.4.01.47  - 2014.03.06
+-------------------------------------------------------------------------------
+    debug:
+        ... ChainStay went out of display if last segment had negativ length
+
+
+3.4.01.46  - 2014.03.05
 -------------------------------------------------------------------------------
     refactoring:
         ... displayed ChainStay length in ChainStay Details depending 
@@ -15,6 +21,7 @@
             ... by .../test/sample/road_classic_1984_SuperRecord
             ... now with bent stays
         ... update .../sample/... .xml ... ChainStay purpose
+
 
 3.4.01.44  - 2014.03.02
 -------------------------------------------------------------------------------
