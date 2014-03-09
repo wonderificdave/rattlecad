@@ -723,10 +723,12 @@
 
         
     #-------------------------------------------------------------------------
-        # check user settings in $::APPL_Config(USER_Dir)/rattleCAD_init.xml
+        # check user settings in $::APPL_Config(USER_Dir)/_rattleCAD_[info hostname].init
         #            
     proc read_userInit {} {    
-        set fileName    [file join $::APPL_Config(USER_Dir) _rattleCAD.init ]
+        set hostName    [info hostname]
+        set fileName    [format "_rattleCAD_%s.init" $hostName ]
+        set fileName    [file join $::APPL_Config(USER_Dir) $fileName ]
         puts ""
         puts "     ... user_InitDOM      $fileName"
         puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
@@ -785,9 +787,14 @@
               }
               
         } else {
-              set    fp [open $fileName w]
+              set   timeString    [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+                #          
+			  set    fp [open $fileName w]
               puts  $fp {<?xml version="1.0" encoding="UTF-8" ?>}
               puts  $fp {<root>}
+              puts  $fp "    <hostname>$hostName</hostname>"
+              puts  $fp "    <fileName>$fileName</fileName>"
+              puts  $fp "    <fileCreated>$timeString</fileCreated>"
               puts  $fp "    <GUI_Font>$::APPL_Config(GUI_Font)</GUI_Font>"
               puts  $fp "    <mime>"
               puts  $fp "        <mime name=\".test\">_any_executable</mime>"
