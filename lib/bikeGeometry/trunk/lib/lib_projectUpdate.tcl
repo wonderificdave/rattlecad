@@ -119,7 +119,6 @@
                         set node [$projectDOM selectNode /root/Personal/SeatTube_Length]
                         if {$node == {}} {
                             puts "                           ... update File ... /root/Personal/SeatTube_Length"
-                            puts "                           ... update File ... /root/Personal/SeatTube_Length"
                             set LegLength [expr 0.88 * [[$projectDOM selectNode /root/Personal/InnerLeg_Length] asText ] ]
                             set node [$projectDOM selectNode /root/Personal]
                             $node appendXML "<SeatTube_Length>$LegLength</SeatTube_Length>"
@@ -1304,7 +1303,7 @@
                             set length_02  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_02/text()] nodeValue]
                             set length_03  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_03/text()] nodeValue]
                             set length_04  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_04/text()] nodeValue]
-                            set node       [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05]
+                            set node       [ $projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05]
                             if {$node != {}} {
                                 set length_05  [[$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05/text()] nodeValue]
                             } else {
@@ -1315,8 +1314,10 @@
                             set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine]
                             set delNode    [$projectDOM selectNode /root/FrameTubes/ChainStay/CenterLine/length_05]
                               #
-                            $parentNode removeChild $delNode
-                            $delNode delete
+                            if {$delNode != ""} {
+                                $parentNode removeChild $delNode
+                                $delNode delete
+                            }
                               #
                             set parentNode [$projectDOM selectNode /root/FrameTubes/ChainStay/Profile]
                               #
