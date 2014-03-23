@@ -1,9 +1,19 @@
 
+
+3.4.01.49  - 2014.03.23
+-------------------------------------------------------------------------------
+    debug:
+        ... failed on open project-File of rattleCAD 3.2.78.26  
+            ... fixed in bike_Geometry (0.56)
+                ... project::update_Project
+        ... save template didn't save in project directory
+
+
 3.4.01.48  - 2014.03.08
 -------------------------------------------------------------------------------
     refactoring:
-		... rename  _rattleCAD.init  in  $::APPL_Config(USER_Dir)
-		    ... to _rattleCAD_<[info hostname]>.init
+        ... rename  _rattleCAD.init  in  $::APPL_Config(USER_Dir)
+            ... to _rattleCAD_<[info hostname]>.init
 
 
 3.4.01.47  - 2014.03.06

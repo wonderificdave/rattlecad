@@ -15,7 +15,7 @@
 	ein!
 	//-->
 	
-	<property name = "rattleCAD_Version" 	value = "3.4.01.48" />
+	<property name = "rattleCAD_Version" 	value = "3.4.01.49" />
 	<property name = "build.dir"         	value = "___build" />
 
 	<property name = "tcl_8.5"   					value = "tclsh" />
