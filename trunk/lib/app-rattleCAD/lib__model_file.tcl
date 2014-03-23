@@ -187,11 +187,6 @@
 					rattleCAD::control::newProject $projectDOM
                       #
 					  
-                      #
-					# set ::APPL_Config(PROJECT_File)        $fileName
-                    # set ::APPL_Config(PROJECT_Name)        $fileName
-                    # set ::APPL_Config(PROJECT_Save)        [clock milliseconds]
-					  # 
 					rattleCAD::control::setSession  projectFile       [file normalize $fileName]
                     rattleCAD::control::setSession  projectName       [file rootname [file tail $fileName]]
                     rattleCAD::control::setSession  projectSave       [clock milliseconds]
@@ -256,10 +251,6 @@
                     #
                 rattleCAD::control::newProject $projectDOM
 				    # bikeGeometry::set_newProject $::APPL_Config(root_ProjectDOM)
-                    #
-                # set ::APPL_Config(PROJECT_Name)     "Template $type"
-                # set ::APPL_Config(PROJECT_File)     "Template $type"  
-                # set ::APPL_Config(PROJECT_Save)     [expr 2 * [clock milliseconds]]                    
                     #
                 rattleCAD::control::setSession  projectFile       "Template $type"
                 rattleCAD::control::setSession  projectName       "Template $type"
@@ -327,17 +318,17 @@
                                         {Template MTB}  {   set requestTemplate    {yes}
                                                             set initialFile        [format "%s%s.xml" $::APPL_Config(USER_InitString) MTB ]
                                                         }
-                                        default            {}
+                                        default         {}
                                     }
                                     if {$requestTemplate == "yes"} {
                                         set retValue [tk_messageBox -title   "Save Project" -icon question \
                                                                     -message "Save Project as Template: $initialFile?" \
                                                                     -default cancel \
                                                                     -type    yesnocancel]
-                                        puts "\n  $retValue\n"
+                                        puts "\n      $retValue\n"
 
                                         switch $retValue {
-                                            yes     {   set ::APPL_Config(PROJECT_File) [file join $::APPL_Config(USER_Dir) $initialFile] 
+                                            yes     {   rattleCAD::control::setSession  projectFile [file join $::APPL_Config(USER_Dir) $initialFile ]
                                                     }
                                             no      {   set mode        saveAs
                                                         set initialFile {new_Project.xml}
@@ -382,15 +373,8 @@
                                 }
 
                                     # --- set runtime Attributes
-                                set ::APPL_Config(PROJECT_File) [file normalize $fileName]
-                                set ::APPL_Config(PROJECT_Name) [file tail      $fileName]
-                                
-                                    # --- set xml-File Attributes
+                                rattleCAD::control::setSession  projectFile       [file normalize $fileName]
                                 rattleCAD::control::setSession  projectName       [file rootname [file tail $fileName]]
-                                    # rattleCAD::control::setValue    Project/Name     [ file tail $fileName ]
-								    # set project::Project(Name)     [ file tail $fileName ]
-                                    # [ $domConfig selectNodes /root/Project/Name/text()              ]     nodeValue     [ file tail $fileName ]
-
 
                                     # --- set window Title
                                 set windowTitle    $fileName

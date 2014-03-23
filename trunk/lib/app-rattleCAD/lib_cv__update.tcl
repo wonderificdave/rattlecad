@@ -96,7 +96,6 @@
                     update_renderCanvas               $cv_Name
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
-                        # createWaterMark             $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #                      
                 }
             rattleCAD::view::gui::cv_Custom00 {
@@ -125,7 +124,6 @@
                     update_renderCenterline           $cv_Name
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
-                        # createWaterMark                   $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
             rattleCAD::view::gui::cv_Custom10 {
@@ -271,7 +269,6 @@
                     update_renderCanvas               $cv_Name        wheat   gray98  gray93  gray93
                         #
                     createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
-                        # createWaterMark             $cv_Name        $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                     rattleCAD::view::gui::notebook_createButton    $cv_Name        changeFormatScale   format
                         #
@@ -379,7 +376,6 @@
                     update_renderCanvas               $cv_Name
                         #
                     createWaterMark                   $cv_Name [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
-                        # createWaterMark             $cv_Name $::APPL_Config(PROJECT_File)  [bikeGeometry::project_attribute modified]
                         #
                 }
             rattleCAD::view::gui::cv_Custom70 {
@@ -436,7 +432,6 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    CrankSet           editable   ;# $updateCommand
                         #
                     createWaterMark                          $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
-                        # createWaterMark                    $cv_Name         $::APPL_Config(PROJECT_File)    [bikeGeometry::project_attribute modified]
                         #
                 }
 

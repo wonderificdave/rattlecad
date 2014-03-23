@@ -44,7 +44,7 @@
   
   package require   appUtil       0.15
   package require   vectormath    0.5
-  package require   bikeGeometry  0.55
+  package require   bikeGeometry  0.56
   package require   canvasCAD     0.51
   package require   extSummary    0.4
   package require   osEnv         0.8
@@ -394,10 +394,6 @@
 		rattleCAD::control::setSession  projectName       "Template $::APPL_Config(TemplateType)"
 		rattleCAD::control::setSession  projectSave       [clock milliseconds]
 			#
-        # set ::APPL_Config(PROJECT_Name)           "Template $::APPL_Config(TemplateType)"
-        # set ::APPL_Config(PROJECT_File)           "Template $::APPL_Config(TemplateType)"
-        # set ::APPL_Config(PROJECT_Save)           [clock milliseconds]
-            # 
           
             # --------------------------------------------
             #    check startup parameters

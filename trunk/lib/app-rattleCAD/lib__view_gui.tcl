@@ -647,10 +647,6 @@
                         file copy -force [file join $::APPL_Config(CONFIG_Dir) html/style.css]      $::APPL_Config(EXPORT_HTML)
                         file copy -force [file join $::APPL_Config(CONFIG_Dir) html/rattleCAD.ico]  $::APPL_Config(EXPORT_HTML)
                               
-                              # rattleCAD::model::file::saveProject_xml
-                              # puts "    \$APPL_Config(PROJECT_File):         Template Road"
-                              # puts "    \$APPL_Config(TemplateInit):      -> $::APPL_Config(TemplateInit)"
-                              
                             # --- get project file 
                         if {[file exists [rattleCAD::control::getSession  projectFile]] == 1} {
                               # file exists
