@@ -272,27 +272,28 @@
             set _dim_Tyre_Height        [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_WheelRadius) $Center(Rim) ] \
                                                                     horizontal      [expr   35 * $stageScale]   [expr   0 * $stageScale]  \
                                                                     gray50 ]                                                                                                              
-            set _dim_Tyre_CapHeight     [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_WheelRadius) $Center(TyreWidth) ] \
-                                                                    horizontal      [expr   25 * $stageScale]   [expr  20 * $stageScale]  \
-                                                                    gray50 ]                                                                                                              
             set _dim_Sprocket_CL        [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_RearHub_02) $Center(SprocketClearance) ] \
                                                                     horizontal      [expr  -25 * $stageScale]   [expr  -5 * $stageScale]  \
                                                                     gray50 ]
             set _dim_Tyre_CL            [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Tyre) $Center(TyreClearance) ] \
                                                                     vertical        [expr   65 * $stageScale]   [expr  20 * $stageScale]  \
                                                                     gray50 ]
+            set _dim_Tyre_CapHeight     [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_WheelRadius) $Center(TyreWidth) ] \
+                                                                    horizontal      [expr   25 * $stageScale]   [expr  20 * $stageScale]  \
+                                                                    $Colour(result) ]                                                                                                              
             set _dim_Tyre_Width         [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_Tyre_01) $Center(Dim_Tyre_02) ] \
                                                                     vertical        [expr   35 * $stageScale]   [expr   3 * $stageScale]  \
                                                                     $Colour(primary) ]  
             set _dim_Tyre_Radius        [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(TyreWidth) $Center(CL_RearHub_01) ] \
                                                                     horizontal      [expr   25 * $stageScale]   [expr  50 * $stageScale]  \
                                                                     $Colour(primary) ]   
-                   rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Width
-                   $cv_Name bind $_dim_Tyre_Width        <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/TyreWidth) ]
-                   rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Radius       
-                   $cv_Name bind $_dim_Tyre_Radius       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/TyreWidthRadius) ]
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                    rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_CapHeight
+                    $cv_Name bind $_dim_Tyre_CapHeight    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/RearWheel/TyreShoulder) ]
+                    rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Width
+                    $cv_Name bind $_dim_Tyre_Width        <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/TyreWidth) ]
+                    rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Radius       
+                    $cv_Name bind $_dim_Tyre_Radius       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/TyreWidthRadius) ]
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 
                 # -- ChainStay length
             set _dim_CS_Length             [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(CL_RearHub_01) $Center(CL_BB_01) ] \
@@ -310,10 +311,10 @@
                                                                     horizontal        [expr  35 * $stageScale]    [expr  35 * $stageScale]  \
                                                                     $Colour(primary) ] 
             set _dim_BB_Width           [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Dim_BBWidth_01) $Center(Dim_BBWidth_02) ] \
-                                                                    vertical        [expr  35 * $stageScale]    [expr -10 * $stageScale]  \
+                                                                    vertical          [expr  35 * $stageScale]    [expr -10 * $stageScale]  \
                                                                     $Colour(primary) ] 
             set _dim_CS_BB_Offset       [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $ChainStay(93) $ChainStay(94) ] \
-                                                                    vertical        [expr -60 * $stageScale]   [expr  15 * $stageScale]  \
+                                                                    vertical          [expr -60 * $stageScale]    [expr  15 * $stageScale]  \
                                                                     $Colour(primary) ] 
                     rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_BB_Diam_inside       
                     rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_BB_Diam_outside       
@@ -1384,9 +1385,9 @@
             proc update_ctrlPointValues {xpathValueList} {
                 set myList {}
                 foreach {xPath value} $xpathValueList { 
-                    puts "   -> $xPath $value"
+                      # puts "   -> $xPath $value"
                     set lastValue  [rattleCAD::control::getValue $xPath ]
-                    puts "     ->   $lastValue"
+                      # puts "     ->   $lastValue"
                       # set lastValue  [bikeGeometry::get_Value $xPath  value]
                     set diffValue  [expr abs($lastValue - $value)]
                     if {$diffValue > 0.1} { 
