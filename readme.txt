@@ -1,5 +1,16 @@
 
 
+3.4.01.50  - 2014.03.31
+-------------------------------------------------------------------------------
+    feature: 
+        ... add  20"/406 ETRTO - BMX to favorite rim dimensions
+        ... add  Result(Length/RearWheel/TyreShoulder)
+    debug:
+        ... handle  Component/Wheel/Rear/TyreWidthRadius 
+            ... if greater then WheelRadius
+            ... in bikeGeometry::check_Values
+
+
 3.4.01.49  - 2014.03.23
 -------------------------------------------------------------------------------
     debug:
