@@ -225,6 +225,7 @@
                 <horizontal>0.00</horizontal>
                 <Radius>0.00</Radius>
 				<Diameter>0.00</Diameter>
+                <TyreShoulder>0.00</TyreShoulder>
             </RearWheel>
             <Personal>
                 <SaddleNose_HB>0.00</SaddleNose_HB>

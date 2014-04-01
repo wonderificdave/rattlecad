@@ -40,7 +40,6 @@
 
         
 
-
         #
         #
         # --- set basePoints Attributes
@@ -177,6 +176,38 @@
             project::setValue Result(Position/Reference_SN)      position    $Reference(SaddleNose)
          
     }    
+        #
+        #
+        # --- check Values before compute details
+        #
+    proc bikeGeometry::check_Values {} {
+            variable Saddle
+            variable SeatPost
+            variable SeatTube
+            variable HandleBar
+            variable HeadTube
+            variable Steerer
+            variable Stem
+            variable Fork
+            variable RearWheel
+            variable FrontWheel
+            variable BottomBracket
+              #
+            puts ""
+              #
+              # -- Component(Wheel/Rear/TyreWidthRadius) <-> RearWheel(TyreWidthRadius)
+              #    Component/Wheel/Rear/TyreHeight
+              #    Component/Wheel/Rear/RimDiameter
+              # -- handle values like done in bikeGeometry::set_base_Parameters 
+            if {$RearWheel(TyreWidthRadius) > $RearWheel(Radius)} {
+                set project::Component(Wheel/Rear/TyreWidthRadius) [expr $RearWheel(Radius) - 5.0]
+                set RearWheel(TyreWidthRadius)                     $project::Component(Wheel/Rear/TyreWidthRadius)
+                puts "                     -> <i> \$project::Component(Wheel/Rear/TyreWidthRadius) ... $project::Component(Wheel/Rear/TyreWidthRadius)"
+            }
+              #
+            puts ""
+              #
+    }      
 
 
         #
@@ -1247,11 +1278,19 @@
 
                 # --- RearWheel/Radius --------------------------------
                 #
-            set rimDiameter   [ project::getValue Component(Wheel/Rear/RimDiameter) value ]
-            set tyreHeight    [ project::getValue Component(Wheel/Rear/TyreHeight)  value ]
-            set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
+            set rimDiameter     [ project::getValue Component(Wheel/Rear/RimDiameter) value ]
+            set tyreHeight      [ project::getValue Component(Wheel/Rear/TyreHeight)  value ]
+            set value           [ expr 0.5 * $rimDiameter + $tyreHeight ]                
                   # puts "                  ... $value"
                 project::setValue Result(Length/RearWheel/Radius value $value
+              
+                # --- RearWheel/TyreShoulder --------------------------------
+                #
+            set wheelRadius     [ project::getValue Result(Length/RearWheel/Radius         value ]
+            set tyreWidthRadius [ project::getValue Component(Wheel/Rear/TyreWidthRadius)  value ]
+            set value           [ expr $wheelRadius - $tyreWidthRadius ]                
+                  # puts "                  ... $value"
+                project::setValue Result(Length/RearWheel/TyreShoulder) value $value
               
                 # --- FrontWheel/Radius -------------------------------
                 #

@@ -39,7 +39,7 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.56
+ package provide bikeGeometry 0.57
 
  namespace eval bikeGeometry {
 
@@ -513,9 +513,9 @@
             set xpath "$_array/$_name"
               # puts "       xpath:           $xpath"
         
-            switch -glob $_name {
+            switch -exact $_name {
         
-                {Length/BottomBracket/Height}    {
+                {Length/BottomBracket/Height} {
                       # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
                       set oldValue                $project::Result(Length/BottomBracket/Height)
                       # 3.2.76 set oldValue       $project::Temporary(BottomBracket/Height)
@@ -669,7 +669,7 @@
                       return
                 }
               
-                {Length/TopTube/VirtualLength}            -
+                {Length/TopTube/VirtualLength} -
                 {Length/FrontWheel/horizontal} {
                       # puts "  -> Length/TopTube/VirtualLength"
                       # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
@@ -705,7 +705,7 @@
                       return
                   }
               
-                {Length/FrontWheel/diagonal}    {
+                {Length/FrontWheel/diagonal} {
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
                       set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
                         # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
@@ -735,7 +735,7 @@
                       return
                   }
               
-                {Length/Saddle/Offset_HB}    {
+                {Length/Saddle/Offset_HB} {
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
                       set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
                       set newValue                [set_Value $xpath  $value format ]
@@ -752,7 +752,7 @@
                       return
                   }
               
-                {Length/Saddle/Offset_BB_ST}    {
+                {Length/Saddle/Offset_BB_ST} {
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
                       set newValue                [set_Value $xpath  $value format ]
                       set height                  [project::getValue [format "%s(%s)" Personal Saddle_Height] value ]
@@ -764,7 +764,7 @@
                       return
                   }
               
-                {Length/Saddle/Offset_BB_Nose}    {
+                {Length/Saddle/Offset_BB_Nose} {
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
                       set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
                       set newValue                [set_Value $xpath  $value format ]
@@ -822,18 +822,24 @@
                       return 
                   }
                   
-                {Length/RearWheel/Radius}     {
+                {Length/RearWheel/Radius} {
                       set rimDiameter   [ project::getValue Component(Wheel/Rear/RimDiameter)  value ]
                       set tyreHeight    [ project::getValue Component(Wheel/Rear/TyreHeight)   value ]
                       set newValue      [ expr $value - 0.5 * $rimDiameter]
-                      set xpath         Component(Wheel/Rear/TyreHeight
+                      set xpath         Component/Wheel/Rear/TyreHeight
                       set_Value         $xpath     $newValue  
                   }
-                {Length/FrontWheel/Radius}    {
+                {Length/RearWheel/TyreShoulder} {
+                      set wheelRadius   [ project::getValue Result(Length/RearWheel/Radius)  value ]
+                      set xpath         Component/Wheel/Rear/TyreWidthRadius
+                      set newValue      [ expr $wheelRadius - abs($value)]
+                      set_Value         $xpath     $newValue
+                  }
+                {Length/FrontWheel/Radius} {
                       set rimDiameter   [ project::getValue Component(Wheel/Front/RimDiameter) value ]
                       set tyreHeight    [ project::getValue Component(Wheel/Front/TyreHeight)  value ]
                       set newValue      [ expr $value - 0.5 * $rimDiameter]
-                      set xpath         Component(Wheel/Front/TyreHeight
+                      set xpath         Component/Wheel/Front/TyreHeight
                       set_Value         $xpath     $newValue                
                   }
                   
@@ -847,7 +853,7 @@
                       set HandleBar_Height        [expr $HandleBar_Height - $deltaValue]  
                       set_Value         $xpath    $HandleBar_Height
                   } 
-
+ 
                 {Length/Reference/SaddleNose_HB} {
                       set SaddleHeight            $project::Result(Length/Reference/Heigth_SN_HB)
                       set newValue                [set_Value [format "%s(%s)" $_array $_name]  $value format ]

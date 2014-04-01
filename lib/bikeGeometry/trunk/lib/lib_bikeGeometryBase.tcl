@@ -112,15 +112,16 @@
 
                 #
                 # --- get RearWheel
-            set RearWheel(RimDiameter)  $project::Component(Wheel/Rear/RimDiameter)
-            set RearWheel(RimHeight)    $project::Component(Wheel/Rear/RimHeight)
-            set RearWheel(TyreHeight)   $project::Component(Wheel/Rear/TyreHeight)
-            set RearWheel(Radius)       [ expr 0.5*$RearWheel(RimDiameter) + $RearWheel(TyreHeight) ]
-            set RearWheel(DistanceBB)   $project::Custom(WheelPosition/Rear)
-            #set RearWheel(Distance_X)  [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
-            set RearWheel(Distance_X)   [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
-            set RearWheel(Position)     [ list [expr -1.0 * $RearWheel(Distance_X)] $project::Custom(BottomBracket/Depth) ]
-            set RearWheel(HubWidth)     $project::Component(Wheel/Rear/HubWidth)
+            set RearWheel(RimDiameter)     $project::Component(Wheel/Rear/RimDiameter)
+            set RearWheel(RimHeight)       $project::Component(Wheel/Rear/RimHeight)
+            set RearWheel(TyreHeight)      $project::Component(Wheel/Rear/TyreHeight)
+            set RearWheel(Radius)          [ expr 0.5*$RearWheel(RimDiameter) + $RearWheel(TyreHeight) ]
+            set RearWheel(TyreWidthRadius) $project::Component(Wheel/Rear/TyreWidthRadius)
+            set RearWheel(DistanceBB)      $project::Custom(WheelPosition/Rear)
+            #set RearWheel(Distance_X)     [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
+            set RearWheel(Distance_X)      [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
+            set RearWheel(Position)        [ list [expr -1.0 * $RearWheel(Distance_X)] $project::Custom(BottomBracket/Depth) ]
+            set RearWheel(HubWidth)        $project::Component(Wheel/Rear/HubWidth)
                 # set RearWheel(Distance_X) 450
 
                 #
@@ -331,7 +332,9 @@
             #
             # --- compute tubing geometry
             #
-
+                #
+            check_Values
+            
                 #
             get_ChainStay
 
