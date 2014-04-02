@@ -211,10 +211,10 @@
                                         # set colour(third)        darkblue
                                         # set colour(result)        darkred
 
-                            set colour(primary)        darkorange
+                            set colour(primary)      darkorange
                             set colour(secondary)    darkred
                             set colour(third)        darkmagenta
-                            set colour(result)        darkblue
+                            set colour(result)       darkblue
 
                                         # set colour(primary)        darkorange
                                         # set colour(primary)        darkorchid
@@ -659,7 +659,7 @@
                             set _dim_CS_Length          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position)  $BottomBracket(Position)] \
                                                                                     aligned     [expr  180 * $stageScale]   [expr   80 * $stageScale] \
                                                                                     gray50 ]
-                            set _dim_SD_Nose_Dist       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $BottomBracket(Position) ] \
+                            # set _dim_SD_Nose_Dist       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $BottomBracket(Position) ] \
                                                                                     horizontal  [expr   $distY_SN_LC * $stageScale]   0  \
                                                                                     gray50 ]
                             set _dim_SN_HandleBar       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $HandleBar(Position)] \
@@ -706,6 +706,16 @@
                                                                 vertical    [expr -130 * $stageScale]   [expr   250 * $stageScale]  \
                                                                 darkblue ]
 
+                            
+                              # -- the only editable dimensions her
+                            set _dim_SD_Nose_Dist       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $BottomBracket(Position) ] \
+                                                                horizontal  [expr   $distY_SN_LC * $stageScale]   0  \
+                                                                darkmagenta ]
+                            rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SD_Nose_Dist
+                            $cv_Name bind $_dim_SD_Nose_Dist    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/Saddle/Offset_BB_Nose) ]
+                                    
+                                                                
+                                                                
                             proc dim_LegClearance {cv_Name BB_Position stageScale} {
                                 set pt_01               [ vectormath::addVector        $bikeGeometry::LegClearance(Position)        $BB_Position  ]
                                 set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon        $BB_Position  ]

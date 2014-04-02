@@ -265,6 +265,7 @@
         </Wheel>
         <HandleBar>
             <File>etc:handlebar/campagnolo_ergopower_11_a.svg</File>
+            <PivotAngle>-5.00</PivotAngle>
         </HandleBar>
         <Saddle>
             <File>etc:saddle/saddle150_00.svg</File>
