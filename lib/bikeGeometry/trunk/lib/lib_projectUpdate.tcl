@@ -1326,6 +1326,14 @@
                             $parentNode appendXML  "<cuttingLeft>0.00</cuttingLeft>"
                             $parentNode appendXML  "<cuttingLength>$completeLength</cuttingLength>"
                         }
+                                # -- set Component HandleBar/PivotAngle
+                        set node [$projectDOM selectNode /root/Component/HandleBar/PivotAngle/text()]
+                        if {$node == {}} {
+                            set parentNode [$projectDOM selectNode /root/Component/HandleBar]
+                              #
+                            puts "                           ... update File ... /root/Component/HandleBar/PivotAngle"
+                            $parentNode appendXML  "<PivotAngle>-5.00</PivotAngle>"
+                        } 
 
                     }       
                         

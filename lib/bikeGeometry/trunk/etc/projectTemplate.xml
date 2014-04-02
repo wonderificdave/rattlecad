@@ -268,6 +268,7 @@
         </Wheel>
         <HandleBar>
             <File>etc:handlebar/flatbar_sti.svg</File>
+            <PivotAngle>0.00</PivotAngle>
         </HandleBar>
         <Saddle>
             <File>etc:saddle/saddle_d.svg</File>
