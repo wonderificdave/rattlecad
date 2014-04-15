@@ -128,6 +128,12 @@ namespace eval rattleCAD::control {
               # -- 1 for execute updateControl
             set doUpdate 1
               #
+            
+              # -- set busy cursor
+            set currentTab         [$rattleCAD::view::gui::noteBook_top select]
+			set varName            [rattleCAD::view::gui::notebook_getVarName $currentTab]
+			eval $varName          configure -cursor watch            
+              #
               
             if {$mode == {update}} {
                 set newValue  [rattleCAD::model::setValue $xpath ${value}]
@@ -135,7 +141,7 @@ namespace eval rattleCAD::control {
                 set newValue  [rattleCAD::model::setValue $xpath ${value} $mode]
             }
             
-              # set value to model
+              # set value to local model
             set newValue [[namespace current]::getValue $xpath]
               #
               
@@ -154,7 +160,10 @@ namespace eval rattleCAD::control {
         }
         
           # -- if update of view is not required
-        if {! $doUpdate} {return}
+        if {! $doUpdate} {
+            eval $varName          configure -cursor arrow 
+            return
+        }
           #        
         
           #
@@ -167,7 +176,12 @@ namespace eval rattleCAD::control {
 		foreach {xpath value} $xpathValueList {
             puts "          -> $xpath -> $value"
         }
-  
+          #
+          
+          # -- reset cursor to arrow
+        eval $varName          configure -cursor arrow 
+          #
+          
 		puts ""
 		puts "    rattleCAD::control::setValue"
 		puts "   -------------------------------"
@@ -301,17 +315,7 @@ namespace eval rattleCAD::control {
             {SELECT_ChainStay} {        set listBoxContent [rattleCAD::model::get_ListBoxValues  ChainStay] }
             {SELECT_BrakeType} {        set listBoxContent [rattleCAD::model::get_ListBoxValues  Brake] }
             {SELECT_BottleCage} {       set listBoxContent [rattleCAD::model::get_ListBoxValues  BottleCage] }
-            {SELECT_Binary_OnOff} {     set listBoxContent [rattleCAD::model::get_ListBoxValues  Binary_OnOff] }
-            
-                {__SELECT_Rim} {              set listBoxContent $::APPL_Config(list_Rims) }
-                {__SELECT_ForkType} {         set listBoxContent $::APPL_Config(list_ForkTypes) }
-                {__SELECT_ForkBladeType} {    set listBoxContent $::APPL_Config(list_ForkBladeTypes) }
-                {__SELECT_DropOutDirection} { set listBoxContent $::APPL_Config(list_DropOutDirections) }
-                {__SELECT_DropOutPosition} {  set listBoxContent $::APPL_Config(list_DropOutPositions) }
-                {__SELECT_ChainStay} {        set listBoxContent $::APPL_Config(list_ChainStay) }
-                {__SELECT_BrakeType} {        set listBoxContent $::APPL_Config(list_BrakeTypes) }
-                {__SELECT_BottleCage} {       set listBoxContent $::APPL_Config(list_BottleCage) }
-                {__SELECT_Binary_OnOff} {     set listBoxContent $::APPL_Config(list_Binary_OnOff) }
+            {SELECT_Binary_OnOff} {     set listBoxContent [rattleCAD::model::get_ListBoxValues  Binary_OnOff] }         
         }
         return $listBoxContent
     }    
