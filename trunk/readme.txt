@@ -1,5 +1,15 @@
 
 
+3.4.01.52  - 2014.04.15
+-------------------------------------------------------------------------------
+    refactoring:
+        ... in  $::APPL_Config(USER_Dir)
+            ... rename  _rattleCAD_<[info hostname]>.init  
+                ... to  .rattleCAD_<[info hostname]>.init
+    feature: 
+        ... create  .rattleCAD_<[info hostname]>.Xdefaults
+
+
 3.4.01.51  - 2014.04.03
 -------------------------------------------------------------------------------
     feature: 
@@ -30,8 +40,9 @@
 3.4.01.48  - 2014.03.08
 -------------------------------------------------------------------------------
     refactoring:
-        ... rename  _rattleCAD.init  in  $::APPL_Config(USER_Dir)
-            ... to _rattleCAD_<[info hostname]>.init
+        ... in  $::APPL_Config(USER_Dir)
+            ... rename  _rattleCAD.init  
+                 ... to _rattleCAD_<[info hostname]>.init
 
 
 3.4.01.47  - 2014.03.06

@@ -299,8 +299,10 @@
             # ttk::style configure TCombobox -padding 0
             # ttk::style theme use default
         ttk::style configure TCombobox -padding 0
-        # -- set standard font ------------
+            # -- set standard font ------------
         option add *font $::APPL_Config(GUI_Font)
+            #
+            
         
         rattleCAD::view::gui::binding_copyClass      Spinbox mySpinbox
         rattleCAD::view::gui::binding_removeOnly     mySpinbox [list <Clear>]
@@ -495,7 +497,12 @@
             set APPL_Config(FrameJigType) [$node asText]
             
             
-                # -- check user settings in $::APPL_Config(USER_Dir)/rattleCAD_init.xml  ----
+                # -- check user settings in $::APPL_Config(USER_Dir)/_rattleCAD_[info hostname].Xdefaults  ----
+                #            
+            read_userXdefaults
+
+            
+                # -- check user settings in $::APPL_Config(USER_Dir)/_rattleCAD_[info hostname].init  ----
                 #
             read_userInit
                 
@@ -721,12 +728,85 @@
     #-------------------------------------------------------------------------
         # check user settings in $::APPL_Config(USER_Dir)/_rattleCAD_[info hostname].init
         #            
-    proc read_userInit {} {    
+    proc read_userXdefaults {} {    
         set hostName    [info hostname]
-        set fileName    [format "_rattleCAD_%s.init" $hostName ]
+        set fileName    [format ".rattleCAD_%s.Xdefaults" $hostName ]
         set fileName    [file join $::APPL_Config(USER_Dir) $fileName ]
         puts ""
-        puts "     ... user_InitDOM      $fileName"
+        puts "   ... read_userXdefaults"
+        puts "         ... .Xdefaults        $fileName"
+        puts ""
+        
+        if {[file exists $fileName ]} {
+            if { [catch {option readfile $fileName userDefault} fid] } {
+                puts stderr "         ... <E> ... could not open .Xdefaults $fileName\n             ... $fid"
+                # exit 1
+            }
+        } else {
+			  set   timeString    [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+                #
+              set    fp [open $fileName w]
+              puts  $fp "! ... created by  rattleCAD ($::APPL_Config(RELEASE_Version).$::APPL_Config(RELEASE_Revision))"
+              puts  $fp "!     ... on  $timeString"
+              puts  $fp {!}
+              puts  $fp {!*Menu.foreground: black}
+              puts  $fp {!}
+              puts  $fp {!*Menu.background: lemonChiffon2}
+              puts  $fp {!*Menu.foreground: red}
+              puts  $fp {!}
+              puts  $fp {!}
+              puts  $fp {! --- any untested examples: -----------------}
+              puts  $fp {!       ... see: http://computer-programming-forum.com/57-tcl/714fcdf48fb18c6c.htm}
+              puts  $fp {!}
+              puts  $fp {! ----- try some attributes ------------------}
+              puts  $fp {!*padX: 10}
+              puts  $fp {!*padY: 10}
+              puts  $fp {!*sliderLength: 20}
+              puts  $fp {!*yScrollSide: left}
+              puts  $fp {!*Scale.width: 8}
+              puts  $fp {!*Scrollbar.width: 10}
+              puts  $fp {!*tearOff: 0}
+              puts  $fp {!*activeBorderWidth: 1}
+              puts  $fp {! ----- font settings ------------------------}
+              puts  $fp {!*font: *-helv*-bold-r-*-120-*-iso8859-1}
+              puts  $fp {!*Text.font: *-cour*-medium-r-*-100-*-iso8859-1}
+              puts  $fp {!*Radiobutton.font: *-helv*-bold-r-*-120-*-iso8859-1}
+              puts  $fp {!*Message.font: *-helv*-bold-r-*-120-*-iso8859-1}
+              puts  $fp {!*Listbox.font: *-helv*-bold-r-*-120-*-iso8859-1}
+              puts  $fp {!*Label.font: *-helv*-bold-r-*-120-*-iso8859-1}
+              puts  $fp {!*Entry.font: *-cour*-medium-r-*-100-*-iso8859-1}
+              puts  $fp {!*Checkbutton.font: *-helv*-bold-r-*-120-*-iso8859-1}
+              puts  $fp {!*Button.font: *-helv*-bold-r-*-120-*-iso8859-1}
+              puts  $fp {! ----- menubar setups -----------------------}
+              puts  $fp {!*Menubar.relief: raised}
+              puts  $fp {!*Menubar.borderWidth: 2}
+              puts  $fp {!*Menubar.Menubutton.padX: 8}
+              puts  $fp {!*Menubar*font: *-helv*-bold-o-*-120-*-iso8859-1}
+              puts  $fp {!}              
+              puts  $fp {}
+              close $fp
+              puts ""
+              puts "     ... .Xdefaults        $fileName"
+              puts "         ------------------------"
+              puts "           ... write new:"   
+              puts "                           $fileName"
+              puts "                   ... done"
+              
+              read_userXdefaults
+        }
+    }
+
+       
+    #-------------------------------------------------------------------------
+        # check user settings in $::APPL_Config(USER_Dir)/_rattleCAD_[info hostname].init
+        #            
+    proc read_userInit {} {    
+        set hostName    [info hostname]
+        set fileName    [format ".rattleCAD_%s.init" $hostName ]
+        set fileName    [file join $::APPL_Config(USER_Dir) $fileName ]
+        puts ""
+        puts "   ... read_userInit"
+        puts "         ... user_InitDOM      $fileName"
         puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
         puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
         puts "        ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
