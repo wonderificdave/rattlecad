@@ -131,8 +131,8 @@ namespace eval rattleCAD::control {
             
               # -- set busy cursor
             set currentTab         [$rattleCAD::view::gui::noteBook_top select]
-			set varName            [rattleCAD::view::gui::notebook_getVarName $currentTab]
-			eval $varName          configure -cursor watch            
+			set cv_VarName         [rattleCAD::view::gui::notebook_getVarName $currentTab]
+			catch {eval $cv_VarName       configure -cursor watch}          
               #
               
             if {$mode == {update}} {
@@ -161,7 +161,7 @@ namespace eval rattleCAD::control {
         
           # -- if update of view is not required
         if {! $doUpdate} {
-            eval $varName          configure -cursor arrow 
+            catch {eval $cv_VarName   configure -cursor arrow}
             return
         }
           #        
@@ -179,7 +179,7 @@ namespace eval rattleCAD::control {
           #
           
           # -- reset cursor to arrow
-        eval $varName          configure -cursor arrow 
+        catch {eval $cv_VarName   configure -cursor arrow} 
           #
           
 		puts ""
