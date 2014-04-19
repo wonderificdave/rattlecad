@@ -989,11 +989,11 @@
             
             
             set f_DIN_Format    [frame $baseFrame.select.din_Format]
-                    radiobutton $f_DIN_Format.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
-                    radiobutton $f_DIN_Format.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
-                    radiobutton $f_DIN_Format.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
-                    radiobutton $f_DIN_Format.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
-                    radiobutton $f_DIN_Format.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {puts $rattleCAD::view::gui::stageFormat}
+                    radiobutton $f_DIN_Format.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_DIN_Format.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_DIN_Format.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_DIN_Format.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_DIN_Format.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
                 pack $f_DIN_Format.a4 \
                      $f_DIN_Format.a3 \
                      $f_DIN_Format.a2 \
@@ -1002,12 +1002,12 @@
             
             set f_Scale        [frame $baseFrame.select.scale]
             if {$type == {default}} {
-                    radiobutton $f_Scale.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
-                    radiobutton $f_Scale.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
-                    radiobutton $f_Scale.s033 -text "1:3  "     -value 0.33 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
-                    radiobutton $f_Scale.s040 -text "1:2,5"     -value 0.40 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
-                    radiobutton $f_Scale.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
-                    radiobutton $f_Scale.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {puts $rattleCAD::view::gui::stageScale}
+                    radiobutton $f_Scale.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_Scale.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_Scale.s033 -text "1:3  "     -value 0.33 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_Scale.s040 -text "1:2,5"     -value 0.40 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_Scale.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $f_Scale.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
                 pack $f_Scale.s020 \
                      $f_Scale.s025 \
                      $f_Scale.s040 \
@@ -1019,7 +1019,8 @@
             
             button  $baseFrame.update \
                         -text "update" \
-                        -command {rattleCAD::view::gui::notebook_formatCanvas  $rattleCAD::view::gui::stageFormat  $rattleCAD::view::gui::stageScale}
+                        -command {rattleCAD::view::gui::notebook_formatCanvas }
+                               # {rattleCAD::view::gui::notebook_formatCanvas  $rattleCAD::view::gui::stageFormat  $rattleCAD::view::gui::stageScale}
             pack    $baseFrame.update -expand yes -fill x            
     }
 
@@ -1053,8 +1054,8 @@
             set f_FrameJig    [frame $baseFrame.select.jigType ]
               # foreach jig $::APPL_Config(list_FrameJigTypes) {}
             foreach jig $rattleCAD::model::valueRegistry(FrameJigType) {
-                radiobutton     $f_FrameJig.$jig -text $jig -value $jig  -anchor w  -variable ::APPL_Config(FrameJigType)  -command {}
-                pack $f_FrameJig.$jig -expand yes -fill x -side top
+                radiobutton     $f_FrameJig.option_$jig -text $jig -value $jig  -anchor w  -variable ::APPL_Config(FrameJigType)  -command {rattleCAD::view::gui::updateFrameJig}
+                pack $f_FrameJig.option_$jig -expand yes -fill x -side top
             }
             pack $f_FrameJig -side left
             
@@ -1131,7 +1132,7 @@
     #-------------------------------------------------------------------------
        #  change canvasCAD Format and Scale
        #
-    proc notebook_formatCanvas {stageFormat stageScale} {
+    proc notebook_formatCanvas {} {
             variable canvasUpdate
             variable noteBook_top
 
@@ -1150,7 +1151,7 @@
             }
                             
               #
-			$varName formatCanvas $stageFormat $stageScale
+			$varName formatCanvas $rattleCAD::view::gui::stageFormat  $rattleCAD::view::gui::stageScale
               # 
 
 			  #

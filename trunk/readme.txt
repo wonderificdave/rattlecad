@@ -1,5 +1,18 @@
 
 
+3.4.01.55  - 2014.04.19
+-------------------------------------------------------------------------------
+    refactoring:
+        ... createFrameJig
+    feature: 
+        ... createFrameJig
+            ... add FrameJIG: MeisterJig (http://www.meisterjig.com/)
+                ... waiting for commitment 
+        ... update: rattleCAD::view::gui::notebook_createButton
+            ... update on select radiobutton in 
+                ... ChainStay Details, Summary, FrameJig and FrameDrafting
+
+
 3.4.01.54  - 2014.04.16
 -------------------------------------------------------------------------------
     feature: 
