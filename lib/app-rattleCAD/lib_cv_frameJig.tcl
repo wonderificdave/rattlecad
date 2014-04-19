@@ -48,39 +48,41 @@
                 #
             rattleCAD::rendering::createDecoration       $cv_Name $xy    DerailleurRear_ctr
                 #
-            createCenterline                            $cv_Name $xy
+            createCenterline                             $cv_Name $xy
                 #
-            get_FrameJig                                $frameJigType
+            get_FrameJig                                 $frameJigType
                 #
-            createDimension                             $cv_Name $xy    cline_brake
+            createDimension                              $cv_Name $xy    cline_brake
             
                 #
               # puts " <D> ..... rattleCAD::cv_custom::createFrameJig $frameJigType"
             switch -exact $frameJigType {
                 nuremberg -
                 vogeltanz {       
-                        createJigDimension    $cv_Name $xy    cline_vogeltanz
-                        createJigDimension    $cv_Name $xy    bg_vogeltanz 
+                        createJigDimension    $cv_Name $xy    vogeltanz 
                     }
                           
                 vienna -
                 selberbruzzler {  
-                        createJigDimension    $cv_Name $xy    cline_rattleCAD
-                        createJigDimension    $cv_Name $xy    bg_rattleCAD 
+                        createJigDimension    $cv_Name $xy    selberbruzzler 
                     }
                           
                 ilz -
                 graz -
                 rattleCAD {         
-                        createJigDimension    $cv_Name $xy    cline_rattleCAD
-                        createJigDimension    $cv_Name $xy    bg_rattleCAD 
+                        createJigDimension    $cv_Name $xy    rattleCAD 
                     }
 
+                MeisterJIG {         
+                        createJigDimension    $cv_Name $xy    MeisterJIG 
+                    }
+                    
                 geldersheim -
                 default {         
-                        createJigDimension    $cv_Name $xy    cline_geldersheim
-                        createJigDimension    $cv_Name $xy    bg_geldersheim 
+                        createJigDimension    $cv_Name $xy    geldersheim 
                     }
+                    
+                    
             }
                 #
             createParameterTable                        $cv_Name $stageScale
@@ -92,6 +94,7 @@
             variable RearWheel
             variable FrontWheel
             variable Steerer
+            variable HeadTube
             variable SeatPost
             variable BottomBracket
 
@@ -148,6 +151,19 @@
                           # puts "\n"
                     }
                     
+                MeisterJIG {
+                        set FrameJig(BB_RearWheel) [ list [lindex $BottomBracket(Position) 0] [lindex $RearWheel(Position) 1] ]
+                        set FrameJig(BB_HeadTube)  [ list [lindex $BottomBracket(Position) 0] [lindex $HeadTube(Fork)      1] ]
+                        
+                        set help_rw                [ vectormath::addVector $RearWheel(Position) {-100 0} ] 
+                        
+                        set FrameJig(RW_SeatStay)  [ vectormath::intersectPoint $BottomBracket(Position) $SeatPost(SeatTube) $RearWheel(Position) $help_rw]
+
+                        set angle_SeatTube      [ vectormath::angle $SeatPost(SeatTube)    $FrameJig(RW_SeatStay)    $help_rw]                        
+                        set angle_HeadTube      [ vectormath::angle $FrameJig(BB_HeadTube) $HeadTube(Fork)           $Steerer(Stem)]                        
+                        set FrameJig(Angles)    [list $angle_SeatTube $angle_HeadTube]
+                    }
+                    
                 ilz -
                 graz -
                 rattleCAD -
@@ -165,8 +181,7 @@
                     }
             }
    }
- 
- 
+
 
     proc rattleCAD::cv_custom::createJigDimension {cv_Name BB_Position type {active {on}}} {
 
@@ -205,10 +220,16 @@
                 # --- create dimension -------------------
             switch $type {
     
-                cline_rattleCAD {
+                    # -----------------------
+                selberbruzzler -
+                rattleCAD {
+                              # puts "   <D>    ... createJigDimension::bg_rattleCAD ($type)"
+                            
+                            set help_bb           [ list [lindex $RearWheel(Position) 0] [lindex $BottomBracket(Position) 1] ]
+                            set help_fk           [ vectormath::intersectPoint    $Steerer(Fork)  $Steerer(Stem)    $FrontWheel(Position) $RearWheel(Position) ]
 
-                                set help_fk             [ vectormath::intersectPoint    $Steerer(Fork)  $Steerer(Stem)    $FrontWheel(Position) $RearWheel(Position) ]
-
+                              # -- CenterLine ------------------------
+                              #
                             $cv_Name create circle        $HeadTube(Fork)       -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
                             $cv_Name create circle        $FrameJig(HeadTube)   -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
                             $cv_Name create circle        $FrameJig(SeatTube)   -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
@@ -216,61 +237,9 @@
                             $cv_Name create centerline  [ appUtil::flatten_nestedList $FrameJig(HeadTube) $RearWheel(Position)] \
                                                                                     -fill darkred   -width 0.25     -tags __CenterLine__
                             $cv_Name create centerline  [ appUtil::flatten_nestedList $RearWheel(Position) $help_fk] \
-                                                                                    -fill darkred   -width 0.25     -tags __CenterLine__
-                        }
-                cline_vogeltanz {
-                                set help_bb             [ list [lindex $RearWheel(Position) 0] [lindex $BottomBracket(Position) 1] ]
-                                set help_fk             [ vectormath::intersectPoint    $Steerer(Fork)  $Steerer(Stem)    $help_bb $BottomBracket(Position) ]
-                                set help_01             [ vectormath::intersectPerp     $Steerer(Fork)  $Steerer(Stem)    $FrontWheel(Position) ]
-                                
-                            $cv_Name create circle        $HeadTube(Fork)       -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
-                            $cv_Name create circle        $help_fk              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
-                            $cv_Name create circle        $help_bb              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
-                            $cv_Name create circle        $FrontWheel(Position) -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
-                            $cv_Name create centerline  [ appUtil::flatten_nestedList $help_bb $help_fk] \
-                                                                                    -fill darkred   -width 0.25     -tags __CenterLine__
-                            $cv_Name create centerline  [ appUtil::flatten_nestedList $help_01 $help_fk] \
-                                                                                    -fill gray60    -width 0.25     -tags __CenterLine__
-                            
-                              # $cv_Name create circle        $FrameJig(HeadTube)   -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
-                              # $cv_Name create circle        $FrameJig(SeatTube)   -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
-                              # $cv_Name create centerline  [ appUtil::flatten_nestedList $FrameJig(HeadTube) $RearWheel(Position)] \
-                                                                                      -fill darkred   -width 0.25     -tags __CenterLine__
-                        }
-                cline_geldersheim {
-                              set help_bb             [ vectormath::intersectPerp      $FrameJig(HeadTube)    $FrameJig(SeatTube)  $RearWheel(Position) ]
-                              set help_fk             [ vectormath::intersectPerp      $Steerer(Stem)  $Steerer(Fork)  $BottomBracket(Position) ]
-
-                                #set help_fk             [ vectormath::intersectPoint    $Steerer(Fork)  $Steerer(Stem)    $help_bb $BottomBracket(Position) ]
-                                #set help_bb             [ list [lindex $RearWheel(Position) 0] [lindex $BottomBracket(Position) 1] ]
-                                #set help_01             [ vectormath::intersectPerp      $Steerer(Fork) $Steerer(Stem)    $FrontWheel(Position) ]
-                                
-                            $cv_Name create circle        $HeadTube(Fork)       -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
-                            $cv_Name create circle        $help_fk              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
-                            $cv_Name create circle        $help_bb              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
-                            $cv_Name create circle        $FrontWheel(Position) -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
-                            $cv_Name create centerline  [ appUtil::flatten_nestedList $help_bb $help_fk] \
-                                                                                    -fill darkred   -width 0.25     -tags __CenterLine__
-                            $cv_Name create centerline  [ appUtil::flatten_nestedList $help_bb $RearWheel(Position)] \
-                                                                                    -fill gray60   -width 0.25     -tags __CenterLine__
                               
-                              # $cv_Name create centerline  [ appUtil::flatten_nestedList $help_01 $help_fk] \
-                                                                                    -fill darkred   -width 0.25     -fill gray60 -tags __CenterLine__
-                            
-                              # $cv_Name create circle        $FrameJig(HeadTube)   -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
-                              # $cv_Name create circle        $FrameJig(SeatTube)   -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
-                              # $cv_Name create centerline  [ appUtil::flatten_nestedList $FrameJig(HeadTube) $RearWheel(Position)] \
-                                                                                      -fill darkred   -width 0.25     -tags __CenterLine__
-                        }
-                    # -----------------------
-                bg_rattleCAD {
-                              # puts "   <D>    ... createJigDimension::bg_rattleCAD ($type)"
-                            
-                              set help_bb           [ list [lindex $RearWheel(Position) 0] [lindex $BottomBracket(Position) 1] ]
-                              set help_fk           [ vectormath::intersectPoint    $Steerer(Fork)  $Steerer(Stem)   $FrontWheel(Position) $RearWheel(Position) ]
-
-                                # -- Dimensions ------------------------
-                                #
+                              # -- Dimensions ------------------------
+                              #
                             set _dim_Jig_length     [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $RearWheel(Position)    $FrameJig(HeadTube)] \
                                                                                         aligned     [expr  -170 * $stageScale]   0 \
                                                                                         darkblue ]
@@ -309,9 +278,6 @@
                             set _dim_ST_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(SeatTube)   $RearWheel(Position)   $BottomBracket(Position) ] \
                                                                                                                      90   0  \
                                                                                                                     darkred ]
-                            # set _dim_ST_Angle_Sup   [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(SeatTube)   $SeatTube(TopTube)     $RearWheel(Position) ] \
-                                                                                                                     90   0  \
-                                                                                                                    darkred ]
                             set _dim_HT_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(HeadTube)   $Steerer(Stem)   $RearWheel(Position) ] \
                                                                                                                      90  10  \
                                                                                                                     darkred ]
@@ -323,16 +289,28 @@
                             set _dim_Fork_Height    [ $cv_Name dimension  length  [ appUtil::flatten_nestedList            $help_fk $HeadTube(Fork)  ] \
                                                                                         aligned        [expr   150 * $stageScale]   0 \
                                                                                         gray30 ]
+                            return
                         }
                     # -----------------------
-                bg_geldersheim {
+                geldersheim {
                               # puts "   <D>    ... createJigDimension::bg_rattleCAD ($type)"
                             
-                              set help_bb             [ vectormath::intersectPerp       $FrameJig(HeadTube)    $FrameJig(SeatTube)  $RearWheel(Position) ]
-                              set help_fk             [ vectormath::intersectPerp       $Steerer(Stem)  $Steerer(Fork)  $BottomBracket(Position) ]
-
-                                # -- Dimensions ------------------------
-                                #
+                            set help_bb             [ vectormath::intersectPerp      $FrameJig(HeadTube)    $FrameJig(SeatTube)  $RearWheel(Position) ]
+                            set help_fk             [ vectormath::intersectPerp      $Steerer(Stem)  $Steerer(Fork)  $BottomBracket(Position) ]
+                               
+                              # -- CenterLine ------------------------
+                              #
+                            $cv_Name create circle        $HeadTube(Fork)       -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $help_fk              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $help_bb              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $FrontWheel(Position) -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
+                            $cv_Name create centerline  [ appUtil::flatten_nestedList $help_bb $help_fk] \
+                                                                                    -fill darkred   -width 0.25     -tags __CenterLine__
+                            $cv_Name create centerline  [ appUtil::flatten_nestedList $help_bb $RearWheel(Position)] \
+                                                                                    -fill gray60   -width 0.25     -tags __CenterLine__
+  
+                              # -- Dimensions ------------------------
+                              #
                             set _dim_Jig_length     [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $help_bb    $help_fk] \
                                                                                         aligned     [expr  150 * $stageScale]   0 \
                                                                                         darkblue ]
@@ -346,25 +324,12 @@
                             set _dim_CS_Length      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $RearWheel(Position)    $BottomBracket(Position)] \
                                                                                         aligned     [expr -100 * $stageScale]   0 \
                                                                                         gray30 ]
-                              #set _dim_CS_LengthHor   [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $BottomBracket(Position)    $RearWheel(Position)  ] \
-                                                                                          horizontal  [expr  -100 * $stageScale]   0 \
-                                                                                        gray30 ]
                             set _dim_BB_Depth       [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $RearWheel(Position)  $BottomBracket(Position) ] \
                                                                                         vertical    [expr   80 * $stageScale]   [expr  70 * $stageScale]  \
                                                                                         gray30 ]
                             set _dim_HT_Dist        [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $HeadTube(Fork)     $BottomBracket(Position)] \
                                                                                         aligned     [expr  100 * $stageScale]   0 \
                                                                                         gray30 ]
-                              # set _dim_HT_Dist_y      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $HeadTube(Fork)     $BottomBracket(Position)] \
-                                                                                          vertical    [expr  -240 * $stageScale]   0 \
-                                                                                          gray30 ]
-                              # set _dim_HT_Dist_x      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $HeadTube(Fork)     $BottomBracket(Position)] \
-                                                                                          horizontal  [expr   -80 * $stageScale]   0 \
-                                                                                          gray30 ]
-                              #set _dim_WH_Distance    [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $RearWheel(Position)    $help_fk] \
-                                                                                          aligned     [expr   210 * $stageScale]   0 \
-                                                                                          gray30 ]
-                            
                             set _dim_HT_Offset      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $FrameJig(HeadTube)         $HeadTube(Fork)] \
                                                                                         aligned     [expr   100 * $stageScale]   [expr   10 * $stageScale] \
                                                                                         darkred ]
@@ -374,33 +339,37 @@
                             set _dim_ST_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position)   $SeatTube(TopTube)    $help_bb ] \
                                                                                          90   0  \
                                                                                         darkred ]
-                            # set _dim_ST_Angle_Sup   [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position)   $help_fk              $SeatTube(TopTube) ] \
-                                                                                         90   0  \
-                                                                                        darkred ]
                             set _dim_ST_Angle_2     [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position)   $RearWheel(Position)  $help_bb ] \
                                                                                         150  40  \
                                                                                         darkred ]
                             set _dim_HT_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(HeadTube)   $Steerer(Stem)   $BottomBracket(Position) ] \
                                                                                          90  10  \
                                                                                         darkred ]
-                                # -- Fork Details ----------------------
-                                #
-                            #set _dim_HT_Fork        [ $cv_Name dimension  length  [ appUtil::flatten_nestedList  $FrameJig(HeadTube)    $help_fk] \
-                                                                                        aligned     [expr  -100 * $stageScale]   0 \
-                                                                                        darkblue ]
-                            #set _dim_Fork_Height    [ $cv_Name dimension  length  [ appUtil::flatten_nestedList            $help_fk $HeadTube(Fork)  ] \
-                                                                                        aligned        [expr   150 * $stageScale]   0 \
-                                                                                        gray30 ]
+                              #
+                            return
+                              #
                         }
                     # -----------------------
-                bg_vogeltanz {
+                vogeltanz {
                               # puts "   <D>    ... createJigDimension::bg_vogeltanz ($type)"
 
-                              set help_bb           [ list [lindex $RearWheel(Position) 0] [lindex $BottomBracket(Position) 1] ]
-                              set help_fk           [ vectormath::intersectPoint                $Steerer(Fork)        $Steerer(Stem)   $help_bb $BottomBracket(Position) ]
-                              set help_01           [ vectormath::intersectPerp      $Steerer(Fork) $Steerer(Stem)    $FrontWheel(Position) ]
-                                # -- Dimensions ------------------------
-                                #
+                            set help_bb           [ list [lindex $RearWheel(Position) 0] [lindex $BottomBracket(Position) 1] ]
+                            set help_fk           [ vectormath::intersectPoint     $Steerer(Fork) $Steerer(Stem)    $help_bb $BottomBracket(Position) ]
+                            set help_01           [ vectormath::intersectPerp      $Steerer(Fork) $Steerer(Stem)    $FrontWheel(Position) ]
+                                
+                              # -- CenterLine ------------------------
+                              #
+                            $cv_Name create circle        $HeadTube(Fork)       -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $help_fk              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $help_bb              -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $FrontWheel(Position) -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
+                            $cv_Name create centerline  [ appUtil::flatten_nestedList $help_bb $help_fk] \
+                                                                                    -fill darkred   -width 0.25     -tags __CenterLine__
+                            $cv_Name create centerline  [ appUtil::flatten_nestedList $help_01 $help_fk] \
+                                                                                    -fill gray60    -width 0.25     -tags __CenterLine__
+                        
+                              # -- Dimensions ------------------------
+                              #
                             set _dim_ST_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $BottomBracket(Position) $SeatPost(SeatTube) $help_bb ] \
                                                                                          90   0  \
                                                                                         darkred ]
@@ -411,7 +380,6 @@
                                                                                          90   0  \
                                                                                         darkred ]
                             
-
                             set _dim_CS_Length      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $RearWheel(Position)    $BottomBracket(Position)] \
                                                                                         aligned     [expr    80 * $stageScale]   0 \
                                                                                         darkred ]
@@ -430,17 +398,63 @@
                             set _dim_FK_Length     [ $cv_Name dimension  length   [ appUtil::flatten_nestedList  $help_01   $FrontWheel(Position)   $HeadTube(Fork) ] \
                                                                                         perpendicular [expr  40 * $stageScale]  [expr  20 * $stageScale]  \
                                                                                         gray30 ]
-                              
-                              # set _dim_HT_Angle2       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(HeadTube)   $Steerer(Stem)   $RearWheel(Position) ] \
-                                                                                           90  10  \
-                                                                                          gray30 ]
-                              # set _dim_Jig_length     [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $RearWheel(Position)    $FrameJig(HeadTube)] \
-                                                                                          aligned     [expr  -110 * $stageScale]   0 \
-                                                                                          gray30 ]
+                              #
+                            return
+                              #                            
+                        }
+                    # -----------------------
+                MeisterJIG {
+                              # puts "   <D>    ... createJigDimension::bg_MeisterJIG ($type)"
+                            set help_fk             [ vectormath::intersectPoint    $Steerer(Fork)  $Steerer(Stem)    $FrontWheel(Position) $RearWheel(Position) ]
 
-
-                            return                              
- 
+                              # -- CenterLine ------------------------
+                              #
+                            $cv_Name create circle        $HeadTube(Fork)         -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $FrameJig(BB_RearWheel) -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $FrameJig(BB_HeadTube)  -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $FrameJig(RW_SeatStay)  -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $help_fk                -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
+                              #
+                            $cv_Name create centerline  [ appUtil::flatten_nestedList $FrameJig(BB_HeadTube)    $HeadTube(Fork)] \
+                                                                                    -fill darkred   -width 0.25     -tags __CenterLine__
+                            $cv_Name create centerline  [ appUtil::flatten_nestedList $RearWheel(Position)      $FrameJig(BB_RearWheel)] \
+                                                                                    -fill darkred   -width 0.25     -tags __CenterLine__
+                            $cv_Name create centerline  [ appUtil::flatten_nestedList $BottomBracket(Position)  $FrameJig(BB_HeadTube)] \
+                                                                                    -fill darkred   -width 0.25     -tags __CenterLine__
+                            
+                              # -- Dimensions ------------------------
+                              #
+                            set _dim_CS_LengthHor   [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $BottomBracket(Position)    $RearWheel(Position) ] \
+                                                                                        horizontal  [expr   -80 * $stageScale]   0 \
+                                                                                        darkred ]
+                            set _dim_BB_Depth       [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $FrameJig(BB_RearWheel)     $BottomBracket(Position) ] \
+                                                                                        vertical    [expr   -80 * $stageScale]   [expr -70 * $stageScale]  \
+                                                                                        darkred ]
+                            set _dim_HT_Dist_x      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $FrameJig(BB_HeadTube)      $HeadTube(Fork)] \
+                                                                                        horizontal  [expr  -200 * $stageScale]   0 \
+                                                                                        darkred ]
+                            set _dim_HT_Dist_y      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $BottomBracket(Position)    $HeadTube(Fork) ] \
+                                                                                        vertical    [expr   160 * $stageScale]   [expr -70 * $stageScale] \
+                                                                                        darkred ]
+                              # set _dim_HT_Dist_y  [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $FrameJig(BB_RearWheel)     $HeadTube(Fork) ] \
+                                                                                        vertical    [expr   130 * $stageScale]   0 \
+                                                                                        darkred ]
+                            set _dim_HT_Dist_x      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $BottomBracket(Position)    $help_fk] \
+                                                                                        horizontal  [expr    80 * $stageScale]   0 \
+                                                                                        gray30 ]
+                            set _dim_HT_Fork        [ $cv_Name dimension  length  [ appUtil::flatten_nestedList  $HeadTube(Fork)              $help_fk] \
+                                                                                        aligned     [expr  -100 * $stageScale]   0 \
+                                                                                        gray30 ]
+                            
+                            set _dim_ST_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(RW_SeatStay)  $SeatPost(SeatTube)  $RearWheel(Position) ] \
+                                                                                                                    130   0  \
+                                                                                                                    darkred ]
+                            set _dim_HT_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $HeadTube(Fork)   $Steerer(Stem)   $FrameJig(BB_HeadTube) ] \
+                                                                                                                    130 -10  \
+                                                                                                                    darkred ]
+                              #
+                            return
+                              #                            
                         }
                     # -----------------------
                 default {
