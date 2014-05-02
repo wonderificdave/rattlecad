@@ -207,7 +207,7 @@ namespace eval rattleCAD::control {
 		}
 		  # puts "        rattleCAD::control::getValue $xpath $value  <- $format"
 		return ${value}
-	}
+	}  
 
     proc setSession {name value} {
         variable  Session

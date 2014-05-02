@@ -161,36 +161,36 @@
 
 
                 # --- get Reference Values
-            set Reference(HandleBar)        [ bikeGeometry::get_Object     Reference_HB        position    $BB_Position ]
-            set Reference(SaddleNose)       [ bikeGeometry::get_Object     Reference_SN        position    $BB_Position ]
+            set Reference(HandleBar)        [ rattleCAD::model::getObject     Reference_HB        position    $BB_Position ]
+            set Reference(SaddleNose)       [ rattleCAD::model::getObject     Reference_SN        position    $BB_Position ]
 
 
                 # --- get defining Point coords ----------
             set BottomBracket(Position)       $BB_Position
-            set RearWheel(Position)         [ bikeGeometry::get_Object     RearWheel           position    $BB_Position ]
-            set FrontWheel(Position)        [ bikeGeometry::get_Object     FrontWheel          position    $BB_Position ]
-            set SeatPost(Saddle)            [ bikeGeometry::get_Object     SeatPostSaddle      position    $BB_Position ]
-            set SeatPost(PivotPosition)     [ bikeGeometry::get_Object     SeatPostPivot       position    $BB_Position ]
-            set SeatPost(SeatTube)          [ bikeGeometry::get_Object     SeatPostSeatTube    position    $BB_Position ]
-            set Saddle(Position)            [ bikeGeometry::get_Object     Saddle              position    $BB_Position ]
-            set Saddle(Proposal)            [ bikeGeometry::get_Object     SaddleProposal      position    $BB_Position ]
-            set SeatStay(SeatTube)          [ bikeGeometry::get_Object     SeatStay/End        position    $BB_Position ]
-            set TopTube(SeatTube)           [ bikeGeometry::get_Object     TopTube/Start       position    $BB_Position ]
-            set TopTube(Steerer)            [ bikeGeometry::get_Object     TopTube/End         position    $BB_Position ]
-            set HeadTube(Stem)              [ bikeGeometry::get_Object     HeadTube/End        position    $BB_Position ]
-            set HeadTube(Fork)              [ bikeGeometry::get_Object     HeadTube/Start      position    $BB_Position ]
-            set Steerer(Stem)               [ bikeGeometry::get_Object     Steerer/End         position    $BB_Position ]
-            set Steerer(Fork)               [ bikeGeometry::get_Object     Steerer/Start       position    $BB_Position ]
-            set DownTube(Steerer)           [ bikeGeometry::get_Object     DownTube/End        position    $BB_Position ]
-            set DownTube(BBracket)          [ bikeGeometry::get_Object     DownTube/Start      position    $BB_Position ]
-            set HandleBar(Position)         [ bikeGeometry::get_Object     HandleBar           position    $BB_Position ]
-            set SeatTube(TopTube)           [ bikeGeometry::get_Object     SeatTube/End        position    $BB_Position ]
-            set SeatTube(Saddle)            [ bikeGeometry::get_Object     SeatTubeSaddle      position    $BB_Position ]
-            set SeatTube(BBracket)          [ bikeGeometry::get_Object     SeatTube/Start      position    $BB_Position ]
-            set SeatStay(End)               [ bikeGeometry::get_Object     SeatStay/End        position    $BB_Position ]
-            set SeatTube(Ground)            [ bikeGeometry::get_Object     SeatTubeGround      position    $BB_Position ]
-            set Steerer(Ground)             [ bikeGeometry::get_Object     SteererGround       position    $BB_Position ]
-            set Position(BaseCenter)        [ bikeGeometry::get_Object     BottomBracketGround position    $BB_Position ]
+            set RearWheel(Position)         [ rattleCAD::model::getObject     RearWheel           position    $BB_Position ]
+            set FrontWheel(Position)        [ rattleCAD::model::getObject     FrontWheel          position    $BB_Position ]
+            set SeatPost(Saddle)            [ rattleCAD::model::getObject     SeatPostSaddle      position    $BB_Position ]
+            set SeatPost(PivotPosition)     [ rattleCAD::model::getObject     SeatPostPivot       position    $BB_Position ]
+            set SeatPost(SeatTube)          [ rattleCAD::model::getObject     SeatPostSeatTube    position    $BB_Position ]
+            set Saddle(Position)            [ rattleCAD::model::getObject     Saddle              position    $BB_Position ]
+            set Saddle(Proposal)            [ rattleCAD::model::getObject     SaddleProposal      position    $BB_Position ]
+            set SeatStay(SeatTube)          [ rattleCAD::model::getObject     SeatStay/End        position    $BB_Position ]
+            set TopTube(SeatTube)           [ rattleCAD::model::getObject     TopTube/Start       position    $BB_Position ]
+            set TopTube(Steerer)            [ rattleCAD::model::getObject     TopTube/End         position    $BB_Position ]
+            set HeadTube(Stem)              [ rattleCAD::model::getObject     HeadTube/End        position    $BB_Position ]
+            set HeadTube(Fork)              [ rattleCAD::model::getObject     HeadTube/Start      position    $BB_Position ]
+            set Steerer(Stem)               [ rattleCAD::model::getObject     Steerer/End         position    $BB_Position ]
+            set Steerer(Fork)               [ rattleCAD::model::getObject     Steerer/Start       position    $BB_Position ]
+            set DownTube(Steerer)           [ rattleCAD::model::getObject     DownTube/End        position    $BB_Position ]
+            set DownTube(BBracket)          [ rattleCAD::model::getObject     DownTube/Start      position    $BB_Position ]
+            set HandleBar(Position)         [ rattleCAD::model::getObject     HandleBar           position    $BB_Position ]
+            set SeatTube(TopTube)           [ rattleCAD::model::getObject     SeatTube/End        position    $BB_Position ]
+            set SeatTube(Saddle)            [ rattleCAD::model::getObject     SeatTubeSaddle      position    $BB_Position ]
+            set SeatTube(BBracket)          [ rattleCAD::model::getObject     SeatTube/Start      position    $BB_Position ]
+            set SeatStay(End)               [ rattleCAD::model::getObject     SeatStay/End        position    $BB_Position ]
+            set SeatTube(Ground)            [ rattleCAD::model::getObject     SeatTubeGround      position    $BB_Position ]
+            set Steerer(Ground)             [ rattleCAD::model::getObject     SteererGround       position    $BB_Position ]
+            set Position(BaseCenter)        [ rattleCAD::model::getObject     BottomBracketGround position    $BB_Position ]
 
             set RearBrake(Mount)            [ vectormath::addVector        $bikeGeometry::RearBrake(Mount)       $BB_Position ]
             set RearBrake(Help)             [ vectormath::addVector        $bikeGeometry::RearBrake(Help)        $BB_Position ]
@@ -205,7 +205,7 @@
               # set FrameJig(SeatTube)      [ vectormath::addVector        $bikeGeometry::FrameJig(SeatTube)     $BB_Position ]
             set LegClearance(Position)      [ vectormath::addVector        $bikeGeometry::LegClearance(Position) $BB_Position ]
             set SaddleNose(Position)        [ vectormath::addVector        $bikeGeometry::Saddle(Nose)           $BB_Position ]
-            set Position(IS_ChainSt_SeatSt) [ bikeGeometry::get_Object     ChainStay/SeatStay_IS   position        $BB_Position ]
+            set Position(IS_ChainSt_SeatSt) [ rattleCAD::model::getObject     ChainStay/SeatStay_IS   position        $BB_Position ]
 
             set Length(CrankSet)            [rattleCAD::control::getValue Component/CrankSet/Length]
 
@@ -225,18 +225,18 @@
 
                 # --- geometry for tubing dimension -----
             set HeadTube(Diameter)      $bikeGeometry::HeadTube(Diameter)
-            set HeadTube(polygon)       [ bikeGeometry::get_Object HeadTube polygon $BB_Position ]
-                set pt_01                   [ bikeGeometry::coords_get_xy $HeadTube(polygon) 2 ]
-                set pt_02                   [ bikeGeometry::coords_get_xy $HeadTube(polygon) 1 ]
-                set pt_03                   [ bikeGeometry::coords_get_xy $HeadTube(polygon) 3 ]
-                set pt_04                   [ bikeGeometry::coords_get_xy $HeadTube(polygon) 0 ]
+            set HeadTube(polygon)       [ rattleCAD::model::getObject HeadTube polygon $BB_Position ]
+                set pt_01                   [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 2 ]
+                set pt_02                   [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 1 ]
+                set pt_03                   [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 3 ]
+                set pt_04                   [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 0 ]
             set HeadTube(vct_Top)       [ list $pt_01 $pt_02 ]
             set HeadTube(vct_Bottom)    [ list $pt_03 $pt_04 ]
 
             set SeatTube(Diameter)      $bikeGeometry::SeatTube(DiameterTT)
-            set SeatTube(polygon)       [ bikeGeometry::get_Object SeatTube polygon $BB_Position  ]
-                set pt_01                   [ bikeGeometry::coords_get_xy $SeatTube(polygon) 3 ]
-                set pt_02                   [ bikeGeometry::coords_get_xy $SeatTube(polygon) 2 ]
+            set SeatTube(polygon)       [ rattleCAD::model::getObject SeatTube polygon $BB_Position  ]
+                set pt_01                   [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 3 ]
+                set pt_02                   [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 2 ]
             set SeatTube(vct_Top)       [ list $pt_01 $pt_02 ]
 
             set Steerer(Diameter)       30.0
@@ -247,24 +247,24 @@
                 set   pt_01                 [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr -0.5 * $Steerer(Diameter)] ]
                 set   pt_02                 [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr  0.5 * $Steerer(Diameter)] ]
             set Steerer(vct_Bottom)     [ list $pt_01 $pt_02 ]
-            set Steerer(Start)          [ bikeGeometry::get_Object            Steerer/Start    position    $BB_Position  ]
-            set Steerer(End)            [ bikeGeometry::get_Object            Steerer/End      position    $BB_Position  ]
+            set Steerer(Start)          [ rattleCAD::model::getObject            Steerer/Start    position    $BB_Position  ]
+            set Steerer(End)            [ rattleCAD::model::getObject            Steerer/End      position    $BB_Position  ]
 
             set HeadSet(Diameter)       $bikeGeometry::HeadSet(Diameter)
-            set HeadSet(polygon)            [ bikeGeometry::get_Object HeadSet/Top polygon $BB_Position ]
+            set HeadSet(polygon)            [ rattleCAD::model::getObject HeadSet/Top polygon $BB_Position ]
                 set   pt_01             [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr -0.5 * $HeadSet(Diameter)] ]
                 set   pt_02             [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr  0.5 * $HeadSet(Diameter)] ]
             set HeadSet(vct_Bottom)     [ list $pt_01 $pt_02 ]
-                set   pt_01                 [ bikeGeometry::coords_get_xy $HeadSet(polygon) 0 ]
-                set   pt_02                 [ bikeGeometry::coords_get_xy $HeadSet(polygon) 7 ]
+                set   pt_01                 [ rattleCAD::model::coords_get_xy $HeadSet(polygon) 0 ]
+                set   pt_02                 [ rattleCAD::model::coords_get_xy $HeadSet(polygon) 7 ]
             set HeadSet(vct_Top)        [ list $pt_01 $pt_02 ]
 
-            set TopTube(polygon)        [ bikeGeometry::get_Object TopTube  polygon $BB_Position ]
-            set DownTube(polygon)       [ bikeGeometry::get_Object DownTube polygon $BB_Position ]
+            set TopTube(polygon)        [ rattleCAD::model::getObject TopTube  polygon $BB_Position ]
+            set DownTube(polygon)       [ rattleCAD::model::getObject DownTube polygon $BB_Position ]
 
                 # --- help points for virtual horizontal TopTube -----
                 # set TopTube(SeatVirtual)    [ vectormath::intersectPoint [list -500 [lindex $TopTube(Steerer) 1]] $TopTube(Steerer)  $SeatTube(BBracket) $SeatPost(SeatTube) ]
-            set TopTube(SeatVirtual)   [ bikeGeometry::get_Object             SeatTubeVirtualTopTube    position $BB_Position ]
+            set TopTube(SeatVirtual)   [ rattleCAD::model::getObject             SeatTubeVirtualTopTube    position $BB_Position ]
                 # puts "\n \$TopTube(SeatVirtual)  $TopTube(SeatVirtual)"
 
 
@@ -426,21 +426,21 @@
 
                 # --- get defining Point coords ----------
             set BottomBracket(Position)     $BB_Position
-            set FrontWheel(Position)        [ bikeGeometry::get_Object     FrontWheel          position    $BB_Position ]
-            set Saddle(Position)            [ bikeGeometry::get_Object     Saddle              position    $BB_Position ]
-            set SeatStay(SeatTube)          [ bikeGeometry::get_Object     SeatStay/End        position    $BB_Position ]
-            set SeatTube(Saddle)            [ bikeGeometry::get_Object     SeatTubeSaddle      position    $BB_Position ]
-            set SeatTube(TopTube)           [ bikeGeometry::get_Object     SeatTube/End        position    $BB_Position ]
-            set SeatStay(RearWheel)         [ bikeGeometry::get_Object     SeatStay/Start      position    $BB_Position ]
-            set TopTube(SeatTube)           [ bikeGeometry::get_Object     TopTube/Start       position    $BB_Position ]
-            set TopTube(Steerer)            [ bikeGeometry::get_Object     TopTube/End         position    $BB_Position ]
-            set Steerer(Stem)               [ bikeGeometry::get_Object     Steerer/End         position    $BB_Position ]
-            set Steerer(Fork)               [ bikeGeometry::get_Object     Steerer/Start       position    $BB_Position ]
-            set DownTube(Steerer)           [ bikeGeometry::get_Object     DownTube/End        position    $BB_Position ]
-            set DownTube(BBracket)          [ bikeGeometry::get_Object     DownTube/Start      position    $BB_Position ]
-            set SeatTube(BBracket)          [ bikeGeometry::get_Object     SeatTube/Start      position    $BB_Position ]
-            set HandleBar(Position)         [ bikeGeometry::get_Object     HandleBar           position    $BB_Position ]
-            set Position(IS_ChainSt_SeatSt) [ bikeGeometry::get_Object     ChainStay/SeatStay_IS   position   $BB_Position ]
+            set FrontWheel(Position)        [ rattleCAD::model::getObject     FrontWheel          position    $BB_Position ]
+            set Saddle(Position)            [ rattleCAD::model::getObject     Saddle              position    $BB_Position ]
+            set SeatStay(SeatTube)          [ rattleCAD::model::getObject     SeatStay/End        position    $BB_Position ]
+            set SeatTube(Saddle)            [ rattleCAD::model::getObject     SeatTubeSaddle      position    $BB_Position ]
+            set SeatTube(TopTube)           [ rattleCAD::model::getObject     SeatTube/End        position    $BB_Position ]
+            set SeatStay(RearWheel)         [ rattleCAD::model::getObject     SeatStay/Start      position    $BB_Position ]
+            set TopTube(SeatTube)           [ rattleCAD::model::getObject     TopTube/Start       position    $BB_Position ]
+            set TopTube(Steerer)            [ rattleCAD::model::getObject     TopTube/End         position    $BB_Position ]
+            set Steerer(Stem)               [ rattleCAD::model::getObject     Steerer/End         position    $BB_Position ]
+            set Steerer(Fork)               [ rattleCAD::model::getObject     Steerer/Start       position    $BB_Position ]
+            set DownTube(Steerer)           [ rattleCAD::model::getObject     DownTube/End        position    $BB_Position ]
+            set DownTube(BBracket)          [ rattleCAD::model::getObject     DownTube/Start      position    $BB_Position ]
+            set SeatTube(BBracket)          [ rattleCAD::model::getObject     SeatTube/Start      position    $BB_Position ]
+            set HandleBar(Position)         [ rattleCAD::model::getObject     HandleBar           position    $BB_Position ]
+            set Position(IS_ChainSt_SeatSt) [ rattleCAD::model::getObject     ChainStay/SeatStay_IS   position   $BB_Position ]
 
             set help_01                     [ vectormath::intersectPerp         $Steerer(Stem) $Steerer(Fork) $FrontWheel(Position) ]
 
@@ -559,14 +559,14 @@
 
             # --- get defining Point coords ----------
         set BottomBracket(Position) $BB_Position
-        set SeatStay(SeatTube)      [ bikeGeometry::get_Object     SeatStay/End        position    $BB_Position ]
-        set TopTube(SeatTube)       [ bikeGeometry::get_Object     TopTube/Start       position    $BB_Position ]
-        set TopTube(Steerer)        [ bikeGeometry::get_Object     TopTube/End         position    $BB_Position ]
-        set Steerer(Stem)           [ bikeGeometry::get_Object     Steerer/End         position    $BB_Position ]
-        set Steerer(Fork)           [ bikeGeometry::get_Object     Steerer/Start       position    $BB_Position ]
-        set DownTube(Steerer)       [ bikeGeometry::get_Object     DownTube/End        position    $BB_Position ]
-        set DownTube(BBracket)      [ bikeGeometry::get_Object     DownTube/Start      position    $BB_Position ]
-        set ChainSt_SeatSt_IS       [ bikeGeometry::get_Object     ChainStay/SeatStay_IS   position    $BB_Position ]
+        set SeatStay(SeatTube)      [ rattleCAD::model::getObject     SeatStay/End        position    $BB_Position ]
+        set TopTube(SeatTube)       [ rattleCAD::model::getObject     TopTube/Start       position    $BB_Position ]
+        set TopTube(Steerer)        [ rattleCAD::model::getObject     TopTube/End         position    $BB_Position ]
+        set Steerer(Stem)           [ rattleCAD::model::getObject     Steerer/End         position    $BB_Position ]
+        set Steerer(Fork)           [ rattleCAD::model::getObject     Steerer/Start       position    $BB_Position ]
+        set DownTube(Steerer)       [ rattleCAD::model::getObject     DownTube/End        position    $BB_Position ]
+        set DownTube(BBracket)      [ rattleCAD::model::getObject     DownTube/Start      position    $BB_Position ]
+        set ChainSt_SeatSt_IS       [ rattleCAD::model::getObject     ChainStay/SeatStay_IS   position    $BB_Position ]
 
         set represent_DO       [ createAngleRep $cv_Name $ChainSt_SeatSt_IS        $BottomBracket(Position)    $SeatStay(SeatTube)          70   Lugs(RearDropOut)  ]
         set represent_BB_01    [ createAngleRep $cv_Name $BottomBracket(Position)  $DownTube(Steerer)          $TopTube(SeatTube)           90   Lugs(BottomBracket/DownTube)  ]
@@ -782,6 +782,9 @@
                 $cv_Name itemconfigure  $cv_Item -fill $compColour
             }
             foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Saddle__}] {
+                $cv_Name itemconfigure  $cv_Item -fill $compColour
+            }
+            foreach cv_Item [$cv_Name find withtag {__Decoration__ && __Fender__}] {
                 $cv_Name itemconfigure  $cv_Item -fill $compColour
             }
             

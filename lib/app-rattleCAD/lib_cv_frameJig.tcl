@@ -59,7 +59,7 @@
             switch -exact $frameJigType {
                 nuremberg -
                 vogeltanz {       
-                        createJigDimension    $cv_Name $xy    vogeltanz 
+                        createJigDimension    $cv_Name $xy    nuremberg 
                     }
                           
                 vienna -
@@ -350,7 +350,7 @@
                               #
                         }
                     # -----------------------
-                vogeltanz {
+                nuremberg {
                               # puts "   <D>    ... createJigDimension::bg_vogeltanz ($type)"
 
                             set help_bb           [ list [lindex $RearWheel(Position) 0] [lindex $BottomBracket(Position) 1] ]
@@ -406,7 +406,8 @@
                 MeisterJIG {
                               # puts "   <D>    ... createJigDimension::bg_MeisterJIG ($type)"
                             set help_fk             [ vectormath::intersectPoint    $Steerer(Fork)  $Steerer(Stem)    $FrontWheel(Position) $RearWheel(Position) ]
-
+                            set help_01             [ vectormath::intersectPerp      $Steerer(Fork) $Steerer(Stem)    $FrontWheel(Position) ]
+                            
                               # -- CenterLine ------------------------
                               #
                             $cv_Name create circle        $HeadTube(Fork)         -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
@@ -414,6 +415,7 @@
                             $cv_Name create circle        $FrameJig(BB_HeadTube)  -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
                             $cv_Name create circle        $FrameJig(RW_SeatStay)  -radius  7  -outline darkred   -width 0.35     -tags __CenterLine__
                             $cv_Name create circle        $help_fk                -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
+                            $cv_Name create circle        $FrontWheel(Position)   -radius  4  -outline gray50    -width 0.35     -tags __CenterLine__
                               #
                             $cv_Name create centerline  [ appUtil::flatten_nestedList $FrameJig(BB_HeadTube)    $HeadTube(Fork)] \
                                                                                     -fill darkred   -width 0.25     -tags __CenterLine__
@@ -424,17 +426,17 @@
                             
                               # -- Dimensions ------------------------
                               #
-                            set _dim_CS_LengthHor   [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $BottomBracket(Position)    $RearWheel(Position) ] \
-                                                                                        horizontal  [expr   -80 * $stageScale]   0 \
+                            set _dim_CS_LengthHor   [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $RearWheel(Position)        $BottomBracket(Position)] \
+                                                                                        horizontal  [expr   -80 * $stageScale]   [expr  70 * $stageScale] \
                                                                                         darkred ]
                             set _dim_BB_Depth       [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $FrameJig(BB_RearWheel)     $BottomBracket(Position) ] \
-                                                                                        vertical    [expr   -80 * $stageScale]   [expr -70 * $stageScale]  \
+                                                                                        vertical    [expr   120 * $stageScale]   [expr  70 * $stageScale]  \
                                                                                         darkred ]
                             set _dim_HT_Dist_x      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $FrameJig(BB_HeadTube)      $HeadTube(Fork)] \
                                                                                         horizontal  [expr  -200 * $stageScale]   0 \
                                                                                         darkred ]
                             set _dim_HT_Dist_y      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $BottomBracket(Position)    $HeadTube(Fork) ] \
-                                                                                        vertical    [expr   160 * $stageScale]   [expr -70 * $stageScale] \
+                                                                                        vertical    [expr   140 * $stageScale]   [expr -70 * $stageScale] \
                                                                                         darkred ]
                               # set _dim_HT_Dist_y  [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $FrameJig(BB_RearWheel)     $HeadTube(Fork) ] \
                                                                                         vertical    [expr   130 * $stageScale]   0 \
@@ -442,15 +444,24 @@
                             set _dim_HT_Dist_x      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $BottomBracket(Position)    $help_fk] \
                                                                                         horizontal  [expr    80 * $stageScale]   0 \
                                                                                         gray30 ]
+                            set _dim_FW_Dist_x      [ $cv_Name dimension  length  [ appUtil::flatten_nestedList   $BottomBracket(Position)    $FrontWheel(Position)] \
+                                                                                        horizontal  [expr   140 * $stageScale]   0 \
+                                                                                        gray30 ]
+                            set _dim_ForkRake       [ $cv_Name dimension  length  [ appUtil::flatten_nestedList  $HeadTube(Fork)   $help_01   $FrontWheel(Position)] \
+                                                                                        perpendicular [expr  80 * $stageScale]  [expr -55 * $stageScale]  \
+                                                                                        gray30 ]
                             set _dim_HT_Fork        [ $cv_Name dimension  length  [ appUtil::flatten_nestedList  $HeadTube(Fork)              $help_fk] \
                                                                                         aligned     [expr  -100 * $stageScale]   0 \
                                                                                         gray30 ]
+                            set _dim_FK_Length      [ $cv_Name dimension  length   [ appUtil::flatten_nestedList  $help_01   $FrontWheel(Position)   $HeadTube(Fork) ] \
+                                                                                        perpendicular [expr 120 * $stageScale]  [expr  20 * $stageScale]  \
+                                                                                        gray30 ]
                             
                             set _dim_ST_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $FrameJig(RW_SeatStay)  $SeatPost(SeatTube)  $RearWheel(Position) ] \
-                                                                                                                    130   0  \
+                                                                                                                    180   0  \
                                                                                                                     darkred ]
                             set _dim_HT_Angle       [ $cv_Name dimension  angle [ appUtil::flatten_nestedList  $HeadTube(Fork)   $Steerer(Stem)   $FrameJig(BB_HeadTube) ] \
-                                                                                                                    130 -10  \
+                                                                                                                    180 -10  \
                                                                                                                     darkred ]
                               #
                             return

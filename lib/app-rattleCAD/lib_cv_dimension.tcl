@@ -718,9 +718,9 @@
                                                                 
                             proc dim_LegClearance {cv_Name BB_Position stageScale} {
                                 set pt_01               [ vectormath::addVector        $bikeGeometry::LegClearance(Position)        $BB_Position  ]
-                                set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon        $BB_Position  ]
-                                set pt_09               [ bikeGeometry::coords_get_xy $TopTube(polygon)  9 ]
-                                set pt_10               [ bikeGeometry::coords_get_xy $TopTube(polygon) 10 ]
+                                set TopTube(polygon)    [ rattleCAD::model::getObject TopTube polygon        $BB_Position  ]
+                                set pt_09               [ rattleCAD::model::coords_get_xy $TopTube(polygon)  9 ]
+                                set pt_10               [ rattleCAD::model::coords_get_xy $TopTube(polygon) 10 ]
                                 set pt_is               [ vectormath::intersectPerp $pt_09 $pt_10 $pt_01 ]
                                 set dimension           [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_is] ] \
                                                                 aligned    [expr -60 * $stageScale]  [expr 50 * $stageScale] \
@@ -729,10 +729,10 @@
                             dim_LegClearance  $cv_Name $BottomBracket(Position) $stageScale
 
                             proc dim_RearWheel_Clearance {cv_Name BB_Position WheelRadius stageScale} {
-                                        set pt_03                [ bikeGeometry::get_Object        RearWheel   position    $BB_Position  ]
-                                        set SeatTube(polygon)    [ bikeGeometry::get_Object        SeatTube    polygon     $BB_Position  ]
-                                        set pt_06                [ bikeGeometry::coords_get_xy $SeatTube(polygon) 5 ]
-                                        set pt_07                [ bikeGeometry::coords_get_xy $SeatTube(polygon) 6 ]
+                                        set pt_03                [ rattleCAD::model::getObject        RearWheel   position    $BB_Position  ]
+                                        set SeatTube(polygon)    [ rattleCAD::model::getObject        SeatTube    polygon     $BB_Position  ]
+                                        set pt_06                [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 5 ]
+                                        set pt_07                [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 6 ]
                                         set pt_is                [ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
                                         set pt_rw                [ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]
                                         set dimension            [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_rw $pt_is] ] \
@@ -755,14 +755,14 @@
                             #             rattleCAD::view::gui::cv_Custom40 setPrecision 2 force
 
 
-                                set DownTube(polygon)   [ bikeGeometry::get_Object DownTube polygon        $BB_Position  ]
+                                set DownTube(polygon)   [ rattleCAD::model::getObject DownTube polygon        $BB_Position  ]
 
                                 set help_fk             [ vectormath::addVector         $Steerer(Fork)                  [ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
                                 set help_rw_rim         [ vectormath::rotateLine        $RearWheel(Position)            [expr 0.5 * $RearWheel(RimDiameter) ] 70 ]
                                 set help_tt_c1          [ vectormath::rotateLine        $RearWheel(Position)            [expr 0.5 * $RearWheel(RimDiameter) ] 70 ]
-                                set help_st_dt          [ bikeGeometry::coords_get_xy $SeatTube(polygon) end]
-                                # set help_st_dt          [ bikeGeometry::coords_get_xy $DownTube(polygon) 15 ]
-                                # set pt_49                    [ bikeGeometry::coords_get_xy $DownTube(polygon) 15 ]
+                                set help_st_dt          [ rattleCAD::model::coords_get_xy $SeatTube(polygon) end]
+                                # set help_st_dt          [ rattleCAD::model::coords_get_xy $DownTube(polygon) 15 ]
+                                # set pt_49                    [ rattleCAD::model::coords_get_xy $DownTube(polygon) 15 ]
 
                                 # -- Dimensions ------------------------
                                 #
@@ -842,8 +842,8 @@
 
 
                                 # -- Steerer Details ----------------------
-                                set pt_01                    [ bikeGeometry::get_Object            Steerer/Start    position    $BB_Position  ]
-                                set pt_02                    [ bikeGeometry::get_Object            Steerer/End        position    $BB_Position  ]
+                                set pt_01                    [ rattleCAD::model::getObject            Steerer/Start    position    $BB_Position  ]
+                                set pt_02                    [ rattleCAD::model::getObject            Steerer/End        position    $BB_Position  ]
                                     # puts "       -> _dim_STR_Length"
                             set _dim_STR_Length         [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $Steerer(vct_Bottom)  $Steerer(End) ] \
                                                                                         perpendicular            [expr    (190 - 0.5 * $Steerer(Diameter)) * $stageScale]    [expr   5 * $stageScale] \
@@ -895,9 +895,9 @@
                             if {$Rendering(BrakeRear) != {off}} {
                                 switch $Rendering(BrakeRear) {
                                     Rim {
-                                                set SeatStay(polygon)       [ bikeGeometry::get_Object            SeatStay polygon $BB_Position  ]
-                                                set pt_01                   [ bikeGeometry::coords_get_xy        $SeatStay(polygon)  8 ]
-                                                set pt_02                   [ bikeGeometry::coords_get_xy        $SeatStay(polygon)  9 ]
+                                                set SeatStay(polygon)       [ rattleCAD::model::getObject            SeatStay polygon $BB_Position  ]
+                                                set pt_01                   [ rattleCAD::model::coords_get_xy        $SeatStay(polygon)  8 ]
+                                                set pt_02                   [ rattleCAD::model::coords_get_xy        $SeatStay(polygon)  9 ]
                                                 set pt_03                   [ vectormath::addVector    $bikeGeometry::RearBrake(Shoe)    $BB_Position  ]
                                                 set pt_04                   [ vectormath::addVector    $bikeGeometry::RearBrake(Help)    $BB_Position  ]
                                                 set pt_10                   [ vectormath::intersectPerp            $pt_01 $pt_02 $pt_04  ]
@@ -918,13 +918,13 @@
 
                                 # -- Bottle Cage Mount ------------------
                             if {$Rendering(BottleCage_ST) != {off}} {
-                                            set st_direction            [ bikeGeometry::get_Object SeatTube        direction ]
-                                            set pt_01                   [ bikeGeometry::get_Object    SeatTube/BottleCage/Offset   position    $BB_Position]
-                                            set pt_02                   [ bikeGeometry::get_Object    SeatTube/BottleCage/Base     position    $BB_Position]
+                                            set st_direction            [ rattleCAD::model::getObject SeatTube        direction ]
+                                            set pt_01                   [ rattleCAD::model::getObject    SeatTube/BottleCage/Offset   position    $BB_Position]
+                                            set pt_02                   [ rattleCAD::model::getObject    SeatTube/BottleCage/Base     position    $BB_Position]
                                             set pt_03                   [ vectormath::addVector    $pt_02    $st_direction    [expr -1.0 * $bikeGeometry::BottleCage(SeatTube)] ]
                                             set pt_04                  [ vectormath::intersectPerp         $pt_01 $pt_02 $BB_Position ]
                                             #set pt_04                   $BB_Position
-                                              # set pt_04                   [ bikeGeometry::coords_get_xy $SeatTube(polygon)  0 ]
+                                              # set pt_04                   [ rattleCAD::model::coords_get_xy $SeatTube(polygon)  0 ]
 
                                             set dimension        [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $pt_01  $pt_02 ] \
                                                                                                     aligned        [expr  90 * $stageScale]    [expr    0 * $stageScale] \
@@ -939,16 +939,16 @@
                                                                                                     aligned        [expr  35 * $stageScale]    [expr   50 * $stageScale] \
                                                                                                     gray50 ]
                             } else {
-                                            set pt_04                    [ bikeGeometry::coords_get_xy $SeatTube(polygon)  0 ]
+                                            set pt_04                    [ rattleCAD::model::coords_get_xy $SeatTube(polygon)  0 ]
                                             set dimension        [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $pt_04  $DownTube(BBracket) $help_st_dt ] \
                                                                                                     perpendicular   [expr  50 * $stageScale]    [expr   50 * $stageScale] \
                                                                                                     gray50 ]
                             }
 
                             if {$Rendering(BottleCage_DT) != {off}} {
-                                            set dt_direction            [ bikeGeometry::get_Object     DownTube        direction ]
-                                            set pt_01                   [ bikeGeometry::get_Object     DownTube/BottleCage/Offset    position    $BB_Position ]
-                                            set pt_02                   [ bikeGeometry::get_Object     DownTube/BottleCage/Base    position    $BB_Position ]
+                                            set dt_direction            [ rattleCAD::model::getObject     DownTube        direction ]
+                                            set pt_01                   [ rattleCAD::model::getObject     DownTube/BottleCage/Offset    position    $BB_Position ]
+                                            set pt_02                   [ rattleCAD::model::getObject     DownTube/BottleCage/Base    position    $BB_Position ]
                                             set pt_03                   [ vectormath::addVector    $pt_02    $dt_direction    [expr -1.0 * $bikeGeometry::BottleCage(DownTube)] ]
                                             set pt_04h                  [ vectormath::intersectPerp         $DownTube(BBracket) $DownTube(Steerer) $help_st_dt ]
                                             set vct_04h                 [ vectormath::subVector             $help_st_dt $pt_04h ]
@@ -981,9 +981,9 @@
                             }
 
                             if {$Rendering(BottleCage_DT_L) != {off}} {
-                                            set dt_direction            [ bikeGeometry::get_Object DownTube        direction ]
-                                            set pt_01                   [ bikeGeometry::get_Object    DownTube/BottleCage_Lower/Offset    position    $BB_Position ]
-                                            set pt_02                   [ bikeGeometry::get_Object    DownTube/BottleCage_Lower/Base        position    $BB_Position ]
+                                            set dt_direction            [ rattleCAD::model::getObject DownTube        direction ]
+                                            set pt_01                   [ rattleCAD::model::getObject    DownTube/BottleCage_Lower/Offset    position    $BB_Position ]
+                                            set pt_02                   [ rattleCAD::model::getObject    DownTube/BottleCage_Lower/Base        position    $BB_Position ]
                                             set pt_03                   [ vectormath::addVector    $pt_02    $dt_direction    [expr -1.0 * $bikeGeometry::BottleCage(DownTube_Lower) ] ]
 
                                             set dimension       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $pt_01  $pt_02 ] \
@@ -1002,20 +1002,20 @@
                            # reset be 3.4.00.34
                            #rattleCAD::view::gui::cv_Custom40 setPrecision 2
                                 # 
-                                set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon $BB_Position  ]
-                                set pt_01               [ bikeGeometry::coords_get_xy $TopTube(polygon)  8 ]
-                                set pt_02               [ bikeGeometry::coords_get_xy $TopTube(polygon) 11 ]
-                                set pt_03               [ bikeGeometry::coords_get_xy $TopTube(polygon)  3 ]
+                                set TopTube(polygon)    [ rattleCAD::model::getObject TopTube polygon $BB_Position  ]
+                                set pt_01               [ rattleCAD::model::coords_get_xy $TopTube(polygon)  8 ]
+                                set pt_02               [ rattleCAD::model::coords_get_xy $TopTube(polygon) 11 ]
+                                set pt_03               [ rattleCAD::model::coords_get_xy $TopTube(polygon)  3 ]
                             set _dim_TopTube_CutLength  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                         aligned    [expr 110 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
-                                set DownTube(polygon)   [ bikeGeometry::get_Object DownTube polygon $BB_Position  ]
-                                set pt_04               [ bikeGeometry::coords_get_xy $DownTube(polygon)  2 ]
+                                set DownTube(polygon)   [ rattleCAD::model::getObject DownTube polygon $BB_Position  ]
+                                set pt_04               [ rattleCAD::model::coords_get_xy $DownTube(polygon)  2 ]
                             set _dim_DownTube_CutLength [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $BB_Position $pt_04] ] \
                                                                                         aligned    [expr  70 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
-                                set SeatTube(polygon)   [ bikeGeometry::get_Object SeatTube polygon $BB_Position  ]
-                                set pt_05               [ bikeGeometry::coords_get_xy $SeatTube(polygon)  2 ]
+                                set SeatTube(polygon)   [ rattleCAD::model::getObject SeatTube polygon $BB_Position  ]
+                                set pt_05               [ rattleCAD::model::coords_get_xy $SeatTube(polygon)  2 ]
                             set _dim_SeatTube_CutLength [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $help_st_dt $pt_05] ] \
                                                                                         aligned    [expr   90 * $stageScale] [expr 10 * $stageScale] \
                                                                                         darkviolet ]
@@ -1028,39 +1028,39 @@
 
                                 # -- Tubing Details --------------------
                                 #
-                                set HeadTube(polygon)   [ bikeGeometry::get_Object HeadTube polygon $BB_Position  ]
-                                set pt_01               [ bikeGeometry::coords_get_xy $HeadTube(polygon) 0 ]
-                                set pt_02               [ bikeGeometry::coords_get_xy $HeadTube(polygon) 1 ]
+                                set HeadTube(polygon)   [ rattleCAD::model::getObject HeadTube polygon $BB_Position  ]
+                                set pt_01               [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 0 ]
+                                set pt_02               [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 1 ]
                             set _dim_HeadTube_Length    [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                         aligned    [expr 90 * $stageScale]   0 \
                                                                                         darkblue ]
 
-                                set HeadTube(polygon)   [ bikeGeometry::get_Object HeadTube polygon $BB_Position  ]
-                                set pt_01               [ bikeGeometry::coords_get_xy $HeadTube(polygon) 2 ]
-                                set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon $BB_Position  ]
-                                set pt_02               [ bikeGeometry::coords_get_xy $TopTube(polygon) 8 ]
+                                set HeadTube(polygon)   [ rattleCAD::model::getObject HeadTube polygon $BB_Position  ]
+                                set pt_01               [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 2 ]
+                                set TopTube(polygon)    [ rattleCAD::model::getObject TopTube polygon $BB_Position  ]
+                                set pt_02               [ rattleCAD::model::coords_get_xy $TopTube(polygon) 8 ]
                             set _dim_HeadTube_OffsetTT  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                         aligned    [expr 50 * $stageScale] [expr 50 * $stageScale] \
                                                                                         gray30 ]
 
-                                set HeadTube(polygon)   [ bikeGeometry::get_Object HeadTube polygon $BB_Position  ]
-                                set pt_01               [ bikeGeometry::coords_get_xy $HeadTube(polygon) 3 ]
-                                set DownTube(polygon)   [ bikeGeometry::get_Object DownTube polygon $BB_Position  ]
-                                set pt_02               [ bikeGeometry::coords_get_xy $DownTube(polygon) 2 ]
+                                set HeadTube(polygon)   [ rattleCAD::model::getObject HeadTube polygon $BB_Position  ]
+                                set pt_01               [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 3 ]
+                                set DownTube(polygon)   [ rattleCAD::model::getObject DownTube polygon $BB_Position  ]
+                                set pt_02               [ rattleCAD::model::coords_get_xy $DownTube(polygon) 2 ]
                             set _dim_HeadTube_OffsetDT  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                         aligned    [expr -50 * $stageScale] [expr 50 * $stageScale] \
                                                                                         gray30 ]
 
-                                set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon $BB_Position  ]
-                                set pt_01               [ bikeGeometry::coords_get_xy $TopTube(polygon) 11 ]
-                                set SeatTube(polygon)   [ bikeGeometry::get_Object SeatTube polygon $BB_Position  ]
-                                set pt_02               [ bikeGeometry::coords_get_xy $SeatTube(polygon) 2 ]
+                                set TopTube(polygon)    [ rattleCAD::model::getObject TopTube polygon $BB_Position  ]
+                                set pt_01               [ rattleCAD::model::coords_get_xy $TopTube(polygon) 11 ]
+                                set SeatTube(polygon)   [ rattleCAD::model::getObject SeatTube polygon $BB_Position  ]
+                                set pt_02               [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 2 ]
                             set _dim_SeatTube_Extension [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                         aligned    [expr 65 * $stageScale] [expr -50 * $stageScale] \
                                                                                         gray30 ]
 
-                                set pt_01               [ bikeGeometry::get_Object TopTube/Start    position $BB_Position  ]
-                                set pt_02               [ bikeGeometry::get_Object SeatStay/End    position $BB_Position  ]
+                                set pt_01               [ rattleCAD::model::getObject TopTube/Start    position $BB_Position  ]
+                                set pt_02               [ rattleCAD::model::getObject SeatStay/End    position $BB_Position  ]
                                 if { [lindex $pt_02 1] < [lindex $pt_01 1] } {
                                         set dim_coords  [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ]
                                 } else {
@@ -1071,8 +1071,8 @@
                                                                                         gray30 ]
 
                             if { $DownTube(OffsetBB) != 0 } {
-                                    set pt_01           [ bikeGeometry::get_Object    DownTube/End    position        $BB_Position  ]
-                                    set pt_02           [ bikeGeometry::get_Object    DownTube/Start    position        $BB_Position  ]
+                                    set pt_01           [ rattleCAD::model::getObject    DownTube/End    position        $BB_Position  ]
+                                    set pt_02           [ rattleCAD::model::getObject    DownTube/Start    position        $BB_Position  ]
                                     set pt_03           $BB_Position
                                     if { [lindex $pt_02 1] >= [lindex $pt_03 1] } {
                                             set dim_distance    [expr -70 * $stageScale]
@@ -1086,8 +1086,8 @@
                                                                                             darkred ]
                             }
                             if { $SeatTube(OffsetBB) != 0 } {
-                                    set pt_01                [ bikeGeometry::get_Object    SeatTube/End    position        $BB_Position  ]
-                                    set pt_02                [ bikeGeometry::get_Object    SeatTube/Start    position        $BB_Position  ]
+                                    set pt_01                [ rattleCAD::model::getObject    SeatTube/End    position        $BB_Position  ]
+                                    set pt_02                [ rattleCAD::model::getObject    SeatTube/Start    position        $BB_Position  ]
                                     set pt_03               $BB_Position
                                     if { [lindex $pt_02 1] >= [lindex $pt_03 1] } {
                                             set dim_distance    [expr -70 * $stageScale]
@@ -1101,16 +1101,16 @@
                                                                                             darkred ]
                             }
 
-                                set pt_01               [ bikeGeometry::get_Object            TopTube/End        position        $BB_Position  ]
-                                set pt_hlp              [ bikeGeometry::get_Object            TopTube/Start    position        $BB_Position  ]
+                                set pt_01               [ rattleCAD::model::getObject            TopTube/End        position        $BB_Position  ]
+                                set pt_hlp              [ rattleCAD::model::getObject            TopTube/Start    position        $BB_Position  ]
                                 set pt_cnt              [ vectormath::center        $pt_01  $pt_hlp]
                                 set pt_02               [ list [expr [lindex $pt_cnt 0] + 2] [lindex $pt_cnt 1]  ]
                             set _dim_TopTube_Angle      [ $cv_Name dimension  angle            [ appUtil::flatten_nestedList [list $pt_cnt $pt_02 $pt_01] ] \
                                                                                         100   -30 \
                                                                                         darkred ]
 
-                                set pt_01               [ bikeGeometry::get_Object            HeadTube/Start    position    $BB_Position  ]
-                                set pt_02               [ bikeGeometry::get_Object            Steerer/Start    position    $BB_Position  ]
+                                set pt_01               [ rattleCAD::model::getObject            HeadTube/Start    position    $BB_Position  ]
+                                set pt_02               [ rattleCAD::model::getObject            Steerer/Start    position    $BB_Position  ]
                                     # puts "       -> _dim_HeadSet_Bottom"
                             set _dim_HeadSet_Bottom     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList $Steerer(vct_Bottom) [lindex $HeadTube(vct_Bottom) 1] ] \
                                                                                         perpendicular    [expr (150 - 0.5 * $Steerer(Diameter)) * $stageScale]   [expr -50 * $stageScale] \
@@ -1119,10 +1119,10 @@
                                 set RimDiameter         [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter]
                                 set TyreHeight          [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight]
                                 set WheelRadius         [ expr 0.5 * $RimDiameter + $TyreHeight ]
-                                set pt_03               [ bikeGeometry::get_Object        RearWheel    position  $BB_Position  ]
-                                set SeatTube(polygon)   [ bikeGeometry::get_Object        SeatTube     polygon   $BB_Position  ]
-                                set pt_06               [ bikeGeometry::coords_get_xy $SeatTube(polygon) 5 ]
-                                set pt_07               [ bikeGeometry::coords_get_xy $SeatTube(polygon) 6 ]
+                                set pt_03               [ rattleCAD::model::getObject        RearWheel    position  $BB_Position  ]
+                                set SeatTube(polygon)   [ rattleCAD::model::getObject        SeatTube     polygon   $BB_Position  ]
+                                set pt_06               [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 5 ]
+                                set pt_07               [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 6 ]
                                 set pt_is               [ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
                                 set pt_rw               [ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]
                             set _dim_RearWheel_Clear    [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_rw $pt_is] ] \
@@ -1131,9 +1131,9 @@
 
 
                                 set pt_01               [ vectormath::addVector        $bikeGeometry::LegClearance(Position)        $BB_Position  ]
-                                set TopTube(polygon)    [ bikeGeometry::get_Object TopTube polygon        $BB_Position  ]
-                                set pt_09               [ bikeGeometry::coords_get_xy $TopTube(polygon)  9 ]
-                                set pt_10               [ bikeGeometry::coords_get_xy $TopTube(polygon) 10 ]
+                                set TopTube(polygon)    [ rattleCAD::model::getObject TopTube polygon        $BB_Position  ]
+                                set pt_09               [ rattleCAD::model::coords_get_xy $TopTube(polygon)  9 ]
+                                set pt_10               [ rattleCAD::model::coords_get_xy $TopTube(polygon) 10 ]
                                 set pt_is               [ vectormath::intersectPerp $pt_09 $pt_10 $pt_01 ]
                             set _dim_LegClearance       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_is] ] \
                                                                                         aligned    [expr -30 * $stageScale]  [expr 50 * $stageScale] \
@@ -1339,8 +1339,8 @@
                                     }
                             }
                 HeadTube_OffsetTT {
-                            set pt_01           [ bikeGeometry::coords_get_xy $HeadTube(polygon) 2 ]
-                            set pt_02           [ bikeGeometry::coords_get_xy $TopTube(polygon) 8 ]
+                            set pt_01           [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 2 ]
+                            set pt_02           [ rattleCAD::model::coords_get_xy $TopTube(polygon) 8 ]
                             set dimension       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                     aligned    [expr 70 * $stageScale] [expr 50 * $stageScale] \
                                                                                     darkred ]
@@ -1352,8 +1352,8 @@
                                     }
                             }
                 HeadTube_OffsetDT {
-                            set pt_01           [ bikeGeometry::coords_get_xy $HeadTube(polygon) 3 ]
-                            set pt_02           [ bikeGeometry::coords_get_xy $DownTube(polygon) 2 ]
+                            set pt_01           [ rattleCAD::model::coords_get_xy $HeadTube(polygon) 3 ]
+                            set pt_02           [ rattleCAD::model::coords_get_xy $DownTube(polygon) 2 ]
                             set dimension       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                     aligned    [expr -70 * $stageScale] [expr 50 * $stageScale] \
                                                                                     darkred ]
@@ -1365,8 +1365,8 @@
                                     }
                             }
                 SeatTube_Extension {
-                            set pt_01           [ bikeGeometry::coords_get_xy $TopTube(polygon) 11 ]
-                            set pt_02           [ bikeGeometry::coords_get_xy $SeatTube(polygon) 2 ]
+                            set pt_01           [ rattleCAD::model::coords_get_xy $TopTube(polygon) 11 ]
+                            set pt_02           [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 2 ]
                             set dimension       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \
                                                                                     aligned    [expr 50 * $stageScale] [expr -50 * $stageScale] \
                                                                                     darkred ]
@@ -1568,12 +1568,12 @@
                             }
                         }
                 BottleCage {
-                                set dt_direction    [ bikeGeometry::get_Object DownTube direction ]
-                                set st_direction    [ bikeGeometry::get_Object SeatTube direction ]
+                                set dt_direction    [ rattleCAD::model::getObject DownTube direction ]
+                                set st_direction    [ rattleCAD::model::getObject SeatTube direction ]
 
                             if {$Rendering(BottleCage_ST) != {off}} {
-                                            set pt_01           [ bikeGeometry::get_Object    SeatTube/BottleCage/Offset   position    $BB_Position]
-                                            set pt_02           [ bikeGeometry::get_Object    SeatTube/BottleCage/Base     position    $BB_Position]
+                                            set pt_01           [ rattleCAD::model::getObject    SeatTube/BottleCage/Offset   position    $BB_Position]
+                                            set pt_02           [ rattleCAD::model::getObject    SeatTube/BottleCage/Base     position    $BB_Position]
                                             set pt_03           [ vectormath::addVector    $pt_02    $st_direction    [expr -1.0 * $bikeGeometry::BottleCage(SeatTube)] ]
 
                                             set dimension       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $pt_01  $pt_02 ] \
@@ -1595,8 +1595,8 @@
                             }
 
                             if {$Rendering(BottleCage_DT) != {off}} {
-                                            set pt_01           [ bikeGeometry::get_Object    DownTube/BottleCage/Offset   position    $BB_Position]
-                                            set pt_02           [ bikeGeometry::get_Object    DownTube/BottleCage/Base     position    $BB_Position]
+                                            set pt_01           [ rattleCAD::model::getObject    DownTube/BottleCage/Offset   position    $BB_Position]
+                                            set pt_02           [ rattleCAD::model::getObject    DownTube/BottleCage/Base     position    $BB_Position]
                                             set pt_03           [ vectormath::addVector    $pt_02    $dt_direction    [expr -1.0 * $bikeGeometry::BottleCage(DownTube)] ]
 
                                             if { $Rendering(BottleCage_DT_L) != {off}} { set addDist 50 } else { set addDist 0}
@@ -1615,8 +1615,8 @@
                                                     }
                             }
                             if {$Rendering(BottleCage_DT_L) != {off}} {
-                                            set pt_01           [ bikeGeometry::get_Object    DownTube/BottleCage_Lower/Offset position    $BB_Position ]
-                                            set pt_02           [ bikeGeometry::get_Object    DownTube/BottleCage_Lower/Base   position    $BB_Position ]
+                                            set pt_01           [ rattleCAD::model::getObject    DownTube/BottleCage_Lower/Offset position    $BB_Position ]
+                                            set pt_02           [ rattleCAD::model::getObject    DownTube/BottleCage_Lower/Base   position    $BB_Position ]
                                             set pt_03           [ vectormath::addVector    $pt_02    $dt_direction    [expr -1.0 * $bikeGeometry::BottleCage(DownTube_Lower) ] ]
 
                                             set dimension       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $pt_01  $pt_02 ] \
@@ -1634,8 +1634,8 @@
                             }
                         }
                 DerailleurMount {
-                            set pt_01     [ bikeGeometry::get_Object     RearWheel    position    $BB_Position  ]
-							set pt_02     [ bikeGeometry::get_Object     Lugs/Dropout/Rear/Derailleur  position  $BB_Position]
+                            set pt_01     [ rattleCAD::model::getObject     RearWheel    position    $BB_Position  ]
+							set pt_02     [ rattleCAD::model::getObject     Lugs/Dropout/Rear/Derailleur  position  $BB_Position]
                             set pt_03     [ vectormath::rotatePoint      $pt_01  $BB_Position 90]
 								#
 							set offset_y       [ rattleCAD::control::getValue Lugs/RearDropOut/Derailleur/y]
@@ -1711,9 +1711,9 @@
                             set RimDiameter         [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter]
                             set TyreHeight          [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight]
                             set WheelRadius         [ expr 0.5 * $RimDiameter + $TyreHeight ]
-                            set pt_03               [ bikeGeometry::get_Object        RearWheel    position    $BB_Position  ]
-                            set pt_06               [ bikeGeometry::coords_get_xy $SeatTube(polygon) 5 ]
-                            set pt_07               [ bikeGeometry::coords_get_xy $SeatTube(polygon) 6 ]
+                            set pt_03               [ rattleCAD::model::getObject        RearWheel    position    $BB_Position  ]
+                            set pt_06               [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 5 ]
+                            set pt_07               [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 6 ]
                             set pt_is               [ vectormath::intersectPerp $pt_06 $pt_07 $pt_03 ]
                             set pt_rw               [ vectormath::addVector $pt_03 [ vectormath::unifyVector  $pt_03  $pt_is  $WheelRadius ] ]
                             set dimension           [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_rw $pt_is] ] \
@@ -1722,17 +1722,17 @@
                         }
                 LegClearance {
                             set pt_01                    [ vectormath::addVector        $bikeGeometry::LegClearance(Position)        $BB_Position ]
-                            set pt_09                    [ bikeGeometry::coords_get_xy $TopTube(polygon)  9 ]
-                            set pt_10                    [ bikeGeometry::coords_get_xy $TopTube(polygon) 10 ]
+                            set pt_09                    [ rattleCAD::model::coords_get_xy $TopTube(polygon)  9 ]
+                            set pt_10                    [ rattleCAD::model::coords_get_xy $TopTube(polygon) 10 ]
                             set pt_is                    [ vectormath::intersectPerp $pt_09 $pt_10 $pt_01 ]
                             set dimension            [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_is] ] \
                                                                                     aligned    [expr -30 * $stageScale]  [expr 50 * $stageScale] \
                                                                                     gray50 ]
                         }
                 check_this {
-                            set pt_01                    [ bikeGeometry::coords_get_xy $TopTube(polygon) 11 ]
-                            set pt_01a                   [ bikeGeometry::coords_get_xy $TopTube(polygon) 11 ]
-                            set pt_02                    [ bikeGeometry::coords_get_xy $SeatTube(polygon) 3 ]
+                            set pt_01                    [ rattleCAD::model::coords_get_xy $TopTube(polygon) 11 ]
+                            set pt_01a                   [ rattleCAD::model::coords_get_xy $TopTube(polygon) 11 ]
+                            set pt_02                    [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 3 ]
                             $cv_Name create circle  $pt_01        -radius 20  -outline red
                             $cv_Name create circle  $pt_02        -radius 20  -outline blue
                             set dimension           [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $pt_01 $pt_02] ] \

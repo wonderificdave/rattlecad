@@ -140,6 +140,7 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost                editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Fender_Rep              editable   ;# $updateCommand
                         #
                     rattleCAD::rendering::createFork         $cv_Name $xy    editable   ;# $updateCommand
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy    editable   ;# $updateCommand
@@ -240,6 +241,7 @@
                         #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Fender          editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                       #
@@ -291,6 +293,7 @@
                         #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Fender_Rep
                         #
                     rattleCAD::rendering::createFork         $cv_Name $xy
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy
@@ -325,6 +328,7 @@
                         #
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel       editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel      editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    Fender          editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                         #
