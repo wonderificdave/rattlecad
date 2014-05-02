@@ -266,6 +266,18 @@
                 <FirstSprocket>15</FirstSprocket>
             </Rear>
         </Wheel>
+        <Fender>
+            <Front>
+                <Radius>200.00</Radius>
+                <Height>15.00</Height>
+                <OffsetAngle>90.00</OffsetAngle>
+            </Front>
+            <Rear>
+                <Radius>200.00</Radius>
+                <Height>15.00</Height>
+                <OffsetAngle>150.00</OffsetAngle>
+            </Rear>
+        </Fender>
         <HandleBar>
             <File>etc:handlebar/flatbar_sti.svg</File>
             <PivotAngle>0.00</PivotAngle>
@@ -341,6 +353,14 @@
             <Offset_X>5.00</Offset_X>
             <Offset_Y>0.00</Offset_Y>
         </Saddle>
+        <Fender>
+            <Front>off</Front>
+            <Rear>off</Rear>
+        </Fender>
+        <!--Carrier>
+            <Front>off</Front>
+            <Rear>off</Rear>
+        </Carrier-->
         <RearMockup>
             <DiscOffset>15.30</DiscOffset>
             <DiscWidth>2.00</DiscWidth>

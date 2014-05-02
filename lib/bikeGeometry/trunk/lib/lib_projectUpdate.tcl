@@ -1334,7 +1334,48 @@
                             puts "                           ... update File ... /root/Component/HandleBar/PivotAngle"
                             $parentNode appendXML  "<PivotAngle>-5.00</PivotAngle>"
                         } 
-
+                                 # -- set Component Fender/
+                        set node [$projectDOM selectNode /root/Component/Fender]
+                        if {$node == {}} {
+                            set parentNode [$projectDOM selectNode /root/Component]
+                              #
+                            puts "                           ... update File ... /root/Component/Fender"
+                            $parentNode appendXML  "<Fender>
+                                                        <Front>
+                                                            <Radius>200.00</Radius>
+                                                            <Height>15.00</Height>
+                                                            <OffsetAngleFront>20.00</OffsetAngleFront>
+                                                            <OffsetAngle>90.00</OffsetAngle>
+                                                        </Front>
+                                                        <Rear>
+                                                            <Radius>200.00</Radius>
+                                                            <Height>15.00</Height>
+                                                            <OffsetAngle>150.00</OffsetAngle>
+                                                        </Rear>
+                                                   </Fender>"
+                        } 
+                                # -- set Rendering Fender
+                        set node [$projectDOM selectNode   /root/Rendering/Fender]
+                        if {$node == {}} {
+                            set parentNode [$projectDOM selectNode /root/Rendering]
+                              #
+                            puts "                           ... update File ... /root/Rendering/Fender"
+                            $parentNode appendXML  "<Fender>
+                                                        <Front>off</Front>
+                                                        <Rear>off</Rear>
+                                                    </Fender>"
+                        }
+                                # -- set Rendering Carrier
+                        set node [$projectDOM selectNode   /root/Rendering/Carrier]
+                        if {$node == {_unset_}} {
+                            set parentNode [$projectDOM selectNode /root/Rendering]
+                              #
+                            puts "                           ... update File ... /root/Rendering/Carrier"
+                            $parentNode appendXML  "<Carrier>
+                                                        <Front>off</Front>
+                                                        <Rear>off</Rear>
+                                                    </Carrier>"
+                        }
                     }       
                         
                 {ab-xy} {	

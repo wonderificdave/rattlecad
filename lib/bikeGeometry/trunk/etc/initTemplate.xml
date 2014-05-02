@@ -399,6 +399,14 @@
                     <Polygon>0.00,0.00</Polygon>
                 </Top>
             </HeadSet>
+            <Fender>
+                <Rear>
+                    <Polygon>0.00,0.00</Polygon>
+                </Rear>
+                <Front>
+                    <Polygon>0.00,0.00</Polygon>
+                </Front>
+            </Fender>
         </Components>
 
         <TubeMiter>

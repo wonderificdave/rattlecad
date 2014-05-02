@@ -39,7 +39,10 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- package provide bikeGeometry 0.58
+ # 0.59 add Rendering/Fender, Rendering/Carrier
+ #
+ 
+ package provide bikeGeometry 0.59
 
  namespace eval bikeGeometry {
 
@@ -218,9 +221,11 @@
                 polygon    {    
 				            set returnValue    {}
                             switch -exact $object {
-                                Stem             -
+                                Stem            -
                                 HeadSet/Top     -
-                                HeadSet/Bottom     -
+                                HeadSet/Bottom  -
+                                Fender/Rear     -
+                                Fender/Front    -
                                 SeatPost     {
                                                 set branch "Components/$object/Polygon"
                                             }

@@ -53,10 +53,12 @@
             variable RearWheel
             variable FrontWheel
             variable HandleBar
+            variable RearFender
+            variable FrontFender
             variable Saddle
             variable SeatPost
             variable LegClearance
-
+            
             variable HeadTube
             variable SeatTube
             variable DownTube
@@ -289,7 +291,16 @@
             set FrontDerailleur(Distance)   $project::Component(Derailleur/Front/Distance)
             set FrontDerailleur(Offset)     $project::Component(Derailleur/Front/Offset)
 
-
+                #
+                # --- get Fender  -------------------------------
+            set RearFender(Radius)          $project::Component(Fender/Rear/Radius)
+            set RearFender(OffsetAngle)     $project::Component(Fender/Rear/OffsetAngle)
+            set RearFender(Height)          $project::Component(Fender/Rear/Height)
+            set FrontFender(Radius)         $project::Component(Fender/Front/Radius)
+            set FrontFender(OffsetAngleFront) $project::Component(Fender/Front/OffsetAngleFront)
+            set FrontFender(OffsetAngle)    $project::Component(Fender/Front/OffsetAngle)
+            set FrontFender(Height)         $project::Component(Fender/Front/Height)
+            
                 #
                 # --- set DEBUG_Geometry  ----------------------
             set DEBUG_Geometry(Base)        {0 0}
@@ -380,6 +391,12 @@
                 #
             get_BottleCageMount
 
+                #
+            get_FenderRear
+
+                #
+            get_FenderFront
+            
                 #
             get_FrameJig
 
