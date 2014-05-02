@@ -263,6 +263,19 @@
                 <FirstSprocket>13</FirstSprocket>
             </Rear>
         </Wheel>
+        <Fender>
+            <Front>
+                <Radius>346.00</Radius>
+                <Height>15.00</Height>
+                <OffsetAngleFront>20.00</OffsetAngleFront>
+                <OffsetAngle>110.00</OffsetAngle>
+            </Front>
+            <Rear>
+                <Radius>346.00</Radius>
+                <Height>15.00</Height>
+                <OffsetAngle>160.00</OffsetAngle>
+            </Rear>
+        </Fender>
         <HandleBar>
             <File>etc:handlebar/campagnolo_ergopower_11_a.svg</File>
             <PivotAngle>-5.00</PivotAngle>
@@ -331,6 +344,14 @@
             <DownTube>Cage</DownTube>
             <DownTube_Lower>off</DownTube_Lower>
         </BottleCage>
+        <Fender>
+            <Front>off</Front>
+            <Rear>off</Rear>
+        </Fender>
+        <!--Carrier>
+            <Front>off</Front>
+            <Rear>off</Rear>
+        </Carrier-->
         <RearDropOut>behind</RearDropOut>
         <ForkDropOut>front</ForkDropOut>
         <ChainStay>straight</ChainStay>

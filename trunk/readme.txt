@@ -1,5 +1,14 @@
 
 
+3.4.01.56  - 2014.05.02
+-------------------------------------------------------------------------------
+    feature: 
+        ... Rear & Front Fender
+    refactoring:
+        ... cleanup rattleCAD-namespace from references to bikeGeometry
+        ... change rendering of lower headset lower then 8 mm
+
+
 3.4.01.55  - 2014.04.19
 -------------------------------------------------------------------------------
     refactoring:

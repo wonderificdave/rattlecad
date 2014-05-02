@@ -1388,7 +1388,6 @@
                       # puts "   -> $xPath $value"
                     set lastValue  [rattleCAD::control::getValue $xPath ]
                       # puts "     ->   $lastValue"
-                      # set lastValue  [bikeGeometry::get_Value $xPath  value]
                     set diffValue  [expr abs($lastValue - $value)]
                     if {$diffValue > 0.1} { 
                         puts "            ... update:  $xPath  $lastValue -> $value" 
@@ -1492,7 +1491,6 @@
                 set myList {}
                 foreach {xPath value} $xpathValueList { 
                     set lastValue  [rattleCAD::control::getValue $xPath ]
-                      # set lastValue  [bikeGeometry::get_Value $xPath  value]
                     set diffValue  [expr abs($lastValue - $value)]
                     if {$diffValue > 0.1} { 
                         puts "            ... update:  $xPath  $lastValue -> $value" 

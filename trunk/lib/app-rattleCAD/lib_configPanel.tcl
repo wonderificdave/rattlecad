@@ -140,8 +140,10 @@
 				BottleCage/SeatTube          {f}
 				Brake/Front                  {g}
 				Brake/Rear                   {h}
-				Fork                         {i}
-				ForkBlade                    {j}
+				Fender/Front                 {i}
+				Fender/Rear                  {j}
+				Fork                         {k}
+				ForkBlade                    {l}
 			} 
 								
 								
@@ -185,14 +187,16 @@
             set root_w     [winfo width $main]
             set root_x    [lindex $root_xy 1]
             set root_y    [lindex $root_xy 2]
-
-
+                #
+            set pos_x     [expr $root_x - 20 + $root_w]
+            set pos_y     [expr $root_y - 10]
+            
                 # -----------------
                 # check if window exists
             if {[winfo exists $w]} {
                     # restore if hidden
                     # puts "   ... $w allready exists!"
-                wm geometry    $w +[expr $root_x+8+$root_w]+[expr $root_y]
+                wm geometry     $w +$pos_x+$pos_y
                 wm deiconify    $w
                 wm deiconify    $main
                 focus           $w
@@ -212,7 +216,7 @@
                 wm iconphoto  $w [image create photo .ico1 -format gif -file [file join $::APPL_Config(BASE_Dir)  icon16.gif] ]
             }
                 # puts "    geometry:  [wm geometry .]"
-            wm geometry    $w +[expr $root_x+8+$root_w]+[expr $root_y]
+            wm geometry    $w +$pos_x+$pos_y
 
 
                 # -----------------
@@ -500,6 +504,79 @@
                         pack $menueFrame.sf.lf_06.bt_f      -fill both  -expand yes
                     button  $menueFrame.sf.lf_06.bt_f.bt_check      -text {switch: check Frame Angles}  -width 30   -bd 1 -command [namespace current]::tubing_checkAngles
                         pack $menueFrame.sf.lf_06.bt_f.bt_check     -side right -fill both -expand yes
+                        
+                        
+
+                # -----------------
+                #   Rendering
+            ttk::labelframe $menueFrame.sf.lf_02        -text "Check Fender"
+                pack $menueFrame.sf.lf_02               -side top  -fill x  -expand yes  -pady 2
+                set entryList { {Fender Front}      Rendering Fender/Front              Binary_OnOff  \
+                                {Fender Rear}       Rendering Fender/Rear               Binary_OnOff  \
+                            }
+                    set i 10
+                foreach {label _array _name listName} $entryList {
+                        set xPath [format "%s/%s" $_array $_name]
+
+    
+                        incr i 1
+                        set optionFrame [frame $menueFrame.sf.lf_02.f___$i]
+                        label $optionFrame.lb -text "  $label"
+                                                
+						set textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
+						set value [set $textvariable]
+						puts "     -> \$textvariable $textvariable     <- $value"
+                        
+						  # ttk::combobox $optionFrame.cb -textvariable [namespace current]::configValue($xPath)
+						ttk::combobox $optionFrame.cb -textvariable $textvariable \
+                             -values $rattleCAD::model::valueRegistry($listName)        -width 30
+                          # ttk::combobox $optionFrame.cb -textvariable $textvariable \
+                             -values $::APPL_Config($listName)        -width 30
+
+                        bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] select]
+                        bind $optionFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] update]
+                        
+                        pack $optionFrame -fill x -expand yes  -pady 2
+                        pack $optionFrame.cb -side right
+                        pack $optionFrame.lb -side left
+                }                        
+                        
+                # -----------------
+                #   Rendering
+            ttk::labelframe $menueFrame.sf.lf_03        -text "Check DownTube Bottle"
+                pack $menueFrame.sf.lf_03               -side top  -fill x  -expand yes  -pady 2
+                set entryList { {BottleCage ST}     Rendering BottleCage/SeatTube       BottleCage \
+                                {BottleCage DT}     Rendering BottleCage/DownTube       BottleCage \
+                                {BottleCage DT L}   Rendering BottleCage/DownTube_Lower BottleCage  \
+                            }
+                    set i 10
+                foreach {label _array _name listName} $entryList {
+                        set xPath [format "%s/%s" $_array $_name]
+
+    
+                        incr i 1
+                        set optionFrame [frame $menueFrame.sf.lf_03.f___$i]
+                        label $optionFrame.lb -text "  $label"
+                                                
+						set textvariable [format "%s::%s(%s)"  [namespace current] $_array $_name]
+						set value [set $textvariable]
+						puts "     -> \$textvariable $textvariable     <- $value"
+                        
+						  # ttk::combobox $optionFrame.cb -textvariable [namespace current]::configValue($xPath)
+						ttk::combobox $optionFrame.cb -textvariable $textvariable \
+                             -values $rattleCAD::model::valueRegistry($listName)        -width 30
+                          # ttk::combobox $optionFrame.cb -textvariable $textvariable \
+                             -values $::APPL_Config($listName)        -width 30
+
+                        bind $optionFrame.cb <<ComboboxSelected>> [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] select]
+                        bind $optionFrame.cb <ButtonPress>        [list [namespace current]::::ListboxEvent %W cv_Components [format "%s::%s(%s)" [namespace current] $_array $_name] update]
+                        
+                        pack $optionFrame -fill x -expand yes  -pady 2
+                        pack $optionFrame.cb -side right
+                        pack $optionFrame.lb -side left
+                }                        
+                        
+                        
 
     }
     #-------------------------------------------------------------------------
@@ -578,14 +655,6 @@
 
                 # -----------------
                 #   Rendering
-                set entryList { {Fork Type}         Rendering Fork                      list_ForkTypes  \
-                                {Fork Blade Type}   Rendering ForkBlade                 list_ForkBladeTypes  \
-                                {Brake Type Front}  Rendering Brake/Front               list_BrakeTypes \
-                                {Brake Type Rear}   Rendering Brake/Rear                list_BrakeTypes \
-                                {BottleCage ST}     Rendering BottleCage/SeatTube       list_BottleCage \
-                                {BottleCage DT}     Rendering BottleCage/DownTube       list_BottleCage \
-                                {BottleCage DT L}   Rendering BottleCage/DownTube_Lower list_BottleCage \
-                            }
                 set entryList { {Fork Type}         Rendering Fork                      Fork  \
                                 {Fork Blade Type}   Rendering ForkBlade                 ForkBlade  \
                                 {Brake Type Front}  Rendering Brake/Front               Brake \
@@ -593,6 +662,8 @@
                                 {BottleCage ST}     Rendering BottleCage/SeatTube       BottleCage \
                                 {BottleCage DT}     Rendering BottleCage/DownTube       BottleCage \
                                 {BottleCage DT L}   Rendering BottleCage/DownTube_Lower BottleCage \
+                                {Fender Front}      Rendering Fender/Front              Binary_OnOff  \
+                                {Fender Rear}       Rendering Fender/Rear               Binary_OnOff  \
                             }
                     set i 10
                 foreach {label _array _name listName} $entryList {

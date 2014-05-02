@@ -1121,10 +1121,17 @@
                                                       list://Rendering(Brake/Rear@SELECT_BrakeType)
                                                       list://Rendering(BottleCage/SeatTube@SELECT_BottleCage)
                                                       list://Rendering(BottleCage/DownTube@SELECT_BottleCage)
-                                                      list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) }
+                                                      list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) 
+                                                      list://Rendering(Fender/Front@SELECT_Binary_OnOff) 
+                                                      list://Rendering(Fender/Rear@SELECT_Binary_OnOff) 
+                                                      }
+                                                      # list://Rendering(Carrier/Front@SELECT_Binary_OnOff) 
+                                                      # list://Rendering(Carrier/Rear@SELECT_Binary_OnOff) 
                               }
             } 
-            rattleCAD::view::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}                
+            rattleCAD::view::createEdit  0 140  $varName  $listDefinition  {Rendering Settings}                
+            #rattleCAD::view::createEdit  $x $y  $varName  $listDefinition  {Rendering Settings}                
+            # rattleCAD::view::createEdit  5 100  $varName  $listDefinition  {Rendering Settings}                
             # rattleCAD::view::createEdit  5 80  $varName  rattleCAD::cv_custom::updateView  $listDefinition  {Rendering Settings}                
     }
 

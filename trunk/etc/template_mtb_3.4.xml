@@ -262,6 +262,19 @@
                 <FirstSprocket>12</FirstSprocket>
             </Rear>
         </Wheel>
+        <Fender>
+            <Front>
+                <Radius>340.00</Radius>
+                <Height>20.00</Height>
+                <OffsetAngleFront>25.00</OffsetAngleFront>
+                <OffsetAngle>110.00</OffsetAngle>
+            </Front>
+            <Rear>
+                <Radius>340.00</Radius>
+                <Height>20.00</Height>
+                <OffsetAngle>150.00</OffsetAngle>
+            </Rear>
+        </Fender>
         <HandleBar>
             <File>etc:handlebar/flatbar_sti.svg</File>
             <PivotAngle>0.00</PivotAngle>
@@ -330,6 +343,14 @@
             <DownTube>Cage</DownTube>
             <DownTube_Lower>off</DownTube_Lower>
         </BottleCage>
+        <Fender>
+            <Front>off</Front>
+            <Rear>off</Rear>
+        </Fender>
+        <!--Carrier>
+            <Front>off</Front>
+            <Rear>off</Rear>
+        </Carrier-->
         <RearDropOut>behind</RearDropOut>
         <ForkDropOut>front</ForkDropOut>
         <ChainStay>bent</ChainStay>
