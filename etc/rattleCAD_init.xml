@@ -60,6 +60,8 @@
             <component key="Component/CrankSet/File"                     dir="components/crankset"          />
             <component key="Component/Derailleur/Front/File"             dir="components/derailleur/front"  />
             <component key="Component/Derailleur/Rear/File"              dir="components/derailleur/rear"   />
+            <component key="Component/Carrier/Front/File"                dir="components/carrier/front"     />
+            <component key="Component/Carrier/Rear/File"                 dir="components/carrier/rear"      />
             <component key="Component/BottleCage/SeatTube/File"          dir="components/bottle_cage/left"  />
             <component key="Component/BottleCage/DownTube/File"          dir="components/bottle_cage/right" />
             <component key="Component/BottleCage/DownTube_Lower/File"    dir="components/bottle_cage/left"  />

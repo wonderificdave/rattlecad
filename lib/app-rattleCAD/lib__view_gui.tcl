@@ -1124,6 +1124,8 @@
                                                       list://Rendering(BottleCage/DownTube_Lower@SELECT_BottleCage) 
                                                       list://Rendering(Fender/Front@SELECT_Binary_OnOff) 
                                                       list://Rendering(Fender/Rear@SELECT_Binary_OnOff) 
+                                                      file://Component(Carrier/Front/File) 
+                                                      file://Component(Carrier/Rear/File)  
                                                       }
                                                       # list://Rendering(Carrier/Front@SELECT_Binary_OnOff) 
                                                       # list://Rendering(Carrier/Rear@SELECT_Binary_OnOff) 

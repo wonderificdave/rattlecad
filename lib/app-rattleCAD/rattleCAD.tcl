@@ -44,7 +44,7 @@
   
   package require   appUtil       0.15
   package require   vectormath    0.5
-  package require   bikeGeometry  0.59
+  package require   bikeGeometry  0.60
   package require   canvasCAD     0.51
   package require   extSummary    0.4
   package require   osEnv         0.8
@@ -66,9 +66,9 @@
     array set APPL_Config { 
 					RELEASE_Version     {3.4}  
 					RELEASE_Revision    {tbd}
-					RELEASE_Date        {01. May. 2012}
+					RELEASE_Date        {04. May. 2014}
 					
-					GUI_Font            {Helvetica 8}
+					GUI_Font            {Helvetica 12}
 					VECTOR_Font         {}
 					Language            {english}
 
