@@ -42,7 +42,7 @@
  # 0.59 add Rendering/Fender, Rendering/Carrier
  #
  
- package provide bikeGeometry 0.59
+ package provide bikeGeometry 0.60
 
  namespace eval bikeGeometry {
 
@@ -279,6 +279,8 @@
                                 BrakeFront -
                                 BrakeRear -
                                 DerailleurMountFront -
+                                CarrierMountRear -
+                                CarrierMountFront -
                                 Reference_HB -
                                 Reference_SN -
                                 SummarySize {

@@ -53,8 +53,6 @@
             variable RearWheel
             variable FrontWheel
             variable HandleBar
-            variable RearFender
-            variable FrontFender
             variable Saddle
             variable SeatPost
             variable LegClearance
@@ -76,6 +74,10 @@
             variable RearBrake
             variable FrontBrake
             variable FrontDerailleur
+            variable RearFender
+            variable FrontFender
+            variable RearCarrier
+            variable FrontCarrier
 
             variable BottleCage
             variable FrameJig
@@ -302,6 +304,13 @@
             set FrontFender(Height)         $project::Component(Fender/Front/Height)
             
                 #
+                # --- get Carrier  ------------------------------
+            set RearCarrier(x)              $project::Component(Carrier/Rear/x)
+            set RearCarrier(y)              $project::Component(Carrier/Rear/y)
+            set FrontCarrier(x)             $project::Component(Carrier/Front/x)
+            set FrontCarrier(y)             $project::Component(Carrier/Front/y)
+            
+                #
                 # --- set DEBUG_Geometry  ----------------------
             set DEBUG_Geometry(Base)        {0 0}
 
@@ -381,6 +390,12 @@
             
                 #
             get_DerailleurMountFront
+            
+                #
+            get_CarrierMountRear
+
+                #
+            get_CarrierMountFront
 
                 #
             get_BrakePositionRear

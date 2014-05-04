@@ -1366,14 +1366,22 @@
                                                     </Fender>"
                         }
                                 # -- set Rendering Carrier
-                        set node [$projectDOM selectNode   /root/Rendering/Carrier]
-                        if {$node == {_unset_}} {
-                            set parentNode [$projectDOM selectNode /root/Rendering]
+                        set node [$projectDOM selectNode   /root/Component/Carrier]
+                        if {$node == {}} {
+                            set parentNode [$projectDOM selectNode /root/Component]
                               #
-                            puts "                           ... update File ... /root/Rendering/Carrier"
+                            puts "                           ... update File ... /root/Component/Carrier"
                             $parentNode appendXML  "<Carrier>
-                                                        <Front>off</Front>
-                                                        <Rear>off</Rear>
+                                                        <Front>                
+                                                           <File>etc:carrier/front/__blank__.svg</File>
+                                                            <x>20.00</x>
+                                                            <y>5.00</y>
+                                                        </Front>
+                                                        <Rear>
+                                                            <File>etc:carrier/rear/__blank__.svg</File>
+                                                            <x>15.00</x>
+                                                            <y>30.00</y>
+                                                        </Rear>
                                                     </Carrier>"
                         }
                     }       

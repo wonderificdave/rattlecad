@@ -168,6 +168,8 @@
             <SeatTubeSaddle>0.00,0.00</SeatTubeSaddle>
             <SeatTubeVirtualTopTube>0.00,0.00</SeatTubeVirtualTopTube>
             <DerailleurMountFront>0.00,0.00</DerailleurMountFront>
+            <CarrierMountFront>0.00,0.00</CarrierMountFront>
+            <CarrierMountRear>0.00,0.00</CarrierMountRear>
             <BrakeFront>0.00,0.00</BrakeFront>           
             <BrakeRear>0.00,0.00</BrakeRear>
             <SummarySize>0.00,0.00</SummarySize>

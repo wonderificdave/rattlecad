@@ -1414,7 +1414,7 @@
 
 
         #
-        # --- set FrontDerailleurMount ------------
+        # --- set DerailleurMountFront ------------
     proc bikeGeometry::get_DerailleurMountFront {} {
             variable SeatTube
             variable FrontDerailleur
@@ -1422,6 +1422,33 @@
                 set FrontDerailleur(Mount)  [ vectormath::rotatePoint   {0 0} [ list $FrontDerailleur(Distance) [expr -1.0*$FrontDerailleur(Offset)] ] [expr 180 - $SeatTube(Angle)] ]
 
             project::setValue Result(Position/DerailleurMountFront) position    $FrontDerailleur(Mount)
+            # puts "    ... \$FrontDerailleur(Mount) $FrontDerailleur(Mount)"
+    }
+
+
+        #
+        # --- set CarrierMountFront ---------------
+    proc bikeGeometry::get_CarrierMountFront {} {
+            variable FrontWheel
+            variable FrontCarrier
+
+                set FrontCarrier(Mount)    [ list [expr [lindex $FrontWheel(Position) 0] - $FrontCarrier(x)]  [expr [lindex $FrontWheel(Position) 1] + $FrontCarrier(y)]]
+
+            project::setValue Result(Position/CarrierMountFront) position    $FrontCarrier(Mount)
+            # puts "    ... \$FrontDerailleur(Mount) $FrontDerailleur(Mount)"
+    }
+
+
+        #
+        # --- set CarrierMountRear ----------------
+    proc bikeGeometry::get_CarrierMountRear {} {
+            variable RearWheel
+            variable FrontCarrier
+            variable RearCarrier
+            
+                set RearCarrier(Mount)    [ list [expr [lindex $RearWheel(Position) 0] - $RearCarrier(x)]     [expr [lindex $RearWheel(Position) 1] + $RearCarrier(y)]]
+
+            project::setValue Result(Position/CarrierMountRear) position    $RearCarrier(Mount)
             # puts "    ... \$FrontDerailleur(Mount) $FrontDerailleur(Mount)"
     }
 
