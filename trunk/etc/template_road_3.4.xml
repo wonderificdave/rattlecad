@@ -329,6 +329,18 @@
                 <OffsetBB>170.00</OffsetBB>
             </DownTube_Lower>
         </BottleCage>
+        <Carrier>
+            <Front>                
+               <File>etc:carrier/front/__blank__.svg</File>
+                <x>20.00</x>
+                <y>5.00</y>
+            </Front>
+            <Rear>
+                <File>etc:carrier/rear/__blank__.svg</File>
+                <x>15.00</x>
+                <y>30.00</y>
+            </Rear>
+        </Carrier>
     </Component>
 
     <Rendering>

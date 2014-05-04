@@ -141,6 +141,7 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    Fender_Rep              editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierRear             editable   ;# $updateCommand
                         #
                     rattleCAD::rendering::createFork         $cv_Name $xy    editable   ;# $updateCommand
                     rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy    editable   ;# $updateCommand
@@ -260,6 +261,9 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
                         #
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierRear     editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierFront    editable   ;# $updateCommand
+                        #
                     createDimension                   $cv_Name $xy    cline_angle
                         #
                     createDimension                   $cv_Name $xy    summary_bg
@@ -347,6 +351,9 @@
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurRear  editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    DerailleurFront editable   ;# $updateCommand
                     rattleCAD::rendering::createDecoration   $cv_Name $xy    CrankSet        editable   ;# $updateCommand
+                        #
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierRear     editable   ;# $updateCommand
+                    rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierFront    editable   ;# $updateCommand
                         #
                     update_renderCanvas               $cv_Name
                         #

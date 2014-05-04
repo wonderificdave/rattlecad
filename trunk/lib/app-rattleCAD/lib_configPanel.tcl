@@ -82,6 +82,8 @@
 				CrankSet/File            {}
 				Derailleur/Front/File    {}
 				Derailleur/Rear/File     {}
+				Carrier/Front/File       {}
+				Carrier/Rear/File        {}
 				Fork/Crown/File          {d}
 				Fork/DropOut/File        {e}
 				Fork/Height              {c}
@@ -140,10 +142,12 @@
 				BottleCage/SeatTube          {f}
 				Brake/Front                  {g}
 				Brake/Rear                   {h}
-				Fender/Front                 {i}
-				Fender/Rear                  {j}
-				Fork                         {k}
-				ForkBlade                    {l}
+				Carrier/Front                {i}
+				Carrier/Rear                 {j}
+				Fender/Front                 {k}
+				Fender/Rear                  {l}
+				Fork                         {m}
+				ForkBlade                    {n}
 			} 
 								
 								
@@ -612,6 +616,8 @@
                                 Component/CrankSet/File \
                                 Component/Brake/Front/File \
                                 Component/Brake/Rear/File \
+                                Component/Carrier/Front/File \
+                                Component/Carrier/Rear/File \
                                 Component/Derailleur/Front/File \
                                 Component/Derailleur/Rear/File }
                     set i 0

@@ -217,8 +217,6 @@
                                                           rattleCAD::view::gui::object_CursorBinding     $cv_Name    $Chain(object)
                                     }
                             }
-
-                    
                     SeatPost {
                                 # --- create SeatPost ------------------
                             set SeatPost(polygon)         [ rattleCAD::model::getObject SeatPost polygon $BB_Position ]
@@ -231,7 +229,6 @@
                                                           rattleCAD::view::gui::object_CursorBinding     $cv_Name    $SeatPost(object)
                                     }
                             }
-
                     Brake {
                                 # --- create RearBrake -----------------
                                 if {$Rendering(BrakeRear) != {off}} {
@@ -287,7 +284,6 @@
                                     }
                                 }
                             }
-
                     BottleCage {
                                 # --- create FrontBrake ----------------
                                 if {$Rendering(BottleCage_ST) != {off}} {
@@ -504,6 +500,38 @@
                                 }
                             }
                     }
+                    CarrierFront {
+                                # --- create FrontDerailleur --------
+                            set CarrierFront(position)  [ rattleCAD::model::getObject  CarrierMountFront  position    $BB_Position]
+                            set CarrierFront(file)      [ checkFileString [rattleCAD::control::getValue Component/Carrier/Front/File] ]
+                            set CarrierFront(object)    [ $cv_Name readSVG $CarrierFront(file) $CarrierFront(position)  0  __CarrierFront__ ]
+                                                          $cv_Name addtag  __Decoration__ withtag $CarrierFront(object)
+                            if {$updateCommand != {}}   { $cv_Name bind    $CarrierFront(object)    <Double-ButtonPress-1> \
+                                                                    [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
+                                                                                    {   file://Component(Carrier/Front/File)    \
+                                                                                        Component(Carrier/Front/x) \
+                                                                                        Component(Carrier/Front/y) \
+                                                                                    }  {CarrierFront Parameter} \
+                                                                    ]
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $CarrierFront(object)
+                                    }
+                            }  
+                    CarrierRear {
+                                # --- create FrontDerailleur --------
+                            set CarrierRear(position)   [ rattleCAD::model::getObject  CarrierMountRear  position    $BB_Position]
+                            set CarrierRear(file)       [ checkFileString [rattleCAD::control::getValue Component/Carrier/Rear/File] ]
+                            set CarrierRear(object)     [ $cv_Name readSVG $CarrierRear(file) $CarrierRear(position)  0  __CarrierRear__ ]
+                                                          $cv_Name addtag  __Decoration__ withtag $CarrierRear(object)
+                            if {$updateCommand != {}}   { $cv_Name bind    $CarrierRear(object)    <Double-ButtonPress-1> \
+                                                                    [list rattleCAD::view::createEdit  %x %y  $cv_Name  \
+                                                                                    {   file://Component(Carrier/Rear/File)    \
+                                                                                        Component(Carrier/Rear/x) \
+                                                                                        Component(Carrier/Rear/y) \
+                                                                                    }  {CarrierRear Parameter} \
+                                                                    ]
+                                                          rattleCAD::view::gui::object_CursorBinding     $cv_Name    $CarrierRear(object)
+                                    }
+                            }  
                     RearWheel {     # --- create RearWheel -----------------
                             set Hub(position)       [rattleCAD::model::getObject        RearWheel  position        $BB_Position]
                             set RimDiameter             $bikeGeometry::RearWheel(RimDiameter)
