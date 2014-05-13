@@ -44,7 +44,7 @@
   
   package require   appUtil       0.15
   package require   vectormath    0.5
-  package require   bikeGeometry  0.60
+  package require   bikeGeometry  0.61
   package require   canvasCAD     0.51
   package require   extSummary    0.4
   package require   osEnv         0.8
@@ -164,6 +164,7 @@
           set ::APPL_Config(EXPORT_Dir)       [rattleCAD::model::file::check_user_dir rattleCAD/export]
           set ::APPL_Config(EXPORT_HTML)      [rattleCAD::model::file::check_user_dir rattleCAD/html]
           set ::APPL_Config(EXPORT_PDF)       [rattleCAD::model::file::check_user_dir rattleCAD/pdf]
+          set ::APPL_Config(EXPORT_FEA)       [rattleCAD::model::file::check_user_dir rattleCAD/analysis]
           set ::APPL_Config(TEMPLATE_Dir)     [rattleCAD::model::file::check_user_dir rattleCAD/_template/rattleCAD]
                      
                      

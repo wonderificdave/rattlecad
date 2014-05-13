@@ -1,5 +1,13 @@
 
 
+3.4.01.59  - 2014.05.13
+-------------------------------------------------------------------------------
+    feature: 
+        ... add Rear Carrier: racktime Add-it
+        ... Export -> Export Reynolds FEA
+            ... export project geometry into reynolds' FEA  csv-Format
+
+
 3.4.01.58  - 2014.05.04
 -------------------------------------------------------------------------------
     feature: 

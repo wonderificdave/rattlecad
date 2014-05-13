@@ -77,7 +77,7 @@
                 
                 {separator}
                 
-                {command "&Copy Reference"  {}  "Copy Reference"       {Ctrl r}       -command { rattleCAD::view::gui::notebook_switchTab  cv_Custom02} }
+                {command "&Copy Reference"  {}  "Copy Reference"        {Ctrl r}      -command { rattleCAD::view::gui::notebook_switchTab  cv_Custom02} }
                 
                 {separator}
                 
@@ -107,6 +107,7 @@
                 {command "&Export SVG"      {}  "Export to SVG"         {}            -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
                 {command "&Export DXF"      {}  "Export to DXF"         {}            -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
                 {command "&Export PS"       {}  "Export to PostScript"  {}            -command { rattleCAD::view::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
+                {command "&Export Reynolds FEA" {} "Export Reynolds FEA" {Ctrl f}     -command { rattleCAD::view::gui::export_reynoldsFEA  1.0} }
             }
             "Demo"   all info 0 {
                 {command "Samples"          {}  "Example Projects"      {}            -command { rattleCAD::test:::runDemo loopSamples } }
@@ -596,6 +597,22 @@
     #-------------------------------------------------------------------------
        #  export canvasCAD from every notebook-Tab
        #
+    proc export_reynoldsFEA {versionFEA} {
+              # ---
+            set exportDir $::APPL_Config(EXPORT_FEA)
+              # ---
+            set fileName [rattleCAD::model::file::create_reynoldsFEA  $exportDir]
+              #
+            tk_messageBox -title "Reynolds FEA - Export" -message "current project exported to:\n          $fileName"
+              #
+            return
+              #            
+    }
+    
+    
+    #-------------------------------------------------------------------------
+       #  export canvasCAD from every notebook-Tab
+       #
     proc export_Project { {type {html}}} {
             variable noteBook_top
             variable notebookCanvas     
@@ -709,6 +726,7 @@
             return
 
     }
+
 
     #-------------------------------------------------------------------------
        #  export canvasCAD from current notebook-Tab as PostScript 
@@ -833,7 +851,7 @@
             
                 # --- set exportFile
             set stageTitle    [ $cv_Name  getNodeAttr  Stage  title ]
-            set fileName     [ winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ] ]
+            set fileName      [ winfo name   $currentTab]___[ string map {{ } {_}} [ string trim $stageTitle ] ]
             set exportFile    [ file join $printDir ${fileName}.dxf ]
 
                 # --- export content to File
@@ -947,7 +965,7 @@
             # pack append $cv.buttonFrame
             
     }            
-            
+
 
     #-------------------------------------------------------------------------
        #  update Personal Geometry with parameters of Reference Geometry 
