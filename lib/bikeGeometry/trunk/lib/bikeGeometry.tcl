@@ -39,10 +39,11 @@
 
  # 0.18 http://sourceforge.net/p/rattlecad/tickets/2/
  # 
- # 0.59 add Rendering/Fender, Rendering/Carrier
- #
+ # 0.59 add Rendering/Fender
+ # 0.60 add Rendering/Carrier
+ # 0.61 add reynoldsFEA ... export csv for Reynolds' FEA Solver
  
- package provide bikeGeometry 0.60
+ package provide bikeGeometry 0.61
 
  namespace eval bikeGeometry {
 
