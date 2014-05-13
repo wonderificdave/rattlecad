@@ -806,8 +806,55 @@
             puts ""
                           
     }
-    
 
+
+    
+    #-------------------------------------------------------------------------
+       #  export project and prepared for eReynoldsFEA
+       #
+    proc create_reynoldsFEA {exportDir {postEvent {open}}} {
+            
+                # --- set exportFile
+            set fileName      reynolds_FEA.csv
+            set fileName    [ file join $exportDir $fileName ]
+            set fileName    [ file normalize $fileName]
+
+                # --- get file content
+            set reynoldsFEA_Content [bikeGeometry::lib_reynoldsFEA::get_Content]
+            
+                # -- open File for writing
+            if {[file exist $fileName]} {
+                if {[file writable $fileName]} {
+                    set fp [open $fileName w]
+                    fconfigure $fp -translation {crlf cr}
+                    puts $fp $reynoldsFEA_Content
+                    close $fp
+                    puts ""
+                    puts "         -- update ----------------------"
+                    puts "           ... write:"   
+                    puts "                       $fileName"
+                    puts "                   ... done"
+                } else {
+                    tk_messageBox -icon error -message "File: \n   $fileName\n  ... not writeable!"
+                }
+            } else {
+                    set fp [open $fileName w]
+                    fconfigure $fp -translation {crlf cr}
+                    puts $fp $reynoldsFEA_Content
+                    close $fp
+                    puts ""
+                    puts "         -- new--------------------------"
+                    puts "           ... write:"  
+                    puts "                       $fileName "
+                    puts "                   ... done"
+            }
+            
+              # ---
+            return $fileName
+                     
+    }
+
+    
     #-------------------------------------------------------------------------
         #  ...
         #

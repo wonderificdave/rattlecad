@@ -1,8 +1,8 @@
 <root>
     <Project>
         <rattleCADVersion>3.4.01.58</rattleCADVersion>
-        <Name>_BIRIA_PRO_RS_2004</Name>
-        <modified>2014.05.05 - 00:44:47</modified>
+        <Name>biria_pro_rs_2004</Name>
+        <modified>2014.05.09 - 01:53:14</modified>
     </Project>
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
@@ -284,7 +284,7 @@
                 <File>etc:derailleur/rear/shimano_RD-M773.svg</File>
                 <Pulley>
                     <x>-8.00</x>
-                    <y>79.00</y>
+                    <y>129.000</y>
                     <teeth>10</teeth>
                 </Pulley>
             </Rear>
