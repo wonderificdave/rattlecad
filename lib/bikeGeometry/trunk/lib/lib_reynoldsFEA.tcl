@@ -253,13 +253,21 @@ namespace eval bikeGeometry::lib_reynoldsFEA {
             set topTubeLength     [vectormath::length [split $TopTube_04 ,]       [split $TopTube_08  ,]     ]
             set headTubeLength    [vectormath::length [split $HeadTube_06 ,]      [split $HeadTube_09 ,]     ]
             
+              # -- Tube Diameter
+            set chainStayDiameter [[$rattleCAD_DOM selectNodes /root/FrameTubes/ChainStay/HeightBB/text()  ] asXML]
+            set seatTubeDiameter  [[$rattleCAD_DOM selectNodes /root/FrameTubes/SeatTube/DiameterTT/text() ] asXML]
+            set seatStayDiameter  [[$rattleCAD_DOM selectNodes /root/FrameTubes/SeatStay/DiameterST/text() ] asXML]
+            set downTubeDiameter  [[$rattleCAD_DOM selectNodes /root/FrameTubes/DownTube/DiameterBB/text() ] asXML]
+            set topTubeDiameter   [[$rattleCAD_DOM selectNodes /root/FrameTubes/TopTube/DiameterHT/text()  ] asXML]
+            set headTubeDiameter  [[$rattleCAD_DOM selectNodes /root/FrameTubes/HeadTube/Diameter/text()   ] asXML]
+            
               # -- Tube Lengths
-            append targetText "0,30,20,0.5,5,1,1,1,CHAIN STAY,1,0,100,50,100,50,0.8,0.8,0.5,50,$chainStayLength,0.5\n"
-            append targetText "0,30,20,0.5,5,1,1,2,SEAT TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,$seatTubeLength,0.5\n"
-            append targetText "0,30,20,0.5,5,1,1,3,SEAT STAY,1,0,100,50,100,50,0.8,0.8,0.5,50,$seatStayLength,0.5\n"
-            append targetText "0,30,20,0.5,5,1,1,4,DOWN TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,$downTubeLength,0.5\n"
-            append targetText "0,30,20,0.5,5,1,1,5,TOP TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,$topTubeLength,0.5\n"
-            append targetText "0,30,20,0.5,5,1,1,6,HEAD TUBE,1,0,10,15,10,15,0.8,0.8,0.5,50,$headTubeLength,0.5\n"     
+            append targetText [format "0,%s,20,0.5,5,1,1,1,CHAIN STAY,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"   $chainStayDiameter $chainStayLength]
+            append targetText [format "0,%s,20,0.5,5,1,1,2,SEAT TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $seatTubeDiameter  $seatTubeLength ]
+            append targetText [format "0,%s,20,0.5,5,1,1,3,SEAT STAY,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $seatStayDiameter  $seatStayLength ]
+            append targetText [format "0,%s,20,0.5,5,1,1,4,DOWN TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $downTubeDiameter  $downTubeLength ]
+            append targetText [format "0,%s,20,0.5,5,1,1,5,TOP TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"     $topTubeDiameter   $topTubeLength  ]
+            append targetText [format "0,%s,20,0.5,5,1,1,6,HEAD TUBE,1,0,10,15,10,15,0.8,0.8,0.5,50,%s,0.5\n"      $headTubeDiameter  $headTubeLength ]     
     }   
 
 

@@ -42,8 +42,9 @@
  # 0.59 add Rendering/Fender
  # 0.60 add Rendering/Carrier
  # 0.61 add reynoldsFEA ... export csv for Reynolds' FEA Solver
+ # 0.62 add tubeDiameter ... to reynoldsFEA
  
- package provide bikeGeometry 0.61
+ package provide bikeGeometry 0.62
 
  namespace eval bikeGeometry {
 
