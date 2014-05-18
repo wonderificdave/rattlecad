@@ -704,7 +704,7 @@
         set Rendering(RearDropOut)  [rattleCAD::control::getValue Rendering/RearDropOut]
             switch -exact $RearDropout(Direction) {
                 ChainStay  -              
-                Chainstay  { set do_angle [expr 180 - $RearDropout(Rotation) + [rattleCAD::control::getValue Result/Tubes/ChainStay/Direction/degree]]}              
+                Chainstay  { set do_angle [expr 360 - $RearDropout(Rotation) + [rattleCAD::control::getValue Result/Tubes/ChainStay/Direction/degree]]}              
                 horizontal { set do_angle [expr 360 - $RearDropout(Rotation) ]}              
                 default    { set do_angle   0}
             }
