@@ -165,24 +165,47 @@
 
                 # -- ChainStay Type
             switch [rattleCAD::control::getValue Rendering/ChainStay] {
-                   {straight}   { set retValues [bikeGeometry::get_ChainStay_RearMockup straight] }
-                   {bent}       { set retValues [bikeGeometry::get_ChainStay_RearMockup bent]}
-                   
+                   {straight}   -
+                   {bent}       -
                    {off}        {}
                    default      { puts "\n  <W> ... not defined in createRearMockup: [rattleCAD::control::getValue Rendering/ChainStay]\n"
                                   # return
                                 }
             }
+                # -- format Values
+            proc format_XspaceY {xyList} {
+                set spaceList {}
+                foreach {xy} $xyList {
+                    foreach {x y} [split $xy ,] break
+                    lappend spaceList $x $y
+                }
+                return $spaceList
+            }
+            
             switch [rattleCAD::control::getValue Rendering/ChainStay] {
                    {straight}   -
-                   {bent}       { set ChainStay(centerLine)    [lindex $retValues 0]
-                                  set ChainStay(polygon)       [lindex $retValues 1]
-                                  set ChainStay(ctrLines)      [lindex $retValues 2]
-                                  set ChainStay(centerLineCut) [lindex $retValues 3]
+                   {bent}       { set ChainStay(start)           [format_XspaceY [rattleCAD::control::getValue Result/Tubes/ChainStay/RearMockup/Start]]
+                                  set ChainStay(polygon)         [format_XspaceY [rattleCAD::control::getValue Result/Tubes/ChainStay/RearMockup/Polygon]]
+                                  set ChainStay(ctrLines)        [format_XspaceY [rattleCAD::control::getValue Result/Tubes/ChainStay/RearMockup/CtrLines]]
+                                  set ChainStay(centerLine)      [format_XspaceY [rattleCAD::control::getValue Result/Tubes/ChainStay/RearMockup/CenterLine]]
+                                  set ChainStay(centerLineUnCut) [format_XspaceY [rattleCAD::control::getValue Result/Tubes/ChainStay/RearMockup/CenterLineUnCut]]
+                                      # 
+                                  set ChainStay(centerLine)      [vectormath::addVectorPointList $ChainStay(start) $ChainStay(centerLine)]
+                                  set ChainStay(centerLineUnCut) [vectormath::addVectorPointList $ChainStay(start) $ChainStay(centerLineUnCut)]
+                                  set ChainStay(polygon)         [vectormath::addVectorPointList $ChainStay(start) $ChainStay(polygon)]
+                                    #    
+                                      #
+                                      # replaced 3.4.01.60 - 2014.05.16
+                                      # set ChainStay(centerLine)    [lindex $retValues 0]
+                                      # set ChainStay(polygon)       [lindex $retValues 1]
+                                      # set ChainStay(ctrLines)      [lindex $retValues 2]
+                                      # set ChainStay(centerLine) [lindex $retValues 3]
+                                  
+                                  
                                     # puts "\n --> \$ChainStay(ctrLines) $ChainStay(ctrLines)"
                                   set tube_CS_left    [ $cv_Name create polygon  $ChainStay(polygon)        -fill $rattleCAD::view::colorSet(chainStay) \
                                                                                                             -outline black  -tags __Tube__ ]
-                                  set tube_CS_CLine   [ $cv_Name create line     $ChainStay(centerLineCut)  -fill $rattleCAD::view::colorSet(chainStay_CL) \
+                                  set tube_CS_CLine   [ $cv_Name create line     $ChainStay(centerLine)  -fill $rattleCAD::view::colorSet(chainStay_CL) \
                                                                                                             -tags __CenterLine__ ]
                                       set polygon_opposite {}
                                       foreach {x y}  $ChainStay(polygon) {
