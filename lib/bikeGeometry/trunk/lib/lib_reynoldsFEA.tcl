@@ -262,12 +262,12 @@ namespace eval bikeGeometry::lib_reynoldsFEA {
             set headTubeDiameter  [[$rattleCAD_DOM selectNodes /root/FrameTubes/HeadTube/Diameter/text()   ] asXML]
             
               # -- Tube Lengths
-            append targetText [format "0,%s,20,0.5,5,1,1,1,CHAIN STAY,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"   $chainStayDiameter $chainStayLength]
-            append targetText [format "0,%s,20,0.5,5,1,1,2,SEAT TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $seatTubeDiameter  $seatTubeLength ]
-            append targetText [format "0,%s,20,0.5,5,1,1,3,SEAT STAY,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $seatStayDiameter  $seatStayLength ]
-            append targetText [format "0,%s,20,0.5,5,1,1,4,DOWN TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $downTubeDiameter  $downTubeLength ]
-            append targetText [format "0,%s,20,0.5,5,1,1,5,TOP TUBE,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"     $topTubeDiameter   $topTubeLength  ]
-            append targetText [format "0,%s,20,0.5,5,1,1,6,HEAD TUBE,1,0,10,15,10,15,0.8,0.8,0.5,50,%s,0.5\n"      $headTubeDiameter  $headTubeLength ]     
+            append targetText [format "0,%s,20,0.5,5,1,1,1,%s,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $chainStayDiameter {CHAIN STAY} $chainStayLength]
+            append targetText [format "0,%s,20,0.5,5,1,1,2,%s,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $seatTubeDiameter  {SEAT TUBE}  $seatTubeLength ]
+            append targetText [format "0,%s,20,0.5,5,1,1,3,%s,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $seatStayDiameter  {SEAT STAY}  $seatStayLength ]
+            append targetText [format "0,%s,20,0.5,5,1,1,4,%s,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $downTubeDiameter  {DOWN TUBE}  $downTubeLength ]
+            append targetText [format "0,%s,20,0.5,5,1,1,5,%s,1,0,100,50,100,50,0.8,0.8,0.5,50,%s,0.5\n"    $topTubeDiameter   {TOP TUBE}   $topTubeLength  ]
+            append targetText [format "0,%s,20,0.5,5,1,1,6,%s,1,0,10,15,10,15,0.8,0.8,0.5,50,%s,0.5\n"      $headTubeDiameter  {HEAD TUBE}  $headTubeLength ]
     }   
 
 

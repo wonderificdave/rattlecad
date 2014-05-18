@@ -25,7 +25,7 @@
             <bent/>
         </ForkBlade>
         
-    </Options>        
+    </Options>
 
     
     <Fork>
@@ -61,7 +61,7 @@
 
         <SteelLugged></SteelLugged>
         
-        <Composite>    
+        <Composite>
             <Crown>
               <File>fork/_composite/fork_crown.svg</File>
               <Brake>
@@ -134,7 +134,7 @@
           </Brake>
         </Suspension_26>
 
-        <Suspension_29>   
+        <Suspension_29>
           <Geometry>
             <Rake>45.00</Rake>
           </Geometry>
@@ -170,7 +170,7 @@
             <DerailleurMountFront>0.00,0.00</DerailleurMountFront>
             <CarrierMountFront>0.00,0.00</CarrierMountFront>
             <CarrierMountRear>0.00,0.00</CarrierMountRear>
-            <BrakeFront>0.00,0.00</BrakeFront>           
+            <BrakeFront>0.00,0.00</BrakeFront>
             <BrakeRear>0.00,0.00</BrakeRear>
             <SummarySize>0.00,0.00</SummarySize>
             <SeatPostSaddle>0.00,0.00</SeatPostSaddle>
@@ -209,7 +209,7 @@
             </SeatTube>
             <Saddle>
                 <Offset_BB>0.00</Offset_BB>
-                <Offset_BB_ST>0.00</Offset_BB_ST>    
+                <Offset_BB_ST>0.00</Offset_BB_ST>
                 <Offset_HB>0.00</Offset_HB>
                 <Offset_BB_Nose>0.00</Offset_BB_Nose>
                 <SeatTube_BB>0.00</SeatTube_BB>
@@ -268,7 +268,7 @@
                         <polar>0.00,0.00</polar>
                         <degree>0.00</degree>
                         <radiant>0.00</radiant>
-                    </Direction>            
+                    </Direction>
                     <Derailleur>0.00,0.00</Derailleur>
                 </Rear>
                 <Front>
@@ -277,7 +277,7 @@
                         <polar>0.00,0.00</polar>
                         <degree>0.00</degree>
                         <radiant>0.00</radiant>
-                    </Direction>            
+                    </Direction>
                 </Front>
             </Dropout>
             <ForkCrown>
@@ -286,37 +286,49 @@
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
             </ForkCrown>
         </Lugs>
 
         <Tubes>
-            <TopTube>                
+            <TopTube>
                 <Direction>
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
+                <Profile>
+                    <xz>0.00,0.00</xz>
+                    <xy>0.00,0.00</xy>
+                </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
                 <Polygon>0.00,0.00</Polygon>
-            </TopTube>        
+            </TopTube>
             <HeadTube>
                 <Direction>
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
+                <Profile>
+                    <xz>0.00,0.00</xz>
+                    <xy>0.00,0.00</xy>
+                </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
                 <Polygon>0.00,0.00</Polygon>
-            </HeadTube>        
+            </HeadTube>
             <SeatTube>
                 <Direction>
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
+                <Profile>
+                    <xz>0.00,0.00</xz>
+                    <xy>0.00,0.00</xy>
+                </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
                 <Polygon>0.00,0.00</Polygon>
@@ -330,7 +342,11 @@
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
+                <Profile>
+                    <xz>0.00,0.00</xz>
+                    <xy>0.00,0.00</xy>
+                </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
                 <Polygon>0.00,0.00</Polygon>
@@ -348,7 +364,11 @@
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
+                <Profile>
+                    <xz>0.00,0.00</xz>
+                    <xy>0.00,0.00</xy>
+                </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
                 <Polygon>0.00,0.00</Polygon>
@@ -358,18 +378,33 @@
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
+                <Profile>
+                    <xz>0.00,0.00</xz>
+                    <xy>0.00,0.00</xy>
+                </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
                 <SeatStay_IS>0.00,0.00</SeatStay_IS>
                 <Polygon>0.00,0.00</Polygon>
+                <RearMockup>
+                    <Start>0.00,0.00</Start>
+                    <Polygon>0.00,0.00</Polygon>
+                    <CtrLines>0.00,0.00</CtrLines>
+                    <CenterLine>0.00,0.00</CenterLine>
+                    <CenterLineUnCut>0.00,0.00</CenterLineUnCut>
+                </RearMockup>
             </ChainStay>
             <ForkBlade>
                 <Direction>
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
+                <Profile>
+                    <xz>0.00,0.00</xz>
+                    <xy>0.00,0.00</xy>
+                </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
                 <Polygon>0.00,0.00</Polygon>
@@ -379,7 +414,11 @@
                     <polar>0.00,0.00</polar>
                     <degree>0.00</degree>
                     <radiant>0.00</radiant>
-                </Direction>            
+                </Direction>
+                <Profile>
+                    <xz>0.00,0.00</xz>
+                    <xy>0.00,0.00</xy>
+                </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
                 <Polygon>0.00,0.00</Polygon>
@@ -414,44 +453,44 @@
         <TubeMiter>
             <TopTube_Head>
                 <Polygon>0.00,0.00</Polygon>
-            </TopTube_Head> 
+            </TopTube_Head>
             <TopTube_Seat>
                 <Polygon>0.00,0.00</Polygon>
             </TopTube_Seat>
             
             <DownTube_Head>
                 <Polygon>0.00,0.00</Polygon>
-            </DownTube_Head>            
+            </DownTube_Head>
             <DownTube_Seat>
                 <Polygon>0.00,0.00</Polygon>
-            </DownTube_Seat>            
+            </DownTube_Seat>
             <DownTube_BB_out>
                 <Polygon>0.00,0.00</Polygon>
-            </DownTube_BB_out>            
+            </DownTube_BB_out>
             <DownTube_BB_in>
                 <Polygon>0.00,0.00</Polygon>
             </DownTube_BB_in>
             
             <SeatTube_Down>
                 <Polygon>0.00,0.00</Polygon>
-            </SeatTube_Down>            
+            </SeatTube_Down>
             <SeatTube_BB_out>
                 <Polygon>0.00,0.00</Polygon>
-            </SeatTube_BB_out>            
+            </SeatTube_BB_out>
             <SeatTube_BB_in>
                 <Polygon>0.00,0.00</Polygon>
-            </SeatTube_BB_in> 
+            </SeatTube_BB_in>
             
             <SeatStay_01>
                 <Polygon>0.00,0.00</Polygon>
-            </SeatStay_01>     
+            </SeatStay_01>
             <SeatStay_02>
                 <Polygon>0.00,0.00</Polygon>
             </SeatStay_02>
             
             <Reference>
                 <Polygon>0.00,0.00</Polygon>
-            </Reference>     
+            </Reference>
         </TubeMiter>
     </Result>
 

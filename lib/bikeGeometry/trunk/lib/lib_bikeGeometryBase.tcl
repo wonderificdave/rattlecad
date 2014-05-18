@@ -357,6 +357,7 @@
             
                 #
             get_ChainStay
+            get_ChainStay_RearMockup
 
                 #
             get_HeadTube
