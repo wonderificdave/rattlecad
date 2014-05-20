@@ -471,7 +471,8 @@
                                 set RimDiameter       [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter]
                                 set TyreHeight            [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight]
                                 set FenderRadius          [expr 0.5 * $RimDiameter + $TyreHeight + 10]
-                                set AngleStart            [expr -180 + [rattleCAD::control::getValue Result/Tubes/ChainStay/Direction/degree]]
+                                set AngleStart            [expr -360 + [rattleCAD::control::getValue Result/Tubes/ChainStay/Direction/degree]]
+                                # set AngleStart          [expr -180 + [rattleCAD::control::getValue Result/Tubes/ChainStay/Direction/degree]]
                                 set AngleFender           [expr   90 - $AngleStart ]
                                 set my_Fender             [$cv_Name create arc   $Hub(position)  -radius $FenderRadius -start $AngleStart  -extent $AngleFender -style arc -outline gray40  -tags __Decoration__]
                                 if {$updateCommand != {}} {$cv_Name bind    $my_Fender    <Double-ButtonPress-1> \
