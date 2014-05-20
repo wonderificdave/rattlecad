@@ -44,11 +44,12 @@
  # 0.61 add reynoldsFEA ... export csv for Reynolds' FEA Solver
  # 0.62 add tubeDiameter ... to reynoldsFEA
  # 0.63 extend /Result/Tube with TubeProfile-Definition
- #      switch Result(Tubes/ChainStay/Direction) 
+ #        switch Result(Tubes/ChainStay/Direction) 
  # 0.64 unique definitions of shapes and positions with ","
- #
+ # 0.65 debug bikeGeometry::get_FenderRear 
+ #        because of modified ChainStay-direction in 0.64
  
- package provide bikeGeometry 0.64
+ package provide bikeGeometry 0.65
 
  namespace eval bikeGeometry {
 

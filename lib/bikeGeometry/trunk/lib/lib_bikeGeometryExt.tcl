@@ -162,7 +162,7 @@
                 puts "\n                     -> <i> \$project::Component(Wheel/Rear/TyreWidthRadius) ... $project::Component(Wheel/Rear/TyreWidthRadius)"
             }
               #
-              # -- Componentt(Fender/Rear/Radius) <-> $RearFender(Radius)
+              # -- Component(Fender/Rear/Radius) <-> $RearFender(Radius)
               #       handle values like done in bikeGeometry::set_base_Parameters 
             if {$RearFender(Radius) < $RearWheel(Radius)} {
                 set project::Component(Fender/Rear/Radius) [expr $RearWheel(Radius) + 5.0]
@@ -171,7 +171,7 @@
             }
 
               #
-              # -- Componentt(Fender/Front/Radius) <-> $RearFender(Radius)
+              # -- Component(Fender/Front/Radius) <-> $RearFender(Radius)
               #       handle values like done in bikeGeometry::set_base_Parameters 
             if {$FrontFender(Radius) < $FrontWheel(Radius)} {
                 set project::Component(Fender/Front/Radius) [expr $FrontWheel(Radius) + 5.0]
@@ -211,6 +211,10 @@
 
                     set ChainStay(Direction)            [ vectormath::unifyVector $pt_00 {0 0}]
             project::setValue Result(Tubes/ChainStay/Direction) direction   $ChainStay(Direction)
+                        #
+            project::setValue Result(Tubes/ChainStay/CenterLine)  value [list [format "%s,%s %s,%s" [lindex $pt_00 0] [lindex $pt_00 1] \
+                                                                                                    0                 0 ] ]
+
 
 
                         # -- position of Rear Derailleur Mount
@@ -498,6 +502,10 @@
                     set HeadTube(Stem)              [ vectormath::addVector     $HeadTube(Fork) $HeadTube(Direction)    $HeadTube(Length) ]
             project::setValue Result(Tubes/HeadTube/Start)      position    $HeadTube(Fork)
             project::setValue Result(Tubes/HeadTube/End)        position    $HeadTube(Stem)
+                    #
+            project::setValue Result(Tubes/HeadTube/CenterLine) value [list [format "%s,%s %s,%s" [lindex $HeadTube(Fork) 0] [lindex $HeadTube(Fork) 1] \
+                                                                                                  [lindex $HeadTube(Stem) 0] [lindex $HeadTube(Stem) 1] ] ]
+
 
                     set vct_01      [ vectormath::parallel          $HeadTube(Fork) $HeadTube(Stem) [expr 0.5*$HeadTube(Diameter)] ]
                     set vct_ht      [ vectormath::parallel          $HeadTube(Stem) $HeadTube(Fork) [expr 0.5*$HeadTube(Diameter)] ]
@@ -555,7 +563,10 @@
                 set TopTube(SeatTube)            [ vectormath::intersectPoint [lindex $vct_00 0] [lindex $vct_00 1] $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
             project::setValue Result(Tubes/TopTube/Start)          position     $TopTube(SeatTube)
             project::setValue Result(Tubes/TopTube/End)            position     $TopTube(HeadTube)
-
+                        #
+            project::setValue Result(Tubes/TopTube/CenterLine)  value [list [format "%s,%s %s,%s" [lindex $TopTube(SeatTube) 0] [lindex $TopTube(SeatTube) 1] \
+                                                                                                  [lindex $TopTube(HeadTube) 0] [lindex $TopTube(HeadTube) 1] ] ]
+                        #
                     set is_tt_ht    [ tube_intersection    $TopTube(DiameterHT) $TopTube(Direction)  $HeadTube(Diameter)    $HeadTube(Direction)  $TopTube(HeadTube) right]
                     set is_tt_st    [ tube_intersection    $TopTube(DiameterST) $TopTube(Direction)  $SeatTube(DiameterTT)  $SeatTube(Direction)  $TopTube(SeatTube) left ]
 
@@ -616,6 +627,9 @@
             project::setValue Result(Tubes/DownTube/Start)      position    $DownTube(BottomBracket)
             project::setValue Result(Tubes/DownTube/End)        position    $DownTube(HeadTube)
                         #
+            project::setValue Result(Tubes/DownTube/CenterLine) value [list [format "%s,%s %s,%s" [lindex $DownTube(BottomBracket) 0] [lindex $DownTube(BottomBracket) 1] \
+                                                                                                  [lindex $DownTube(HeadTube)      0] [lindex $DownTube(HeadTube)      1] ] ]
+                        #
                     set vct_02      [ vectormath::parallel          [lindex $vct_cl 0] [lindex $vct_cl 1] $DownTube(DiameterHT) left]   ;# DownTube upper Vector HT
                     set pt_04       [ vectormath::intersectPoint    [lindex $vct_02 0] [lindex $vct_02 1] \
                                                                     [lindex $vct_ht 0] [lindex $vct_ht 1] ] ;# top intersection DownTube/HeadTube
@@ -664,7 +678,7 @@
                         #
                     set SeatTube(Direction)        [ vectormath::unifyVector $SeatTube(DownTube) $SeatPost(SeatTube) ]
                         #
-            project::setValue Result(Tubes/SeatTube/Start)        position    $pt_is
+            # 0.65 -- project::setValue Result(Tubes/SeatTube/Start)        position    $pt_is
                         #
                     set pt_01       $SeatTube(TopTube)
                     set length      [ vectormath::length            $SeatTube(BottomBracket) $pt_01 ]
@@ -679,6 +693,10 @@
                         #
             project::setValue Result(Tubes/SeatTube/Start)      position    $SeatTube(BottomBracket)
             project::setValue Result(Tubes/SeatTube/End)        position    $SeatTube(TopTube)
+                        #
+            project::setValue Result(Tubes/SeatTube/CenterLine) value [list [format "%s,%s %s,%s" [lindex $SeatTube(BottomBracket) 0] [lindex $SeatTube(BottomBracket) 1] \
+                                                                                                  [lindex $SeatTube(TopTube)       0] [lindex $SeatTube(TopTube)       1] ] ]
+            
                         #
                     set is_st_dt    [ tube_intersection    $SeatTube(DiameterBB) $SeatTube(Direction)  $DownTube(DiameterBB)  $DownTube(Direction)  $SeatTube(DownTube) right ]
                         #
@@ -750,6 +768,9 @@
                 set SeatStay(RearWheel)     $pt_10
             project::setValue Result(Tubes/SeatStay/Start)      position    $SeatStay(RearWheel)
             project::setValue Result(Tubes/SeatStay/End)        position    $SeatStay(SeatTube)
+                        #
+            project::setValue Result(Tubes/SeatStay/CenterLine) value [list [format "%s,%s %s,%s" [lindex $SeatStay(RearWheel) 0] [lindex $SeatStay(RearWheel) 1] \
+                                                                                                  [lindex $SeatStay(SeatTube)  0] [lindex $SeatStay(SeatTube)  1] ] ]
                         #
                     set dir         [ vectormath::addVector {0 0} $SeatStay(Direction) -1]
                     set offset      [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
@@ -998,7 +1019,9 @@
             variable HeadTube
             variable Steerer
 
-            project::setValue Result(Tubes/Steerer/End)        position     $Steerer(Stem)
+            project::setValue Result(Tubes/Steerer/CenterLine)  value [list [format "%s,%s %s,%s" [lindex $Steerer(Fork) 0] [lindex $Steerer(Fork) 1] \
+                                                                                                  [lindex $Steerer(Stem) 0] [lindex $Steerer(Stem) 1] ] ]
+            
 
                     if {$HeadTube(Diameter) > 35 } {
                         set SteererDiameter 28.6
@@ -1011,7 +1034,7 @@
                     set polygon     [format "%s %s %s %s" \
                                             [lindex $vct_01 0] [lindex $vct_01 1] \
                                             [lindex $vct_ht 0] [lindex $vct_ht 1] ]
-            # puts $polygon
+              # puts $polygon
             project::setValue Result(Tubes/Steerer)            polygon     $polygon
     }
 
@@ -1215,7 +1238,7 @@
               # parray RearFender
               # puts " ->   \$project::Result(Tubes/ChainStay/Direction) [project::getValue Result(Tubes/ChainStay/Direction/degree) value]"
             
-            set AngleStart          $AngleChainStay
+            set AngleStart          [expr 180 + $AngleChainStay]
                                            
               # bikeGeometry::createFender {radius angleStart angleLength height} 
             set polygon [createFender $RearFender(Radius) $AngleStart $RearFender(OffsetAngle)  $RearFender(Height)]

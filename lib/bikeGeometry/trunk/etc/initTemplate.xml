@@ -303,6 +303,7 @@
                 </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
+                <CenterLine>0.00,0.00</CenterLine>
                 <Polygon>0.00,0.00</Polygon>
             </TopTube>
             <HeadTube>
@@ -317,6 +318,7 @@
                 </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
+                <CenterLine>0.00,0.00</CenterLine>
                 <Polygon>0.00,0.00</Polygon>
             </HeadTube>
             <SeatTube>
@@ -331,6 +333,7 @@
                 </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
+                <CenterLine>0.00,0.00</CenterLine>
                 <Polygon>0.00,0.00</Polygon>
                 <BottleCage>
                     <Base>0.00,0.00</Base>
@@ -349,6 +352,7 @@
                 </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
+                <CenterLine>0.00,0.00</CenterLine>
                 <Polygon>0.00,0.00</Polygon>
                 <BottleCage>
                     <Base>0.00,0.00</Base>
@@ -371,6 +375,7 @@
                 </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
+                <CenterLine>0.00,0.00</CenterLine>
                 <Polygon>0.00,0.00</Polygon>
             </SeatStay>
             <ChainStay>
@@ -385,6 +390,7 @@
                 </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
+                <CenterLine>0.00,0.00</CenterLine>
                 <SeatStay_IS>0.00,0.00</SeatStay_IS>
                 <Polygon>0.00,0.00</Polygon>
                 <RearMockup>
@@ -407,6 +413,7 @@
                 </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
+                <CenterLine>0.00,0.00</CenterLine>
                 <Polygon>0.00,0.00</Polygon>
             </ForkBlade>
             <Steerer>
@@ -421,6 +428,7 @@
                 </Profile>
                 <Start>0.00,0.00</Start>
                 <End>0.00,0.00</End>
+                <CenterLine>0.00,0.00</CenterLine>
                 <Polygon>0.00,0.00</Polygon>
             </Steerer>
         </Tubes>
