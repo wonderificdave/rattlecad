@@ -1,5 +1,14 @@
 
 
+3.4.01.62  - 2014.05.25
+-------------------------------------------------------------------------------
+    feature: 
+        ... add first investigation to create 3D Shape of a project
+            ... located in ./_style/shape3D_OBJ.tcl
+            ... creates an .obj-File
+            ... can be opened by e.g. glc-player
+
+
 3.4.01.61  - 2014.05.20
 -------------------------------------------------------------------------------
     debug: 
