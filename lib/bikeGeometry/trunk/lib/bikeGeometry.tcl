@@ -48,8 +48,9 @@
  # 0.64 unique definitions of shapes and positions with ","
  # 0.65 debug bikeGeometry::get_FenderRear 
  #        because of modified ChainStay-direction in 0.64
+ # 0.66 fill Result/Length/...Wheel/Diameter bikeGeometry::fill_resultValues 
  
- package provide bikeGeometry 0.65
+ package provide bikeGeometry 0.66
 
  namespace eval bikeGeometry {
 

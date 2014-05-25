@@ -1463,7 +1463,8 @@
             set tyreHeight      [ project::getValue Component(Wheel/Rear/TyreHeight)  value ]
             set value           [ expr 0.5 * $rimDiameter + $tyreHeight ]                
                   # puts "                  ... $value"
-                project::setValue Result(Length/RearWheel/Radius value $value
+                project::setValue Result(Length/RearWheel/Radius   value $value
+                project::setValue Result(Length/RearWheel/Diameter value [expr 2.0 * $value]
               
                 # --- RearWheel/TyreShoulder --------------------------------
                 #
@@ -1480,7 +1481,8 @@
             set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
                   # puts "                  ... $value"
                 project::setValue Result(Length/FrontWheel/Radius value $value
-                
+                project::setValue Result(Length/FrontWheel/Diameter value [expr 2.0 * $value]
+              
                 
 
 
