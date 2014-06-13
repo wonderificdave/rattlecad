@@ -235,8 +235,8 @@
                         }
 
                     set pt_01       [ vectormath::addVector         $pt_00  $ChainStay(Direction)  $taper_length ]
-                    set pt_02       [ vectormath::addVector         {0 0}   $ChainStay(Direction)  -70 ]
-                    set pt_03       [ vectormath::addVector         {0 0}   $ChainStay(Direction)  -30 ]
+                    set pt_02       [ vectormath::addVector         $pt_00  $ChainStay(Direction)  [expr $taper_length + 40] ]
+                    set pt_03       [ vectormath::addVector         $pt_00  $ChainStay(Direction)  [expr $taper_length + 85] ]
 
                     set ChainStay(RearWheel)            $pt_00
                     set ChainStay(BottomBracket)        {0 0}
@@ -866,9 +866,20 @@
                         set centerLine      [lindex $retValue 1]
                         set brakeDefLine    [lindex $retValue 2]
                         set dropOutAngle    [lindex $retValue 3]
-                        
+                        set forkBladePos    [lindex $retValue 4]
+                          #
                         set dropOutPos      $FrontWheel(Position) 
-                        
+                          #
+                        set forkBladePos    [vectormath::addVector $forkBladePos  $dropOutPos]
+                        set forkBladePos    [format "%s,%s"  [lindex $forkBladePos 0] [lindex $forkBladePos 1]]
+                          #
+                        foreach {x y} $centerLine {
+                            lappend centerLine_Format [format "%s,%s" $x $y]
+                        }
+                          #
+                        set forkBladeEnd    [lindex $centerLine_Format end]
+                          #
+                          
                           # puts "  -> \$outLine       $outLine"
                           # puts "  -> \$dropOutPos    $dropOutPos"
                           # puts "  -> \$dropOutAngle  $dropOutAngle"
@@ -879,6 +890,9 @@
                         
                         
                         project::setValue Result(Tubes/ForkBlade)                 polygon     $outLine
+                        project::setValue Result(Tubes/ForkBlade/Start)           value       $forkBladePos
+                        project::setValue Result(Tubes/ForkBlade/End)             value       $forkBladeEnd
+                        project::setValue Result(Tubes/ForkBlade/CenterLine)      value       [list $centerLine_Format]
                         project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)   
             
                         set myFork(CrownFile)         $project::Component(Fork/Crown/File)                                     
@@ -933,9 +947,20 @@
                         set centerLine      [lindex $retValue 1]
                         set brakeDefLine    [lindex $retValue 2]
                         set dropOutAngle    [lindex $retValue 3]
-                        
+                        set forkBladePos    [lindex $retValue 4]
+                          #
                         set dropOutPos      $FrontWheel(Position) 
-                        
+                          #
+                        set forkBladePos    [vectormath::addVector $forkBladePos  $dropOutPos]
+                        set forkBladePos    [format "%s,%s"  [lindex $forkBladePos 0] [lindex $forkBladePos 1]]
+                          #
+                        foreach {x y} $centerLine {
+                            lappend centerLine_Format [format "%s,%s" $x $y]
+                        }
+                          #
+                        set forkBladeEnd    [lindex $centerLine_Format end]
+                          #
+                          
                           # puts "  -> \$outLine       $outLine"
                           # puts "  -> \$dropOutPos    $dropOutPos"
                           # puts "  -> \$dropOutAngle  $dropOutAngle"
@@ -945,6 +970,9 @@
                           # puts "  -> \$Fork(DropoutDirection)  $Fork(DropoutDirection)"
                         
                         project::setValue Result(Tubes/ForkBlade)                 polygon     $outLine
+                        project::setValue Result(Tubes/ForkBlade/Start)           value       $forkBladePos
+                        project::setValue Result(Tubes/ForkBlade/End)             value       $forkBladeEnd
+                        project::setValue Result(Tubes/ForkBlade/CenterLine)      value       [list $centerLine_Format]
                         project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)
                         
                         set myFork(CrownFile)         [[ $domInit selectNodes /root/Fork/SteelLuggedMAX/Crown/File             ]  asText ]
@@ -1246,7 +1274,8 @@
             project::setValue Result(Components/Fender/Rear)   polygon     [project::flatten_nestedList $polygon]
             return
     }
-    
+
+
         #
         # --- set FenderFront ----------------------
     proc bikeGeometry::get_FenderFront {} {
@@ -1839,83 +1868,6 @@
 
     #-------------------------------------------------------------------------
         #  Fork Blade Polygon for composite Fork
-    proc bikeGeometry::set_columbusMAXFork {} {
-    
-            variable FrontWheel
-            variable Fork
-
-            set domInit $project::initDOM
-                # set domInit $::APPL_Config(root_InitDOM)
-                
-            set FrontWheel(position)    [ bikeGeometry::get_Object        FrontWheel       position    {0 0}]
-            set Steerer_Fork(position)  [ bikeGeometry::get_Object        Steerer/Start    position    {0 0}]
-            set ht_direction            [ bikeGeometry::get_Object        HeadTube         direction ]
-
-            set Fork(BladeWith)             [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Blade/Width            ]  asText ]
-            set Fork(BladeDiameterDO)       [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Blade/DiameterDO       ]  asText ]
-            set Fork(BladeBendRadius)       [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Blade/BendRadius       ]  asText ]
-            set Fork(BladeEndLength)        [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Blade/EndLength        ]  asText ]
-            set Fork(BladeOffsetCrown)      [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Crown/Blade/Offset     ]  asText ]
-            set Fork(BladeOffsetCrownPerp)  [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Crown/Blade/OffsetPerp ]  asText ]
-            set Fork(BladeOffsetDO)         [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/DropOut/Offset         ]  asText ]
-    
-
-
-            dict create dict_ForkBlade {}
-            dict append dict_ForkBlade env \
-                    [list dropOutPosition $FrontWheel(Position) \
-                          forkHeight      $Fork(Height)   \
-                          forkRake        $Fork(Rake)     \
-                          crownOffset     $Fork(BladeOffsetCrown)     \
-                          crownPerp       $Fork(BladeOffsetCrownPerp) \
-                          dropOutOffset   $Fork(BladeOffsetDO)        \
-                          dropOutPerp     $Fork(BladeOffsetDOPerp)    \
-                          headTubeAngle   $HeadTube(Angle) \
-                    ]
-            dict append dict_ForkBlade blade \
-                    [list type            $project::Rendering(ForkBlade)  \
-                          endLength       $Fork(BladeEndLength) \
-                          bendRadius      $Fork(BladeBendRadius) \
-                    ]
-            dict append dict_ForkBlade profile \
-                    [list [list 0                       $Fork(BladeDiameterDO)] \
-                          [list $Fork(BladeTaperLength) $Fork(BladeWith)] \
-                          [list 200                     $Fork(BladeWith)] \
-                          [list 500                     $Fork(BladeWith)] \
-                    ]
-
-            set retValue [bikeGeometry::tube::get_ForkBlade $dict_ForkBlade]
-            
-            set outLine         [lindex $retValue 0]
-            set centerLine      [lindex $retValue 1]
-            set brakeDefLine    [lindex $retValue 2]
-            set dropOutAngle    [lindex $retValue 3]
-            
-            set dropOutPos      $FrontWheel(Position) 
-                                        
-              # puts "  -> \$outLine       $outLine"
-              # puts "  -> \$dropOutPos    $dropOutPos"
-              # puts "  -> \$dropOutAngle  $dropOutAngle"
-            
-            set Fork(BrakeOffsetDef)      $brakeDefLine
-            set Fork(DropoutDirection)    [ vectormath::unifyVector $dropOutPos [vectormath::rotateLine $dropOutPos 10 [expr 180 + $dropOutAngle]] 1]
-              # puts "  -> \$Fork(DropoutDirection)  $Fork(DropoutDirection)"
-            
-            
-            project::setValue Result(Tubes/ForkBlade)                 polygon     $outLine
-            project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)                                        
- 
-   
-            set do_direction    [ vectormath::unifyVector $FrontWheel(position) $pt_03 ]
-            project::setValue Result(Lugs/Dropout/Front/Direction)    direction    $do_direction
-
-            return $polygon    
-    
-    }
-
-
-    #-------------------------------------------------------------------------
-        #  Fork Blade Polygon for composite Fork
     proc bikeGeometry::set_compositeFork {forkType} {
 
             set domInit $project::initDOM
@@ -2192,5 +2144,82 @@
     
     
  
+     #-------------------------------------------------------------------------
+        #  Fork Blade Polygon for composite Fork
+    proc bikeGeometry::set_columbusMAXFork____remove_ {} {
+    
+            variable FrontWheel
+            variable Fork
+
+            set domInit $project::initDOM
+                # set domInit $::APPL_Config(root_InitDOM)
+                
+            set FrontWheel(position)    [ bikeGeometry::get_Object        FrontWheel       position    {0 0}]
+            set Steerer_Fork(position)  [ bikeGeometry::get_Object        Steerer/Start    position    {0 0}]
+            set ht_direction            [ bikeGeometry::get_Object        HeadTube         direction ]
+
+            set Fork(BladeWith)             [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Blade/Width            ]  asText ]
+            set Fork(BladeDiameterDO)       [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Blade/DiameterDO       ]  asText ]
+            set Fork(BladeBendRadius)       [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Blade/BendRadius       ]  asText ]
+            set Fork(BladeEndLength)        [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Blade/EndLength        ]  asText ]
+            set Fork(BladeOffsetCrown)      [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Crown/Blade/Offset     ]  asText ]
+            set Fork(BladeOffsetCrownPerp)  [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/Crown/Blade/OffsetPerp ]  asText ]
+            set Fork(BladeOffsetDO)         [ [ $domInit selectNodes /root/Fork/SteelLuggedMAX/DropOut/Offset         ]  asText ]
+    
+
+
+            dict create dict_ForkBlade {}
+            dict append dict_ForkBlade env \
+                    [list dropOutPosition $FrontWheel(Position) \
+                          forkHeight      $Fork(Height)   \
+                          forkRake        $Fork(Rake)     \
+                          crownOffset     $Fork(BladeOffsetCrown)     \
+                          crownPerp       $Fork(BladeOffsetCrownPerp) \
+                          dropOutOffset   $Fork(BladeOffsetDO)        \
+                          dropOutPerp     $Fork(BladeOffsetDOPerp)    \
+                          headTubeAngle   $HeadTube(Angle) \
+                    ]
+            dict append dict_ForkBlade blade \
+                    [list type            $project::Rendering(ForkBlade)  \
+                          endLength       $Fork(BladeEndLength) \
+                          bendRadius      $Fork(BladeBendRadius) \
+                    ]
+            dict append dict_ForkBlade profile \
+                    [list [list 0                       $Fork(BladeDiameterDO)] \
+                          [list $Fork(BladeTaperLength) $Fork(BladeWith)] \
+                          [list 200                     $Fork(BladeWith)] \
+                          [list 500                     $Fork(BladeWith)] \
+                    ]
+
+            set retValue [bikeGeometry::tube::get_ForkBlade $dict_ForkBlade]
+            
+            set outLine         [lindex $retValue 0]
+            set centerLine      [lindex $retValue 1]
+            set brakeDefLine    [lindex $retValue 2]
+            set dropOutAngle    [lindex $retValue 3]
+            
+            set dropOutPos      $FrontWheel(Position) 
+                                        
+              # puts "  -> \$outLine       $outLine"
+              # puts "  -> \$dropOutPos    $dropOutPos"
+              # puts "  -> \$dropOutAngle  $dropOutAngle"
+            
+            set Fork(BrakeOffsetDef)      $brakeDefLine
+            set Fork(DropoutDirection)    [ vectormath::unifyVector $dropOutPos [vectormath::rotateLine $dropOutPos 10 [expr 180 + $dropOutAngle]] 1]
+              # puts "  -> \$Fork(DropoutDirection)  $Fork(DropoutDirection)"
+            
+            
+            project::setValue Result(Tubes/ForkBlade)                 polygon     $outLine
+            project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)                                        
  
+   
+            set do_direction    [ vectormath::unifyVector $FrontWheel(position) $pt_03 ]
+            project::setValue Result(Lugs/Dropout/Front/Direction)    direction    $do_direction
+
+            return $polygon    
+    
+    }
+
+
+
  

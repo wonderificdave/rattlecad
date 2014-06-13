@@ -49,8 +49,9 @@
  # 0.65 debug bikeGeometry::get_FenderRear 
  #        because of modified ChainStay-direction in 0.64
  # 0.66 fill Result/Length/...Wheel/Diameter bikeGeometry::fill_resultValues 
+ # 0.67 fill Result/Tubes/ForkBlade/... bikeGeometry::get_Fork / get_ForkBlade
  
- package provide bikeGeometry 0.66
+ package provide bikeGeometry 0.67
 
  namespace eval bikeGeometry {
 

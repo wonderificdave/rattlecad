@@ -101,8 +101,8 @@ namespace eval bikeGeometry::tube {
         set centerLineRadius(4)    $S04_radius
         set centerLineRadius(5)    0
         
-        set centerLine    [list {0 0}]
-        set ctrlPoints  {}
+        set centerLine             [list {0 0}]
+        set ctrlPoints             {}
         
           #
           # puts " -> centerLineDefLength [array size centerLineDefLength]"
@@ -113,11 +113,12 @@ namespace eval bikeGeometry::tube {
               # puts " == <$i> ==========================="
             set lastId $i
             set nextId [expr $i+1]
-            set retValue [init_centerLineNextPosition   $centerLine $ctrlPoints\
+            set retValue    [init_centerLineNextPosition   \
+                                                    $centerLine $ctrlPoints\
                                                     $centerLineRadius($lastId)  $centerLineAngle($lastId)  $centerLineDirection($lastId) \
                                                     $centerLineDefLength($nextId) \
                                                     $centerLineRadius($nextId)  $centerLineAngle($nextId)  $centerLineDirection($nextId)]
-            set centerLine    [lindex $retValue 0]
+            set centerLine  [lindex $retValue 0]
             set ctrlPoints  [lindex $retValue 1] 
               # puts "  -> $ctrlPoints"
                 #if {$i == 20} { exit }
@@ -481,7 +482,7 @@ namespace eval bikeGeometry::tube {
               
               set length    [expr sqrt(pow($_hypot,2) - pow($dropOutPerp,2)) - $dropOutOffset]
               
-              set dirAngle     [expr (180/$vectormath::CONST_PI) * ($_dAngle - $_pAngle)]
+              set dirAngle  [expr (180/$vectormath::CONST_PI) * ($_dAngle - $_pAngle)]
 
               set segLength 30
               
@@ -642,9 +643,10 @@ namespace eval bikeGeometry::tube {
         set dropOutAngle  [expr $angleRotation - $headTube_Angle]
                                 
             # -- get smooth centerLine
-        set retValues [bikeGeometry::tube::init_centerLine $centerLineDef] 
-        set centerLine  [lindex $retValues 0]
-        set ctrLines    [lindex $retValues 1]
+        set retValues       [bikeGeometry::tube::init_centerLine $centerLineDef] 
+        set centerLine      [lindex $retValues 0]
+        set ctrLines        [lindex $retValues 1]
+        set centerLineCut   [lindex $retValues 2]
         
             # -- draw shape of tube
         set outLineLeft   [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile left  ]
@@ -655,36 +657,44 @@ namespace eval bikeGeometry::tube {
 
 
         set addVector [list $dropOutOffset $dropOutPerp]
-        # set addVector [vectormath::addVector $dropOutPos [list $dropOutOffset $dropOutPerp]]
-        #puts "  ->    \$dropOutPos $dropOutPos"     
-        #puts "     ->    $dropOutOffset $dropOutPerp"     
-        #puts "     ->    $addVector $addVector" 
-    
+          # set addVector [vectormath::addVector $dropOutPos [list $dropOutOffset $dropOutPerp]]
+          # puts "  ->    \$dropOutPos $dropOutPos"     
+          # puts "     ->    $dropOutOffset $dropOutPerp"     
+          # puts "     ->    \$addVector $addVector" 
+          # exit            # get startPosition of ForkBlade
+        set offsetDO  [vectormath::rotatePoint {0 0}           $addVector $dropOutAngle]
+          # puts "     ->    \$offsetDO $offsetDO" 
+
             # -- get oriented tube
-        set outLine [vectormath::addVectorPointList         $addVector $outLine]
-        set outLine [vectormath::rotatePointList {0 0}      $outLine $angleRotation]
-        set outLine [vectormath::addVectorPointList         $dropOutPos $outLine]
+        set outLine [vectormath::addVectorPointList            $addVector $outLine]
+        set outLine [vectormath::rotatePointList               {0 0}  $outLine $angleRotation]
+        set outLine [vectormath::addVectorPointList            $dropOutPos $outLine]
         
             # -- get oriented centerLine
-        set centerLine [vectormath::addVectorPointList      $addVector [appUtil::flatten_nestedList $centerLine]]
-        set centerLine [vectormath::rotatePointList {0 0}   $centerLine $angleRotation]
-        set centerLine [vectormath::addVectorPointList      $dropOutPos $centerLine]
-        
+        set centerLineCut [vectormath::addVectorPointList      $addVector [appUtil::flatten_nestedList $centerLineCut]]
+        set centerLineCut [vectormath::rotatePointList {0 0}   $centerLineCut $angleRotation]
+        set centerLineCut [vectormath::addVectorPointList      $dropOutPos $centerLineCut]
+            # set centerLine [vectormath::addVectorPointList       $addVector [appUtil::flatten_nestedList $centerLine]]
+            # set centerLine [vectormath::rotatePointList {0 0}    $centerLine $angleRotation]
+            # set centerLine [vectormath::addVectorPointList       $dropOutPos $centerLine]
+            # puts "\$centerLineCut $centerLineCut"    
+
             # -- get oriented brakeDefLine
-        set brakeDefLine [vectormath::addVectorPointList    $addVector [appUtil::flatten_nestedList $brakeDefLine]]
-        set brakeDefLine [vectormath::rotatePointList {0 0} $brakeDefLine $angleRotation]
-        set brakeDefLine [vectormath::addVectorPointList    $dropOutPos $brakeDefLine]
+        set brakeDefLine [vectormath::addVectorPointList       $addVector [appUtil::flatten_nestedList $brakeDefLine]]
+        set brakeDefLine [vectormath::rotatePointList          {0 0} $brakeDefLine $angleRotation]
+        set brakeDefLine [vectormath::addVectorPointList       $dropOutPos $brakeDefLine]
 
-        return [list $outLine $centerLine $brakeDefLine $dropOutAngle]
+        return [list $outLine $centerLineCut $brakeDefLine $dropOutAngle $offsetDO]
+          # return [list $outLine $centerLine $brakeDefLine $dropOutAngle $offsetDO]
 
-		}
+    }
 
 
     proc get_tubeProfileOffset {profile position} {
         
         variable unbentShape
 
-        set profileIndex {}
+        #set profileIndex {}
           # puts "dict: $profile"
           # puts "keys: [dict keys $profile]"
         foreach offset [lsort -real [dict keys $profile]] {
@@ -693,7 +703,8 @@ namespace eval bikeGeometry::tube {
         } 
           # puts "\$profileIndex  $profileIndex"
 
-        foreach index $profileIndex { 
+        foreach index $profileIndex {
+#puts "      <D10>  $index $position"        
           if {$position >= [expr 1.0 * $index]} {
             set k {}
             set value [dict get $profile $index]
@@ -716,7 +727,7 @@ namespace eval bikeGeometry::tube {
         variable arcPrecission
         
         set linePosition 0
-        set bentProfile {}
+          # set bentProfile {}
         
         set lineOffset  [get_tubeProfileOffset $tubeProfile $linePosition]
         if {$side == {left}} {
@@ -724,70 +735,73 @@ namespace eval bikeGeometry::tube {
         } else {
           lappend bentProfile [list $linePosition [expr -1.0 * $lineOffset]]
         }
-        # puts "        ---> $bentProfile"
-        
+          # puts "        ---> $bentProfile"
         set xLast {}
         set yLast {}
-        foreach p $centerLine {
-          foreach {x y} $p break
-          if {$xLast == {}} {
-            set xLast $x
-            set yLast $y
-            continue
-          }
+          #
+        set pLast [lindex $centerLine 0]
+        foreach {xLast yLast} $pLast break
+          #
+      
+        foreach p [lrange $centerLine 1 end] {
+            foreach {x y} $p break
               # puts "$xLast -> $x  | $yLast -> $y"
-            # -- get offset / depending on segments
-          set p_SegStart  [list $xLast $yLast]
-          set p_SegEnd    [list $x $y]
-          set angle       [vectormath::dirAngle $p_SegStart $p_SegEnd]
-          set l_segment   [vectormath::length   $p_SegStart $p_SegEnd]
-              #puts "\n-----------"
-              #puts "     -> start:    $p_SegStart"
-              #puts "     -> end:      $p_SegEnd"
-              #puts "       -> angle:     $angle"
-              #puts "       -> segment:   $l_segment\n"
+              # -- get offset / depending on segments
+            set p_SegStart  [list $xLast $yLast]
+            set p_SegEnd    [list $x $y]
+            set angle       [vectormath::dirAngle $p_SegStart $p_SegEnd]
+            set l_segment   [vectormath::length   $p_SegStart $p_SegEnd]
+              # puts "\n-----------"
+              # puts "     -> start:    $p_SegStart"
+              # puts "     -> end:      $p_SegEnd"
+              # puts "       -> angle:     $angle"
+              # puts "       -> segment:   $l_segment\n"
           
-          set nrSegments  [expr abs(round($l_segment/$arcPrecission))]
-          if {$nrSegments < 1} {
-              # puts "    -> nrSegments: $nrSegments"
-            set nrSegments 1
-          }
-          set l_segment   [expr $l_segment/$nrSegments]
+            set nrSegments  [expr abs(round($l_segment/$arcPrecission))]
+            if {$nrSegments < 1} {
+                  # puts "    -> nrSegments: $nrSegments"
+                set nrSegments 1
+            }
+            set l_segment   [expr $l_segment/$nrSegments]
           
-          if {$side == {left}} {
-            set offsetAngle [expr $angle + 90]
-          } else {
-            set offsetAngle [expr $angle - 90]
-          }
+            if {$side == {left}} {
+                set offsetAngle [expr $angle + 90]
+            } else {
+                set offsetAngle [expr $angle - 90]
+            }
           
-          set p_Start $p_SegStart
-          set i 0
-          while {$i < $nrSegments} {
-            set linePosition  [expr $linePosition + $l_segment]
-            set lineOffset    [get_tubeProfileOffset $tubeProfile $linePosition]
-            set p_End         [vectormath::rotateLine $p_Start $l_segment   $angle]
-            set p_Offset      [vectormath::rotateLine $p_End   $lineOffset  $offsetAngle]
-              # -- add to bentProfile
-            lappend bentProfile $p_Offset
-                #puts "        ---> [lindex $bentProfile end]"
-                #puts "         ->  + $l_segment = $linePosition / $lineOffset  |  $offsetAngle"
+            set p_Start    $p_SegStart
+            set lastOffset {}
+            set i 0
+            while {$i < $nrSegments} {
+                set linePosition  [expr $linePosition + $l_segment]
+                set lineOffset    [get_tubeProfileOffset $tubeProfile $linePosition]
+                set p_End         [vectormath::rotateLine $p_Start $l_segment   $angle]
+                set p_Offset      [vectormath::rotateLine $p_End   $lineOffset  $offsetAngle]
+                  # -- add to bentProfile
+                if {$p_Offset != $lastOffset} {
+                    lappend bentProfile $p_Offset
+                }
+                    #puts "        ---> [lindex $bentProfile end]"
+                    #puts "         ->  + $l_segment = $linePosition / $lineOffset  |  $offsetAngle"
+                  # -- prepare next loop
+                set p_Start    $p_End
+                set lastOffset $p_Offset
+                incr i
+            }
+          
               # -- prepare next loop
-            set p_Start $p_End
-            incr i
-          }
-          
-            # -- prepare next loop
-          set xLast $x
-          set yLast $y     
+            set xLast $x
+            set yLast $y     
         }
         foreach xy $bentProfile {
-          # puts "   -> $xy"
+            # puts "   -> $xy"
         }
         
         if {$side == {left}} {
-          return $bentProfile
+            return $bentProfile
         } else {
-          return [lreverse $bentProfile]
+            return [lreverse $bentProfile]
         }
     }
 
