@@ -1,0 +1,328 @@
+<?xml version="1.0" ?>
+
+<!-- HelloWorld als ant Build.xml //-->
+<!-- 
+	jedes Ant Skript besteht aus einem Projekt
+	Pro Projekt muss ein Default Target definiert sein!
+//-->
+
+<project default="rattleCAD_build_3.4">
+	<!-- 
+	jedes Ant Project besteht aus einer oder mehreren Targets, in denen
+	Tasks ausgefuehrt werden
+	Ant definiert viele Tasks : sie koennen diese einfach einsetzen
+	Welche Tasks existieren sehen Sie im Manual. Wir gehen auf einige
+	ein!
+	//-->
+	
+	<property name = "rattleCAD_Version" 	value = "3.4.01.64" />
+	<property name = "build.dir"         	value = "___build" />
+
+	<property name = "tcl_8.5"   					value = "tclsh" />
+	<property name = "tcl_8.6"   					value = "C:\Program Files (x86)\Tcl\8.6\bin\tclsh" />
+	
+	<property name = "appUtil_home"       location = "../appUtil" />
+	<property name = "bikeGeometry_home"  location = "../bikeGeometry" />
+	<property name = "canvasCAD_home"     location = "../canvasCAD" />
+	<property name = "extSummary_home"    location = "../extSummary" />
+	<property name = "osEnv_home"         location = "../osEnv" />
+	<property name = "vectorMath_home"    location = "../vectorMath" />
+	
+	<property name = "rattleCAD_fileList" value = "main.tcl, rattleCAD.tcl, help.txt, readme.txt, license.txt, exclusion.txt, icon16.gif, tclkit.ico, tclkit.inf" />
+			        
+
+	
+	<target   name = "rattleCAD_build_3.4">
+	
+			<echo>build rattleCAD ${rattleCAD_Version}</echo>
+			<echo> </echo>	<echo> </echo>
+			
+						
+			<echo>     ... cleanup content of folder ${build.dir} ..."</echo>
+			<delete includeEmptyDirs="true">
+			  	<fileset dir="${build.dir}" includes="**/*" defaultexcludes="no"/>
+			</delete>
+			<echo> </echo>	<echo> </echo>
+			
+	
+			<copy todir="${build.dir}/${rattleCAD_Version}/etc">
+	        <fileset dir="./etc"/>
+			</copy>
+			<echo>     ... content of folder ./etc was copied.</echo>
+			<echo> </echo>
+			
+			
+			<copy todir="${build.dir}/${rattleCAD_Version}/image">
+	        <fileset dir="./image"/>
+			</copy>
+			<echo>     ... content of folder ./image was copied.</echo>
+			<echo> </echo>
+			
+			
+			<copy todir="${build.dir}/${rattleCAD_Version}/lib">
+	        <fileset dir="./lib"/>
+			</copy>
+			<echo>     ... content of folder ./lib was copied.</echo>
+			<echo> </echo>
+
+
+			<copy todir="${build.dir}/${rattleCAD_Version}/sample">
+	        <fileset dir="./sample"/>
+			</copy>
+			<echo>     ... content of folder ./sample was copied.</echo>
+			<echo> </echo>
+
+
+			<copy todir="${build.dir}/${rattleCAD_Version}/_style">
+	        <fileset dir="./_style"/>
+			</copy>
+			<echo>     ... content of folder ./_style was copied.</echo>
+			<echo> </echo>
+
+
+			<copy todir="${build.dir}/${rattleCAD_Version}/_test">
+	        <fileset dir="./_test"/>
+			</copy>
+			<echo>     ... content of folder ./_test was copied.</echo>
+			<echo> </echo>
+
+
+			
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil">
+          <filelist dir = "${appUtil_home}" files = "pkgIndex.tcl"/>
+      </copy>
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil/lib">
+          <fileset dir = "${appUtil_home}/lib"/>
+      </copy>   
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil/test">
+          <fileset dir = "${appUtil_home}/test"/>
+      </copy>   
+      <echo>     ... content of folder ${appUtil_home} was copied.</echo>
+      
+      <echo> </echo>
+
+  
+      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry">
+           <filelist dir="${bikeGeometry_home}" files="pkgIndex.tcl"/>
+      </copy>
+      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/lib">
+          <fileset dir="${bikeGeometry_home}/lib"/>
+      </copy>
+      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/etc">
+          <fileset dir="${bikeGeometry_home}/etc"/>
+      </copy>
+      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/test">
+          <fileset dir="${bikeGeometry_home}/test"/>
+      </copy>
+      <echo>     ... content of folder ${bikeGeometry_home} was copied.</echo>
+      
+      <echo> </echo>
+      
+      
+			<copy todir="${build.dir}/${rattleCAD_Version}/lib/app-canvasCAD">
+			    <filelist dir="${canvasCAD_home}" files="pkgIndex.tcl"/>
+			</copy>
+			<copy todir="${build.dir}/${rattleCAD_Version}/lib/app-canvasCAD/lib">
+	        <fileset dir="${canvasCAD_home}/lib"/>
+			</copy>
+			<copy todir="${build.dir}/${rattleCAD_Version}/lib/app-canvasCAD/font">
+	        <fileset dir="${canvasCAD_home}/font"/>
+			</copy>
+			<copy todir="${build.dir}/${rattleCAD_Version}/lib/app-canvasCAD/test">
+	        <fileset dir="${canvasCAD_home}/test"/>
+			</copy>
+			<echo>     ... content of folder ${canvasCAD_home} was copied.</echo>
+			
+			<echo> </echo>
+
+		
+			<copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-extSummary">
+	        <filelist dir = "${extSummary_home}" files = "pkgIndex.tcl"/>
+			</copy>
+			<copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-extSummary/lib">
+	        <fileset dir = "${extSummary_home}/lib"/>
+			</copy>   
+			<copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-extSummary/test">
+	        <fileset dir = "${extSummary_home}/test"/>
+			</copy>   
+			<echo>     ... content of folder ${extSummary_home} was copied.</echo>
+			
+			<echo> </echo>
+	
+			
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv">
+          <filelist dir = "${osEnv_home}" files = "pkgIndex.tcl"/>
+      </copy>
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/lib">
+          <fileset dir = "${osEnv_home}/lib"/>
+      </copy>   
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/etc">
+          <fileset dir = "${osEnv_home}/etc"/>
+      </copy>   
+      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/test">
+          <fileset dir = "${osEnv_home}/test"/>
+      </copy>   
+      <echo>     ... content of folder ${osEnv_home} was copied.</echo>
+      
+      <echo> </echo>
+      
+  
+      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath">
+          <filelist dir="${vectorMath_home}" files="pkgIndex.tcl"/>
+      </copy>
+      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath/lib">
+          <fileset dir="${vectorMath_home}/lib"/>
+      </copy>
+      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath/test">
+          <fileset dir="${vectorMath_home}/test"/>
+      </copy>
+      <echo>     ... content of folder ${vectorMath_home} was copied.</echo>
+      
+      <echo> </echo>
+
+
+			
+			<copy todir="${build.dir}/${rattleCAD_Version}">
+			    <filelist dir = "."   files="${rattleCAD_fileList}"/>  	
+			    	
+			        <!--
+			        <include name="rattleCAD.tcl, help.txt, readme.txt, license.txt, exclusion.txt, icon16.gif, tclkit.ico, tclkit.inf"/>
+			        <exclude name="./.*"/>
+			        -->
+			</copy>
+			<echo>     ... content of folder ./ was copied.</echo>
+			
+			<echo> </echo>
+				
+	</target>
+
+	
+  
+  <target   name = "rattleCAD_test_export_8.5">
+	
+			<echo> </echo>
+			<echo>     ... execute rattleCAD ${build.dir}/${rattleCAD_Version}/main.tcl</echo>
+			<echo> </echo>
+			<exec executable = "${tcl_8.5}"   dir = "${build.dir}/${rattleCAD_Version}"   failonerror = "false"   resultproperty = "return.code">    
+				<arg value = "main.tcl" />
+			</exec>
+
+	</target>
+	
+	<target   name = "rattleCAD_test_export_8.6">
+	
+			<echo> </echo>
+			<echo>     ... execute rattleCAD ${build.dir}/${rattleCAD_Version}/main.tcl</echo>
+			<echo> </echo>
+			<exec executable = "${tcl_8.6}"   dir = "${build.dir}/${rattleCAD_Version}">    
+				<arg value = "main.tcl" />
+			</exec>
+		
+	</target>
+	
+	
+  
+  <target   name = "make_tclstarkit_8.5">
+	
+			<echo> </echo>
+			<echo>     ... make tclkit/starkit ./___build_starkit/make_starkit.tcl</echo>
+			<echo> </echo>
+			<exec executable = "${tcl_8.5}"   dir = "./___build_starkit">    
+				<arg value = "make_starkit.tcl" />
+			</exec>
+	    
+	    <!-- Test if a ${build.dir}/rattleCAD.vfs/rattleCAD.exe exists -->
+		  <available type = "dir"   file = "${build.dir}/rattleCAD.vfs"   property = "isDirAvailable"/>
+		  <fail unless = "isDirAvailable"   message = "     ... ERROR - starkit could not be build">
+		  </fail>
+
+	</target>
+
+  
+  
+	<target   name = "create_batchFile">
+	
+			<echo> </echo>
+			<echo>     ... create batchFiles ./build_starkit/make_batchfile.tcl</echo>
+			<echo> </echo>
+			<exec executable = "${tcl_8.5}"   dir = "./___build_starkit">    
+				<arg value = "make_batchfile.tcl" />
+				<arg value = "${rattleCAD_Version}" />
+			</exec>
+		
+	</target>
+ 
+ 
+	<target   name = "test_batchFile_Tclkit -> rattleCAD_Version.kit">
+	
+			<echo> </echo>
+			<echo>     ... test_Tclkit ./${build.dir}/rattleCAD_${rattleCAD_Version}.kit</echo>
+			<echo> </echo>
+			<exec executable = "${tcl_8.5}"   dir = "${build.dir}/">  
+			    <arg value = "rattleCAD.tcl" />  
+			</exec>
+		
+	</target>		
+
+
+	<target   name = "test_batchFile_Starkit -> rattleCAD_Version.exe">
+	
+			<echo> </echo>
+			<echo>     ... test_batchfile ./${build.dir}/rattleCAD.bat</echo>
+			<echo> </echo>
+			<exec executable = "cmd.exe"   dir = "${build.dir}/">  
+			  <arg value = "/c"/>
+			  <arg value = "rattleCAD.bat" />  
+			</exec>
+		
+	</target>	
+
+
+
+	<target name = "build_zipFile">
+			
+			<echo> </echo>
+			<echo>     ... create zip-file ./${build.dir}/rattleCAD_${rattleCAD_Version}.zip</echo>
+			<echo> </echo>
+		  <copy todir="${build.dir}">
+			    <filelist dir = "."   files="readme.txt, tclkit.ico"/>  	
+			</copy>
+		  <zip destfile = "${build.dir}/rattleCAD_${rattleCAD_Version}.zip" >
+   			 <zipfileset dir = "${build.dir}/${rattleCAD_Version}"   prefix = "${rattleCAD_Version}"/>
+   			 <fileset dir = "${build.dir}"   includes = "readme.txt, tclkit.ico, rattleCAD.tcl, rattleCAD.bat, rattleCAD_${rattleCAD_Version}.kit, rattleCAD_${rattleCAD_Version}.exe"/>
+   	  	 <!-- fileset dir = "${build.dir}"   includes = "readme.txt, tclkit.ico, rattleCAD.tcl, rattleCAD.bat"/-->
+   	  </zip>
+
+	</target>
+	
+	
+	<target   name = "all_done">
+	
+			<echo> </echo>
+			<echo>     ... it's all done</echo>
+			<echo> </echo>
+		
+	</target>	
+  
+  
+  
+  <target   name = "test_tclstarkit">
+	
+			<echo> </echo>
+			<echo>     ... test_tclkit ${build.dir}/rattleCAD${rattleCAD_Version}.kit</echo>
+			<echo> </echo>
+			<exec executable = "${tcl_8.5}"   dir = "${build.dir}">  
+			  <arg value = "rattleCAD${rattleCAD_Version}.kit" />  
+			</exec>
+		
+			<echo> </echo>
+			<echo>     ... test_starkit ${build.dir}/rattleCAD${rattleCAD_Version}.exe</echo>
+			<echo> </echo>
+			<exec executable = "cmd.exe"   dir = "${build.dir}">  
+			  <arg value = "rattleCAD${rattleCAD_Version}.exe" />  
+			</exec>
+		
+	</target>
+	
+	
+</project>
