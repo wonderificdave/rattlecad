@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator:  -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="210mm" height="297mm" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 210 297"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:cc="http://creativecommons.org/ns#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:svg="http://www.w3.org/2000/svg"
+ xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+ xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+ sodipodi:version="0.32"
+ inkscape:version="0.46"
+ sodipodi:docname="dropout_01_right.svg"
+ inkscape:output_extension="org.inkscape.output.svg.inkscape">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#202326;stroke-width:0.0762;stroke-linecap:round;stroke-linejoin:bevel}
+    .str2 {stroke:#2B2828;stroke-width:0.0762}
+    .str1 {stroke:#A36D6C;stroke-width:0.0762;stroke-linecap:round;stroke-linejoin:bevel}
+    .fil0 {fill:none}
+   ]]>
+  </style>
+ </defs>
+
+ <g id="Ebene_x0020_1">
+  <polygon id="polygon10" class="fil0 str0" points="13.3125,306.118 16.5773,306.951 31.744,309.425 37.1943,309.171 38.7643,298.467 33.8367,296.595 28.9918,295.804 24.684,295.099 20.9094,293.145 19.3985,290.908 18.849,288.199 18.8481,288.009 19.3422,282.376 20.4202,277.824 21.7104,274.171 23.3004,270.709 23.716,270.05 24.674,265.264 17.749,261.454 14.4144,264.178 12.8129,266.715 9.4036,271.192 3.9328,277.307 -2.1161,282.644 -6.6768,285.792 -9.416,288.171 -11.3175,291.074 -12.2401,293.633 -12.6182,296.71 -12.3625,299.242 -10.5748,308.137 -10.4764,309.111 -10.7867,310.827 -13.2982,313.609 -15.4647,315.264 -14.2765,316.7 -9.6125,313.7 -5.7306,305.549 -7.3077,298.102 -6.4404,291.506 1.3131,288.522 6.1521,291.126 8.4425,299.155 11.0871,305.183 "/>
+  <line id="line12" class="fil0 str0" x1="31.744" y1="309.425" x2="28.9918" y2= "295.804" />
+  <line id="line14" class="fil0 str0" x1="23.716" y1="270.05" x2="13.0587" y2= "266.326" />
+  <polygon id="polyline16" class="fil0 str0" points="13.573,306.203 11.2144,294.559 10.0352,291.36 8.4911,289.232 7.0107,287.893 4.7055,286.553 2.3186,285.834 0.3818,285.66 -3.0851,286.219 -5.4817,287.351 -7.5935,289.075 -9.315,291.421 -10.3192,293.954 -10.6682,296.71 -10.4509,298.862 -9.0696,305.746 -8.9319,307.109 -9.2275,309.116 -10.6675,311.718 -12.2177,312.863 -13.0882,313.507 -15.4647,315.264 -16.8997,317.421 -17.6124,320.713 -17.2478,323.08 -16.2636,325.145 -14.7221,326.872 -17.2496,329.997 -13.4836,330.549 -10.6641,330.233 -8.151,329.394 -5.9355,328.127 -3.5089,325.898 -2.3775,324.118 -1.7633,322.22 -1.6129,320.655 -1.7418,311.699 -4.9107,296.016 -3.6611,293.531 -1.5485,292.042 0.4709,291.652 2.1247,291.897 3.5466,292.572 4.9892,294.015 6.6556,302.245 8.4875,303.651 11.0871,305.183 "/>
+  <polygon id="polygon18" class="fil0 str0" points="12.8503,287.819 12.4638,288.71 11.5533,289.084 10.5275,288.586 8.2095,286.338 6.091,285.03 5.3801,283.872 5.8117,282.907 8.6621,280.003 11.9354,276.665 12.9002,276.233 13.8187,276.615 14.2002,277.533 14.1545,277.868 13.4073,281.29 13.0054,284.34 "/>
+  <_path id="path20" class="fil0 str1" d="M-9.6125 322.3l0 -3.175m0 4.763l0 7.675m0 -14.025l0 -7.675m-3.175 10.85l-7.675 0m9.2625 0l3.175 0m1.5875 0l7.675 0"/>
+  <polygon id="polygon22" class="fil0 str0" points="-5.1124,320.713 -5.6585,318.582 -7.2855,316.872 -9.6124,316.213 -11.5603,316.658 -13.2244,318.035 -14.1124,320.713 -13.5549,322.871 -12.0318,324.504 -9.6124,325.213 -7.4704,324.669 -5.7654,323.044 "/>
+  <circle id="circle24"  class="fil0 str2" cx="0.403666" cy="296.806" r="5.0466" sodipodi:cx="58.411598" sodipodi:cy="120.791" sodipodi:rx="5.0466499" sodipodi:ry="5.0466499"/>
+  <circle id="center_00" class="fil0 str2" cx="0.403666" cy="296.806" r="5.0466" sodipodi:cx="58.411598" sodipodi:cy="120.791" sodipodi:rx="5.0466499" sodipodi:ry="5.0466499"/>
+ </g>
+</svg>
