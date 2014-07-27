@@ -1653,11 +1653,12 @@
 							set pt_04       [ vectormath::rotateLine       $pt_01  $offset_y [expr 270 - $offsetAngle ] ]
 							    # $cv_Name create circle $pt_04    -radius 5  -outline red    -width 1        -tags __CenterLine__
 							    #
-                                #puts "\n ----------"
-                                #puts "   \$pt_01  $pt_01"
-                                #puts "   \$pt_02  $pt_02"
-                                #puts "   \$pt_04  $pt_04"
-                                #puts " ----------\n"
+                                # puts "\n ----------"
+                                # puts "   \$pt_01  $pt_01"
+                                # puts "   \$pt_02  $pt_02"
+                                # puts "   \$pt_03  $pt_03"
+                                # puts "   \$pt_04  $pt_04"
+                                # puts " ----------\n"
 							    #	
 							set radius          [ vectormath::length $pt_01 $pt_02]
 							    #
@@ -1673,9 +1674,11 @@
 							set dimension_03    [ $cv_Name dimension  length    [ appUtil::flatten_nestedList   $pt_01   $pt_02 ] \
                                                                                     aligned       [expr   40 * $stageScale]    [expr   50 * $stageScale] \
                                                                                     gray50 ]
-							set dimension_04    [ $cv_Name dimension  length    [ appUtil::flatten_nestedList   $pt_03 $pt_01 $pt_02 ] \
+							if { $direction == {horizontal}} {
+                            set dimension_04    [ $cv_Name dimension  length    [ appUtil::flatten_nestedList   $pt_03 $pt_01 $pt_02 ] \
                                                                                     perpendicular [expr -110 * $stageScale]    [expr   30 * $stageScale] \
                                                                                     gray50 ]
+                            }
 																					
 							    #																								
                             if {$updateCommand != {}} { 
