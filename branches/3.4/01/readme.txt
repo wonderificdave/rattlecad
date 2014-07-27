@@ -1,5 +1,13 @@
 
 
+3.4.01.65  - 2014.07.27
+-------------------------------------------------------------------------------
+    feature: 
+        ... RearDerailleur Mount:
+            ... dimension in direction of Chainstay on horizontal now depending
+                on direction of dropout (horiozontal only)
+
+
 3.4.01.64  - 2014.06.21
 -------------------------------------------------------------------------------
     feature: 
