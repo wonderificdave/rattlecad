@@ -1,5 +1,12 @@
 
 
+3.4.01.66  - 2014.10.09
+-------------------------------------------------------------------------------
+    feature: 
+        ... add script to check OS Environment to run rattleCAD
+            ... rattleCAD_checkEnv.tcl (tested for Linux and Windows)
+
+
 3.4.01.65  - 2014.07.27
 -------------------------------------------------------------------------------
     feature: 
