@@ -44,7 +44,7 @@ exec tclsh "$0" "$@"
   #
   ###########################################################################
 
-    puts "\n\n ====== I N I T ============================ \n\n"
+    puts "\n\n====== I N I T ============================ \n\n"
         
         # -- ::APPL_Config(BASE_Dir)  ------
     set BASE_Dir  [file normalize $::argv0]
@@ -64,26 +64,27 @@ exec tclsh "$0" "$@"
 
 
         # -- Libraries  ---------------
+    variable packageStatus {}
+    variable osEnvSataus   {}
+    
+     
+        # -- Libraries  ---------------
     lappend auto_path           [file join $BASE_Dir lib]
     lappend auto_path           [file dirname $BASE_Dir]
 
         # puts "  \$auto_path  $auto_path"
-    puts "-- auto_path ----------"
+    puts " -- auto_path ----------"
     foreach dir $auto_path {
         puts "      ... $dir"
     }
     puts ""
         
-        # -- Packages -----------------
-    package require   osEnv
-    # package require   rattleCAD     3.4 
-    
     proc check___Common {} {
-        puts "\n -- common ------------"
+        puts "\n   -- common ------------"
         check_Package Tk
         check_Package BWidget
         check_Package tdom   
-        check_Package TclOO 
+        # check_Package TclOO 
         
         
         check_Package  
@@ -92,15 +93,20 @@ exec tclsh "$0" "$@"
     }
     
     proc check__Windows {} {
-        puts "\n --- windows ----------"
+        puts "\n   --- windows ----------"
         check_Package registry
         check_Package log
     }
     
     proc check_Package {{packageName {}}} {
-        if {$packageName != {}} {
+        variable packageStatus
+	    #
+	if {$packageName != {}} {
             if {[catch {set packageVersion   [package require $packageName]} eID]} {
-	        set packageVersion "... n/a  ->   sudo apt-get install $packageName"
+	          # set packageVersion "... n/a  ->   sudo apt-get install $packageName"
+		set packageVersion "n/a "
+		lappend packageStatus $packageName
+		  # puts "      ... check_Package: \$packageStatus $packageStatus"
             }
             puts [format "     tcl package   %-15s  %s" $packageName  $packageVersion]
         }
@@ -127,12 +133,13 @@ exec tclsh "$0" "$@"
         puts "\n -- ghostScript -------"
         puts "     [osEnv::get_ghostscriptExec]"
     }
+
     
-        # -- check Environment
-    puts "\n -- osEnv -------------"
-    osEnv::init_osEnv
+  
+    
+        # -- check tcl packages
+    puts "\n -- tcl-packages ------"
     puts ""
-    
         #
     puts "     $tcl_platform(platform)"
     puts ""
@@ -142,14 +149,55 @@ exec tclsh "$0" "$@"
                     # -- TclTk
                 check___Common
                 check__Windows
+            }
+        unix {
+                    # -- TclTk
+                check___Common
+            }
+        default {    
+                    # -- TclTk
+                check___Common
+
+            }   
+    }
+      
+      
+      
+      
+        # -- check status 
+    if {$packageStatus != {}} {
+        puts "\n\n====== E R R O R ========================== \n"
+	puts "   ... missing packages \n"
+	  # puts "\n\n====== S T A T U S :  E R R O R ===========\n"
+	    #
+	foreach packageName $packageStatus {
+	      # puts "     $packageName  -> sudo apt-get install $packageName"
+	    puts [format "     %-15s  -> sudo apt-get install %s"  $packageName $packageName]
+	}
+	puts "\n"
+        exit
+    }
+
+      
+   
+    
+        # -- check Environment
+    package require   osEnv
+        # package require   rattleCAD     3.4 
+    
+    puts "\n\n\n -- osEnv -------------"
+    osEnv::init_osEnv
+    puts ""
+    
+        #
+    switch $tcl_platform(platform) {
+        windows {    
                     # -- mimeTypes
                 check_WindowsMimeTypes
                     # -- ghostScript
                 check_ghostScript
             }
         unix {
-                    # -- TclTk
-                check___Common
                     # -- mimeTypes
                 foreach appName {firefox evince evince nedit sh gs} {
                     set defaultApp {}
@@ -160,12 +208,31 @@ exec tclsh "$0" "$@"
                 check_ghostScript
             }
         default {    
-                    # -- TclTk
-                check___Common
                     # -- ghostScript
                 check_ghostScript
             }   
     }
+ 
+       
+        # -- check status 
+    if {$packageStatus == {}} {
+        puts "\n\n====== O K ================================ \n"
+	puts "   ... all required packages installed!\n"
+	
     
     
+    } else {
+        puts "\n\n====== E R R O R ========================== \n"
+	puts "   ... missing packages \n"
+	  # puts "\n\n====== S T A T U S :  E R R O R ===========\n"
+	    #
+	foreach packageName $packageStatus {
+	      # puts "     $packageName  -> sudo apt-get install $packageName"
+	    puts [format "     %-15s  -> sudo apt-get install %s"  $packageName $packageName]
+	}
+	puts "\n"
+        exit
+    }
+ 
+ 
     exit
