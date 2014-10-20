@@ -533,7 +533,8 @@
             variable SeatPost
             variable Steerer
 
-                    set vct_st      [ vectormath::parallel          $SeatTube(BottomBracket) $SeatPost(SeatTube) [expr 0.5*$SeatTube(DiameterTT)] ]
+                    set vct_st      [ vectormath::parallel          $SeatTube(DownTube) $SeatPost(SeatTube) [expr 0.5*$SeatTube(DiameterTT)] ]
+                    # set vct_st    [ vectormath::parallel          $SeatTube(BottomBracket) $SeatPost(SeatTube) [expr 0.5*$SeatTube(DiameterTT)] ]
 
             project::setValue Result(Tubes/SeatTube/Direction)    direction     $SeatTube(Direction)     ;# direction vector of SeatTube
 
@@ -576,16 +577,19 @@
                     set polygon     [ lappend polygon [lindex $vct_22 0] [lindex $vct_11 1]]
             project::setValue Result(Tubes/TopTube)                 polygon     [project::flatten_nestedList $polygon]
             
-                # 
+                        # 
                     set pt_00       [ vectormath::intersectPerp     $SeatTube(BottomBracket) $SeatPost(SeatTube)   $pt_st ]
                     set pt_01       [ vectormath::addVector         $pt_00   $SeatTube(Direction)  $SeatTube(Extension) ]
                 set SeatTube(TopTube)        $pt_01
+            project::setValue Result(Tubes/SeatTube/End)        position    $SeatTube(TopTube)
+            project::setValue Result(Tubes/SeatTube/CenterLine) value [list [format "%s,%s %s,%s" [lindex $SeatTube(BottomBracket) 0] [lindex $SeatTube(BottomBracket) 1] \
+                                                                                                  [lindex $SeatTube(TopTube)       0] [lindex $SeatTube(TopTube)       1] ] ]
                 
                 # --- get length
-            set l_00  0
-            set l_01  [expr $l_00 + [ vectormath::length $pt_10 $pt_11 ]]
-            set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
-            set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_13 ]]
+                    set l_00  0
+                    set l_01  [expr $l_00 + [ vectormath::length $pt_10 $pt_11 ]]
+                    set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
+                    set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_13 ]]
                 # --- side View
             project::setValue Result(Tubes/TopTube/Profile/xz) value   \
                                         [list [format "%s,%s %s,%s %s,%s %s,%s" \
@@ -598,6 +602,56 @@
               # --- top View
             project::setValue Result(Tubes/TopTube/Profile/xy) value [list [project::getValue Result(Tubes/TopTube/Profile/xz) value]]
               #
+
+
+                        #
+                    # set SeatTube(Direction)        [ vectormath::unifyVector $SeatTube(DownTube) $SeatPost(SeatTube) ]
+                        #
+            # 0.65 -- project::setValue Result(Tubes/SeatTube/Start)        position    $pt_is
+                        #
+                    set pt_01       $SeatTube(TopTube)
+                    
+                    set length      [ vectormath::length            $SeatTube(BottomBracket) $pt_01 ]
+                    set pt_10       $SeatTube(BottomBracket)
+                    set pt_11       [ vectormath::addVector         $pt_10  $SeatTube(Direction)  [expr 0.5*($length - $SeatTube(TaperLength)) ] ]
+                    set pt_12       [ vectormath::addVector         $pt_11  $SeatTube(Direction)  $SeatTube(TaperLength) ]
+                    set pt_13       $pt_01
+                    set vct_10      [ vectormath::parallel          $pt_10 $pt_11 [expr 0.5*$SeatTube(DiameterBB)] right ]
+                    set vct_11      [ vectormath::parallel          $pt_10 $pt_11 [expr 0.5*$SeatTube(DiameterBB)] left  ]
+                    set vct_21      [ vectormath::parallel          $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] right ]
+                    set vct_22      [ vectormath::parallel          $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] left  ]
+                        #
+            project::setValue Result(Tubes/SeatTube/Start)      position    $SeatTube(BottomBracket)
+                        
+                        #
+                    set is_st_dt    [ tube_intersection    $SeatTube(DiameterBB) $SeatTube(Direction)  $DownTube(DiameterBB)  $DownTube(Direction)  $SeatTube(DownTube) right ]
+                        #
+                    set polygon     [ list  [lindex $vct_10 1]  [lindex $vct_21 0] \
+                                            [lindex $vct_21 1]  [lindex $vct_22 1] \
+                                            [lindex $vct_22 0]  [lindex $vct_11 1] ]
+                    lappend polygon $is_st_dt
+                        #
+            project::setValue Result(Tubes/SeatTube)                polygon     [project::flatten_nestedList $polygon]            
+                        #
+                        
+                        # --- get length
+            set l_00  0
+            set l_01  [expr $l_00 + [ vectormath::length $pt_10 $pt_11 ]]
+            set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
+            set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_13 ]]
+                        # --- side View
+            project::setValue Result(Tubes/SeatTube/Profile/xz) value   \
+                                        [list [format "%s,%s %s,%s %s,%s %s,%s" \
+                                                $l_00  [expr 0.5*$SeatTube(DiameterBB)] \
+                                                $l_01  [expr 0.5*$SeatTube(DiameterBB)] \
+                                                $l_02  [expr 0.5*$SeatTube(DiameterTT)] \
+                                                $l_03  [expr 0.5*$SeatTube(DiameterTT)] \
+                                            ]
+                                        ]
+                        # --- top View
+            project::setValue Result(Tubes/SeatTube/Profile/xy) value [list [project::getValue Result(Tubes/SeatTube/Profile/xz) value]]
+                        #
+         
     }
 
 
@@ -658,10 +712,10 @@
                         #
                         
                         # --- get length
-            set l_00  0
-            set l_01  [expr $l_00 + [ vectormath::length $pt_10 $pt_11 ]]
-            set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
-            set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_ht ]]
+                    set l_00  0
+                    set l_01  [expr $l_00 + [ vectormath::length $pt_10 $pt_11 ]]
+                    set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
+                    set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_ht ]]
                         # --- side View
             project::setValue Result(Tubes/DownTube/Profile/xz) value   \
                                         [list [format "%s,%s %s,%s %s,%s %s,%s" \
@@ -674,13 +728,18 @@
                         # --- top View
             project::setValue Result(Tubes/DownTube/Profile/xy) value [list [project::getValue Result(Tubes/DownTube/Profile/xz) value]]
                         #                   
+            return
+            
+            
             
                         #
                     set SeatTube(Direction)        [ vectormath::unifyVector $SeatTube(DownTube) $SeatPost(SeatTube) ]
                         #
             # 0.65 -- project::setValue Result(Tubes/SeatTube/Start)        position    $pt_is
                         #
-                    set pt_01       $SeatTube(TopTube)
+                    set pt_01       $SeatPost(SeatTube)
+                                    # $SeatTube(TopTube)
+                    
                     set length      [ vectormath::length            $SeatTube(BottomBracket) $pt_01 ]
                     set pt_10       $SeatTube(BottomBracket)
                     set pt_11       [ vectormath::addVector         $pt_10  $SeatTube(Direction)  [expr 0.5*($length - $SeatTube(TaperLength)) ] ]
@@ -692,11 +751,7 @@
                     set vct_22      [ vectormath::parallel          $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] left  ]
                         #
             project::setValue Result(Tubes/SeatTube/Start)      position    $SeatTube(BottomBracket)
-            project::setValue Result(Tubes/SeatTube/End)        position    $SeatTube(TopTube)
-                        #
-            project::setValue Result(Tubes/SeatTube/CenterLine) value [list [format "%s,%s %s,%s" [lindex $SeatTube(BottomBracket) 0] [lindex $SeatTube(BottomBracket) 1] \
-                                                                                                  [lindex $SeatTube(TopTube)       0] [lindex $SeatTube(TopTube)       1] ] ]
-            
+                        
                         #
                     set is_st_dt    [ tube_intersection    $SeatTube(DiameterBB) $SeatTube(Direction)  $DownTube(DiameterBB)  $DownTube(Direction)  $SeatTube(DownTube) right ]
                         #
@@ -1088,31 +1143,37 @@
                     set pt_10       $pt_01
                     set pt_11       $pt_02
                     set pt_12       $TopTube(SeatTube)
-                    set pt_20       [ vectormath::addVector $SeatPost(SeatTube) [ vectormath::unifyVector $SeatPost(SeatTube) {0 0} 75.0 ] ]
+                        #
+                    set pt_13       $SeatTube(DownTube)
+                    set vct_ST      [ vectormath::subVector $TopTube(SeatTube) $SeatTube(DownTube)] 
+                        #
+                    set pt_20       [ vectormath::addVector $SeatPost(SeatTube) [ vectormath::unifyVector $SeatPost(SeatTube) $SeatTube(DownTube) 75.0 ] ]
+                        # set pt_20 [ vectormath::addVector $SeatPost(SeatTube) [ vectormath::unifyVector $SeatPost(SeatTube) {0 0} 675.0 ] ]
                     set vct_10      [ vectormath::parallel  $pt_12 $pt_20 [expr 0.5 * $SeatPost(Diameter)] ]
                     set vct_11      [ vectormath::parallel  $pt_12 $pt_20 [expr 0.5 * $SeatPost(Diameter)] left]
                     set vct_15      [ vectormath::parallel  $pt_11 $pt_12 [expr 0.5 * $SeatPost(Diameter) -5] left]
+                    
                     # puts " -> SeatPost"
-                    set polyline    "13.5989,-1.3182 13.4789,-2.5115 13.1643,-5.6659 12.5937,-9.0769 11.7884,-12.7185 10.9667,-15.7283 10.1936,-18.175 9.5246,-20.0034 8.5409,-22.3099 7.2154,-24.9485 5.5208,-27.773 3.43,-30.6374 1.5276,-32.7944 -0.3539,-34.7937 -2.347,-36.636 -4.3817,-38.2747 -6.707,-39.8938 -8.7112,-41.1006 -11.212,-42.3902 -13.5496,-43.4003 -16.29,-44.3671 -18.7682,-45.0546 -21.3969,-45.5995 -24.5756,-46.0134 -28.0195,-46.1561 -31.8065,-45.983 -34.8534,-45.5653 -37.9101,-44.8966 -40.1926,-44.227 -42.3258,-43.4623 -43.5886,-42.6367 -44.1867,-42.1325 -44.3757,-41.3807 -43.9618,-39.6722 -43.681,-38.9927 -43.2884,-38.7329 -42.7931,-38.5496 -42.283,-38.5839 -41.8194,-38.7683 -41.1634,-39.1064 -39.6321,-39.8205 -37.8997,-40.5087 -35.5587,-41.2516 -33.218,-41.7936 -30.7338,-42.162 -28.6077,-42.315 -25.9892,-42.3033 -23.1653,-42.042 -20.4089,-41.5287 -17.7059,-40.7334 -15.0552,-39.7382 -12.2211,-38.3082 -9.8302,-36.7916 -7.7268,-35.1785 -5.9291,-33.5486 -4.295,-31.8174 -2.9598,-30.1792 -1.5385,-28.1425 -0.794,-25.3638 -1.1078,-22.226 -0.794,-25.3638 -1.5385,-28.1425 -2.9598,-30.1792 -4.295,-31.8174 -5.9291,-33.5486 -7.7268,-35.1785 -9.8302,-36.7916 -12.2211,-38.3082 -15.0552,-39.7382 -17.7059,-40.7334 -20.4089,-41.5287 -23.1653,-42.042 -25.9892,-42.3033 -28.6077,-42.315 -30.7338,-42.162 -33.218,-41.7936 -35.5587,-41.2516 -37.8997,-40.5087 -39.6321,-39.8205 -41.1634,-39.1064 -41.8194,-38.7683 -42.283,-38.5839 -42.7931,-38.5496 -43.2884,-38.7329 -43.681,-38.9927 -43.4595,-38.4572 -43.1745,-38.0921 -42.8444,-37.8607 -42.3437,-37.6034 -41.6384,-37.325 -40.8501,-37.0395 -40.0765,-36.7304 -39.303,-36.3718 -38.5153,-35.9378 -37.6988,-35.4023 -34.0397,-32.9438 -30.1695,-30.1224 -26.3083,-26.7006 -21.7663,-21.7594 -18.0718,-16.7489 -16.5658,-14.4083 -15.8413,-12.8905 -15.1253,-11.0864 -14.6535,-9.7442 -14.1928,-8.2413 -13.8083,-6.6772 -13.5652,-5.1515 -13.5287,-3.7637 -13.601,1.3182"
+                    
+                    # set polyline  "13.5989,-1.3182 13.4789,-2.5115 13.1643,-5.6659 12.5937,-9.0769 11.7884,-12.7185 10.9667,-15.7283 10.1936,-18.175 9.5246,-20.0034 8.5409,-22.3099 7.2154,-24.9485 5.5208,-27.773 3.43,-30.6374 1.5276,-32.7944 -0.3539,-34.7937 -2.347,-36.636 -4.3817,-38.2747 -6.707,-39.8938 -8.7112,-41.1006 -11.212,-42.3902 -13.5496,-43.4003 -16.29,-44.3671 -18.7682,-45.0546 -21.3969,-45.5995 -24.5756,-46.0134 -28.0195,-46.1561 -31.8065,-45.983 -34.8534,-45.5653 -37.9101,-44.8966 -40.1926,-44.227 -42.3258,-43.4623 -43.5886,-42.6367 -44.1867,-42.1325 -44.3757,-41.3807 -43.9618,-39.6722 -43.681,-38.9927 -43.2884,-38.7329 -42.7931,-38.5496 -42.283,-38.5839 -41.8194,-38.7683 -41.1634,-39.1064 -39.6321,-39.8205 -37.8997,-40.5087 -35.5587,-41.2516 -33.218,-41.7936 -30.7338,-42.162 -28.6077,-42.315 -25.9892,-42.3033 -23.1653,-42.042 -20.4089,-41.5287 -17.7059,-40.7334 -15.0552,-39.7382 -12.2211,-38.3082 -9.8302,-36.7916 -7.7268,-35.1785 -5.9291,-33.5486 -4.295,-31.8174 -2.9598,-30.1792 -1.5385,-28.1425 -0.794,-25.3638 -1.1078,-22.226 -0.794,-25.3638 -1.5385,-28.1425 -2.9598,-30.1792 -4.295,-31.8174 -5.9291,-33.5486 -7.7268,-35.1785 -9.8302,-36.7916 -12.2211,-38.3082 -15.0552,-39.7382 -17.7059,-40.7334 -20.4089,-41.5287 -23.1653,-42.042 -25.9892,-42.3033 -28.6077,-42.315 -30.7338,-42.162 -33.218,-41.7936 -35.5587,-41.2516 -37.8997,-40.5087 -39.6321,-39.8205 -41.1634,-39.1064 -41.8194,-38.7683 -42.283,-38.5839 -42.7931,-38.5496 -43.2884,-38.7329 -43.681,-38.9927 -43.4595,-38.4572 -43.1745,-38.0921 -42.8444,-37.8607 -42.3437,-37.6034 -41.6384,-37.325 -40.8501,-37.0395 -40.0765,-36.7304 -39.303,-36.3718 -38.5153,-35.9378 -37.6988,-35.4023 -34.0397,-32.9438 -30.1695,-30.1224 -26.3083,-26.7006 -21.7663,-21.7594 -18.0718,-16.7489 -16.5658,-14.4083 -15.8413,-12.8905 -15.1253,-11.0864 -14.6535,-9.7442 -14.1928,-8.2413 -13.8083,-6.6772 -13.5652,-5.1515 -13.5287,-3.7637 -13.601,1.3182"
+                    # set polyline  "0,50 [expr -1.0*$SeatPost(PivotOffset)],0 [expr -1.0*$SeatPost(PivotOffset)],50 "
+                        #
                     set polyline    "12.6235,-1.2235 12.6243,-1.4196 12.5121,-2.331 12.2201,-5.2588 11.6905,-8.4246 10.9431,-11.8045 10.1805,-14.598 9.4629,-16.8689 8.842,-18.5659 7.929,-20.7067 6.6987,-23.1557 5.1259,-25.7772 3.1854,-28.4358 1.4197,-30.4377 -0.3266,-32.2934 -2.1765,-34.0033 -4.065,-35.5242 -6.2232,-37.027 -8.0833,-38.147 -10.4044,-39.344 -12.574,-40.2815 -15.1175,-41.1788 -17.4176,-41.8169 -19.8574,-42.3226 -22.8077,-42.7068 -26.0041,-42.8392 -29.519,-42.6786 -32.3469,-42.2909 -35.184,-41.6703 -37.3024,-41.0488 -39.2823,-40.339 -40.4544,-39.5728 -41.0095,-39.1048 -41.1849,-38.407 -40.8008,-36.8213 -40.5401,-36.1906 -40.3753,-36.0544 -40.1758,-35.9495 -39.946,-35.8356 -39.716,-35.7794 -39.4541,-35.7718 -39.2426,-35.8112 -39.0317,-35.8909 -38.8123,-35.9823 -38.2035,-36.2962 -36.7822,-36.9589 -35.1743,-37.5977 -33.0015,-38.2872 -30.829,-38.7902 -28.5234,-39.1322 -26.55,-39.2742 -24.1197,-39.2633 -21.4987,-39.0208 -18.9404,-38.5444 -16.4317,-37.8062 -13.9714,-36.8825 -11.341,-35.5553 -9.1219,-34.1477 -7.1697,-32.6505 -5.5012,-31.1377 -3.9845,-29.531 -2.7452,-28.0105 -1.4261,-26.1201 -0.7351,-23.5411 -1.0263,-20.6288 -0.7351,-23.5411 -1.4261,-26.1201 -2.7452,-28.0105 -3.9845,-29.531 -5.5012,-31.1377 -7.1697,-32.6505 -9.1219,-34.1477 -11.341,-35.5553 -13.9714,-36.8825 -16.4317,-37.8062 -18.9404,-38.5444 -21.4987,-39.0208 -24.1197,-39.2633 -26.55,-39.2742 -28.5234,-39.1322 -30.829,-38.7902 -33.0015,-38.2872 -35.1743,-37.5977 -36.7822,-36.9589 -38.2035,-36.2962 -38.8123,-35.9823 -39.0317,-35.8909 -39.2426,-35.8112 -39.4541,-35.7718 -39.716,-35.7794 -39.946,-35.8356 -40.1758,-35.9495 -40.3876,-36.0645 -40.5401,-36.1906 -40.3346,-35.6936 -40.07,-35.3547 -39.7637,-35.14 -39.2989,-34.9012 -38.6443,-34.6428 -37.9127,-34.3778 -37.1947,-34.0909 -36.4768,-33.7581 -35.7457,-33.3553 -34.9878,-32.8582 -31.5917,-30.5764 -27.9996,-27.9578 -24.4159,-24.7819 -20.2003,-20.1957 -16.7713,-15.5453 -15.3735,-13.3729 -14.7011,-11.9642 -14.0365,-10.2897 -13.5986,-9.044 -13.171,-7.6491 -12.8142,-6.1974 -12.5885,-4.7813 -12.5546,-3.4932 -12.6218,1.2235" 
                     
-                    
-                    
+
                     set headGeom  {}
                     foreach {xy}   $polyline {
                         foreach {x y} [split $xy ,] break;
                         lappend headGeom $x [expr -1.0 * $y]
                     }
-                        # puts $headGeom
-                    set vct_30      [ vectormath::unifyVector $SeatPost(SeatTube) {0 0} 48.5 ]
-                    set vct_31      [ vectormath::unifyVector {0 0} $SeatTube(Direction) $SeatPost(PivotOffset) ]
-                      # set vct_31      [ vectormath::unifyVector {0 0} $SeatTube(Direction) $SeatPost(PivotOffset) ]
-                    set vct_32      [ vectormath::addVector $vct_30 $vct_31]
-                    set pt_30       [ vectormath::addVector $SeatPost(SeatTube) $vct_32 ]
-                      # set pt_30       [ vectormath::addVector $SeatPost(SeatTube) [ vectormath::unifyVector $SeatPost(SeatTube) {0 0} 52.5 ] ]
-
-                    set headGeom    [ vectormath::addVectorPointList  $pt_30  [ vectormath::rotatePointList {0 0} $headGeom [expr 90 - $SeatTube(Angle)] ] ]
-                        # puts $headGeom
+                        # -- correction of polyline position
+                    set headGeom    [ vectormath::addVectorPointList {0 -10} $headGeom ]
+                        # -- align to seattube
+                    set headGeom    [ vectormath::rotatePointList    {0 0} $headGeom [expr 90 - $SeatTube(Angle)] ]
+                        # -- position seatpost
+                    set headGeom    [ vectormath::addVectorPointList  $SeatPost(SeatTube)  $headGeom ]
+                        
+                        
                     set head_P1     [ lrange $headGeom 0 1 ]
                     set head_P2     [ lrange $headGeom end-1 end ]
 

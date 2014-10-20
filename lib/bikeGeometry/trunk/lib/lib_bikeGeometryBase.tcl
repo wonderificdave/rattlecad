@@ -363,10 +363,10 @@
             get_HeadTube
 
                 #
-            get_TopTube_SeatTube
-
-                #
             get_DownTube_SeatTube
+            
+                #
+            get_TopTube_SeatTube
 
                 #
             get_SeatStay
