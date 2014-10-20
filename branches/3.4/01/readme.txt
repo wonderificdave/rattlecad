@@ -1,9 +1,16 @@
 
 
+3.4.01.68  - 2014.10.19
+-------------------------------------------------------------------------------
+    debug: 
+        ... debug and reorganize creation of SeatTube and SeatPost
+            ... error occurred on SeatTube Offset at BottomBracket
+
+
 3.4.01.67  - 2014.10.10
 -------------------------------------------------------------------------------
     debug: 
-        ... uodated script to check OS Environment to run rattleCAD
+        ... updated script to check OS Environment to run rattleCAD
             ... rattleCAD_checkEnv.tcl (tested for Linux and Windows)
 
 
