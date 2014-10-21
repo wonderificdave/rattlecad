@@ -51,8 +51,11 @@
  # 0.66 fill Result/Length/...Wheel/Diameter bikeGeometry::fill_resultValues 
  # 0.67 fill Result/Tubes/ForkBlade/... bikeGeometry::get_Fork / get_ForkBlade
  # 0.68 debug seatpost-rendering
+ # 0.69 refactor replace get_basePoints by 
+ #          get_RearWheel, get_FrontWheel, get_GeometryRear
+ #          get_GeometryCenter, get_GeometryFront, get_BoundingBox
  
- package provide bikeGeometry 0.68
+ package provide bikeGeometry 0.69
 
  namespace eval bikeGeometry {
 

@@ -103,7 +103,7 @@
 
                 #
                 # --- get BottomBracket (1)
-            set BottomBracket(depth)    $project::Custom(BottomBracket/Depth)
+            # get_GeometryCenter    set BottomBracket(depth)    $project::Custom(BottomBracket/Depth)
             set BottomBracket(outside)  $project::Lugs(BottomBracket/Diameter/outside)
             set BottomBracket(inside)   $project::Lugs(BottomBracket/Diameter/inside)
             set BottomBracket(width)    $project::Lugs(BottomBracket/Width)
@@ -116,106 +116,106 @@
 
                 #
                 # --- get RearWheel
-            set RearWheel(RimDiameter)     $project::Component(Wheel/Rear/RimDiameter)
-            set RearWheel(RimHeight)       $project::Component(Wheel/Rear/RimHeight)
-            set RearWheel(TyreHeight)      $project::Component(Wheel/Rear/TyreHeight)
-            set RearWheel(Radius)          [ expr 0.5*$RearWheel(RimDiameter) + $RearWheel(TyreHeight) ]
-            set RearWheel(TyreWidthRadius) $project::Component(Wheel/Rear/TyreWidthRadius)
-            set RearWheel(DistanceBB)      $project::Custom(WheelPosition/Rear)
-            #set RearWheel(Distance_X)     [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
-            set RearWheel(Distance_X)      [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
-            set RearWheel(Position)        [ list [expr -1.0 * $RearWheel(Distance_X)] $project::Custom(BottomBracket/Depth) ]
-            set RearWheel(HubWidth)        $project::Component(Wheel/Rear/HubWidth)
-                # set RearWheel(Distance_X) 450
-
+            # get_RearWheel     set RearWheel(RimDiameter)     $project::Component(Wheel/Rear/RimDiameter)
+            # get_RearWheel     set RearWheel(RimHeight)       $project::Component(Wheel/Rear/RimHeight)
+            # get_RearWheel     set RearWheel(TyreHeight)      $project::Component(Wheel/Rear/TyreHeight)
+            # get_GeometryRear  set RearWheel(Radius)          [ expr 0.5*$RearWheel(RimDiameter) + $RearWheel(TyreHeight) ]
+            # get_RearWheel     set RearWheel(TyreWidthRadius) $project::Component(Wheel/Rear/TyreWidthRadius)
+            # get_RearWheel     set RearWheel(DistanceBB)      $project::Custom(WheelPosition/Rear)
+            # get_RearWheel     set RearWheel(Distance_X)      [ expr sqrt(pow($RearWheel(DistanceBB),2)  - pow($project::Custom(BottomBracket/Depth),2)) ]
+            # get_GeometryRear  set RearWheel(Position)        [ list [expr -1.0 * $RearWheel(Distance_X)] $project::Custom(BottomBracket/Depth) ]
+            # get_RearWheel     set RearWheel(HubWidth)        $project::Component(Wheel/Rear/HubWidth)
+            
                 #
                 # --- get BottomBracket (2)
-            set BottomBracket(height)    [ expr $RearWheel(Radius) - $project::Custom(BottomBracket/Depth) ]
-            set BottomBracket(Ground)    [ list 0    [expr - $RearWheel(Radius) + $project::Custom(BottomBracket/Depth) ] ]
+            # set BottomBracket(height)    [ expr $RearWheel(Radius) - $project::Custom(BottomBracket/Depth) ]
+            # set BottomBracket(Ground)    [ list 0    [expr - $RearWheel(Radius) + $project::Custom(BottomBracket/Depth) ] ]
 
                 #
                 # --- get FrontWheel
-            set FrontWheel(RimDiameter) $project::Component(Wheel/Front/RimDiameter)
-            set FrontWheel(RimHeight)   $project::Component(Wheel/Front/RimHeight)
-            set FrontWheel(TyreHeight)  $project::Component(Wheel/Front/TyreHeight)
-            set FrontWheel(Radius)      [ expr 0.5*$FrontWheel(RimDiameter) + $FrontWheel(TyreHeight) ]
-            set FrontWheel(Distance_Y)  [ expr $project::Custom(BottomBracket/Depth) - $RearWheel(Radius) + $FrontWheel(Radius) ]
+            # get_FrontWheel    set FrontWheel(RimDiameter) $project::Component(Wheel/Front/RimDiameter)
+            # get_FrontWheel    set FrontWheel(RimHeight)   $project::Component(Wheel/Front/RimHeight)
+            # get_FrontWheel    set FrontWheel(TyreHeight)  $project::Component(Wheel/Front/TyreHeight)
+            # get_FrontWheel    set FrontWheel(Radius)      [ expr 0.5*$FrontWheel(RimDiameter) + $FrontWheel(TyreHeight) ]
+            # get_FrontWheel    set FrontWheel(Distance_Y)  [ expr $project::Custom(BottomBracket/Depth) - $RearWheel(Radius) + $FrontWheel(Radius) ]
 
                 #
                 # --- get HandleBarMount - Position
-            set HandleBar(Distance)     $project::Personal(HandleBar_Distance)
-            set HandleBar(Height)       $project::Personal(HandleBar_Height)
-            set HandleBar(Position)     [ list $HandleBar(Distance) $HandleBar(Height) ]
+            # get_GeometryFront     set HandleBar(Distance)     $project::Personal(HandleBar_Distance)
+            # get_GeometryFront     set HandleBar(Height)       $project::Personal(HandleBar_Height)
+            # get_GeometryFront     set HandleBar(Position)     [ list $HandleBar(Distance) $HandleBar(Height) ]
 
 
                 #
                 # --- get Fork -----------------------------
-            set Fork(Height)                $project::Component(Fork/Height)
-            set Fork(Rake)                  $project::Component(Fork/Rake)
-            set Fork(BladeWith)             $project::Component(Fork/Blade/Width)
-            set Fork(BladeDiameterDO)       $project::Component(Fork/Blade/DiameterDO)
-            set Fork(BladeTaperLength)      $project::Component(Fork/Blade/TaperLength)
-            set Fork(BladeBendRadius)       $project::Component(Fork/Blade/BendRadius)
-            set Fork(BladeEndLength)        $project::Component(Fork/Blade/EndLength)
-            set Fork(BladeOffsetCrown)      $project::Component(Fork/Crown/Blade/Offset)
-            set Fork(BladeOffsetCrownPerp)  $project::Component(Fork/Crown/Blade/OffsetPerp)
-            set Fork(BladeOffsetDO)         $project::Component(Fork/DropOut/Offset)
-            set Fork(BladeOffsetDOPerp)     $project::Component(Fork/DropOut/OffsetPerp)
-            set Fork(BrakeAngle)            $project::Component(Fork/Crown/Brake/Angle)
-            set Fork(BrakeOffset)           $project::Component(Fork/Crown/Brake/Offset)
+            # get_GeometryFront     set Fork(Height)                $project::Component(Fork/Height)
+            # get_GeometryFront     set Fork(Rake)                  $project::Component(Fork/Rake)
+            # get_Fork              set Fork(BladeWith)             $project::Component(Fork/Blade/Width)
+            # get_Fork              set Fork(BladeDiameterDO)       $project::Component(Fork/Blade/DiameterDO)
+            # get_Fork              set Fork(BladeTaperLength)      $project::Component(Fork/Blade/TaperLength)
+            # get_Fork              set Fork(BladeBendRadius)       $project::Component(Fork/Blade/BendRadius)
+            # get_Fork              set Fork(BladeEndLength)        $project::Component(Fork/Blade/EndLength)
+            # get_Fork              set Fork(BladeOffsetCrown)      $project::Component(Fork/Crown/Blade/Offset)
+            # get_Fork              set Fork(BladeOffsetCrownPerp)  $project::Component(Fork/Crown/Blade/OffsetPerp)
+            # get_Fork              set Fork(BladeOffsetDO)         $project::Component(Fork/DropOut/Offset)
+            # get_Fork              set Fork(BladeOffsetDOPerp)     $project::Component(Fork/DropOut/OffsetPerp)
+            # get_Fork              set Fork(BrakeAngle)            $project::Component(Fork/Crown/Brake/Angle)
+            # get_Fork              set Fork(BrakeOffset)           $project::Component(Fork/Crown/Brake/Offset)
 
                 #
                 # --- get Stem -----------------------------
-            set Stem(Angle)                 $project::Component(Stem/Angle)
-            set Stem(Length)                $project::Component(Stem/Length)
+            # get_GeometryFront     set Stem(Angle)                 $project::Component(Stem/Angle)
+            # get_GeometryFront     set Stem(Length)                $project::Component(Stem/Length)
 
                 #
                 # --- get HeadTube -------------------------
-            set HeadTube(ForkRake)          $Fork(Rake)
-            set HeadTube(ForkHeight)        $Fork(Height)
-            set HeadTube(Diameter)          $project::FrameTubes(HeadTube/Diameter)
-            set HeadTube(Length)            $project::FrameTubes(HeadTube/Length)
-            set HeadTube(Angle)             $project::Custom(HeadTube/Angle)
+            # set HeadTube(ForkRake)          $Fork(Rake)
+            # set HeadTube(ForkHeight)        $Fork(Height)
+            # get_HeadTube      set HeadTube(ForkRake)          $project::Component(Fork/Rake)
+            # get_HeadTube      set HeadTube(ForkHeight)        $project::Component(Fork/Height)
+            # get_HeadTube      set HeadTube(Diameter)          $project::FrameTubes(HeadTube/Diameter)
+            # get_HeadTube      set HeadTube(Length)            $project::FrameTubes(HeadTube/Length)
+            # get_GeometryFront set HeadTube(Angle)             $project::Custom(HeadTube/Angle)
 
                 #
                 # --- get SeatTube -------------------------
-            set SeatTube(DiameterBB)        $project::FrameTubes(SeatTube/DiameterBB)
-            set SeatTube(DiameterTT)        $project::FrameTubes(SeatTube/DiameterTT)
-            set SeatTube(TaperLength)       $project::FrameTubes(SeatTube/TaperLength)
-            set SeatTube(Extension)         $project::Custom(SeatTube/Extension)
-            set SeatTube(OffsetBB)          $project::Custom(SeatTube/OffsetBB)
+            # get_TopTube_SeatTube      set SeatTube(DiameterBB)        $project::FrameTubes(SeatTube/DiameterBB)
+            # get_TopTube_SeatTube      set SeatTube(DiameterTT)        $project::FrameTubes(SeatTube/DiameterTT)
+            # get_TopTube_SeatTube      set SeatTube(TaperLength)       $project::FrameTubes(SeatTube/TaperLength)
+            # get_TopTube_SeatTube      set SeatTube(Extension)         $project::Custom(SeatTube/Extension)
+            # get_GeometryCenter        set SeatTube(OffsetBB)          $project::Custom(SeatTube/OffsetBB)
 
                 #
                 # --- get DownTube -------------------------
-            set DownTube(DiameterBB)        $project::FrameTubes(DownTube/DiameterBB)
-            set DownTube(DiameterHT)        $project::FrameTubes(DownTube/DiameterHT)
-            set DownTube(TaperLength)       $project::FrameTubes(DownTube/TaperLength)
-            set DownTube(OffsetHT)          $project::Custom(DownTube/OffsetHT)
-            set DownTube(OffsetBB)          $project::Custom(DownTube/OffsetBB)
+            # get_DownTube_SeatTube     set DownTube(DiameterBB)        $project::FrameTubes(DownTube/DiameterBB)
+            # get_DownTube_SeatTube     set DownTube(DiameterHT)        $project::FrameTubes(DownTube/DiameterHT)
+            # get_DownTube_SeatTube     set DownTube(TaperLength)       $project::FrameTubes(DownTube/TaperLength)
+            # get_DownTube_SeatTube     set DownTube(OffsetHT)          $project::Custom(DownTube/OffsetHT)
+            # get_DownTube_SeatTube     set DownTube(OffsetBB)          $project::Custom(DownTube/OffsetBB)
 
                 #
                 # --- get TopTube --------------------------
-            set TopTube(DiameterHT)         $project::FrameTubes(TopTube/DiameterHT)
-            set TopTube(DiameterST)         $project::FrameTubes(TopTube/DiameterST)
-            set TopTube(TaperLength)        $project::FrameTubes(TopTube/TaperLength)
-            set TopTube(PivotPosition)      $project::Custom(TopTube/PivotPosition)
-            set TopTube(OffsetHT)           $project::Custom(TopTube/OffsetHT)
-            set TopTube(Angle)              $project::Custom(TopTube/Angle)
+            # get_TopTube_SeatTube      set TopTube(DiameterHT)         $project::FrameTubes(TopTube/DiameterHT)
+            # get_TopTube_SeatTube      set TopTube(DiameterST)         $project::FrameTubes(TopTube/DiameterST)
+            # get_TopTube_SeatTube      set TopTube(TaperLength)        $project::FrameTubes(TopTube/TaperLength)
+            # get_GeometryCenter        set TopTube(PivotPosition)      $project::Custom(TopTube/PivotPosition)
+            # get_TopTube_SeatTube      set TopTube(OffsetHT)           $project::Custom(TopTube/OffsetHT)
+            # get_TopTube_SeatTube      set TopTube(Angle)              $project::Custom(TopTube/Angle)
 
                 #
                 # --- get ChainStay ------------------------
-            set ChainStay(HeigthBB)         $project::FrameTubes(ChainStay/HeightBB)
-            set ChainStay(DiameterSS)       $project::FrameTubes(ChainStay/DiameterSS)
-            set ChainStay(Height)           $project::FrameTubes(ChainStay/Height)
-            set ChainStay(TaperLength)      $project::FrameTubes(ChainStay/TaperLength)
-            set ChainStay(WidthBB)          $project::FrameTubes(ChainStay/WidthBB)
+            # get_ChainStay         set ChainStay(HeigthBB)         $project::FrameTubes(ChainStay/HeightBB)
+            # get_ChainStay         set ChainStay(DiameterSS)       $project::FrameTubes(ChainStay/DiameterSS)
+            # get_ChainStay         set ChainStay(Height)           $project::FrameTubes(ChainStay/Height)
+            # get_ChainStay         set ChainStay(TaperLength)      $project::FrameTubes(ChainStay/TaperLength)
+            # get_ChainStay         set ChainStay(WidthBB)          $project::FrameTubes(ChainStay/WidthBB)
             
                 #
                 # --- get SeatStay -------------------------
-            set SeatStay(DiameterST)        $project::FrameTubes(SeatStay/DiameterST)
-            set SeatStay(DiameterCS)        $project::FrameTubes(SeatStay/DiameterCS)
-            set SeatStay(TaperLength)       $project::FrameTubes(SeatStay/TaperLength)
-            set SeatStay(OffsetTT)          $project::Custom(SeatStay/OffsetTT)
+            # get_SeatStay          set SeatStay(DiameterST)        $project::FrameTubes(SeatStay/DiameterST)
+            # get_SeatStay          set SeatStay(DiameterCS)        $project::FrameTubes(SeatStay/DiameterCS)
+            # get_SeatStay          set SeatStay(TaperLength)       $project::FrameTubes(SeatStay/TaperLength)
+            # get_SeatStay          set SeatStay(OffsetTT)          $project::Custom(SeatStay/OffsetTT)
 
                 #
                 # --- get RearDropOut ----------------------
@@ -231,49 +231,50 @@
 
                 #
                 # --- get Saddle ---------------------------
-            set Saddle(Distance)        $project::Personal(Saddle_Distance)
-            set Saddle(Height)          $project::Personal(Saddle_Height)
-            set Saddle(Saddle_Height)   $project::Component(Saddle/Height)
-                # check-Value-procedure
-                if {$Saddle(Saddle_Height) < 0} {
-                       set project::Component(Saddle/Height) 0
-                       set Saddle(Saddle_Height) 0
-                }
-            set Saddle(Position)        [ list [expr -1.0*$Saddle(Distance)]  $Saddle(Height) ]
-            set Saddle(Nose)            [ vectormath::addVector  $Saddle(Position) [list [expr $project::Component(Saddle/LengthNose) + $project::Rendering(Saddle/Offset_X)] -15] ]
+            # get_GeometryCenter  
+            # get_GeometryCenter    set Saddle(Distance)        $project::Personal(Saddle_Distance)
+            # get_GeometryCenter    set Saddle(Height)          $project::Personal(Saddle_Height)
+            # get_GeometryCenter    set Saddle(Saddle_Height)   $project::Component(Saddle/Height)
+            # get_GeometryCenter        # check-Value-procedure
+            # get_GeometryCenter        if {$Saddle(Saddle_Height) < 0} 
+            # get_GeometryCenter             set project::Component(Saddle/Height) 0
+            # get_GeometryCenter             set Saddle(Saddle_Height) 0
+            # get_GeometryCenter        
+            # get_GeometryCenter    set Saddle(Position)        [ list [expr -1.0*$Saddle(Distance)]  $Saddle(Height) ]
+            # get_GeometryCenter    set Saddle(Nose)            [ vectormath::addVector  $Saddle(Position) [list [expr $project::Component(Saddle/LengthNose) + $project::Rendering(Saddle/Offset_X)] -15] ]
 
                 #
                 # --- get SaddleMount - Position
-            set SeatPost(Diameter)      $project::Component(SeatPost/Diameter)
-            set SeatPost(Setback)       $project::Component(SeatPost/Setback)
-            set SeatPost(PivotOffset)   $project::Component(SeatPost/PivotOffset)
+            # get_SeatPost          set SeatPost(Diameter)      $project::Component(SeatPost/Diameter)
+            # get_GeometryCenter    set SeatPost(Setback)       $project::Component(SeatPost/Setback)
+            # get_GeometryCenter    set SeatPost(PivotOffset)   $project::Component(SeatPost/PivotOffset)
                 # 
-            set SeatPost(Height)        [ expr $Saddle(Height) - $Saddle(Saddle_Height) ]
-            set SeatPost(Saddle)        [ list [expr -1.0 * $Saddle(Distance)] $SeatPost(Height) ]
-            set SeatPost(PivotPosition) [ vectormath::addVector $SeatPost(Saddle)  [list 0 $SeatPost(PivotOffset)] -1]
-                set hlp_01              [ vectormath:::cathetusPoint {0 0} $SeatPost(PivotPosition) [expr $SeatPost(Setback) - $SeatTube(OffsetBB)] {opposite}]
-                # set hlp_01              [ vectormath:::cathetusPoint {0 0} $SeatPost(Saddle) [expr $SeatPost(Setback) - $SeatTube(OffsetBB)] {opposite}]
-                set vct_01              [ vectormath:::parallel {0 0} $hlp_01 $SeatTube(OffsetBB)]
-            set SeatPost(SeatTube)      [ lindex $vct_01 1]
-            set SeatTube(BottomBracket) [ lindex $vct_01 0]
-            set SeatTube(Angle)         [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) [list -100 [lindex $SeatTube(BottomBracket) 1]]]
-            set SeatTube(Direction)     [ vectormath::unifyVector $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
+            # get_GeometryCenter    set SeatPost(Height)        [ expr $Saddle(Height) - $Saddle(Saddle_Height) ]
+            # get_GeometryCenter    set SeatPost(Saddle)        [ list [expr -1.0 * $Saddle(Distance)] $SeatPost(Height) ]
+            # get_GeometryCenter    set SeatPost(PivotPosition) [ vectormath::addVector $SeatPost(Saddle)  [list 0 $SeatPost(PivotOffset)] -1]
+            # get_GeometryCenter        set hlp_01              [ vectormath:::cathetusPoint {0 0} $SeatPost(PivotPosition) [expr $SeatPost(Setback) - $SeatTube(OffsetBB)] {opposite}]
+            # get_GeometryCenter        # set hlp_01              [ vectormath:::cathetusPoint {0 0} $SeatPost(Saddle) [expr $SeatPost(Setback) - $SeatTube(OffsetBB)] {opposite}]
+            # get_GeometryCenter        set vct_01              [ vectormath:::parallel {0 0} $hlp_01 $SeatTube(OffsetBB)]
+            # get_GeometryCenter    set SeatPost(SeatTube)      [ lindex $vct_01 1]
+            # get_GeometryCenter    set SeatTube(BottomBracket) [ lindex $vct_01 0]
+            # get_GeometryCenter    set SeatTube(Angle)         [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) [list -100 [lindex $SeatTube(BottomBracket) 1]]]
+            # get_GeometryCenter    set SeatTube(Direction)     [ vectormath::unifyVector $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
 
                 #
                 # --- get LegClearance - Position
-            set LegClearance(Length)        $project::Personal(InnerLeg_Length)
-            set LegClearance(Position)      [ list $TopTube(PivotPosition)  [expr $LegClearance(Length) - ($RearWheel(Radius) - $project::Custom(BottomBracket/Depth)) ] ]
+            # get_GeometryCenter    set LegClearance(Length)        $project::Personal(InnerLeg_Length)
+            # get_GeometryCenter    set LegClearance(Position)      [ list $TopTube(PivotPosition)  [expr $LegClearance(Length) - ($RearWheel(Radius) - $project::Custom(BottomBracket/Depth)) ] ]
 
                 #
                 # --- get Saddle ---------------------------
-            set Saddle(Proposal)            [ vectormath::rotateLine {0 0}  [ expr 0.88*$LegClearance(Length) ]  [ expr 180 - $SeatTube(Angle) ] ]
+            # get_GeometryCenter    set Saddle(Proposal)            [ vectormath::rotateLine {0 0}  [ expr 0.88*$LegClearance(Length) ]  [ expr 180 - $SeatTube(Angle) ] ]
 
                 #
                 # --- get HeadSet --------------------------
-            set HeadSet(Diameter)           $project::Component(HeadSet/Diameter)
-            set HeadSet(Height_Top)         $project::Component(HeadSet/Height/Top)
-            set HeadSet(Height_Bottom)      $project::Component(HeadSet/Height/Bottom)
-            set HeadSet(ShimDiameter)       36
+            # get_HeadSet   set HeadSet(Diameter)           $project::Component(HeadSet/Diameter)
+            # get_HeadSet   set HeadSet(Height_Top)         $project::Component(HeadSet/Height/Top)
+            # get_HeadSet   set HeadSet(Height_Bottom)      $project::Component(HeadSet/Height/Bottom)
+            # get_HeadSet   set HeadSet(ShimDiameter)       36
 
                 #
                 # --- get Front/Rear Brake PadLever --------------
@@ -295,13 +296,13 @@
 
                 #
                 # --- get Fender  -------------------------------
-            set RearFender(Radius)          $project::Component(Fender/Rear/Radius)
-            set RearFender(OffsetAngle)     $project::Component(Fender/Rear/OffsetAngle)
-            set RearFender(Height)          $project::Component(Fender/Rear/Height)
-            set FrontFender(Radius)         $project::Component(Fender/Front/Radius)
-            set FrontFender(OffsetAngleFront) $project::Component(Fender/Front/OffsetAngleFront)
-            set FrontFender(OffsetAngle)    $project::Component(Fender/Front/OffsetAngle)
-            set FrontFender(Height)         $project::Component(Fender/Front/Height)
+            # get_FenderRear        set RearFender(Radius)          $project::Component(Fender/Rear/Radius)
+            # get_FenderRear        set RearFender(OffsetAngle)     $project::Component(Fender/Rear/OffsetAngle)
+            # get_FenderRear        set RearFender(Height)          $project::Component(Fender/Rear/Height)
+            # get_FenderFront       set FrontFender(Radius)         $project::Component(Fender/Front/Radius)
+            # get_FenderFront       set FrontFender(OffsetAngleFront) $project::Component(Fender/Front/OffsetAngleFront)
+            # get_FenderFront       set FrontFender(OffsetAngle)    $project::Component(Fender/Front/OffsetAngle)
+            # get_FenderFront       set FrontFender(Height)         $project::Component(Fender/Front/Height)
             
                 #
                 # --- get Carrier  ------------------------------
@@ -319,19 +320,19 @@
                 #
                 # --- set basePoints Attributes
                 #
-            project::setValue Result(Position/RearWheel)            position    $RearWheel(Position)
-            project::setValue Result(Position/HandleBar)            position    $HandleBar(Position)
-            project::setValue Result(Position/SeatPostSaddle)       position    $SeatPost(Saddle)
-            project::setValue Result(Position/SeatPostSeatTube)     position    $SeatPost(SeatTube)
-            project::setValue Result(Position/SeatPostPivot)        position    $SeatPost(PivotPosition)
-            project::setValue Result(Position/Saddle)               position    $Saddle(Position)
-            project::setValue Result(Position/SaddleProposal)       position    $Saddle(Proposal)
-            project::setValue Result(Position/SaddleNose)           position    $Saddle(Nose)
-            project::setValue Result(Position/LegClearance)         position    $TopTube(PivotPosition)     [expr $LegClearance(Length) - ($RearWheel(Radius) - $project::Custom(BottomBracket/Depth)) ]
-            project::setValue Result(Position/BottomBracketGround)  position    0     [expr - $RearWheel(Radius) + $project::Custom(BottomBracket/Depth) ] ;# Point on the Ground perp. to BB
-            project::setValue Result(Position/SeatTubeSaddle)       position    [ vectormath::intersectPoint [list 0 [lindex $Saddle(Position) 1] ] [list 100 [lindex $Saddle(Position) 1]] $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
+            # get_GeometryRear      project::setValue Result(Position/RearWheel)            position    $RearWheel(Position)
+            # get_GeometryFront     project::setValue Result(Position/HandleBar)            position    $HandleBar(Position)
+            # get_GeometryCenter    project::setValue Result(Position/SeatPostSaddle)       position    $SeatPost(Saddle)
+            # get_GeometryCenter    project::setValue Result(Position/SeatPostSeatTube)     position    $SeatPost(SeatTube)
+            # get_GeometryCenter    project::setValue Result(Position/SeatPostPivot)        position    $SeatPost(PivotPosition)
+            # get_GeometryCenter    project::setValue Result(Position/Saddle)               position    $Saddle(Position)
+            # get_GeometryCenter    project::setValue Result(Position/SaddleProposal)       position    $Saddle(Proposal)
+            # get_GeometryCenter    project::setValue Result(Position/SaddleNose)           position    $Saddle(Nose)
+            # get_GeometryCenter    project::setValue Result(Position/LegClearance)         position    $TopTube(PivotPosition)     [expr $LegClearance(Length) - ($RearWheel(Radius) - $project::Custom(BottomBracket/Depth)) ]
+            # get_GeometryCenter    project::setValue Result(Position/BottomBracketGround)  position    0     [expr - $RearWheel(Radius) + $project::Custom(BottomBracket/Depth) ] ;# Point on the Ground perp. to BB
+            # get_GeometryCenter    project::setValue Result(Position/SeatTubeSaddle)       position    [ vectormath::intersectPoint [list 0 [lindex $Saddle(Position) 1] ] [list 100 [lindex $Saddle(Position) 1]] $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
 
-            project::setValue Result(Lugs/Dropout/Rear/Position)    position     [expr -1*$RearWheel(Distance_X)]    $project::Custom(BottomBracket/Depth)
+            # get_GeometryRear  project::setValue Result(Lugs/Dropout/Rear/Position)    position     [expr -1*$RearWheel(Distance_X)]    $project::Custom(BottomBracket/Depth)
                
                 # project::setValue Result(Lugs/Dropout/Rear/Derailleur)        position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
                 # project::setValue /root/Result/Lugs/Dropout/Front/Position    position     $FrontWheel(Distance_X)    [expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
@@ -344,9 +345,18 @@
                 #
                 # --- set basePoints Attributes
                 #
-            get_basePoints
-            project::setValue Result(Position/FrontWheel)            position    $FrontWheel(Position)
-            project::setValue Result(Lugs/Dropout/Front/Position)    position    $FrontWheel(Distance_X)    [expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
+                # get_basePoints ... replaced ... 0.69 ... 2014.10.20
+                #
+            get_RearWheel
+            get_FrontWheel
+                #
+            get_GeometryRear
+            get_GeometryCenter
+            get_GeometryFront
+            get_BoundingBox
+                #
+            #project::setValue Result(Position/FrontWheel)            position    $FrontWheel(Position)
+            #project::setValue Result(Lugs/Dropout/Front/Position)    position    $FrontWheel(Distance_X)    [expr $project::Custom(BottomBracket/Depth) + ($FrontWheel(Radius) - $RearWheel(Radius))]
 
 
             #
