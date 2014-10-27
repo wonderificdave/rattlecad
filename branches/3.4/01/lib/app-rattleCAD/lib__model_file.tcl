@@ -240,9 +240,9 @@
             set template_file    [ getTemplateFile $type ]
             puts "         ... template_file:   $template_file"
             
-            puts "\n   -> FrameTubes/ChainStay/CenterLine/angle_03: [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_03]"
-            puts "\n   -> FrameTubes/ChainStay/CenterLine/angle_04: [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/angle_04]"
-            puts "\n   -> FrameTubes/ChainStay/CenterLine/radius_01: [rattleCAD::control::getValue FrameTubes/ChainStay/CenterLine/radius_01]"
+            puts "\n   -> FrameTubes/ChainStay/CenterLine/angle_03:  [rattleCAD::model::getValue FrameTubes/ChainStay/CenterLine/angle_03]"
+            puts "\n   -> FrameTubes/ChainStay/CenterLine/angle_04:  [rattleCAD::model::getValue FrameTubes/ChainStay/CenterLine/angle_04]"
+            puts "\n   -> FrameTubes/ChainStay/CenterLine/radius_01: [rattleCAD::model::getValue FrameTubes/ChainStay/CenterLine/radius_01]"
             
             
             

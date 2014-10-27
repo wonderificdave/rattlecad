@@ -75,7 +75,7 @@
         button  $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { rattleCAD::model::file::get_XMLContent [rattleCAD::model::file::getTemplateFile MTB ]     visualize}
 
 
-        button  $menueFrame.bt05    -text {current Values}                  -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $bikeGeometry::domFrame    }
+        # button  $menueFrame.bt05  -text {current Values}                  -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $bikeGeometry::projectDOM    }
         button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {currentProject} }
         button  $menueFrame.bt07    -text {rattleCAD - Runtime}             -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {runTime} }
         button  $menueFrame.bt08    -text {OS - Environment}                -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {osEnv} }

@@ -135,11 +135,11 @@
 
 
                 # --- get Rendering Style
-            set Rendering(BrakeFront)       [rattleCAD::control::getValue Rendering/Brake/Front]
-            set Rendering(BrakeRear)        [rattleCAD::control::getValue Rendering/Brake/Rear]
-            set Rendering(BottleCage_ST)    [rattleCAD::control::getValue Rendering/BottleCage/SeatTube]
-            set Rendering(BottleCage_DT)    [rattleCAD::control::getValue Rendering/BottleCage/DownTube]
-            set Rendering(BottleCage_DT_L)  [rattleCAD::control::getValue Rendering/BottleCage/DownTube_Lower]
+            set Rendering(BrakeFront)       [rattleCAD::model::getValue Rendering/Brake/Front]
+            set Rendering(BrakeRear)        [rattleCAD::model::getValue Rendering/Brake/Rear]
+            set Rendering(BottleCage_ST)    [rattleCAD::model::getValue Rendering/BottleCage/SeatTube]
+            set Rendering(BottleCage_DT)    [rattleCAD::model::getValue Rendering/BottleCage/DownTube]
+            set Rendering(BottleCage_DT_L)  [rattleCAD::model::getValue Rendering/BottleCage/DownTube_Lower]
             
             
 
@@ -207,7 +207,7 @@
             set SaddleNose(Position)        [ vectormath::addVector        $bikeGeometry::Saddle(Nose)           $BB_Position ]
             set Position(IS_ChainSt_SeatSt) [ rattleCAD::model::getObject     ChainStay/SeatStay_IS   position        $BB_Position ]
 
-            set Length(CrankSet)            [rattleCAD::control::getValue Component/CrankSet/Length]
+            set Length(CrankSet)            [rattleCAD::model::getValue Component/CrankSet/Length]
 
 
                 # --- help points for boot clearance -----
@@ -242,7 +242,7 @@
             set Steerer(Diameter)       30.0
                   # set   dir_01            [ split [ project::getValue Result(Tubes/Steerer/Direction)    direction ] ,]
 				  # puts "   -> \$dir_01  $dir_01   [llength $dir_01]"
-				set   dir_01                [ split [rattleCAD::control::getValue  Result/Tubes/Steerer/Direction/polar ] ,]
+				set   dir_01                [ split [rattleCAD::model::getValue  Result/Tubes/Steerer/Direction/polar ] ,]
 				set   dir_02                [ vectormath::VRotate $dir_01 -90 grad ]
                 set   pt_01                 [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr -0.5 * $Steerer(Diameter)] ]
                 set   pt_02                 [ vectormath::addVector        $Steerer(Fork)  $dir_02 [expr  0.5 * $Steerer(Diameter)] ]
@@ -290,20 +290,20 @@
 	    
           # set FrontWheel(Position)      [project::getValue Result(Position/FrontWheel)         position]
           # puts "  -> \$FrontWheel(Position)  $FrontWheel(Position)"
-		set FrontWheel(Position)      [rattleCAD::control::getValue Result/Position/FrontWheel        position]	
-		set FrontWheel(RimDiameter)   [rattleCAD::control::getValue Component/Wheel/Front/RimDiameter ]
-        set FrontWheel(TyreHeight)    [rattleCAD::control::getValue Component/Wheel/Front/TyreHeight ]
+		set FrontWheel(Position)      [rattleCAD::model::getValue Result/Position/FrontWheel        position]	
+		set FrontWheel(RimDiameter)   [rattleCAD::model::getValue Component/Wheel/Front/RimDiameter ]
+        set FrontWheel(TyreHeight)    [rattleCAD::model::getValue Component/Wheel/Front/TyreHeight ]
         set FrontWheel(Radius)        [expr 0.5 * $FrontWheel(RimDiameter) + $FrontWheel(TyreHeight)] 
                     
-        set RearWheel(Position)       [rattleCAD::control::getValue Result/Position/RearWheel    position]
-        set RearWheel(RimDiameter)    [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter ]
-        set RearWheel(TyreHeight)     [rattleCAD::control::getValue Component/Wheel/Front/TyreHeight ]
+        set RearWheel(Position)       [rattleCAD::model::getValue Result/Position/RearWheel    position]
+        set RearWheel(RimDiameter)    [rattleCAD::model::getValue Component/Wheel/Rear/RimDiameter ]
+        set RearWheel(TyreHeight)     [rattleCAD::model::getValue Component/Wheel/Front/TyreHeight ]
         set RearWheel(Radius)         [expr 0.5 * $RearWheel(RimDiameter) + $RearWheel(TyreHeight)] 
-        set RearWheel(Distance_X)     [rattleCAD::control::getValue Result/Length/RearWheel/horizontal ]
+        set RearWheel(Distance_X)     [rattleCAD::model::getValue Result/Length/RearWheel/horizontal ]
         
-        set BottomBracketDepth        [rattleCAD::control::getValue  Custom/BottomBracket/Depth ]
+        set BottomBracketDepth        [rattleCAD::model::getValue  Custom/BottomBracket/Depth ]
         set BottomBracketHeight       [expr $RearWheel(Radius) - $BottomBracketDepth]
-        set FrameSize          [split [rattleCAD::control::getValue Result/Position/SummarySize  position] ,]
+        set FrameSize          [split [rattleCAD::model::getValue Result/Position/SummarySize  position] ,]
         set SummaryLength             [lindex $FrameSize 0]
         
         
@@ -402,7 +402,7 @@
 	    if {$option == {bicycle}} {
             set BtmBracket_x        [ expr $border + $RearWheel(Radius) + $RearWheel(Distance_X) ]
             set BtmBracket_y        [ expr $cvBorder + $BottomBracketHeight ]
-                # puts "\n -> get_BottomBracket_Position:  $cvBorder + $RearWheel(Radius) - [rattleCAD::control::getValue Custom/BottomBracket/Depth] "
+                # puts "\n -> get_BottomBracket_Position:  $cvBorder + $RearWheel(Radius) - [rattleCAD::model::getValue Custom/BottomBracket/Depth] "
                 # puts "\n -> get_BottomBracket_Position:  $BtmBracket_x $BtmBracket_y \n"
 	    } else {
             # puts "        \$option                $option"
@@ -499,8 +499,8 @@
 
                       # set lugAngle        [project::getValue [format "%s/Angle/value)"        [string range $lugPath 0 end-1]] value]
                       # set lugTolerance    [project::getValue [format "%s/Angle/plus_minus)"   [string range $lugPath 0 end-1]] value]
-                    set lugAngle        [rattleCAD::control::getValue  [format "%sAngle/value"        [string map {( /  ) /} $lugPath]]] 
-                    set lugTolerance    [rattleCAD::control::getValue  [format "%sAngle/plus_minus"   [string map {( /  ) /} $lugPath]]] 
+                    set lugAngle        [rattleCAD::model::getValue  [format "%sAngle/value"        [string map {( /  ) /} $lugPath]]] 
+                    set lugTolerance    [rattleCAD::model::getValue  [format "%sAngle/plus_minus"   [string map {( /  ) /} $lugPath]]] 
                       # puts "   -> \$lugAngle      $lugAngle                  [string map {( /  ) /} $lugPath]"
                       # puts "   -> \$lugTolerance  $lugTolerance"
 					

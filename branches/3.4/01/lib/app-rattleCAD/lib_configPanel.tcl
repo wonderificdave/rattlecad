@@ -160,7 +160,7 @@
 				  # puts "    -> $arrayNameComplete"
 				set arrayName [lindex [split $arrayNameComplete :] end]
 				foreach key [lsort [array names $arrayNameComplete]] {
-					set value [rattleCAD::control::getValue $arrayName/$key]
+					set value [rattleCAD::model::getValue $arrayName/$key]
 					  # puts "        -> $key   -> $value"
 					  # puts " <D>           $::rattleCAD::configPanel::Component(Fork/Height)"
 					set command [format "set %s(%s) %s" $arrayNameComplete $key $value]
@@ -1124,7 +1124,7 @@
                     {Component/Wheel/Rear/RimDiameter} -
                     {Component/Wheel/Front/RimDiameter} {
                             
-							set oldValue     [rattleCAD::control::getValue $xPath]
+							set oldValue     [rattleCAD::model::getValue $xPath]
 							set textvariable [$w cget -textvariable]
 							set textValue    [set $textvariable]
 							  # puts "  <D>  -> \$textvariable $textvariable"

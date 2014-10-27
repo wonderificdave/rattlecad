@@ -311,7 +311,7 @@ namespace eval rattleCAD::view {
 			
 		    # puts "\n  -> here I am --- $key\n"
 		set xPath [format "%s"   [string map {( /  ) ""} $key]]
-		set value       [rattleCAD::control::getValue  $xPath]
+		set value       [rattleCAD::model::getValue  $xPath]
 		    # puts "\n  -> here I am --- $value    $xPath\n"
 		    # exit
             # set value       [project::getValue $key value]
