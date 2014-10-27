@@ -45,11 +45,12 @@
             variable ChainStay
             variable RearWheel
                 #
-            set ChainStay(HeigthBB)         $project::FrameTubes(ChainStay/HeightBB)
-            set ChainStay(DiameterSS)       $project::FrameTubes(ChainStay/DiameterSS)
-            set ChainStay(Height)           $project::FrameTubes(ChainStay/Height)
-            set ChainStay(TaperLength)      $project::FrameTubes(ChainStay/TaperLength)
-            set ChainStay(WidthBB)          $project::FrameTubes(ChainStay/WidthBB)
+            # 2014 10 25 - C - 01
+            # set ChainStay(HeigthBB)         $project::FrameTubes(ChainStay/HeightBB)
+            # set ChainStay(DiameterSS)       $project::FrameTubes(ChainStay/DiameterSS)
+            # set ChainStay(Height)           $project::FrameTubes(ChainStay/Height)
+            # set ChainStay(TaperLength)      $project::FrameTubes(ChainStay/TaperLength)
+            # set ChainStay(WidthBB)          $project::FrameTubes(ChainStay/WidthBB)
                 #
                 #
             set vct_angle   [ vectormath::dirAngle      $RearWheel(Position)  {0 0}]
@@ -144,7 +145,9 @@
             variable RearDrop
             variable ChainStay
             
-            set type $project::Rendering(ChainStay)
+            # 2014 10 25 - C - 02
+            # set type $project::Rendering(ChainStay)
+            set type $ChainStay(Rendering) 
             
             set Length(01)              [ expr 0.5 * $BottomBracket(inside) ]
             set Length(02)              [ expr 0.5 * $BottomBracket(width) ]
@@ -168,15 +171,22 @@
       
       
                 # -- tube profile
-            set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
-            set profile_x01   $project::FrameTubes(ChainStay/Profile/length_01)
-            set profile_y01   $project::FrameTubes(ChainStay/Profile/width_01)
-            set profile_x02   $project::FrameTubes(ChainStay/Profile/length_02)
-            set profile_y02   $project::FrameTubes(ChainStay/Profile/width_02)
-            set profile_x03   $project::FrameTubes(ChainStay/Profile/length_03)
-            set profile_y03   $project::FrameTubes(ChainStay/Profile/width_03)
-      
-      
+            # 2014 10 25 - C - 03
+            # set profile_y00   $project::FrameTubes(ChainStay/Profile/width_00)
+            # set profile_x01   $project::FrameTubes(ChainStay/Profile/length_01)
+            # set profile_y01   $project::FrameTubes(ChainStay/Profile/width_01)
+            # set profile_x02   $project::FrameTubes(ChainStay/Profile/length_02)
+            # set profile_y02   $project::FrameTubes(ChainStay/Profile/width_02)
+            # set profile_x03   $project::FrameTubes(ChainStay/Profile/length_03)
+            # set profile_y03   $project::FrameTubes(ChainStay/Profile/width_03)
+            set profile_y00   $ChainStay(profile_y00)
+            set profile_x01   $ChainStay(profile_x01)
+            set profile_y01   $ChainStay(profile_y01)
+            set profile_x02   $ChainStay(profile_x02)
+            set profile_y02   $ChainStay(profile_y02)
+            set profile_x03   $ChainStay(profile_x03)
+            set profile_y03   $ChainStay(profile_y03)
+            
             set profileDef {}
               lappend profileDef [list 0            $profile_y00]
               lappend profileDef [list $profile_x01 $profile_y01]
@@ -190,13 +200,22 @@
       
       
                 # -- tube centerline
-            set S01_length     $project::FrameTubes(ChainStay/CenterLine/length_01)
-            set S02_length     $project::FrameTubes(ChainStay/CenterLine/length_02)
-            set S03_length     $project::FrameTubes(ChainStay/CenterLine/length_03)
-            set S04_length     $project::FrameTubes(ChainStay/CenterLine/length_04)
+            # 2014 10 25 - C - 03
+            # set S01_length     $project::FrameTubes(ChainStay/CenterLine/length_01)
+            # set S02_length     $project::FrameTubes(ChainStay/CenterLine/length_02)
+            # set S03_length     $project::FrameTubes(ChainStay/CenterLine/length_03)
+            # set S04_length     $project::FrameTubes(ChainStay/CenterLine/length_04)
+            # set tmp_length     [expr $S01_length + $S02_length + $S03_length + $S04_length]
+            # set max_length     $project::FrameTubes(ChainStay/Profile/completeLength)
+            # set S05_length     [expr $max_length - $tmp_length]
+            set max_length     $ChainStay(completeLength)
+            set S01_length     $ChainStay(segmentLength_01)       
+            set S02_length     $ChainStay(segmentLength_02)       
+            set S03_length     $ChainStay(segmentLength_03)       
+            set S04_length     $ChainStay(segmentLength_04)       
             set tmp_length     [expr $S01_length + $S02_length + $S03_length + $S04_length]
-            set max_length     $project::FrameTubes(ChainStay/Profile/completeLength)
             set S05_length     [expr $max_length - $tmp_length]
+            
                 #
                 
             switch -exact $type {
@@ -209,19 +228,31 @@
                     set S02_radius     320
                     set S03_radius     320
                     set S04_radius     320
-                    set cuttingLength  $project::FrameTubes(ChainStay/Profile/cuttingLength)
+                    # 2014 1ß 25 - C - 04
+                    # set cuttingLength  $project::FrameTubes(ChainStay/Profile/cuttingLength)
+                    set cuttingLength  $ChainStay(cuttingLength)
                   }
               default {
                       # -- bent                                                
-                    set S01_angle      $project::FrameTubes(ChainStay/CenterLine/angle_01)
-                    set S02_angle      $project::FrameTubes(ChainStay/CenterLine/angle_02)
-                    set S03_angle      $project::FrameTubes(ChainStay/CenterLine/angle_03)
-                    set S04_angle      $project::FrameTubes(ChainStay/CenterLine/angle_04)
-                    set S01_radius     $project::FrameTubes(ChainStay/CenterLine/radius_01)
-                    set S02_radius     $project::FrameTubes(ChainStay/CenterLine/radius_02)
-                    set S03_radius     $project::FrameTubes(ChainStay/CenterLine/radius_03)
-                    set S04_radius     $project::FrameTubes(ChainStay/CenterLine/radius_04)
-                    set cuttingLength  $project::FrameTubes(ChainStay/Profile/cuttingLength)
+                    # 2014 1ß 25 - C - 04
+                    # set S01_angle      $project::FrameTubes(ChainStay/CenterLine/angle_01)
+                    # set S02_angle      $project::FrameTubes(ChainStay/CenterLine/angle_02)
+                    # set S03_angle      $project::FrameTubes(ChainStay/CenterLine/angle_03)
+                    # set S04_angle      $project::FrameTubes(ChainStay/CenterLine/angle_04)
+                    # set S01_radius     $project::FrameTubes(ChainStay/CenterLine/radius_01)
+                    # set S02_radius     $project::FrameTubes(ChainStay/CenterLine/radius_02)
+                    # set S03_radius     $project::FrameTubes(ChainStay/CenterLine/radius_03)
+                    # set S04_radius     $project::FrameTubes(ChainStay/CenterLine/radius_04)
+                    # set cuttingLength  $project::FrameTubes(ChainStay/Profile/cuttingLength)
+                    set S01_angle      $ChainStay(segmentAngle_01) 
+                    set S02_angle      $ChainStay(segmentAngle_02) 
+                    set S03_angle      $ChainStay(segmentAngle_03) 
+                    set S04_angle      $ChainStay(segmentAngle_04) 
+                    set S01_radius     $ChainStay(segmentRadius_01)
+                    set S02_radius     $ChainStay(segmentRadius_02)
+                    set S03_radius     $ChainStay(segmentRadius_03)
+                    set S04_radius     $ChainStay(segmentRadius_04)
+                    set cuttingLength  $ChainStay(cuttingLength)
                 }
             }
               # --- check angle: S04_angle
@@ -356,12 +387,13 @@
             variable HeadSet
             variable Steerer
                 #
-            set HeadTube(ForkRake)          $project::Component(Fork/Rake)
-            set HeadTube(ForkHeight)        $project::Component(Fork/Height)
-            set HeadTube(Diameter)          $project::FrameTubes(HeadTube/Diameter)
-            set HeadTube(Length)            $project::FrameTubes(HeadTube/Length)
-            set HeadTube(Angle)             $project::Custom(HeadTube/Angle)
-            set HeadSet(Height_Bottom)      $project::Component(HeadSet/Height/Bottom)
+            # 2014 10 25 - D - 01
+            # set HeadTube(ForkRake)          $project::Component(Fork/Rake)
+            # set HeadTube(ForkHeight)        $project::Component(Fork/Height)
+            # set HeadTube(Diameter)          $project::FrameTubes(HeadTube/Diameter)
+            # set HeadTube(Length)            $project::FrameTubes(HeadTube/Length)
+            # set HeadTube(Angle)             $project::Custom(HeadTube/Angle)
+            # set HeadSet(Height_Bottom)      $project::Component(HeadSet/Height/Bottom)
                 #
             set HeadTube(Direction)         [ vectormath::unifyVector     $Steerer(Fork)        $Steerer(Stem) ]
             set Steerer(Direction)          $HeadTube(Direction)
@@ -405,16 +437,18 @@
             variable SeatPost
             variable Steerer
                 #
-            set SeatTube(DiameterBB)        $project::FrameTubes(SeatTube/DiameterBB)
-            set SeatTube(DiameterTT)        $project::FrameTubes(SeatTube/DiameterTT)
-            set SeatTube(TaperLength)       $project::FrameTubes(SeatTube/TaperLength)
-            set SeatTube(Extension)         $project::Custom(SeatTube/Extension)
+            # 2014 10 25 - D - 01
+            # set SeatTube(DiameterBB)        $project::FrameTubes(SeatTube/DiameterBB)
+            # set SeatTube(DiameterTT)        $project::FrameTubes(SeatTube/DiameterTT)
+            # set SeatTube(TaperLength)       $project::FrameTubes(SeatTube/TaperLength)
+            # set SeatTube(Extension)         $project::Custom(SeatTube/Extension)
                 #
-            set TopTube(DiameterHT)         $project::FrameTubes(TopTube/DiameterHT)
-            set TopTube(DiameterST)         $project::FrameTubes(TopTube/DiameterST)
-            set TopTube(TaperLength)        $project::FrameTubes(TopTube/TaperLength)
-            set TopTube(OffsetHT)           $project::Custom(TopTube/OffsetHT)
-            set TopTube(Angle)              $project::Custom(TopTube/Angle)
+            # 2014 10 25 - D - 01
+            # set TopTube(DiameterHT)         $project::FrameTubes(TopTube/DiameterHT)
+            # set TopTube(DiameterST)         $project::FrameTubes(TopTube/DiameterST)
+            # set TopTube(TaperLength)        $project::FrameTubes(TopTube/TaperLength)
+            # set TopTube(OffsetHT)           $project::Custom(TopTube/OffsetHT)
+            # set TopTube(Angle)              $project::Custom(TopTube/Angle)
                 #
 
             set vct_st      [ vectormath::parallel          $SeatTube(DownTube) $SeatPost(SeatTube) [expr 0.5*$SeatTube(DiameterTT)] ]
@@ -549,11 +583,12 @@
             variable SeatPost
             variable Steerer
                 #
-            set DownTube(DiameterBB)        $project::FrameTubes(DownTube/DiameterBB)
-            set DownTube(DiameterHT)        $project::FrameTubes(DownTube/DiameterHT)
-            set DownTube(TaperLength)       $project::FrameTubes(DownTube/TaperLength)
-            set DownTube(OffsetHT)          $project::Custom(DownTube/OffsetHT)
-            set DownTube(OffsetBB)          $project::Custom(DownTube/OffsetBB)           
+            # 2014 10 25 - D - 01
+            # set DownTube(DiameterBB)        $project::FrameTubes(DownTube/DiameterBB)
+            # set DownTube(DiameterHT)        $project::FrameTubes(DownTube/DiameterHT)
+            # set DownTube(TaperLength)       $project::FrameTubes(DownTube/TaperLength)
+            # set DownTube(OffsetHT)          $project::Custom(DownTube/OffsetHT)
+            # set DownTube(OffsetBB)          $project::Custom(DownTube/OffsetBB)           
                 #          
                     #
                 set vct_ht      [ vectormath::parallel          $HeadTube(Stem) $HeadTube(Fork) [expr 0.5*$HeadTube(Diameter)] ]
@@ -639,10 +674,11 @@
             variable RearWheel
             variable RearDrop
                 #
-            set SeatStay(DiameterST)        $project::FrameTubes(SeatStay/DiameterST)
-            set SeatStay(DiameterCS)        $project::FrameTubes(SeatStay/DiameterCS)
-            set SeatStay(TaperLength)       $project::FrameTubes(SeatStay/TaperLength)
-            set SeatStay(OffsetTT)          $project::Custom(SeatStay/OffsetTT) 
+            # 2014 10 25 - D - 01
+            # set SeatStay(DiameterST)        $project::FrameTubes(SeatStay/DiameterST)
+            # set SeatStay(DiameterCS)        $project::FrameTubes(SeatStay/DiameterCS)
+            # set SeatStay(TaperLength)       $project::FrameTubes(SeatStay/TaperLength)
+            # set SeatStay(OffsetTT)          $project::Custom(SeatStay/OffsetTT) 
                 #
 
                     set pt_00       [ vectormath::addVector     $TopTube(SeatTube)  $SeatTube(Direction)  $SeatStay(OffsetTT) ] ; # intersection seatstay / seattube
@@ -728,24 +764,32 @@
                     set dir         [ vectormath::scalePointList {0 0} [ bikeGeometry::get_Object HeadTube direction ] -1.0 ]
                         # puts " .. \$dir $dir"
                                               # tube_miter  { diameter              direction              diameter_isect           direction_isect         isectionPoint         {side {right}} {offset {0}}  {startAngle {0}}}
-            set TubeMiter(TopTube_Head)       [ tube_miter    $TopTube(DiameterHT)  $TopTube(Direction)    $HeadTube(Diameter)      $HeadTube(Direction)    $TopTube(HeadTube)  ]
-            set TubeMiter(TopTube_Seat)       [ tube_miter    $TopTube(DiameterST)  $TopTube(Direction)    $SeatTube(DiameterTT)    $dir                    $TopTube(SeatTube)  ]
-            
-            set TubeMiter(DownTube_Head)      [ tube_miter    $DownTube(DiameterHT) $DownTube(Direction)   $HeadTube(Diameter)      $HeadTube(Direction)    $DownTube(HeadTube)      right    0    0  opposite]
-            set TubeMiter(DownTube_Seat)      [ tube_miter    $DownTube(DiameterBB) $DownTube(Direction)   $SeatTube(DiameterBB)    $SeatTube(Direction)    $SeatTube(DownTube)      ]
-            set TubeMiter(DownTube_BB_out)    [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(outside)  {0 1}                   {0 0}                    right    0   90  opposite]
-            set TubeMiter(DownTube_BB_in)     [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(inside)   {0 1}                   {0 0}                    right    0   90  opposite]
-            
-            set TubeMiter(SeatTube_Down)      [ tube_miter    $SeatTube(DiameterBB) $SeatTube(Direction)   $DownTube(DiameterBB)    $DownTube(Direction)    $SeatTube(DownTube)      ]
-            set TubeMiter(SeatTube_BB_out)    [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(outside)  {0 1}                   {0 0}                    right    0   90  opposite]
-            set TubeMiter(SeatTube_BB_in)     [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(inside)   {0 1}                   {0 0}                    right    0   90  opposite]
+            set TubeMiter(TopTube_Head)       [ tube_miter    $TopTube(DiameterHT)  $TopTube(Direction)    $HeadTube(Diameter)      $HeadTube(Direction)    ]
+            set TubeMiter(TopTube_Seat)       [ tube_miter    $TopTube(DiameterST)  $TopTube(Direction)    $SeatTube(DiameterTT)    $dir                    ]
+                                                                                                                                                            
+            set TubeMiter(DownTube_Head)      [ tube_miter    $DownTube(DiameterHT) $DownTube(Direction)   $HeadTube(Diameter)      $HeadTube(Direction)    right    0    0  opposite]
+            set TubeMiter(DownTube_Seat)      [ tube_miter    $DownTube(DiameterBB) $DownTube(Direction)   $SeatTube(DiameterBB)    $SeatTube(Direction)    ]
+            set TubeMiter(DownTube_BB_out)    [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(outside)  {0 1}                   right    0   90  opposite]
+            set TubeMiter(DownTube_BB_in)     [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(inside)   {0 1}                   right    0   90  opposite]
+                                                                                                                                                            
+            set TubeMiter(SeatTube_Down)      [ tube_miter    $SeatTube(DiameterBB) $SeatTube(Direction)   $DownTube(DiameterBB)    $DownTube(Direction)    ]
+            set TubeMiter(SeatTube_BB_out)    [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(outside)  {0 1}                   right    0   90  opposite]
+            set TubeMiter(SeatTube_BB_in)     [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(inside)   {0 1}                   right    0   90  opposite]
                     
                     set offset      [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
                     set dir         [ vectormath::scalePointList {0 0} [ bikeGeometry::get_Object SeatStay direction ] -1.0 ]
                         # puts " .. \$dir $dir"
-            set TubeMiter(SeatStay_01)        [ tube_miter    $SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)      $SeatTube(Direction)  $SeatStay(SeatTube)  right -$offset]
-            set TubeMiter(SeatStay_02)        [ tube_miter    $SeatStay(DiameterST) $dir  $SeatTube(DiameterTT)      $SeatTube(Direction)  $SeatStay(SeatTube)  right +$offset]
-            set TubeMiter(Reference)             { -50 0  50 0  50 10  -50 10 }
+                    # puts "\n  get_TubeMiter"
+                    # puts "       .... [ bikeGeometry::get_Object SeatStay direction ]"
+                    # puts "       .... $dir"
+                    # puts "       .... $SeatTube(DiameterTT) - $SeatStay(DiameterST) "
+                    # puts "       .... $offset"
+                    # exit
+                    # set offset 0
+                    #
+            set TubeMiter(SeatStay_01)        [ tube_miter    $SeatStay(DiameterST) $dir                   $SeatTube(DiameterTT)    $SeatTube(Direction)    right   -$offset]
+            set TubeMiter(SeatStay_02)        [ tube_miter    $SeatStay(DiameterST) $dir                   $SeatTube(DiameterTT)    $SeatTube(Direction)    right   +$offset]
+            set TubeMiter(Reference)          { -50 0  50 0  50 10  -50 10 }
 
             project::setValue Result(TubeMiter/TopTube_Head)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Head)  ]
             project::setValue Result(TubeMiter/TopTube_Seat)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Seat)  ]
@@ -817,12 +861,12 @@
         #   -------\     \     \
         #     direction   \     \
         #     - - - - - - -o- -  \
-        #                   \ isectionPoint
+        #                   \     \
         #   -----------\     \     \
         #   diameter    \     \     \
         #                \     \     \ diameter_isect
         #
-    proc bikeGeometry::tube_miter { diameter direction diameter_isect direction_isect isectionPoint {side {right}} {offset {0}}  {startAngle {0}}  {opposite {no}}} {
+    proc bikeGeometry::tube_miter { diameter direction diameter_isect direction_isect {side {right}} {offset {0}}  {startAngle {0}}  {opposite {no}}} {
 
               # puts " intersection_angle     \[vectormath::angle $direction {0 0} $direction_isect\]"
             set intersection_angle     [vectormath::angle $direction {0 0} $direction_isect]
@@ -839,7 +883,7 @@
                 # puts "       side:            $side"
                 # puts "       offset:          $offset"
                 # puts "       opposite:        $opposite"
-                # puts "       -> intersection_angle   $intersection_angle"
+                puts "       -> intersection_angle   $intersection_angle"
                 # puts [format " -> tube_miter \n   %2.f %2.f" $direction_angle $intersection_angle]
 
             if {$opposite != {no} } {
@@ -856,25 +900,33 @@
             set coordList   {}
                 # while {$angle <= [expr 180 - $startAngle]}
                 # puts " -> $diameter $direction $diameter_isect $direction_isect $isectionPoint"
+                # puts "       -> intersection_angle   $intersection_angle"
+                # puts "            ... [expr tan([vectormath::rad $intersection_angle])]"
+                        #
             while {$angle <= 180} {
-                      # puts "  -> \$angle $angle"
+                        # puts "  -> \$angle $angle"
                     set rad_Angle   [vectormath::rad [expr $angle -$startAngle]]
-                    set x [expr $diameter*[vectormath::rad 180]*$angle/360 ]
+                    set pp [expr $diameter*$vectormath::CONST_PI*$angle/360 ];  # -- position on perimeter
+                        # set x [expr $diameter*[vectormath::rad 180]*$angle/360 ]
 
-                    set h [expr $offset + $radius*sin($rad_Angle)]
-                    set b [expr $diameter*0.5*cos($rad_Angle)]
-
+                    set h [expr $offset + $radius*sin($rad_Angle)];             # -- y-value on circle 
+                    set b [expr $radius*cos($rad_Angle)];                       # -- x-value on circle
+                        # set b [expr $diameter*0.5*cos($rad_Angle)]
+                    
                     if {[expr abs($radius_isect)] >= [expr abs($h)]} {
-                        set l [expr sqrt(pow($radius_isect,2) - pow($h,2))]
+                        set y  [expr sqrt(pow($radius_isect,2) - pow($h,2))] ;   # -- point on miter-curve based on perimeter position
                     } else {
-                        set l 0
+                        set y  0                                             ;   # -- undefined for situations where point on circle does not cut sectioning tube
                     }
-                    set v [expr $b/tan([vectormath::rad $intersection_angle])]
-
+                    if {[expr abs($intersection_angle)] != 90.0} {
+                        set v1 [expr $b/tan([vectormath::rad $intersection_angle])]; # -- tube - component of offset
+                        set v2 [expr $y/sin([vectormath::rad $intersection_angle])]; # -- intersecting tube component of offset
+                        set y  [expr $v1 + $v2]
+                    }
                         # puts [format "%.2f  -  %+.2f / %+.2f  -  %+.2f / %+.2f"   $angle  $h  $b  $l  $v ]
-                    set y $h
-                    set y [expr $l+$v]
-                    set xy [list $x $y]
+                        # set y $h
+                    # set y [expr $y+$v1] ;                                        # -- y corrected by v 
+                    set xy [list $pp $y]
                     if {$side == {right}}  {set xy    [vectormath::rotatePoint {0 0} $xy  180]}
                     lappend coordList [lindex $xy 0] [lindex $xy 1]
                     set angle       [expr $angle + 360 / $loops]

@@ -46,7 +46,8 @@
             variable TopTube
             variable SeatTube
                 #
-            set SeatPost(Diameter)      $project::Component(SeatPost/Diameter)
+            # 2014 10 27 - H -
+            # set SeatPost(Diameter)      $project::Component(SeatPost/Diameter)
                 #
             set pt_00       $SeatPost(SeatTube)
             set pt_99       {0 0}
@@ -113,10 +114,11 @@
             variable HeadSet
             variable Steerer
                 #
-            set HeadSet(Diameter)           $project::Component(HeadSet/Diameter)
-            set HeadSet(Height_Top)         $project::Component(HeadSet/Height/Top)
-            set HeadSet(Height_Bottom)      $project::Component(HeadSet/Height/Bottom)
-            set HeadSet(ShimDiameter)       36
+            # 2014 10 27 - H -
+            # set HeadSet(Diameter)           $project::Component(HeadSet/Diameter)
+            # set HeadSet(Height_Top)         $project::Component(HeadSet/Height/Top)
+            # set HeadSet(Height_Bottom)      $project::Component(HeadSet/Height/Bottom)
+            # set HeadSet(ShimDiameter)       36
                 #
             set pt_10       $HeadTube(Fork)
             set pt_12       $Steerer(Fork)
@@ -255,14 +257,19 @@
             variable ChainStay
             variable RearWheel
                 #
-            set RearFender(Radius)          $project::Component(Fender/Rear/Radius)
-            set RearFender(OffsetAngle)     $project::Component(Fender/Rear/OffsetAngle)
-            set RearFender(Height)          $project::Component(Fender/Rear/Height)
+            # 2014 10 27 - H -
+            # set RearFender(Radius)          $project::Component(Fender/Rear/Radius)
+            # set RearFender(OffsetAngle)     $project::Component(Fender/Rear/OffsetAngle)
+            # set RearFender(Height)          $project::Component(Fender/Rear/Height)
                 #
             if {$RearFender(Radius) < $RearWheel(Radius)} {
-                set project::Component(Fender/Rear/Radius) [expr $RearWheel(Radius) + 5.0]
-                set RearFender(Radius)                     $project::Component(Fender/Rear/Radius)
-                puts "\n                     -> <i> \$project::Component(Fender/Rear/Radius) ........... $project::Component(Fender/Rear/Radius)"
+                # 2014 10 25 - H -
+                # set project::Component(Fender/Rear/Radius) [expr $RearWheel(Radius) + 5.0]
+                # set RearFender(Radius)                     $project::Component(Fender/Rear/Radius)
+                set RearFender(Radius)                     [expr $RearWheel(Radius) + 5.0]
+                project::setValue Component(Fender/Rear/Radius) value $RearFender(Radius)
+                # puts "\n                     -> <i> \$project::Component(Fender/Rear/Radius) ........... $project::Component(Fender/Rear/Radius)"
+                puts "\n                     -> <i> \$RearFender(Radius) ........... $RearFender(Radius)"
             }               
                 #
                 # puts " ->   \$ChainStay(Direction) $ChainStay(Direction)"
@@ -290,15 +297,20 @@
             variable HeadTube
             variable FrontWheel
                 #
-            set FrontFender(Radius)             $project::Component(Fender/Front/Radius)
-            set FrontFender(OffsetAngleFront)   $project::Component(Fender/Front/OffsetAngleFront)
-            set FrontFender(OffsetAngle)        $project::Component(Fender/Front/OffsetAngle)
-            set FrontFender(Height)             $project::Component(Fender/Front/Height)
+            # 2014 10 27 - H -
+            # set FrontFender(Radius)             $project::Component(Fender/Front/Radius)
+            # set FrontFender(OffsetAngleFront)   $project::Component(Fender/Front/OffsetAngleFront)
+            # set FrontFender(OffsetAngle)        $project::Component(Fender/Front/OffsetAngle)
+            # set FrontFender(Height)             $project::Component(Fender/Front/Height)
                 #
             if {$FrontFender(Radius) < $FrontWheel(Radius)} {
-                set project::Component(Fender/Front/Radius) [expr $FrontWheel(Radius) + 5.0]
-                set FrontFender(Radius)                     $project::Component(Fender/Front/Radius)
-                puts "\n                     -> <i> \$project::Component(Fender/Front/Radius) .......... $project::Component(Fender/Front/Radius)"
+                # 2014 10 25 - H -
+                # set project::Component(Fender/Front/Radius) [expr $FrontWheel(Radius) + 5.0]
+                # project::setValue Component(Fender/Front/Radius) value [expr $FrontWheel(Radius) + 5.0]
+                set FrontFender(Radius)                     [expr $FrontWheel(Radius) + 5.0]
+                project::setValue Component(Fender/Front/Radius) value $FrontFender(Radius)
+                # puts "\n                     -> <i> \$project::Component(Fender/Front/Radius) .......... $project::Component(Fender/Front/Radius)"
+                puts "\n                     -> <i> \$FrontFender(Radius) .......... $FrontFender(Radius)"
             }
                 #
             set AngleHeadTube [vectormath::dirAngle {0 0} $HeadTube(Direction)]
