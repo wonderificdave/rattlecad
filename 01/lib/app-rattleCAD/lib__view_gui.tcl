@@ -118,6 +118,8 @@
                 {separator}      
                 {command "Integration Test" {}  "Integration Test"      {CtrlAlt i}   -command { rattleCAD::test:::runDemo integrationTest_00} }
                 {separator}      
+                {command "Debug Special"    {}  "Debug Special"         {}            -command { rattleCAD::test:::runDemo integrationTest_special} }
+                {separator}      
                 {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
             }
             "Info"   all info 0 {

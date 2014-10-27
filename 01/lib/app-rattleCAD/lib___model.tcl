@@ -36,7 +36,8 @@
 # ---------------------------------------------------------------------------
 #
 # 
-
+# --- this is the interface to the bikeGeometry - namespace
+#
 
 namespace eval rattleCAD::model {
 
@@ -99,6 +100,25 @@ namespace eval rattleCAD::model {
 		  #
 	}
 
+    proc getValue {xpath {format {value}} args} {
+	       # key type args
+		variable modelDICT
+		
+		set value     [appUtil::get_dictValue $modelDICT $xpath]
+		switch -exact $format {
+		    position  {}
+		    direction {
+			        set value [split [dict get ${value} polar] ,]
+					# puts "    -> getValue -> direction"
+			    }
+			polygon   {}
+			value     -
+		    default   {}
+		}
+		  # puts "        rattleCAD::model::getValue $xpath $value  <- $format"
+		return ${value}
+	} 
+    
     proc getObject {object index {centerPoint {0 0}} } {
         return [bikeGeometry::get_Object $object $index $centerPoint]
     }

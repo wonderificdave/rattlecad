@@ -108,7 +108,8 @@ namespace eval rattleCAD::control {
         foreach {xpath value} $xpathValueList {
         
               # puts "   -> xpath = value:   $xpath  $value"
-            set oldValue [[namespace current]::getValue $xpath]
+              # set oldValue [[namespace current]::getValue $xpath]
+            set oldValue [rattleCAD::model::getValue $xpath]
 
             if {$value == $oldValue} {
                 continue
@@ -142,7 +143,8 @@ namespace eval rattleCAD::control {
             }
             
               # set value to local model
-            set newValue [[namespace current]::getValue $xpath]
+              # set newValue [[namespace current]::getValue $xpath]
+            set newValue [rattleCAD::model::getValue $xpath]
               #
               
               # append _editList
@@ -189,25 +191,6 @@ namespace eval rattleCAD::control {
 		return $newValue
 	
 	}
-
-	proc getValue {xpath {format {value}} args} {
-	       # key type args
-		variable currentDICT
-		
-		set value     [appUtil::get_dictValue $rattleCAD::model::modelDICT $xpath]
-		switch -exact $format {
-		    position  {}
-		    direction {
-			        set value [split [dict get ${value} polar] ,]
-					# puts "    -> getValue -> direction"
-			    }
-			polygon   {}
-			value     -
-		    default   {}
-		}
-		  # puts "        rattleCAD::control::getValue $xpath $value  <- $format"
-		return ${value}
-	}  
 
     proc setSession {name value} {
         variable  Session

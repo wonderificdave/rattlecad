@@ -56,6 +56,12 @@
                     set messageValue "... integrationTest 00"
                       # tk_messageBox -title "integration Test" -message "... integrationTest 00\n      ... done!"
                 }
+            integrationTest_special {
+                      # tk_messageBox -title "integration Test" -message "... start integrationTest 00"
+                    [namespace current]::testResultParameter
+                    # [namespace current]::integrationTest_00 
+                    set messageValue "... integrationTest special"
+                }
             method_rattleCAD {
                     while {$runningStatus != {off}} {
                           # tk_messageBox -title "Demontsration" -message "... show rattleCAD Principle"
@@ -154,7 +160,10 @@
   
 		
 		# -- integration test ---------
-		set openFile         [file join  ${SAMPLE_Dir} __test_Integration_02.xml]
+        puts "\n\n === open File  ===\n"  
+		puts "          ... \n"
+        
+        set openFile         [file join  ${SAMPLE_Dir} __test_Integration_02.xml]
 		puts "          ... $openFile\n"
 		rattleCAD::model::file::openProject_xml   $openFile
 		
@@ -235,6 +244,11 @@
 		puts "\n\n === load template road again  ===\n"  
 		puts "          ... Template  Road\n"
         rattleCAD::view::gui::load_Template  Road	
+        
+        
+        puts "\n\n === load template road again  ===\n"  
+		puts "          ... Template  Road\n"
+        rattleCAD::view::gui::load_Template  Road	
    
 		
 		puts "\n\n === end ===\n"       
@@ -264,22 +278,22 @@
         rattleCAD::view::updateView        force
           #
           
-        set init_HB_Reach     [rattleCAD::control::getValue  Personal/HandleBar_Distance]
-        set init_HB_Stack     [rattleCAD::control::getValue  Personal/HandleBar_Height]
-        set init_SD_Distance  [rattleCAD::control::getValue  Personal/Saddle_Distance]
-        set init_SD_Height    [rattleCAD::control::getValue  Personal/Saddle_Height]
-        set init_HT_Angle     [rattleCAD::control::getValue  Custom/HeadTube/Angle]
-        set init_TT_Angle     [rattleCAD::control::getValue  Custom/TopTube/Angle]
-        set init_HT_Length    [rattleCAD::control::getValue  FrameTubes/HeadTube/Length]
-        set init_Stem_Length  [rattleCAD::control::getValue  Component/Stem/Length]
-        set init_Fork_Height  [rattleCAD::control::getValue  Component/Fork/Height]
-        set init_Fork_Rake    [rattleCAD::control::getValue  Component/Fork/Rake]
-        set init_ST_Ext       [rattleCAD::control::getValue  Custom/SeatTube/Extension]
-        set init_SS_Offset    [rattleCAD::control::getValue  Custom/SeatStay/OffsetTT]
-        set init_ST_Angle     [rattleCAD::control::getValue  Result/Angle/SeatTube/Direction]
-        set init_ST_Length    [rattleCAD::control::getValue  Result/Length/SeatTube/VirtualLength]
-        set init_TT_Length    [rattleCAD::control::getValue  Result/Length/TopTube/VirtualLength]
-        set init_SD_Nose      [rattleCAD::control::getValue  Result/Length/Saddle/Offset_BB_Nose]
+        set init_HB_Reach     [rattleCAD::model::getValue  Personal/HandleBar_Distance]
+        set init_HB_Stack     [rattleCAD::model::getValue  Personal/HandleBar_Height]
+        set init_SD_Distance  [rattleCAD::model::getValue  Personal/Saddle_Distance]
+        set init_SD_Height    [rattleCAD::model::getValue  Personal/Saddle_Height]
+        set init_HT_Angle     [rattleCAD::model::getValue  Custom/HeadTube/Angle]
+        set init_TT_Angle     [rattleCAD::model::getValue  Custom/TopTube/Angle]
+        set init_HT_Length    [rattleCAD::model::getValue  FrameTubes/HeadTube/Length]
+        set init_Stem_Length  [rattleCAD::model::getValue  Component/Stem/Length]
+        set init_Fork_Height  [rattleCAD::model::getValue  Component/Fork/Height]
+        set init_Fork_Rake    [rattleCAD::model::getValue  Component/Fork/Rake]
+        set init_ST_Ext       [rattleCAD::model::getValue  Custom/SeatTube/Extension]
+        set init_SS_Offset    [rattleCAD::model::getValue  Custom/SeatStay/OffsetTT]
+        set init_ST_Angle     [rattleCAD::model::getValue  Result/Angle/SeatTube/Direction]
+        set init_ST_Length    [rattleCAD::model::getValue  Result/Length/SeatTube/VirtualLength]
+        set init_TT_Length    [rattleCAD::model::getValue  Result/Length/TopTube/VirtualLength]
+        set init_SD_Nose      [rattleCAD::model::getValue  Result/Length/Saddle/Offset_BB_Nose]
 
         puts "         -> \$init_HB_Reach     $init_HB_Reach   "
         puts "         -> \$init_HB_Stack     $init_HB_Stack   "
@@ -552,20 +566,20 @@
         rattleCAD::view::updateView        force
           #
           
-        set init_HB_Reach     [rattleCAD::control::getValue  Personal/HandleBar_Distance]
-        set init_HB_Stack     [rattleCAD::control::getValue  Personal/HandleBar_Height]
-        set init_SD_Distance  [rattleCAD::control::getValue  Personal/Saddle_Distance]
-        set init_SD_Height    [rattleCAD::control::getValue  Personal/Saddle_Height]
-        set init_HT_Angle     [rattleCAD::control::getValue  Custom/HeadTube/Angle]
-        set init_TT_Angle     [rattleCAD::control::getValue  Custom/TopTube/Angle]
-        set init_HT_Length    [rattleCAD::control::getValue  FrameTubes/HeadTube/Length]
-        set init_Stem_Length  [rattleCAD::control::getValue  Component/Stem/Length]
-        set init_Fork_Height  [rattleCAD::control::getValue  Component/Fork/Height]
-        set init_Fork_Rake    [rattleCAD::control::getValue  Component/Fork/Rake]
-        set init_ST_Angle     [rattleCAD::control::getValue  Result/Angle/SeatTube/Direction]
-        set init_ST_Length    [rattleCAD::control::getValue  Result/Length/SeatTube/VirtualLength]
-        set init_TT_Length    [rattleCAD::control::getValue  Result/Length/TopTube/VirtualLength]
-        set init_SD_Nose      [rattleCAD::control::getValue  Result/Length/Saddle/Offset_BB_Nose]
+        set init_HB_Reach     [rattleCAD::model::getValue  Personal/HandleBar_Distance]
+        set init_HB_Stack     [rattleCAD::model::getValue  Personal/HandleBar_Height]
+        set init_SD_Distance  [rattleCAD::model::getValue  Personal/Saddle_Distance]
+        set init_SD_Height    [rattleCAD::model::getValue  Personal/Saddle_Height]
+        set init_HT_Angle     [rattleCAD::model::getValue  Custom/HeadTube/Angle]
+        set init_TT_Angle     [rattleCAD::model::getValue  Custom/TopTube/Angle]
+        set init_HT_Length    [rattleCAD::model::getValue  FrameTubes/HeadTube/Length]
+        set init_Stem_Length  [rattleCAD::model::getValue  Component/Stem/Length]
+        set init_Fork_Height  [rattleCAD::model::getValue  Component/Fork/Height]
+        set init_Fork_Rake    [rattleCAD::model::getValue  Component/Fork/Rake]
+        set init_ST_Angle     [rattleCAD::model::getValue  Result/Angle/SeatTube/Direction]
+        set init_ST_Length    [rattleCAD::model::getValue  Result/Length/SeatTube/VirtualLength]
+        set init_TT_Length    [rattleCAD::model::getValue  Result/Length/TopTube/VirtualLength]
+        set init_SD_Nose      [rattleCAD::model::getValue  Result/Length/Saddle/Offset_BB_Nose]
 
         puts "         -> \$init_HB_Reach     $init_HB_Reach   "
         puts "         -> \$init_HB_Stack     $init_HB_Stack   "
@@ -799,7 +813,7 @@
             set _name     [lindex [split $arrayName ()] 1]
             set xPath     [format "%s/%s" $_array $_name]
              
-            set currentValue  [rattleCAD::control::getValue  $xPath value]
+            set currentValue  [rattleCAD::model::getValue  $xPath value]
               # set currentValue  [project::getValue $arrayName value]
               # puts "   -> $currentValue"
               # return
@@ -995,9 +1009,58 @@
                         return
                         #exit
 
-     }
+    }
 
-
+    
+    proc testResultParameter {} {
+            # tk_messageBox -message "testResultParameter" 
+            set parameterList { 
+                    Angle/HeadTube/TopTube              
+                    Angle/SeatTube/Direction            
+                    Length/BottomBracket/Height         
+                    Length/FrontWheel/Radius            
+                    Length/FrontWheel/diagonal          
+                    Length/FrontWheel/horizontal        
+                    Length/HeadTube/ReachLength         
+                    Length/HeadTube/StackHeight         
+                    Length/Personal/SaddleNose_HB       
+                    Length/RearWheel/Radius             
+                    Length/RearWheel/TyreShoulder       
+                    Length/RearWheel/horizontal         
+                    Length/Reference/Heigth_SN_HB       
+                    Length/Reference/SaddleNose_HB      
+                    Length/Saddle/Offset_BB_Nose        
+                    Length/Saddle/Offset_BB_ST          
+                    Length/Saddle/Offset_HB             
+                    Length/Saddle/SeatTube_BB           
+                    Length/SeatTube/VirtualLength       
+                    Length/TopTube/VirtualLength        }
+                    
+            # set parameterList Length/Saddle/Offset_BB_ST
+            # set parameterList Length/Saddle/SeatTube_BB
+                
+            foreach resultKey $parameterList {
+                # puts "    ... $resultKey"
+                set currentValue [rattleCAD::model::getValue Result/$resultKey value]
+                puts "\n\n -> testResultParameter \n       ... $resultKey    ... $currentValue\n"
+                    #
+                set newValue [expr $currentValue - 2.6]
+                rattleCAD::control::setValue [list Result/$resultKey  $newValue]
+                set newValue [expr $currentValue + 2.6]
+                rattleCAD::control::setValue [list Result/$resultKey  $newValue]
+                    #
+                rattleCAD::control::setValue [list Result/$resultKey  $currentValue]
+                    #
+                  # tk_messageBox -message "was resultKey: $resultKey" 
+            }
+            
+            puts "\n\n"
+            puts "      #"
+            puts "      # ---- testResultParameter ---- done ------"
+            puts "      #"
+            puts "\n\n"
+    }
+     
 
     #-------------------------------------------------------------------------
         #

@@ -1116,8 +1116,8 @@
                                                                                         perpendicular    [expr (150 - 0.5 * $Steerer(Diameter)) * $stageScale]   [expr -50 * $stageScale] \
                                                                                         gray30 ]
 
-                                set RimDiameter         [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter]
-                                set TyreHeight          [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight]
+                                set RimDiameter         [rattleCAD::model::getValue Component/Wheel/Rear/RimDiameter]
+                                set TyreHeight          [rattleCAD::model::getValue Component/Wheel/Rear/TyreHeight]
                                 set WheelRadius         [ expr 0.5 * $RimDiameter + $TyreHeight ]
                                 set pt_03               [ rattleCAD::model::getObject        RearWheel    position  $BB_Position  ]
                                 set SeatTube(polygon)   [ rattleCAD::model::getObject        SeatTube     polygon   $BB_Position  ]
@@ -1638,11 +1638,11 @@
 							set pt_02     [ rattleCAD::model::getObject     Lugs/Dropout/Rear/Derailleur  position  $BB_Position]
                             set pt_03     [ vectormath::rotatePoint      $pt_01  $BB_Position 90]
 								#
-							set offset_y       [ rattleCAD::control::getValue Lugs/RearDropOut/Derailleur/y]
-							set offsetAngle    [ rattleCAD::control::getValue Lugs/RearDropOut/RotationOffset]
+							set offset_y       [ rattleCAD::model::getValue Lugs/RearDropOut/Derailleur/y]
+							set offsetAngle    [ rattleCAD::model::getValue Lugs/RearDropOut/RotationOffset]
 							set chainStayAngle [ vectormath::dirAngle   $pt_01  $BB_Position]
 							    #
-							set direction   [ rattleCAD::control::getValue Lugs/RearDropOut/Direction]
+							set direction   [ rattleCAD::model::getValue Lugs/RearDropOut/Direction]
 							switch -exact $direction {
 							    ChainStay  -
 								Chainstay  { set offsetAngle [ expr $offsetAngle - $chainStayAngle ] }
@@ -1704,15 +1704,15 @@
                                                 rattleCAD::view::gui::object_CursorBinding        $cv_Name    $dimension_02
                             }
                             
-                            #            project::setValue Result(Lugs/Dropout/Rear/Derailleur)    position ]     [expr -1*$RearWheel(Distance_X)]    [rattleCAD::control::getValue Custom/BottomBracket/Depth]
+                            #            project::setValue Result(Lugs/Dropout/Rear/Derailleur)    position ]     [expr -1*$RearWheel(Distance_X)]    [rattleCAD::model::getValue Custom/BottomBracket/Depth]
                             # project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     [ vectormath::addVector  $RearWheel(Position)  [list $RearDrop(Derailleur_x) $RearDrop(Derailleur_y)] ]
 
                             
                             
                         }
                 RearWheel_Clearance {
-                            set RimDiameter         [rattleCAD::control::getValue Component/Wheel/Rear/RimDiameter]
-                            set TyreHeight          [rattleCAD::control::getValue Component/Wheel/Rear/TyreHeight]
+                            set RimDiameter         [rattleCAD::model::getValue Component/Wheel/Rear/RimDiameter]
+                            set TyreHeight          [rattleCAD::model::getValue Component/Wheel/Rear/TyreHeight]
                             set WheelRadius         [ expr 0.5 * $RimDiameter + $TyreHeight ]
                             set pt_03               [ rattleCAD::model::getObject        RearWheel    position    $BB_Position  ]
                             set pt_06               [ rattleCAD::model::coords_get_xy $SeatTube(polygon) 5 ]

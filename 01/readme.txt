@@ -1,5 +1,29 @@
 
 
+3.4.01.72  - 2014.10.27
+-------------------------------------------------------------------------------
+    refactoring:
+        ... bikeGeometry 0.71
+        ... bikeGeometry::remove references to $project::...
+
+        
+3.4.01.71  - 2014.10.25
+-------------------------------------------------------------------------------
+    refactoring:
+        ... move rattleCAD::control::setValue to rattleCAD::model
+        ... cleanup rattleCAD-namespace from references to bikeGeometry
+        ... bikeGeometry 0.70 add procedure bikeGeometry::get_from_project
+    debug:
+        ... bikeGeometry::tube_miter ... correct influence of intersect. tube
+        
+        
+3.4.01.70  - 2014.10.21
+-------------------------------------------------------------------------------
+    refactor: 
+        ... rattleCAD::cv_custom::updateView
+            ... split into subprocedures
+
+
 3.4.01.69  - 2014.10.20
 -------------------------------------------------------------------------------
     refactor: 
@@ -655,7 +679,6 @@
         ... mockup: chain 
     refactor:
         ... rattleCAD::rendering - checkFileString
-        ... rattleCAD::rendering - createFork
         ... rattleCAD::rendering - createFork
         ... modify templates
 
