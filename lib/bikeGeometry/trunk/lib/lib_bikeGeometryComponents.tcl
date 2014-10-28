@@ -46,9 +46,6 @@
             variable TopTube
             variable SeatTube
                 #
-            # 2014 10 27 - H -
-            # set SeatPost(Diameter)      $project::Component(SeatPost/Diameter)
-                #
             set pt_00       $SeatPost(SeatTube)
             set pt_99       {0 0}
                 #
@@ -113,12 +110,6 @@
             variable HeadTube
             variable HeadSet
             variable Steerer
-                #
-            # 2014 10 27 - H -
-            # set HeadSet(Diameter)           $project::Component(HeadSet/Diameter)
-            # set HeadSet(Height_Top)         $project::Component(HeadSet/Height/Top)
-            # set HeadSet(Height_Bottom)      $project::Component(HeadSet/Height/Bottom)
-            # set HeadSet(ShimDiameter)       36
                 #
             set pt_10       $HeadTube(Fork)
             set pt_12       $Steerer(Fork)
@@ -251,39 +242,25 @@
         #
         # --- set FenderRear ----------------------
     proc bikeGeometry::get_FenderRear {} {
-                #
             variable RearFender
             variable Result
             variable ChainStay
             variable RearWheel
                 #
-            # 2014 10 27 - H -
-            # set RearFender(Radius)          $project::Component(Fender/Rear/Radius)
-            # set RearFender(OffsetAngle)     $project::Component(Fender/Rear/OffsetAngle)
-            # set RearFender(Height)          $project::Component(Fender/Rear/Height)
-                #
             if {$RearFender(Radius) < $RearWheel(Radius)} {
-                # 2014 10 25 - H -
-                # set project::Component(Fender/Rear/Radius) [expr $RearWheel(Radius) + 5.0]
-                # set RearFender(Radius)                     $project::Component(Fender/Rear/Radius)
                 set RearFender(Radius)                     [expr $RearWheel(Radius) + 5.0]
                 project::setValue Component(Fender/Rear/Radius) value $RearFender(Radius)
-                # puts "\n                     -> <i> \$project::Component(Fender/Rear/Radius) ........... $project::Component(Fender/Rear/Radius)"
                 puts "\n                     -> <i> \$RearFender(Radius) ........... $RearFender(Radius)"
             }               
                 #
-                # puts " ->   \$ChainStay(Direction) $ChainStay(Direction)"
             set AngleChainStay [vectormath::dirAngle $ChainStay(Direction) {0 0} ]
-                # puts " ->   \$AngleChainStay $AngleChainStay"
-                # parray RearFender
-                # puts " ->   \$project::Result(Tubes/ChainStay/Direction) [project::getValue Result(Tubes/ChainStay/Direction/degree) value]"
-            
+                #
             set AngleStart          [expr 180 + $AngleChainStay]
-                                           
-                # bikeGeometry::createFender {radius angleStart angleLength height} 
+                #
             set polygon [createFender $RearFender(Radius) $AngleStart $RearFender(OffsetAngle)  $RearFender(Height)]
-            
+                #
             project::setValue Result(Components/Fender/Rear)   polygon     [project::flatten_nestedList $polygon]
+                #
             return
     }
 
@@ -291,42 +268,25 @@
         #
         # --- set FenderFront ----------------------
     proc bikeGeometry::get_FenderFront {} {
-                #
             variable FrontFender
             variable Result
             variable HeadTube
             variable FrontWheel
                 #
-            # 2014 10 27 - H -
-            # set FrontFender(Radius)             $project::Component(Fender/Front/Radius)
-            # set FrontFender(OffsetAngleFront)   $project::Component(Fender/Front/OffsetAngleFront)
-            # set FrontFender(OffsetAngle)        $project::Component(Fender/Front/OffsetAngle)
-            # set FrontFender(Height)             $project::Component(Fender/Front/Height)
-                #
             if {$FrontFender(Radius) < $FrontWheel(Radius)} {
-                # 2014 10 25 - H -
-                # set project::Component(Fender/Front/Radius) [expr $FrontWheel(Radius) + 5.0]
-                # project::setValue Component(Fender/Front/Radius) value [expr $FrontWheel(Radius) + 5.0]
                 set FrontFender(Radius)                     [expr $FrontWheel(Radius) + 5.0]
                 project::setValue Component(Fender/Front/Radius) value $FrontFender(Radius)
-                # puts "\n                     -> <i> \$project::Component(Fender/Front/Radius) .......... $project::Component(Fender/Front/Radius)"
                 puts "\n                     -> <i> \$FrontFender(Radius) .......... $FrontFender(Radius)"
             }
                 #
             set AngleHeadTube [vectormath::dirAngle {0 0} $HeadTube(Direction)]
-              # parray FrontFender
-              # puts " ->   \$AngleHeadTube $AngleHeadTube"
-            
+                #
             set AngleStart          [expr $AngleHeadTube - $FrontFender(OffsetAngleFront)]
-                                
-              # puts " ->   \$AngleStart  $AngleStart"
-              # puts " ->   \$FrontFender(OffsetAngle) $FrontFender(OffsetAngle)"
-
-              # bikeGeometry::createFender {radius angleStart angleLength height} 
+                #
             set polygon [createFender $FrontFender(Radius) $AngleStart $FrontFender(OffsetAngle)  $FrontFender(Height)]
-            
+                #
             project::setValue Result(Components/Fender/Front)   polygon     [project::flatten_nestedList $polygon]
-            #exit
+                #
             return
     }
 

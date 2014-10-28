@@ -56,19 +56,6 @@
                 #
             set domInit $project::initDOM
                 #
-            # 2014 10 25 - B
-            # set Fork(BladeWith)             $project::Component(Fork/Blade/Width)
-            # set Fork(BladeDiameterDO)       $project::Component(Fork/Blade/DiameterDO)
-            # set Fork(BladeTaperLength)      $project::Component(Fork/Blade/TaperLength)
-            # set Fork(BladeBendRadius)       $project::Component(Fork/Blade/BendRadius)
-            # set Fork(BladeEndLength)        $project::Component(Fork/Blade/EndLength)
-            # set Fork(BladeOffsetCrown)      $project::Component(Fork/Crown/Blade/Offset)
-            # set Fork(BladeOffsetCrownPerp)  $project::Component(Fork/Crown/Blade/OffsetPerp)
-            # set Fork(BladeOffsetDO)         $project::Component(Fork/DropOut/Offset)
-            # set Fork(BladeOffsetDOPerp)     $project::Component(Fork/DropOut/OffsetPerp)
-            # set Fork(BrakeAngle)            $project::Component(Fork/Crown/Brake/Angle)
-            # set Fork(BrakeOffset)           $project::Component(Fork/Crown/Brake/Offset)                
-                #
                 # set     domInit $::APPL_Config(root_InitDOM)
                 #
             switch -glob $Fork(Rendering) {
@@ -169,12 +156,6 @@
             project::setValue Result(Tubes/ForkBlade/End)             value       $forkBladeEnd
             project::setValue Result(Tubes/ForkBlade/CenterLine)      value       [list $centerLine_Format]
             project::setValue Result(Lugs/Dropout/Front/Direction)    direction   $Fork(DropoutDirection)   
-                #
-            # 2014 10 25 - B
-            # set myFork(CrownFile)         $project::Component(Fork/Crown/File)                                     
-            # set myFork(DropOutFile)       $project::Component(Fork/DropOut/File)
-            # set myFork(CrownBrakeOffset)  $project::Component(Fork/Crown/Brake/Offset) 
-            # set myFork(CrownBrakeAngle)   $project::Component(Fork/Crown/Brake/Angle)
                 #
             set myFork(CrownFile)         $Fork(CrownFile)                                     
             set myFork(DropOutFile)       $Fork(DropOutFile)
@@ -351,24 +332,6 @@
                 #
             variable myFork
                 #
-                #
-            # 2014 10 25 - B
-            # set Fork(BladeWith)             $project::Component(Fork/Blade/Width)
-            # set Fork(BladeDiameterDO)       $project::Component(Fork/Blade/DiameterDO)
-            # set Fork(BladeTaperLength)      $project::Component(Fork/Blade/TaperLength)
-            # set Fork(BladeBendRadius)       $project::Component(Fork/Blade/BendRadius)
-            # set Fork(BladeEndLength)        $project::Component(Fork/Blade/EndLength)
-            # set Fork(BladeOffsetCrown)      $project::Component(Fork/Crown/Blade/Offset)
-            # set Fork(BladeOffsetCrownPerp)  $project::Component(Fork/Crown/Blade/OffsetPerp)
-            # set Fork(BladeOffsetDO)         $project::Component(Fork/DropOut/Offset)
-            # set Fork(BladeOffsetDOPerp)     $project::Component(Fork/DropOut/OffsetPerp)
-            # set Fork(BrakeAngle)            $project::Component(Fork/Crown/Brake/Angle)
-            # set Fork(BrakeOffset)           $project::Component(Fork/Crown/Brake/Offset)                
-                #
-            
-            # set domInit $project::initDOM
-                # set     domInit $::APPL_Config(root_InitDOM)
-                #
             set pt_00       $Steerer(Fork)
             set pt_99       $FrontWheel(Position)
             set pt_01       [ vectormath::addVector $pt_00 $HeadTube(Direction) -$Fork(BladeOffsetCrown) ]
@@ -421,8 +384,6 @@
                 #
             # project::setValue Result(Tubes/ForkBlade)       polygon     [ set_suspensionFork ]
                 #
-            # 2014 10 25 - B
-            # set forkSize  $project::Rendering(Fork)
             set forkSize  $Fork(Rendering)
                 #
             set pt_60  [ vectormath::rotateLine $pt_00  40.0 [expr  90 - $HeadTube(Angle)]]
@@ -457,12 +418,6 @@
                 #
             variable myFork
                  #
-            # set domInit $project::initDOM
-                # set domInit $::APPL_Config(root_InitDOM)
-                
-            # 2014 10 25 - B
-            # set FrontWheel(position)    [ bikeGeometry::get_Object        FrontWheel       position    {0 0}] ; # $FrontWheel(Position)
-            # set Steerer_Fork(position)  [ bikeGeometry::get_Object        Steerer/Start    position    {0 0}] ; # $Steerer(Fork)
             set ht_direction            [ bikeGeometry::get_Object        HeadTube         direction ]
                 #
 
@@ -480,10 +435,6 @@
             set pt_00               [ vectormath::addVector $Steerer(Fork) [ vectormath::rotatePoint {0 0} $pt_00 $ht_angle ]]
             set pt_01               [ vectormath::addVector $Steerer(Fork) [ vectormath::rotatePoint {0 0} $pt_01 $ht_angle ]]
             set pt_02               [ vectormath::addVector $Steerer(Fork) [ vectormath::rotatePoint {0 0} $pt_02 $ht_angle ]]
-            # 2014 10 25 - B
-            # set pt_00               [ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_00 $ht_angle ]]
-            # set pt_01               [ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_01 $ht_angle ]]
-            # set pt_02               [ vectormath::addVector $Steerer_Fork(position) [ vectormath::rotatePoint {0 0} $pt_02 $ht_angle ]]
                     # puts "     ... \$ht_angle  $ht_angle"
                     # puts "   -> pt_00  $pt_00"
                     # puts "   -> pt_01  $pt_01"
@@ -517,12 +468,12 @@
 										[lindex $vct_11 1] [lindex $vct_18 1] \
 										[lindex $vct_19 1] [lindex $vct_19 0] ]
 			}
-			
+                #
             set do_direction    [ vectormath::unifyVector $FrontWheel(Position) $pt_03 ]
             project::setValue Result(Lugs/Dropout/Front/Direction)    direction    $do_direction
-
+                #
                 # tk_messageBox -message "$polygon"
-              
+                #
             return $polygon
     }
 

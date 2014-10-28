@@ -387,7 +387,6 @@
             set Saddle(Distance)                $project::Personal(Saddle_Distance)
             set Saddle(Height)                  $project::Personal(Saddle_Height)
             set Saddle(Saddle_Height)           $project::Component(Saddle/Height)
-            # 2014 10 27 - H -
             set Saddle(Nose_Length)             $project::Component(Saddle/LengthNose)
                 # check-Value-procedure
             if {$Saddle(Saddle_Height) < 0} {
@@ -395,8 +394,6 @@
                 set project::Component(Saddle/Height) $Saddle(Saddle_Height)
             }
             set Saddle(Position)                [ list [expr -1.0*$Saddle(Distance)]  $Saddle(Height) ]
-                # 2014 10 27 - H - 
-                # set Saddle(Nose)              [ vectormath::addVector  $Saddle(Position) [list [expr $project::Component(Saddle/LengthNose) + $project::Rendering(Saddle/Offset_X)] -15] ]
 
                 #
                 # --- get SaddleMount - Position
@@ -562,24 +559,23 @@
                 puts "\n                     -> <i> \$project::Component(Wheel/Rear/TyreWidthRadius) ... $project::Component(Wheel/Rear/TyreWidthRadius)"
             }
             if {1 == 2} {
-                      # 2014 10 27 - H -  
                       #
                       # -- Component(Fender/Rear/Radius) <-> $RearFender(Radius)
                       #       handle values like done in bikeGeometry::get_FenderRear 
                     if {$RearFender(Radius) < $RearWheel(Radius)} {
-                        set project::Component(Fender/Rear/Radius) [expr $RearWheel(Radius) + 5.0]
-                        set RearFender(Radius)                     $project::Component(Fender/Rear/Radius)
-                        puts "\n                     -> <i> \$project::Component(Fender/Rear/Radius) ........... $project::Component(Fender/Rear/Radius)"
-                    }
+                        set RearFender(Radius)                     [expr $RearWheel(Radius) + 5.0]
+                        project::setValue Component(Fender/Rear/Radius) value $RearFender(Radius)
+                        puts "\n                     -> <i> \$RearFender(Radius) ........... $RearFender(Radius)"
+                    }  
 
-                      # 2014 10 27 - H -  
+
                       #
                       # -- Component(Fender/Front/Radius) <-> $RearFender(Radius)
                       #       handle values like done in bikeGeometry::get_FenderFront 
                     if {$FrontFender(Radius) < $FrontWheel(Radius)} {
-                        set project::Component(Fender/Front/Radius) [expr $FrontWheel(Radius) + 5.0]
-                        set FrontFender(Radius)                     $project::Component(Fender/Front/Radius)
-                        puts "\n                     -> <i> \$project::Component(Fender/Front/Radius) .......... $project::Component(Fender/Front/Radius)"
+                        set FrontFender(Radius)                     [expr $FrontWheel(Radius) + 5.0]
+                        project::setValue Component(Fender/Front/Radius) value $FrontFender(Radius)
+                        puts "\n                     -> <i> \$FrontFender(Radius) .......... $FrontFender(Radius)"
                     }
             }
               #

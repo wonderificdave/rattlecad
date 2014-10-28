@@ -55,9 +55,11 @@
  #          get_RearWheel, get_FrontWheel, get_GeometryRear
  #          get_GeometryCenter, get_GeometryFront, get_BoundingBox
  # 0.70 search an error in tubemiter, do some optimisation
+ # 0.71 cleanup bikeGeometry from $project::... references
+ # 0.72 cleanup from refactoring comments in 0.71
  #
   
- package provide bikeGeometry 0.71
+ package provide bikeGeometry 0.72
 
  namespace eval bikeGeometry {
 
@@ -546,13 +548,10 @@
             switch -exact $_name {
         
                 {Length/BottomBracket/Height} {
-                      # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                      # 2014 10 25 - E - 01
-                      # set oldValue              $project::Result(Length/BottomBracket/Height)
-                      puts "set_resultParameter   -> Length/BottomBracket/Height - check \$BottomBracket(height) $BottomBracket(height)"
-                      puts "set_resultParameter   -> Length/BottomBracket/Height - check \$BottomBracket(depth) $BottomBracket(depth)"
+                        # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                        # puts "set_resultParameter   -> Length/BottomBracket/Height - check \$BottomBracket(height) $BottomBracket(height)"
+                        # puts "set_resultParameter   -> Length/BottomBracket/Height - check \$BottomBracket(depth) $BottomBracket(depth)"
                       set oldValue                $BottomBracket(height)
-                      # 3.2.76 set oldValue       $project::Temporary(BottomBracket/Height)
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                       set delta                   [expr $newValue - $oldValue]
@@ -563,8 +562,6 @@
                         # --- update value
                         #
                       set xpath                   Custom/BottomBracket/Depth
-                      # 2014 10 25 - E - 01
-                      # set oldValue                $project::Custom(BottomBracket/Depth)
                       set oldValue                $BottomBracket(depth)
                       set newValue                [expr $oldValue - $delta ]
                       set_Value                   $xpath     $newValue
@@ -579,10 +576,7 @@
                   
                         # --- update value
                         #
-                      # 2014 10 25 - E - 01
-                      # set HeadTube_Angle          $project::Custom(HeadTube/Angle)
-                      # set value                   [expr $HeadTopTube_Angle - $HeadTube_Angle]
-                      puts "set_resultParameter   -> Angle/HeadTube/TopTube - check \$HeadTube(Angle) $HeadTube(Angle)"
+                        # puts "set_resultParameter   -> Angle/HeadTube/TopTube - check \$HeadTube(Angle) $HeadTube(Angle)"
                       set value                   [expr $HeadTopTube_Angle - $HeadTube(Angle)]
                       set xpath                   Custom/TopTube/Angle
                       set_Value                   $xpath     $value
@@ -590,20 +584,14 @@
                   }
               
                 {Angle/SeatTube/Direction} {
-                          # puts "\n"
-                          # puts "  ... Angle/SeatTube/Direction comes here: $value"
-                          # puts ""
-                      # 2014 10 25 - E - 01
-                      # set oldValue        $project::Result(Angle/SeatTube/Direction)
-                      # set PS_SD_Heigth    [project::getValue Personal(Saddle_Height)         value]
-                      # set SD_Heigth       [project::getValue Component(Saddle/Height)        value]
-                      # set SP_Setback      [project::getValue Component(SeatPost/Setback)     value]
-                      # set SP_PivotOffset  [project::getValue Component(SeatPost/PivotOffset) value]
-                      puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$Geometry(SeatTube_Angle) $Geometry(SeatTube_Angle)"
-                      puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$Saddle(Height) $Saddle(Height)"
-                      puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$Saddle(Saddle_Height) $Saddle(Saddle_Height)"
-                      puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$SeatPost(Setback) $SeatPost(Setback)"
-                      puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$SeatPost(PivotOffset) $SeatPost(PivotOffset)"
+                        # puts "\n"
+                        # puts "  ... Angle/SeatTube/Direction comes here: $value"
+                        # puts ""
+                        # puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$Geometry(SeatTube_Angle) $Geometry(SeatTube_Angle)"
+                        # puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$Saddle(Height) $Saddle(Height)"
+                        # puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$Saddle(Saddle_Height) $Saddle(Saddle_Height)"
+                        # puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$SeatPost(Setback) $SeatPost(Setback)"
+                        # puts "set_resultParameter   -> Angle/SeatTube/Direction - check \$SeatPost(PivotOffset) $SeatPost(PivotOffset)"
                       set oldValue        $Geometry(SeatTube_Angle)
                       set PS_SD_Heigth    $Saddle(Height)
                       set SD_Heigth       $Saddle(Saddle_Height)
@@ -621,14 +609,8 @@
                       set length_SeatTube [expr $ST_height / tan([vectormath::rad $value])]
                         # puts "    -> ST_height $ST_height"
                         # puts "    -> length_SeatTube $length_SeatTube"
-                        
-                        #set length_PivOffs  [expr $SP_PivotOffset * cos([vectormath::rad $value])]
-                        #set height_PivOffs  [expr $SP_PivotOffset * sin([vectormath::rad $value])]
-                        #set ST_height       [expr [project::getValue Personal(Saddle_Height)   value] - $SD_Heigth + $height_Setback]
-                          
-                        
-                        
-                  
+                        #
+                    
                         # --- update value
                         #
                       set value [expr $length_Setback + $length_SeatTube]
@@ -643,32 +625,24 @@
               
                         # SeatTube Offset
                         #
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                      puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$SeatTube(VirtualLength) $SeatTube(VirtualLength))"
-                      puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$Geometry(SeatTube_Angle) $Geometry(SeatTube_Angle))"
-                      puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$HeadTube(Angle) $HeadTube(Angle))"
+                        # puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$SeatTube(VirtualLength) $SeatTube(VirtualLength))"
+                        # puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$Geometry(SeatTube_Angle) $Geometry(SeatTube_Angle))"
+                        # puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$HeadTube(Angle) $HeadTube(Angle))"
                       set oldValue                $SeatTube(VirtualLength)
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                       set delta                   [expr $newValue - $oldValue]
               
-                      # set offsetSeatTube          [vectormath::rotateLine {0 0} $delta [expr 180 - $project::Result(Angle/SeatTube/Direction)]]
                       set offsetSeatTube          [vectormath::rotateLine {0 0} $delta [expr 180 - $Geometry(SeatTube_Angle)]]
                       set offsetSeatTube_x        [lindex $offsetSeatTube 0]
                         # puts "   -> $offsetSeatTube"
                   
                         # HeadTube Offset - horizontal
                         #
-                      # 2014 10 25 - E - 01
-                      # set deltaHeadTube           [expr [lindex $offsetSeatTube 1] / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-                      # set offsetHeadTube_x        [expr [lindex $offsetSeatTube 1] / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
                       set deltaHeadTube           [expr [lindex $offsetSeatTube 1] / sin($HeadTube(Angle) * $vectormath::CONST_PI / 180) ]
                       set offsetHeadTube_x        [expr [lindex $offsetSeatTube 1] / tan($HeadTube(Angle) * $vectormath::CONST_PI / 180) ]
               
                         # HeadTube Offset - horizontal & length
-                        #
-                        # project::remove_tracing ; #because of setting more then one parameter at once
                         #
                       set xpath                   Personal/HandleBar_Distance
                       set newValue                [expr $HandleBar(Distance)    + $offsetHeadTube_x + $offsetSeatTube_x]
@@ -678,25 +652,20 @@
                       set newValue                [expr $HeadTube(Length)    + $deltaHeadTube]
                       set_Value                   $xpath     $newValue
                         #
-                        # project::add_tracing
                       set_Value                   $xpath     $newValue
                         #
                       return
                 }
               
                 {Length/HeadTube/ReachLength} {
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                      puts "set_resultParameter   -> Length/HeadTube/ReachLength - check \$Geometry(ReachLengthResult) $Geometry(ReachLengthResult)"
-                      puts "set_resultParameter   -> Length/HeadTube/ReachLength - check \$HandleBar(Distance) $HandleBar(Distance)"
+                        # puts "set_resultParameter   -> Length/HeadTube/ReachLength - check \$Geometry(ReachLengthResult) $Geometry(ReachLengthResult)"
+                        # puts "set_resultParameter   -> Length/HeadTube/ReachLength - check \$HandleBar(Distance) $HandleBar(Distance)"
                       set oldValue                $Geometry(ReachLengthResult)
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                       set delta                   [expr $newValue - $oldValue]
-              
+                        #
                       set xpath                   Personal/HandleBar_Distance
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
                       set oldValue                $HandleBar(Distance)
                       set newValue                [expr $HandleBar(Distance)    + $delta]
                       set_Value                   $xpath     $newValue
@@ -704,19 +673,14 @@
                 }
               
                 {Length/HeadTube/StackHeight} {
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                      puts "set_resultParameter   -> Length/HeadTube/StackHeight - check \$Geometry(StackHeightResult) $Geometry(StackHeightResult)"
-                      puts "set_resultParameter   -> Length/HeadTube/StackHeight - check \$HeadTube(Angle)   $HeadTube(Angle)"
-                      puts "set_resultParameter   -> Length/HeadTube/StackHeight - check \$HandleBar(Height) $HandleBar(Height)"
+                        # puts "set_resultParameter   -> Length/HeadTube/StackHeight - check \$Geometry(StackHeightResult) $Geometry(StackHeightResult)"
+                        # puts "set_resultParameter   -> Length/HeadTube/StackHeight - check \$HeadTube(Angle)   $HeadTube(Angle)"
+                        # puts "set_resultParameter   -> Length/HeadTube/StackHeight - check \$HandleBar(Height) $HandleBar(Height)"
                       set oldValue                $Geometry(StackHeightResult)
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                       set delta                   [expr $newValue - $oldValue]
               
-                      # 2014 10 25 - E - 01
-                      # set deltaHeadTube           [expr $delta / sin($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
-                      # set offsetHeadTube_x        [expr $delta / tan($project::Custom(HeadTube/Angle) * $vectormath::CONST_PI / 180) ]
                       set deltaHeadTube           [expr $delta / sin($HeadTube(Angle) * $vectormath::CONST_PI / 180) ]
                       set offsetHeadTube_x        [expr $delta / tan($HeadTube(Angle) * $vectormath::CONST_PI / 180) ]
               
@@ -729,8 +693,6 @@
                         # project::remove_tracing ; #because of setting two parameters at once
                         #
                       set xpath                   Personal/HandleBar_Height
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
                       set oldValue                $HandleBar(Height)
                       set newValue                [expr $HandleBar(Height)    + $delta]
                       set_Value                   $xpath      $newValue
@@ -738,29 +700,24 @@
                         # project::add_tracing
                         #
                       set xpath                   FrameTubes/HeadTube/Length
-                      # 2014 10 25 - E - 01
-                      # oldValue                  $project::FrameTubes(HeadTube/Length)
                       set oldValue                $HeadTube(Length)
                       set newValue                [expr $HeadTube(Length) + $deltaHeadTube ]
                       set_Value                   $xpath     $newValue
-                    #
+                        #
                       return
                 }
               
                 {Length/TopTube/VirtualLength} {
-                      # puts "  -> Length/TopTube/VirtualLength"
-                      # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                      puts "set_resultParameter   -> Length/TopTube/VirtualLength - check \$TopTube(VirtualLength) $TopTube(VirtualLength)"
+                        # puts "  -> Length/TopTube/VirtualLength"
+                        # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                        # puts "set_resultParameter   -> Length/TopTube/VirtualLength - check \$TopTube(VirtualLength) $TopTube(VirtualLength)"
                       set oldValue                $TopTube(VirtualLength)
-                      # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                       set delta                   [expr $newValue - $oldValue]
               
-                    # --- set HandleBar(Distance)
-                    #
+                        # --- set HandleBar(Distance)
+                        #
                       set newValue                [ expr $HandleBar(Distance)    + $delta ]
                       set xpath                   Personal/HandleBar_Distance
                       set_Value $xpath            $newValue
@@ -768,19 +725,16 @@
                   }
               
                 {Length/FrontWheel/horizontal} {
-                      # puts "  -> Length/TopTube/VirtualLength"
-                      # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                      puts "set_resultParameter   -> Length/FrontWheel/horizontal - check \$Geometry(FrontWheel_x) $Geometry(FrontWheel_x)"
+                        # puts "  -> Length/TopTube/VirtualLength"
+                        # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                        # puts "set_resultParameter   -> Length/FrontWheel/horizontal - check \$Geometry(FrontWheel_x) $Geometry(FrontWheel_x)"
                       set oldValue                $Geometry(FrontWheel_x)
-                      # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                       set delta                   [expr $newValue - $oldValue]
-              
-                    # --- set HandleBar(Distance)
-                    #
+                  
+                        # --- set HandleBar(Distance)
+                        #
                       set newValue                [ expr $HandleBar(Distance)    + $delta ]
                       set xpath                   Personal/HandleBar_Distance
                       set_Value $xpath            $newValue
@@ -788,42 +742,33 @@
                   }
               
                 {Length/RearWheel/horizontal} {
-                          # puts "  -> Length/TopTube/VirtualLength"
-                          # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                          #set oldValue               [project::getValue [format "%s(%s)" $_array $_name] value]
-                          # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
-                      # 2014 10 25 - E - 01
-                      # set newValue                [set_Value $xpath  $value format]
-                      puts "set_resultParameter   -> Length/FrontWheel/horizontal - check \$Geometry(RearWheel_x) $Geometry(RearWheel_x)"
-                      puts "set_resultParameter   -> Length/FrontWheel/horizontal - check \$BottomBracket(depth)  $BottomBracket(depth)"
-                      set newValue                $Geometry(RearWheel_x)
+                        # puts "  -> Length/TopTube/VirtualLength"
+                        # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
+                        # puts "set_resultParameter   -> Length/FrontWheel/horizontal - check \$Geometry(RearWheel_x) $Geometry(RearWheel_x)"
+                        # puts "set_resultParameter   -> Length/FrontWheel/horizontal - check \$BottomBracket(depth)  $BottomBracket(depth)"
+                      set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
-                          #set delta                  [expr $newValue - $oldValue]
-                      # 2014 10 25 - E - 01
-                      # set bbDepth                 $project::Custom(BottomBracket/Depth)
                       set bbDepth                 $BottomBracket(depth)
               
-                    # --- set HandleBar(Distance)
-                    #
+                        # --- set HandleBar(Distance)
+                        #
                       set newValue                [ expr { sqrt( $newValue * $newValue + $bbDepth * $bbDepth ) } ]
+                      set Geometry(RearWheel_x)   $newValue
                       set xpath                   Custom/WheelPosition/Rear
-                      set_Value                   $xpath     $newValue
+                      set_Value                   $xpath     $Geometry(RearWheel_x)
                       return
                   }
               
                 {Length/FrontWheel/diagonal} {
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value]
-                      puts "set_resultParameter   -> Length/FrontWheel/diagonal - check \$Geometry(FrontWheel_xy) $Geometry(FrontWheel_xy)"
+                        # puts "set_resultParameter   -> Length/FrontWheel/diagonal - check \$Geometry(FrontWheel_xy) $Geometry(FrontWheel_xy)"
                       set oldValue                $Geometry(FrontWheel_xy)
-                        # set oldValue              [ [ $domProject selectNodes $xpath  ]    asText ]
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                         # puts "                 <D> ... $oldValue $newValue"
               
-                    # --- set HandleBar(Angle)
-                    #
+                        # --- set HandleBar(Angle)
+                        #
                       set vect_01     [ expr $Stem(Length) * cos($Stem(Angle) * $vectormath::CONST_PI / 180) ]
                       set vect_02     [ expr $vect_01 - $Fork(Rake) ]
               
@@ -846,9 +791,7 @@
               
                 {Length/Saddle/Offset_HB} {
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
-                      puts "set_resultParameter   -> Length/Saddle/Offset_HB - check \$Geometry(Saddle_HB_y) $Geometry(Saddle_HB_y)"
+                        # puts "set_resultParameter   -> Length/Saddle/Offset_HB - check \$Geometry(Saddle_HB_y) $Geometry(Saddle_HB_y)"
                       set oldValue                $Geometry(Saddle_HB_y)
                       set newValue                [set_Value $xpath  $value format ]
                       set _updateValue($xpath)    $newValue
@@ -867,25 +810,17 @@
                 {Length/Saddle/Offset_BB_ST} {
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
                       set newValue                [set_Value $xpath  $value format ]
-                      # 2014 10 25 - E - 01
-                      # set height                  [project::getValue [format "%s(%s)" Personal Saddle_Height] value ]
-                      puts "set_resultParameter   -> Length/Saddle/Offset_BB_ST - check \$Saddle(Saddle_Height) $Saddle(Saddle_Height)"
+                        # puts "set_resultParameter   -> Length/Saddle/Offset_BB_ST - check \$Saddle(Saddle_Height) $Saddle(Saddle_Height)"
                       set height                  $Saddle(Height)
-                      # puts "   .... \$height $height"
                       set angle                   [vectormath::dirAngle {0 0} [list $newValue $height] ]
-                      # puts "   .... \$angle $angle"
-                      # exit
                       set_resultParameter Result Angle/SeatTube/Direction $angle
-              
                         # puts "   $newValue / $height -> $angle"
                       return
                   }
               
                 {Length/Saddle/Offset_BB_Nose} {
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
-                      # 2014 10 25 - E - 01
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
-                      puts "set_resultParameter   -> Length/Saddle/Offset_BB_Nose - check \$Geometry(SaddleNose_BB_x) $Geometry(SaddleNose_BB_x)"
+                        # puts "set_resultParameter   -> Length/Saddle/Offset_BB_Nose - check \$Geometry(SaddleNose_BB_x) $Geometry(SaddleNose_BB_x)"
                       set oldValue                $Geometry(SaddleNose_BB_x)
                       set newValue                [set_Value $xpath  $value format ]
                       set delta                   [expr -1.0 * ($newValue - $oldValue) ]
@@ -893,42 +828,27 @@
                         
                         # --- set Component(Saddle/LengthNose)
                         #
-                      # 2014 10 25 - E - 01
-                      # set newValue                [expr $project::Rendering(Saddle/Offset_X) + $delta ]
-                      puts "set_resultParameter   -> Length/Saddle/Offset_BB_Nose - check \$Rendering(SaddleOffset_x) $Rendering(SaddleOffset_x)"
+                        # puts "set_resultParameter   -> Length/Saddle/Offset_BB_Nose - check \$Rendering(SaddleOffset_x) $Rendering(SaddleOffset_x)"
                       set newValue                [expr $Rendering(SaddleOffset_x) + $delta ]
                       set Rendering(SaddleOffset_x) $newValue
                       set xpath                   Rendering/Saddle/Offset_X
                       set_Value                   $xpath     $Rendering(SaddleOffset_x)                        
-
+                        #
                       return
                   }
 
                 {Length/Saddle/SeatTube_BB} {
-                      # 2014 10 25 - G -
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
-                      # set angle_SeatTube          $project::Result(Angle/SeatTube/Direction)
-                      # set pos_SeatTube_old        [ split [ project::getValue Result(Position/SeatTubeSaddle)    position] ,]
-                      # set pos_Saddle_old          $Saddle(Position)
-                      # puts "  ... \$oldValue         $oldValue" 
-                      # puts "  ... \$angle_SeatTube   $angle_SeatTube" 
-                      # puts "  ... \$pos_SeatTube_old $pos_SeatTube_old" 
-                      # puts "  ... \$pos_Saddle_old   $pos_Saddle_old" 
                       set newValue                [set_Value $xpath  $value format ]
                       set oldValue                $Geometry(Saddle_BB)
                       set angle_SeatTube          $Geometry(SeatTube_Angle)
                       set pos_SeatTube_old        $Geometry(SeatTubeSaddle)
                       set pos_Saddle_old          $Saddle(Position)
-                      puts "  ... \$oldValue         $oldValue" 
-                      puts "  ... \$angle_SeatTube   $angle_SeatTube" 
-                      puts "  ... \$pos_SeatTube_old $pos_SeatTube_old" 
-                      puts "  ... \$pos_Saddle_old   $pos_Saddle_old" 
-                      
+                        #
                       set pos_SeatTube_x          [expr $newValue * cos([vectormath::rad $angle_SeatTube])]
                       set pos_SeatTube_y          [expr $newValue * sin([vectormath::rad $angle_SeatTube])]
-                      
+                        #
                       set delta_Saddle_ST         [expr [lindex $pos_Saddle_old 0] - [lindex $pos_SeatTube_old 0]]
-                      
+                        #
                       set pos_Saddle_x            [expr $pos_SeatTube_x - $delta_Saddle_ST]
                       set pos_Saddle_y            $pos_SeatTube_y
                       
@@ -938,111 +858,92 @@
                         # puts "  -> \$pos_Saddle_x     $pos_Saddle_x"
                         # puts "  -> \$pos_Saddle_y     $pos_Saddle_y"
   
-                      # 2014 10 25 - E -
-                            #   set project::Personal(Saddle_Distance)   [format "%.3f" $pos_Saddle_x]
-                            #   set_base_Parameters              
-                            #   set xpath                   Personal/Saddle_Height
-                            #   set_Value                   $xpath     $pos_Saddle_y   
-                            #
                       set Saddle(Distance)  [format "%.3f" $pos_Saddle_x]
                       set Saddle(Height)    [format "%.3f" $pos_Saddle_y]
-                        # set project::Personal(Saddle_Distance)   [format "%.3f" $pos_Saddle_x]
-                        # puts "    ... 01 \$project::Personal(Saddle_Distance) $project::Personal(Saddle_Distance)"
                       set xpath                   Personal/Saddle_Distance
                       set_Value                   $xpath     $Saddle(Distance) 
-                        # puts "    ... 02 \$project::Personal(Saddle_Distance) $project::Personal(Saddle_Distance)"
-                        #exit
+                        #
                       set_base_Parameters
-                                            
+                        #                    
                       set xpath                   Personal/Saddle_Height
-                      set_Value                   $xpath     $Saddle(Height)   
+                      set_Value                   $xpath     $Saddle(Height)
+                        #
                       return                      
                   }
                 
                 {Length/Personal/SaddleNose_HB}  {
-                      # 2014 10 25 - G -
-                      # set oldValue                [project::getValue [format "%s(%s)" $_array $_name] value ]
-                      puts "set_resultParameter   -> Length/Personal/SaddleNose_HB - check \$Geometry(SaddleNose_HB)  $Geometry(SaddleNose_HB)"
-                      puts "set_resultParameter   -> Length/Personal/SaddleNose_HB - check \$HandleBar(Distance)  $HandleBar(Distance)"
+                        # puts "set_resultParameter   -> Length/Personal/SaddleNose_HB - check \$Geometry(SaddleNose_HB)  $Geometry(SaddleNose_HB)"
+                        # puts "set_resultParameter   -> Length/Personal/SaddleNose_HB - check \$HandleBar(Distance)  $HandleBar(Distance)"
                       set oldValue                $Geometry(SaddleNose_HB)
                       set newValue                [set_Value $xpath  $value format ]
                       set delta                   [expr ($newValue - $oldValue) ]
                         
                         # --- set Personal(HandleBar_Distance)
                         #
-                      # 2014 10 25 - E -
-                      # set newValue                [expr $project::Personal(HandleBar_Distance) + $delta ]
                       set newValue                [expr $HandleBar(Distance) + $delta ]
                       set xpath                   Personal/HandleBar_Distance
-                      set_Value                   $xpath     $newValue   
+                      set_Value                   $xpath     $newValue
+                        #
                       return 
                   }
                   
                 {Length/RearWheel/Radius} {
-                      # 2014 10 25 - E -
-                      # set rimDiameter   [ project::getValue Component(Wheel/Rear/RimDiameter)  value ]
-                      # set tyreHeight    [ project::getValue Component(Wheel/Rear/TyreHeight)   value ]
-                      puts "set_resultParameter   -> Length/RearWheel/Radius - check \$RearWheel(RimDiameter)  $RearWheel(RimDiameter)"
-                      puts "set_resultParameter   -> Length/RearWheel/Radius - check \$RearWheel(TyreHeight)   $RearWheel(TyreHeight)"
+                        # puts "set_resultParameter   -> Length/RearWheel/Radius - check \$RearWheel(RimDiameter)  $RearWheel(RimDiameter)"
+                        # puts "set_resultParameter   -> Length/RearWheel/Radius - check \$RearWheel(TyreHeight)   $RearWheel(TyreHeight)"
                       set rimDiameter       $RearWheel(RimDiameter)
                       set tyreHeight        $RearWheel(TyreHeight)
                       set newValue          [ expr $value - 0.5 * $rimDiameter]
                       set xpath             Component/Wheel/Rear/TyreHeight
-                      set_Value             $xpath     $newValue  
+                      set_Value             $xpath     $newValue
+                        #
+                      return                      
                   }
                 {Length/RearWheel/TyreShoulder} {
-                      # 2014 10 25 - E -
-                      # set wheelRadius   [ project::getValue Result(Length/RearWheel/Radius)  value ]
-                      puts "set_resultParameter   -> Length/RearWheel/TyreShoulder - check \$RearWheel(Radius)  $RearWheel(Radius)"
+                        # puts "set_resultParameter   -> Length/RearWheel/TyreShoulder - check \$RearWheel(Radius)  $RearWheel(Radius)"
                       set wheelRadius   $RearWheel(Radius)
                       set xpath         Component/Wheel/Rear/TyreWidthRadius
                       set newValue      [ expr $wheelRadius - abs($value)]
                       set_Value         $xpath     $newValue
+                        #
+                      return                      
                   }
                 {Length/FrontWheel/Radius} {
-                      # 2014 10 25 - E -
-                      # set rimDiameter   [ project::getValue Component(Wheel/Front/RimDiameter) value ]
-                      # set tyreHeight    [ project::getValue Component(Wheel/Front/TyreHeight)  value ]
-                      puts "set_resultParameter   -> Length/FrontWheel/Radius - check \$FrontWheel(RimDiameter)  $FrontWheel(RimDiameter)"
-                      puts "set_resultParameter   -> Length/FrontWheel/Radius - check \$FrontWheel(TyreHeight)   $FrontWheel(TyreHeight)"
+                        # puts "set_resultParameter   -> Length/FrontWheel/Radius - check \$FrontWheel(RimDiameter)  $FrontWheel(RimDiameter)"
+                        # puts "set_resultParameter   -> Length/FrontWheel/Radius - check \$FrontWheel(TyreHeight)   $FrontWheel(TyreHeight)"
                       set rimDiameter   $FrontWheel(RimDiameter)
                       set tyreHeight    $FrontWheel(TyreHeight)
                       set newValue      [ expr $value - 0.5 * $rimDiameter]
                       set xpath         Component/Wheel/Front/TyreHeight
-                      set_Value         $xpath     $newValue                
+                      set_Value         $xpath     $newValue
+                        #
+                      return                      
                   }
                   
                 {Length/Reference/Heigth_SN_HB} {
                       # puts "   -> $_name"
-                      # 2014 10 25 - E -
-                      # set oldValue                $project::Result(Length/Reference/Heigth_SN_HB)
-                      parray Reference
-                      puts "set_resultParameter   -> Length/Reference/Heigth_SN_HB - check \$Reference(SaddleNose_HB_y)   $Reference(SaddleNose_HB_y)"
-                      puts "set_resultParameter   -> Length/Reference/Heigth_SN_HB - check \$Reference(HandleBar_Height)  $Reference(HandleBar_Height)"
-                      puts "set_resultParameter   -> Length/Reference/Heigth_SN_HB - check \$Reference(HandleBar_Height)  $Reference(HandleBar_Height)"
-                      # Reference(HandleBar_Height)
+                        # puts "set_resultParameter   -> Length/Reference/Heigth_SN_HB - check \$Reference(SaddleNose_HB_y)   $Reference(SaddleNose_HB_y)"
+                        # puts "set_resultParameter   -> Length/Reference/Heigth_SN_HB - check \$Reference(HandleBar_Height)  $Reference(HandleBar_Height)"
+                        # puts "set_resultParameter   -> Length/Reference/Heigth_SN_HB - check \$Reference(HandleBar_Height)  $Reference(HandleBar_Height)"
                       set oldValue                $Reference(SaddleNose_HB_y)
                       set newValue                [set_Value [format "%s(%s)" $_array $_name]  $value format ]
                       set deltaValue              [expr $newValue - $oldValue]
-                      # set xpath                   Reference(HandleBar_Height)
                       set xpath                   Reference/HandleBar_Height
-                      # 2014 10 25 - E -
-                      # set HandleBar_Height        $project::Reference(HandleBar_Height)                              
                       set HandleBar_Height        $Reference(HandleBar_Height)                              
                       set HandleBar_Height        [expr $HandleBar_Height - $deltaValue]  
                       set_Value         $xpath    $HandleBar_Height
+                        #
+                      return
                   } 
  
                 {Length/Reference/SaddleNose_HB} {
-                      # 2014 10 25 - E -
-                      # set SaddleHeight            $project::Result(Length/Reference/Heigth_SN_HB)
-                      puts "set_resultParameter   -> Length/Reference/SaddleNose_HB - check \$Reference(SaddleNose_HB_y)  $Reference(SaddleNose_HB_y)"
+                        # puts "set_resultParameter   -> Length/Reference/SaddleNose_HB - check \$Reference(SaddleNose_HB_y)  $Reference(SaddleNose_HB_y)"
                       set SaddleHeight            $Reference(SaddleNose_HB_y)
                       set newValue                [set_Value [format "%s(%s)" $_array $_name]  $value format ]
                       set Distance_HB             [ expr { sqrt( $newValue * $newValue - $SaddleHeight * $SaddleHeight ) } ]
-                      # set xpath                   Reference(HandleBar_Distance)
                       set xpath                   Reference/HandleBar_Distance
                       set_Value         $xpath    $Distance_HB
+                        #
+                      return
                   }
                   
       
