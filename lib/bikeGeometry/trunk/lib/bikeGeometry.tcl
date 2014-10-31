@@ -59,7 +59,7 @@
  # 0.72 cleanup from refactoring comments in 0.71
  #
   
- package provide bikeGeometry 0.72
+ package provide bikeGeometry 0.73
 
  namespace eval bikeGeometry {
 
@@ -81,10 +81,10 @@
         
             #-------------------------------------------------------------------------
                 #  current Project Values
-                # variable BaseCenter        ; array set BaseCenter        {}
             variable Project        ; array set Project         {}
             variable Geometry       ; array set Geometry        {}
             variable Reference      ; array set Reference       {}
+            variable Result         ; array set Result          {}
 
             variable RearWheel      ; array set RearWheel       {}
             variable FrontWheel     ; array set FrontWheel      {}
@@ -102,6 +102,7 @@
             variable SeatStay       ; array set SeatStay        {}
             variable Steerer        ; array set Steerer         {}
             variable ForkBlade      ; array set ForkBlade       {}
+            variable Lugs           ; array set Lugs            {}
 
             variable Fork           ; array set Fork            {}
             variable Stem           ; array set Stem            {}
@@ -628,7 +629,8 @@
                         # puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$SeatTube(VirtualLength) $SeatTube(VirtualLength))"
                         # puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$Geometry(SeatTube_Angle) $Geometry(SeatTube_Angle))"
                         # puts "set_resultParameter   -> Length/SeatTube/VirtualLength - check \$HeadTube(Angle) $HeadTube(Angle))"
-                      set oldValue                $SeatTube(VirtualLength)
+                      set oldValue                $Geometry(SeatTube_VirtualLength)
+                      # set oldValue                $SeatTube(VirtualLength)
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                       set delta                   [expr $newValue - $oldValue]
@@ -711,7 +713,8 @@
                         # puts "  -> Length/TopTube/VirtualLength"
                         # puts "               ... [format "%s(%s)" $_array $_name] $xpath"
                         # puts "set_resultParameter   -> Length/TopTube/VirtualLength - check \$TopTube(VirtualLength) $TopTube(VirtualLength)"
-                      set oldValue                $TopTube(VirtualLength)
+                      set oldValue                $Geometry(TopTube_VirtualLength)
+                      # set oldValue                $TopTube(VirtualLength)
                       set newValue                [set_Value $xpath  $value format]
                       set _updateValue($xpath)    $newValue
                       set delta                   [expr $newValue - $oldValue]

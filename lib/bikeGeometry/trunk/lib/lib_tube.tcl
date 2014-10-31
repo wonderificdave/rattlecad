@@ -651,7 +651,8 @@ namespace eval bikeGeometry::tube {
             # -- draw shape of tube
         set outLineLeft   [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile left  ]
         set outLineRight  [bikeGeometry::tube::get_tubeShape    $centerLine $tubeProfile right ]
-        set outLine       [appUtil::flatten_nestedList $outLineLeft $outLineRight]
+        set outLine       [bikeGeometry::util::flatten_nestedList   $outLineLeft $outLineRight]
+        # set outLine       [appUtil::flatten_nestedList $outLineLeft $outLineRight]
         set angleRotation [expr $angleRotation - $headTube_Angle]
         set brakeDefLine  [lrange $outLineRight 0 1]
 
@@ -671,7 +672,8 @@ namespace eval bikeGeometry::tube {
         set outLine [vectormath::addVectorPointList            $dropOutPos $outLine]
         
             # -- get oriented centerLine
-        set centerLineCut [vectormath::addVectorPointList      $addVector [appUtil::flatten_nestedList $centerLineCut]]
+        set centerLineCut [vectormath::addVectorPointList      $addVector [bikeGeometry::util::flatten_nestedList $centerLineCut]]
+        # set centerLineCut [vectormath::addVectorPointList      $addVector [appUtil::flatten_nestedList $centerLineCut]]
         set centerLineCut [vectormath::rotatePointList {0 0}   $centerLineCut $angleRotation]
         set centerLineCut [vectormath::addVectorPointList      $dropOutPos $centerLineCut]
             # set centerLine [vectormath::addVectorPointList       $addVector [appUtil::flatten_nestedList $centerLine]]
@@ -680,7 +682,8 @@ namespace eval bikeGeometry::tube {
             # puts "\$centerLineCut $centerLineCut"    
 
             # -- get oriented brakeDefLine
-        set brakeDefLine [vectormath::addVectorPointList       $addVector [appUtil::flatten_nestedList $brakeDefLine]]
+        set brakeDefLine [vectormath::addVectorPointList       $addVector [bikeGeometry::util::flatten_nestedList $brakeDefLine]]
+        # set brakeDefLine [vectormath::addVectorPointList       $addVector [appUtil::flatten_nestedList $brakeDefLine]]
         set brakeDefLine [vectormath::rotatePointList          {0 0} $brakeDefLine $angleRotation]
         set brakeDefLine [vectormath::addVectorPointList       $dropOutPos $brakeDefLine]
 

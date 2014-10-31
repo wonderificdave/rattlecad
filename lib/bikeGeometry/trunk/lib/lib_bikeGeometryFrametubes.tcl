@@ -44,6 +44,9 @@
             variable RearDrop
             variable ChainStay
             variable RearWheel
+            variable Lugs
+                #
+            variable Result
                 #
             set vct_angle   [ vectormath::dirAngle      $RearWheel(Position)  {0 0}]
             set vct_xy      [ list $RearDrop(OffsetCS) [expr -1.0 * $RearDrop(OffsetCSPerp)]]
@@ -64,10 +67,12 @@
             set pt_00       [ vectormath::addVector     $RearWheel(Position)  $vct_CS]
                 #
             set ChainStay(Direction)            [ vectormath::unifyVector $pt_00 {0 0}]
+            # set Result(Tubes/ChainStay/Direction)  $ChainStay(Direction)
                 #
-            project::setValue Result(Tubes/ChainStay/Direction) direction   $ChainStay(Direction)
-                #
-            project::setValue Result(Tubes/ChainStay/CenterLine)  value [list [format "%s,%s %s,%s" [lindex $pt_00 0] [lindex $pt_00 1] \
+            set ChainStay(CenterLine) [list [format "%s,%s %s,%s" [lindex $pt_00 0] [lindex $pt_00 1] \
+                                                                                                    0                 0 ] ]
+            # set Result(Tubes/ChainStay/CenterLine) $ChainStay(CenterLine)
+            # set Result(Tubes/ChainStay/CenterLine) [list [format "%s,%s %s,%s" [lindex $pt_00 0] [lindex $pt_00 1] \
                                                                                                     0                 0 ] ]
 
 
@@ -76,8 +81,9 @@
             set vct_xy      [ list [expr -1 * $RearDrop(Derailleur_x)]  [expr -1 * $RearDrop(Derailleur_y)]]
             set vct_mount   [ vectormath::rotatePoint   {0 0}  $vct_xy  $do_angle]
             set pt_mount    [ vectormath::addVector     $RearWheel(Position)  $vct_mount]
+            set Lugs(RearDropout_Derailleur)    $pt_mount
                 #
-            project::setValue Result(Lugs/Dropout/Rear/Derailleur)  position     $pt_mount
+            # set Result(Lugs/Dropout/Rear/Derailleur)       $pt_mount
 
 
                         # -- exception if Tube is shorter than taper length
@@ -96,8 +102,8 @@
 
                     set ChainStay(RearWheel)            $pt_00
                     set ChainStay(BottomBracket)        {0 0}
-            project::setValue Result(Tubes/ChainStay/Start)         position    $ChainStay(RearWheel)
-            project::setValue Result(Tubes/ChainStay/End)           position    {0 0}
+            # set Result(Tubes/ChainStay/Start)             $ChainStay(RearWheel)
+            # set Result(Tubes/ChainStay/End)               {0 0}
 
                     set vct_01      [ vectormath::parallel          $pt_00 $pt_01 [expr 0.5*$ChainStay(DiameterSS)] ]
                     set vct_02      [ vectormath::parallel          $pt_01 $pt_02 [expr 0.5*$ChainStay(Height)]    ]
@@ -109,7 +115,8 @@
                     set polygon     [format "%s %s %s %s %s %s %s %s %s %s" \
                                             [lindex $vct_01 0] [lindex $vct_02 0] [lindex $vct_02 1] [lindex $vct_03 0] [lindex $vct_03 1] \
                                             [lindex $vct_04 1] [lindex $vct_04 0] [lindex $vct_05 1] [lindex $vct_05 0] [lindex $vct_06 0] ]
-            project::setValue Result(Tubes/ChainStay)   polygon     $polygon
+            set ChainStay(Polygon)        $polygon
+            # set Result(Tubes/ChainStay/Polygon)        $polygon
             
               # --- side View
             set l_00  0
@@ -117,13 +124,21 @@
             set l_02  [vectormath::length $pt_00 $pt_02]
             set l_03  [vectormath::length $pt_00 $pt_03]
             set l_04  [vectormath::length $pt_00 {0 0}]
-            project::setValue Result(Tubes/ChainStay/Profile/xz) value  [list [format "%s,%s %s,%s %s,%s %s,%s %s,%s" \
+            set ChainStay(Polygon_zx)   [list [format "%s,%s %s,%s %s,%s %s,%s %s,%s" \
                                                                                 $l_00 [expr 0.5*$ChainStay(DiameterSS)] \
                                                                                 $l_01 [expr 0.5*$ChainStay(Height)] \
                                                                                 $l_02 [expr 0.5*$ChainStay(Height)] \
                                                                                 $l_03 [expr 0.5*$ChainStay(HeigthBB)] \
-                                                                                $l_04 [expr 0.5*$ChainStay(HeigthBB)]
+                                                                                $l_04 [expr 0.5*$ChainStay(HeigthBB)] \
                                                                               ]
+                                                                        ]
+            # set Result(Tubes/ChainStay/Profile/xz)   [list [format "%s,%s %s,%s %s,%s %s,%s %s,%s" \
+                                                                                $l_00 [expr 0.5*$ChainStay(DiameterSS)] \
+                                                                                $l_01 [expr 0.5*$ChainStay(Height)] \
+                                                                                $l_02 [expr 0.5*$ChainStay(Height)] \
+                                                                                $l_03 [expr 0.5*$ChainStay(HeigthBB)] \
+                                                                                $l_04 [expr 0.5*$ChainStay(HeigthBB)] \
+                                                                              ] \
                                                                         ]
 
     }
@@ -136,6 +151,8 @@
             variable RearWheel
             variable RearDrop
             variable ChainStay
+                #
+            variable Result
                 #
             set type $ChainStay(Rendering) 
                 #
@@ -258,7 +275,8 @@
             set outLineOrient    [bikeGeometry::tube::get_tubeShape    $centerLineUnCut  $tubeProfile left  ]
             set outLineLeft      [bikeGeometry::tube::get_tubeShape    $centerLine       $tubeProfile left  ]
             set outLineRight     [bikeGeometry::tube::get_tubeShape    $centerLine       $tubeProfile right ]
-            set outLine          [appUtil::flatten_nestedList          $outLineLeft      $outLineRight]
+            set outLine          [bikeGeometry::util::flatten_nestedList    $outLineLeft      $outLineRight]
+            # set outLine          [appUtil::flatten_nestedList          $outLineLeft      $outLineRight]
                 # -- move outline to centerLine
             set vct              [lindex $centerLine 0]
             set vct              [list [lindex $vct 0] [expr -1.0*[lindex $vct 1]]]
@@ -285,18 +303,21 @@
                 # $ext_cvName  create   polygon $outLine    -tags __Tube__  -fill lightgray
                
                 # -- prepare $centerLineUnCut for export 
-            set centerLineUnCut  [appUtil::flatten_nestedList $centerLineUnCut]
+            set centerLineUnCut  [bikeGeometry::util::flatten_nestedList $centerLineUnCut]
+            # set centerLineUnCut  [appUtil::flatten_nestedList $centerLineUnCut]
             set centerLineUnCut  [vectormath::rotatePointList {0 0} $centerLineUnCut $angleRotation]    
                 # set centerLine    [vectormath::addVectorPointList $Center(ChainStay_DO) $centerLineUnCut]
                 
                 # -- prepare $centerLine for export 
-            set centerLine       [appUtil::flatten_nestedList $centerLine]
+            set centerLine       [bikeGeometry::util::flatten_nestedList $centerLine]
+            # set centerLine       [appUtil::flatten_nestedList $centerLine]
             set centerLine       [vectormath::rotatePointList {0 0} $centerLine $angleRotation]    
                 #set centerLine [vectormath::addVectorPointList $Center(ChainStay_DO) $centerLine]
                 # $ext_cvName  create   line    $centerLine -tags __CenterLine__  -fill blue
              
                 # -- prepare $ctrLines for export 
-            set ctrLines         [appUtil::flatten_nestedList $ctrLines]
+            set ctrLines         [bikeGeometry::util::flatten_nestedList $ctrLines]
+            # set ctrLines         [appUtil::flatten_nestedList $ctrLines]
             set ctrLines         [vectormath::rotatePointList {0 0} $ctrLines $angleRotation]    
             
                   
@@ -308,11 +329,12 @@
                 return $commaList
             }
                 # -- store Values
-            project::setValue Result(Tubes/ChainStay/RearMockup/Start)            value  [list [lindex $Center(ChainStay_DO) 0],[lindex $Center(ChainStay_DO) 1]]
-            project::setValue Result(Tubes/ChainStay/RearMockup)                polygon  $outLine
-            project::setValue Result(Tubes/ChainStay/RearMockup/CtrLines)         value  [list [format_XcommaY $ctrLines]]
-            project::setValue Result(Tubes/ChainStay/RearMockup/CenterLine)       value  [list [format_XcommaY $centerLine]]
-            project::setValue Result(Tubes/ChainStay/RearMockup/CenterLineUnCut)  value  [list [format_XcommaY $centerLineUnCut]]
+            set Result(Tubes/ChainStay/RearMockup/Start)              [list [lindex $Center(ChainStay_DO) 0],[lindex $Center(ChainStay_DO) 1]]
+            set ChainStay(Polygon_RearMockup)            $outLine
+            # set Result(Tubes/ChainStay/RearMockup/Polygon)            $outLine
+            set Result(Tubes/ChainStay/RearMockup/CtrLines)           [list [format_XcommaY $ctrLines]]
+            set Result(Tubes/ChainStay/RearMockup/CenterLine)         [list [format_XcommaY $centerLine]]
+            set Result(Tubes/ChainStay/RearMockup/CenterLineUnCut)    [list [format_XcommaY $centerLineUnCut]]
                 # puts "\n===================\n -> \$outLine $outLine\n"
 
             
@@ -322,7 +344,7 @@
             set l_02  [expr $l_01 + $profile_x02]
             set l_03  [expr $l_02 + $profile_x03]
             set l_04  [expr $l_03 + 250]
-            project::setValue Result(Tubes/ChainStay/Profile/xy) value  [list [format "%s,%s %s,%s %s,%s %s,%s" \
+            set Result(Tubes/ChainStay/Profile/xy)   [list [format "%s,%s %s,%s %s,%s %s,%s" \
                                                                                 $l_00 [expr 0.5 * $profile_y00] \
                                                                                 $l_01 [expr 0.5 * $profile_y01] \
                                                                                 $l_02 [expr 0.5 * $profile_y02] \
@@ -347,19 +369,21 @@
             variable HeadSet
             variable Steerer
                 #
+            variable Result
+                #
             set HeadTube(Direction)         [ vectormath::unifyVector     $Steerer(Fork)        $Steerer(Stem) ]
             set Steerer(Direction)          $HeadTube(Direction)
                 #
-            project::setValue Result(Tubes/Steerer/Direction)   direction   $HeadTube(Direction)
-            project::setValue Result(Tubes/HeadTube/Direction)  direction   $HeadTube(Direction)
+            # set Result(Tubes/Steerer/Direction)    $HeadTube(Direction)
+            # set Result(Tubes/HeadTube/Direction)   $HeadTube(Direction)
                 #
             set HeadTube(Fork)              [ vectormath::addVector     $Steerer(Fork)  $HeadTube(Direction)    $HeadSet(Height_Bottom) ]
             set HeadTube(Stem)              [ vectormath::addVector     $HeadTube(Fork) $HeadTube(Direction)    $HeadTube(Length) ]
                 #
-            project::setValue Result(Tubes/HeadTube/Start)      position    $HeadTube(Fork)
-            project::setValue Result(Tubes/HeadTube/End)        position    $HeadTube(Stem)
+            # set Result(Tubes/HeadTube/Start)          $HeadTube(Fork)
+            # set Result(Tubes/HeadTube/End)            $HeadTube(Stem)
                 #
-            project::setValue Result(Tubes/HeadTube/CenterLine) value [list [format "%s,%s %s,%s" [lindex $HeadTube(Fork) 0] [lindex $HeadTube(Fork) 1] \
+            set Result(Tubes/HeadTube/CenterLine)  [list [format "%s,%s %s,%s" [lindex $HeadTube(Fork) 0] [lindex $HeadTube(Fork) 1] \
                                                                                                   [lindex $HeadTube(Stem) 0] [lindex $HeadTube(Stem) 1] ] ]
                 #
                 #
@@ -370,11 +394,12 @@
                                     [lindex $vct_01 0] [lindex $vct_01 1] \
                                     [lindex $vct_ht 0] [lindex $vct_ht 1] ]
                 #                           
-            project::setValue Result(Tubes/HeadTube)            polygon     $polygon
+            set HeadTube(Polygon)       $polygon
+            # set Result(Tubes/HeadTube/Polygon)      $polygon
                 # --- side View
-            project::setValue Result(Tubes/HeadTube/Profile/xz) value   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
+            set Result(Tubes/HeadTube/Profile/xz)   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
                 # --- top View
-            project::setValue Result(Tubes/HeadTube/Profile/xy) value   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
+            set Result(Tubes/HeadTube/Profile/xy)   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
                 #
     }
 
@@ -389,18 +414,21 @@
             variable SeatPost
             variable Steerer
                 #
+            variable Result
+                #
 
             set vct_st      [ vectormath::parallel          $SeatTube(DownTube) $SeatPost(SeatTube) [expr 0.5*$SeatTube(DiameterTT)] ]
                     # set vct_st    [ vectormath::parallel          $SeatTube(BottomBracket) $SeatPost(SeatTube) [expr 0.5*$SeatTube(DiameterTT)] ]
 
-            project::setValue Result(Tubes/SeatTube/Direction)    direction     $SeatTube(Direction)     ;# direction vector of SeatTube
+            # set Result(Tubes/SeatTube/Direction)       $SeatTube(Direction)     ;# direction vector of SeatTube
 
                     set vct_ht      [ vectormath::parallel          $HeadTube(Stem) $HeadTube(Fork) [expr 0.5*$HeadTube(Diameter)] ]
                     set pt_00       [lindex $vct_ht 0]
                     set pt_01       [ vectormath::addVector         $pt_00 $HeadTube(Direction) [expr -1 * $TopTube(OffsetHT)] ]    ;# top intersection TopTube/HeadTube
 
-                    set TopTube(Direction)            [ vectormath::rotatePoint {0 0} {-1 0} $TopTube(Angle) ]    ;# direction vector of TopTube
-            project::setValue Result(Tubes/TopTube/Direction)    direction     [ vectormath::rotatePoint {0 0} {-1 0} $TopTube(Angle) ]    ;# direction vector of TopTube
+            set TopTube(Direction)            [ vectormath::rotatePoint {0 0} {-1 0} $TopTube(Angle) ]    ;# direction vector of TopTube
+            # set Result(Tubes/TopTube/Direction)       $TopTube(Direction)    ;# direction vector of TopTube
+            # set Result(Tubes/TopTube/Direction)       [ vectormath::rotatePoint {0 0} {-1 0} $TopTube(Angle) ]    ;# direction vector of TopTube
 
                     set pt_02       [ vectormath::intersectPoint    $pt_01 [vectormath::addVector $pt_01  $TopTube(Direction)]  {0 0} $SeatPost(SeatTube) ]    ;# top intersection TopTube/HeadTube
                     set vct_00      [ vectormath::parallel          $pt_01 $pt_02 [expr 0.5 * $TopTube(DiameterHT)] left]    ;# TopTube centerline Vector
@@ -417,29 +445,30 @@
                     set pt_st       [ vectormath::intersectPoint    [lindex $vct_st 0] [lindex $vct_st 1]  [lindex $vct_21 0] [lindex $vct_21 1] ]
                     set pt_22       [ vectormath::intersectPoint    [lindex $vct_st 0] [lindex $vct_st 1]  [lindex $vct_22 0] [lindex $vct_22 1] ]
 
-                set TopTube(HeadTube)            $pt_10
-                set TopTube(SeatTube)            [ vectormath::intersectPoint [lindex $vct_00 0] [lindex $vct_00 1] $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
-            project::setValue Result(Tubes/TopTube/Start)          position     $TopTube(SeatTube)
-            project::setValue Result(Tubes/TopTube/End)            position     $TopTube(HeadTube)
+            set TopTube(HeadTube)   $pt_10
+            set TopTube(SeatTube)   [ vectormath::intersectPoint [lindex $vct_00 0] [lindex $vct_00 1] $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
+            # set Result(Tubes/TopTube/Start)               $TopTube(SeatTube)
+            # set Result(Tubes/TopTube/End)                 $TopTube(HeadTube)
                         #
-            project::setValue Result(Tubes/TopTube/CenterLine)  value [list [format "%s,%s %s,%s" [lindex $TopTube(SeatTube) 0] [lindex $TopTube(SeatTube) 1] \
+            set Result(Tubes/TopTube/CenterLine)   [list [format "%s,%s %s,%s" [lindex $TopTube(SeatTube) 0] [lindex $TopTube(SeatTube) 1] \
                                                                                                   [lindex $TopTube(HeadTube) 0] [lindex $TopTube(HeadTube) 1] ] ]
                         #
                     set is_tt_ht    [ tube_intersection    $TopTube(DiameterHT) $TopTube(Direction)  $HeadTube(Diameter)    $HeadTube(Direction)  $TopTube(HeadTube) right]
                     set is_tt_st    [ tube_intersection    $TopTube(DiameterST) $TopTube(Direction)  $SeatTube(DiameterTT)  $SeatTube(Direction)  $TopTube(SeatTube) left ]
-
-                    set polygon     [ project::flatten_nestedList $is_tt_ht]
+                        #
+                    set polygon     [ bikeGeometry::util::flatten_nestedList $is_tt_ht]
                     set polygon     [ lappend polygon [lindex $vct_10 1] [lindex $vct_21 0]]
-                    set polygon     [ lappend polygon [project::flatten_nestedList $is_tt_st]]
+                    set polygon     [ lappend polygon [bikeGeometry::util::flatten_nestedList $is_tt_st]]
                     set polygon     [ lappend polygon [lindex $vct_22 0] [lindex $vct_11 1]]
-            project::setValue Result(Tubes/TopTube)                 polygon     [project::flatten_nestedList $polygon]
+            set TopTube(Polygon)    [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Tubes/TopTube/Polygon)                [project::flatten_nestedList $polygon]
             
                         # 
                     set pt_00       [ vectormath::intersectPerp     $SeatTube(BottomBracket) $SeatPost(SeatTube)   $pt_st ]
                     set pt_01       [ vectormath::addVector         $pt_00   $SeatTube(Direction)  $SeatTube(Extension) ]
-                set SeatTube(TopTube)        $pt_01
-            project::setValue Result(Tubes/SeatTube/End)        position    $SeatTube(TopTube)
-            project::setValue Result(Tubes/SeatTube/CenterLine) value [list [format "%s,%s %s,%s" [lindex $SeatTube(BottomBracket) 0] [lindex $SeatTube(BottomBracket) 1] \
+            set SeatTube(TopTube)        $pt_01
+            # set Result(Tubes/SeatTube/End)            $SeatTube(TopTube)
+            set Result(Tubes/SeatTube/CenterLine)     [list [format "%s,%s %s,%s" [lindex $SeatTube(BottomBracket) 0] [lindex $SeatTube(BottomBracket) 1] \
                                                                                                   [lindex $SeatTube(TopTube)       0] [lindex $SeatTube(TopTube)       1] ] ]
                 
                 # --- get length
@@ -448,7 +477,7 @@
                     set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
                     set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_13 ]]
                 # --- side View
-            project::setValue Result(Tubes/TopTube/Profile/xz) value   \
+            set Result(Tubes/TopTube/Profile/xz)    \
                                         [list [format "%s,%s %s,%s %s,%s %s,%s" \
                                                 $l_00  [expr 0.5*$TopTube(DiameterHT)] \
                                                 $l_01  [expr 0.5*$TopTube(DiameterHT)] \
@@ -457,14 +486,15 @@
                                             ]
                                         ]
               # --- top View
-            project::setValue Result(Tubes/TopTube/Profile/xy) value [list [project::getValue Result(Tubes/TopTube/Profile/xz) value]]
+            set Result(Tubes/TopTube/Profile/xy)  $Result(Tubes/TopTube/Profile/xz)
+            # set Result(Tubes/TopTube/Profile/xy)  [list [project::getValue Result(Tubes/TopTube/Profile/xz) value]]
               #
 
 
                         #
                     # set SeatTube(Direction)        [ vectormath::unifyVector $SeatTube(DownTube) $SeatPost(SeatTube) ]
                         #
-            # 0.65 -- project::setValue Result(Tubes/SeatTube/Start)        position    $pt_is
+            # 0.65 -- set Result(Tubes/SeatTube/Start)        position    $pt_is
                         #
                     set pt_01       $SeatTube(TopTube)
                     
@@ -478,7 +508,7 @@
                     set vct_21      [ vectormath::parallel          $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] right ]
                     set vct_22      [ vectormath::parallel          $pt_12 $pt_13 [expr 0.5*$SeatTube(DiameterTT)] left  ]
                         #
-            project::setValue Result(Tubes/SeatTube/Start)      position    $SeatTube(BottomBracket)
+            # set Result(Tubes/SeatTube/Start)          $SeatTube(BottomBracket)
                         
                         #
                     set is_st_dt    [ tube_intersection    $SeatTube(DiameterBB) $SeatTube(Direction)  $DownTube(DiameterBB)  $DownTube(Direction)  $SeatTube(DownTube) right ]
@@ -488,7 +518,8 @@
                                             [lindex $vct_22 0]  [lindex $vct_11 1] ]
                     lappend polygon $is_st_dt
                         #
-            project::setValue Result(Tubes/SeatTube)                polygon     [project::flatten_nestedList $polygon]            
+            set SeatTube(Polygon)   [bikeGeometry::util::flatten_nestedList $polygon]            
+            # set Result(Tubes/SeatTube/Polygon)             [project::flatten_nestedList $polygon]            
                         #
                         
                         # --- get length
@@ -497,7 +528,7 @@
             set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
             set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_13 ]]
                         # --- side View
-            project::setValue Result(Tubes/SeatTube/Profile/xz) value   \
+            set Result(Tubes/SeatTube/Profile/xz)    \
                                         [list [format "%s,%s %s,%s %s,%s %s,%s" \
                                                 $l_00  [expr 0.5*$SeatTube(DiameterBB)] \
                                                 $l_01  [expr 0.5*$SeatTube(DiameterBB)] \
@@ -506,7 +537,8 @@
                                             ]
                                         ]
                         # --- top View
-            project::setValue Result(Tubes/SeatTube/Profile/xy) value [list [project::getValue Result(Tubes/SeatTube/Profile/xz) value]]
+            set Result(Tubes/SeatTube/Profile/xy)  $Result(Tubes/SeatTube/Profile/xz)
+            # set Result(Tubes/SeatTube/Profile/xy)  [list [project::getValue Result(Tubes/SeatTube/Profile/xz) value]]
                         #
          
     }
@@ -522,9 +554,16 @@
             variable SeatPost
             variable Steerer
                 #
-                    #
+            variable Result
+                #
                 set vct_ht      [ vectormath::parallel          $HeadTube(Stem) $HeadTube(Fork) [expr 0.5*$HeadTube(Diameter)] ]
-                set pt_00       [split [ project::getValue      Result(Tubes/HeadTube/Polygon)    polygon 3 ] , ]
+                    # puts $Result(Tubes/HeadTube/Polygon)
+                    # puts [lrange $Result(Tubes/HeadTube/Polygon)   4 5]
+                    # exit
+                #set pt_00       [lrange $Result(Tubes/HeadTube/Polygon)   4 5]
+                set pt_00       [lrange $HeadTube(Polygon)   6 7]
+                # set pt_00       [lrange $Result(Tubes/HeadTube/Polygon)   6 7]
+                # set pt_00       [split [ project::getValue      Result(Tubes/HeadTube/Polygon)    polygon 3 ] , ]
                 set pt_01       [ vectormath::addVector         $pt_00 $HeadTube(Direction) $DownTube(OffsetHT) ]                            ;# bottom intersection DownTube/HeadTube
                 set pt_02       [ vectormath::cathetusPoint     {0 0}  $pt_01 [expr 0.5 * $DownTube(DiameterHT) - $DownTube(OffsetBB) ]]    ;# DownTube lower Vector
                 set vct_cl      [ vectormath::parallel          $pt_02 $pt_01 [expr 0.5 * $DownTube(DiameterHT)] left]                        ;# DownTube centerline Vector
@@ -536,11 +575,11 @@
                 set DownTube(HeadTube)      [ vectormath::intersectPoint    [lindex $vct_cl 0] [lindex $vct_cl 1]  $Steerer(Fork)     $Steerer(Stem) ]
                 set DownTube(BottomBracket) [lindex $vct_cl 0]
                     #
-            project::setValue Result(Tubes/DownTube/Direction)  direction   $DownTube(Direction)
-            project::setValue Result(Tubes/DownTube/Start)      position    $DownTube(BottomBracket)
-            project::setValue Result(Tubes/DownTube/End)        position    $DownTube(HeadTube)
+            # set Result(Tubes/DownTube/Direction)    $DownTube(Direction)
+            # set Result(Tubes/DownTube/Start)        $DownTube(BottomBracket)
+            # set Result(Tubes/DownTube/End)          $DownTube(HeadTube)
                         #
-            project::setValue Result(Tubes/DownTube/CenterLine) value [list [format "%s,%s %s,%s" [lindex $DownTube(BottomBracket) 0] [lindex $DownTube(BottomBracket) 1] \
+            set Result(Tubes/DownTube/CenterLine)   [list [format "%s,%s %s,%s" [lindex $DownTube(BottomBracket) 0] [lindex $DownTube(BottomBracket) 1] \
                                                                                               [lindex $DownTube(HeadTube)      0] [lindex $DownTube(HeadTube)      1] ] ]
                     #
                 set vct_02      [ vectormath::parallel          [lindex $vct_cl 0] [lindex $vct_cl 1] $DownTube(DiameterHT) left]   ;# DownTube upper Vector HT
@@ -563,11 +602,12 @@
                 set is_dt_ht    [ tube_intersection $DownTube(DiameterHT) $dir  $HeadTube(Diameter)     $HeadTube(Direction)  $DownTube(HeadTube) ]
                     #
                 set polygon     [ list            [lindex $vct_10 1] [lindex $vct_21 0]]
-                lappend polygon [ project::flatten_nestedList $is_dt_ht]
+                lappend polygon [ bikeGeometry::util::flatten_nestedList $is_dt_ht]
                 lappend polygon [ lindex $vct_22 0] [lindex $vct_11 1]
                 lappend polygon [ lindex $vct_11 0] [ lindex $vct_10 0]
                     #
-            project::setValue Result(Tubes/DownTube)            polygon     [project::flatten_nestedList $polygon]
+            set DownTube(Polygon)       [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Tubes/DownTube/Polygon)      [project::flatten_nestedList $polygon]
                     #
                     
                     # --- get length
@@ -578,7 +618,7 @@
                     #
                 
                 # --- side View
-            project::setValue Result(Tubes/DownTube/Profile/xz) value   \
+            set Result(Tubes/DownTube/Profile/xz)    \
                                         [list [format "%s,%s %s,%s %s,%s %s,%s" \
                                                 $l_00  [expr 0.5*$DownTube(DiameterBB)] \
                                                 $l_01  [expr 0.5*$DownTube(DiameterBB)] \
@@ -587,7 +627,8 @@
                                             ]
                                         ]
                 # --- top View
-            project::setValue Result(Tubes/DownTube/Profile/xy) value [list [project::getValue Result(Tubes/DownTube/Profile/xz) value]]
+            set Result(Tubes/DownTube/Profile/xy)   $Result(Tubes/DownTube/Profile/xz)
+            # set Result(Tubes/DownTube/Profile/xy)   [list [project::getValue Result(Tubes/DownTube/Profile/xz) value]]
                 #
                 #
             return
@@ -606,11 +647,14 @@
             variable RearWheel
             variable RearDrop
                 #
+            variable Result
+                #
+                
                     set pt_00       [ vectormath::addVector     $TopTube(SeatTube)  $SeatTube(Direction)  $SeatStay(OffsetTT) ] ; # intersection seatstay / seattube
                     set pt_01       [ lindex [ vectormath::parallel     $RearWheel(Position)  $pt_00   $RearDrop(OffsetSSPerp) ] 0 ]
                         #
-                    set SeatStay(Direction)     [ vectormath::unifyVector $pt_01 $pt_00 ]
-            project::setValue Result(Tubes/SeatStay/Direction)  direction   $SeatStay(Direction)    ;# direction vector of SeatStay
+            set SeatStay(Direction)     [ vectormath::unifyVector $pt_01 $pt_00 ]
+            # set Result(Tubes/SeatStay/Direction)   $SeatStay(Direction)    ;# direction vector of SeatStay
                         #
                     set pt_10       [ vectormath::addVector     $pt_01  $SeatStay(Direction)  $RearDrop(OffsetSS) ]
                         #
@@ -633,10 +677,10 @@
                         #
                 set SeatStay(SeatTube)      $pt_00
                 set SeatStay(RearWheel)     $pt_10
-            project::setValue Result(Tubes/SeatStay/Start)      position    $SeatStay(RearWheel)
-            project::setValue Result(Tubes/SeatStay/End)        position    $SeatStay(SeatTube)
+            # set Result(Tubes/SeatStay/Start)    $SeatStay(RearWheel)
+            # set Result(Tubes/SeatStay/End)      $SeatStay(SeatTube)
                         #
-            project::setValue Result(Tubes/SeatStay/CenterLine) value [list [format "%s,%s %s,%s" [lindex $SeatStay(RearWheel) 0] [lindex $SeatStay(RearWheel) 1] \
+            set Result(Tubes/SeatStay/CenterLine)   [list [format "%s,%s %s,%s" [lindex $SeatStay(RearWheel) 0] [lindex $SeatStay(RearWheel) 1] \
                                                                                                   [lindex $SeatStay(SeatTube)  0] [lindex $SeatStay(SeatTube)  1] ] ]
                         #
                     set dir         [ vectormath::addVector {0 0} $SeatStay(Direction) -1]
@@ -645,10 +689,11 @@
                         #
                 set SeatStay(debug)             $is_ss_st
                         #
-                    set polygon     [ project::flatten_nestedList  $is_ss_st ]
+                    set polygon     [ bikeGeometry::util::flatten_nestedList  $is_ss_st ]
                     set polygon     [ lappend polygon [lindex $vct_12 0] [lindex $vct_13 0] \
                                                       [lindex $vct_10 0] [lindex $vct_11 0] ]
-            project::setValue Result(Tubes/SeatStay)          polygon     [project::flatten_nestedList $polygon]
+            set SeatStay(Polygon)   [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Tubes/SeatStay/Polygon)  [project::flatten_nestedList $polygon]
                         #
                                     
                         # --- get length
@@ -656,7 +701,7 @@
             set l_01  [expr $l_00 + [ vectormath::length $pt_10 $pt_11 ]]
             set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
                         # --- side View
-            project::setValue Result(Tubes/SeatStay/Profile/xz) value   \
+            set Result(Tubes/SeatStay/Profile/xz)    \
                                         [list [format "%s,%s %s,%s %s,%s" \
                                                 $l_00  [expr 0.5*$SeatStay(DiameterCS)] \
                                                 $l_01  [expr 0.5*$SeatStay(DiameterST)] \
@@ -664,13 +709,14 @@
                                             ]
                                         ]
                         # --- top View
-            project::setValue Result(Tubes/SeatStay/Profile/xy) value [list [project::getValue Result(Tubes/SeatStay/Profile/xz) value]]
+            set Result(Tubes/SeatStay/Profile/xy)   $Result(Tubes/SeatStay/Profile/xz)
+            # set Result(Tubes/SeatStay/Profile/xy)   [list [project::getValue Result(Tubes/SeatStay/Profile/xz) value]]
                         #
 
                         #
                         # --- set SeatStay / ChainStay - Intersection
                     set ChainStay(SeatStay_IS)      [ vectormath::intersectPoint $SeatStay(SeatTube) $SeatStay(RearWheel) $ChainStay(BottomBracket) $ChainStay(RearWheel) ];# intersection of ChainStay and SeatStay centerlines
-            project::setValue Result(Tubes/ChainStay/SeatStay_IS)   position    $ChainStay(SeatStay_IS) ;# Point on the Ground perp. to BB
+            # set Result(Tubes/ChainStay/SeatStay_IS) $ChainStay(SeatStay_IS) ;# Point on the Ground perp. to BB
                         #
     }
 
@@ -685,53 +731,83 @@
             variable DownTube
             variable TubeMiter
             variable BottomBracket
+                #
+            variable Result
+                #
 
-                    set dir         [ vectormath::scalePointList {0 0} [ bikeGeometry::get_Object HeadTube direction ] -1.0 ]
+                    # set dir         [ vectormath::scalePointList {0 0} [ bikeGeometry::get_Object HeadTube direction ] -1.0 ]
+                    set dir $HeadTube(Direction)
                         # puts " .. \$dir $dir"
                                               # tube_miter  { diameter              direction              diameter_isect           direction_isect         isectionPoint         {side {right}} {offset {0}}  {startAngle {0}}}
             set TubeMiter(TopTube_Head)       [ tube_miter    $TopTube(DiameterHT)  $TopTube(Direction)    $HeadTube(Diameter)      $HeadTube(Direction)    ]
             set TubeMiter(TopTube_Seat)       [ tube_miter    $TopTube(DiameterST)  $TopTube(Direction)    $SeatTube(DiameterTT)    $dir                    ]
-                                                                                                                                                            
+                #                                                                                                                                            
             set TubeMiter(DownTube_Head)      [ tube_miter    $DownTube(DiameterHT) $DownTube(Direction)   $HeadTube(Diameter)      $HeadTube(Direction)    right    0    0  opposite]
             set TubeMiter(DownTube_Seat)      [ tube_miter    $DownTube(DiameterBB) $DownTube(Direction)   $SeatTube(DiameterBB)    $SeatTube(Direction)    ]
             set TubeMiter(DownTube_BB_out)    [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(outside)  {0 1}                   right    0   90  opposite]
             set TubeMiter(DownTube_BB_in)     [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(inside)   {0 1}                   right    0   90  opposite]
-                                                                                                                                                            
+                #
             set TubeMiter(SeatTube_Down)      [ tube_miter    $SeatTube(DiameterBB) $SeatTube(Direction)   $DownTube(DiameterBB)    $DownTube(Direction)    ]
             set TubeMiter(SeatTube_BB_out)    [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(outside)  {0 1}                   right    0   90  opposite]
             set TubeMiter(SeatTube_BB_in)     [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(inside)   {0 1}                   right    0   90  opposite]
-                    
-                    set offset      [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
-                    set dir         [ vectormath::scalePointList {0 0} [ bikeGeometry::get_Object SeatStay direction ] -1.0 ]
-                        # puts " .. \$dir $dir"
-                    # puts "\n  get_TubeMiter"
-                    # puts "       .... [ bikeGeometry::get_Object SeatStay direction ]"
-                    # puts "       .... $dir"
-                    # puts "       .... $SeatTube(DiameterTT) - $SeatStay(DiameterST) "
-                    # puts "       .... $offset"
-                    # exit
-                    # set offset 0
-                    #
+                #
+                set offset      [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
+                set dir         [ vectormath::scalePointList {0 0} $SeatStay(Direction) -1.0 ]
+                #
+            # set dir         [ vectormath::scalePointList {0 0} [ bikeGeometry::get_Object SeatStay direction ] -1.0 ]
+                # puts " .. \$dir $dir"
+                
+            # puts "\n  get_TubeMiter"
+            # puts "       .... [ bikeGeometry::get_Object SeatStay direction ]"
+            # puts "       .... $dir"
+            # puts "       .... $SeatTube(DiameterTT) - $SeatStay(DiameterST) "
+            # puts "       .... $offset"
+            # exit
+            # set offset 0
+            #
+                #
             set TubeMiter(SeatStay_01)        [ tube_miter    $SeatStay(DiameterST) $dir                   $SeatTube(DiameterTT)    $SeatTube(Direction)    right   -$offset]
             set TubeMiter(SeatStay_02)        [ tube_miter    $SeatStay(DiameterST) $dir                   $SeatTube(DiameterTT)    $SeatTube(Direction)    right   +$offset]
             set TubeMiter(Reference)          { -50 0  50 0  50 10  -50 10 }
-
-            project::setValue Result(TubeMiter/TopTube_Head)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Head)  ]
-            project::setValue Result(TubeMiter/TopTube_Seat)        polygon     [ project::flatten_nestedList $TubeMiter(TopTube_Seat)  ]
+                #
+                #
+            set TubeMiter(TopTube_Head)       [ bikeGeometry::util::flatten_nestedList $TubeMiter(TopTube_Head)  ]
+            set TubeMiter(TopTube_Seat)       [ bikeGeometry::util::flatten_nestedList $TubeMiter(TopTube_Seat)  ]
+                #
+            set TubeMiter(DownTube_Head)      [ bikeGeometry::util::flatten_nestedList $TubeMiter(DownTube_Head) ]
+            set TubeMiter(DownTube_Seat)      [ bikeGeometry::util::flatten_nestedList $TubeMiter(DownTube_Seat) ]
+            set TubeMiter(DownTube_BB_out)    [ bikeGeometry::util::flatten_nestedList $TubeMiter(DownTube_BB_out) ]
+            set TubeMiter(DownTube_BB_in)     [ bikeGeometry::util::flatten_nestedList $TubeMiter(DownTube_BB_in)  ]
+                #
+            set TubeMiter(SeatTube_Down)      [ bikeGeometry::util::flatten_nestedList $TubeMiter(SeatTube_Down) ]
+            set TubeMiter(SeatTube_BB_out)    [ bikeGeometry::util::flatten_nestedList $TubeMiter(SeatTube_BB_out) ]
+            set TubeMiter(SeatTube_BB_in)     [ bikeGeometry::util::flatten_nestedList $TubeMiter(SeatTube_BB_in)  ]
+                #
+            set TubeMiter(SeatStay_01)        [ bikeGeometry::util::flatten_nestedList $TubeMiter(SeatStay_01)   ]
+            set TubeMiter(SeatStay_02)        [ bikeGeometry::util::flatten_nestedList $TubeMiter(SeatStay_02)   ]
+                #
+            set TubeMiter(Reference)          [ bikeGeometry::util::flatten_nestedList $TubeMiter(Reference)     ]
+                #
+                #
+            return
+                #
             
-            project::setValue Result(TubeMiter/DownTube_Head)       polygon     [ project::flatten_nestedList $TubeMiter(DownTube_Head) ]
-            project::setValue Result(TubeMiter/DownTube_Seat)       polygon     [ project::flatten_nestedList $TubeMiter(DownTube_Seat) ]
-            project::setValue Result(TubeMiter/DownTube_BB_out)     polygon     [ project::flatten_nestedList $TubeMiter(DownTube_BB_out) ]
-            project::setValue Result(TubeMiter/DownTube_BB_in)      polygon     [ project::flatten_nestedList $TubeMiter(DownTube_BB_in)  ]
+            # set Result(TubeMiter/TopTube_Head/Polygon)        [ project::flatten_nestedList $TubeMiter(TopTube_Head)  ]
+            # set Result(TubeMiter/TopTube_Seat/Polygon)        [ project::flatten_nestedList $TubeMiter(TopTube_Seat)  ]
             
-            project::setValue Result(TubeMiter/SeatTube_Down)       polygon     [ project::flatten_nestedList $TubeMiter(SeatTube_Down) ]
-            project::setValue Result(TubeMiter/SeatTube_BB_out)     polygon     [ project::flatten_nestedList $TubeMiter(SeatTube_BB_out) ]
-            project::setValue Result(TubeMiter/SeatTube_BB_in)      polygon     [ project::flatten_nestedList $TubeMiter(SeatTube_BB_in)  ]
+            # set Result(TubeMiter/DownTube_Head/Polygon)       [ project::flatten_nestedList $TubeMiter(DownTube_Head) ]
+            # set Result(TubeMiter/DownTube_Seat/Polygon)       [ project::flatten_nestedList $TubeMiter(DownTube_Seat) ]
+            # set Result(TubeMiter/DownTube_BB_out/Polygon)     [ project::flatten_nestedList $TubeMiter(DownTube_BB_out) ]
+            # set Result(TubeMiter/DownTube_BB_in/Polygon)      [ project::flatten_nestedList $TubeMiter(DownTube_BB_in)  ]
             
-            project::setValue Result(TubeMiter/SeatStay_01)         polygon     [ project::flatten_nestedList $TubeMiter(SeatStay_01)   ]
-            project::setValue Result(TubeMiter/SeatStay_02)         polygon     [ project::flatten_nestedList $TubeMiter(SeatStay_02)   ]
+            # set Result(TubeMiter/SeatTube_Down/Polygon)       [ project::flatten_nestedList $TubeMiter(SeatTube_Down) ]
+            # set Result(TubeMiter/SeatTube_BB_out/Polygon)     [ project::flatten_nestedList $TubeMiter(SeatTube_BB_out) ]
+            # set Result(TubeMiter/SeatTube_BB_in/Polygon)      [ project::flatten_nestedList $TubeMiter(SeatTube_BB_in)  ]
             
-            project::setValue Result(TubeMiter/Reference)           polygon     [ project::flatten_nestedList $TubeMiter(Reference)     ]
+            # set Result(TubeMiter/SeatStay_01/Polygon)         [ project::flatten_nestedList $TubeMiter(SeatStay_01)   ]
+            # set Result(TubeMiter/SeatStay_02/Polygon)         [ project::flatten_nestedList $TubeMiter(SeatStay_02)   ]
+            
+            # set Result(TubeMiter/Reference/Polygon)           [ project::flatten_nestedList $TubeMiter(Reference)     ]
     }
 
 

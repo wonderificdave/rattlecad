@@ -103,11 +103,16 @@
                 #
             variable RearWheel
             variable BottomBracket
+            variable Lugs
                 #
-            set RearWheel(Position)        [ list [expr -1.0 * $RearWheel(Distance_X)] $BottomBracket(depth) ]
+            variable Result
                 #
-            project::setValue Result(Lugs/Dropout/Rear/Position)    position    [expr -1*$RearWheel(Distance_X)]    $BottomBracket(depth)
-            project::setValue Result(Position/RearWheel)            position    $RearWheel(Position)
+            set RearWheel(Position)     [ list [expr -1.0 * $RearWheel(Distance_X)] $BottomBracket(depth) ]
+                #
+            set Lugs(RearDropout)       [ list [expr -1*$RearWheel(Distance_X)]    $BottomBracket(depth) ]
+            # set Result(Lugs/Dropout/Rear/Position)        $Lugs(RearDropout)
+            # set Result(Lugs/Dropout/Rear/Position)        [list [expr -1*$RearWheel(Distance_X)]    $BottomBracket(depth)]
+            # set Result(Position/RearWheel)                $RearWheel(Position)
                 #
             return
                 #
@@ -116,6 +121,8 @@
                 #
             variable Geometry
             variable Rendering
+                #
+            variable Result
                 #
             variable Saddle
             variable SeatPost
@@ -132,7 +139,7 @@
             if {$Saddle(Saddle_Height) < 0} {
                    # set project::Component(Saddle/Height) 0
                    set Saddle(Saddle_Height) 0
-                   project::setValue Component(Saddle/Height) $Saddle(Saddle_Height)
+                   # project::setValue Component(Saddle/Height) $Saddle(Saddle_Height)
             }
                 #
             set Saddle(Position)        [ list [expr -1.0*$Saddle(Distance)]  $Saddle(Height) ]
@@ -161,17 +168,22 @@
                 #
             set Geometry(SeatTubeSaddle)    [ vectormath::intersectPoint [list 0 [lindex $Saddle(Position) 1] ] [list 100 [lindex $Saddle(Position) 1]] $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
                 #
-            project::setValue Result(Position/BottomBracketGround)  position    0     [expr - $RearWheel(Radius) + $BottomBracket(depth) ] ;# Point on the Ground perp. to BB
-            project::setValue Result(Position/LegClearance)         position    $TopTube(PivotPosition)     [expr $LegClearance(Length) - ($RearWheel(Radius) - $BottomBracket(depth)) ]
-            project::setValue Result(Position/Saddle)               position    $Saddle(Position)
-            project::setValue Result(Position/SaddleNose)           position    $Saddle(Nose)
-            project::setValue Result(Position/SaddleProposal)       position    $Saddle(Proposal)
-            project::setValue Result(Position/SeatPostPivot)        position    $SeatPost(PivotPosition)
-            project::setValue Result(Position/SeatPostSaddle)       position    $SeatPost(Saddle)
-            project::setValue Result(Position/SeatPostSeatTube)     position    $SeatPost(SeatTube)
-            project::setValue Result(Position/SeatTubeGround)       position    $SeatTube(Ground)       ;# Point on the Ground in direction of SeatTube
-            project::setValue Result(Position/SeatTubeSaddle)       position    $Geometry(SeatTubeSaddle)
-            project::setValue Result(Tubes/SeatTube/Direction)      direction   $SeatTube(Ground)  $SeatPost(SeatTube)                
+            # set Result(Position/BottomBracketGround)     $BottomBracket(Ground)
+            # set Result(Position/BottomBracketGround)     [list 0     [expr - $RearWheel(Radius) + $BottomBracket(depth) ]] ;# Point on the Ground perp. to BB
+            set Geometry(LegClearance)      [list $TopTube(PivotPosition)     [expr $LegClearance(Length) - ($RearWheel(Radius) - $BottomBracket(depth)) ]]
+            # set Result(Position/LegClearance)            $Geometry(LegClearance)
+            # set Result(Position/LegClearance)            [list $TopTube(PivotPosition)     [expr $LegClearance(Length) - ($RearWheel(Radius) - $BottomBracket(depth)) ]]
+            # set Result(Position/Saddle)                  $Saddle(Position)
+            # set Result(Position/SaddleNose)              $Saddle(Nose)
+            # set Result(Position/SaddleProposal)          $Saddle(Proposal)
+            # set Result(Position/SeatPostPivot)           $SeatPost(PivotPosition)
+            # set Result(Position/SeatPostSaddle)          $SeatPost(Saddle)
+            # set Result(Position/SeatPostSeatTube)        $SeatPost(SeatTube)
+            # set Result(Position/SeatTubeGround)          $SeatTube(Ground)       ;# Point on the Ground in direction of SeatTube
+            # set Result(Position/SeatTubeSaddle)          $Geometry(SeatTubeSaddle)
+            # set SeatTube(Direction)         [list $SeatTube(Ground)  $SeatPost(SeatTube)]                
+            # set Result(Tubes/SeatTube/Direction)         $SeatTube(Direction)                
+            # set Result(Tubes/SeatTube/Direction)         [list $SeatTube(Ground)  $SeatPost(SeatTube)]                
                 #
             return
                 #
@@ -184,11 +196,16 @@
             variable FrontWheel
             variable RearWheel
             variable BottomBracket
+                #
+            variable Geometry
+            variable Result
+                #
                 # --- set summary Length of Frame, Saddle and Stem
             set summaryLength [ expr $RearWheel(Distance_X) + $FrontWheel(Distance_X)]
             set summaryHeight [ expr $BottomBracket(depth) + 40 + [lindex $SeatPost(SeatTube) 1] ]
                 #
-            project::setValue Result(Position/SummarySize)      position    $summaryLength   $summaryHeight
+            set Geometry(SummarySize)       [list $summaryLength   $summaryHeight]
+            # set Result(Position/SummarySize)          [list $summaryLength   $summaryHeight]
                 #
             return    
                 #
@@ -203,7 +220,8 @@
             variable FrontWheel
             variable BottomBracket
             variable Reference
-            variable Result
+                #
+            # variable Result
                 #
             set BB_Height    [expr  0.5 * $RearWheel(RimDiameter) +  $RearWheel(TyreHeight) -  $BottomBracket(depth)]
                 #
@@ -214,10 +232,10 @@
             set HB_Height    [expr $Reference(HandleBar_Height)   - $BB_Height]
                 #
             set Reference(HandleBar)    [list $HB_Distance $HB_Height]
-            project::setValue Result(Position/Reference_HB)      position    $Reference(HandleBar)
+            # set Result(Position/Reference_HB)          $Reference(HandleBar)
                 #
             set Reference(SaddleNose)   [list $SN_Distance $SN_Height]
-            project::setValue Result(Position/Reference_SN)      position    $Reference(SaddleNose)
+            # set Result(Position/Reference_SN)          $Reference(SaddleNose)
                 #
     }    
 
@@ -254,67 +272,6 @@
 
 
         #
-        # --- set Stem ----------------------------
-    proc bikeGeometry::get_Stem {} {
-            variable HeadTube
-            variable HandleBar
-            variable HeadSet
-            variable Steerer
-            variable Stem
-
-                    set pt_00       $HandleBar(Position)
-                    set pt_01       $Steerer(Stem)
-                    set pt_02       $HeadSet(Stem)
-
-                    # -- ceck coincidence
-                    set checkStem           [ vectormath::checkPointCoincidence $pt_00 $pt_01]
-                    if {$checkStem == 0} {
-                        # puts "   ... no Stem required"
-                        project::setValue Result(Components/Stem)   polygon     {}
-                        return
-                    }
-
-                    set Stem(Direction)     [ vectormath::unifyVector $pt_01 $pt_00 ]
-                    set angle                           [ vectormath::angle {1 0}    {0 0}    $Stem(Direction) ]
-                    set clamp_SVGPolygon    "-18.8336,-17.9999 -15.7635,-18.3921 -13.3549,-19.887 -11.1307,-22.1168 -10.0644,-24.1389 -9.7316,-24.4732 -9.8958,-23.3099 -10.3089,-21.9026 -11.1479,-19.9125 -12.0719,-17.777 -15.3406,-11.3784 -16.1873,-10.0012 -17.4384,-9.0427 -18.8336,-8.3572 -17.4384,-9.0427 -16.1873,-10.0012 -15.3406,-11.3784 -12.0719,-17.777 -11.1479,-19.9125 -10.3089,-21.9026 -9.8958,-23.3099 -9.7316,-24.4732 -9.4316,-24.7774 -8.6838,-24.9999 -0.8,-24.9999 -0.8,-15.8802 0.8,-15.8802 0.8,-24.9998 5.6669,-24.9998 6.3699,-24.8858 6.9818,-24.5172 7.4284,-24.07 13.0499,-18.7437 13.049,-23.6727 12.6125,-24.0796 12.5936,-20.4963 12.6125,-24.0796 7.4284,-24.07 13.2207,-18.5818 15.8552,-15.7422 17.8482,-13.2995 19.8206,-9.913 20.8437,-7.292 21.5329,-4.4455 21.8005,-2.0944 21.9,0.0001 21.8005,2.0946 21.5329,4.4457 20.8437,7.2922 19.8206,9.9132 17.8482,13.2997 15.8552,15.7424 13.2207,18.582 7.4284,24.0702 12.6125,24.0798 12.5936,20.4965 12.6125,24.0798 13.049,23.6729 13.0499,18.7439 7.4284,24.0702 6.9818,24.5174 6.3699,24.886 5.6669,25 0.8,25 0.8,15.8804 4.18,15.3448 7.4163,14.0676 10.1772,12.2159 12.523,9.7973 14.299,6.9605 15.506,3.5323 15.9,0.0001 15.506,-3.5321 14.299,-6.9603 12.523,-9.7971 10.1772,-12.2157 7.4163,-14.0674 4.18,-15.3446 0.8,-15.8802 -0.8,-15.8802 -3.4694,-15.544 -6.2265,-14.634 -9.2433,-12.9378 -11.6453,-10.8246 -13.5388,-8.3403 -14.8801,-5.6139 -15.6719,-2.6977 -15.9,0.0001 -15.6719,2.6979 -14.8801,5.6141 -13.5388,8.3405 -11.6453,10.8248 -9.2433,12.938 -6.2265,14.6342 -3.4694,15.5442 -0.8,15.8804 0.8,15.8804 -0.8,15.8804 -0.8,25.0001 -8.6838,25.0001 -9.3776,24.6754 -9.7467,23.9553 -9.8958,23.3101 -10.3089,21.9028 -11.1479,19.9127 -12.0719,17.7772 -15.3406,11.3786 -16.1873,10.0014 -17.4384,9.0429 -18.8336,8.3574 -17.4384,9.0429 -16.1873,10.0014 -15.3406,11.3786 -12.0719,17.7772 -11.1479,19.9127 -10.3089,21.9028 -9.8958,23.3101 -9.7467,23.9553 -11.1307,22.117 -13.3549,19.8872 -15.7635,18.3923 -18.8336,18.0001 "
-                    set clamp_SVGPolygon    "-20.2619,-17 -16.6918,-17.4561 -13.8908,-19.1945 -11.3044,-21.7874 -10.0644,-24.1389 -9.7316,-24.4732 -9.8958,-23.3099 -10.3089,-21.9026 -11.1479,-19.9125 -12.0719,-17.777 -15.3406,-11.3784 -16.1873,-10.0012 -17.4384,-9.0427 -18.8336,-8.3572 -17.4384,-9.0427 -16.1873,-10.0012 -15.3406,-11.3784 -12.0719,-17.777 -11.1479,-19.9125 -10.3089,-21.9026 -9.8958,-23.3099 -9.7316,-24.4732 -9.4316,-24.7774 -8.6838,-24.9999 -0.8,-24.9999 -0.8,-15.8802 0.8,-15.8802 0.8,-24.9998 5.6669,-24.9998 6.3699,-24.8858 6.9818,-24.5172 7.4284,-24.07 13.0499,-18.7437 13.049,-23.6727 12.6125,-24.0796 12.5936,-20.4963 12.6125,-24.0796 7.4284,-24.07 13.2207,-18.5818 15.8552,-15.7422 17.8482,-13.2995 19.8206,-9.913 20.8437,-7.292 21.5329,-4.4455 21.8005,-2.0944 21.9,0.0001 21.8005,2.0946 21.5329,4.4457 20.8437,7.2922 19.8206,9.9132 17.8482,13.2997 15.8552,15.7424 13.2207,18.582 7.4284,24.0702 12.6125,24.0798 12.5936,20.4965 12.6125,24.0798 13.049,23.6729 13.0499,18.7439 7.4284,24.0702 6.9818,24.5174 6.3699,24.886 5.6669,25 0.8,25 0.8,15.8804 4.18,15.3448 7.4163,14.0676 10.1772,12.2159 12.523,9.7973 14.299,6.9605 15.506,3.5323 15.9,0.0001 15.506,-3.5321 14.299,-6.9603 12.523,-9.7971 10.1772,-12.2157 7.4163,-14.0674 4.18,-15.3446 0.8,-15.8802 -0.8,-15.8802 -3.4694,-15.544 -6.2265,-14.634 -9.2433,-12.9378 -11.6453,-10.8246 -13.5388,-8.3403 -14.8801,-5.6139 -15.6719,-2.6977 -15.9,0.0001 -15.6719,2.6979 -14.8801,5.6141 -13.5388,8.3405 -11.6453,10.8248 -9.2433,12.938 -6.2265,14.6342 -3.4694,15.5442 -0.8,15.8804 0.8,15.8804 -0.8,15.8804 -0.8,25.0001 -8.6838,25.0001 -9.3776,24.6754 -9.7467,23.9553 -9.8958,23.3101 -10.3089,21.9028 -11.1479,19.9127 -12.0719,17.7772 -15.3406,11.3786 -16.1873,10.0014 -17.4384,9.0429 -18.8336,8.3574 -17.4384,9.0429 -16.1873,10.0014 -15.3406,11.3786 -12.0719,17.7772 -11.1479,19.9127 -10.3089,21.9028 -9.8958,23.3101 -9.7467,23.9553 -11.1307,22.117 -13.8952,19.3455 -16.8889,17.4875 -20.7048,17 "
-
-                        set polygon         [ string map {"," " "}  $clamp_SVGPolygon ]
-                        set polygon         [ coords_flip_y $polygon]
-                        set polygon         [ vectormath::addVectorPointList [list $HandleBar(Distance) $HandleBar(Height)] $polygon]
-                        set polygon         [ vectormath::rotatePointList $HandleBar(Position) $polygon $angle ]
-
-                    set polygonLength   [ llength $polygon  ]
-                    set pt_099          [ list [lindex $polygon 0] [lindex $polygon 1] ]
-                    set pt_000          [ list [lindex $polygon $polygonLength-2] [lindex $polygon $polygonLength-1] ]
-                    set stemWidth       [ vectormath::length $pt_099 $pt_000 ]
-                    set stemDiameter    34
-                    set vct_099         [ vectormath::parallel $pt_01 $pt_00 [expr 0.5 * $stemWidth        ] left]
-                    set vct_000         [ vectormath::parallel $pt_01 $pt_00 [expr 0.5 * $stemWidth        ] ]
-                    set vct_010         [ vectormath::parallel $pt_02 $pt_01 [expr 0.5 * $stemDiameter    + 4 ] ]
-                    set pt_095          [ vectormath::intersectPoint [lindex $vct_099 0] [lindex $vct_099 1]  [lindex $vct_010 0] [lindex $vct_010 1] ]
-                    set pt_50           [ vectormath::intersectPerp $pt_01 $pt_02 $pt_095 ]
-                    set pt_51           [ vectormath::addVector $pt_50  [ vectormath::unifyVector {0 0} $HeadTube(Direction) 2] ]
-                    set pt_005          [ vectormath::intersectPoint [lindex $vct_000 0] [lindex $vct_000 1]  [lindex $vct_010 0] [lindex $vct_010 1] ]
-                    set pt_12           [ vectormath::intersectPerp $pt_01 $pt_02 $pt_005 ]
-                    set pt_11           [ vectormath::addVector $pt_12 [ vectormath::unifyVector {0 0} $HeadTube(Direction) -2] ]
-                    set vct_020         [ vectormath::parallel $pt_11 $pt_51 [expr 0.5 * $stemDiameter ] ]
-                    set vct_021         [ vectormath::parallel $pt_11 $pt_51 [expr 0.5 * $stemDiameter ] left ]
-                    set vct_030         [ vectormath::parallel $HeadSet(Stem) $pt_51 [expr 0.5 * $HeadSet(ShimDiameter) ] ];# ShimDiameter from HeadSet definition above
-                    set vct_031         [ vectormath::parallel $HeadSet(Stem) $pt_51 [expr 0.5 * $HeadSet(ShimDiameter) ] left ]
-                    set vct_040         [ vectormath::parallel [lindex  $vct_021 1] [lindex  $vct_020 1] 5  left]
-
-                    set polygon         [ lappend polygon   $pt_005 \
-                                                            [lindex  $vct_020 0] [lindex  $vct_021 0] [lindex  $vct_020 0] \
-                                                            [lindex  $vct_030 0] [lindex  $vct_031 0] [lindex  $vct_021 0] \
-                                                            [lindex  $vct_021 1] [lindex  $vct_020 1] [lindex  $vct_021 1] \
-                                                            [lindex  $vct_040 0] [lindex  $vct_040 1] [lindex  $vct_020 1] \
-                                                            $pt_095 ]
-            project::setValue Result(Components/Stem)   polygon     [project::flatten_nestedList $polygon]
-    }
-
-
-        #
         # --- fill Result Values ------------------
     proc bikeGeometry::fill_resultValues {} {
                 #
@@ -333,7 +290,9 @@
             variable HandleBar
             variable SeatStay
             variable DownTube
-      
+                #
+            variable Result
+                #      
                     #
                     # template of <Result>  .. </Result> is defined in
                     # 
@@ -354,9 +313,11 @@
 
                     # --- BottomBracket/Height
                     #
-                set value      [ format "%.3f" [lindex $position 0] ]
+                set BottomBracket(height) [ format "%.3f" [lindex $position 0] ]
+                # set value      [ format "%.3f" [lindex $position 0] ]
                     # puts "                  ... $value"
-                project::setValue Result(Length/BottomBracket/Height) value $value
+                # set Result(Length/BottomBracket/Height)  $value
+                
 
 
                 # --- HeadTube ----------------------------------------
@@ -368,16 +329,16 @@
                     # puts "                ... [ bikeGeometry::get_Object     HeadTube Stem           {0 0} ]"
                 set value       [lindex $position 0] 
                     # puts "                  ... $value"
-                set Geometry(ReachLengthResult) [ format "%.3f" $value ]
-                project::setValue Result(Length/HeadTube/ReachLength) value $Geometry(ReachLengthResult)
+            set Geometry(ReachLengthResult) [ format "%.3f" $value ]
+                # set Result(Length/HeadTube/ReachLength)  $Geometry(ReachLengthResult)
 
                     # --- HeadTube/StackHeight
                     #
                     # puts "                ... [ bikeGeometry::get_Object     HeadTube Stem           {0 0} ]"
                 set value       [lindex $position 1]
                     # puts "                  ... $value"
-                set Geometry(StackHeightResult) [ format "%.3f" $value ]
-                project::setValue Result(Length/HeadTube/StackHeight) value $Geometry(StackHeightResult)
+            set Geometry(StackHeightResult) [ format "%.3f" $value ]
+                # set Result(Length/HeadTube/StackHeight)  $Geometry(StackHeightResult)
 
 
 
@@ -389,47 +350,52 @@
                     #
             set angle [ vectormath::angle $SeatPost(SeatTube) $SeatTube(BottomBracket) [list -200 [lindex $SeatTube(BottomBracket) 1]] ]
             set Geometry(SeatTube_Angle) [ format "%.3f" $angle ]
-            project::setValue Result(Angle/SeatTube/Direction) value $Geometry(SeatTube_Angle)
+            # set Result(Angle/SeatTube/Direction)  $Geometry(SeatTube_Angle)
 
                     # --- SeatTube/TubeLength -------------------------
                     #
                     # puts "                   ... [ bikeGeometry::get_Object        SeatTube TopTube    {0 0} ]"
                 set value       [ format "%.3f" [ expr hypot([lindex $position 0],[lindex $position 1]) ] ]
-                project::setValue Result(Length/SeatTube/TubeLength) value $value
+                set Result(Length/SeatTube/TubeLength)  $value
 
                     # --- SeatTube/TubeHeight -------------------------
                     #
                     # puts "                   ... [ bikeGeometry::get_Object        SeatTube TopTube    {0 0} ]"
                 set value        [ format "%.3f" [lindex $position 1] ]
-                project::setValue Result(Length/SeatTube/TubeHeight) value $value
+                set Result(Length/SeatTube/TubeHeight)  $value
                     
 
 
                 # --- VirtualTopTube ----------------------------------
                 #
             set SeatTube(VirtualTopTube)    [ vectormath::intersectPoint [list -500 [lindex $HeadTube(Stem) 1]]  $HeadTube(Stem)  $SeatTube(BottomBracket) $SeatPost(SeatTube) ]
-            project::setValue Result(Position/SeatTubeVirtualTopTube)    position    $SeatTube(VirtualTopTube)        ;# Point on the SeatTube of virtual TopTube
+            # set Result(Position/SeatTubeVirtualTopTube)        $SeatTube(VirtualTopTube)        ;# Point on the SeatTube of virtual TopTube
 
                     # --- TopTube/VirtualLength -----------------------
                     #
                     # puts "                  ... $value"
                 set value       [expr [lindex $HeadTube(Stem) 0] - [lindex $SeatTube(VirtualTopTube) 0] ]
-                set TopTube(VirtualLength)       [ format "%.3f" $value ]
-                project::setValue Result(Length/TopTube/VirtualLength) value $TopTube(VirtualLength)
+            set Geometry(TopTube_VirtualLength)       [ format "%.3f" $value ]
+            # set TopTube(VirtualLength)       [ format "%.3f" $value ]
+                # set Result(Length/TopTube/VirtualLength)  $TopTube(VirtualLength)
+                # set Result(Length/TopTube/VirtualLength)  $Geometry(TopTube_VirtualLength)
 
                     # --- SeatTube/VirtualLength ----------------------
                     #
                     # puts "                  ... $value"
                 set value       [vectormath::length $SeatTube(VirtualTopTube) {0 0}]
-                set SeatTube(VirtualLength) [ format "%.3f" $value]
-                project::setValue Result(Length/SeatTube/VirtualLength) value $SeatTube(VirtualLength)
+            set Geometry(SeatTube_VirtualLength) [ format "%.3f" $value]
+                # set SeatTube(VirtualLength) [ format "%.3f" $value]
+                # set Result(Length/SeatTube/VirtualLength)  $SeatTube(VirtualLength)
+                # set Result(Length/SeatTube/VirtualLength)  $Geometry(SeatTube_VirtualLength)
 
 
                 # --- Saddle ------------------------------------------
                 #
             set position_Saddle      $Saddle(Position)   
             set position_SaddleNose  $Saddle(Nose)            
-            set position_SeatTube    [ split [ project::getValue Result(Position/SeatTubeSaddle)    position] ,]
+            set position_SeatTube    $Geometry(SeatTubeSaddle)
+            # set position_SeatTube    [ split [ project::getValue Result(Position/SeatTubeSaddle)    position] ,]
             set position_HandleBar   $HandleBar(Position)
             set position_BB          {0 0}
                   # puts "   fill_resultValues  \$position_Saddle      $position_Saddle"
@@ -443,7 +409,7 @@
                     #
                 set value        [ format "%.3f" [expr -1 * [lindex $position_Saddle 0]] ]
                     # puts "                  ... $value"
-                # project::setValue Result(Length/Saddle/Offset_BB) value $value
+                set Result(Length/Saddle/Offset_BB) $value
                 #                  Result(Length/Saddle/Offset_BB)
 
 
@@ -451,15 +417,15 @@
                 #
                 set value       [ format "%.3f" [expr -1 * [lindex $position_SeatTube 0]] ]
                     # puts "                  ... $value"
-                project::setValue Result(Length/Saddle/Offset_BB_ST) value $value
+                set Result(Length/Saddle/Offset_BB_ST)  $value
 
 
                     # --- Saddle/Offset_HB --------------------------------
                     #
                 set value       [expr [lindex $position_Saddle 1] - [lindex $position_HandleBar 1]]
-                set Geometry(Saddle_HB_y) [ format "%.3f" $value ]
+            set Geometry(Saddle_HB_y) [ format "%.3f" $value ]
                     # puts "                  ... $value"
-                project::setValue Result(Length/Saddle/Offset_HB) value $Geometry(Saddle_HB_y)
+                # set Result(Length/Saddle/Offset_HB)  $Geometry(Saddle_HB_y)
 
                 
                     # --- Personal/SeatTube_BB ------------------------
@@ -467,19 +433,19 @@
                   # puts "   \$position_SeatTube  $position_SeatTube"
                   # puts "   \$position_BB  $position_BB"
                 set value       [ vectormath::length $position_SeatTube $position_BB]
-                set Geometry(Saddle_BB) [ format "%.3f" $value ]
-                project::setValue Result(Length/Saddle/SeatTube_BB) value $Geometry(Saddle_BB)   
+            set Geometry(Saddle_BB) [ format "%.3f" $value ]
+                # set Result(Length/Saddle/SeatTube_BB)  $Geometry(Saddle_BB)   
 
                 
                     # --- Personal/Offset_BB_Nose -------------------------
                     #
                 set value       [expr -1.0 * [lindex $position_SaddleNose 0]]
                     # puts "                  ... $value"
-                set Geometry(SaddleNose_BB_x) [ format "%.3f" $value ]
-                project::setValue Result(Length/Saddle/Offset_BB_Nose) value $Geometry(SaddleNose_BB_x)
+            set Geometry(SaddleNose_BB_x) [ format "%.3f" $value ]
+                # set Result(Length/Saddle/Offset_BB_Nose)  $Geometry(SaddleNose_BB_x)
                 set value       [ expr  [lindex $position_HandleBar 0] + [expr -1.0 * [lindex $position_SaddleNose 0]] ]
-                set Geometry(SaddleNose_HB) [ format "%.3f" $value ]
-                project::setValue Result(Length/Personal/SaddleNose_HB) value $Geometry(SaddleNose_HB)
+            set Geometry(SaddleNose_HB) [ format "%.3f" $value ]
+                # set Result(Length/Personal/SaddleNose_HB)  $Geometry(SaddleNose_HB)
 
                 
 
@@ -488,9 +454,9 @@
             set position    $FrontWheel(Position)
                     # puts "                ... $frameCoords::FrontWheel"
                 set value       [expr { hypot( [lindex $position 0], [lindex $position 1] ) }]
-                set Geometry(FrontWheel_xy)       [ format "%.3f" $value ]
+            set Geometry(FrontWheel_xy)       [ format "%.3f" $value ]
                     # puts "                  ... $value"
-                project::setValue Result(Length/FrontWheel/diagonal) value $Geometry(FrontWheel_xy)
+                # set Result(Length/FrontWheel/diagonal)  $Geometry(FrontWheel_xy)
 
 
                 # --- WheelPosition/front/horizontal ------------------
@@ -498,9 +464,9 @@
             set position    $FrontWheel(Position)
                     # puts "                ... $frameCoords::FrontWheel"
                 set value       [lindex $position 0]
-                set Geometry(FrontWheel_x)       [ format "%.3f" $value ]
+            set Geometry(FrontWheel_x)       [ format "%.3f" $value ]
                     # puts "                  ... $value"
-                project::setValue Result(Length/FrontWheel/horizontal) value $Geometry(FrontWheel_x)
+                # set Result(Length/FrontWheel/horizontal)  $Geometry(FrontWheel_x)
 
 
                 # --- WheelPosition/rear/horizontal -------------------
@@ -508,48 +474,62 @@
             set position    $RearWheel(Position)
                     # puts "                ... $frameCoords::RearWheel"
                 set value       [expr -1 * [lindex $position 0]]
-                set Geometry(RearWheel_x)       [ format "%.3f" $value ]
+            set Geometry(RearWheel_x)       [ format "%.3f" $value ]
                     # puts "                  ... $value"
-                project::setValue Result(Length/RearWheel/horizontal) value $Geometry(RearWheel_x)
+                # set Result(Length/RearWheel/horizontal)  $Geometry(RearWheel_x)
 
 
                 # --- RearWheel/Radius --------------------------------
                 #
-            set rimDiameter     $RearWheel(RimDiameter)
-            set tyreHeight      $RearWheel(TyreHeight)
-            set value           [ expr 0.5 * $rimDiameter + $tyreHeight ]                
+            # set rimDiameter     $RearWheel(RimDiameter)
+            # set tyreHeight      $RearWheel(TyreHeight)
+            # set value           [ expr 0.5 * $rimDiameter + $tyreHeight ]                
                   # puts "                  ... $value"
-                project::setValue Result(Length/RearWheel/Radius   value $value
-                project::setValue Result(Length/RearWheel/Diameter value [expr 2.0 * $value]
+            set RearWheel(Diameter)     [ expr $RearWheel(RimDiameter) + 2.0 * $RearWheel(TyreHeight)]
+            set RearWheel(Radius)       [ expr 0.5 * $RearWheel(Diameter) ]
+            # set RearWheel(Radius)       $value
+            # set RearWheel(Diameter)     [expr 2.0 * $RearWheel(Radius)]
+                # set Result(Length/RearWheel/Radius)    $RearWheel(Radius)
+                # set Result(Length/RearWheel/Diameter)  $RearWheel(Diameter)
+                # set Result(Length/RearWheel/Radius)    $value
+                # set Result(Length/RearWheel/Diameter)  [expr 2.0 * $value]
               
                 # --- RearWheel/TyreShoulder --------------------------------
                 #
-            set wheelRadius     [ project::getValue Result(Length/RearWheel/Radius         value ]
-            set tyreWidthRadius [ project::getValue Component(Wheel/Rear/TyreWidthRadius)  value ]
-            set value           [ expr $wheelRadius - $tyreWidthRadius ]                
+            # set wheelRadius     $RearWheel(Radius)
+            # set wheelRadius     [ project::getValue Result(Length/RearWheel/Radius         value ]
+            # set tyreWidthRadius $RearWheel(TyreWidthRadius)
+            # set tyreWidthRadius [ project::getValue Component(Wheel/Rear/TyreWidthRadius)  value ]
+            # set tyreWidthRadius [ project::getValue Component(Wheel/Rear/TyreWidthRadius)  value ]
                   # puts "                  ... $value"
-                project::setValue Result(Length/RearWheel/TyreShoulder) value $value
+            set RearWheel(TyreShoulder)  [ expr $RearWheel(Radius) - $RearWheel(TyreWidthRadius) ]
+            # set RearWheel(TyreShoulder)  [ expr $wheelRadius - $tyreWidthRadius ]
+                # set value           [ expr $wheelRadius - $tyreWidthRadius ]                
+                # set Result(Length/RearWheel/TyreShoulder)  $RearWheel(TyreShoulder)
+                # set Result(Length/RearWheel/TyreShoulder)  $value
               
                 # --- FrontWheel/Radius -------------------------------
                 #
-            set rimDiameter   [ project::getValue Component(Wheel/Front/RimDiameter) value ]
-            set tyreHeight    [ project::getValue Component(Wheel/Front/TyreHeight)  value ]
-            set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
+            set FrontWheel(Diameter)     [ expr $FrontWheel(RimDiameter) + 2.0 * $FrontWheel(TyreHeight)]
+            set FrontWheel(Radius)       [ expr 0.5 * $FrontWheel(Diameter) ]
+            # set rimDiameter   [ project::getValue Component(Wheel/Front/RimDiameter) value ]
+            # set tyreHeight    [ project::getValue Component(Wheel/Front/TyreHeight)  value ]
+            # set value         [ expr 0.5 * $rimDiameter + $tyreHeight ]                
                   # puts "                  ... $value"
-                project::setValue Result(Length/FrontWheel/Radius value $value
-                project::setValue Result(Length/FrontWheel/Diameter value [expr 2.0 * $value]
+                # set Result(Length/FrontWheel/Radius)    $value
+                # set Result(Length/FrontWheel/Diameter)  [expr 2.0 * $value]
                 #
             set BB_Position             {0 0}
                 #
             set ChainSt_SeatSt_IS       [ bikeGeometry::get_Object     ChainStay/SeatStay_IS   position ]
                 #  
-            project::setValue Result(Angle/HeadTube/TopTube)        value    [ get_resultAngle  $TopTube(HeadTube)    $Steerer(Stem)      $TopTube(SeatTube)  ]
-            project::setValue Result(Angle/HeadTube/DownTube)       value    [ get_resultAngle $DownTube(HeadTube)    $BB_Position        $Steerer(Fork)      ]
-            project::setValue Result(Angle/SeatTube/TopTube)        value    [ get_resultAngle $TopTube(SeatTube)     $BB_Position        $TopTube(HeadTube)   ]
-            project::setValue Result(Angle/SeatTube/SeatStay)       value    [ get_resultAngle $SeatStay(SeatTube)    $ChainSt_SeatSt_IS  $BB_Position        ]
-            project::setValue Result(Angle/BottomBracket/DownTube)  value    [ get_resultAngle $BB_Position           $DownTube(HeadTube) $TopTube(SeatTube)  ]
-            project::setValue Result(Angle/BottomBracket/ChainStay) value    [ get_resultAngle $BB_Position           $TopTube(SeatTube)  $ChainSt_SeatSt_IS  ]
-            project::setValue Result(Angle/SeatStay/ChainStay)      value    [ get_resultAngle $ChainSt_SeatSt_IS     $BB_Position        $SeatStay(SeatTube) ]                
+            set Result(Angle/HeadTube/TopTube)            [ get_resultAngle $TopTube(HeadTube)     $Steerer(Stem)      $TopTube(SeatTube)  ]
+            set Result(Angle/HeadTube/DownTube)           [ get_resultAngle $DownTube(HeadTube)    $BB_Position        $Steerer(Fork)      ]
+            set Result(Angle/SeatTube/TopTube)            [ get_resultAngle $TopTube(SeatTube)     $BB_Position        $TopTube(HeadTube)   ]
+            set Result(Angle/SeatTube/SeatStay)           [ get_resultAngle $SeatStay(SeatTube)    $ChainSt_SeatSt_IS  $BB_Position        ]
+            set Result(Angle/BottomBracket/DownTube)      [ get_resultAngle $BB_Position           $DownTube(HeadTube) $TopTube(SeatTube)  ]
+            set Result(Angle/BottomBracket/ChainStay)     [ get_resultAngle $BB_Position           $TopTube(SeatTube)  $ChainSt_SeatSt_IS  ]
+            set Result(Angle/SeatStay/ChainStay)          [ get_resultAngle $ChainSt_SeatSt_IS     $BB_Position        $SeatStay(SeatTube) ]                
                 
                 
                 
@@ -565,14 +545,14 @@
             set Reference(SaddleNose)       [list $SN_Distance $SN_Height]
             set Reference(SaddleNose_HB_y)  [expr $SN_Height - $HB_Height]
             
-            project::setValue Result(Position/Reference_HB)      position    $Reference(HandleBar)   
-            project::setValue Result(Position/Reference_SN)      position    $Reference(SaddleNose)
+            # set Result(Position/Reference_HB)          $Reference(HandleBar)   
+            # set Result(Position/Reference_SN)          $Reference(SaddleNose)
             
-            project::setValue Result(Length/Reference/HandleBar_FW)  value   [vectormath::length $Reference(HandleBar) $FrontWheel(Position)]
-            project::setValue Result(Length/Reference/HandleBar_BB)  value   [vectormath::length $Reference(HandleBar) {0 0}]
-            project::setValue Result(Length/Reference/SaddleNose_HB) value   [vectormath::length $Reference(SaddleNose) $Reference(HandleBar)]
-            project::setValue Result(Length/Reference/SaddleNose_BB) value   [vectormath::length $Reference(SaddleNose) {0 0}]
-            project::setValue Result(Length/Reference/Heigth_SN_HB)  value   $Reference(SaddleNose_HB_y)      
+            set Result(Length/Reference/HandleBar_FW)     [vectormath::length $Reference(HandleBar) $FrontWheel(Position)]
+            set Result(Length/Reference/HandleBar_BB)     [vectormath::length $Reference(HandleBar) {0 0}]
+            set Result(Length/Reference/SaddleNose_HB)    [vectormath::length $Reference(SaddleNose) $Reference(HandleBar)]
+            set Result(Length/Reference/SaddleNose_BB)    [vectormath::length $Reference(SaddleNose) {0 0}]
+            set Result(Length/Reference/Heigth_SN_HB)     $Reference(SaddleNose_HB_y)      
 
               # puts "   ->  $project::Result(Position/Reference_HB)"
               # puts "   ->  $project::Result(Position/Reference_SN)"
@@ -590,10 +570,12 @@
     proc bikeGeometry::get_DerailleurMountFront {} {
             variable SeatTube
             variable FrontDerailleur
-
-                set FrontDerailleur(Mount)  [ vectormath::rotatePoint   {0 0} [ list $FrontDerailleur(Distance) [expr -1.0*$FrontDerailleur(Offset)] ] [expr 180 - $SeatTube(Angle)] ]
-
-            project::setValue Result(Position/DerailleurMountFront) position    $FrontDerailleur(Mount)
+                #
+            variable Result
+                #
+            set FrontDerailleur(Mount)  [ vectormath::rotatePoint   {0 0} [ list $FrontDerailleur(Distance) [expr -1.0*$FrontDerailleur(Offset)] ] [expr 180 - $SeatTube(Angle)] ]
+                #
+            # set Result(Position/DerailleurMountFront)     $FrontDerailleur(Mount)
             # puts "    ... \$FrontDerailleur(Mount) $FrontDerailleur(Mount)"
     }
 
@@ -603,11 +585,16 @@
     proc bikeGeometry::get_CarrierMountFront {} {
             variable FrontWheel
             variable FrontCarrier
-
-                set FrontCarrier(Mount)    [ list [expr [lindex $FrontWheel(Position) 0] - $FrontCarrier(x)]  [expr [lindex $FrontWheel(Position) 1] + $FrontCarrier(y)]]
-
-            project::setValue Result(Position/CarrierMountFront) position    $FrontCarrier(Mount)
+                #
+            variable Result
+                #
+            set FrontCarrier(Mount)    [ list [expr [lindex $FrontWheel(Position) 0] - $FrontCarrier(x)]  [expr [lindex $FrontWheel(Position) 1] + $FrontCarrier(y)]]
+                #
+            # set Result(Position/CarrierMountFront)     $FrontCarrier(Mount)
             # puts "    ... \$FrontDerailleur(Mount) $FrontDerailleur(Mount)"
+                #
+            return
+                #
     }
 
 
@@ -617,11 +604,16 @@
             variable RearWheel
             variable FrontCarrier
             variable RearCarrier
-            
-                set RearCarrier(Mount)    [ list [expr [lindex $RearWheel(Position) 0] - $RearCarrier(x)]     [expr [lindex $RearWheel(Position) 1] + $RearCarrier(y)]]
-
-            project::setValue Result(Position/CarrierMountRear) position    $RearCarrier(Mount)
+                #
+            variable Result
+                #
+            set RearCarrier(Mount)    [ list [expr [lindex $RearWheel(Position) 0] - $RearCarrier(x)]     [expr [lindex $RearWheel(Position) 1] + $RearCarrier(y)]]
+                #
+            # set Result(Position/CarrierMountRear)     $RearCarrier(Mount)
             # puts "    ... \$FrontDerailleur(Mount) $FrontDerailleur(Mount)"
+                #
+            return
+                #
     }
 
 
@@ -632,14 +624,24 @@
             variable RearBrake
             variable RearWheel
             variable SeatStay
-
+                #
+            variable Result
+                #
             set RimBrakeRadius  [ expr 0.5 * $RearWheel(RimDiameter) ]
-
+                #
             set pt_00           $RearWheel(Position)
-            set pt_01           [split [ project::getValue Result(Tubes/SeatStay/Start)      position ] , ]
-            set pt_02           [split [ project::getValue Result(Tubes/SeatStay/End)        position ] , ]
-            set pt_03           [split [ project::getValue Result(Tubes/SeatStay/Polygon)    polygon 8 ] , ]
-            set pt_04           [split [ project::getValue Result(Tubes/SeatStay/Polygon)    polygon 9 ] , ]
+            set pt_01           $SeatStay(RearWheel)
+            # set pt_01           $Result(Tubes/SeatStay/Start)
+            set pt_02           $SeatStay(SeatTube)
+            # set pt_02           $Result(Tubes/SeatStay/End)
+            set pt_03           [lrange $SeatStay(Polygon)    16 17 ]
+            set pt_04           [lrange $SeatStay(Polygon)    18 19 ]
+            # set pt_03           [lrange $Result(Tubes/SeatStay/Polygon)    16 17 ]
+            # set pt_04           [lrange $Result(Tubes/SeatStay/Polygon)    18 19 ]
+            # set pt_01           [split [ project::getValue Result(Tubes/SeatStay/Start)      position ] , ]
+            # set pt_02           [split [ project::getValue Result(Tubes/SeatStay/End)        position ] , ]
+            # set pt_03           [split [ project::getValue Result(Tubes/SeatStay/Polygon)    polygon 8 ] , ]
+            # set pt_04           [split [ project::getValue Result(Tubes/SeatStay/Polygon)    polygon 9 ] , ]
             set pt_05           [ vectormath::intersectPerp    $pt_04 $pt_03 $pt_00 ]    ;# point on SeatStay through RearWheel
             set vct_01          [ vectormath::parallel $pt_03 $pt_05 $RearBrake(Offset) ]
             set pt_06           [ lindex $vct_01 1 ]
@@ -658,14 +660,14 @@
             set RearBrake(Definition)   $pt_13
             set RearBrake(Mount)        $pt_14
 
-            project::setValue Result(Position/BrakeRear)    position    $RearBrake(Shoe)
+            # set Result(Position/BrakeRear)              $RearBrake(Shoe)
                 #
                 # - TODO -- remove above line -------
                 #
-            project::setValue Result(Position/Brake/Rear/Shoe)          position    $RearBrake(Shoe)
-            project::setValue Result(Position/Brake/Rear/Help)          position    $RearBrake(Help)
-            project::setValue Result(Position/Brake/Rear/Definition)    position    $RearBrake(Definition)
-            project::setValue Result(Position/Brake/Rear/Mount)         position    $RearBrake(Mount)
+            # set Result(Position/Brake/Rear/Shoe)        $RearBrake(Shoe)
+            # set Result(Position/Brake/Rear/Help)        $RearBrake(Help)
+            # set Result(Position/Brake/Rear/Definition)  $RearBrake(Definition)
+            # set Result(Position/Brake/Rear/Mount)       $RearBrake(Mount)
                
              
                                     
@@ -688,7 +690,9 @@
             variable FrontWheel
             variable Fork
             variable myFork
-
+                #
+            variable Result
+                #
             # -- ceck Parameter
             if {$FrontBrake(LeverLength) < 10} {
                 set FrontBrake(LeverLength) 10.0
@@ -708,8 +712,8 @@
                 #puts " $pt_01    [llength $pt_01]"
                 #puts " $pt_02    [llength $pt_02]"
                 #exit            
-                # project::setValue Result(Tubes/Steerer/End)             position    $Steerer(Stem)
-                    # project::setValue Result(Tubes/Steerer/Start)           position    $Steerer(Fork)
+                # set Result(Tubes/Steerer/End)             position    $Steerer(Stem)
+                    # set Result(Tubes/Steerer/Start)           position    $Steerer(Fork)
                 
                 #set pt_03           [split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon    1] , ]
                 #set pt_04           [split [ project::getValue Result(Tubes/ForkBlade/Polygon)  polygon    0] , ]
@@ -752,14 +756,14 @@
             set FrontBrake(Definition)  $pt_13
             set FrontBrake(Mount)       $pt_16
 
-            project::setValue Result(Position/BrakeFront)   position    $FrontBrake(Shoe)
+            # set Result(Position/BrakeFront)       $FrontBrake(Shoe)
                 #
                 # - TODO -- remove above line -------
                 #
-            project::setValue Result(Position/Brake/Front/Shoe)          position   $FrontBrake(Shoe)
-            project::setValue Result(Position/Brake/Front/Help)          position   $FrontBrake(Help)
-            project::setValue Result(Position/Brake/Front/Definition)    position   $FrontBrake(Definition)
-            project::setValue Result(Position/Brake/Front/Mount)         position   $FrontBrake(Mount)
+            # set Result(Position/Brake/Front/Shoe)             $FrontBrake(Shoe)
+            # set Result(Position/Brake/Front/Help)             $FrontBrake(Help)
+            # set Result(Position/Brake/Front/Definition)       $FrontBrake(Definition)
+            # set Result(Position/Brake/Front/Mount)            $FrontBrake(Mount)
 
 
                     # set pt_18         [split [ project::getValue Result(Tubes/ForkBlade/Start)     position] , ]
@@ -804,28 +808,30 @@
             variable BottleCage
             variable SeatTube
             variable DownTube
-
+                #
+            variable Result
+                #
                     set pt_00   [ vectormath::addVector $SeatTube(BottomBracket)    $SeatTube(Direction)     $BottleCage(SeatTube)                ]
                     set vct_01  [ vectormath::parallel  $SeatTube(Direction)    $pt_00                     [expr  0.5 * $SeatTube(DiameterBB)] ]
                     set SeatTube(BottleCage_Base)            [ lindex $vct_01 1 ]
                     set SeatTube(BottleCage_Offset)          [ vectormath::addVector        $SeatTube(BottleCage_Base)            $SeatTube(Direction) 64.0 ]
-            project::setValue Result(Tubes/SeatTube/BottleCage/Base)            position    $SeatTube(BottleCage_Base)
-            project::setValue Result(Tubes/SeatTube/BottleCage/Offset)          position    $SeatTube(BottleCage_Offset)
+            # set Result(Tubes/SeatTube/BottleCage/Base)                $SeatTube(BottleCage_Base)
+            # set Result(Tubes/SeatTube/BottleCage/Offset)              $SeatTube(BottleCage_Offset)
 
                     set pt_00   [ vectormath::addVector $DownTube(BottomBracket)    $DownTube(Direction)     $BottleCage(DownTube)                ]
                     set vct_01  [ vectormath::parallel  $DownTube(BottomBracket)    $pt_00                     [expr -0.5 * $DownTube(DiameterBB)] ]
                     set DownTube(BottleCage_Base)            [ lindex $vct_01 1 ]
                     set DownTube(BottleCage_Offset)          [ vectormath::addVector        $DownTube(BottleCage_Base)            $DownTube(Direction) 64.0 ]
-            project::setValue Result(Tubes/DownTube/BottleCage/Base)            position    $DownTube(BottleCage_Base)
-            project::setValue Result(Tubes/DownTube/BottleCage/Offset)          position    $DownTube(BottleCage_Offset)
+            # set Result(Tubes/DownTube/BottleCage/Base)               $DownTube(BottleCage_Base)
+            # set Result(Tubes/DownTube/BottleCage/Offset)             $DownTube(BottleCage_Offset)
 
                     set pt_00   [ vectormath::addVector $DownTube(BottomBracket)    $DownTube(Direction)     $BottleCage(DownTube_Lower)            ]
                     set vct_01  [ vectormath::parallel  $DownTube(BottomBracket)    $pt_00                     [expr  0.5 * $DownTube(DiameterBB)] ]
                     set DownTube(BottleCage_Lower_Base)     [ lindex $vct_01 1 ]
                     set DownTube(BottleCage_Lower_Base)     [ lindex $vct_01 1 ]
                     set DownTube(BottleCage_Lower_Offset)   [ vectormath::addVector        $DownTube(BottleCage_Lower_Base)    $DownTube(Direction) 64.0 ]
-            project::setValue Result(Tubes/DownTube/BottleCage_Lower/Base)      position    $DownTube(BottleCage_Lower_Base)
-            project::setValue Result(Tubes/DownTube/BottleCage_Lower/Offset)    position    $DownTube(BottleCage_Lower_Offset)
+            # set Result(Tubes/DownTube/BottleCage_Lower/Base)          $DownTube(BottleCage_Lower_Base)
+            # set Result(Tubes/DownTube/BottleCage_Lower/Offset)        $DownTube(BottleCage_Lower_Offset)
     }
 
 

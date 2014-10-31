@@ -46,6 +46,8 @@
             variable TopTube
             variable SeatTube
                 #
+            variable Result
+                #
             set pt_00       $SeatPost(SeatTube)
             set pt_99       {0 0}
                 #
@@ -98,7 +100,8 @@
             lappend          polygon     $headGeom
             lappend          polygon     [lindex $vct_11 1]  [lindex $vct_11 0]
                 #
-            project::setValue Result(Components/SeatPost)    polygon     [project::flatten_nestedList $polygon]
+            set SeatPost(Polygon)       [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Components/SeatPost/Polygon)     [project::flatten_nestedList $polygon]
                 #
     }
 
@@ -110,6 +113,8 @@
             variable HeadTube
             variable HeadSet
             variable Steerer
+                #
+            variable Result
                 #
             set pt_10       $HeadTube(Fork)
             set pt_12       $Steerer(Fork)
@@ -140,7 +145,8 @@
                  }
             }
                 #
-            project::setValue Result(Components/HeadSet/Bottom)    polygon     [project::flatten_nestedList $polygon]
+            set HeadSet(PolygonBottom)      [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Components/HeadSet/Bottom/Polygon)     [project::flatten_nestedList $polygon]
                 #
             if {$HeadSet(Height_Top) < 2} {    set HeadSet(Height_Top) 2}
             if {$HeadSet(Height_Top) > 8} {
@@ -170,7 +176,8 @@
                                             [lindex $vct_11 1] \
                                             [lindex $vct_12 1]  [lindex $vct_12 0] [lindex $vct_13 0] ]
                 #
-            project::setValue Result(Components/HeadSet/Top)    polygon     [project::flatten_nestedList $polygon]
+            set HeadSet(PolygonTop)     [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Components/HeadSet/Top/Polygon)     [project::flatten_nestedList $polygon]
                 #
                 #
             return  
@@ -186,6 +193,9 @@
             variable HeadSet
             variable Steerer
             variable Stem
+                #
+            variable Result
+                #
 
                     set pt_00       $HandleBar(Position)
                     set pt_01       $Steerer(Stem)
@@ -195,7 +205,8 @@
                     set checkStem           [ vectormath::checkPointCoincidence $pt_00 $pt_01]
                     if {$checkStem == 0} {
                         # puts "   ... no Stem required"
-                        project::setValue Result(Components/Stem)   polygon     {}
+                        set Stem(Polygon) {}
+                        # set Result(Components/Stem/Polygon)     {}
                         return
                     }
 
@@ -235,7 +246,8 @@
                                                             [lindex  $vct_021 1] [lindex  $vct_020 1] [lindex  $vct_021 1] \
                                                             [lindex  $vct_040 0] [lindex  $vct_040 1] [lindex  $vct_020 1] \
                                                             $pt_095 ]
-            project::setValue Result(Components/Stem)   polygon     [project::flatten_nestedList $polygon]
+            set Stem(Polygon)   [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Components/Stem/Polygon)     [project::flatten_nestedList $polygon]
     }
 
 
@@ -247,9 +259,13 @@
             variable ChainStay
             variable RearWheel
                 #
+            variable Result
+                #
+
+                #
             if {$RearFender(Radius) < $RearWheel(Radius)} {
                 set RearFender(Radius)                     [expr $RearWheel(Radius) + 5.0]
-                project::setValue Component(Fender/Rear/Radius) value $RearFender(Radius)
+                # project::setValue Component(Fender/Rear/Radius) value $RearFender(Radius)
                 puts "\n                     -> <i> \$RearFender(Radius) ........... $RearFender(Radius)"
             }               
                 #
@@ -259,7 +275,8 @@
                 #
             set polygon [createFender $RearFender(Radius) $AngleStart $RearFender(OffsetAngle)  $RearFender(Height)]
                 #
-            project::setValue Result(Components/Fender/Rear)   polygon     [project::flatten_nestedList $polygon]
+            set RearFender(Polygon)        [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Components/Fender/Rear/Polygon)        [project::flatten_nestedList $polygon]
                 #
             return
     }
@@ -273,9 +290,11 @@
             variable HeadTube
             variable FrontWheel
                 #
+            variable Result
+                #
             if {$FrontFender(Radius) < $FrontWheel(Radius)} {
                 set FrontFender(Radius)                     [expr $FrontWheel(Radius) + 5.0]
-                project::setValue Component(Fender/Front/Radius) value $FrontFender(Radius)
+                # project::setValue Component(Fender/Front/Radius) value $FrontFender(Radius)
                 puts "\n                     -> <i> \$FrontFender(Radius) .......... $FrontFender(Radius)"
             }
                 #
@@ -285,7 +304,8 @@
                 #
             set polygon [createFender $FrontFender(Radius) $AngleStart $FrontFender(OffsetAngle)  $FrontFender(Height)]
                 #
-            project::setValue Result(Components/Fender/Front)   polygon     [project::flatten_nestedList $polygon]
+            set FrontFender(Polygon)    [bikeGeometry::util::flatten_nestedList $polygon]
+            # set Result(Components/Fender/Front/Polygon)       [project::flatten_nestedList $polygon]
                 #
             return
     }
@@ -321,7 +341,8 @@
             set angle [expr $angle - $incrAngle]
         }
         
-        return [appUtil::flatten_nestedList $pointList]
+        return [bikeGeometry::util::flatten_nestedList $pointList]
+        # return [appUtil::flatten_nestedList $pointList]
 
     }
 
