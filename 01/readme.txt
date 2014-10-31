@@ -1,5 +1,12 @@
 
 
+3.4.01.74  - 2014.10.31
+-------------------------------------------------------------------------------
+    refactoring:
+        ... bikeGeometry 0.73
+        ... remove references from bikeGeometry to $project::...
+
+
 3.4.01.73  - 2014.10.27
 -------------------------------------------------------------------------------
     refactoring:
@@ -11,7 +18,7 @@
 -------------------------------------------------------------------------------
     refactoring:
         ... bikeGeometry 0.71
-        ... bikeGeometry::remove references to $project::...
+        ... remove references from bikeGeometry to $project::...
 
         
 3.4.01.71  - 2014.10.25
