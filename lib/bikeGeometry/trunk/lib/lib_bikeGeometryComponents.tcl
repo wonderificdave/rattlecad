@@ -39,7 +39,11 @@
 
         #
         # --- set SeatPost ------------------------
-    proc bikeGeometry::get_SeatPost {} {
+    proc bikeGeometry::create_SeatPost {} {
+                #
+            variable Polygon
+            variable Position
+            variable Geometry
                 #
             variable Saddle
             variable SeatPost
@@ -48,25 +52,25 @@
                 #
             variable Result
                 #
-            set pt_00       $SeatPost(SeatTube)
+            set pt_00       $Position(SeatPost_SeatTube)
             set pt_99       {0 0}
                 #
-            set pt_01       $SeatPost(Saddle)
+            set pt_01       $Position(SeatPost_Saddle)
                 #
             set vct_01      [ vectormath::parallel  $pt_01 [ vectormath::addVector $pt_01 {100 0}] 35 ]
             set vct_05      [ vectormath::parallel  $pt_01 [ vectormath::addVector $pt_01 {100 0}] 20 ]
             set vct_06      [ vectormath::parallel  $pt_01 [ vectormath::addVector $pt_01 {100 0}] 30 ]
-            set pt_02       [ vectormath::intersectPoint [lindex $vct_01 0] [lindex $vct_01 1]  {0 0} $SeatPost(SeatTube) ]
+            set pt_02       [ vectormath::intersectPoint [lindex $vct_01 0] [lindex $vct_01 1]  {0 0} $Position(SeatPost_SeatTube) ]
                 #
             set pt_10       $pt_01
             set pt_11       $pt_02
-            set pt_12       $TopTube(SeatTube)
+            set pt_12       $Position(TopTube_Start)
                 #
             set pt_13       $SeatTube(DownTube)
-            set vct_ST      [ vectormath::subVector $TopTube(SeatTube) $SeatTube(DownTube)] 
+            set vct_ST      [ vectormath::subVector $Position(TopTube_Start) $SeatTube(DownTube)] 
                 #
-            set pt_20       [ vectormath::addVector $SeatPost(SeatTube) [ vectormath::unifyVector $SeatPost(SeatTube) $SeatTube(DownTube) 75.0 ] ]
-                # set pt_20 [ vectormath::addVector $SeatPost(SeatTube) [ vectormath::unifyVector $SeatPost(SeatTube) {0 0} 675.0 ] ]
+            set pt_20       [ vectormath::addVector $Position(SeatPost_SeatTube) [ vectormath::unifyVector $Position(SeatPost_SeatTube) $SeatTube(DownTube) 75.0 ] ]
+                # set pt_20 [ vectormath::addVector $Position(SeatPost_SeatTube) [ vectormath::unifyVector $Position(SeatPost_SeatTube) {0 0} 675.0 ] ]
             set vct_10      [ vectormath::parallel  $pt_12 $pt_20 [expr 0.5 * $SeatPost(Diameter)] ]
             set vct_11      [ vectormath::parallel  $pt_12 $pt_20 [expr 0.5 * $SeatPost(Diameter)] left]
             set vct_15      [ vectormath::parallel  $pt_11 $pt_12 [expr 0.5 * $SeatPost(Diameter) -5] left]
@@ -88,9 +92,9 @@
                 # -- correction of polyline position
             set headGeom    [ vectormath::addVectorPointList {0 -10} $headGeom ]
                 # -- align to seattube
-            set headGeom    [ vectormath::rotatePointList    {0 0} $headGeom [expr 90 - $SeatTube(Angle)] ]
+            set headGeom    [ vectormath::rotatePointList    {0 0} $headGeom [expr 90 - $Geometry(SeatTube_Angle)] ]
                 # -- position seatpost
-            set headGeom    [ vectormath::addVectorPointList  $SeatPost(SeatTube)  $headGeom ]
+            set headGeom    [ vectormath::addVectorPointList  $Position(SeatPost_SeatTube)  $headGeom ]
                 
                 #
             set head_P1     [ lrange $headGeom 0 1 ]
@@ -100,25 +104,28 @@
             lappend          polygon     $headGeom
             lappend          polygon     [lindex $vct_11 1]  [lindex $vct_11 0]
                 #
-            set SeatPost(Polygon)       [bikeGeometry::util::flatten_nestedList $polygon]
-            # set Result(Components/SeatPost/Polygon)     [project::flatten_nestedList $polygon]
+            set Polygon(SeatPost)   [bikeGeometry::flatten_nestedList $polygon]
                 #
     }
 
 
         #
         # --- set HeadSet -------------------------
-    proc bikeGeometry::get_HeadSet {} {
+    proc bikeGeometry::create_HeadSet {} {
                 #
+            variable Direction
+                #
+            variable Position
+            variable Polygon
             variable HeadTube
             variable HeadSet
             variable Steerer
                 #
             variable Result
                 #
-            set pt_10       $HeadTube(Fork)
-            set pt_12       $Steerer(Fork)
-            set pt_11       [ vectormath::addVector $pt_12 $HeadTube(Direction) [expr 0.5 * $HeadSet(Height_Bottom)]]
+            set pt_10       $Position(HeadTube_Start)
+            set pt_12       $Position(Steerer_Start)
+            set pt_11       [ vectormath::addVector $pt_12 $Direction(HeadTube) [expr 0.5 * $HeadSet(Height_Bottom)]]
                 #
             if {$HeadSet(Height_Bottom) > 8} {
                 set vct_10      [ vectormath::parallel  $pt_10 $pt_11 [expr 0.5 * $HeadTube(Diameter)] ]
@@ -145,8 +152,7 @@
                  }
             }
                 #
-            set HeadSet(PolygonBottom)      [bikeGeometry::util::flatten_nestedList $polygon]
-            # set Result(Components/HeadSet/Bottom/Polygon)     [project::flatten_nestedList $polygon]
+            set Polygon(HeadSetBottom)      [bikeGeometry::flatten_nestedList $polygon]
                 #
             if {$HeadSet(Height_Top) < 2} {    set HeadSet(Height_Top) 2}
             if {$HeadSet(Height_Top) > 8} {
@@ -156,9 +162,9 @@
                     set majorDM     $HeadTube(Diameter)
                     set height_00    1
             }
-            set pt_12       $HeadTube(Stem)
-            set pt_11       [ vectormath::addVector $pt_12 $HeadTube(Direction) $height_00]
-            set pt_10       [ vectormath::addVector $pt_11 $HeadTube(Direction) [expr $HeadSet(Height_Top) - $height_00]]
+            set pt_12       $Position(HeadTube_End)
+            set pt_11       [ vectormath::addVector $pt_12 $Direction(HeadTube) $height_00]
+            set pt_10       [ vectormath::addVector $pt_11 $Direction(HeadTube) [expr $HeadSet(Height_Top) - $height_00]]
                 #
                 # puts "\n\n"
                 # puts "   pt_10:  $pt_10"
@@ -176,8 +182,7 @@
                                             [lindex $vct_11 1] \
                                             [lindex $vct_12 1]  [lindex $vct_12 0] [lindex $vct_13 0] ]
                 #
-            set HeadSet(PolygonTop)     [bikeGeometry::util::flatten_nestedList $polygon]
-            # set Result(Components/HeadSet/Top/Polygon)     [project::flatten_nestedList $polygon]
+            set Polygon(HeadSetTop)     [bikeGeometry::flatten_nestedList $polygon]
                 #
                 #
             return  
@@ -187,7 +192,13 @@
 
         #
         # --- set Stem ----------------------------
-    proc bikeGeometry::get_Stem {} {
+    proc bikeGeometry::create_Stem {} {
+                #
+            variable Direction
+            variable Geometry
+            variable Polygon
+            variable Position
+                #
             variable HeadTube
             variable HandleBar
             variable HeadSet
@@ -196,64 +207,70 @@
                 #
             variable Result
                 #
+            set pt_00       $Position(HandleBar)
+            set pt_01       $Position(Steerer_End)
+            set pt_02       $HeadSet(Stem)
 
-                    set pt_00       $HandleBar(Position)
-                    set pt_01       $Steerer(Stem)
-                    set pt_02       $HeadSet(Stem)
+                # -- ceck coincidence
+            set checkStem           [ vectormath::checkPointCoincidence $pt_00 $pt_01]
+            if {$checkStem == 0} {
+                # puts "   ... no Stem required"
+                set Polygon(Stem) {}
+                return
+            }
+                #
+            set Stem(Direction)     [ vectormath::unifyVector $pt_01 $pt_00 ]
+            set angle                           [ vectormath::angle {1 0}    {0 0}    $Stem(Direction) ]
+            set clamp_SVGPolygon    "-18.8336,-17.9999 -15.7635,-18.3921 -13.3549,-19.887 -11.1307,-22.1168 -10.0644,-24.1389 -9.7316,-24.4732 -9.8958,-23.3099 -10.3089,-21.9026 -11.1479,-19.9125 -12.0719,-17.777 -15.3406,-11.3784 -16.1873,-10.0012 -17.4384,-9.0427 -18.8336,-8.3572 -17.4384,-9.0427 -16.1873,-10.0012 -15.3406,-11.3784 -12.0719,-17.777 -11.1479,-19.9125 -10.3089,-21.9026 -9.8958,-23.3099 -9.7316,-24.4732 -9.4316,-24.7774 -8.6838,-24.9999 -0.8,-24.9999 -0.8,-15.8802 0.8,-15.8802 0.8,-24.9998 5.6669,-24.9998 6.3699,-24.8858 6.9818,-24.5172 7.4284,-24.07 13.0499,-18.7437 13.049,-23.6727 12.6125,-24.0796 12.5936,-20.4963 12.6125,-24.0796 7.4284,-24.07 13.2207,-18.5818 15.8552,-15.7422 17.8482,-13.2995 19.8206,-9.913 20.8437,-7.292 21.5329,-4.4455 21.8005,-2.0944 21.9,0.0001 21.8005,2.0946 21.5329,4.4457 20.8437,7.2922 19.8206,9.9132 17.8482,13.2997 15.8552,15.7424 13.2207,18.582 7.4284,24.0702 12.6125,24.0798 12.5936,20.4965 12.6125,24.0798 13.049,23.6729 13.0499,18.7439 7.4284,24.0702 6.9818,24.5174 6.3699,24.886 5.6669,25 0.8,25 0.8,15.8804 4.18,15.3448 7.4163,14.0676 10.1772,12.2159 12.523,9.7973 14.299,6.9605 15.506,3.5323 15.9,0.0001 15.506,-3.5321 14.299,-6.9603 12.523,-9.7971 10.1772,-12.2157 7.4163,-14.0674 4.18,-15.3446 0.8,-15.8802 -0.8,-15.8802 -3.4694,-15.544 -6.2265,-14.634 -9.2433,-12.9378 -11.6453,-10.8246 -13.5388,-8.3403 -14.8801,-5.6139 -15.6719,-2.6977 -15.9,0.0001 -15.6719,2.6979 -14.8801,5.6141 -13.5388,8.3405 -11.6453,10.8248 -9.2433,12.938 -6.2265,14.6342 -3.4694,15.5442 -0.8,15.8804 0.8,15.8804 -0.8,15.8804 -0.8,25.0001 -8.6838,25.0001 -9.3776,24.6754 -9.7467,23.9553 -9.8958,23.3101 -10.3089,21.9028 -11.1479,19.9127 -12.0719,17.7772 -15.3406,11.3786 -16.1873,10.0014 -17.4384,9.0429 -18.8336,8.3574 -17.4384,9.0429 -16.1873,10.0014 -15.3406,11.3786 -12.0719,17.7772 -11.1479,19.9127 -10.3089,21.9028 -9.8958,23.3101 -9.7467,23.9553 -11.1307,22.117 -13.3549,19.8872 -15.7635,18.3923 -18.8336,18.0001 "
+            set clamp_SVGPolygon    "-20.2619,-17 -16.6918,-17.4561 -13.8908,-19.1945 -11.3044,-21.7874 -10.0644,-24.1389 -9.7316,-24.4732 -9.8958,-23.3099 -10.3089,-21.9026 -11.1479,-19.9125 -12.0719,-17.777 -15.3406,-11.3784 -16.1873,-10.0012 -17.4384,-9.0427 -18.8336,-8.3572 -17.4384,-9.0427 -16.1873,-10.0012 -15.3406,-11.3784 -12.0719,-17.777 -11.1479,-19.9125 -10.3089,-21.9026 -9.8958,-23.3099 -9.7316,-24.4732 -9.4316,-24.7774 -8.6838,-24.9999 -0.8,-24.9999 -0.8,-15.8802 0.8,-15.8802 0.8,-24.9998 5.6669,-24.9998 6.3699,-24.8858 6.9818,-24.5172 7.4284,-24.07 13.0499,-18.7437 13.049,-23.6727 12.6125,-24.0796 12.5936,-20.4963 12.6125,-24.0796 7.4284,-24.07 13.2207,-18.5818 15.8552,-15.7422 17.8482,-13.2995 19.8206,-9.913 20.8437,-7.292 21.5329,-4.4455 21.8005,-2.0944 21.9,0.0001 21.8005,2.0946 21.5329,4.4457 20.8437,7.2922 19.8206,9.9132 17.8482,13.2997 15.8552,15.7424 13.2207,18.582 7.4284,24.0702 12.6125,24.0798 12.5936,20.4965 12.6125,24.0798 13.049,23.6729 13.0499,18.7439 7.4284,24.0702 6.9818,24.5174 6.3699,24.886 5.6669,25 0.8,25 0.8,15.8804 4.18,15.3448 7.4163,14.0676 10.1772,12.2159 12.523,9.7973 14.299,6.9605 15.506,3.5323 15.9,0.0001 15.506,-3.5321 14.299,-6.9603 12.523,-9.7971 10.1772,-12.2157 7.4163,-14.0674 4.18,-15.3446 0.8,-15.8802 -0.8,-15.8802 -3.4694,-15.544 -6.2265,-14.634 -9.2433,-12.9378 -11.6453,-10.8246 -13.5388,-8.3403 -14.8801,-5.6139 -15.6719,-2.6977 -15.9,0.0001 -15.6719,2.6979 -14.8801,5.6141 -13.5388,8.3405 -11.6453,10.8248 -9.2433,12.938 -6.2265,14.6342 -3.4694,15.5442 -0.8,15.8804 0.8,15.8804 -0.8,15.8804 -0.8,25.0001 -8.6838,25.0001 -9.3776,24.6754 -9.7467,23.9553 -9.8958,23.3101 -10.3089,21.9028 -11.1479,19.9127 -12.0719,17.7772 -15.3406,11.3786 -16.1873,10.0014 -17.4384,9.0429 -18.8336,8.3574 -17.4384,9.0429 -16.1873,10.0014 -15.3406,11.3786 -12.0719,17.7772 -11.1479,19.9127 -10.3089,21.9028 -9.8958,23.3101 -9.7467,23.9553 -11.1307,22.117 -13.8952,19.3455 -16.8889,17.4875 -20.7048,17 "
 
-                    # -- ceck coincidence
-                    set checkStem           [ vectormath::checkPointCoincidence $pt_00 $pt_01]
-                    if {$checkStem == 0} {
-                        # puts "   ... no Stem required"
-                        set Stem(Polygon) {}
-                        # set Result(Components/Stem/Polygon)     {}
-                        return
-                    }
+                set polygon         [ string map {"," " "}  $clamp_SVGPolygon ]
+                set polygon         [ coords_flip_y $polygon]
+                set polygon         [ vectormath::addVectorPointList [list $Geometry(HandleBar_Distance) $Geometry(HandleBar_Height)] $polygon]
+                set polygon         [ vectormath::rotatePointList $Position(HandleBar) $polygon $angle ]
 
-                    set Stem(Direction)     [ vectormath::unifyVector $pt_01 $pt_00 ]
-                    set angle                           [ vectormath::angle {1 0}    {0 0}    $Stem(Direction) ]
-                    set clamp_SVGPolygon    "-18.8336,-17.9999 -15.7635,-18.3921 -13.3549,-19.887 -11.1307,-22.1168 -10.0644,-24.1389 -9.7316,-24.4732 -9.8958,-23.3099 -10.3089,-21.9026 -11.1479,-19.9125 -12.0719,-17.777 -15.3406,-11.3784 -16.1873,-10.0012 -17.4384,-9.0427 -18.8336,-8.3572 -17.4384,-9.0427 -16.1873,-10.0012 -15.3406,-11.3784 -12.0719,-17.777 -11.1479,-19.9125 -10.3089,-21.9026 -9.8958,-23.3099 -9.7316,-24.4732 -9.4316,-24.7774 -8.6838,-24.9999 -0.8,-24.9999 -0.8,-15.8802 0.8,-15.8802 0.8,-24.9998 5.6669,-24.9998 6.3699,-24.8858 6.9818,-24.5172 7.4284,-24.07 13.0499,-18.7437 13.049,-23.6727 12.6125,-24.0796 12.5936,-20.4963 12.6125,-24.0796 7.4284,-24.07 13.2207,-18.5818 15.8552,-15.7422 17.8482,-13.2995 19.8206,-9.913 20.8437,-7.292 21.5329,-4.4455 21.8005,-2.0944 21.9,0.0001 21.8005,2.0946 21.5329,4.4457 20.8437,7.2922 19.8206,9.9132 17.8482,13.2997 15.8552,15.7424 13.2207,18.582 7.4284,24.0702 12.6125,24.0798 12.5936,20.4965 12.6125,24.0798 13.049,23.6729 13.0499,18.7439 7.4284,24.0702 6.9818,24.5174 6.3699,24.886 5.6669,25 0.8,25 0.8,15.8804 4.18,15.3448 7.4163,14.0676 10.1772,12.2159 12.523,9.7973 14.299,6.9605 15.506,3.5323 15.9,0.0001 15.506,-3.5321 14.299,-6.9603 12.523,-9.7971 10.1772,-12.2157 7.4163,-14.0674 4.18,-15.3446 0.8,-15.8802 -0.8,-15.8802 -3.4694,-15.544 -6.2265,-14.634 -9.2433,-12.9378 -11.6453,-10.8246 -13.5388,-8.3403 -14.8801,-5.6139 -15.6719,-2.6977 -15.9,0.0001 -15.6719,2.6979 -14.8801,5.6141 -13.5388,8.3405 -11.6453,10.8248 -9.2433,12.938 -6.2265,14.6342 -3.4694,15.5442 -0.8,15.8804 0.8,15.8804 -0.8,15.8804 -0.8,25.0001 -8.6838,25.0001 -9.3776,24.6754 -9.7467,23.9553 -9.8958,23.3101 -10.3089,21.9028 -11.1479,19.9127 -12.0719,17.7772 -15.3406,11.3786 -16.1873,10.0014 -17.4384,9.0429 -18.8336,8.3574 -17.4384,9.0429 -16.1873,10.0014 -15.3406,11.3786 -12.0719,17.7772 -11.1479,19.9127 -10.3089,21.9028 -9.8958,23.3101 -9.7467,23.9553 -11.1307,22.117 -13.3549,19.8872 -15.7635,18.3923 -18.8336,18.0001 "
-                    set clamp_SVGPolygon    "-20.2619,-17 -16.6918,-17.4561 -13.8908,-19.1945 -11.3044,-21.7874 -10.0644,-24.1389 -9.7316,-24.4732 -9.8958,-23.3099 -10.3089,-21.9026 -11.1479,-19.9125 -12.0719,-17.777 -15.3406,-11.3784 -16.1873,-10.0012 -17.4384,-9.0427 -18.8336,-8.3572 -17.4384,-9.0427 -16.1873,-10.0012 -15.3406,-11.3784 -12.0719,-17.777 -11.1479,-19.9125 -10.3089,-21.9026 -9.8958,-23.3099 -9.7316,-24.4732 -9.4316,-24.7774 -8.6838,-24.9999 -0.8,-24.9999 -0.8,-15.8802 0.8,-15.8802 0.8,-24.9998 5.6669,-24.9998 6.3699,-24.8858 6.9818,-24.5172 7.4284,-24.07 13.0499,-18.7437 13.049,-23.6727 12.6125,-24.0796 12.5936,-20.4963 12.6125,-24.0796 7.4284,-24.07 13.2207,-18.5818 15.8552,-15.7422 17.8482,-13.2995 19.8206,-9.913 20.8437,-7.292 21.5329,-4.4455 21.8005,-2.0944 21.9,0.0001 21.8005,2.0946 21.5329,4.4457 20.8437,7.2922 19.8206,9.9132 17.8482,13.2997 15.8552,15.7424 13.2207,18.582 7.4284,24.0702 12.6125,24.0798 12.5936,20.4965 12.6125,24.0798 13.049,23.6729 13.0499,18.7439 7.4284,24.0702 6.9818,24.5174 6.3699,24.886 5.6669,25 0.8,25 0.8,15.8804 4.18,15.3448 7.4163,14.0676 10.1772,12.2159 12.523,9.7973 14.299,6.9605 15.506,3.5323 15.9,0.0001 15.506,-3.5321 14.299,-6.9603 12.523,-9.7971 10.1772,-12.2157 7.4163,-14.0674 4.18,-15.3446 0.8,-15.8802 -0.8,-15.8802 -3.4694,-15.544 -6.2265,-14.634 -9.2433,-12.9378 -11.6453,-10.8246 -13.5388,-8.3403 -14.8801,-5.6139 -15.6719,-2.6977 -15.9,0.0001 -15.6719,2.6979 -14.8801,5.6141 -13.5388,8.3405 -11.6453,10.8248 -9.2433,12.938 -6.2265,14.6342 -3.4694,15.5442 -0.8,15.8804 0.8,15.8804 -0.8,15.8804 -0.8,25.0001 -8.6838,25.0001 -9.3776,24.6754 -9.7467,23.9553 -9.8958,23.3101 -10.3089,21.9028 -11.1479,19.9127 -12.0719,17.7772 -15.3406,11.3786 -16.1873,10.0014 -17.4384,9.0429 -18.8336,8.3574 -17.4384,9.0429 -16.1873,10.0014 -15.3406,11.3786 -12.0719,17.7772 -11.1479,19.9127 -10.3089,21.9028 -9.8958,23.3101 -9.7467,23.9553 -11.1307,22.117 -13.8952,19.3455 -16.8889,17.4875 -20.7048,17 "
-
-                        set polygon         [ string map {"," " "}  $clamp_SVGPolygon ]
-                        set polygon         [ coords_flip_y $polygon]
-                        set polygon         [ vectormath::addVectorPointList [list $HandleBar(Distance) $HandleBar(Height)] $polygon]
-                        set polygon         [ vectormath::rotatePointList $HandleBar(Position) $polygon $angle ]
-
-                    set polygonLength   [ llength $polygon  ]
-                    set pt_099          [ list [lindex $polygon 0] [lindex $polygon 1] ]
-                    set pt_000          [ list [lindex $polygon $polygonLength-2] [lindex $polygon $polygonLength-1] ]
-                    set stemWidth       [ vectormath::length $pt_099 $pt_000 ]
-                    set stemDiameter    34
-                    set vct_099         [ vectormath::parallel $pt_01 $pt_00 [expr 0.5 * $stemWidth        ] left]
-                    set vct_000         [ vectormath::parallel $pt_01 $pt_00 [expr 0.5 * $stemWidth        ] ]
-                    set vct_010         [ vectormath::parallel $pt_02 $pt_01 [expr 0.5 * $stemDiameter    + 4 ] ]
-                    set pt_095          [ vectormath::intersectPoint [lindex $vct_099 0] [lindex $vct_099 1]  [lindex $vct_010 0] [lindex $vct_010 1] ]
-                    set pt_50           [ vectormath::intersectPerp $pt_01 $pt_02 $pt_095 ]
-                    set pt_51           [ vectormath::addVector $pt_50  [ vectormath::unifyVector {0 0} $HeadTube(Direction) 2] ]
-                    set pt_005          [ vectormath::intersectPoint [lindex $vct_000 0] [lindex $vct_000 1]  [lindex $vct_010 0] [lindex $vct_010 1] ]
-                    set pt_12           [ vectormath::intersectPerp $pt_01 $pt_02 $pt_005 ]
-                    set pt_11           [ vectormath::addVector $pt_12 [ vectormath::unifyVector {0 0} $HeadTube(Direction) -2] ]
-                    set vct_020         [ vectormath::parallel $pt_11 $pt_51 [expr 0.5 * $stemDiameter ] ]
-                    set vct_021         [ vectormath::parallel $pt_11 $pt_51 [expr 0.5 * $stemDiameter ] left ]
-                    set vct_030         [ vectormath::parallel $HeadSet(Stem) $pt_51 [expr 0.5 * $HeadSet(ShimDiameter) ] ];# ShimDiameter from HeadSet definition above
-                    set vct_031         [ vectormath::parallel $HeadSet(Stem) $pt_51 [expr 0.5 * $HeadSet(ShimDiameter) ] left ]
-                    set vct_040         [ vectormath::parallel [lindex  $vct_021 1] [lindex  $vct_020 1] 5  left]
-
-                    set polygon         [ lappend polygon   $pt_005 \
-                                                            [lindex  $vct_020 0] [lindex  $vct_021 0] [lindex  $vct_020 0] \
-                                                            [lindex  $vct_030 0] [lindex  $vct_031 0] [lindex  $vct_021 0] \
-                                                            [lindex  $vct_021 1] [lindex  $vct_020 1] [lindex  $vct_021 1] \
-                                                            [lindex  $vct_040 0] [lindex  $vct_040 1] [lindex  $vct_020 1] \
-                                                            $pt_095 ]
-            set Stem(Polygon)   [bikeGeometry::util::flatten_nestedList $polygon]
-            # set Result(Components/Stem/Polygon)     [project::flatten_nestedList $polygon]
+            set polygonLength   [ llength $polygon  ]
+            set pt_099          [ list [lindex $polygon 0] [lindex $polygon 1] ]
+            set pt_000          [ list [lindex $polygon $polygonLength-2] [lindex $polygon $polygonLength-1] ]
+            set stemWidth       [ vectormath::length $pt_099 $pt_000 ]
+            set stemDiameter    34
+            set vct_099         [ vectormath::parallel $pt_01 $pt_00 [expr 0.5 * $stemWidth        ] left]
+            set vct_000         [ vectormath::parallel $pt_01 $pt_00 [expr 0.5 * $stemWidth        ] ]
+            set vct_010         [ vectormath::parallel $pt_02 $pt_01 [expr 0.5 * $stemDiameter    + 4 ] ]
+            set pt_095          [ vectormath::intersectPoint [lindex $vct_099 0] [lindex $vct_099 1]  [lindex $vct_010 0] [lindex $vct_010 1] ]
+            set pt_50           [ vectormath::intersectPerp $pt_01 $pt_02 $pt_095 ]
+            set pt_51           [ vectormath::addVector $pt_50  [ vectormath::unifyVector {0 0} $Direction(HeadTube) 2] ]
+            set pt_005          [ vectormath::intersectPoint [lindex $vct_000 0] [lindex $vct_000 1]  [lindex $vct_010 0] [lindex $vct_010 1] ]
+            set pt_12           [ vectormath::intersectPerp $pt_01 $pt_02 $pt_005 ]
+            set pt_11           [ vectormath::addVector $pt_12 [ vectormath::unifyVector {0 0} $Direction(HeadTube) -2] ]
+            set vct_020         [ vectormath::parallel $pt_11 $pt_51 [expr 0.5 * $stemDiameter ] ]
+            set vct_021         [ vectormath::parallel $pt_11 $pt_51 [expr 0.5 * $stemDiameter ] left ]
+            set vct_030         [ vectormath::parallel $HeadSet(Stem) $pt_51 [expr 0.5 * $HeadSet(ShimDiameter) ] ];# ShimDiameter from HeadSet definition above
+            set vct_031         [ vectormath::parallel $HeadSet(Stem) $pt_51 [expr 0.5 * $HeadSet(ShimDiameter) ] left ]
+            set vct_040         [ vectormath::parallel [lindex  $vct_021 1] [lindex  $vct_020 1] 5  left]
+                #
+            set polygon         [ lappend polygon   $pt_005 \
+                                                    [lindex  $vct_020 0] [lindex  $vct_021 0] [lindex  $vct_020 0] \
+                                                    [lindex  $vct_030 0] [lindex  $vct_031 0] [lindex  $vct_021 0] \
+                                                    [lindex  $vct_021 1] [lindex  $vct_020 1] [lindex  $vct_021 1] \
+                                                    [lindex  $vct_040 0] [lindex  $vct_040 1] [lindex  $vct_020 1] \
+                                                    $pt_095 ]
+            set Polygon(Stem)   [bikeGeometry::flatten_nestedList $polygon]
+                #
+            return    
+                #
     }
 
 
         #
         # --- set FenderRear ----------------------
-    proc bikeGeometry::get_FenderRear {} {
+    proc bikeGeometry::create_RearFender {} {
+                #
+            variable Direction
+                #
+            variable Geometry
+            variable Direction
+            variable Polygon
             variable RearFender
             variable Result
             variable ChainStay
@@ -263,28 +280,32 @@
                 #
 
                 #
-            if {$RearFender(Radius) < $RearWheel(Radius)} {
-                set RearFender(Radius)                     [expr $RearWheel(Radius) + 5.0]
-                # project::setValue Component(Fender/Rear/Radius) value $RearFender(Radius)
+            if {$RearFender(Radius) < $Geometry(RearWheel_Radius)} {
+                set RearFender(Radius)                     [expr $Geometry(RearWheel_Radius) + 5.0]
                 puts "\n                     -> <i> \$RearFender(Radius) ........... $RearFender(Radius)"
             }               
                 #
-            set AngleChainStay [vectormath::dirAngle $ChainStay(Direction) {0 0} ]
+            set AngleChainStay [vectormath::dirAngle $Direction(ChainStay) {0 0} ]
                 #
             set AngleStart          [expr 180 + $AngleChainStay]
                 #
-            set polygon [createFender $RearFender(Radius) $AngleStart $RearFender(OffsetAngle)  $RearFender(Height)]
+            set polygon             [_createFender $RearFender(Radius) $AngleStart $RearFender(OffsetAngle)  $RearFender(Height)]
                 #
-            set RearFender(Polygon)        [bikeGeometry::util::flatten_nestedList $polygon]
-            # set Result(Components/Fender/Rear/Polygon)        [project::flatten_nestedList $polygon]
+            set Polygon(RearFender) [bikeGeometry::flatten_nestedList $polygon]
                 #
             return
+                #
     }
 
 
         #
         # --- set FenderFront ----------------------
-    proc bikeGeometry::get_FenderFront {} {
+    proc bikeGeometry::create_FrontFender {} {
+                #
+            variable Direction
+                #
+            variable Geometry
+            variable Polygon
             variable FrontFender
             variable Result
             variable HeadTube
@@ -292,36 +313,36 @@
                 #
             variable Result
                 #
-            if {$FrontFender(Radius) < $FrontWheel(Radius)} {
-                set FrontFender(Radius)                     [expr $FrontWheel(Radius) + 5.0]
-                # project::setValue Component(Fender/Front/Radius) value $FrontFender(Radius)
+            if {$FrontFender(Radius) < $Geometry(FrontWheel_Radius)} {
+                set FrontFender(Radius)                     [expr $Geometry(FrontWheel_Radius) + 5.0]
                 puts "\n                     -> <i> \$FrontFender(Radius) .......... $FrontFender(Radius)"
             }
                 #
-            set AngleHeadTube [vectormath::dirAngle {0 0} $HeadTube(Direction)]
+            set AngleHeadTube   [vectormath::dirAngle {0 0} $Direction(HeadTube)]
                 #
-            set AngleStart          [expr $AngleHeadTube - $FrontFender(OffsetAngleFront)]
+            set AngleStart      [expr $AngleHeadTube - $FrontFender(OffsetAngleFront)]
                 #
-            set polygon [createFender $FrontFender(Radius) $AngleStart $FrontFender(OffsetAngle)  $FrontFender(Height)]
+            set polygon         [_createFender $FrontFender(Radius) $AngleStart $FrontFender(OffsetAngle)  $FrontFender(Height)]
                 #
-            set FrontFender(Polygon)    [bikeGeometry::util::flatten_nestedList $polygon]
-            # set Result(Components/Fender/Front/Polygon)       [project::flatten_nestedList $polygon]
+            set Polygon(FrontFender)    [bikeGeometry::flatten_nestedList $polygon]
                 #
             return
+                #
     }
 
 
 
     #-------------------------------------------------------------------------
         #  Fork Blade Polygon for suspension Fork
-    proc bikeGeometry::createFender {radius angleStart angleLength height} {
+    proc bikeGeometry::_createFender {radius angleStart angleLength height} {
+            #
         set precision 3; # mm
-        
-          # puts "  -> \$radius       $radius"
-          # puts "  -> \$angleStart   $angleStart"
-          # puts "  -> \$angleLength  $angleLength"
-          # puts "  -> \$height       $height"
-        
+            #
+            # puts "  -> \$radius       $radius"
+            # puts "  -> \$angleStart   $angleStart"
+            # puts "  -> \$angleLength  $angleLength"
+            # puts "  -> \$height       $height"
+            #
         set angleEnd    [expr $angleStart + $angleLength]
         set arcLength   [expr $angleLength * 2 * $radius * $vectormath::CONST_PI / 360]
         set nr_Elements [expr round ($arcLength / $precision)]
@@ -331,18 +352,17 @@
         for {set angle $angleStart} {$angle <= $angleEnd} {set angle [expr $angle + $incrAngle]} {
             lappend pointList [vectormath::rotateLine {0 0} $radius $angle]
         }
-          #
+            #
         set angleEnd    [expr $angleEnd   - 2]
         set angleStart  [expr $angleStart + 2]
         set innerRadius [expr $radius - $height]
-          #
+            #
         for {set angle $angleEnd} {$angle >= $angleStart} {} {
             lappend pointList [vectormath::rotateLine {0 0} $innerRadius $angle]
             set angle [expr $angle - $incrAngle]
         }
-        
-        return [bikeGeometry::util::flatten_nestedList $pointList]
-        # return [appUtil::flatten_nestedList $pointList]
-
+            #
+        return [bikeGeometry::flatten_nestedList $pointList]
+            #
     }
 

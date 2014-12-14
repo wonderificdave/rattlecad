@@ -36,21 +36,25 @@
  # ---------------------------------------------------------------------------
  #
  #
-
- 
-     
+      
     
     #-------------------------------------------------------------------------
         #  compute all values of the project 
         #
         #    <T> ... should be renamed to compute_Project
         #
-    proc bikeGeometry::set_base_Parameters {} {
+    proc bikeGeometry::update_Project {} {
             
+                #
+                # ... new structure of bikeGeometry 1.20 ...
+                #
+            bikeGeometry::_updateProjectNS 
+                #
+                #
             variable Project
             variable Geometry
             variable Reference
-            variable Rendering
+            variable Config
             
             variable BottomBracket
             variable RearWheel
@@ -72,7 +76,7 @@
             variable Fork
             variable HeadSet
             variable Stem
-            variable RearDrop
+            variable RearDropout
 
             variable RearBrake
             variable FrontBrake
@@ -85,65 +89,74 @@
             variable BottleCage
             variable FrameJig
             variable TubeMiter
+            variable RearMockup
 
             variable DEBUG_Geometry
 
               # appUtil::get_procHierarchy
               
             set DEBUG_Geometry(Base)        {0 0}
+            set DEBUG_Geometry(Position)    {0 0}
 
 
-            get_from_project
                 #
+                # ... moved to bikeGeometry::set_newProject  ... 20141126
+            # get_from_project   
+                #
+                
                 #
                 # --- set basePoints Attributes
                 #
                 # get_basePoints ... replaced ... 0.69 ... 2014.10.20
                 #
-            get_RearWheel
-            get_FrontWheel
+            create_GeometryRear
+            create_GeometryCenter
+            create_GeometryFront
                 #
-            get_GeometryRear
-            get_GeometryCenter
-            get_GeometryFront
-            get_BoundingBox
+            create_RearDropout
+            create_RearWheel
+            create_FrontWheel
                 #
-            
+            create_SummarySize
+                #
+           
+            trace_ForkConfig   
+                
                 #
                 # --- compute tubing geometry
                 #
             check_Values
             
                 #
-            get_ChainStay
-            get_ChainStay_RearMockup
+            create_ChainStay
+            create_ChainStay_RearMockup
 
                 #
-            get_HeadTube
+            create_HeadTube
 
                 #
-            get_DownTube_SeatTube
+            create_DownTube_SeatTube
             
                 #
-            get_TopTube_SeatTube
+            create_TopTube_SeatTube
 
                 #
-            get_SeatStay
+            create_SeatStay
 
                 #
-            get_Fork
+            create_Fork
 
                 #
-            get_Steerer
+            create_Steerer
 
                 #
-            get_SeatPost
+            create_SeatPost
 
                 #
-            get_HeadSet
+            create_HeadSet
 
                 #
-            get_Stem
+            create_Stem
             
                 #
             fill_resultValues
@@ -151,34 +164,34 @@
                 #
                 # --- compute components
                 #
-            get_DerailleurMountFront
+            create_DerailleurMountFront
             
                 #
-            get_CarrierMountRear
+            create_CarrierMountRear
 
                 #
-            get_CarrierMountFront
+            create_CarrierMountFront
 
                 #
-            get_BrakePositionRear
+            create_BrakePositionRear
 
                 #
-            get_BrakePositionFront
+            create_BrakePositionFront
 
                 #
-            get_BottleCageMount
+            create_BottleCageMount
 
                 #
-            get_FenderRear
+            create_RearFender
 
                 #
-            get_FenderFront
+            create_FrontFender
             
                 #
-            get_FrameJig
+            create_FrameJig
 
                 #
-            get_TubeMiter
+            create_TubeMiter
             
             
             # ----------------------------------
@@ -189,13 +202,76 @@
             
     }
 
-
+    proc bikeGeometry::trace_ForkConfig {} {
+            #
+        variable customFork
+            #
+        variable Component
+        variable Config
+        variable Fork
+            #
+            # puts "   -> lastConfig ... $customFork(lastConfig)"
+            # puts "                 ... $Config(Fork)"
+            #
+            # tk_messageBox -message "<01> ... switch from  $customFork(lastConfig) -> \n $Config(Fork)"
+            #
+            # set lastFile $Fork(CrownFile)
+            #
+        switch -exact $Config(Fork) {
+            SteelLugged -
+            SteelCustom {
+                    if {$customFork(lastConfig) != $Config(Fork)} {               
+                            # ... noe SteelCustom, last time anything else
+                            # ... therefore restore Fork() from customFork()
+                            # ... initialy customFork() is empty
+                        # tk_messageBox -message "<02> ... switch from  $customFork(lastConfig) -> \n $Config(Fork)"
+                            #
+                            # -- check that  customFork()  has values 
+                            #     ... if not fill customFork()  initially with current values
+                        if {[array get customFork CrownFile] == {}} {
+                                # tk_messageBox -message "... initial SteelCustom Status"
+                            catch { set customFork(CrownFile)         $Component(ForkCrown)     }                                  
+                            catch { set customFork(DropOutFile)       $Component(ForkDropout)   }
+                            catch { set customFork(CrownBrakeOffset)  $Fork(CrownBrakeOffset)   }
+                            catch { set customFork(CrownBrakeAngle)   $Fork(CrownBrakeAngle)    }
+                            catch { set customFork(BladeBrakeOffset)  $FrontBrake(Offset)       } 
+                        } 
+                                #
+                        set lastFile $customFork(CrownFile)      
+                            #
+                            # -- update  Fork()  from  customFork()
+                            #
+                        catch { set Component(ForkCrown)    $customFork(CrownFile)          }
+                        catch { set Component(ForkDropout)  $customFork(DropOutFile)        }
+                        catch { set Fork(CrownBrakeOffset)  $customFork(CrownBrakeOffset)   }
+                        catch { set Fork(CrownBrakeAngle)   $customFork(CrownBrakeAngle)    }
+                        catch { set Fork(BladeBrakeOffset)  $customFrontBrake(Offset)       }
+                            #
+                    }
+                }
+            default {}
+        }
+            #
+        set customFork(lastConfig) $Config(Fork)
+            #
+        # tk_messageBox -message "<03> ... switch from  $customFork(lastConfig) -> \n $Config(Fork)\n old: $lastFile \n new: $Fork(CrownFile)"   
+            #
+            #
+        #parray customFork
+        #parray Fork
+            #
+        return
+            #
+    }
+    
     proc bikeGeometry::get_from_project {} {
             
             variable Project
             variable Geometry
             variable Reference
-            variable Rendering
+            variable Component
+            variable Config
+            variable ListValue
             variable Result
 
             variable BottomBracket
@@ -219,65 +295,140 @@
             variable Fork
             variable HeadSet
             variable Stem
-            variable RearDrop
+            variable RearDropout
 
-            variable RearBrake
+            variable CrankSet
             variable FrontBrake
-            variable FrontDerailleur
-            variable RearFender
-            variable FrontFender
-            variable RearCarrier
             variable FrontCarrier
-
+            variable FrontDerailleur
+            variable FrontFender
+            variable RearBrake
+            variable RearCarrier
+            variable RearDerailleur
+            variable RearFender
             variable BottleCage
+            variable Logo
+            
             variable FrameJig
             variable TubeMiter
+            variable RearMockup
+            variable Visualisation
 
               # appUtil::get_procHierarchy
 
-
+                #
+                # --- get Component
+            set Component(BottleCage_DownTube)          $project::Component(BottleCage/DownTube/File)
+            set Component(BottleCage_DownTube_Lower)    $project::Component(BottleCage/DownTube_Lower/File)
+            set Component(BottleCage_SeatTube)          $project::Component(BottleCage/SeatTube/File)
+            set Component(CrankSet)                     $project::Component(CrankSet/File)
+            set Component(ForkCrown)                    $project::Component(Fork/Crown/File)                                     
+            set Component(ForkDropout)                  $project::Component(Fork/DropOut/File)
+            set Component(FrontBrake)                   $project::Component(Brake/Front/File)
+            set Component(FrontCarrier)                 $project::Component(Carrier/Front/File)
+            set Component(FrontDerailleur)              $project::Component(Derailleur/Front/File)
+            set Component(HandleBar)                    $project::Component(HandleBar/File)
+            set Component(Logo)                         $project::Component(Logo/File)                    
+            set Component(RearBrake)                    $project::Component(Brake/Rear/File)
+            set Component(RearCarrier)                  $project::Component(Carrier/Rear/File)
+            set Component(RearDerailleur)               $project::Component(Derailleur/Rear/File)
+            set Component(RearDropout)                  $project::Lugs(RearDropOut/File)
+            set Component(RearHub)                      {hub/rattleCAD_rear.svg}
+            set Component(Saddle)                       $project::Component(Saddle/File)                 
+            
+                #
+                # --- get Rendering  ----------------------------
+            set Config(FrontBrake)                  $project::Rendering(Brake/Front)    
+            set Config(RearBrake)                   $project::Rendering(Brake/Rear)    
+            set Config(BottleCage_SeatTube)         $project::Rendering(BottleCage/SeatTube)
+            set Config(BottleCage_DownTube)         $project::Rendering(BottleCage/DownTube)
+            set Config(BottleCage_DownTube_Lower)   $project::Rendering(BottleCage/DownTube_Lower)    
+            set Config(FrontFender)                 $project::Rendering(Fender/Front)
+            set Config(RearFender)                  $project::Rendering(Fender/Rear)
+            set Config(ChainStay)                   $project::Rendering(ChainStay)
+            set Config(Fork)                        $project::Rendering(Fork)
+            set Config(ForkBlade)                   $project::Rendering(ForkBlade)
+            set Config(ForkDropout)                 $project::Rendering(ForkDropOut)
+            set Config(RearDropout)                 $project::Rendering(RearDropOut)
+            set Config(RearDropoutOrient)           $project::Lugs(RearDropOut/Direction) ; # prev. RearDropOut/Direction
+ 
+                #
+                # --- get ListValue  ----------------------------
+            set ListValue(CrankSetChainRings)   $project::Component(CrankSet/ChainRings)
+            
+                #
+                # --- get Geometry  ----------------------------
+            set Geometry(BottomBracket_Depth)   $project::Custom(BottomBracket/Depth)
+            set Geometry(ChainStay_Length)      $project::Custom(WheelPosition/Rear)
+            set Geometry(Fork_Height)           $project::Component(Fork/Height)
+            set Geometry(Fork_Rake)             $project::Component(Fork/Rake)
+            set Geometry(FrontRim_Diameter)     $project::Component(Wheel/Front/RimDiameter)
+            set Geometry(FrontTyre_Height)      $project::Component(Wheel/Front/TyreHeight)
+            set Geometry(HandleBar_Distance)    $project::Personal(HandleBar_Distance)
+            set Geometry(HandleBar_Height)      $project::Personal(HandleBar_Height)
+            set Geometry(HeadTube_Angle)        $project::Custom(HeadTube/Angle)
+            set Geometry(Inseam_Length)         $project::Personal(InnerLeg_Length)
+            set Geometry(RearRim_Diameter)      $project::Component(Wheel/Rear/RimDiameter)
+            set Geometry(RearTyre_Height)       $project::Component(Wheel/Rear/TyreHeight)
+            set Geometry(Saddle_Distance)       $project::Personal(Saddle_Distance)
+            set Geometry(Saddle_Height)         $project::Personal(Saddle_Height)
+            set Geometry(Stem_Angle)            $project::Component(Stem/Angle)
+            set Geometry(Stem_Length)           $project::Component(Stem/Length)
+            set Geometry(TopTube_Angle)         $project::Custom(TopTube/Angle)
+            
+                #
+                # --- get RearMockup  ----------------------------
+            set RearMockup(CassetteClearance)   $project::Rendering(RearMockup/CassetteClearance)
+            set RearMockup(ChainWheelClearance) $project::Rendering(RearMockup/ChainWheelClearance)
+            set RearMockup(CrankClearance)      $project::Rendering(RearMockup/CrankClearance)
+            set RearMockup(DiscClearance)       $project::Rendering(RearMockup/DiscClearance)
+            set RearMockup(DiscDiameter)        $project::Rendering(RearMockup/DiscDiameter)
+            set RearMockup(DiscOffset)          $project::Rendering(RearMockup/DiscOffset)
+            set RearMockup(DiscWidth)           $project::Rendering(RearMockup/DiscWidth)
+            set RearMockup(TyreClearance)       $project::Rendering(RearMockup/TyreClearance)
+ 
+                #
+                # --- get Reference  ----------------------------
+            set Reference(SaddleNose_Distance)  $project::Reference(SaddleNose_Distance)
+            set Reference(SaddleNose_Height)    $project::Reference(SaddleNose_Height)
+            set Reference(HandleBar_Distance)   $project::Reference(HandleBar_Distance)
+            set Reference(HandleBar_Height)     $project::Reference(HandleBar_Height)
+            
+            
                 #
                 # --- get BottomBracket (1)
-            set BottomBracket(depth)            $project::Custom(BottomBracket/Depth)
-            set BottomBracket(outside)          $project::Lugs(BottomBracket/Diameter/outside)
-            set BottomBracket(inside)           $project::Lugs(BottomBracket/Diameter/inside)
-            set BottomBracket(width)            $project::Lugs(BottomBracket/Width)
+            set BottomBracket(OutsideDiameter)  $project::Lugs(BottomBracket/Diameter/outside)
+            set BottomBracket(InsideDiameter)   $project::Lugs(BottomBracket/Diameter/inside)
+            set BottomBracket(Width)            $project::Lugs(BottomBracket/Width)
             set BottomBracket(OffsetCS_TopView) $project::Lugs(BottomBracket/ChainStay/Offset_TopView)
                 # check-Value-procedure
-            if {[expr $BottomBracket(outside) -2.0] < $BottomBracket(inside)} {
-                set BottomBracket(inside)       [expr $BottomBracket(outside) -2.0]
-                set project::Lugs(BottomBracket/Diameter/inside) $BottomBracket(inside)
+            if {[expr $BottomBracket(OutsideDiameter) -2.0] < $BottomBracket(InsideDiameter)} {
+                set BottomBracket(InsideDiameter)       [expr $BottomBracket(OutsideDiameter) -2.0]
+                set project::Lugs(BottomBracket/Diameter/inside) $BottomBracket(InsideDiameter)
             }
 
                 #
                 # --- get RearWheel
-            set RearWheel(RimDiameter)          $project::Component(Wheel/Rear/RimDiameter)
             set RearWheel(RimHeight)            $project::Component(Wheel/Rear/RimHeight)
-            set RearWheel(TyreHeight)           $project::Component(Wheel/Rear/TyreHeight)
+            set RearWheel(TyreWidth)            $project::Component(Wheel/Rear/TyreWidth)
             set RearWheel(TyreWidthRadius)      $project::Component(Wheel/Rear/TyreWidthRadius)
-            set RearWheel(DistanceBB)           $project::Custom(WheelPosition/Rear)
             set RearWheel(HubWidth)             $project::Component(Wheel/Rear/HubWidth)
+            set RearWheel(FirstSprocket)        $project::Component(Wheel/Rear/FirstSprocket)
             
 
                 #
                 # --- get FrontWheel
-            set FrontWheel(RimDiameter)         $project::Component(Wheel/Front/RimDiameter)
             set FrontWheel(RimHeight)           $project::Component(Wheel/Front/RimHeight)
-            set FrontWheel(TyreHeight)          $project::Component(Wheel/Front/TyreHeight)
-
+            
                 #
                 # --- get HandleBarMount - Position
-            set HandleBar(Distance)             $project::Personal(HandleBar_Distance)
-            set HandleBar(Height)               $project::Personal(HandleBar_Height)
-
-
+            set HandleBar(PivotAngle)           $project::Component(HandleBar/PivotAngle)
+            
                 #
                 # --- get Fork -----------------------------
-            set Fork(Height)                    $project::Component(Fork/Height)
-            set Fork(Rake)                      $project::Component(Fork/Rake)
-            set Fork(Rendering)                 $project::Rendering(Fork)
-            set Fork(BladeRendering)            $project::Rendering(ForkBlade)
-            set Fork(BladeWith)                 $project::Component(Fork/Blade/Width)
+            # set Fork(Rendering)               $project::Rendering(Fork)
+            # set Fork(BladeRendering)          $project::Rendering(ForkBlade)
+            set Fork(BladeWidth)                $project::Component(Fork/Blade/Width)
             set Fork(BladeDiameterDO)           $project::Component(Fork/Blade/DiameterDO)
             set Fork(BladeTaperLength)          $project::Component(Fork/Blade/TaperLength)
             set Fork(BladeBendRadius)           $project::Component(Fork/Blade/BendRadius)
@@ -286,27 +437,18 @@
             set Fork(BladeOffsetCrownPerp)      $project::Component(Fork/Crown/Blade/OffsetPerp)
             set Fork(BrakeAngle)                $project::Component(Fork/Crown/Brake/Angle)
             set Fork(BrakeOffset)               $project::Component(Fork/Crown/Brake/Offset)
-            set Fork(CrownFile)                 $project::Component(Fork/Crown/File)                                     
             set Fork(CrownBrakeOffset)          $project::Component(Fork/Crown/Brake/Offset) 
             set Fork(CrownBrakeAngle)           $project::Component(Fork/Crown/Brake/Angle)
             set Fork(BladeOffsetDO)             $project::Component(Fork/DropOut/Offset)
             set Fork(BladeOffsetDOPerp)         $project::Component(Fork/DropOut/OffsetPerp)
-            set Fork(DropOutFile)               $project::Component(Fork/DropOut/File)
                         
                 #
                 # --- get Stem -----------------------------
-            set Stem(Angle)                     $project::Component(Stem/Angle)
-            set Stem(Length)                    $project::Component(Stem/Length)
 
                 #
                 # --- get HeadTube -------------------------
-            set HeadTube(ForkRake)              $Fork(Rake)
-            set HeadTube(ForkHeight)            $Fork(Height)
-            set HeadTube(ForkRake)              $project::Component(Fork/Rake)
-            set HeadTube(ForkHeight)            $project::Component(Fork/Height)
             set HeadTube(Diameter)              $project::FrameTubes(HeadTube/Diameter)
             set HeadTube(Length)                $project::FrameTubes(HeadTube/Length)
-            set HeadTube(Angle)                 $project::Custom(HeadTube/Angle)
 
                 #
                 # --- get SeatTube -------------------------
@@ -331,7 +473,6 @@
             set TopTube(TaperLength)            $project::FrameTubes(TopTube/TaperLength)
             set TopTube(PivotPosition)          $project::Custom(TopTube/PivotPosition)
             set TopTube(OffsetHT)               $project::Custom(TopTube/OffsetHT)
-            set TopTube(Angle)                  $project::Custom(TopTube/Angle)
 
                 #
                 # --- get ChainStay ------------------------
@@ -340,22 +481,20 @@
             set ChainStay(Height)               $project::FrameTubes(ChainStay/Height)
             set ChainStay(TaperLength)          $project::FrameTubes(ChainStay/TaperLength)
             set ChainStay(WidthBB)              $project::FrameTubes(ChainStay/WidthBB)
-            set ChainStay(Rendering)            $project::Rendering(ChainStay)
+              # set ChainStay(profile_y03)      $ChainStay(WidthBB)
             set ChainStay(profile_y00)          $project::FrameTubes(ChainStay/Profile/width_00)
             set ChainStay(profile_x01)          $project::FrameTubes(ChainStay/Profile/length_01)
             set ChainStay(profile_y01)          $project::FrameTubes(ChainStay/Profile/width_01)
             set ChainStay(profile_x02)          $project::FrameTubes(ChainStay/Profile/length_02)
             set ChainStay(profile_y02)          $project::FrameTubes(ChainStay/Profile/width_02)
             set ChainStay(profile_x03)          $project::FrameTubes(ChainStay/Profile/length_03)
-            set ChainStay(profile_y03)          $project::FrameTubes(ChainStay/Profile/width_03)
             set ChainStay(completeLength)       $project::FrameTubes(ChainStay/Profile/completeLength) 
-            set ChainStay(cuttingLength)        $project::FrameTubes(ChainStay/Profile/cuttingLength)            
+            set ChainStay(cuttingLength)        $project::FrameTubes(ChainStay/Profile/cuttingLength) 
+            set ChainStay(cuttingLeft)          $project::FrameTubes(ChainStay/Profile/cuttingLeft)
             set ChainStay(segmentLength_01)     $project::FrameTubes(ChainStay/CenterLine/length_01)      
             set ChainStay(segmentLength_02)     $project::FrameTubes(ChainStay/CenterLine/length_02)      
             set ChainStay(segmentLength_03)     $project::FrameTubes(ChainStay/CenterLine/length_03)      
-            set ChainStay(segmentLength_04)     $project::FrameTubes(ChainStay/CenterLine/length_04)  
-                          
-                          
+            set ChainStay(segmentLength_04)     $project::FrameTubes(ChainStay/CenterLine/length_04)       
             set ChainStay(segmentAngle_01)      $project::FrameTubes(ChainStay/CenterLine/angle_01)
             set ChainStay(segmentAngle_02)      $project::FrameTubes(ChainStay/CenterLine/angle_02)
             set ChainStay(segmentAngle_03)      $project::FrameTubes(ChainStay/CenterLine/angle_03)
@@ -371,31 +510,50 @@
             set SeatStay(DiameterCS)            $project::FrameTubes(SeatStay/DiameterCS)
             set SeatStay(TaperLength)           $project::FrameTubes(SeatStay/TaperLength)
             set SeatStay(OffsetTT)              $project::Custom(SeatStay/OffsetTT)
+            set SeatStay(SeatTubeMiterDiameter) $project::Lugs(SeatTube/SeatStay/MiterDiameter)
 
                 #
-                # --- get RearDropOut ----------------------
-            set RearDrop(Direction)             $project::Lugs(RearDropOut/Direction)
-            set RearDrop(RotationOffset)        $project::Lugs(RearDropOut/RotationOffset)
-            set RearDrop(OffsetCS)              $project::Lugs(RearDropOut/ChainStay/Offset)
-            set RearDrop(OffsetCSPerp)          $project::Lugs(RearDropOut/ChainStay/OffsetPerp)
-            set RearDrop(OffsetSS)              $project::Lugs(RearDropOut/SeatStay/Offset)
-            set RearDrop(OffsetSSPerp)          $project::Lugs(RearDropOut/SeatStay/OffsetPerp)
-            set RearDrop(Derailleur_x)          $project::Lugs(RearDropOut/Derailleur/x)
-            set RearDrop(Derailleur_y)          $project::Lugs(RearDropOut/Derailleur/y)
-            set RearDrop(OffsetCS_TopView)      $project::Lugs(RearDropOut/ChainStay/Offset_TopView)
+                # --- get RearDropout ----------------------
+            # set RearDropout(Direction)        $project::Lugs(RearDropOut/Direction)
+            set RearDropout(RotationOffset)     $project::Lugs(RearDropOut/RotationOffset)
+            set RearDropout(OffsetCS)           $project::Lugs(RearDropOut/ChainStay/Offset)
+            set RearDropout(OffsetCSPerp)       $project::Lugs(RearDropOut/ChainStay/OffsetPerp)
+            set RearDropout(OffsetSS)           $project::Lugs(RearDropOut/SeatStay/Offset)
+            set RearDropout(OffsetSSPerp)       $project::Lugs(RearDropOut/SeatStay/OffsetPerp)
+            set RearDropout(Derailleur_x)       $project::Lugs(RearDropOut/Derailleur/x)
+            set RearDropout(Derailleur_y)       $project::Lugs(RearDropOut/Derailleur/y)
+            set RearDropout(OffsetCS_TopView)   $project::Lugs(RearDropOut/ChainStay/Offset_TopView)
+            
 
+                #
+                # --- get Lugs -----------------------------
+            set Lugs(BottomBracket_ChainStay_Angle)         $project::Lugs(BottomBracket/ChainStay/Angle/value) 
+            set Lugs(BottomBracket_ChainStay_Tolerance)     $project::Lugs(BottomBracket/ChainStay/Angle/plus_minus) 
+            set Lugs(BottomBracket_DownTube_Angle)          $project::Lugs(BottomBracket/DownTube/Angle/value) 
+            set Lugs(BottomBracket_DownTube_Tolerance)      $project::Lugs(BottomBracket/DownTube/Angle/plus_minus) 
+            set Lugs(HeadLug_Bottom_Angle)                  $project::Lugs(HeadTube/DownTube/Angle/value) 
+            set Lugs(HeadLug_Bottom_Tolerance)              $project::Lugs(HeadTube/DownTube/Angle/plus_minus) 
+            set Lugs(HeadLug_Top_Angle)                     $project::Lugs(HeadTube/TopTube/Angle/value) 
+            set Lugs(HeadLug_Top_Tolerance)                 $project::Lugs(HeadTube/TopTube/Angle/plus_minus) 
+            set Lugs(RearDropOut_Angle)                     $project::Lugs(RearDropOut/Angle/value) 
+            set Lugs(RearDropOut_Tolerance)                 $project::Lugs(RearDropOut/Angle/plus_minus) 
+            set Lugs(SeatLug_SeatStay_Angle)                $project::Lugs(SeatTube/SeatStay/Angle/value) 
+            set Lugs(SeatLug_SeatStay_Tolerance)            $project::Lugs(SeatTube/SeatStay/Angle/plus_minus) 
+            set Lugs(SeatLug_TopTube_Angle)                 $project::Lugs(SeatTube/TopTube/Angle/value) 
+            set Lugs(SeatLug_TopTube_Tolerance)             $project::Lugs(SeatTube/TopTube/Angle/plus_minus) 
+           
+                
                 #
                 # --- get Saddle ---------------------------
-            set Saddle(Distance)                $project::Personal(Saddle_Distance)
-            set Saddle(Height)                  $project::Personal(Saddle_Height)
-            set Saddle(Saddle_Height)           $project::Component(Saddle/Height)
-            set Saddle(Nose_Length)             $project::Component(Saddle/LengthNose)
+            set Saddle(Height)                  $project::Component(Saddle/Height)
+            set Saddle(Length)                  $project::Component(Saddle/Length)
+            set Saddle(NoseLength)              $project::Component(Saddle/LengthNose)
+            set Saddle(Offset_x)                $project::Rendering(Saddle/Offset_X) 
+            set Saddle(Offset_y)                $project::Rendering(Saddle/Offset_Y)
                 # check-Value-procedure
-            if {$Saddle(Saddle_Height) < 0} {
-                set Saddle(Saddle_Height) 0
-                # set project::Component(Saddle/Height) $Saddle(Saddle_Height)
+            if {$Saddle(Height) < 0} {
+                set Saddle(Height)  0
             }
-            set Saddle(Position)                [ list [expr -1.0*$Saddle(Distance)]  $Saddle(Height) ]
 
                 #
                 # --- get SaddleMount - Position
@@ -403,13 +561,6 @@
             set SeatPost(Setback)               $project::Component(SeatPost/Setback)
             set SeatPost(PivotOffset)           $project::Component(SeatPost/PivotOffset)
 
-                #
-                # --- get LegClearance - Position
-            set LegClearance(Length)            $project::Personal(InnerLeg_Length)
-
-                #
-                # --- get Saddle ---------------------------
- 
                 #
                 # --- get HeadSet --------------------------
             set HeadSet(Diameter)               $project::Component(HeadSet/Diameter)
@@ -419,21 +570,36 @@
 
                 #
                 # --- get Front/Rear Brake PadLever --------------
-            set RearBrake(LeverLength)          $project::Component(Brake/Rear/LeverLength)
-            set RearBrake(Offset)               $project::Component(Brake/Rear/Offset)
             set FrontBrake(LeverLength)         $project::Component(Brake/Front/LeverLength)
             set FrontBrake(Offset)              $project::Component(Brake/Front/Offset)
+            set RearBrake(LeverLength)          $project::Component(Brake/Rear/LeverLength)
+            set RearBrake(Offset)               $project::Component(Brake/Rear/Offset)
 
                 #
-                # --- get BottleCage Offset ----------------------
+                # --- get BottleCage -----------------------------
             set BottleCage(SeatTube)            $project::Component(BottleCage/SeatTube/OffsetBB)
             set BottleCage(DownTube)            $project::Component(BottleCage/DownTube/OffsetBB)
             set BottleCage(DownTube_Lower)      $project::Component(BottleCage/DownTube_Lower/OffsetBB)
-
+            
+                # --- get CrankSet  -----------------------------
+            set CrankSet(ArmWidth)              $project::Component(CrankSet/ArmWidth)
+            set CrankSet(ChainLine)             $project::Component(CrankSet/ChainLine)
+            set CrankSet(Length)                $project::Component(CrankSet/Length)
+            set CrankSet(PedalEye)              $project::Component(CrankSet/PedalEye)
+            set CrankSet(Q-Factor)              $project::Component(CrankSet/Q-Factor)
+            
                 #
                 # --- get FrontDerailleur  ----------------------
             set FrontDerailleur(Distance)       $project::Component(Derailleur/Front/Distance)
             set FrontDerailleur(Offset)         $project::Component(Derailleur/Front/Offset)
+
+
+                #
+                # --- get RearDerailleur  -----------------------
+            set RearDerailleur(Pulley_teeth)    $project::Component(Derailleur/Rear/Pulley/teeth)  
+            set RearDerailleur(Pulley_x)        $project::Component(Derailleur/Rear/Pulley/x)      
+            set RearDerailleur(Pulley_y)        $project::Component(Derailleur/Rear/Pulley/y)
+            
 
                 #
                 # --- get Fender  -------------------------------
@@ -447,20 +613,11 @@
             
                 #
                 # --- get Carrier  ------------------------------
-            set RearCarrier(x)                  $project::Component(Carrier/Rear/x)
-            set RearCarrier(y)                  $project::Component(Carrier/Rear/y)
             set FrontCarrier(x)                 $project::Component(Carrier/Front/x)
             set FrontCarrier(y)                 $project::Component(Carrier/Front/y)
-            
-                #
-            set Rendering(SaddleOffset_x)       $project::Rendering(Saddle/Offset_X)    
-                
-                #
-            set Reference(SaddleNose_Distance)  $project::Reference(SaddleNose_Distance)
-            set Reference(SaddleNose_Height)    $project::Reference(SaddleNose_Height)
-            set Reference(HandleBar_Distance)   $project::Reference(HandleBar_Distance)
-            set Reference(HandleBar_Height)     $project::Reference(HandleBar_Height)
-            
+            set RearCarrier(x)                  $project::Component(Carrier/Rear/x)
+            set RearCarrier(y)                  $project::Component(Carrier/Rear/y)
+                         
                 #
                 # --- set DEBUG_Geometry  ----------------------
             set DEBUG_Geometry(Base)        {0 0}
@@ -472,8 +629,10 @@
             
             variable Project
             variable Geometry 
-            variable Rendering
+            variable Component
+            variable Config
             variable Reference
+            variable Position
 
             variable BottomBracket
             variable RearWheel
@@ -491,12 +650,13 @@
             variable SeatStay
             variable Steerer
             variable ForkBlade
+            variable RearDropout
             variable Lugs
 
             variable Fork
             variable HeadSet
             variable Stem
-            variable RearDrop
+            variable RearDropout
 
             variable RearBrake
             variable FrontBrake
@@ -509,73 +669,94 @@
             variable BottleCage
             variable FrameJig
             variable TubeMiter
+            variable RearMockup
+            variable BoundingBox
             
             variable Result
     
 
     
-                # -- Re3sult Values
+                # -- Custom Values
             
-            project::setValue Result(Angle/BottomBracket/ChainStay)                 value       $Result(Angle/BottomBracket/ChainStay)
-            project::setValue Result(Angle/BottomBracket/DownTube)                  value       $Result(Angle/BottomBracket/DownTube)
-            project::setValue Result(Angle/HeadTube/DownTube)                       value       $Result(Angle/HeadTube/DownTube)
-            project::setValue Result(Angle/HeadTube/TopTube)                        value       $Result(Angle/HeadTube/TopTube)
-            project::setValue Result(Angle/SeatStay/ChainStay)                      value       $Result(Angle/SeatStay/ChainStay)
+            project::setValue Custom(WheelPosition/Rear)                            value       $Geometry(ChainStay_Length)
+                
+                
+                # -- Result Values
+                
+            project::setValue Result(Angle/HeadTube/TopTube)                        value       $Geometry(HeadLugTop_Angle) 
             project::setValue Result(Angle/SeatTube/Direction)                      value       $Geometry(SeatTube_Angle)
+                #
+            project::setValue Result(Angle/BottomBracket/ChainStay)                 value       $Geometry(BottomBracket_Angle_ChainStay)
+            project::setValue Result(Angle/BottomBracket/DownTube)                  value       $Geometry(BottomBracket_Angle_DownTube)
+            project::setValue Result(Angle/HeadTube/DownTube)                       value       $Geometry(HeadLugBottom_Angle_DownTube)
+            project::setValue Result(Angle/SeatStay/ChainStay)                      value       $Geometry(SeatLug_Angle_SeatStay)
+            project::setValue Result(Angle/SeatTube/SeatStay)                       value       $Geometry(SeatLug_Angle_SeatStay)
+            project::setValue Result(Angle/SeatTube/TopTube)                        value       $Geometry(SeatLug_Angle_TopTube)
+            # project::setValue Result(Angle/BottomBracket/ChainStay)                 value       $Result(Angle/BottomBracket/ChainStay)
+            # project::setValue Result(Angle/BottomBracket/DownTube)                  value       $Result(Angle/BottomBracket/DownTube)
+            # project::setValue Result(Angle/HeadTube/DownTube)                       value       $Result(Angle/HeadTube/DownTube)
+            # project::setValue Result(Angle/HeadTube/TopTube)                        value       $Result(Angle_HeadTubeTopTube)
+            # project::setValue Result(Angle/SeatStay/ChainStay)                      value       $Result(Angle/SeatStay/ChainStay)
             # project::setValue Result(Angle/SeatTube/Direction)                      value       $Result(Angle/SeatTube/Direction)
-            project::setValue Result(Angle/SeatTube/SeatStay)                       value       $Result(Angle/SeatTube/SeatStay)
-            project::setValue Result(Angle/SeatTube/TopTube)                        value       $Result(Angle/SeatTube/TopTube)
-            project::setValue Result(Length/BottomBracket/Height)                   value       $BottomBracket(height)
+            # project::setValue Result(Angle/SeatTube/SeatStay)                       value       $Result(Angle/SeatTube/SeatStay)
+            # project::setValue Result(Angle/SeatTube/TopTube)                        value       $Result(Angle/SeatTube/TopTube)
+            
+            
+            project::setValue Result(Length/BottomBracket/Height)                   value       $Geometry(BottomBracket_Height)
             # project::setValue Result(Length/BottomBracket/Height)                   value       $Result(Length/BottomBracket/Height)
             project::setValue Result(Length/FrontWheel/Diameter)                    value       $FrontWheel(Diameter)
             # project::setValue Result(Length/FrontWheel/Diameter)                    value       $Result(Length/FrontWheel/Diameter)
-            project::setValue Result(Length/FrontWheel/Radius)                      value       $FrontWheel(Radius)
+            project::setValue Result(Length/FrontWheel/Radius)                      value       $Geometry(FrontWheel_Radius)
             # project::setValue Result(Length/FrontWheel/Radius)                      value       $Result(Length/FrontWheel/Radius)
             project::setValue Result(Length/FrontWheel/diagonal)                    value       $Geometry(FrontWheel_xy)
             # project::setValue Result(Length/FrontWheel/diagonal)                    value       $Result(Length/FrontWheel/diagonal)
             project::setValue Result(Length/FrontWheel/horizontal)                  value       $Geometry(FrontWheel_x)
             # project::setValue Result(Length/FrontWheel/horizontal)                  value       $Result(Length/FrontWheel/horizontal)
-            project::setValue Result(Length/HeadTube/ReachLength)                   value       $Geometry(ReachLengthResult)
+            project::setValue Result(Length/HeadTube/ReachLength)                   value       $Geometry(Reach_Length)
             # project::setValue Result(Length/HeadTube/ReachLength)                   value       $Result(Length/HeadTube/ReachLength)
-            project::setValue Result(Length/HeadTube/StackHeight)                   value       $Geometry(StackHeightResult)
+            project::setValue Result(Length/HeadTube/StackHeight)                   value       $Geometry(Stack_Height)
             # project::setValue Result(Length/HeadTube/StackHeight)                   value       $Result(Length/HeadTube/StackHeight)
             project::setValue Result(Length/Personal/SaddleNose_HB)                 value       $Geometry(SaddleNose_HB)
             # project::setValue Result(Length/Personal/SaddleNose_HB)                 value       $Result(Length/Personal/SaddleNose_HB)
             project::setValue Result(Length/RearWheel/Diameter)                     value       $RearWheel(Diameter)                                  
             # project::setValue Result(Length/RearWheel/Diameter)                     value       $Result(Length/RearWheel/Diameter)                                  
-            project::setValue Result(Length/RearWheel/Radius)                       value       $RearWheel(Radius)                                    
+            project::setValue Result(Length/RearWheel/Radius)                       value       $Geometry(RearWheel_Radius)                                    
             # project::setValue Result(Length/RearWheel/Radius)                       value       $Result(Length/RearWheel/Radius)                                    
             project::setValue Result(Length/RearWheel/TyreShoulder)                 value       $RearWheel(TyreShoulder)                             
             # project::setValue Result(Length/RearWheel/TyreShoulder)                 value       $Result(Length/RearWheel/TyreShoulder)                             
-            project::setValue Result(Length/RearWheel/horizontal)                   value       $Geometry(RearWheel_x)                               
-            # project::setValue Result(Length/RearWheel/horizontal)                   value       $Result(Length/RearWheel/horizontal)                               
-            project::setValue Result(Length/Reference/HandleBar_BB)                 value       $Result(Length/Reference/HandleBar_BB)                             
-            project::setValue Result(Length/Reference/HandleBar_FW)                 value       $Result(Length/Reference/HandleBar_FW)                             
-            project::setValue Result(Length/Reference/Heigth_SN_HB)                 value       $Result(Length/Reference/Heigth_SN_HB)                             
-            project::setValue Result(Length/Reference/SaddleNose_BB)                value       $Result(Length/Reference/SaddleNose_BB)                            
-            project::setValue Result(Length/Reference/SaddleNose_HB)                value       $Result(Length/Reference/SaddleNose_HB)                            
-            project::setValue Result(Length/Saddle/Offset_BB)                       value       $Result(Length/Saddle/Offset_BB)                                   
+            project::setValue Result(Length/RearWheel/horizontal)                   value       $Geometry(RearWheel_x)      ;#$Result(Length/RearWheel/horizontal) 
+            project::setValue Result(Length/Reference/HandleBar_BB)                 value       $Reference(HandleBar_BB)    ;#Result(Length/Reference/HandleBar_BB) 
+            project::setValue Result(Length/Reference/HandleBar_FW)                 value       $Reference(HandleBar_FW)    ;#Result(Length/Reference/HandleBar_FW) 
+            project::setValue Result(Length/Reference/Heigth_SN_HB)                 value       $Reference(SaddleNose_HB_y) ;#Result(Length/Reference/Heigth_SN_HB)
+            project::setValue Result(Length/Reference/SaddleNose_BB)                value       $Reference(SaddleNose_BB)   ;#Result(Length/Reference/SaddleNose_BB)
+            project::setValue Result(Length/Reference/SaddleNose_HB)                value       $Reference(SaddleNose_HB)   ;#Result(Length/Reference/SaddleNose_HB)
+            
+            project::setValue Result(Length/Saddle/Offset_BB)                       value       $Geometry(Saddle_Offset_BB)                                   
             project::setValue Result(Length/Saddle/Offset_BB_Nose)                  value       $Geometry(SaddleNose_BB_x)                              
             # project::setValue Result(Length/Saddle/Offset_BB_Nose)                  value       $Result(Length/Saddle/Offset_BB_Nose)                              
-            project::setValue Result(Length/Saddle/Offset_BB_ST)                    value       $Result(Length/Saddle/Offset_BB_ST)                                
+            project::setValue Result(Length/Saddle/Offset_BB_ST)                    value       $Geometry(Saddle_Offset_BB_ST)                                
+            # project::setValue Result(Length/Saddle/Offset_BB_ST)                    value       $Result(Length/Saddle/Offset_BB_ST)                                
             project::setValue Result(Length/Saddle/Offset_HB)                       value       $Geometry(Saddle_HB_y)                                   
             # project::setValue Result(Length/Saddle/Offset_HB)                       value       $Result(Length/Saddle/Offset_HB)                                   
             project::setValue Result(Length/Saddle/SeatTube_BB)                     value       $Geometry(Saddle_BB)                                 
             # project::setValue Result(Length/Saddle/SeatTube_BB)                     value       $Result(Length/Saddle/SeatTube_BB)                                 
-            project::setValue Result(Length/SeatTube/TubeHeight)                    value       $Result(Length/SeatTube/TubeHeight)                                
-            project::setValue Result(Length/SeatTube/TubeLength)                    value       $Result(Length/SeatTube/TubeLength)                                
-            project::setValue Result(Length/SeatTube/VirtualLength)                 value       $Geometry(SeatTube_VirtualLength)                            
+            project::setValue Result(Length/SeatTube/TubeHeight)                    value       $Geometry(SeatTube_TubeHeight)                                
+            project::setValue Result(Length/SeatTube/TubeLength)                    value       $Geometry(SeatTube_TubeLength)                                
+            project::setValue Result(Length/SeatTube/VirtualLength)                 value       $Geometry(SeatTube_Virtual)                            
             # project::setValue Result(Length/SeatTube/VirtualLength)                 value       $Result(Length/SeatTube/VirtualLength)                             
-            project::setValue Result(Length/TopTube/VirtualLength)                  value       $Geometry(TopTube_VirtualLength)                              
-            # project::setValue Result(Length/TopTube/VirtualLength)                  value       $TopTube(VirtualLength)                              
+            project::setValue Result(Length/TopTube/VirtualLength)                  value       $Geometry(TopTube_Virtual)                              
+            # project::setValue Result(Length/TopTube/VirtualLength)                  value       $Geometry(TopTube_Virtual)                             
             # project::setValue Result(Length/TopTube/VirtualLength)                  value       $Result(Length/TopTube/VirtualLength)                              
             project::setValue Result(Tubes/ChainStay/CenterLine)                    value       $ChainStay(CenterLine)                                
             # project::setValue Result(Tubes/ChainStay/CenterLine)                    value       $Result(Tubes/ChainStay/CenterLine)                                
             project::setValue Result(Tubes/ChainStay/Profile/xy)                    value       $ChainStay(Polygon_zx)                                 
             # project::setValue Result(Tubes/ChainStay/Profile/xz)                    value       $Result(Tubes/ChainStay/Profile/xz)                                 
-            project::setValue Result(Tubes/ChainStay/RearMockup/CenterLine)         value       $Result(Tubes/ChainStay/RearMockup/CenterLine)                     
-            project::setValue Result(Tubes/ChainStay/RearMockup/CenterLineUnCut)    value       $Result(Tubes/ChainStay/RearMockup/CenterLineUnCut)                
-            project::setValue Result(Tubes/ChainStay/RearMockup/CtrLines)           value       $Result(Tubes/ChainStay/RearMockup/CtrLines)                       
+            project::setValue Result(Tubes/ChainStay/RearMockup/CenterLine)         value       [list $RearMockup(CenterLine)]                    
+            project::setValue Result(Tubes/ChainStay/RearMockup/CenterLineUnCut)    value       [list $RearMockup(CenterLineUnCut)]               
+            project::setValue Result(Tubes/ChainStay/RearMockup/CtrLines)           value       [list $RearMockup(CtrLines)]               
+            # project::setValue Result(Tubes/ChainStay/RearMockup/CenterLine)         value       $Result(Tubes/ChainStay/RearMockup/CenterLine)                     
+            # project::setValue Result(Tubes/ChainStay/RearMockup/CenterLineUnCut)    value       $Result(Tubes/ChainStay/RearMockup/CenterLineUnCut)                
+            # project::setValue Result(Tubes/ChainStay/RearMockup/CtrLines)           value       $Result(Tubes/ChainStay/RearMockup/CtrLines)                       
             project::setValue Result(Tubes/ChainStay/RearMockup/Start)              value       $Result(Tubes/ChainStay/RearMockup/Start)                          
             project::setValue Result(Tubes/DownTube/CenterLine)                     value       $Result(Tubes/DownTube/CenterLine)                                                
             project::setValue Result(Tubes/DownTube/Profile/xy)                     value       $Result(Tubes/DownTube/Profile/xy)                                   
@@ -599,6 +780,7 @@
                 #
             project::setValue Result(Lugs/Dropout/Front/Direction)                  direction   $Fork(DropoutDirection)                              
             # project::setValue Result(Lugs/Dropout/Front/Direction)                  direction   $Result(Lugs/Dropout/Front/Direction)                              
+            project::setValue Result(Lugs/Dropout/Rear/Direction)                   direction   $RearDropout(Direction)                              
             project::setValue Result(Lugs/ForkCrown/Direction)                      direction   $Fork(CrownDirection)                                  
             # project::setValue Result(Lugs/ForkCrown/Direction)                      direction   $Result(Lugs/ForkCrown/Direction)                                  
             project::setValue Result(Tubes/ChainStay/Direction)                     direction   $ChainStay(Direction)                                 
@@ -673,13 +855,14 @@
             # project::setValue Result(Tubes/TopTube/Polygon)                         polygon     $Result(Tubes/TopTube/Polygon)                                             
                 #
                 #
-            project::setValue Result(Lugs/Dropout/Front/Position)                   position    $Fork(Dropout)
-            project::setValue Result(Lugs/Dropout/Rear/Derailleur)                  position    $Lugs(RearDropout_Derailleur)                              
+            project::setValue Result(Lugs/Dropout/Front/Position)                   position    $Fork(DropoutPosition)
+            project::setValue Result(Lugs/Dropout/Rear/Derailleur)                  position    $RearDropout(DerailleurPosition)                              
+            # project::setValue Result(Lugs/Dropout/Rear/Derailleur)                  position    $Lugs(RearDropout_Derailleur)                              
             # project::setValue Result(Lugs/Dropout/Rear/Derailleur)                  position    $Result(Lugs/Dropout/Rear/Derailleur)                              
-            project::setValue Result(Lugs/Dropout/Rear/Position)                    position    $Lugs(RearDropout)                                
+            project::setValue Result(Lugs/Dropout/Rear/Position)                    position    $RearDropout(Position)                                
             # project::setValue Result(Lugs/Dropout/Rear/Position)                    position    $Result(Lugs/Dropout/Rear/Position)                                
             project::setValue Result(Lugs/ForkCrown/Position)                       position    $Steerer(Fork)
-            project::setValue Result(Position/BottomBracketGround)                  position    $BottomBracket(Ground)                              
+            project::setValue Result(Position/BottomBracketGround)                  position    $Position(BottomBracket_Ground)                              
             # project::setValue Result(Position/BottomBracketGround)                  position    $Result(Position/BottomBracketGround)                              
             project::setValue Result(Position/Brake/Front/Definition)               position    $FrontBrake(Definition)                           
             project::setValue Result(Position/Brake/Front/Help)                     position    $FrontBrake(Help)                                 
@@ -707,9 +890,9 @@
             # project::setValue Result(Position/CarrierMountRear)                     position    $Result(Position/CarrierMountRear)                                 
             project::setValue Result(Position/DerailleurMountFront)                 position    $FrontDerailleur(Mount)                             
             # project::setValue Result(Position/DerailleurMountFront)                 position    $Result(Position/DerailleurMountFront)                             
-            project::setValue Result(Position/FrontWheel)                           position    $FrontWheel(Position)
+            project::setValue Result(Position/FrontWheel)                           position    $Fork(DropoutPosition)
             project::setValue Result(Position/HandleBar)                            position    $HandleBar(Position)
-            project::setValue Result(Position/LegClearance)                         position    $Geometry(LegClearance)                                     
+            project::setValue Result(Position/LegClearance)                         position    $Position((LegClearance)                                     
             # project::setValue Result(Position/LegClearance)                         position    $Result(Position/LegClearance)                                     
             project::setValue Result(Position/RearWheel)                            position    $RearWheel(Position)                                        
             # project::setValue Result(Position/RearWheel)                            position    $Result(Position/RearWheel)                                        
@@ -730,7 +913,7 @@
             # project::setValue Result(Position/SeatPostSaddle)                       position    $Result(Position/SeatPostSaddle)                                   
             # project::setValue Result(Position/SeatPostSeatTube)                     position    $Result(Position/SeatPostSeatTube)                                 
             project::setValue Result(Position/SeatTubeGround)                       position    $SeatTube(Ground)                                   
-            project::setValue Result(Position/SeatTubeSaddle)                       position    $Geometry(SeatTubeSaddle)                                   
+            project::setValue Result(Position/SeatTubeSaddle)                       position    $Position(SeatTubeSaddle)                                   
             # project::setValue Result(Position/SeatTubeGround)                       position    $Result(Position/SeatTubeGround)                                   
             # project::setValue Result(Position/SeatTubeSaddle)                       position    $Result(Position/SeatTubeSaddle)                                   
             project::setValue Result(Position/SeatTubeVirtualTopTube)               position    $SeatTube(VirtualTopTube)                           
@@ -783,12 +966,42 @@
             # project::setValue Result(Tubes/ForkBlade/Start)                         value       $Result(Tubes/ForkBlade/Start)                                     
                 #
                 #
-            project::setValue Result(Position/SummarySize)                          position    $Geometry(SummarySize)                                         
+            project::setValue Result(Position/SummarySize)                          position    $BoundingBox(SummarySize)                                         
             # project::setValue Result(Position/SummarySize)                          position    $Result(Position/SummarySize)                                         
                 #
                 #
-            
-            
+                # --- get Rendering  ----------------------------
+            project::setValue Rendering(Saddle/Offset_X)                            value       $Saddle(Offset_x)   
+            project::setValue Rendering(Saddle/Offset_Y)                            value       $Saddle(Offset_y)   
+            project::setValue Rendering(Brake/Front)                                value       $Config(FrontBrake)       
+            project::setValue Rendering(Brake/Rear)                                 value       $Config(RearBrake)        
+            project::setValue Rendering(BottleCage/SeatTube)                        value       $Config(BottleCage_SeatTube)    
+            project::setValue Rendering(BottleCage/DownTube)                        value       $Config(BottleCage_DownTube)    
+            project::setValue Rendering(BottleCage/DownTube_Lower)                  value       $Config(BottleCage_DownTube_Lower)             
+            project::setValue Rendering(Fender/Front)                               value       $Config(FrontFender)      
+            project::setValue Rendering(Fender/Rear)                                value       $Config(RearFender)      
+            project::setValue Rendering(Fork)                                       value       $Config(Fork)         
+            project::setValue Rendering(ForkBlade)                                  value       $Config(ForkBlade)    
+            project::setValue Rendering(ForkDropOut)                                value       $Config(ForkDropout)  
+            project::setValue Rendering(RearDropOut)                                value       $Config(RearDropout) 
+                #
+            project::setValue Rendering(RearMockup/CassetteClearance)               value       $RearMockup(CassetteClearance)           
+            project::setValue Rendering(RearMockup/ChainWheelClearance)             value       $RearMockup(ChainWheelClearance)           
+            project::setValue Rendering(RearMockup/CrankClearance)                  value       $RearMockup(CrankClearance)           
+            project::setValue Rendering(RearMockup/DiscClearance)                   value       $RearMockup(DiscClearance)           
+            project::setValue Rendering(RearMockup/DiscDiameter)                    value       $RearMockup(DiscDiameter)           
+            project::setValue Rendering(RearMockup/DiscOffset)                      value       $RearMockup(DiscOffset)           
+            project::setValue Rendering(RearMockup/DiscWidth)                       value       $RearMockup(DiscWidth)           
+            project::setValue Rendering(RearMockup/TyreClearance)                   value       $RearMockup(TyreClearance) 
+                #
+                #
+                #
+            project::setValue Lugs(RearDropOut/Direction)                           value       $Config(RearDropoutOrient)
+            project::setValue Component(HandleBar/PivotAngle)                       value       $HandleBar(PivotAngle)
+            project::setValue Component(Fork/Crown/File)                            value       $Component(ForkCrown)
+            project::setValue Component(Fork/DropOut/File)                          value       $Component(ForkDropout)
+
+                #
                 #
             return    
                 #
@@ -800,6 +1013,7 @@
         # --- check Values before compute details
         #
     proc bikeGeometry::check_Values {} {
+            variable Geometry
             variable Saddle
             variable SeatPost
             variable SeatTube
@@ -816,17 +1030,19 @@
               #
               # -- Component(Wheel/Rear/TyreWidthRadius) <-> RearWheel(TyreWidthRadius)   
               # -- handle values like done in bikeGeometry::set_base_Parameters 
-            if {$RearWheel(TyreWidthRadius) > $RearWheel(Radius)} {
-                set project::Component(Wheel/Rear/TyreWidthRadius) [expr $RearWheel(Radius) - 5.0]
+            if {$RearWheel(TyreWidthRadius) > $Geometry(RearWheel_Radius)} {
+                set project::Component(Wheel/Rear/TyreWidthRadius) [expr $Geometry(RearWheel_Radius) - 5.0]
                 set RearWheel(TyreWidthRadius)                     $project::Component(Wheel/Rear/TyreWidthRadius)
                 puts "\n                     -> <i> \$project::Component(Wheel/Rear/TyreWidthRadius) ... $project::Component(Wheel/Rear/TyreWidthRadius)"
             }
+                #
+                #
             if {1 == 2} {
                       #
                       # -- Component(Fender/Rear/Radius) <-> $RearFender(Radius)
                       #       handle values like done in bikeGeometry::get_FenderRear 
-                    if {$RearFender(Radius) < $RearWheel(Radius)} {
-                        set RearFender(Radius)                     [expr $RearWheel(Radius) + 5.0]
+                    if {$RearFender(Radius) < $Geometry(RearWheel_Radius)} {
+                        set RearFender(Radius)                     [expr $Geometry(RearWheel_Radius) + 5.0]
                         project::setValue Component(Fender/Rear/Radius) value $RearFender(Radius)
                         puts "\n                     -> <i> \$RearFender(Radius) ........... $RearFender(Radius)"
                     }  
@@ -835,8 +1051,8 @@
                       #
                       # -- Component(Fender/Front/Radius) <-> $RearFender(Radius)
                       #       handle values like done in bikeGeometry::get_FenderFront 
-                    if {$FrontFender(Radius) < $FrontWheel(Radius)} {
-                        set FrontFender(Radius)                     [expr $FrontWheel(Radius) + 5.0]
+                    if {$FrontFender(Radius) < $Geometry(FrontWheel_Radius)} {
+                        set FrontFender(Radius)                     [expr $Geometry(FrontWheel_Radius) + 5.0]
                         project::setValue Component(Fender/Front/Radius) value $FrontFender(Radius)
                         puts "\n                     -> <i> \$FrontFender(Radius) .......... $FrontFender(Radius)"
                     }

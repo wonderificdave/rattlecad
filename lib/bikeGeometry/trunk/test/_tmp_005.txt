@@ -1,0 +1,531 @@
+DownTube
+HeadTube
+Steerer
+ForkDropout
+ForkCrown
+SeatStay
+SeatTube
+TopTube
+ChainStay
+RearDropout
+
+
+
+BottomBracketGround                         $BB_Position
+FrontBrakeShoe                              $BB_Position
+FrontBrakeHelp                              $BB_Position
+FrontBrakeDefinition                        $BB_Position
+FrontBrake                                  $BB_Position
+RearBrakeShoe                               $BB_Position
+RearBrakeHelp                               $BB_Position
+RearBrakeDefinition                         $BB_Position
+RearBrake                                   $BB_Position
+LegClearance                                $BB_Position
+
+CarrierMountFront                           $BB_Position
+CarrierMountRear                            $BB_Position
+ChainStay_SeatStay_IS                       $BB_Position
+DerailleurMountFront                        $BB_Position
+DownTube_BottleCageBase                     $BB_Position
+DownTube_BottleCageOffset                   $BB_Position
+DownTube_Lower_BottleCageBase               $BB_Position
+DownTube_Lower_BottleCageOffset             $BB_Position
+DownTubeEnd                                 $BB_Position
+DownTubeStart                               $BB_Position
+FrontWheel                                  $BB_Position
+HandleBar                                   $BB_Position
+HeadTubeEnd                                 $BB_Position
+HeadTubeStart                               $BB_Position
+RearDerailleur                              $BB_Position
+ForkCrown                                   $BB_Position
+RearWheel                                   $BB_Position
+Reference_HB                                $BB_Position
+Reference_SN                                $BB_Position
+Saddle                                      $BB_Position
+SaddleNose                                  $BB_Position
+SaddleProposal                              $BB_Position
+SeatPostPivot                               $BB_Position
+SeatPostSaddle                              $BB_Position
+SeatPostSeatTube                            $BB_Position
+SeatStayEnd                                 $BB_Position
+SeatStayStart                               $BB_Position
+SeatTube_BottleCageBase                     $BB_Position
+SeatTube_BottleCageOffset                   $BB_Position
+SeatTubeEnd                                 $BB_Position
+SeatTubeStart                               $BB_Position
+SeatTubeGround                              $BB_Position
+SeatTubeSaddle                              $BB_Position
+SeatTubeVirtualTopTube                      $BB_Position
+SteererEnd                                  $BB_Position
+SteererStart                                $BB_Position
+SteererGround                               $BB_Position
+TopTubeEnd                                  $BB_Position
+TopTubeStart                                $BB_Position
+ChainStayRearMockup                         [list 0.0 0.0
+
+
+DownTube                                    $BB_Position
+FrontFender                                 $FrontHub_Pos
+RearFender                                  $RearHub_Posi
+ForkBlade                                   $BB_Position
+HeadSetBottom                               $BB_Position
+HeadSetTop                                  $BB_Position
+HeadTube                                    $BB_Position
+SeatPost                                    $BB_Position
+SeatStay                                    $BB_Position
+SeatTube                                    $BB_Position
+Steerer                                     $BB_Position
+Stem                                        $BB_Position
+TopTube                                     $BB_Position
+ChainStay                                   $BB_Position
+ChainStayRearMockup                         {0 0}
+
+
+DownTube_BB_in   
+DownTube_BB_out            
+DownTube_Head              
+DownTube_Seat              
+Reference                  
+SeatStay_01                
+SeatStay_02                
+SeatTube_BB_in             
+SeatTube_BB_out            
+SeatTube_Down              
+TopTube_Head               
+TopTube_Seat     
+
+{SummarySize}
+
+
+{BottleCage_DT}
+{BottleCage_DT_L}
+{BottleCage_ST}
+{FrontBrake}
+{RearBrake}
+{ChainStay}
+{FrontFender}
+{RearFender}
+{Fork}
+{ForkBlade}
+{ForkDropout}
+{RearDropout}
+{RearDropoutOrient}
+
+
+FrontCarrier
+RearCarrier
+CrankSet
+FrontDerailleur
+RearDerailleur
+HandleBar
+Logo
+Saddle
+FrontBrake
+RearBrake
+{BottleCage FileSeatTube}
+{BottleCage FileDownTube}
+{BottleCage FileDownTube_Lower}
+{Fork CrownFile}
+{Fork DropOutFile}
+{RearDropout File}
+
+
+{HandleBar PivotAngle}
+{HeadSet Diameter}
+{CrankSet Length}
+{BottleCage SeatTube}
+{BottleCage DownTube}
+{BottleCage DownTube_Lower}
+
+{CrankSet ArmWidth}
+{CrankSet ChainLine}
+{CrankSet ChainRings}
+{CrankSet Length}
+{CrankSet PedalEye}
+{CrankSet Q-Factor}
+
+{RearDerailleur Pulley_teeth}
+{RearDerailleur Pulley_x}
+{RearDerailleur Pulley_y}
+
+{Fork BrakeAngle}
+{Fork Height}
+{Fork Rake}
+
+{Saddle Length}
+{Saddle SaddleHeight}
+{Saddle NoseLength}
+{Saddle Offset_X}
+{Saddle Offset_Y}
+{Stem Length}
+{Stem Angle}
+
+{FrontWheel RimDiameter}
+{FrontWheel TyreHeight}
+{RearWheel FirstSprocket}
+{RearWheel HubWidth}
+{RearWheel RimDiameter}
+{RearWheel RimDiameter}
+{RearWheel TyreHeight}
+{RearWheel TyreWidth}
+{RearWheel TyreWidthRadius}
+{RearWheel DistanceBB}
+
+{BottomBracket Depth}
+{BottomBracket OutsideDiameter}
+{BottomBracket InsideDiameter}
+{BottomBracket Width}
+{BottomBracket OffsetCS_TopView}
+
+{HeadTube Angle}
+{SeatStay OffsetTT}
+{SeatTube Extension}
+{TopTube Angle}
+
+{ChainStay segmentAngle_01}
+{ChainStay segmentAngle_02}
+{ChainStay segmentAngle_03}
+{ChainStay segmentAngle_04}
+{ChainStay segmentLength_01}
+{ChainStay segmentLength_02}
+{ChainStay segmentLength_03}
+{ChainStay segmentLength_04}
+{ChainStay segmentRadius_01}
+{ChainStay segmentRadius_02}
+{ChainStay segmentRadius_03}
+{ChainStay segmentRadius_04}
+{ChainStay DiameterSS}
+{ChainStay Height}
+{ChainStay HeigthBB}
+{ChainStay completeLength}
+{ChainStay cuttingLength}
+{ChainStay cuttingLeft}
+
+{ChainStay profile_x01}
+{ChainStay profile_x02}
+{ChainStay profile_x03}
+{ChainStay profile_y00}
+{ChainStay profile_y01}
+{ChainStay profile_y02}
+{ChainStay profile_y03}
+{ChainStay TaperLength}
+{ChainStay WidthBB}
+
+{DownTube DiameterBB}
+{DownTube DiameterHT}
+{HeadTube Diameter  }
+{HeadTube Length    }
+{SeatStay DiameterST}
+{SeatTube DiameterBB}
+{SeatTube DiameterTT}
+{TopTube  DiameterHT}
+{TopTube  DiameterST}
+
+{RearDropout OffsetCS}
+{RearDropout OffsetCSPerp}
+{RearDropout OffsetCS_TopView}
+{RearDropout Derailleur_y}
+{RearDropout RotationOffset}
+
+{SeatStay SeatTubeMiterDiameter}
+
+{HandleBar Distance}
+{HandleBar Height}
+{Saddle Distance}
+{Saddle Height}
+{LegClearance Length}
+
+{RearMockup CassetteClearance}
+{RearMockup ChainWheelClearance}
+{RearMockup CrankClearance}
+{RearMockup DiscClearance}
+{RearMockup DiscDiameter}
+{RearMockup DiscOffset}
+{RearMockup DiscWidth}
+{RearMockup TyreClearance}
+
+{Geometry RearWheel_X}
+{Geometry SaddleNose_BB_X}
+{Geometry SeatTubeVirtual}
+{Geometry TopTubeVirtual}
+
+{RearMockup CenterLine}                                  
+{RearMockup CenterLineUnCut}                             
+{RearMockup CtrLines}                                    
+
+
+{Lugs BottomBracket_ChainStay_Tolerance}
+{Lugs BottomBracket_ChainStay_Angle}
+{Lugs BottomBracket_DownTube_Tolerance}
+{Lugs BottomBracket_DownTube_Angle}
+{Lugs HeadLug_Bottom_Tolerance}
+{Lugs HeadLug_Bottom_Angle}
+{Lugs HeadLug_Top_Tolerance}
+{Lugs HeadLug_Top_Angle}
+{Lugs RearDropOut_Tolerance}
+{Lugs RearDropOut_Angle}
+{Lugs SeatLug_SeatStay_Tolerance}
+{Lugs SeatLug_SeatStay_Angle}
+{Lugs SeatLug_TopTube_Tolerance}
+{Lugs SeatLug_TopTube_Angle}
+
+
+
+LegClearance Length}
+Result Angle_HeadTubeTopTube}
+HeadSet Height_Bottom}
+
+SeatPost Setback}
+DownTube OffsetBB}
+
+DownTube OffsetHT}
+TopTube OffsetHT}
+
+TopTube PivotPosition}
+BottomBracket Height}
+
+Geometry FrontWheel_xy}
+Geometry FrontWheel_x}
+Geometry Saddle_BB}
+
+
+
+
+
+
+
+
+
+
+{BottleCage FileDownTube}
+{BottleCage FileDownTube_Lower}
+{BottleCage FileSeatTube}
+FrontBrake
+RearBrake
+FrontCarrier
+RearCarrier
+CrankSet
+FrontDerailleur
+RearDerailleur
+{Fork CrownFile}
+{Fork DropOutFile}
+HandleBar
+Logo
+Saddle
+{RearDropout File}
+
+
+
+{RearDropoutOrient}
+{BottleCage_DT}
+{BottleCage_DT_L}
+{BottleCage_ST}
+{FrontBrake}
+{RearBrake}
+{ChainStay}
+{FrontFender}
+{FrontFender}
+{FrontFender}
+{RearFender}
+{Fork}
+{ForkBlade}
+{ForkDropout}
+{RearDropout}
+
+
+{BottleCage DownTube}
+{BottleCage DownTube_Lower}
+{BottleCage SeatTube}
+
+{FrontBrake LeverLength}
+{FrontBrake Offset}
+{RearBrake LeverLength}
+{RearBrake Offset}
+{FrontCarrier x}
+{FrontCarrier y}
+{RearCarrier x}
+{RearCarrier y}
+
+{CrankSet ArmWidth}
+{CrankSet ChainLine}
+{CrankSet ChainRings}
+{CrankSet Length}
+{CrankSet PedalEye}
+{CrankSet Q-Factor}
+{FrontDerailleur Distance}
+{FrontDerailleur Offset}
+
+{RearDerailleur Pulley_teeth}
+{RearDerailleur Pulley_x}
+{RearDerailleur Pulley_y}
+{FrontFender Height}
+{FrontFender OffsetAngle}
+{FrontFender OffsetAngleFront}
+{FrontFender Radius}
+{RearFender Height}
+{RearFender OffsetAngle}
+{RearFender Radius}
+
+{Fork BladeBendRadius}
+{Fork BladeDiameterDO}
+{Fork BladeEndLength}
+{Fork BladeTaperLength}
+{Fork BladeWidth}
+{Fork BladeOffsetCrown}
+{Fork BladeOffsetCrownPerp}
+{Fork BrakeAngle}
+{Fork BrakeOffset}
+{Fork BladeOffsetDO}
+{Fork BladeOffsetDOPerp}
+{Fork Height}
+{Fork Rake}
+{HandleBar PivotAngle}
+{HeadSet Diameter}
+{HeadSet Height_Bottom}
+{HeadSet Height_Top}
+{Saddle SaddleHeight}
+{Saddle Length}
+{Saddle NoseLength}
+{SeatPost Diameter}
+{SeatPost PivotOffset}
+
+
+{SeatPost Setback}
+{Stem Angle}
+{Stem Length}
+{FrontWheel RimDiameter}
+{FrontWheel RimHeight}
+{FrontWheel TyreHeight}
+{RearWheel FirstSprocket}
+{RearWheel HubWidth}
+{RearWheel RimDiameter}
+{RearWheel RimHeight}
+{RearWheel TyreHeight}
+
+{RearWheel TyreWidth}
+{RearWheel TyreWidthRadius}
+{BottomBracket Depth}
+{DownTube OffsetBB}
+{DownTube OffsetHT}
+{HeadTube Angle}
+{SeatStay OffsetTT}
+{SeatTube Extension}
+{SeatTube OffsetBB}
+
+{TopTube Angle}
+{TopTube OffsetHT}
+{TopTube PivotPosition}
+{RearWheel DistanceBB}
+{ChainStay segmentAngle_01}
+{ChainStay segmentAngle_02}
+{ChainStay segmentAngle_03}
+{ChainStay segmentAngle_04}
+{ChainStay segmentLength_01}
+{ChainStay segmentLength_02}
+{ChainStay segmentLength_03}
+{ChainStay segmentLength_04}
+{ChainStay segmentRadius_01}
+{ChainStay segmentRadius_02}
+{ChainStay segmentRadius_03}
+{ChainStay segmentRadius_04}
+{ChainStay DiameterSS}
+{ChainStay Height}
+{ChainStay HeigthBB}
+{ChainStay completeLength}
+{ChainStay cuttingLeft}
+{ChainStay cuttingLength}
+{ChainStay profile_x01}
+{ChainStay profile_x02}
+{ChainStay profile_x03}
+{ChainStay profile_y00}
+{ChainStay profile_y01}
+{ChainStay profile_y02}
+{ChainStay profile_y03}
+{ChainStay TaperLength}
+{ChainStay WidthBB}
+{DownTube DiameterBB}
+{DownTube DiameterHT}
+{DownTube TaperLength}
+{HeadTube Diameter  }
+{HeadTube Length    }
+{SeatStay DiameterCS}
+{SeatStay DiameterST}
+{SeatStay TaperLength}
+{SeatTube DiameterBB}
+{SeatTube DiameterTT}
+{SeatTube TaperLength}
+{TopTube  DiameterHT}
+{TopTube  DiameterST}
+{TopTube  TaperLength}
+
+{Lugs BottomBracket_ChainStay_Tolerance}
+{Lugs BottomBracket_ChainStay_Angle}
+{BottomBracket OffsetCS_TopView}
+{BottomBracket InsideDiameter}
+{BottomBracket OutsideDiameter}
+{Lugs BottomBracket_DownTube_Tolerance}
+{Lugs BottomBracket_DownTube_Angle}
+{BottomBracket Width}
+{Lugs HeadLug_Bottom_Tolerance}
+{Lugs HeadLug_Bottom_Angle}
+{Lugs HeadLug_Top_Tolerance}
+{Lugs HeadLug_Top_Angle}
+{Lugs RearDropOut_Tolerance}
+{Lugs RearDropOut_Angle}
+{RearDropout OffsetCS}
+{RearDropout OffsetCSPerp}
+{RearDropout OffsetCS_TopView}
+{RearDropout Derailleur_x}
+{RearDropout Derailleur_y}
+{RearDropoutOrient}
+{RearDropout RotationOffset}
+{RearDropout OffsetSS}
+{RearDropout OffsetSSPerp}
+{Lugs SeatLug_SeatStay_Tolerance}
+{Lugs SeatLug_SeatStay_Angle}
+{SeatStay SeatTubeMiterDiameter}
+{Lugs SeatLug_TopTube_Tolerance}
+{Lugs SeatLug_TopTube_Angle}
+{HandleBar Distance}
+{HandleBar Height}
+{LegClearance Length}
+{Saddle Distance}
+{Saddle Height}
+{Reference HandleBar_Distance }
+{Reference HandleBar_Height   }
+{Reference SaddleNose_Distance}
+{Reference SaddleNose_Height  }
+
+
+{RearMockup CassetteClearance}
+{RearMockup ChainWheelClearance}
+{RearMockup CrankClearance}
+{RearMockup DiscClearance}
+{RearMockup DiscDiameter}
+{RearMockup DiscOffset}
+{RearMockup DiscWidth}
+{RearMockup TyreClearance}
+{Saddle Offset_X}
+{Saddle Offset_Y}
+{Result Angle_HeadTubeTopTube}
+{SeatTube Angle}
+{BottomBracket Height}
+{FrontWheel Radius}
+{Geometry FrontWheel_xy}
+{Geometry FrontWheel_x}
+{Geometry ReachLengthResult}
+{Geometry StackHeightResult}
+{Geometry SaddleNose_HB}
+{RearWheel Radius}
+{RearWheel TyreShoulder }
+{Geometry RearWheel_X}
+{Geometry SaddleNose_BB_X}
+{Geometry Saddle_Offset_BB_ST}
+{Geometry Saddle_HB_y}
+{Geometry Saddle_BB}
+{Geometry SeatTubeVirtual}
+{Geometry TopTubeVirtual}
+
+
+{Reference SaddleNose_HB_y}
+{Reference SaddleNose_HB}

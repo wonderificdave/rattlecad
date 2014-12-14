@@ -100,10 +100,10 @@
 		# variable Project;   array set Project {}
 		#      set Project(Name)      "I am new, ..."
 		#      set Project(modified)  [clock milliseconds]
-    
+}    
  
     #-------------------------------------------------------------------------
-    proc get_xPath {node} {
+    proc project::get_xPath {node} {
             variable xPath
             set xPath "[$node nodeName]"
             proc parentNode {node} {
@@ -119,7 +119,7 @@
             return "/$xPath"
     }   
     #-------------------------------------------------------------------------
-    proc dom_2_runTime {} {          
+    proc project::dom_2_runTime {} {          
 
             variable projectDOM 
             
@@ -172,7 +172,7 @@
             # add_tracing
     }
     #-------------------------------------------------------------------------
-    proc runTime_2_dom {{_projectDOM {}}} {
+    proc project::runTime_2_dom {{_projectDOM {}}} {
             
             variable projectDOM 
             
@@ -216,7 +216,7 @@
 			return $projectDOM
     }
     #-------------------------------------------------------------------------
-    proc runTime_2_dict {} {
+    proc project::runTime_2_dict {} {
             
             variable projectDICT 
             variable projectDOM 
@@ -278,7 +278,7 @@
         #            NAME/a
         #            NAME/a/b/c
         #         
-    proc unifyKey {key} {
+    proc project::unifyKey {key} {
         
         package require appUtil 0.9
         # appUtil::get_procHierarchy
@@ -312,7 +312,7 @@
         #            NAME/a
         #            NAME/a/b/c 
         #
-    proc setValue {key type args} {
+    proc project::setValue {key type args} {
     
             foreach {_array _name _path} [unifyKey $key] break
                 # set _array [lindex [split $arrayName (] 0]
@@ -423,7 +423,7 @@
         #            NAME/a
         #            NAME/a/b/c 
         #
-    proc getValue {key type args} {
+    proc project::getValue {key type args} {
     
             foreach {_array _name xPath} [unifyKey $key] break
                 # set _array [lindex [split $arrayName (] 0]
@@ -449,6 +449,12 @@
                 puts "\n"
                 puts "         --<E>--getValue----------------------------"
                 puts "             ... /$_array/$_name not found in [namespace current]::$_array"
+                set r [catch {info level [expr [info level] - 1]} e]
+                if {$r} {
+                    puts "                 ... called directly by the interpreter (e.g.: .tcl on the partyline)."
+                } {
+                    puts "                 ... called by ${e}."
+                }
                 puts "         --<E>--getValue----------------------------"
                 puts "\n"
                 return
@@ -481,34 +487,8 @@
             return $value            
     }
     #-------------------------------------------------------------------------
-        #  init Fork Configuration
-        #  ... 
-        #
-    proc add_forkSetting {_forkDOM} {
-            variable initDOM
-            
-            puts "\n"
-            puts "   -------------------------------"
-            puts "    project::add_forkSetting"
-            puts ""
-            
-            set forkNode   [$initDOM selectNode Fork]
-            
-            if {$_forkDOM == {}} {
-                # $initDOM appendXML [$_forkDOM asXML]
-                puts "        using bikeGeometry  ... default"
-            } else {
-                  # puts [$forkNode asXML]
-                $initDOM removeChild $forkNode
-                $forkNode delete
-                $initDOM appendXML [$_forkDOM asXML]
-                puts "        updated by value"
-            }
-              # puts "[[$initDOM selectNode Fork] asXML]"
-    }
-    #-------------------------------------------------------------------------
        #  import templates to current project
-    proc import_ProjectSubset {nodeRoot} {
+    proc project::import_ProjectSubset {nodeRoot} {
                 # puts "[$nodeRoot asXML]"
                 
                     puts "\n"
@@ -556,7 +536,7 @@
             }
 			
 			# --- update Project completely
-			bikeGeometry::set_base_Parameters
+			bikeGeometry::update_Parameter
 
     }
  
@@ -566,7 +546,7 @@
     #-------------------------------------------------------------------------
         # see  http://wiki.tcl.tk/440
         #
-    proc flatten_nestedList { args } {
+    proc project::flatten_nestedList { args } {
             if {[llength $args] == 0 } { return ""}
             set flatList {}
             foreach e [eval concat $args] {
@@ -579,7 +559,7 @@
     
     #-------------------------------------------------------------------------
         # recursion function for runTime_2_dict
-    proc recurse_domTree {node} {
+    proc project::recurse_domTree {node} {
             variable projectDICT
             
             set xPath       [$node toXPath]
@@ -611,7 +591,7 @@
             }
 			
     }
-    proc set_dictValue {dictPath dictValue args} {
+    proc project::set_dictValue {dictPath dictValue args} {
             variable projectDICT
             
 			set command [format "dict set projectDICT %s \{%s\}"   $dictPath ${dictValue}]
@@ -620,7 +600,7 @@
 			    # dict set projectDICT Runtime ChainStay CenterLine angle_01 {-8.000}
 			return
     }    
-    proc get_dictValue {dictPath dictKey} {
+    proc project::get_dictValue {dictPath dictKey} {
               variable projectDICT  
               set value "___undefined___"
               if { [catch {set value [dict get $projectDICT {*}$dictPath $dictKey]} fid]} {
@@ -633,7 +613,7 @@
     #-------------------------------------------------------------------------
         # see  http://wiki.tcl.tk/23526
         #
-    proc pdict { d {i 0} {p "  "} {s " -> "} } {
+    proc project::pdict { d {i 0} {p "  "} {s " -> "} } {
 	          # set ouputList {}
             set errorInfo $::errorInfo
             set errorCode $::errorCode
@@ -678,5 +658,3 @@
             return ""
     }
 
-
-}

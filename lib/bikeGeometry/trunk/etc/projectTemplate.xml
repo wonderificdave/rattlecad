@@ -352,7 +352,11 @@
         <Brake>
             <Front>Rim</Front>
             <Rear>Rim</Rear>
-        </Brake>        
+        </Brake>  
+        <!--Carrier>
+            <Front>off</Front>
+            <Rear>off</Rear>
+        </Carrier-->        
         <BottleCage>
             <SeatTube>Cage</SeatTube>
             <DownTube>Cage</DownTube>
