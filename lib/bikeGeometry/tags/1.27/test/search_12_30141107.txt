@@ -1,0 +1,80 @@
+	rattleCAD::model::getObject    DownTube                         direction
+	rattleCAD::model::getObject    HeadTube                         direction
+	rattleCAD::model::getObject    Lugs/Dropout/Front               direction
+	rattleCAD::model::getObject    Lugs/ForkCrown                   direction
+	rattleCAD::model::getObject    SeatStay                         direction
+	rattleCAD::model::getObject    SeatTube                         direction
+	rattleCAD::model::getObject    TopTube                          direction
+    
+	rattleCAD::model::getObject    BottomBracketGround              position  $BB_Position
+	rattleCAD::model::getObject    BrakeFront                       position  $BB_Position
+	rattleCAD::model::getObject    BrakeRear                        position  $BB_Position
+	rattleCAD::model::getObject    CarrierMountFront                position  $BB_Position
+	rattleCAD::model::getObject    CarrierMountRear                 position  $BB_Position
+	rattleCAD::model::getObject    ChainStay/SeatStay_IS            position  $BB_Position
+	rattleCAD::model::getObject    DerailleurMountFront             position  $BB_Position
+	rattleCAD::model::getObject    DownTube/BottleCage/Base         position  $BB_Position
+	rattleCAD::model::getObject    DownTube/BottleCage/Offset       position  $BB_Position
+	rattleCAD::model::getObject    DownTube/BottleCage_Lower/Base   position  $BB_Position
+	rattleCAD::model::getObject    DownTube/BottleCage_Lower/Offset position  $BB_Position
+	rattleCAD::model::getObject    DownTube/End                     position  $BB_Position
+	rattleCAD::model::getObject    DownTube/Start                   position  $BB_Position
+	rattleCAD::model::getObject    FrontWheel                       position  $BB_Position
+	rattleCAD::model::getObject    HandleBar                        position  $BB_Position
+	rattleCAD::model::getObject    HeadTube/End                     position  $BB_Position
+	rattleCAD::model::getObject    HeadTube/Start                   position  $BB_Position
+	rattleCAD::model::getObject    Lugs/Dropout/Rear/Derailleur     position  $BB_Position
+	rattleCAD::model::getObject    Lugs/ForkCrown                   position  $BB_Position
+	rattleCAD::model::getObject    RearWheel                        position  $BB_Position
+	rattleCAD::model::getObject    Reference_HB                     position  $BB_Position
+	rattleCAD::model::getObject    Reference_SN                     position  $BB_Position
+	rattleCAD::model::getObject    Result/Position/SeatPost_Saddle  position  $BB_Position
+	rattleCAD::model::getObject    Saddle                           position  $BB_Position
+	rattleCAD::model::getObject    SaddleProposal                   position  $BB_Position
+	rattleCAD::model::getObject    SeatPostPivot                    position  $BB_Position
+	rattleCAD::model::getObject    SeatPostSaddle                   position  $BB_Position
+	rattleCAD::model::getObject    SeatPostSeatTube                 position  $BB_Position
+	rattleCAD::model::getObject    SeatStay/End                     position  $BB_Position
+	rattleCAD::model::getObject    SeatStay/Start                   position  $BB_Position
+	rattleCAD::model::getObject    SeatTube/BottleCage/Base         position  $BB_Position
+	rattleCAD::model::getObject    SeatTube/BottleCage/Offset       position  $BB_Position
+	rattleCAD::model::getObject    SeatTube/End                     position  $BB_Position
+	rattleCAD::model::getObject    SeatTube/Start                   position  $BB_Position
+	rattleCAD::model::getObject    SeatTubeGround                   position  $BB_Position
+	rattleCAD::model::getObject    SeatTubeSaddle                   position  $BB_Position
+	rattleCAD::model::getObject    SeatTubeVirtualTopTube           position  $BB_Position
+	rattleCAD::model::getObject    Steerer/End                      position  $BB_Position
+	rattleCAD::model::getObject    Steerer/Start                    position  $BB_Position
+	rattleCAD::model::getObject    SteererGround                    position  $BB_Position
+	rattleCAD::model::getObject    TopTube/End                      position  $BB_Position
+	rattleCAD::model::getObject    TopTube/Start                    position  $BB_Position                                                                   
+                                                                   
+                                                                   
+                                                                   
+	rattleCAD::model::getObject    DownTube                         polygon $BB_Position
+	rattleCAD::model::getObject    Fender/Front                     polygon $Hub(position)
+	rattleCAD::model::getObject    Fender/Rear                      polygon $Hub(position)
+	rattleCAD::model::getObject    ForkBlade                        polygon $BB_Position
+	rattleCAD::model::getObject    HeadSet/Bottom                   polygon $BB_Position
+	rattleCAD::model::getObject    HeadSet/Top                      polygon $BB_Position
+	rattleCAD::model::getObject    HeadTube                         polygon $BB_Position
+	rattleCAD::model::getObject    SeatPost                         polygon $BB_Position
+	rattleCAD::model::getObject    SeatStay                         polygon $BB_Position
+	rattleCAD::model::getObject    SeatTube                         polygon $BB_Position
+	rattleCAD::model::getObject    Steerer                          polygon $BB_Position
+	rattleCAD::model::getObject    Stem                             polygon $BB_Position
+	rattleCAD::model::getObject    TopTube                          polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/DownTube_BB_in         polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/DownTube_BB_out        polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/DownTube_Head          polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/DownTube_Seat          polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/Reference              polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/SeatStay_01            polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/SeatStay_02            polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/SeatTube_BB_in         polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/SeatTube_BB_out        polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/SeatTube_Down          polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/TopTube_Head           polygon $BB_Position
+	rattleCAD::model::getObject    TubeMiter/TopTube_Seat           polygon $BB_Position
+ 	rattleCAD::model::getObject    ChainStay                        polygon $BB_Position
+
