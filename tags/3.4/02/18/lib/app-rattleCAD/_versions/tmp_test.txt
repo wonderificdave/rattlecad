@@ -1,0 +1,40 @@
+Scalar/HandleBar/Distance
+Scalar/HandleBar/Height/
+Scalar/Saddle/Distance/
+Scalar/Saddle/Height/
+Scalar/HeadTube/Angle
+Scalar/TopTube/Angle
+Scalar/HeadTube/Length
+Scalar/Geometry/Stem_Length
+Scalar/Geometry/Fork_Height
+Scalar/Geometry/Fork_Rake
+Scalar/Geometry/SeatTubeVirtual
+Scalar/Geometry/TopTubeVirtual
+Scalar/Geometry/SaddleNose_BB_X
+Direction/SeatTube/degree
+
+
+Result/Angle/SeatTube/Direction             Direction/SeatTube/degree
+Result/Length/SeatTube/VirtualLength        Scalar/Geometry/SeatTubeVirtual
+Result/Length/TopTube/VirtualLength         Scalar/Geometry/TopTubeVirtual
+Result/Length/Saddle/Offset_BB_Nose         Scalar/Geometry/SaddleNose_BB_X
+
+
+
+Personal/HandleBar_Distance                 Scalar/HandleBar/Distance
+Personal/HandleBar_Height                   Scalar/HandleBar/Height
+Personal/Saddle_Distance                    Scalar/Saddle/Distance
+Personal/Saddle_Height                      Scalar/Saddle/Height
+Custom/HeadTube/Angle                       Scalar/HeadTube/Angle
+Custom/TopTube/Angle                        Scalar/TopTube/Angle
+FrameTubes/HeadTube/Length                  Scalar/HeadTube/Length
+Component/Stem/Length                       Scalar/Geometry/Stem_Lengt
+Component/Fork/Height                       Scalar/Geometry/Fork_Heigh
+Component/Fork/Rake                         Scalar/Geometry/Fork_Rake
+
+
+
+
+
+
+
