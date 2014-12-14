@@ -128,6 +128,9 @@
  # 1.27 debug
  #          Position(SeatTubeSaddle) ... Position(SeatTube_Saddle)
  #          update set_to_project
+ # 1.28 cleanup 
+ #          remove _version
+ #          u
  # 1.xx refactor
  #          split project completely from bikeGeometry
  #          update   get_from_project
@@ -136,7 +139,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.27
+    package provide bikeGeometry 1.28
         #
     package require vectormath
         #
