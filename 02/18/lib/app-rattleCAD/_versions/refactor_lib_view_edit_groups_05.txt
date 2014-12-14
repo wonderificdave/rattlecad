@@ -1,0 +1,398 @@
+                                                           
+                                                           
+file://Component(HandleBar)                                Component(HandleBar/File)   
+       Scalar(HandleBar/PivotAngle)                        Component(HandleBar/PivotAngle)
+                                                           
+                                                           
+                                                           
+                                                           
+file://Component(FrontDerailleur)                          Component(Derailleur/Front/File)
+       Scalar(FrontDerailleur/Distance)                    Component(Derailleur/Front/Distance)   
+       Scalar(FrontDerailleur/Offset)                      Component(Derailleur/Front/Offset) 
+                                                           
+                                                           
+                                                           
+                                                           
+file://Component(CrankSet)                                 Component(CrankSet/File)
+       Scalar(CrankSet/Length)                             Component(CrankSet/Length)
+text://ListValue(CrankSetChainRings)                       Component(CrankSet/ChainRings)
+                                                           
+                                                           
+                                                           
+                                                           
+text://ListValue/CrankSetChainRings)                       Component(CrankSet/ChainRings)
+       Scalar(RearDerailleur/Pulley_x)                     Component/Derailleur/Rear/Pulley/x
+       Scalar(RearDerailleur/Pulley_y)                     Component/Derailleur/Rear/Pulley/y
+       Scalar(RearDerailleur/Pulley_teeth)                 Component/Derailleur/Rear/Pulley/teeth
+                                                           
+                                                           
+                                                           
+                                                           
+list://Config(RearBrake@SELECT_BrakeType)                  Rendering(Brake/Rear@SELECT_BrakeType)
+file://Component(RearBrake)                                Component(Brake/Rear/File)
+       Scalar(RearBrake/LeverLength)                       Component(Brake/Rear/LeverLength)
+       Scalar(RearBrake/Offset)                            Component(Brake/Rear/Offset)
+                                                           
+                                                           
+                                                           
+                                                           
+list://Config(FrontBrake@SELECT_BrakeType)                 Rendering(Brake/Front@SELECT_BrakeType)
+file://Component(FrontBrake)                               Component(Brake/Front/File)
+       Scalar(FrontBrake/LeverLength)                      Component(Brake/Front/LeverLength)
+       Scalar(FrontBrake/Offset)                           Component(Brake/Front/Offset)
+                                                           
+                                                           
+                                                           
+                                                           
+file://Component(Saddle)                                   Component(Saddle/File)
+       Scalar(Saddle/NoseLength)                           Component(Saddle/LengthNose)
+       Scalar(Saddle/Offset_x)                             Rendering(Saddle/Offset_X)
+       Scalar(Saddle/Offset_y)                             Rendering(Saddle/Offset_Y)
+       Scalar(Geometry/SaddleNose_BB_x)                    Result(Length/Saddle/Offset_BB_Nose)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(HeadSet/Height_Top)                          Component(HeadSet/Height/Top)
+       Scalar(HeadSet/Diameter)                            Component(HeadSet/Diameter)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(HeadSet/Height_Bottom)                       Component(HeadSet/Height/Bottom)
+       Scalar(HeadSet/Diameter)                            Component(HeadSet/Diameter)
+                                                           
+                                                           
+                                                           
+                                                           
+list://Config(RearFender@SELECT_Binary_OnOff)              Rendering(Fender/Rear@SELECT_Binary_OnOff)
+       Scalar(RearFender/Radius)                           Component(Fender/Rear/Radius)
+       Scalar(RearFender/Height)                           Component(Fender/Rear/Height)
+       Scalar(RearFender/OffsetAngle)                      Component(Fender/Rear/OffsetAngle)
+                                                           
+                                                           
+                                                           
+                                                           
+list://Config(FrontFender@SELECT_Binary_OnOff)             Rendering(Fender/Front@SELECT_Binary_OnOff)
+       Scalar(FrontFender/Radius)                          Component(Fender/Front/Radius)
+       Scalar(FrontFender/Height)                          Component(Fender/Front/Height)
+       Scalar(FrontFender/OffsetAngleFront)                Component(Fender/Front/OffsetAngleFront)    
+       Scalar(FrontFender/OffsetAngle)                     Component(Fender/Front/OffsetAngle)
+                                                           
+                                                           
+                                                           
+                                                           
+file://Component(FrontCarrier)                             Component(Carrier/Front/File)
+       Scalar(FrontCarrier/x)                              Component(Carrier/Front/x)
+       Scalar(FrontCarrier/y)                              Component(Carrier/Front/y)
+                                                           
+                                                           
+                                                           
+                                                           
+file://Component(RearCarrier)                              Component(Carrier/Rear/File)
+       Scalar(RearCarrier/x)                               Component(Carrier/Rear/x)
+       Scalar(RearCarrier/y)                               Component(Carrier/Rear/y)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(DownTube/DiameterHT)                         FrameTubes(DownTube/DiameterHT)
+       Scalar(DownTube/DiameterBB)                         FrameTubes(DownTube/DiameterBB)
+       Scalar(DownTube/TaperLength)                        FrameTubes(DownTube/TaperLength)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(SeatStay/SeatTubeMiterDiameter)              Lugs(SeatTube/SeatStay/MiterDiameter)
+       Scalar(SeatTube/DiameterTT)                         FrameTubes(SeatTube/DiameterTT)
+       Scalar(SeatTube/DiameterBB)                         FrameTubes(SeatTube/DiameterBB)
+       Scalar(SeatTube/TaperLength)                        FrameTubes(SeatTube/TaperLength)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(TopTube/DiameterHT)                          FrameTubes(TopTube/DiameterHT)
+       Scalar(TopTube/DiameterST)                          FrameTubes(TopTube/DiameterST)
+       Scalar(TopTube/TaperLength)                         FrameTubes(TopTube/TaperLength)
+       Scalar(Geometry/TopTube_Angle)                      Custom(TopTube/Angle)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(ChainStay/DiameterSS)                        FrameTubes(ChainStay/DiameterSS)
+       Scalar(ChainStay/Height)                            FrameTubes(ChainStay/Height)
+       Scalar(ChainStay/HeigthBB)                          FrameTubes(ChainStay/HeightBB)
+       Scalar(ChainStay/TaperLength)                       FrameTubes(ChainStay/TaperLength)
+       Scalar(RearDropout/OffsetCSPerp)                    Lugs(RearDropOut/ChainStay/OffsetPerp)
+       Scalar(RearDropout/OffsetCS)                        Lugs(RearDropOut/ChainStay/Offset)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(SeatStay/SeatTubeMiterDiameter)              Lugs(SeatTube/SeatStay/MiterDiameter)
+       Scalar(SeatStay/DiameterST)                         FrameTubes(SeatStay/DiameterST)
+       Scalar(SeatStay/DiameterCS)                         FrameTubes(SeatStay/DiameterCS)
+       Scalar(SeatStay/TaperLength)                        FrameTubes(SeatStay/TaperLength)
+       Scalar(SeatStay/OffsetTT)                           Custom(SeatStay/OffsetTT)
+       Scalar(RearDropout/OffsetSSPerp)                    Lugs(RearDropOut/SeatStay/OffsetPerp)
+       Scalar(RearDropout/OffsetSS)                        Lugs(RearDropOut/SeatStay/Offset)
+                                                           
+                                                           
+                                                           
+                                                           
+file://Component(RearDropout)                              Lugs(RearDropOut/File)
+list://Config(RearDropoutOrient@SELECT_DropOutDirection)   Lugs(RearDropOut/Direction@SELECT_DropOutDirection)
+list://Config(RearDropout@SELECT_DropOutPosition)          Rendering(RearDropOut@SELECT_DropOutPosition)
+       Scalar(RearDropout/RotationOffset)                  Lugs(RearDropOut/RotationOffset)
+       Scalar(RearDropout/Derailleur_x)                    Lugs(RearDropOut/Derailleur/x)
+       Scalar(RearDropout/Derailleur_y)                    Lugs(RearDropOut/Derailleur/y)
+       Scalar(RearDropout/OffsetSSPerp)                    Lugs(RearDropOut/SeatStay/OffsetPerp)
+       Scalar(RearDropout/OffsetSS)                        Lugs(RearDropOut/SeatStay/Offset)
+       Scalar(RearDropout/OffsetCSPerp)                    Lugs(RearDropOut/ChainStay/OffsetPerp)
+       Scalar(RearDropout/OffsetCS)                        Lugs(RearDropOut/ChainStay/Offset)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(BottomBracket/OutsideDiameter)               Lugs(BottomBracket/Diameter/outside)
+       Scalar(BottomBracket/InsideDiameter)                Lugs(BottomBracket/Diameter/inside)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(HeadTube/Length)                             FrameTubes(HeadTube/Length)
+       Scalar(HeadSet/Height_Bottom)                       Component(HeadSet/Height/Bottom)
+                                                           
+                                                              
+                                                           
+                                                           
+       Scalar(Geometry/SaddleNose_BB_x)                    Result(Length/Saddle/Offset_BB_Nose)
+       Scalar(Saddle/NoseLength)                           Component(Saddle/LengthNose)
+       Scalar(Saddle/Offset_x)                             Rendering(Saddle/Offset_X)
+                                                           
+                                                           
+                                                           
+                                                           
+list://Scalar(FrontWheel/RimDiameter@SELECT_Rim)           Component(Wheel/Front/RimDiameter@SELECT_Rim)
+       Scalar(FrontWheel/TyreHeight)                       Component(Wheel/Front/TyreHeight)
+                                                           
+                                                           
+                                                           
+                                                           
+list://Scalar(FrontWheel/RimDiameter@SELECT_Rim)           Component(Wheel/Front/RimDiameter@SELECT_Rim)
+       Scalar(Geometry/FrontWheel_Radius)                  Result(Length/FrontWheel/Radius)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+list://Config(Fork@SELECT_ForkType)                        Config(Fork@SELECT_ForkType)
+file://Component(ForkCrown)                                Component(ForkCrown)
+       Scalar(Fork/BrakeAngle)                             Component(Fork/Crown/Brake/Angle)
+       Scalar(Fork/BrakeOffset)                            Component(Fork/Crown/Brake/Offset)
+       Scalar(Fork/BladeOffsetCrown)                       Component(Fork/Crown/Blade/Offset)
+       Scalar(Fork/BladeOffsetCrownPerp)                   Component(Fork/Crown/Blade/OffsetPerp)
+                                                           
+                                                           
+                                                           
+                                                           
+list://Config(ForkBlade@SELECT_ForkBladeType)              Rendering(ForkBlade@SELECT_ForkBladeType)
+       Scalar(Fork/BladeWidth)                             Component(Fork/Blade/Width)
+       Scalar(Fork/BladeDiameterDO)                        Component(Fork/Blade/DiameterDO)
+       Scalar(Fork/BladeTaperLength)                       Component(Fork/Blade/TaperLength)
+       Scalar(Fork/BladeBendRadius)                        Component(Fork/Blade/BendRadius)
+       Scalar(Fork/BladeEndLength)                         Component(Fork/Blade/EndLength)
+                                                           
+                                                           
+                                                           
+                                                           
+file://Component(ForkDropout)                              Component(Fork/DropOut/File)
+list://Config(ForkDropout@SELECT_DropOutPosition)          Rendering(ForkDropOut@SELECT_DropOutPosition)
+       Scalar(Fork/BladeOffsetDO)                          Component(Fork/DropOut/Offset)
+       Scalar(Fork/BladeOffsetDOPerp)                      Component(Fork/DropOut/OffsetPerp)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(Lugs/RearDropOut_Angle)                      Lugs(RearDropOut/Angle/value)
+       Scalar(Lugs/RearDropOut_Tolerance)                  Lugs(RearDropOut/Angle/plus_minus)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(Lugs/BottomBracket_DownTube_Angle)           Lugs(BottomBracket/DownTube/Angle/value)
+       Scalar(Lugs/BottomBracket_DownTube_Tolerance)       Lugs(BottomBracket/DownTube/Angle/plus_minus)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(Lugs/BottomBracket_ChainStay_Angle)          Lugs(BottomBracket/ChainStay/Angle/value)
+       Scalar(Lugs/BottomBracket_ChainStay_Tolerance)      Lugs(BottomBracket/ChainStay/Angle/plus_minus)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           Lugs(SeatTube/TopTube/Angle/value)  
+       Scalar(Lugs/SeatLug_TopTube_Tolerance)              Lugs(SeatTube/TopTube/Angle/plus_minus)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(Lugs/SeatLug_SeatStay_Angle)                 Lugs(SeatTube/SeatStay/Angle/value)
+       Scalar(Lugs/SeatLug_SeatStay_Tolerance)             Lugs(SeatTube/SeatStay/Angle/plus_minus)
+       Scalar(SeatStay/SeatTubeMiterDiameter)              Lugs(SeatTube/SeatStay/MiterDiameter)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(Lugs/HeadLug_Top_Angle)                      Lugs(HeadTube/TopTube/Angle/value)
+       Scalar(Lugs/HeadLug_Top_Tolerance)                  Lugs(HeadTube/TopTube/Angle/plus_minus)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(Lugs/HeadLug_Bottom_Angle)                   Lugs(HeadTube/DownTube/Angle/value)
+       Scalar(Lugs/HeadLug_Bottom_Tolerance)               Lugs(HeadTube/DownTube/Angle/plus_minus)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+list://Scalar(RearWheel/RimDiameter@SELECT_Rim)            Component(Wheel/Rear/RimDiameter@SELECT_Rim)
+       Scalar(RearWheel/TyreHeight)                        Component(Wheel/Rear/TyreHeight)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(Geometry/Stem_Angle)                         Component(Stem/Angle)
+       Scalar(Geometry/Stem_Length)                        Component(Stem/Length)
+       Scalar(Fork/Height)                                 Component(Fork/Height)
+       Scalar(Fork/Rake)                                   Component(Fork/Rake)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(Geometry/BottomBracket_Depth)                Custom(BottomBracket/Depth)
+       Scalar(Geometry/BottomBracket_Height)               Result(Length/BottomBracket/Height)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+file://Component(RearDropout)                              Lugs(RearDropOut/File) 
+list://Config(RearDropoutOrient@SELECT_DropOutDirection)   Lugs(RearDropOut/Direction@SELECT_DropOutDirection) 
+list://Config(RearDropout@SELECT_DropOutPosition)          Rendering(RearDropOut@SELECT_DropOutPosition)   
+       Scalar(RearDropout/RotationOffset)                  Lugs(RearDropOut/RotationOffset)   
+       Scalar(RearDropout/Derailleur_x)                    Lugs(RearDropOut/Derailleur/x)
+       Scalar(RearDropout/Derailleur_y)                    Lugs(RearDropOut/Derailleur/y)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(RearMockup/DiscDiameter)                     Rendering(RearMockup/DiscDiameter)
+       Scalar(RearMockup/DiscWidth)                        Rendering(RearMockup/DiscWidth)
+       Scalar(RearMockup/DiscClearance)                    Rendering(RearMockup/DiscClearance)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(RearWheel/TyreWidthRadius)                   Component(Wheel/Rear/TyreWidthRadius)
+       Scalar(RearWheel/TyreWidth)                         Component(Wheel/Rear/TyreWidth)
+       Scalar(RearMockup/TyreClearance)                    Rendering(RearMockup/TyreClearance)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(ChainStay/segmentAngle_01)                   FrameTubes(ChainStay/CenterLine/angle_01)
+       Scalar(ChainStay/segmentRadius_01)                  FrameTubes(ChainStay/CenterLine/radius_01)
+       Scalar(ChainStay/segmentLength_01)                  FrameTubes(ChainStay/CenterLine/length_01)
+       Scalar(ChainStay/segmentLength_02)                  FrameTubes(ChainStay/CenterLine/length_02)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(ChainStay/segmentAngle_02)                   FrameTubes(ChainStay/CenterLine/angle_02)
+       Scalar(ChainStay/segmentRadius_02)                  FrameTubes(ChainStay/CenterLine/radius_02)
+       Scalar(ChainStay/segmentLength_02)                  FrameTubes(ChainStay/CenterLine/length_02)
+       Scalar(ChainStay/segmentLength_03)                  FrameTubes(ChainStay/CenterLine/length_03)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(ChainStay/segmentAngle_03)                   FrameTubes(ChainStay/CenterLine/angle_03)
+       Scalar(ChainStay/segmentRadius_03)                  FrameTubes(ChainStay/CenterLine/radius_03)
+       Scalar(ChainStay/segmentLength_03)                  FrameTubes(ChainStay/CenterLine/length_03)
+       Scalar(ChainStay/segmentLength_04)                  FrameTubes(ChainStay/CenterLine/length_04)
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(ChainStay/segmentAngle_04)                   FrameTubes(ChainStay/CenterLine/angle_04)
+       Scalar(ChainStay/segmentRadius_04)                  FrameTubes(ChainStay/CenterLine/radius_04)
+       Scalar(ChainStay/segmentLength_04)                  FrameTubes(ChainStay/CenterLine/length_04)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(RearWheel/HubWidth)                          Component(Wheel/Rear/HubWidth)
+text://Scalar(RearWheel/FirstSprocket)                     Component(Wheel/Rear/FirstSprocket)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+       Scalar(CrankSet/ChainLine)                          Component(CrankSet/ChainLine) Component(CrankSet/Q-Factor)
+text://ListValue/CrankSetChainRings)                       Component(CrankSet/ChainRings)
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           
+list://Config(ChainStay@SELECT_ChainStay)                  Rendering(ChainStay@SELECT_ChainStay)
+       Scalar(RearMockup/TyreClearance)                    Rendering(RearMockup/TyreClearance)
+       Scalar(RearMockup/ChainWheelClearance)              Rendering(RearMockup/ChainWheelClearance)
+       Scalar(RearMockup/CrankClearance)                   Rendering(RearMockup/CrankClearance)
+       Scalar(RearMockup/CassetteClearance)                Rendering(RearMockup/CassetteClearance) 
