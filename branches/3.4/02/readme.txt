@@ -1,9 +1,16 @@
 
 
+3.4.02.21  - 2014.12.29
+-------------------------------------------------------------------------------
+    refactor/debug
+        ... bikeGeometry 1.30
+            ... BottomBracket Offset on DownTube and SeatTube
+
+
 3.4.02.20  - 2014.12.29
 -------------------------------------------------------------------------------
     refactor/debug
-        ... bikeGeometry 1.27
+        ... bikeGeometry 1.29
         ... history previous/next
         ... BottleCage dimensions display in drawings 
             ... variable Array Rendering -> to local Array Config
