@@ -219,7 +219,8 @@
             
                 # ---     create and register any canvasCAD - canvas in rattleCAD::view::gui::notebookCanvas
             rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom02  "  Copy Reference "      A4  0.2  25  -bd 2  -bg white  -relief sunken
-            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  Base Concept   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+            rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom00  "  BaseGeometry   "      A4  0.2  25  -bd 2  -bg white  -relief sunken
+          # rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom01  "  BaseGeometry-Lug"     A4  0.2  25  -bd 2  -bg white  -relief sunken
             rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom10  "  Frame Details  "      A4  0.2  25  -bd 2  -bg white  -relief sunken
             rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom20  "  ChainStay Details  "  A2  1.0  25  -bd 2  -bg white  -relief sunken
             rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom30  "  Summary   "           A4  0.2  25  -bd 2  -bg white  -relief sunken
@@ -409,6 +410,7 @@
             
             switch -exact -- $varName {
                 cv_Custom00 -
+                cv_Custom01 -
                 cv_Custom02 -
                 cv_Custom10 -
                 cv_Custom20 -

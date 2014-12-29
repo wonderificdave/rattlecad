@@ -164,17 +164,20 @@
                     {update} {
                             set keyList  [split $key /]
                             set rootName [lindex $keyList 0]
-                            set key      [lrange $keyList 1 end]
+                            set keyList [lrange $keyList 1 end]
                             switch -exact $rootName {
-                                Config    { set newValue  [rattleCAD::model::set_Config     $key ${value}] }
-                                Component { set newValue  [rattleCAD::model::set_Component  $key ${value}] }
-                                ListValue { set newValue  [rattleCAD::model::set_ListValue  $key ${value}] }
+                                Config    { set newValue  [rattleCAD::model::set_Config     $keyList ${value}] }
+                                Component { set newValue  [rattleCAD::model::set_Component  $keyList ${value}] }
+                                ListValue { set newValue  [rattleCAD::model::set_ListValue  $keyList ${value}] }
                                 Scalar    { 
-                                            switch -exact [llength $key] {
-                                                1 { set newValue  [rattleCAD::model::set_Scalar     $key                                                    ${value}]} 
-                                                2 { set newValue  [rattleCAD::model::set_Scalar     [lindex $key 0] [lindex $key 1]                         ${value}]} 
-                                                3 { set newValue  [rattleCAD::model::set_Scalar     [lindex $key 0] [lindex $key 1] [lindex $key 2]  $key   ${value}]} 
+                                            switch -exact [llength $keyList] {
+                                                1 { set newValue  [rattleCAD::model::set_Scalar     $keyList                                                                ${value}]} 
+                                                2 { set newValue  [rattleCAD::model::set_Scalar     [lindex $keyList 0] [lindex $keyList 1]                                 ${value}]} 
+                                                3 { set newValue  [rattleCAD::model::set_Scalar     [lindex $keyList 0] [lindex $keyList 1] [lindex $keyList 2]  $keyList   ${value}]} 
                                             }
+                                    }
+                                default {
+                                        tk_messageBox -message "  ... this should be OK?"
                                     }
                             }
                                 # 20141206

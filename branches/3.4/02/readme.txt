@@ -1,5 +1,14 @@
 
 
+3.4.02.20  - 2014.12.29
+-------------------------------------------------------------------------------
+    refactor/debug
+        ... bikeGeometry 1.27
+        ... history previous/next
+        ... BottleCage dimensions display in drawings 
+            ... variable Array Rendering -> to local Array Config
+
+
 3.4.02.19  - 2014.12.13
 -------------------------------------------------------------------------------
     refactor
