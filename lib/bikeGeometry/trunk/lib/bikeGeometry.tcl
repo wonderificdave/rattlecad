@@ -132,7 +132,7 @@
  #          remove _version directory
  #          create namespace bikeGeometry::model_FreeAngle
  #          create namespace bikeGeometry::model_LugAngle
- # 1.28 debug 
+ # 1.29 debug 
  #          bikeGeometry::create_TubeMiter 
  #              handle offset of DownTube and SeatTubeOffset to BottomBracket
  #      refactor   
@@ -146,7 +146,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.28
+    package provide bikeGeometry 1.29
         #
     package require vectormath
         #
