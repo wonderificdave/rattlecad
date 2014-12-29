@@ -103,17 +103,29 @@
                 #
                 
                 #
+            # namespace import [namespace current]::model_freeAngle::update_ModeGeometry                
+                #
+            puts "   [namespace current]"
+            
+            foreach procedure [lsort [info procs [namespace current]::*]] {
+               #  puts "   ... $procedure"
+            }
+            [namespace current]::model_freeAngle::update_ModeGeometry
+                #
+                
+                
+                #
                 # --- set basePoints Attributes
                 #
                 # get_basePoints ... replaced ... 0.69 ... 2014.10.20
                 #
-            create_GeometryRear
-            create_GeometryCenter
-            create_GeometryFront
+            # create_GeometryRear
+            # create_GeometryCenter
+            # create_GeometryFront
                 #
-            create_RearDropout
-            create_RearWheel
-            create_FrontWheel
+                # create_RearDropout
+                # create_RearWheel
+                # create_FrontWheel
                 #
             create_SummarySize
                 #

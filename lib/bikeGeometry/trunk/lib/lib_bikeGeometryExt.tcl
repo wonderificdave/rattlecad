@@ -44,7 +44,7 @@
         #
         # --- set basePoints Attributes
         #
-    proc bikeGeometry::create_GeometryFront {} {
+    proc bikeGeometry::_create_GeometryFront {} {
                     #
             variable Geometry
             variable Position
@@ -91,7 +91,7 @@
             return
                 #
     }
-    proc bikeGeometry::create_GeometryRear {} {
+    proc bikeGeometry::_create_GeometryRear {} {
                 #
             variable Geometry
             variable Position
@@ -112,7 +112,7 @@
             return
                 #
     }   
-    proc bikeGeometry::create_GeometryCenter {} {
+    proc bikeGeometry::_create_GeometryCenter {} {
                 #
             variable Direction
             variable Geometry
@@ -196,11 +196,14 @@
     }
     
     
+        
+        
+        
         #
         #
         # --- set basePoints Attributes
         #
-    proc bikeGeometry::create_Reference {} {
+    proc bikeGeometry::_create_Reference {} {
                 #
             variable Position
                 #
@@ -225,7 +228,7 @@
 
         #
         # --- set RearDropout ------------
-    proc bikeGeometry::create_RearDropout {} {
+    proc bikeGeometry::_create_RearDropout {} {
                 #
             variable Geometry
             variable Position
@@ -240,7 +243,7 @@
 
         #
         # --- set FrontWheel -----------------------
-    proc bikeGeometry::create_FrontWheel {} {
+    proc bikeGeometry::_create_FrontWheel {} {
                 #
             variable Geometry
             variable FrontWheel
@@ -255,7 +258,7 @@
 
         #
         # --- set RearWheel ------------------------
-    proc bikeGeometry::create_RearWheel {} {
+    proc bikeGeometry::_create_RearWheel {} {
                 #
             variable Geometry
             variable Position

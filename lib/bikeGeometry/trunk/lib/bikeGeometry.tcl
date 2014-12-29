@@ -129,12 +129,19 @@
  #          Position(SeatTubeSaddle) ... Position(SeatTube_Saddle)
  #          update set_to_project
  # 1.28 cleanup 
- #          remove _version
- #          u
+ #          remove _version directory
+ #          create namespace bikeGeometry::model_FreeAngle
+ #          create namespace bikeGeometry::model_LugAngle
+ # 1.28 debug 
+ #          bikeGeometry::create_TubeMiter 
+ #              handle offset of DownTube and SeatTubeOffset to BottomBracket
+ #      refactor   
+ #          get_from_project and  set_to_project
+ #          bikeGeometry::model_freeAngle in lib_model_freeAngle.tcl
+ #
  # 1.xx refactor
  #          split project completely from bikeGeometry
- #          update   get_from_project
- #              and  set_to_project
+
  #
   
     package require tdom
@@ -264,6 +271,7 @@
             namespace export set_resultParameter
                 #
             # puts " Hallo!  ... [info command [namespace current]::*]" 
+                #    
     }
         
         

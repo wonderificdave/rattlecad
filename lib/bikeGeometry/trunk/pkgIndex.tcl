@@ -11,6 +11,8 @@
 package ifneeded bikeGeometry  1.28 "\
             [list source [file join $dir lib project.tcl]]; \
             [list source [file join $dir lib lib_projectUpdate.tcl]]; \
+            [list source [file join $dir lib model_freeAngle.tcl]]; \
+            [list source [file join $dir lib model_lugAngle.tcl]]; \
             [list source [file join $dir lib bikeGeometry.tcl]]; \
             [list source [file join $dir lib lib_bikeGeometry.tcl]]; \
             [list source [file join $dir lib lib_bikeGeometryResult.tcl]]; \
