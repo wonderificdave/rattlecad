@@ -711,12 +711,12 @@
                 #                                                                                                                                            
             set TubeMiter(DownTube_Head)      [ tube_miter    $DownTube(DiameterHT) $Direction(DownTube)   $HeadTube(Diameter)      $Direction(HeadTube)    right    0    0  opposite]
             set TubeMiter(DownTube_Seat)      [ tube_miter    $DownTube(DiameterBB) $Direction(DownTube)   $SeatTube(DiameterBB)    $Direction(SeatTube)    ]
-            set TubeMiter(DownTube_BB_out)    [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(OutsideDiameter)      {0 1}       right    $DownTube(OffsetBB)    90  opposite]
-            set TubeMiter(DownTube_BB_in)     [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(InsideDiameter)       {0 1}       right    $DownTube(OffsetBB)    90  opposite]
+            set TubeMiter(DownTube_BB_out)    [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(OutsideDiameter)      {0 1}       right    $DownTube(OffsetBB)   -90  opposite]
+            set TubeMiter(DownTube_BB_in)     [ tube_miter    $DownTube(DiameterBB) {1 0}                  $BottomBracket(InsideDiameter)       {0 1}       right    $DownTube(OffsetBB)   -90  opposite]
                 #
             set TubeMiter(SeatTube_Down)      [ tube_miter    $SeatTube(DiameterBB) $Direction(SeatTube)   $DownTube(DiameterBB)    $Direction(DownTube)    ]
-            set TubeMiter(SeatTube_BB_out)    [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(OutsideDiameter)      {0 1}       right    $SeatTube(OffsetBB)    90  opposite]
-            set TubeMiter(SeatTube_BB_in)     [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(InsideDiameter)       {0 1}       right    $SeatTube(OffsetBB)    90  opposite]
+            set TubeMiter(SeatTube_BB_out)    [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(OutsideDiameter)      {0 1}       right    $SeatTube(OffsetBB)   -90  opposite]
+            set TubeMiter(SeatTube_BB_in)     [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(InsideDiameter)       {0 1}       right    $SeatTube(OffsetBB)   -90  opposite]
                         #
                 set offset      [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
                 set dir         [ vectormath::scalePointList {0 0} $Direction(SeatStay) -1.0 ]

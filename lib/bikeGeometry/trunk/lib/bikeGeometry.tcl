@@ -138,7 +138,10 @@
  #      refactor   
  #          get_from_project and  set_to_project
  #          bikeGeometry::model_freeAngle in lib_model_freeAngle.tcl
- #
+ # 1.30 debug 
+ #          bikeGeometry::create_TubeMiter 
+ #              reverse offset of DownTube and SeatTubeOffset to BottomBracket
+
  # 1.xx refactor
  #          split project completely from bikeGeometry
 
@@ -146,7 +149,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.29
+    package provide bikeGeometry 1.30
         #
     package require vectormath
         #
