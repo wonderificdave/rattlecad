@@ -98,6 +98,7 @@
 
             variable    stageScale
 
+            variable    Config
             variable    Rendering
             variable    Reference
 
@@ -135,11 +136,11 @@
 
 
                 # --- get Rendering Style
-            set Rendering(BrakeFront)       [rattleCAD::model::get_Config FrontBrake]
-            set Rendering(BrakeRear)        [rattleCAD::model::get_Config RearBrake]
-            set Rendering(BottleCage_ST)    [rattleCAD::model::get_Config BottleCage_ST]
-            set Rendering(BottleCage_DT)    [rattleCAD::model::get_Config BottleCage_DT]
-            set Rendering(BottleCage_DT_L)  [rattleCAD::model::get_Config BottleCage_DT_L]
+            set Config(BrakeFront)          [rattleCAD::model::get_Config FrontBrake]
+            set Config(BrakeRear)           [rattleCAD::model::get_Config RearBrake]
+            set Config(BottleCage_ST)       [rattleCAD::model::get_Config BottleCage_ST]
+            set Config(BottleCage_DT)       [rattleCAD::model::get_Config BottleCage_DT]
+            set Config(BottleCage_DT_L)     [rattleCAD::model::get_Config BottleCage_DT_L]
 
                 # --- get defining Values ----------
             set RearWheel(RimDiameter)      [ rattleCAD::model::get_Scalar      Geometry RearRim_Diameter ]

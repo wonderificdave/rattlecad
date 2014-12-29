@@ -277,6 +277,7 @@
             set Config(BottleCage_DT)    [rattleCAD::model::get_Config BottleCage_DownTube]
             set Config(BottleCage_DT_L)  [rattleCAD::model::get_Config BottleCage_DownTube_Lower]
             set Config(BottleCage_ST)    [rattleCAD::model::get_Config BottleCage_SeatTube]
+                #
 
                 # --- create BottleCage ----------------
             if {$Config(BottleCage_ST) != {off}} {
@@ -285,6 +286,10 @@
                     BrazeOn { set BottleCage(file)      [ file join $::APPL_Config(COMPONENT_Dir) bottle_cage/left/brazeOn.svg ] }
                     Cage    { set BottleCage(file)      [ file join $::APPL_Config(COMPONENT_Dir) bottle_cage/left/bottleCage.svg ] }
                     Bottle  { set BottleCage(file)      [ file join $::APPL_Config(COMPONENT_Dir) bottle_cage/left/bottle_Large.svg ] }
+                    default {
+                              set BottleCage(file) {}
+                              puts "\n      <W> \$Config(BottleCage_ST) $Config(BottleCage_ST)"
+                            }
                 }
                     # puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
                 set st_direction    [ rattleCAD::model::get_Direction SeatTube ]
@@ -331,6 +336,10 @@
                     BrazeOn { set BottleCage(file)      [ file join $::APPL_Config(COMPONENT_Dir) bottle_cage/left/brazeOn.svg ] }
                     Cage    { set BottleCage(file)      [ file join $::APPL_Config(COMPONENT_Dir) bottle_cage/left/bottleCage.svg ] }
                     Bottle  { set BottleCage(file)      [ file join $::APPL_Config(COMPONENT_Dir) bottle_cage/left/bottle_Large.svg ] }
+                    default {
+                              set BottleCage(file) {}
+                              puts "\n      <W> \$Config(BottleCage_DT_L) $Config(BottleCage_DT_L)"
+                            }
                 }
                     # puts "   ... $Rendering(BottleCage_ST): BottleCage(file)  $BottleCage(file)"
                 set dt_direction    [ rattleCAD::model::get_Direction   DownTube ]
