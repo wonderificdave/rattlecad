@@ -738,7 +738,6 @@
 
     }
 
-
     proc update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {compColour {gray98}} {tyreColour {gray95}} } {
                 #
             foreach cv_Item [$cv_Name find withtag __Frame__] {

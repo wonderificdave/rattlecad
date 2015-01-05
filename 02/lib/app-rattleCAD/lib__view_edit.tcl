@@ -61,25 +61,29 @@
         #
         # -- Result - Values --------------------------
         #
-    proc rattleCAD::view::edit::single_Result_BottomBracket_Height      {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/BottomBracket_Height)       ;# Result(Length/BottomBracket/Height)       }
-    proc rattleCAD::view::edit::single_Result_FrontWheel_diagonal       {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/FrontWheel_xy)              ;# Result(Length/FrontWheel/diagonal)        }
-    proc rattleCAD::view::edit::single_Result_FrontWheel_horizontal     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/FrontWheel_x)               ;# Result(Length/FrontWheel/horizontal)      }
-    proc rattleCAD::view::edit::single_Result_HeadTube_ReachLength      {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Reach_Length)               ;# Result(Length/HeadTube/ReachLength)       }
-    proc rattleCAD::view::edit::single_Result_HeadTube_Angle            {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SeatTube_Angle)             ;# Result(Angle/SeatTube/Direction)          }
-    proc rattleCAD::view::edit::single_Result_HeadTube_TopTubeAngle     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/HeadLugTop_Angle))          ;# Scalar(Result/Angle_HeadTubeTopTube)      }
-    proc rattleCAD::view::edit::single_Result_RearWheel_horizontal      {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/RearWheel_x)                ;# Result(Length/RearWheel/horizontal)       }
-    proc rattleCAD::view::edit::single_Result_SaddleNose_HB             {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SaddleNose_HB)              ;# Result(Length/Personal/SaddleNose_HB)     }
-    proc rattleCAD::view::edit::single_Result_Saddle_Offset_BB_Nose     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SaddleNose_BB_x)            ;# Result(Length/Saddle/Offset_BB_Nose)      }
-    proc rattleCAD::view::edit::single_Result_Saddle_Offset_BB_ST       {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Saddle_Offset_BB_ST)        ;# Result(Length/Saddle/Offset_BB_ST)        }
-    proc rattleCAD::view::edit::single_Result_Saddle_Offset_HB          {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Saddle_HB_y)                ;# Result(Length/Saddle/Offset_HB)           }
-    proc rattleCAD::view::edit::single_Result_Saddle_SeatTube_BB        {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Saddle_BB)                  ;# Result(Length/Saddle/SeatTube_BB)         }
-    proc rattleCAD::view::edit::single_Result_SeatTube_VirtualLength    {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SeatTube_Virtual)           ;# Result(Length/SeatTube/VirtualLength)     }
-    proc rattleCAD::view::edit::single_Result_StackHeight               {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Stack_Height)               ;# Result(Length/HeadTube/StackHeight)       }
-    proc rattleCAD::view::edit::single_Result_TopTube_VirtualLength     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/TopTube_Virtual)            ;# Result(Length/TopTube/VirtualLength)      }
-        #                                                                                                                                                                   
-    proc rattleCAD::view::edit::single_Result_Reference_Heigth_SN_HB    {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Reference/SaddleNose_HB_y)           ;# Result(Length/Reference/Heigth_SN_HB)     }
-    proc rattleCAD::view::edit::single_Result_Reference_SaddleNose_HB   {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Reference/SaddleNose_HB)             ;# Result(Length/Reference/SaddleNose_HB)    }
-    proc rattleCAD::view::edit::single_Result_RearWheelTyreShoulder     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(RearWheel/TyreShoulder)              ;# Result(Length/RearWheel/TyreShoulder)     }
+    proc rattleCAD::view::edit::single_Result_BottomBracket_Height      {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/BottomBracket_Height)    }  ;# Result(Length/BottomBracket/Height)       
+    proc rattleCAD::view::edit::single_Result_FrontWheel_diagonal       {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/FrontWheel_xy)           }  ;# Result(Length/FrontWheel/diagonal)        
+    proc rattleCAD::view::edit::single_Result_FrontWheel_horizontal     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/FrontWheel_x)            }  ;# Result(Length/FrontWheel/horizontal)      
+    proc rattleCAD::view::edit::single_Result_HeadTube_ReachLength      {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Reach_Length)            }  ;# Result(Length/HeadTube/ReachLength)       
+    proc rattleCAD::view::edit::single_Result_HeadTube_Angle            {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SeatTube_Angle)          }  ;# Result(Angle/SeatTube/Direction)          
+    proc rattleCAD::view::edit::single_Result_HeadTube_TopTubeAngle     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/HeadLug_Angle_Top))      }  ;# Scalar(Result/Angle_HeadTubeTopTube)      
+    proc rattleCAD::view::edit::single_Result_RearWheel_horizontal      {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/RearWheel_x)             }  ;# Result(Length/RearWheel/horizontal)       
+    proc rattleCAD::view::edit::single_Result_SaddleNose_HB             {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SaddleNose_HB)           }  ;# Result(Length/Personal/SaddleNose_HB)     
+    proc rattleCAD::view::edit::single_Result_Saddle_Offset_BB_Nose     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SaddleNose_BB_x)         }  ;# Result(Length/Saddle/Offset_BB_Nose)      
+    proc rattleCAD::view::edit::single_Result_Saddle_Offset_BB_ST       {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Saddle_Offset_BB_ST)     }  ;# Result(Length/Saddle/Offset_BB_ST)        
+    proc rattleCAD::view::edit::single_Result_Saddle_Offset_HB          {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Saddle_HB_y)             }  ;# Result(Length/Saddle/Offset_HB)           
+    proc rattleCAD::view::edit::single_Result_Saddle_SeatTube_BB        {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Saddle_BB)               }  ;# Result(Length/Saddle/SeatTube_BB)         
+    proc rattleCAD::view::edit::single_Result_SeatTube_VirtualLength    {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SeatTube_Virtual)        }  ;# Result(Length/SeatTube/VirtualLength)     
+    proc rattleCAD::view::edit::single_Result_StackHeight               {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Stack_Height)            }  ;# Result(Length/HeadTube/StackHeight)       
+    proc rattleCAD::view::edit::single_Result_TopTube_VirtualLength     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/TopTube_Virtual)         }  ;# Result(Length/TopTube/VirtualLength)      
+        #                                                                                                                                                                        
+    proc rattleCAD::view::edit::single_Result_Reference_Heigth_SN_HB    {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Reference/SaddleNose_HB_y)        }  ;# Result(Length/Reference/Heigth_SN_HB)     
+    proc rattleCAD::view::edit::single_Result_Reference_SaddleNose_HB   {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Reference/SaddleNose_HB)          }  ;# Result(Length/Reference/SaddleNose_HB)    
+    proc rattleCAD::view::edit::single_Result_RearWheelTyreShoulder     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(RearWheel/TyreShoulder)           }  ;# Result(Length/RearWheel/TyreShoulder)     
+        #
+    proc rattleCAD::view::edit::single_LugDetermination_HeadLug         {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/HeadLug_Angle_Bottom)          }
+    proc rattleCAD::view::edit::single_LugDetermination_ChainStay       {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/BottomBracket_Angle_ChainStay) }
+    proc rattleCAD::view::edit::single_LugDetermination_DownTube        {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/BottomBracket_Angle_DownTube)  }
 
 
         #
@@ -166,25 +170,25 @@
 
 
 
-    proc rattleCAD::view::edit::group_HandleBar_Parameter_99            {x y cv_Name} {
+    proc rattleCAD::view::edit::group_HandleBar_Parameter               {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {                
                 file://Component(HandleBar)
                        Scalar(HandleBar/PivotAngle)
-              } {new - HandleBar Parameter - 99} 
+              } {HandleBar Parameter - 001} 
     } 
     proc rattleCAD::view::edit::group_DerailleurFront_Parameter_17      {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                 file://Component(FrontDerailleur)
                        Scalar(FrontDerailleur/Distance)
                        Scalar(FrontDerailleur/Offset)
-              } {new - DerailleurFront Parameter - 17} 
+              } {DerailleurFront Parameter - 002} 
     } 
     proc rattleCAD::view::edit::group_Crankset_Parameter_16             {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                 file://Component(CrankSet)
                        Scalar(CrankSet/Length)
                 text://ListValue(CrankSetChainRings)
-              } {new - Crankset:  Parameter - 16} 
+              } {Crankset:  Parameter - 003} 
     } 
     proc rattleCAD::view::edit::group_Chain_Parameter_15                {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -192,7 +196,7 @@
                        Scalar(RearDerailleur/Pulley_x)
                        Scalar(RearDerailleur/Pulley_y)
                        Scalar(RearDerailleur/Pulley_teeth)
-              } {new - Chain Parameter - 15}
+              } {Chain Parameter - 004}
     } 
     proc rattleCAD::view::edit::group_RearBrake_Parameter_14            {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -200,14 +204,14 @@
                 file://Component(RearBrake)
                        Scalar(RearBrake/LeverLength)
                        Scalar(RearBrake/Offset)
-              } {new - RearBrake Parameter - 14} 
+              } {RearBrake Parameter - 005} 
     } 
     proc rattleCAD::view::edit::group_FrontBrake_Parameter_13           {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                 list://Config(FrontBrake@SELECT_BrakeType)
                 file://Component(FrontBrake)
                        Scalar(FrontBrake/LeverLength)
-              } {new - FrontBrake Parameter - 13} 
+              } {FrontBrake Parameter - 006} 
     } 
     proc rattleCAD::view::edit::group_Saddle_Parameter_12               {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -216,19 +220,19 @@
                        Scalar(Saddle/Offset_x)
                        Scalar(Saddle/Offset_y)
                        Scalar(Geometry/SaddleNose_BB_x)
-              } {Saddle Parameter} 
+              } {Saddle Parameter - 007} 
     } 
     proc rattleCAD::view::edit::group_HeadSet_Parameter_10              {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                        Scalar(HeadSet/Height_Top)
                        Scalar(HeadSet/Diameter)
-              } {HeadSet Parameter} 
+              } {HeadSet Parameter - 008} 
     } 
     proc rattleCAD::view::edit::group_HeadSet_Parameter_09              {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                        Scalar(HeadSet/Height_Bottom)
                        Scalar(HeadSet/Diameter)
-              } {new - HeadSet Parameter - 09} 
+              } {HeadSet Parameter - 009} 
     } 
     proc rattleCAD::view::edit::group_FrontFender_Parameter_08          {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -236,7 +240,7 @@
                        Scalar(RearFender/Radius)
                        Scalar(RearFender/Height)
                        Scalar(RearFender/OffsetAngle)
-              } {FrontFender Parameter} 
+              } {FrontFender Parameter - 010} 
     } 
     proc rattleCAD::view::edit::group_FrontWheel_Parameter_03           {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -245,28 +249,28 @@
                        Scalar(FrontFender/Height)
                        Scalar(FrontFender/OffsetAngleFront)
                        Scalar(FrontFender/OffsetAngle)
-              } {FrontWheel Parameter} 
+              } {FrontWheel Parameter - 011} 
     } 
     proc rattleCAD::view::edit::group_CarrierFront_Parameter_07         {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                 file://Component(FrontCarrier)
                        Scalar(FrontCarrier/x)
                        Scalar(FrontCarrier/y)
-              } {CarrierFront Parameter} 
+              } {CarrierFront Parameter - 012} 
     } 
     proc rattleCAD::view::edit::group_CarrierRear_Parameter_11          {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                 file://Component(RearCarrier)
                        Scalar(RearCarrier/x)
                        Scalar(RearCarrier/y)
-              } {new - CarrierRear Parameter - 11} 
+              } {CarrierRear Parameter - 013} 
     } 
     proc rattleCAD::view::edit::group_DownTube_Parameter_06             {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                        Scalar(DownTube/DiameterHT)
                        Scalar(DownTube/DiameterBB)
                        Scalar(DownTube/TaperLength)
-              } {DownTube Parameter} 
+              } {DownTube Parameter - 014} 
     } 
     proc rattleCAD::view::edit::group_SeatTube_Parameter_05             {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -274,7 +278,7 @@
                        Scalar(SeatTube/DiameterTT)
                        Scalar(SeatTube/DiameterBB)
                        Scalar(SeatTube/TaperLength)
-              } {SeatTube Parameter} 
+              } {SeatTube Parameter - 015} 
     } 
     proc rattleCAD::view::edit::group_TopTube_Parameter_04              {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {                
@@ -282,7 +286,7 @@
                        Scalar(TopTube/DiameterST)
                        Scalar(TopTube/TaperLength)
                        Scalar(Geometry/TopTube_Angle)
-              } {new - TopTube Parameter - 04} 
+              } {TopTube Parameter - 016} 
     } 
     proc rattleCAD::view::edit::group_ChainStay_Parameter_01            {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -292,7 +296,7 @@
                        Scalar(ChainStay/TaperLength)
                        Scalar(RearDropout/OffsetCSPerp)
                        Scalar(RearDropout/OffsetCS)
-              } {new - ChainStay Parameter - 01} 
+              } {ChainStay Parameter - 017} 
     } 
     proc rattleCAD::view::edit::group_SeatStay_Parameter_01             {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -303,7 +307,7 @@
                        Scalar(SeatStay/OffsetTT)
                        Scalar(RearDropout/OffsetSSPerp)
                        Scalar(RearDropout/OffsetSS)
-              } {new - SeatStay Parameter - 01} 
+              } {SeatStay Parameter - 018} 
     } 
     proc rattleCAD::view::edit::group_RearDropout_Parameter_01          {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
@@ -317,38 +321,38 @@
                        Scalar(RearDropout/OffsetSS)
                        Scalar(RearDropout/OffsetCSPerp)
                        Scalar(RearDropout/OffsetCS)
-              } {new- RearDropout Parameter - 01} 
+              } {RearDropout Parameter - 019} 
     } 
     proc rattleCAD::view::edit::group_BottomBracket_Diameter_01         {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                        Scalar(BottomBracket/OutsideDiameter)
                        Scalar(BottomBracket/InsideDiameter)
-              } {new - BottomBracket Diameter - 01} 
+              } {BottomBracket Diameter - 020} 
     } 
     proc rattleCAD::view::edit::group_HeadTube_Parameter_01             {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                        Scalar(HeadTube/Length)
                        Scalar(HeadSet/Height_Bottom)
-              } {new - Head Tube Parameter - 01} 
+              } {Head Tube Parameter - 021} 
     } 
     proc rattleCAD::view::edit::group_Saddle_Parameter_01               {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                        Scalar(Geometry/SaddleNose_BB_x)
                        Scalar(Saddle/NoseLength)
                        Scalar(Saddle/Offset_x)
-              } {new - Saddle Parameter - 01} 
+              } {Saddle Parameter - 022} 
     } 
     proc rattleCAD::view::edit::group_FrontWheel_Parameter_01           {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                 list://Scalar(Geometry/FrontRim_Diameter@SELECT_Rim)
                        Scalar(Geometry/FrontTyre_Height)
-              } {new - Front Wheel Parameter - 01} 
+              } {Front Wheel Parameter - 023} 
     } 
     proc rattleCAD::view::edit::group_FrontWheel_Parameter_02           {x y cv_Name} {
             rattleCAD::view::createEdit  $x $y $cv_Name  { \            
                 list://Scalar(Geometry/FrontRim_Diameter@SELECT_Rim)
                        Scalar(Geometry/FrontWheel_Radius)
-                } {new - Front Wheel Parameter - 02} 
+                } {Front Wheel Parameter - 024} 
     } 
               
               
@@ -364,7 +368,7 @@
                        Scalar(Fork/CrownOffsetBrake)
                        Scalar(Fork/BladeOffsetCrown)
                        Scalar(Fork/BladeOffsetCrownPerp)
-                } {ForkCrown Parameter} 
+                } {ForkCrown Parameter - 025} 
     } 
     proc rattleCAD::view::edit::group_ForkBlade_Parameter               {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name  {
@@ -374,7 +378,7 @@
                        Scalar(Fork/BladeTaperLength)
                        Scalar(Fork/BladeBendRadius)
                        Scalar(Fork/BladeEndLength)
-               } {ForkBlade Parameter}
+               } {ForkBlade Parameter - 026}
     } 
     proc rattleCAD::view::edit::group_ForkDropout_Parameter             {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
@@ -382,7 +386,7 @@
                 list://Config(ForkDropout@SELECT_DropOutPosition)
                        Scalar(Fork/BladeOffsetDO)
                        Scalar(Fork/BladeOffsetDOPerp)
-                } {ForkDropout Parameter}
+                } {ForkDropout Parameter - 027}
     } 
               
         #     
@@ -395,44 +399,44 @@
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(Lugs/RearDropOut_Angle)
                        Scalar(Lugs/RearDropOut_Tolerance)
-                } "new - Lug Specification:  RearDropout"                            
+                } {nLug Specification:  RearDropout - 028}                            
     } 
     proc rattleCAD::view::edit::lugSpec_SeatTube_DownTube               {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(Lugs/BottomBracket_DownTube_Angle)
                        Scalar(Lugs/BottomBracket_DownTube_Tolerance)
-                } "new - Lug Specification:  SeatTube/DownTube"                      
+                } "Lug Specification:  SeatTube/DownTube  - 029"                      
     } 
     proc rattleCAD::view::edit::lugSpec_SeatTube_ChainStay              {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(Lugs/BottomBracket_ChainStay_Angle)
                        Scalar(Lugs/BottomBracket_ChainStay_Tolerance)
-                } "new - Lug Specification:  SeatTube/ChainStay"      
+                } "Lug Specification:  SeatTube/ChainStay - 030"      
     } 
     proc rattleCAD::view::edit::lugSpec_SeatTube_TopTube                {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(Lugs/SeatLug_TopTube_Angle)
                        Scalar(Lugs/SeatLug_TopTube_Tolerance)
-                } "new - Lug Specification:  SeatTube/TopTube"                       
+                } "Lug Specification:  SeatTube/TopTube - 031"                       
     } 
     proc rattleCAD::view::edit::lugSpec_SeatTube_SeatStay               {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(Lugs/SeatLug_SeatStay_Angle)
                        Scalar(Lugs/SeatLug_SeatStay_Tolerance)
                        Scalar(SeatStay/SeatTubeMiterDiameter)
-                } "new - Lug Specification:  SeatTube/SeatStay"                      
+                } "Lug Specification:  SeatTube/SeatStay - 032"                      
     } 
     proc rattleCAD::view::edit::lugSpec_HeadTube_TopTube                {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(Lugs/HeadLug_Top_Angle)
                        Scalar(Lugs/HeadLug_Top_Tolerance)
-                } "new - Lug Specification:  HeadTube/TopTube"                       
+                } "Lug Specification:  HeadTube/TopTube - 033"                       
     } 
     proc rattleCAD::view::edit::lugSpec_HeadTube_DownTube               {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(Lugs/HeadLug_Bottom_Angle)
                        Scalar(Lugs/HeadLug_Bottom_Tolerance)
-                } "new - Lug Specification:  HeadTube/DownTube"                      
+                } "Lug Specification:  HeadTube/DownTube - 034"                      
     } 
               
               
@@ -443,7 +447,7 @@
             rattleCAD::view::createEdit $x $y $cv_Name {
                 list://Scalar(Geometry/RearRim_Diameter@SELECT_Rim)
                        Scalar(Geometry/RearTyre_Height)
-                } "new - Rear Wheel Parameter"                        
+                } "Rear Wheel Parameter - 035"                        
     } 
     proc rattleCAD::view::edit::group_FrontGeometry                     {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
@@ -451,13 +455,13 @@
                        Scalar(Geometry/Stem_Length)
                        Scalar(Geometry/Fork_Height)
                        Scalar(Geometry/Fork_Rake)
-                } "new - Steerer/Fork:  Settings"                     
+                } "Steerer/Fork:  Settings - 036"                     
     } 
     proc rattleCAD::view::edit::group_BottomBracket_DepthHeight         {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(Geometry/BottomBracket_Depth)
                        Scalar(Geometry/BottomBracket_Height)
-                } "new - BottomBracket:  Settings"                    
+                } "BottomBracket:  Settings - 037"                    
     } 
               
               
@@ -486,7 +490,7 @@
                        Scalar(RearDropout/RotationOffset)
                        Scalar(RearDropout/Derailleur_x)
                        Scalar(RearDropout/Derailleur_y)
-                } "new - Rear Derailleur Mount"                       
+                } "Rear Derailleur Mount - 038"                       
     } 
               
               
@@ -498,7 +502,7 @@
                        Scalar(RearMockup/DiscDiameter)
                        Scalar(RearMockup/DiscWidth)
                        Scalar(RearMockup/DiscClearance)
-                } "new - DiscBrake Details"                           
+                } "DiscBrake Details - 039"                           
     } 
     proc rattleCAD::view::edit::group_RearTyre_Parameter                {x y cv_Name} {
             # title { Rear Tyre Parameter} #                            
@@ -506,7 +510,7 @@
                        Scalar(RearWheel/TyreWidthRadius)
                        Scalar(RearWheel/TyreWidth)
                        Scalar(RearMockup/TyreClearance)
-                } "new -  Rear Tyre Parameter"                        
+                } " Rear Tyre Parameter - 040"                        
     } 
         #     
         #     
@@ -516,7 +520,7 @@
                        Scalar(ChainStay/segmentRadius_01)
                        Scalar(ChainStay/segmentLength_01)
                        Scalar(ChainStay/segmentLength_02)
-                } "new - ChainStay:  Bent 01"                         
+                } "ChainStay:  Bent 01 - 041"                         
     } 
     proc rattleCAD::view::edit::group_ChainStay_Centerline_Bent02       {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
@@ -524,7 +528,7 @@
                        Scalar(ChainStay/segmentRadius_02)
                        Scalar(ChainStay/segmentLength_02)
                        Scalar(ChainStay/segmentLength_03)
-                } "new - ChainStay:  Bent 02"                         
+                } "ChainStay:  Bent 02 - 042"                         
     } 
     proc rattleCAD::view::edit::group_ChainStay_Centerline_Bent03       {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
@@ -532,21 +536,21 @@
                        Scalar(ChainStay/segmentRadius_03)
                        Scalar(ChainStay/segmentLength_03)
                        Scalar(ChainStay/segmentLength_04)
-                } "new - ChainStay:  Bent 03"                         
+                } "ChainStay:  Bent 03 - 043"                         
     } 
     proc rattleCAD::view::edit::group_ChainStay_Centerline_Bent04       {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(ChainStay/segmentAngle_04)
                        Scalar(ChainStay/segmentRadius_04)
                        Scalar(ChainStay/segmentLength_04)
-                } "new - ChainStay:  Bent 04"                         
+                } "ChainStay:  Bent 04 - 044"                         
     } 
     proc rattleCAD::view::edit::group_RearHub_Parameter                 {x y cv_Name} {
                 # Line 491:                                             
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(RearWheel/HubWidth)
                 text://Scalar(RearWheel/FirstSprocket)
-                } "new - RearHub:  Parameter"                         
+                } "RearHub:  Parameter - 045"                         
     } 
     proc rattleCAD::view::edit::group_Crankset_Parameter                {x y cv_Name} {
                 # Line 623:                                             
@@ -554,7 +558,7 @@
                        Scalar(CrankSet/ChainLine)
                        Scalar(CrankSet/Q-Factor)
                 text://ListValue/CrankSetChainRings)
-                } "new - Crankset:  Parameter"                        
+                } "Crankset:  Parameter - 046"                        
     } 
     proc rattleCAD::view::edit::group_ChainStay_Area                    {x y cv_Name} {
                 # Line 782:                                             
@@ -564,5 +568,5 @@
                        Scalar(RearMockup/ChainWheelClearance)
                        Scalar(RearMockup/CrankClearance)
                        Scalar(RearMockup/CassetteClearance)
-                } "new - ChainStay:  Area"
+                } "ChainStay:  Area - 047"
     }

@@ -305,7 +305,7 @@
             pack $menueFrame.sf.lf_01                  -side top  -fill x  -expand yes  -pady 2
                 #
             create_configEdit_title $menueFrame.sf.lf_01    {HeadTube - Length}             Scalar/HeadTube/Length              0.20  darkred       ;# FrameTubes(HeadTube/Length)     
-            create_configEdit_title $menueFrame.sf.lf_01    {HeadTube/TopTube - Angle}      Scalar/Geometry/HeadLugTop_Angle    0.02  darkblue      ;# Result(Angle/HeadTube/TopTube)  
+            create_configEdit_title $menueFrame.sf.lf_01    {HeadTube/TopTube - Angle}      Scalar/Geometry/HeadLug_Angle_Top   0.02  darkblue      ;# Result(Angle/HeadTube/TopTube)  
             create_configEdit_title $menueFrame.sf.lf_01    {HeadTube/TopTube - Offset}     Scalar/TopTube/OffsetHT             0.20  darkred       ;# Custom(TopTube/OffsetHT)        
             create_configEdit_title $menueFrame.sf.lf_01    {HeadTube/DownTube - Offset}    Scalar/DownTube/OffsetHT            0.20  darkred       ;# Custom(DownTube/OffsetHT)       
             create_configEdit_title $menueFrame.sf.lf_01    {HeadSet - BottomHeight}        Scalar/HeadSet/Height_Bottom        0.20  darkred       ;# Component(HeadSet/Height/Bottom)

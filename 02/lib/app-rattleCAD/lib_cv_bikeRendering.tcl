@@ -137,7 +137,7 @@
             set HandleBar(object)       [ $cv_Name readSVG $HandleBar(file) $HandleBar(position) $HandleBar(pivotAngle)  __HandleBar__ ]
                                           $cv_Name addtag  __Decoration__ withtag $HandleBar(object)
             if {$updateCommand != {}}   { 
-                rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $HandleBar(object)      group_HandleBar_Parameter_99
+                rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $HandleBar(object)      group_HandleBar_Parameter
                     # $cv_Name bind    $HandleBar(object)    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {   file://Component(HandleBar/File)    Component(HandleBar/PivotAngle) }   {HandleBar Parameter}   ]
                     # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $HandleBar(object)
             }

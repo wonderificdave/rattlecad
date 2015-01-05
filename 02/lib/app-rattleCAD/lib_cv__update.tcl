@@ -51,7 +51,13 @@
 
         switch $cv_Name {
             rattleCAD::view::gui::cv_Custom02  { rattleCAD::cv_custom::update_Reference         $cv_Name  $updatePosition }
-            rattleCAD::view::gui::cv_Custom00  { rattleCAD::cv_custom::update_BaseGeometry      $cv_Name  $updatePosition }
+            rattleCAD::view::gui::cv_Custom00  { 
+                                    if {$::APPL_Config(FrameConfig) == {freeAngle}} {
+                                                 rattleCAD::cv_custom::update_BaseGeometry      $cv_Name  $updatePosition 
+                                          } else {
+                                                 rattleCAD::cv_custom::update_BaseGeometryLug   $cv_Name  $updatePosition
+                                          }
+                                    }
             rattleCAD::view::gui::cv_Custom01  { rattleCAD::cv_custom::update_BaseGeometryLug   $cv_Name  $updatePosition }
             rattleCAD::view::gui::cv_Custom10  { rattleCAD::cv_custom::update_FrameDetails      $cv_Name  $updatePosition }
             rattleCAD::view::gui::cv_Custom20  { rattleCAD::cv_custom::update_RearMockup        $cv_Name  $updatePosition }
@@ -63,7 +69,7 @@
             rattleCAD::view::gui::cv_Custom99  { rattleCAD::cv_custom::update_ComponentPanel    $cv_Name  $updatePosition }
         }
 
-        ::update    ; #for sure otherwise confuse location of canvasCad Stage
+        ::update    ; #for sure otherwise confuse location of canvasCAD Stage
         # puts "  .... $xy"
         
     }
@@ -135,18 +141,20 @@
             createDimension                   $cv_Name $xy    point_seat
             createDimension                   $cv_Name $xy    cline_frame
             createDimension                   $cv_Name $xy    point_frame
-            createDimension                   $cv_Name $xy    geometry_bg
+            createDimension                   $cv_Name $xy    geometry_bg_free
                 #
             rattleCAD::rendering::createFrame_Centerline $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
                 #
             createDimension                   $cv_Name $xy    point_personal
             createDimension                   $cv_Name $xy    point_crank
-            createDimension                   $cv_Name $xy    geometry_fg
+            createDimension                   $cv_Name $xy    geometry_fg_free
             createDimension                   $cv_Name $xy    point_reference
                 #
             update_renderCenterline           $cv_Name
                 #
             createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
+                #
+            rattleCAD::view::gui::notebook_createButton    $cv_Name       FrameConfigMode
                 #
     }
 
@@ -161,30 +169,29 @@
                 #
             update_cv_Parameter               $cv_Name $xy
                 #
-            createLugRep                                $cv_Name $xy
-                #
             rattleCAD::rendering::createBaseline     $cv_Name $xy
                 #
             createDimension                   $cv_Name $xy    point_seat
             createDimension                   $cv_Name $xy    cline_frame
             createDimension                   $cv_Name $xy    point_frame
-            createDimension                   $cv_Name $xy    geometry_bg_classic
+            createDimension                   $cv_Name $xy    geometry_bg_lug
                 #
             rattleCAD::rendering::createFrame_Centerline $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
                 #
             createDimension                   $cv_Name $xy    point_personal
             createDimension                   $cv_Name $xy    point_crank
-            createDimension                   $cv_Name $xy    geometry_fg_classic
+            createDimension                   $cv_Name $xy    geometry_fg_lug
             createDimension                   $cv_Name $xy    point_reference
                 #
             update_renderCenterline           $cv_Name
                 #
             createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        TubingCheckAngles
+            rattleCAD::view::gui::notebook_createButton    $cv_Name        FrameConfigMode
+                # rattleCAD::view::gui::notebook_createButton    $cv_Name        TubingCheckAngles
                 #
     }
-    
+
     proc rattleCAD::cv_custom::update_FrameDetails {cv_Name updatePosition} {
                 #
                 # -- frame - details

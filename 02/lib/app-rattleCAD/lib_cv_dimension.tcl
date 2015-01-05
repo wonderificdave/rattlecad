@@ -52,12 +52,10 @@
                 cline_angle             { createDimension_CLineAngle            $cv_Name $BB_Position $type;            return }
                 cline_brake             { createDimension_CLineBrake            $cv_Name $BB_Position $type;            return }
                 cline_framejig          { createDimension_CLine_FrameJig        $cv_Name $BB_Position $type;            return }
-                geometry_bg             { createDimension_Geometry_BG           $cv_Name $BB_Position $type;            return }
-                geometry_fg             { createDimension_Geometry_FG           $cv_Name $BB_Position $type $active;    return }
                 geometry_bg_free        { createDimension_Geometry_BG_Free      $cv_Name $BB_Position $type;            return }
                 geometry_fg_free        { createDimension_Geometry_FG_Free      $cv_Name $BB_Position $type $active;    return }
-                geometry_bg_classic     { createDimension_Geometry_BG_LugAngle  $cv_Name $BB_Position $type;            return }
-                geometry_fg_classic     { createDimension_Geometry_FG_LugAngle   $cv_Name $BB_Position $type $active;    return }
+                geometry_bg_lug         { createDimension_Geometry_BG_Lug       $cv_Name $BB_Position $type;            return }
+                geometry_fg_lug         { createDimension_Geometry_FG_Lug       $cv_Name $BB_Position $type $active;    return }
                 frameTubing_bg          { createDimension_FrameTubing_BG        $cv_Name $BB_Position $type;            return }
                 summary_bg              { createDimension_Summary_BG            $cv_Name $BB_Position $type;            return }
                 summary_fg              { createDimension_Summary_FG            $cv_Name $BB_Position $type $active;    return }
@@ -240,7 +238,7 @@
             $cv_Name create centerline  [ appUtil::flatten_nestedList $RearWheel(Position) $help_fk] \
                                                                     -fill darkred   -width 0.25     -tags __CenterLine__
     }
-    proc rattleCAD::cv_custom::createDimension_Geometry_BG          {cv_Name BB_Position type} {
+    proc rattleCAD::cv_custom::createDimension_Geometry_BG_Free     {cv_Name BB_Position type} {
                 # geometry_bg
                 #
             variable    stageScale
@@ -288,7 +286,7 @@
                                                 aligned        [expr -160 * $stageScale]    [expr -230 * $stageScale]  \
                                                 gray50 ]
     }
-    proc rattleCAD::cv_custom::createDimension_Geometry_FG          {cv_Name BB_Position type active} {
+    proc rattleCAD::cv_custom::createDimension_Geometry_FG_Free     {cv_Name BB_Position type active} {
 
             variable    stageScale
 
@@ -423,7 +421,7 @@
                 # --- secondary - level - dimensions
                 #
             set _dim_BB_Depth       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)  $RearWheel(Position) ] \
-                                                vertical    [expr  -260 * $stageScale]   [expr -90 * $stageScale]  \
+                                                vertical    [expr  -280 * $stageScale]   [expr -90 * $stageScale]  \
                                                 $colour(secondary) ]
             set _dim_CS_Length      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position)      $BottomBracket(Position)] \
                                                 aligned     [expr   100 * $stageScale]   0 \
@@ -601,7 +599,7 @@
             
             
     }
-    proc rattleCAD::cv_custom::createDimension_Geometry_BG_Free     {cv_Name BB_Position type} {
+    proc rattleCAD::cv_custom::createDimension_Geometry_BG_Lug      {cv_Name BB_Position type} {
                 # geometry_bg
                 #
             variable    stageScale
@@ -609,383 +607,20 @@
             variable    BottomBracket
             variable    FrontWheel
             variable    HandleBar
-            variable    LegClearance
-            variable    RearWheel
-            variable    Saddle
-            variable    SeatPost
-            variable    Steerer
-                #
-            variable    Position
-            variable    Length
-
-                #
-            set help_01                 [ list [lindex $BottomBracket(Position) 0] [lindex $LegClearance(Position) 1] ]
-
-            set _dim_SD_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(BaseCenter)  $Saddle(Position) ] \
-                                                vertical    [expr -660 * $stageScale]  [expr -190 * $stageScale]  \
-                                                gray50 ]
-            set _dim_SP_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatPost(Saddle)      $BottomBracket(Position)  ] \
-                                                vertical    [expr (500 + $Length(Length_BB_Seat)) * $stageScale ]    [expr  150 * $stageScale] \
-                                                gray50 ]
-            set _dim_HB_Height          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)   $Position(BaseCenter) ] \
-                                                vertical    [expr -380 * $stageScale]  [expr  230 * $stageScale]  \
-                                                gray50 ]
-            set _dim_SD_HB_Length       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Saddle(Position)      $HandleBar(Position) ] \
-                                                horizontal  [expr  -210 * $stageScale]    0 \
-                                                gray50 ]
-
-            set _dim_Wh_Distance        [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Ground)     $FrontWheel(Ground) ] \
-                                                horizontal  [expr  130 * $stageScale]    0 \
-                                                gray50 ]
-            set _dim_FW_Lag             [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $FrontWheel(Ground)    $Steerer(Ground) ] \
-                                                horizontal  [expr   70 * $stageScale]   [expr  -70 * $stageScale] \
-                                                gray20 ]
-
-            set _dim_BT_Clearance       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(help_91)     $Position(help_92) ] \
-                                                aligned        0   [expr -150 * $stageScale]  \
-                                                gray50 ]
-
-            set _dim_ST_Length          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(help_93)     $Saddle(Position) ] \
-                                                aligned        [expr -160 * $stageScale]    [expr -230 * $stageScale]  \
-                                                gray50 ]
-    }    
-    
-    
-    
-    
-    
-    
-    
- 
-    proc rattleCAD::cv_custom::createDimension_Geometry_FG_Free     {cv_Name BB_Position type active} {
-            variable    stageScale
-
-            variable    Rendering
-            variable    Reference
-
-            variable    BottomBracket
-            variable    DownTube
-            variable    Fork
-            variable    FrameJig
-            variable    FrontBrake
-            variable    FrontWheel
-            variable    HandleBar
             variable    HeadTube
-            variable    HeadSet
             variable    LegClearance
-            variable    RearBrake
-            variable    RearDrop
             variable    RearWheel
             variable    Saddle
             variable    SaddleNose
             variable    SeatPost
-            variable    SeatStay
             variable    SeatTube
             variable    Steerer
-            variable    Stem
-            variable    TopTube
-
-            variable    Position
-            variable    Length
-            variable    Angle
-            variable    Vector  
-            
-            
-            set help_00            [ vectormath::addVector   $SeatTube(Ground) {-200 0} ]
-            set help_01            [ vectormath::rotatePoint $Steerer(Stem) $Steerer(Fork)  90 ]
-            set help_02            [ vectormath::addVector   $Steerer(Stem) [ vectormath::unifyVector $Steerer(Stem) $help_01 [expr  50 * $stageScale] ] ]
-            set help_03            [ vectormath::addVector   $SeatPost(PivotPosition) {-10 0} ]
-            set help_fk            [ vectormath::addVector   $Steerer(Fork) [ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
-
-                # colourtable: http://www.ironspider.ca/format_text/fontcolor.htm
-                        # set colour(primary)        red
-                        # set colour(secondary)    darkorange
-                        # set colour(third)        darkblue
-                        # set colour(result)        darkred
-
-            set colour(primary)      darkorange
-            set colour(secondary)    darkred
-            set colour(third)        darkmagenta
-            set colour(result)       darkblue
-
-                        # set colour(primary)        darkorange
-                        # set colour(primary)        darkorchid
-                        # set colour(primary)        red
-                        # set colour(primary)        blue
-                        # set colour(secondary)        darkred
-                        # set colour(secondary)        darkorange
-                        # set colour(third)            firebrick
-                        # set colour(result)        firebrick
-                        # set colour(result)        darkorange
-                        # set colour(result)        blue
-
-
-
-
-                # --- result - level - dimensions
-                #
-            set _dim_SD_HB_Height   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)   $Saddle(Position) ] \
-                                                vertical    [expr  380 * $stageScale]   [expr -100 * $stageScale]  \
-                                                $colour(result) ]
-            set _dim_SD_ST_Length   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position) $SeatTube(Saddle) ] \
-                                                aligned        [expr  -80 * $stageScale]    [expr -170 * $stageScale]  \
-                                                $colour(result) ]
-            set _dim_FW_Distance    [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)  $FrontWheel(Position)] \
-                                                aligned     [expr  100 * $stageScale]   [expr  -30 * $stageScale] \
-                                                $colour(result) ]
-            set _dim_FW_DistanceX   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(BaseCenter)  $FrontWheel(Ground) ] \
-                                                horizontal  [expr   70 * $stageScale]   0 \
-                                                $colour(result) ]
-            set _dim_BB_Height      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)    $Position(BaseCenter)] \
-                                                vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
-                                                $colour(result) ]
-            set _dim_ST_Length      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatTube(Saddle)      $BottomBracket(Position) ] \
-                                                horizontal  [expr  -80 * $stageScale]   [expr    0 * $stageScale]  \
-                                                darkblue ]
-            set _dim_ST_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $SeatTube(Ground)      $SeatPost(SeatTube) $help_00 ] \
-                                                150   0  \
-                                                $colour(result) ]
-            set _dim_CS_LengthX     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Ground)     $Position(BaseCenter) ] \
-                                                horizontal  [expr   70 * $stageScale]   0 \
-                                                $colour(result) ]
-                # set _dim_TT_Virtual     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $TopTube(SeatVirtual)  $HeadTube(Stem)] \
-                                                aligned     [expr  150 * $stageScale]   [expr  -80 * $stageScale] \
-                                                $colour(result) ]
-                # set _dim_ST_Virtual     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $BottomBracket(Position) $TopTube(SeatVirtual) ] \
-                                                aligned     [expr   80 * $stageScale]   [expr   90 * $stageScale] \
-                                                $colour(result) ]
-
-            set _dim_HT_Reach_X     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $HeadTube(Stem)       $BottomBracket(Position) ] \
-                                                horizontal  [expr  -80 * $stageScale]    0 \
-                                                $colour(result) ]
-            set _dim_HT_Stack_Y     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $HeadTube(Stem)       $BottomBracket(Position) ] \
-                                                vertical    [expr   80 * $stageScale]    [expr  120 * $stageScale]  \
-                                                $colour(result) ]
-
-
-
-
-
-
-                # --- third - level - dimensions
-                #
-            set distY_SN_LC         [ expr 0.5 *([lindex $SaddleNose(Position) 1] - [lindex $LegClearance(Position) 1])]
-                #
-            set _dim_LC_Position_x  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $LegClearance(Position)  $BottomBracket(Position) ] \
-                                                horizontal  [expr  $distY_SN_LC * $stageScale]   0  \
-                                                $colour(third) ]
-            set _dim_LC_Position_y  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $LegClearance(Position)  $Position(BaseCenter) ] \
-                                                vertical    [expr  -50 * $stageScale]   [expr   160 * $stageScale]  \
-                                                $colour(third) ]
-            set _dim_SN_Position_x  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $BottomBracket(Position) ] \
-                                                horizontal  [expr  $distY_SN_LC * $stageScale]   0  \
-                                                $colour(third) ]
-            set _dim_CR_Length      [ $cv_Name dimension  radius            [ appUtil::flatten_nestedList  $BottomBracket(Position) $Position(help_91)] \
-                                                -20            [expr  130 * $stageScale] \
-                                                $colour(third) ]
-            set _dim_SN_HandleBar   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $HandleBar(Position)] \
-                                                horizontal      [expr  -80 * $stageScale]    0 \
-                                                $colour(third) ]
-
-
-                # --- secondary - level - dimensions
-                #
-            set _dim_BB_Depth       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)  $RearWheel(Position) ] \
-                                                vertical    [expr  -260 * $stageScale]   [expr -90 * $stageScale]  \
-                                                $colour(secondary) ]
-            set _dim_CS_Length      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position)      $BottomBracket(Position)] \
-                                                aligned     [expr   100 * $stageScale]   0 \
-                                                $colour(secondary) ]
-            set _dim_HT_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $Position(BaseCenter) ] \
-                                                150   0  \
-                                                $colour(secondary) ]
-            set _dim_RW_Radius      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position)      $RearWheel(Ground) ] \
-                                                vertical    [expr   130 * $stageScale]    0 \
-                                                $colour(secondary) ]
-            set _dim_FW_Radius      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $FrontWheel(Position)     $FrontWheel(Ground) ] \
-                                                vertical    [expr  -150 * $stageScale]    0 \
-                                                $colour(secondary) ]
-            set _dim_Stem_Length    [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)      $Steerer(Stem) ] \
-                                                aligned     [expr    80 * $stageScale]    0 \
-                                                $colour(secondary) ]
-            set _dim_HT_Length      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Steerer(Fork)  $HeadTube(Stem) ] \
-                                                aligned        [expr   100 * $stageScale]   0 \
-                                                $colour(secondary) ]
-            set _dim_SP_SetBack     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatTube(BBracket) $SeatPost(SeatTube) $SeatPost(PivotPosition) ] \
-                                                perpendicular    [expr  -40 * $stageScale]  [expr  50 * $stageScale]  \
-                                                $colour(secondary) ]
-
-
-            set _dim_Fork_Rake      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Steerer(Stem)  $help_fk $FrontWheel(Position) ] \
-                                                perpendicular [expr  100 * $stageScale]    [expr  -80 * $stageScale] \
-                                                $colour(secondary) ]
-            set _dim_SD_Height      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatPost(Saddle) $Saddle(Position)  ] \
-                                                aligned       [expr  (-500 - $Length(Length_BB_Seat)) * $stageScale ]    [expr  -80 * $stageScale] \
-                                                $colour(secondary) ]
-            set _dim_SP_PivotOffset [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $help_03 $SeatPost(PivotPosition) $SeatPost(Saddle)  ] \
-                                                perpendicular [expr  (-420 - $Length(Length_BB_Seat)) * $stageScale ]    [expr   0 * $stageScale]  \
-                                                $colour(secondary) ]                      
-            
-
-
-            if {$Stem(Angle) > 0} {
-                set _dim_Stem_Angle [ $cv_Name dimension  angle        [ appUtil::flatten_nestedList  $Steerer(Stem)  $help_02 $HandleBar(Position) ] \
-                                                [expr $Stem(Length) +  80]   0  \
-                                                $colour(secondary) ]
-            } else {
-                set _dim_Stem_Angle [ $cv_Name dimension  angle        [ appUtil::flatten_nestedList  $Steerer(Stem)  $HandleBar(Position)  $help_02 ] \
-                                                [expr $Stem(Length) +  80]   0  \
-                                                $colour(secondary) ]
-            }
-
-            if {$Fork(Rake) != 0} {
-                set _dim_Fork_Height    [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $help_fk $FrontWheel(Position) $Steerer(Fork)  ] \
-                                                perpendicular [expr  (100 - $Fork(Rake)) * $stageScale]    [expr  -10 * $stageScale] \
-                                                $colour(secondary) ]
-            } else {
-                set _dim_Fork_Height    [ $cv_Name dimension  length            [ appUtil::flatten_nestedList            $FrontWheel(Position) $Steerer(Fork)  ] \
-                                                aligned          [expr  100  * $stageScale]    [expr  -10 * $stageScale] \
-                                                $colour(secondary) ]
-            }
-
-
-            if {$SeatTube(OffsetBB) > 0} {
-                set dim_distance    [expr  90 * $stageScale]
-                set dim_offset      [expr  50 * $stageScale]
-            } else {
-                set dim_distance    [expr -90 * $stageScale]
-                set dim_offset      [expr -50 * $stageScale]
-            }
-            set _dim_ST_Offset                [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $SeatPost(SeatTube) $SeatTube(BBracket) $BB_Position] ] \
-                                                perpendicular    $dim_distance $dim_offset \
-                                                $colour(secondary) ]
-
-
-
-                # --- primary - level - dimensions
-                #
-            set _dim_HB_XPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)     $BottomBracket(Position) ] \
-                                                horizontal  [expr (150 + $Length(Height_HB_Seat)) * $stageScale ]    0 \
-                                                $colour(primary) ]
-            set _dim_HB_YPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)     $BottomBracket(Position) ] \
-                                                vertical    [expr -310 * $stageScale]    [expr  180 * $stageScale]  \
-                                                $colour(primary) ]
-            set _dim_SD_XPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Saddle(Position)        $BottomBracket(Position)  ] \
-                                                horizontal    [expr -150 * $stageScale]    0 \
-                                                $colour(primary) ]
-            set _dim_SD_YPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
-                                                vertical    [expr -580 * $stageScale]  [expr -130 * $stageScale]  \
-                                                $colour(primary) ]
-
-
-            if {$active == {on}} {
-                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HT_Length
-                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_SN_Position_x
-                    rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_FW_Radius
-
-                    foreach cv_Item [list $_dim_HB_XPosition $_dim_HB_YPosition $_dim_SD_XPosition $_dim_SD_YPosition] {
-                         foreach cv_item [$cv_Name gettags $cv_Item] {
-                            switch -regexp $cv_item {
-                                    vtext* {
-                                            #$cv_Name itemconfigure $cv_item -fill darkred
-                                            set width [expr 3.0 * [$cv_Name itemcget $cv_item -width]]
-                                            $cv_Name itemconfigure $cv_item -width $width
-                                            set bbox [$cv_Name coords $cv_item]
-                                                # puts "  -> $bbox  - $cv_Name"
-                                                # puts "  -> $stageScale"
-                                            set wScale      [ eval $cv_Name getNodeAttr Canvas scale ]
-                                            set stageScale  [ eval $cv_Name getNodeAttr Stage  scale ]
-                                                # puts "  -> $wScale / $stageScale"
-
-                                           foreach {x y} $bbox {
-                                                set x [expr $x * $wScale]
-                                                set y [expr -1.0 * $y * $wScale]
-                                                # $cv_Name create circle [list $x $y]    -radius  17  -outline darkred        -width 10        -tags __CenterLine__
-                                            }
-
-                                            foreach {x1 y1 x2 y2} $bbox {
-                                            }
-                                            #$cv_Name create rectangle [list $x1 $y1 $x2 $y2] -width 3
-                                         }
-                                    default {}
-                            }
-                        }
-                    }
-
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BB_Height         single_Result_BottomBracket_Height
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_RW_Radius         group_RearWheel_Parameter
-
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HB_XPosition      single_Personal_HandleBarDistance
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HB_YPosition      single_Personal_HandleBarHeight
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SD_XPosition      single_Personal_SaddleDistance
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SD_YPosition      single_Personal_SaddleHeight
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SN_HandleBar      single_Result_SaddleNose_HB
-                    
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SD_Height         single_SaddleHeightComponent
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SP_SetBack        single_SeatPost_Setback
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SP_PivotOffset    single_SeatPost_PivotOffset
-                    
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HT_Length         group_HeadTube_Parameter_01
-                    
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_LC_Position_x     single_TopTube_PivotPosition
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_LC_Position_y     single_Personal_InnerLegLength
-                    
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SN_Position_x     group_Saddle_Parameter_01
-                    
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BB_Depth          single_BottomBracket_Depth
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_Length         single_RearWheel_Distance
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HT_Angle          single_HeadTube_Angle
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Stem_Length       single_Stem_Length
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Stem_Angle        single_Stem_Angle
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Fork_Rake         single_Fork_Rake
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Fork_Height       single_Fork_Height
-                    
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_FW_Radius         group_FrontWheel_Parameter_01
-                    
-                    
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CR_Length         single_CrankSet_Length
-                    
-
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Angle          single_Result_HeadTube_Angle
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Length         single_Result_Saddle_Offset_BB_ST
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Offset         single_SeatTube_BottomBracketOffset                
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SD_HB_Height      single_Result_Saddle_Offset_HB
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SD_ST_Length      single_Result_Saddle_SeatTube_BB
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_FW_Distance       single_Result_FrontWheel_diagonal
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_FW_DistanceX      single_Result_FrontWheel_horizontal
-                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_TT_Virtual        single_Result_TopTube_VirtualLength
-                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Virtual        single_Result_SeatTube_VirtualLength
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HT_Reach_X        single_Result_HeadTube_ReachLength
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HT_Stack_Y        single_Result_StackHeight
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_LengthX        single_Result_RearWheel_horizontal
-            
-
-                        #
-                        # ... proc fill_resultValues ...
-                        # ... proc set_spec_Parameters ...
-            }            
-            
-            
-    }
-    proc rattleCAD::cv_custom::createDimension_Geometry_BG_LugAngle {cv_Name BB_Position type} {
-                # geometry_bg
-                #
-            variable    stageScale
-                #
-            variable    BottomBracket
-            variable    FrontWheel
-            variable    HandleBar
-            variable    HeadTube
-            variable    LegClearance
-            variable    RearWheel
-            variable    Saddle
-            variable    SeatPost
-            variable    Steerer
                 #
             variable    Position
             variable    Length
 
                 #
+            set help_00             [ vectormath::addVector   $SeatTube(Ground) {-200 0} ]
             set help_01             [ list [lindex $BottomBracket(Position) 0] [lindex $LegClearance(Position) 1] ]
 
             set _dim_SD_Height      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(BaseCenter)  $Saddle(Position) ] \
@@ -1030,19 +665,39 @@
                                             vertical    [expr -580 * $stageScale]  [expr -130 * $stageScale]  \
                                             gray50 ]           
 
-            set _dim_HT_Reach_X     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $HeadTube(Stem)       $BottomBracket(Position) ] \
+            set _dim_HT_Reach_X     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $HeadTube(Stem)         $BottomBracket(Position) ] \
                                             horizontal  [expr  -80 * $stageScale]    0 \
                                             gray50 ] 
-            set _dim_HT_Stack_Y     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $HeadTube(Stem)       $BottomBracket(Position) ] \
+            set _dim_HT_Stack_Y     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $HeadTube(Stem)         $BottomBracket(Position) ] \
                                             vertical    [expr   80 * $stageScale]    [expr  120 * $stageScale]  \
                                             gray50 ] 
 
             set _dim_FW_Distance    [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)  $FrontWheel(Position)] \
                                             aligned     [expr  100 * $stageScale]   [expr  -30 * $stageScale] \
                                             gray50 ] 
-                                                        
+                                            
+            set _dim_HT_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $Steerer(Ground)         $Steerer(Fork)  $Position(BaseCenter) ] \
+                                            150   0  \
+                                            gray50 ]
+            set _dim_ST_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $SeatTube(Ground)        $SeatPost(SeatTube) $help_00 ] \
+                                            150   0  \
+                                            gray50 ]    
+
+            set _dim_BB_Depth       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)  $RearWheel(Position) ] \
+                                            vertical    [expr  -280 * $stageScale]   [expr -90 * $stageScale]  \
+                                            gray50 ]
+            set _dim_BB_Height      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)    $Position(BaseCenter)] \
+                                            vertical    [expr   150 * $stageScale]   [expr   -20 * $stageScale]  \
+                                            gray50 ]
+            set _dim_CS_LengthX     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Ground)     $Position(BaseCenter) ] \
+                                            horizontal  [expr    70 * $stageScale]   0 \
+                                            gray50 ]    
+
+            set _dim_SN_HandleBar   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $HandleBar(Position)] \
+                                            horizontal      [expr  -80 * $stageScale]    0 \
+                                           gray50 ]
     }    
-    proc rattleCAD::cv_custom::createDimension_Geometry_FG_LugAngle {cv_Name BB_Position type active} {
+    proc rattleCAD::cv_custom::createDimension_Geometry_FG_Lug      {cv_Name BB_Position type active} {
             variable    stageScale
 
             variable    Rendering
@@ -1076,12 +731,17 @@
             variable    Vector  
             
             
-            set help_00            [ vectormath::addVector   $SeatTube(Ground) {-200 0} ]
-            set help_01            [ vectormath::rotatePoint $Steerer(Stem) $Steerer(Fork)  90 ]
-            set help_02            [ vectormath::addVector   $Steerer(Stem) [ vectormath::unifyVector $Steerer(Stem) $help_01 [expr  50 * $stageScale] ] ]
-            set help_03            [ vectormath::addVector   $SeatPost(PivotPosition) {-10 0} ]
-            set help_fk            [ vectormath::addVector   $Steerer(Fork) [ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
-
+            set help_00     [ vectormath::addVector   $SeatTube(Ground) {-200 0} ]
+            set help_01     [ vectormath::rotatePoint $Steerer(Stem) $Steerer(Fork)  90 ]
+            set help_02     [ vectormath::addVector   $Steerer(Stem) [ vectormath::unifyVector $Steerer(Stem) $help_01 [expr  50 * $stageScale] ] ]
+            set help_03     [ vectormath::addVector   $SeatPost(PivotPosition) {-10 0} ]
+            set help_fk     [ vectormath::addVector   $Steerer(Fork) [ vectormath::unifyVector $Steerer(Stem)  $Steerer(Fork)   $Fork(Height) ] ]
+    
+            set pt_base     [ vectormath::intersectPoint  $DownTube(Steerer) $DownTube(BBracket) $SeatTube(BBracket) $SeatTube(TopTube) ]
+            
+            set distY_SN_LC [ expr 0.5 *([lindex $SaddleNose(Position) 1] - [lindex $LegClearance(Position) 1])]
+                #
+            
                 # colourtable: http://www.ironspider.ca/format_text/fontcolor.htm
                         # set colour(primary)        red
                         # set colour(secondary)    darkorange
@@ -1106,32 +766,34 @@
 
 
 
-
                 # --- result - level - dimensions
                 #
             set _dim_SD_HB_Height   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)   $Saddle(Position) ] \
                                                 vertical    [expr  380 * $stageScale]   [expr -100 * $stageScale]  \
                                                 $colour(result) ]
-            set _dim_SD_ST_Length   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position) $SeatTube(Saddle) ] \
-                                                aligned        [expr  -80 * $stageScale]    [expr -170 * $stageScale]  \
+            set _dim_FW_DistanceX   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(BaseCenter)  $FrontWheel(Ground) ] \
+                                                horizontal  [expr   70 * $stageScale]   0 \
+                                                $colour(result) ]
+            set _dim_CS_LengthX     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Ground)     $Position(BaseCenter) ] \
+                                                horizontal  [expr   70 * $stageScale]   0 \
+                                                $colour(result) ]
+
+            set _dim_TT_Virtual     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $TopTube(SeatVirtual)  $HeadTube(Stem)] \
+                                                aligned     [expr  150 * $stageScale]   [expr  -80 * $stageScale] \
+                                                $colour(result) ]
+            set _dim_ST_Virtual     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $BottomBracket(Position) $TopTube(SeatVirtual) ] \
+                                                aligned     [expr   80 * $stageScale]   [expr  -90 * $stageScale] \
+                                                $colour(result) ]
+                                                
+                # set _dim_BB_Height      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)    $Position(BaseCenter)] \
+                                                vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
                                                 $colour(result) ]
                 # set _dim_FW_Distance    [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)  $FrontWheel(Position)] \
                                                 aligned     [expr  100 * $stageScale]   [expr  -30 * $stageScale] \
                                                 $colour(result) ]
-            set _dim_FW_DistanceX   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Position(BaseCenter)  $FrontWheel(Ground) ] \
-                                                horizontal  [expr   70 * $stageScale]   0 \
-                                                $colour(result) ]
-            set _dim_BB_Height      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)    $Position(BaseCenter)] \
-                                                vertical    [expr  150 * $stageScale]   [expr   -20 * $stageScale]  \
-                                                $colour(result) ]
                 # set _dim_ST_Length      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatTube(Saddle)      $BottomBracket(Position) ] \
                                                 horizontal  [expr  -80 * $stageScale]   [expr    0 * $stageScale]  \
                                                 darkblue ]
-            set _dim_CS_LengthX     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Ground)     $Position(BaseCenter) ] \
-                                                horizontal  [expr   70 * $stageScale]   0 \
-                                                $colour(result) ]
-            
-  
                 # set _dim_HT_Reach_X     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $HeadTube(Stem)       $BottomBracket(Position) ] \
                                                 horizontal  [expr  -80 * $stageScale]    0 \
                                                 $colour(result) ]
@@ -1142,11 +804,7 @@
 
 
 
-
-
                 # --- third - level - dimensions
-                #
-            set distY_SN_LC         [ expr 0.5 *([lindex $SaddleNose(Position) 1] - [lindex $LegClearance(Position) 1])]
                 #
             set _dim_LC_Position_x  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $LegClearance(Position)  $BottomBracket(Position) ] \
                                                 horizontal  [expr  $distY_SN_LC * $stageScale]   0  \
@@ -1154,27 +812,21 @@
             set _dim_LC_Position_y  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $LegClearance(Position)  $Position(BaseCenter) ] \
                                                 vertical    [expr  -50 * $stageScale]   [expr   160 * $stageScale]  \
                                                 $colour(third) ]
-            # set _dim_SN_Position_x  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $BottomBracket(Position) ] \
-                                                horizontal  [expr  $distY_SN_LC * $stageScale]   0  \
-                                                $colour(third) ]
             set _dim_CR_Length      [ $cv_Name dimension  radius            [ appUtil::flatten_nestedList  $BottomBracket(Position) $Position(help_91)] \
                                                 -20            [expr  130 * $stageScale] \
                                                 $colour(third) ]
-            # set _dim_SN_HandleBar   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $HandleBar(Position)] \
+            set _dim_SN_Position_x  [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $BottomBracket(Position) ] \
+                                                horizontal  [expr  $distY_SN_LC * $stageScale]   0  \
+                                                $colour(third) ]
+                # set _dim_SN_HandleBar   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $HandleBar(Position)] \
                                                 horizontal      [expr  -80 * $stageScale]    0 \
                                                 $colour(third) ]
 
 
                 # --- secondary - level - dimensions
                 #
-            set _dim_BB_Depth       [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)  $RearWheel(Position) ] \
-                                                vertical    [expr  -260 * $stageScale]   [expr -90 * $stageScale]  \
-                                                $colour(secondary) ]
             set _dim_CS_Length      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position)      $BottomBracket(Position)] \
                                                 aligned     [expr   100 * $stageScale]   0 \
-                                                $colour(secondary) ]
-            set _dim_HT_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $Position(BaseCenter) ] \
-                                                150   0  \
                                                 $colour(secondary) ]
             set _dim_RW_Radius      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $RearWheel(Position)      $RearWheel(Ground) ] \
                                                 vertical    [expr   130 * $stageScale]    0 \
@@ -1191,7 +843,10 @@
             set _dim_SP_SetBack     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $SeatTube(BBracket) $SeatPost(SeatTube) $SeatPost(PivotPosition) ] \
                                                 perpendicular    [expr  -40 * $stageScale]  [expr  50 * $stageScale]  \
                                                 $colour(secondary) ]
-
+                # set _dim_BB_Depth     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position)  $RearWheel(Position) ] \
+                                                vertical    [expr  -260 * $stageScale]   [expr -90 * $stageScale]  \
+                                                $colour(secondary) ]
+            
 
             set _dim_Fork_Rake      [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Steerer(Stem)  $help_fk $FrontWheel(Position) ] \
                                                 perpendicular [expr  100 * $stageScale]    [expr  -80 * $stageScale] \
@@ -1203,7 +858,7 @@
                                                 perpendicular [expr  (-420 - $Length(Length_BB_Seat)) * $stageScale ]    [expr   0 * $stageScale]  \
                                                 $colour(secondary) ]                      
             
-
+         
 
             if {$Stem(Angle) > 0} {
                 set _dim_Stem_Angle [ $cv_Name dimension  angle        [ appUtil::flatten_nestedList  $Steerer(Stem)  $help_02 $HandleBar(Position) ] \
@@ -1233,7 +888,7 @@
                 set dim_distance    [expr -90 * $stageScale]
                 set dim_offset      [expr -50 * $stageScale]
             }
-            set _dim_ST_Offset                [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $SeatPost(SeatTube) $SeatTube(BBracket) $BB_Position] ] \
+            set _dim_ST_Offset          [ $cv_Name dimension  length            [ appUtil::flatten_nestedList [list $SeatPost(SeatTube) $SeatTube(BBracket) $BB_Position] ] \
                                                 perpendicular    $dim_distance $dim_offset \
                                                 $colour(secondary) ]
 
@@ -1241,32 +896,42 @@
 
                 # --- primary - level - dimensions
                 #
-            # set _dim_HB_XPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)     $BottomBracket(Position) ] \
+            set _dim_HB_XPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)     $BottomBracket(Position) ] \
                                                 horizontal  [expr (150 + $Length(Height_HB_Seat)) * $stageScale ]    0 \
                                                 $colour(primary) ]
-            # set _dim_HB_YPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)     $BottomBracket(Position) ] \
+            set _dim_HB_YPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $HandleBar(Position)     $BottomBracket(Position) ] \
                                                 vertical    [expr -310 * $stageScale]    [expr  180 * $stageScale]  \
                                                 $colour(primary) ]
-            # set _dim_SD_XPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Saddle(Position)        $BottomBracket(Position)  ] \
-                                                horizontal    [expr -150 * $stageScale]    0 \
+
+            set _dim_SD_ST_Length   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position) $SeatTube(Saddle) ] \
+                                                aligned        [expr  -80 * $stageScale]    [expr -170 * $stageScale]  \
                                                 $colour(primary) ]
-            # set _dim_SD_YPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
+                                                
+            set _dim_Head_Down_Angle    [ $cv_Name dimension  angle         [ appUtil::flatten_nestedList [list $DownTube(Steerer) $DownTube(BBracket) $Steerer(Ground)] ] \
+                                                250   0 \
+                                                $colour(primary) ]
+            set _dim_Down_Seat_Angle    [ $cv_Name dimension  angle         [ appUtil::flatten_nestedList [list $pt_base  $DownTube(Steerer) $TopTube(SeatTube) ] ] \
+                                                250   0 \
+                                                $colour(primary) ]
+            set _dim_ST_CS_Angle        [ $cv_Name dimension  angle         [ appUtil::flatten_nestedList [list $pt_base $TopTube(SeatTube) $Position(IS_ChainSt_SeatSt)] ] \
+                                                250   0 \
+                                                $colour(primary) ]
+                                                
+                                                
+                
+                # set _dim_SD_YPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $BottomBracket(Position) $Saddle(Position) ] \
                                                 vertical    [expr -580 * $stageScale]  [expr -130 * $stageScale]  \
                                                 $colour(primary) ]
-
-            set _dim_HT_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $Position(BaseCenter) ] \
+                # set _dim_SD_XPosition   [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $Saddle(Position)        $BottomBracket(Position)  ] \
+                                                horizontal    [expr -150 * $stageScale]    0 \
+                                                $colour(primary) ]
+                # set _dim_HT_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $Steerer(Ground)  $Steerer(Fork)  $Position(BaseCenter) ] \
                                                 150   0  \
                                                 $colour(primary) ]
-            set _dim_ST_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $SeatTube(Ground)      $SeatPost(SeatTube) $help_00 ] \
+                # set _dim_ST_Angle       [ $cv_Name dimension  angle             [ appUtil::flatten_nestedList  $SeatTube(Ground)      $SeatPost(SeatTube) $help_00 ] \
                                                 150   0  \
                                                 $colour(primary) ]
-            set _dim_TT_Virtual     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList  $TopTube(SeatVirtual)  $HeadTube(Stem)] \
-                                                aligned     [expr -190 * $stageScale]   [expr  -80 * $stageScale] \
-                                                $colour(primary) ]
-            set _dim_ST_Virtual     [ $cv_Name dimension  length            [ appUtil::flatten_nestedList   $BottomBracket(Position) $TopTube(SeatVirtual) ] \
-                                                aligned     [expr   80 * $stageScale]   [expr   90 * $stageScale] \
-                                                $colour(primary) ]
-
+                                                
             if {$active == {on}} {
                     rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_HT_Length
                     rattleCAD::view::gui::object_CursorBinding        $cv_Name    $_dim_FW_Radius
@@ -1307,11 +972,16 @@
                         }
                     }
 
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BB_Height         single_Result_BottomBracket_Height
+                    
+                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Head_Down_Angle   single_LugDetermination_HeadLug  
+                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Down_Seat_Angle   single_LugDetermination_DownTube  
+                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_CS_Angle       single_LugDetermination_ChainStay  
+                    
+                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BB_Height         single_Result_BottomBracket_Height
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_RW_Radius         group_RearWheel_Parameter
  
-                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HB_XPosition      single_Personal_HandleBarDistance
-                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HB_YPosition      single_Personal_HandleBarHeight
+                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HB_XPosition      single_Personal_HandleBarDistance
+                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HB_YPosition      single_Personal_HandleBarHeight
                         # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SD_XPosition      single_Personal_SaddleDistance
                         # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SD_YPosition      single_Personal_SaddleHeight
                         # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SN_HandleBar      single_Result_SaddleNose_HB
@@ -1325,11 +995,11 @@
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_LC_Position_x     single_TopTube_PivotPosition
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_LC_Position_y     single_Personal_InnerLegLength
                     
-                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SN_Position_x     group_Saddle_Parameter_01
+                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_SN_Position_x     group_Saddle_Parameter_01
                     
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BB_Depth          single_BottomBracket_Depth
+                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BB_Depth          single_BottomBracket_Depth
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_Length         single_RearWheel_Distance
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HT_Angle          single_HeadTube_Angle
+                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HT_Angle          single_HeadTube_Angle
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Stem_Length       single_Stem_Length
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Stem_Angle        single_Stem_Angle
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Fork_Rake         single_Fork_Rake
@@ -1339,7 +1009,7 @@
                     
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CR_Length         single_CrankSet_Length
                     
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Angle          single_Result_HeadTube_Angle
+                        # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Angle          single_Result_HeadTube_Angle
                         # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Length         single_Result_Saddle_Offset_BB_ST
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Offset         single_SeatTube_BottomBracketOffset
 
@@ -1351,7 +1021,7 @@
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ST_Virtual         single_Result_SeatTube_VirtualLength
                         # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HT_Reach_X         single_Result_HeadTube_ReachLength
                         # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_HT_Stack_Y         single_Result_StackHeight
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_LengthX         single_Result_RearWheel_horizontal
+                    # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_LengthX         single_Result_RearWheel_horizontal
             
 
                         #

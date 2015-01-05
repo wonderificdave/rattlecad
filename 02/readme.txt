@@ -1,5 +1,16 @@
 
 
+3.4.02.22  - 2014.01.05
+-------------------------------------------------------------------------------
+    feature
+        ... bikeGeometry 1.31
+            ... new method of frame determination in "Base Geometry" tab
+            ... add ::APPL_Config(FrameConfig)      freeAngle / lugAngle
+            ... Button in upper left corner
+    refactor/debug
+        ... rename all groupEdit Windows with index
+        
+
 3.4.02.21  - 2014.12.29
 -------------------------------------------------------------------------------
     refactor/debug
