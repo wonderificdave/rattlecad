@@ -141,14 +141,14 @@
     proc bikeGeometry::set_Result_HeadTube_TopTubeAngle {value} {
                 #
                 # Angle/HeadTube/TopTube
-                # Geometry(HeadLugTop_Angle) 
+                # Geometry(HeadLug_Angle_Top) 
                 #
             variable Geometry    
             variable Result    
             variable HeadTube    
             variable TopTube    
                 #
-            puts "    <1> set_Result_HeadTube_TopTubeAngle   ... check $Geometry(HeadLugTop_Angle)   ->  $value"
+            puts "    <1> set_Result_HeadTube_TopTubeAngle   ... check $Geometry(HeadLug_Angle_Top)   ->  $value"
                 #
             set HeadTopTube_Angle       $value
                 #
@@ -156,9 +156,9 @@
                 #
             bikeGeometry::update_Geometry
                 #
-            puts "    <2> set_Result_HeadTube_TopTubeAngle   ... check $Geometry(HeadLugTop_Angle)   ->  $value"
+            puts "    <2> set_Result_HeadTube_TopTubeAngle   ... check $Geometry(HeadLug_Angle_Top)   ->  $value"
                 #
-            return $Geometry(HeadLugTop_Angle) 
+            return $Geometry(HeadLug_Angle_Top) 
                 #
     }
     proc bikeGeometry::set_Result_SeatTubeDirection     {value} {

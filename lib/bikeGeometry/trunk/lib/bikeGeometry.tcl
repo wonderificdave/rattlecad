@@ -136,12 +136,17 @@
  #          bikeGeometry::create_TubeMiter 
  #              handle offset of DownTube and SeatTubeOffset to BottomBracket
  #      refactor   
- #          get_from_project and  set_to_project
+ #          get_from_project and set_to_project
  #          bikeGeometry::model_freeAngle in lib_model_freeAngle.tcl
  # 1.30 debug 
  #          bikeGeometry::create_TubeMiter 
  #              reverse offset of DownTube and SeatTubeOffset to BottomBracket
-
+ # 1.31 refactor
+ #          rename [namespace current]::model_freeAngle::update_ModeGeometry
+ #              to [namespace current]::model_freeAngle::update_ModelGeometry
+ #      implement
+ #          model_lugAngle
+ #
  # 1.xx refactor
  #          split project completely from bikeGeometry
 
@@ -149,7 +154,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.30
+    package provide bikeGeometry 1.31
         #
     package require vectormath
         #
@@ -500,8 +505,12 @@
         dict set projDict   Scalar      Geometry SeatTube_Angle             $::bikeGeometry::Geometry(SeatTube_Angle)                       ;#[bikeGeometry::get_Scalar           SeatTube Angle                    ]                ;# set _lastValue(Result/Angle/SeatTube/Direction)                         
         dict set projDict   Scalar      Geometry Fork_Height                $::bikeGeometry::Geometry(Fork_Height)                          ;#[bikeGeometry::get_Scalar           Fork Height                       ]                ;# set _lastValue(Component/Fork/Height)                                   
         dict set projDict   Scalar      Geometry Fork_Rake                  $::bikeGeometry::Geometry(Fork_Rake)                            ;#[bikeGeometry::get_Scalar           Fork Rake                         ]                ;# set _lastValue(Component/Fork/Rake)                                     
-            #            
-        dict set projDict   Scalar      Geometry HeadLugTop_Angle           $::bikeGeometry::Geometry(HeadLugTop_Angle)                     ;#[bikeGeometry::get_Scalar           Result Angle_HeadTubeTopTube      ]                ;# set _lastValue(Result/Angle/HeadTube/TopTube)                           
+            # 
+        dict set projDict   Scalar      Geometry BottomBracket_Angle_ChainStay  $::bikeGeometry::Geometry(BottomBracket_Angle_ChainStay)                                
+        dict set projDict   Scalar      Geometry BottomBracket_Angle_DownTube   $::bikeGeometry::Geometry(BottomBracket_Angle_DownTube)                                
+        dict set projDict   Scalar      Geometry HeadLug_Angle_Bottom           $::bikeGeometry::Geometry(HeadLug_Angle_Bottom)                                
+            #
+        dict set projDict   Scalar      Geometry HeadLug_Angle_Top          $::bikeGeometry::Geometry(HeadLug_Angle_Top)                    ;#[bikeGeometry::get_Scalar           Result Angle_HeadTubeTopTube      ]                ;# set _lastValue(Result/Angle/HeadTube/TopTube)                           
             #
         dict set projDict   Scalar      HandleBar PivotAngle                $::bikeGeometry::HandleBar(PivotAngle)                          ;#[bikeGeometry::get_Scalar           HandleBar PivotAngle              ]                ;# set _lastValue(Component/HandleBar/PivotAngle)                          
         dict set projDict   Scalar      HeadSet Diameter                    $::bikeGeometry::HeadSet(Diameter)                              ;#[bikeGeometry::get_Scalar           HeadSet Diameter                  ]                ;# set _lastValue(Component/HeadSet/Diameter)                              
@@ -658,23 +667,27 @@
         switch -exact $object {
             Geometry {
                     switch -exact $key {
-                        {BottomBracket_Height}      {   bikeGeometry::set_Result_BottomBracketHeight    $newValue; return [get_Scalar $object $key] }
-                        {FrontWhee_Radius}          {   bikeGeometry::set_Result_FrontWheelRadius       $newValue; return [get_Scalar $object $key] }
-                        {FrontWheel_xy}             {   bikeGeometry::set_Result_FrontWheeldiagonal     $newValue; return [get_Scalar $object $key] }
-                        {FrontWheel_x}              {   bikeGeometry::set_Result_FrontWheelhorizontal   $newValue; return [get_Scalar $object $key] }
-                        {HeadLugTop_Angle}          {   bikeGeometry::set_Result_HeadTube_TopTubeAngle  $newValue; return [get_Scalar $object $key] }
-                        {Reach_Length}              {   bikeGeometry::set_Result_HeadTubeReachLength    $newValue; return [get_Scalar $object $key] }
-                        {RearWheel_Radius}          {   bikeGeometry::set_Result_RearWheelRadius        $newValue; return [get_Scalar $object $key] }
-                        {RearWheel_x}               {   bikeGeometry::set_Result_RearWheelhorizontal    $newValue; return [get_Scalar $object $key] }
-                        {SaddleNose_BB_x}           {   bikeGeometry::set_Result_SaddleOffset_BB_Nose   $newValue; return [get_Scalar $object $key] }
-                        {SaddleNose_HB}             {   bikeGeometry::set_Result_PersonalSaddleNose_HB  $newValue; return [get_Scalar $object $key] }
-                        {Saddle_BB}                 {   bikeGeometry::set_Result_SaddleSeatTube_BB      $newValue; return [get_Scalar $object $key] }
-                        {Saddle_HB_y}               {   bikeGeometry::set_Result_SaddleOffset_HB        $newValue; return [get_Scalar $object $key] }
-                        {Saddle_Offset_BB_ST}       {   bikeGeometry::set_Result_SaddleOffset_BB_ST     $newValue; return [get_Scalar $object $key] }
-                        {SeatTube_Angle}            {   bikeGeometry::set_Result_SeatTubeDirection      $newValue; return [get_Scalar $object $key] }
-                        {SeatTube_Virtual}          {   bikeGeometry::set_Result_SeatTubeVirtualLength  $newValue; return [get_Scalar $object $key] }
-                        {Stack_Height}              {   bikeGeometry::set_Result_HeadTubeStackHeight    $newValue; return [get_Scalar $object $key] }
-                        {TopTube_Virtual}           {   bikeGeometry::set_Result_TopTubeVirtualLength   $newValue; return [get_Scalar $object $key] }
+                        {BottomBracket_Height}          {   bikeGeometry::set_Result_BottomBracketHeight    $newValue; return [get_Scalar $object $key] }
+                        {FrontWhee_Radius}              {   bikeGeometry::set_Result_FrontWheelRadius       $newValue; return [get_Scalar $object $key] }
+                        {FrontWheel_xy}                 {   bikeGeometry::set_Result_FrontWheeldiagonal     $newValue; return [get_Scalar $object $key] }
+                        {FrontWheel_x}                  {   bikeGeometry::set_Result_FrontWheelhorizontal   $newValue; return [get_Scalar $object $key] }
+                        {HeadLug_Angle_Top}             {   bikeGeometry::set_Result_HeadTube_TopTubeAngle  $newValue; return [get_Scalar $object $key] }
+                        {Reach_Length}                  {   bikeGeometry::set_Result_HeadTubeReachLength    $newValue; return [get_Scalar $object $key] }
+                        {RearWheel_Radius}              {   bikeGeometry::set_Result_RearWheelRadius        $newValue; return [get_Scalar $object $key] }
+                        {RearWheel_x}                   {   bikeGeometry::set_Result_RearWheelhorizontal    $newValue; return [get_Scalar $object $key] }
+                        {SaddleNose_BB_x}               {   bikeGeometry::set_Result_SaddleOffset_BB_Nose   $newValue; return [get_Scalar $object $key] }
+                        {SaddleNose_HB}                 {   bikeGeometry::set_Result_PersonalSaddleNose_HB  $newValue; return [get_Scalar $object $key] }
+                        {Saddle_BB}                     {   bikeGeometry::set_Result_SaddleSeatTube_BB      $newValue; return [get_Scalar $object $key] }
+                        {Saddle_HB_y}                   {   bikeGeometry::set_Result_SaddleOffset_HB        $newValue; return [get_Scalar $object $key] }
+                        {Saddle_Offset_BB_ST}           {   bikeGeometry::set_Result_SaddleOffset_BB_ST     $newValue; return [get_Scalar $object $key] }
+                        {SeatTube_Angle}                {   bikeGeometry::set_Result_SeatTubeDirection      $newValue; return [get_Scalar $object $key] }
+                        {SeatTube_Virtual}              {   bikeGeometry::set_Result_SeatTubeVirtualLength  $newValue; return [get_Scalar $object $key] }
+                        {Stack_Height}                  {   bikeGeometry::set_Result_HeadTubeStackHeight    $newValue; return [get_Scalar $object $key] }
+                        {TopTube_Virtual}               {   bikeGeometry::set_Result_TopTubeVirtualLength   $newValue; return [get_Scalar $object $key] }
+
+                        {BottomBracket_Angle_ChainStay} {   bikeGeometry::model_lugAngle::set_Angle ChainStaySeatTube $newValue; return [get_Scalar $object $key] }                     
+                        {BottomBracket_Angle_DownTube}  {   bikeGeometry::model_lugAngle::set_Angle SeatTubeDownTube  $newValue; return [get_Scalar $object $key] }                     
+                        {HeadLug_Angle_Bottom}          {   bikeGeometry::model_lugAngle::set_Angle HeadTubeDownTube  $newValue; return [get_Scalar $object $key] }                     
                         
                         default {}
                     }

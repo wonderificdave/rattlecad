@@ -105,12 +105,12 @@
                 #
             # namespace import [namespace current]::model_freeAngle::update_ModeGeometry                
                 #
-            puts "   [namespace current]"
+            # puts "   [namespace current]"
             
             foreach procedure [lsort [info procs [namespace current]::*]] {
                #  puts "   ... $procedure"
             }
-            [namespace current]::model_freeAngle::update_ModeGeometry
+            [namespace current]::model_freeAngle::update_ModelGeometry
                 #
                 
                 
@@ -981,8 +981,8 @@
             project::setValue Rendering(Saddle/Offset_Y)                            value       $Saddle(Offset_y)   
             project::setValue Result(Angle/BottomBracket/ChainStay)                 value       $Geometry(BottomBracket_Angle_ChainStay)
             project::setValue Result(Angle/BottomBracket/DownTube)                  value       $Geometry(BottomBracket_Angle_DownTube)
-            project::setValue Result(Angle/HeadTube/DownTube)                       value       $Geometry(HeadLugBottom_Angle_DownTube)
-            project::setValue Result(Angle/HeadTube/TopTube)                        value       $Geometry(HeadLugTop_Angle) 
+            project::setValue Result(Angle/HeadTube/DownTube)                       value       $Geometry(HeadLug_Angle_Bottom)
+            project::setValue Result(Angle/HeadTube/TopTube)                        value       $Geometry(HeadLug_Angle_Top) 
             project::setValue Result(Angle/SeatStay/ChainStay)                      value       $Geometry(SeatLug_Angle_SeatStay)
             project::setValue Result(Angle/SeatTube/Direction)                      value       $Geometry(SeatTube_Angle)
             project::setValue Result(Angle/SeatTube/SeatStay)                       value       $Geometry(SeatLug_Angle_SeatStay)

@@ -32,20 +32,20 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
  #
  # ---------------------------------------------------------------------------
- #  namespace:  rattleCAD::project
+ #  namespace:  bikeGeometry::model_freeAngle
  # ---------------------------------------------------------------------------
  #
  # 
 
  namespace eval bikeGeometry::model_freeAngle {
         #
-    namespace export update_ModeGeometry
+    namespace export update_ModelGeometry
         #
  }
         #
         # --- update array - Variables
         #
-    proc bikeGeometry::model_freeAngle::update_ModeGeometry {} {
+    proc bikeGeometry::model_freeAngle::update_ModelGeometry {} {
             #
         create_GeometryRear
         create_GeometryCenter
@@ -331,8 +331,8 @@
                 #
             set ChainSt_SeatSt_IS           $Position(ChainStay_SeatStay_IS)
                 #  
-            set Geometry(HeadLugTop_Angle)              [format "%.4f" [ get_resultAngle $Position(TopTube_End)     $Position(Steerer_End)  $Position(TopTube_Start)    ]]  ; # Result(Angle/HeadTube/TopTube)
-            set Geometry(HeadLugBottom_Angle_DownTube)  [format "%.4f" [ get_resultAngle $Position(DownTube_End)    $BB_Position            $Position(Steerer_Start)    ]]  ;# Result(Angle/HeadTube/DownTube)      
+            set Geometry(HeadLug_Angle_Top)              [format "%.4f" [ get_resultAngle $Position(TopTube_End)     $Position(Steerer_End)  $Position(TopTube_Start)    ]]  ; # Result(Angle/HeadTube/TopTube)
+            set Geometry(HeadLug_Angle_Bottom)           [format "%.4f" [ get_resultAngle $Position(DownTube_End)    $BB_Position            $Position(Steerer_Start)    ]]  ;# Result(Angle/HeadTube/DownTube)      
             set Geometry(SeatLug_Angle_TopTube)         [format "%.4f" [ get_resultAngle $Position(TopTube_Start)   $BB_Position            $Position(TopTube_End)      ]]  ;# Result(Angle/SeatTube/TopTube)       
             set Geometry(SeatLug_Angle_SeatStay)        [format "%.4f" [ get_resultAngle $Position(SeatStay_End)    $ChainSt_SeatSt_IS      $BB_Position                ]]  ;# Result(Angle/SeatTube/SeatStay)      
             set Geometry(BottomBracket_Angle_DownTube)  [format "%.4f" [ get_resultAngle $BB_Position               $Position(DownTube_End) $Position(TopTube_Start)    ]]  ;# Result(Angle/BottomBracket/DownTube) 
