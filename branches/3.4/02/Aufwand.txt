@@ -554,6 +554,8 @@
                             
 2014.12.12                    6:00   3.4.02 ... 18 ... bikeGeometry 1.27
 2014.12.13                    6:00   3.4.02 ... 18 ... bikeGeometry 1.27   ... set_to_project
+2014.12...                    5:00   3.4.02 ... 21 ... bikeGeometry 1.30   ... tubemiter debug
+2014.01.04                   40:00   3.4.02 ... 22 ... bikeGeometry 1.31   ... frame determination via lugs
 
 
 

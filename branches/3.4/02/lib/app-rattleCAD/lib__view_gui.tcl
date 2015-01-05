@@ -937,6 +937,10 @@
                                     # -- create a Button to execute tubing_checkAngles
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::tubing_checkAngles %s} $cv]                   
                                 }
+                        FrameConfigMode {
+                                    # -- create a Button to change config mode of Frame: free, lug ...
+                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameConfig %s} $cv]
+                        }
                         changeFrameJigVariant {
                                     # -- create a Button to set FrameJigVersion
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameJig %s %s %s} $cv $x_Position $y_Position ]
@@ -944,9 +948,8 @@
                         changeRendering {
                                     # -- create a Button to set Rendering: BottleCage, Fork, ...
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
-                        }
-                                
-                        rem_ChainStayRendering {
+                        } 
+                       rem_ChainStayRendering {
                                     # -- create a Button to set ChainStayRendering
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::rendering_ChainStay %s} $cv]
                                     
@@ -983,6 +986,19 @@
        #
     proc tubing_checkAngles {cv {type {default}}} {
             rattleCAD::view::check_TubingAngles
+    }
+    
+    
+    #-------------------------------------------------------------------------
+       #  change Rendering Settings 
+       #
+    proc change_FrameConfig {cv {type {default}}} {
+            if {$::APPL_Config(FrameConfig) == {freeAngle}} {
+                set ::APPL_Config(FrameConfig) {lugAngle}
+            } else {
+                set ::APPL_Config(FrameConfig) {freeAngle}
+            }
+            rattleCAD::view::updateView force
     }
 
 

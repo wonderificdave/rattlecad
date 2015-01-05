@@ -1121,7 +1121,7 @@
     proc testResultParameter {} {
             # tk_messageBox -message "testResultParameter"               
             set parameterList {                     
-                    Scalar/Geometry/HeadLugTop_Angle
+                    Scalar/Geometry/HeadLug_Angle_Top
                     Scalar/Geometry/SeatTube_Angle
                     Scalar/Geometry/BottomBracket_Height
                     Scalar/Geometry/FrontWheel_xy

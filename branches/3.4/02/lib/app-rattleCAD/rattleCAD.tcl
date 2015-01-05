@@ -157,8 +157,12 @@
                      
               # -- Application - Logging  -----------
           set ::APPL_Config(LogFile)          [open [file join $::APPL_Config(USER_Dir) _logFile.txt] w]
+          
+          
+              # -- Frame config - mode --------------
+          set ::APPL_Config(FrameConfig)      {freeAngle}
 
-                     
+               
               # -- MainFrame - Indicator  -----------
           set ::APPL_Config(MainFrameInd_Project)  {}
           set ::APPL_Config(MainFrameInd_Status)   {}
@@ -678,85 +682,88 @@
         puts "         ... user_InitDOM      $fileName"
         puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
         puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
+        puts "        ->\$::APPL_Config(FrameConfig)  $::APPL_Config(FrameConfig)"
         puts "        ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
         puts ""
         
         if {[file exists $fileName ]} {
-              set ::APPL_Config(user_InitDOM)  [ rattleCAD::model::file::get_XMLContent     $fileName ]
-                # puts "     ... user_InitDOM      $fileName"
-                # puts "[$::APPL_Config(user_InitDOM) asXML]"
-              catch {set ::APPL_Config(TemplateType) [[$::APPL_Config(user_InitDOM) selectNodes /root/TemplateFile/text()] asXML]}
-              catch {set ::APPL_Config(FrameJigType) [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameJigType/text()] asXML]}
-              catch {set ::APPL_Config(GUI_Font)     [[$::APPL_Config(user_InitDOM) selectNodes /root/GUI_Font/text()]     asXML]}
-              
-              
-              if {$::APPL_Config(user_InitDOM) != {}} {
-                  puts "        ----------------------------"
-                  prettyPrint_XML $::APPL_Config(user_InitDOM)
-                  puts "        ----------------------------"
-              }
-              puts "          ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
-              puts "          ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
-              puts "          ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
-              puts "        ----------------------------"
-              puts ""
-              puts "          mime Types:"
-              puts "        ----------------------------"
-              set mimeConfig [$::APPL_Config(user_InitDOM) selectNodes /root/mime]
-              if {$mimeConfig != {}} {
-                  foreach node   [$mimeConfig childNodes] {
-                      if {[$node nodeType] == {ELEMENT_NODE}} {    
-                          # puts "         [$node asXML]"
-                          set key    [$node getAttribute name]
-                          set value  [[$node firstChild] nodeValue]
-                          puts "          -> $key  $value"
-                          osEnv::register_mimeType $key $value
-                      }
-                  }
-              }
-              
-              puts ""
-              puts "          executables:"
-              puts "        ----------------------------"
-              set execConfig [$::APPL_Config(user_InitDOM) selectNodes /root/exec]
-              if {$execConfig != {}} {
-                  foreach node [$execConfig childNodes] {
-                      if {[$node nodeType] == {ELEMENT_NODE}} { 
-                          # puts "         [$node asXML]"
-                          set key    [$node getAttribute name]
-                          set value  [[$node firstChild] nodeValue]
-                          puts "          -> $key  $value"
-                          osEnv::register_Executable $key $value
-                      }
-                  } 
-              }
+                set ::APPL_Config(user_InitDOM)  [ rattleCAD::model::file::get_XMLContent     $fileName ]
+                    # puts "     ... user_InitDOM      $fileName"
+                    # puts "[$::APPL_Config(user_InitDOM) asXML]"
+                catch {set ::APPL_Config(TemplateType) [[$::APPL_Config(user_InitDOM) selectNodes /root/TemplateFile/text()] asXML]}
+                catch {set ::APPL_Config(FrameJigType) [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameJigType/text()] asXML]}
+                catch {set ::APPL_Config(FrameConfig)    [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameConfig/text()] asXML]}
+                catch {set ::APPL_Config(GUI_Font)     [[$::APPL_Config(user_InitDOM) selectNodes /root/GUI_Font/text()]     asXML]}
+                
+                
+                if {$::APPL_Config(user_InitDOM) != {}} {
+                    puts "        ----------------------------"
+                    prettyPrint_XML $::APPL_Config(user_InitDOM)
+                    puts "        ----------------------------"
+                }
+                puts "          ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
+                puts "          ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
+                puts "          ->\$::APPL_Config(FrameConfig)  $::APPL_Config(FrameConfig)"
+                puts "          ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
+                puts "        ----------------------------"
+                puts ""
+                puts "          mime Types:"
+                puts "        ----------------------------"
+                set mimeConfig [$::APPL_Config(user_InitDOM) selectNodes /root/mime]
+                if {$mimeConfig != {}} {
+                    foreach node   [$mimeConfig childNodes] {
+                        if {[$node nodeType] == {ELEMENT_NODE}} {    
+                            # puts "         [$node asXML]"
+                            set key    [$node getAttribute name]
+                            set value  [[$node firstChild] nodeValue]
+                            puts "          -> $key  $value"
+                            osEnv::register_mimeType $key $value
+                        }
+                    }
+                }
+                
+                puts ""
+                puts "          executables:"
+                puts "        ----------------------------"
+                set execConfig [$::APPL_Config(user_InitDOM) selectNodes /root/exec]
+                if {$execConfig != {}} {
+                    foreach node [$execConfig childNodes] {
+                        if {[$node nodeType] == {ELEMENT_NODE}} { 
+                            # puts "         [$node asXML]"
+                            set key    [$node getAttribute name]
+                            set value  [[$node firstChild] nodeValue]
+                            puts "          -> $key  $value"
+                            osEnv::register_Executable $key $value
+                        }
+                    } 
+                }
               
         } else {
-              set   timeString    [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
-                #          
-			  set    fp [open $fileName w]
-              puts  $fp {<?xml version="1.0" encoding="UTF-8" ?>}
-              puts  $fp {<root>}
-              puts  $fp "    <hostname>$hostName</hostname>"
-              puts  $fp "    <fileName>$fileName</fileName>"
-              puts  $fp "    <fileCreated>$timeString</fileCreated>"
-              puts  $fp "    <GUI_Font>$::APPL_Config(GUI_Font)</GUI_Font>"
-              puts  $fp "    <mime>"
-              puts  $fp "        <mime name=\".test\">_any_executable</mime>"
-              puts  $fp "    </mime>"
-              puts  $fp "    <exec>"
-              puts  $fp "        <exec name=\"_test\">_any_executable</exec>"
-              puts  $fp "    </exec>"
-              puts  $fp {</root>}
-              close $fp
-              puts ""
-              puts "     ... user_InitDOM      $fileName"
-              puts "         ------------------------"
-              puts "           ... write new:"   
-              puts "                           $fileName"
-              puts "                   ... done"
-              
-              read_userInit
+                set   timeString    [ clock format [clock seconds] -format {%Y.%m.%d %H:%M} ]
+                    #          
+                set    fp [open $fileName w]
+                puts  $fp {<?xml version="1.0" encoding="UTF-8" ?>}
+                puts  $fp {<root>}
+                puts  $fp "    <hostname>$hostName</hostname>"
+                puts  $fp "    <fileName>$fileName</fileName>"
+                puts  $fp "    <fileCreated>$timeString</fileCreated>"
+                puts  $fp "    <GUI_Font>$::APPL_Config(GUI_Font)</GUI_Font>"
+                puts  $fp "    <mime>"
+                puts  $fp "        <mime name=\".test\">_any_executable</mime>"
+                puts  $fp "    </mime>"
+                puts  $fp "    <exec>"
+                puts  $fp "        <exec name=\"_test\">_any_executable</exec>"
+                puts  $fp "    </exec>"
+                puts  $fp {</root>}
+                close $fp
+                puts ""
+                puts "     ... user_InitDOM      $fileName"
+                puts "         ------------------------"
+                puts "           ... write new:"   
+                puts "                           $fileName"
+                puts "                   ... done"
+                
+                read_userInit
         }
     }
     
