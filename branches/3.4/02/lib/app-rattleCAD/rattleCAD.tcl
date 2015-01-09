@@ -160,7 +160,7 @@
           
           
               # -- Frame config - mode --------------
-          set ::APPL_Config(FrameConfig)      {freeAngle}
+          # set ::APPL_Config(FrameMethod)      {Hybrid}
 
                
               # -- MainFrame - Indicator  -----------
@@ -682,9 +682,9 @@
         puts "         ... user_InitDOM      $fileName"
         puts "        ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
         puts "        ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
-        puts "        ->\$::APPL_Config(FrameConfig)  $::APPL_Config(FrameConfig)"
         puts "        ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
         puts ""
+        # puts "        ->\$::APPL_Config(FrameMethod)  $::APPL_Config(FrameMethod)"
         
         if {[file exists $fileName ]} {
                 set ::APPL_Config(user_InitDOM)  [ rattleCAD::model::file::get_XMLContent     $fileName ]
@@ -692,8 +692,9 @@
                     # puts "[$::APPL_Config(user_InitDOM) asXML]"
                 catch {set ::APPL_Config(TemplateType) [[$::APPL_Config(user_InitDOM) selectNodes /root/TemplateFile/text()] asXML]}
                 catch {set ::APPL_Config(FrameJigType) [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameJigType/text()] asXML]}
-                catch {set ::APPL_Config(FrameConfig)    [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameConfig/text()] asXML]}
                 catch {set ::APPL_Config(GUI_Font)     [[$::APPL_Config(user_InitDOM) selectNodes /root/GUI_Font/text()]     asXML]}
+                
+                # catch {set ::APPL_Config(FrameMethod)  [[$::APPL_Config(user_InitDOM) selectNodes /root/FrameMethod/text()] asXML]}
                 
                 
                 if {$::APPL_Config(user_InitDOM) != {}} {
@@ -703,7 +704,6 @@
                 }
                 puts "          ->\$::APPL_Config(TemplateType) $::APPL_Config(TemplateType)"
                 puts "          ->\$::APPL_Config(FrameJigType) $::APPL_Config(FrameJigType)"
-                puts "          ->\$::APPL_Config(FrameConfig)  $::APPL_Config(FrameConfig)"
                 puts "          ->\$::APPL_Config(GUI_Font)     $::APPL_Config(GUI_Font)"
                 puts "        ----------------------------"
                 puts ""

@@ -61,6 +61,7 @@
                     projectFile       {}
                     projectSave       {}
                 }
+          # ----------------- #
     }
     
     proc rattleCAD::control::updateControl {} {

@@ -38,30 +38,44 @@
  #
 
 
-    proc rattleCAD::cv_custom::createDimension {cv_Name BB_Position type {active {on}}} {
+     proc rattleCAD::cv_custom::createDimension {cv_Name BB_Position type {active {on}}} {
                 #
             switch -exact $type {
-                point_center            { createDimension_PointCenter           $cv_Name $BB_Position $type;            return }
-                point_personal          { createDimension_PointPersonal         $cv_Name $BB_Position $type;            return }
-                point_crank             { createDimension_PointCrank            $cv_Name $BB_Position $type;            return }
-                point_reference         { createDimension_PointReference        $cv_Name $BB_Position $type;            return }
-                point_seat              { createDimension_PointSeat             $cv_Name $BB_Position $type;            return }
-                point_frame             { createDimension_PointFrame            $cv_Name $BB_Position $type;            return }
-                point_frame_dimension   { createDimension_Point_HT_Stem         $cv_Name $BB_Position $type;            return }
-                cline_frame             { createDimension_CLineFrame            $cv_Name $BB_Position $type;            return }
-                cline_angle             { createDimension_CLineAngle            $cv_Name $BB_Position $type;            return }
-                cline_brake             { createDimension_CLineBrake            $cv_Name $BB_Position $type;            return }
-                cline_framejig          { createDimension_CLine_FrameJig        $cv_Name $BB_Position $type;            return }
-                geometry_bg_free        { createDimension_Geometry_BG_Free      $cv_Name $BB_Position $type;            return }
-                geometry_fg_free        { createDimension_Geometry_FG_Free      $cv_Name $BB_Position $type $active;    return }
-                geometry_bg_lug         { createDimension_Geometry_BG_Lug       $cv_Name $BB_Position $type;            return }
-                geometry_fg_lug         { createDimension_Geometry_FG_Lug       $cv_Name $BB_Position $type $active;    return }
-                frameTubing_bg          { createDimension_FrameTubing_BG        $cv_Name $BB_Position $type;            return }
-                summary_bg              { createDimension_Summary_BG            $cv_Name $BB_Position $type;            return }
-                summary_fg              { createDimension_Summary_FG            $cv_Name $BB_Position $type $active;    return }
-                frameDrafting_bg        { createDimension_FrameDrafting_BG      $cv_Name $BB_Position $type;            return }
-                reference_bg            { createDimension_Reference_BG          $cv_Name $BB_Position $type;            return }
-                reference_fg            { createDimension_Reference_FG          $cv_Name $BB_Position $type;            return }
+                point_center                    { createDimension_PointCenter                   $cv_Name $BB_Position $type;            return }
+                point_personal                  { createDimension_PointPersonal                 $cv_Name $BB_Position $type;            return }
+                point_crank                     { createDimension_PointCrank                    $cv_Name $BB_Position $type;            return }
+                point_reference                 { createDimension_PointReference                $cv_Name $BB_Position $type;            return }
+                point_seat                      { createDimension_PointSeat                     $cv_Name $BB_Position $type;            return }
+                point_frame                     { createDimension_PointFrame                    $cv_Name $BB_Position $type;            return }
+                point_frame_dimension           { createDimension_Point_HT_Stem                 $cv_Name $BB_Position $type;            return }
+                cline_frame                     { createDimension_CLineFrame                    $cv_Name $BB_Position $type;            return }
+                cline_angle                     { createDimension_CLineAngle                    $cv_Name $BB_Position $type;            return }
+                cline_brake                     { createDimension_CLineBrake                    $cv_Name $BB_Position $type;            return }
+                cline_framejig                  { createDimension_CLine_FrameJig                $cv_Name $BB_Position $type;            return }
+                
+                geometry_bg                     { createDimension_Geometry_BG                   $cv_Name $BB_Position $type;            return }
+                
+                geometry_stackreach_personal    { createDimension_Geometry_stackreach_personal  $cv_Name $BB_Position $type $active;    return }
+                geometry_stackreach_primary     { createDimension_Geometry_stackreach_primary   $cv_Name $BB_Position $type $active;    return }
+                geometry_stackreach_secondary   { createDimension_Geometry_stackreach_secondary $cv_Name $BB_Position $type $active;    return }
+                geometry_stackreach_result      { createDimension_Geometry_stackreach_result    $cv_Name $BB_Position $type $active;    return }
+                
+                geometry_lugs_personal          { createDimension_Geometry_lugs_personal        $cv_Name $BB_Position $type $active;    return }
+                geometry_lugs_primary           { createDimension_Geometry_lugs_primary         $cv_Name $BB_Position $type $active;    return }
+                geometry_lugs_secondary         { createDimension_Geometry_lugs_secondary       $cv_Name $BB_Position $type $active;    return }
+                geometry_lugs_result            { createDimension_Geometry_lugs_result          $cv_Name $BB_Position $type $active;    return }
+                geometry_lugs_background        { createDimension_Geometry_BG_Lug               $cv_Name $BB_Position $type;            return }
+                
+                geometry_bg_free                { createDimension_Geometry_BG_Free              $cv_Name $BB_Position $type;            return }
+                geometry_fg_free                { createDimension_Geometry_FG_Free              $cv_Name $BB_Position $type $active;    return }
+                geometry_bg_lug                 { createDimension_Geometry_BG_Lug               $cv_Name $BB_Position $type;            return }
+                geometry_fg_lug                 { createDimension_Geometry_FG_Lug               $cv_Name $BB_Position $type $active;    return }
+                frameTubing_bg                  { createDimension_FrameTubing_BG                $cv_Name $BB_Position $type;            return }
+                summary_bg                      { createDimension_Summary_BG                    $cv_Name $BB_Position $type;            return }
+                summary_fg                      { createDimension_Summary_FG                    $cv_Name $BB_Position $type $active;    return }
+                frameDrafting_bg                { createDimension_FrameDrafting_BG              $cv_Name $BB_Position $type;            return }
+                reference_bg                    { createDimension_Reference_BG                  $cv_Name $BB_Position $type;            return }
+                reference_fg                    { createDimension_Reference_FG                  $cv_Name $BB_Position $type;            return }
                 default                 {}
             }
                  #
@@ -148,13 +162,16 @@
                 #
             $cv_Name create circle      $HeadTube(Stem)           -radius  4  -outline gray       -width 1.0  -tags __CenterLine__
     }
-    proc rattleCAD::cv_custom::createDimension_CLineFrame           {cv_Name BB_Position type} {
+    proc rattleCAD::cv_custom::createDimension_CLineFrame           {cv_Name BB_Position} {
                 # cline_frame 
                 #
             set HeadTube(Stem)          [ rattleCAD::model::get_Position    HeadTube_End            $BB_Position ]
             set TopTube(SeatVirtual)    [ rattleCAD::model::get_Position    SeatTube_VirtualTopTube $BB_Position ]
+            set SeatTube(BBracket)      [ rattleCAD::model::get_Position    SeatTube_Start          $BB_Position ]
                 #
-            $cv_Name create centerline  [ appUtil::flatten_nestedList $HeadTube(Stem) $TopTube(SeatVirtual) ] \
+            $cv_Name create line        [ appUtil::flatten_nestedList $HeadTube(Stem) $TopTube(SeatVirtual) $SeatTube(BBracket)] \
+                                                                    -fill red    -width 3.0  -tags __CenterLine__
+            # $cv_Name create centerline  [ appUtil::flatten_nestedList $HeadTube(Stem) $TopTube(SeatVirtual) ] \
                                                                     -fill darkorange    -width 2.0  -tags __CenterLine__
     }
     proc rattleCAD::cv_custom::createDimension_CLineAngle           {cv_Name BB_Position type} {

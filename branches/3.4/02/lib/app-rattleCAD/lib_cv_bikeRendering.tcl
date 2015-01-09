@@ -1062,7 +1062,232 @@
     }
 
 
-    proc rattleCAD::rendering::createFrame_Centerline {cv_Name BB_Position {highlightList_1 {}} {highlightList_2 {}} {backgroundList {}} {excludeList {}} } {
+    proc rattleCAD::rendering::createFrame_Centerline {cv_Name BB_Position} {
+    
+    
+                # --- get stageScale
+            set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]
+    
+    
+                # --- get defining Values ----------
+            set CrankSetLength      [ rattleCAD::model::get_Scalar CrankSet Length]
+                # --- get defining Point coords ----------
+            set BottomBracket       $BB_Position
+            set RearWheel           [ rattleCAD::model::get_Position        RearWheel               $BB_Position ]
+            set FrontWheel          [ rattleCAD::model::get_Position        FrontWheel              $BB_Position ]
+            set Saddle              [ rattleCAD::model::get_Position        Saddle                  $BB_Position ]
+            set Saddle_Proposal     [ rattleCAD::model::get_Position        SaddleProposal          $BB_Position ]
+            set SeatPost_Saddle     [ rattleCAD::model::get_Position        SeatPost_Saddle         $BB_Position ]
+            set SeatPost_SeatTube   [ rattleCAD::model::get_Position        SeatPost_SeatTube       $BB_Position ]
+            set SeatPost_Pivot      [ rattleCAD::model::get_Position        SeatPost_Pivot          $BB_Position ]
+            set SeatTube_Ground     [ rattleCAD::model::get_Position        SeatTube_Ground         $BB_Position ]
+            set SeatTube_BBracket   [ rattleCAD::model::get_Position        SeatTube_Start          $BB_Position ]
+            set SeatStay_SeatTube   [ rattleCAD::model::get_Position        SeatStay_End            $BB_Position ]
+            set SeatStay_RearWheel  [ rattleCAD::model::get_Position        SeatStay_Start          $BB_Position ]
+            set TopTube_SeatTube    [ rattleCAD::model::get_Position        TopTube_Start           $BB_Position ]
+            set TopTube_SeatVirtual [ rattleCAD::model::get_Position        SeatTube_VirtualTopTube $BB_Position ]
+            set TopTube_Steerer     [ rattleCAD::model::get_Position        TopTube_End             $BB_Position ]
+            set HeadTube_Stem       [ rattleCAD::model::get_Position        HeadTube_End            $BB_Position ]
+            set Steerer_Stem        [ rattleCAD::model::get_Position        Steerer_End             $BB_Position ]
+            set Steerer_Fork        [ rattleCAD::model::get_Position        Steerer_Start           $BB_Position ]
+            set DownTube_Steerer    [ rattleCAD::model::get_Position        DownTube_End            $BB_Position ]
+            set HandleBar           [ rattleCAD::model::get_Position        HandleBar               $BB_Position ]
+            set BaseCenter          [ rattleCAD::model::get_Position        BottomBracket_Ground    $BB_Position ]
+            set Steerer_Ground      [ rattleCAD::model::get_Position        Steerer_Ground          $BB_Position ]
+                #
+            set ChainStay_Dropout   [ rattleCAD::model::get_Position        ChainStay_RearWheel     $BB_Position ]
+                #
+            set Saddle_PropRadius   [ vectormath::length    $Saddle_Proposal   $BB_Position]
+            set SeatTube_Angle      [ vectormath::angle     $SeatPost_SeatTube $BB_Position [list -500 [lindex $BB_Position 1] ] ]
+            set SeatPost_Radius     [ vectormath::length    $SeatPost_Saddle   $SeatPost_Pivot] 
+                #
+            set RimDiameter_Front   [rattleCAD::model::get_Scalar Geometry FrontRim_Diameter]
+            set TyreHeight_Front    [rattleCAD::model::get_Scalar Geometry FrontTyre_Height]
+            set RimDiameter_Rear    [rattleCAD::model::get_Scalar Geometry RearRim_Diameter]
+            set TyreHeight_Rear     [rattleCAD::model::get_Scalar Geometry RearTyre_Height]
+                #
+
+                #
+            set highlightList_1 {} 
+            set highlightList_2 {} 
+            set highlightList_3 {baseLine frontWheel rearWheel}
+            set backgroundList  {}
+            set excludeList     {}
+                #
+            switch -exact $rattleCAD::view::gui::frame_configMethod {
+                {Hybrid} {
+                            set highlightList_1 {chainstay fork saddle seattube steerer stem } 
+                            set highlightList_2 {} 
+                        }
+                {StackReach} {
+                            set highlightList_1 {chainstay fork saddle seattube steerer} 
+                            set highlightList_2 {seatpost stem} 
+                        }
+                {Classic} {
+                            set highlightList_1 {chainstay fork saddle steerer virtualtoptube} 
+                            set highlightList_2 {seatpost stem} 
+                        }
+                {Lugs} {
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $RearWheel    $ChainStay_Dropout  $BottomBracket ]       -fill gray60  -width 1.0      -tags {__CenterLine__    chainstaydropout}
+                                #
+                            set highlightList_1 {chainstay downtube fork saddle seattube steerer stem} 
+                            set highlightList_2 {seatpost} 
+                        }
+                        
+                default {
+                }
+            }     
+                #
+                
+    
+                # ------ rearwheel representation
+            $cv_Name create circle     $RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]    -outline gray60 -width 1.0    -tags {__CenterLine__    rearWheel}
+                # ------ frontwheel representation
+            $cv_Name create circle     $FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  -outline gray60 -width 1.0    -tags {__CenterLine__    frontWheel}
+    
+    
+                # ------ headtube extension to ground
+            $cv_Name create centerline [ appUtil::flatten_nestedList  $Steerer_Fork       $Steerer_Ground   ]    -fill gray60                  -tags __CenterLine__
+                # ------ seattube extension to ground
+            $cv_Name create centerline [ appUtil::flatten_nestedList  $SeatTube_BBracket  $SeatTube_Ground  ]    -fill gray60                  -tags {__CenterLine__    seattube_center}
+    
+    
+                # ------ chainstay
+            $cv_Name create line     [ appUtil::flatten_nestedList  $RearWheel            $BottomBracket    ]    -fill gray60  -width 1.0      -tags {__CenterLine__    chainstay}
+                # ------ seatpost
+            # $cv_Name create line     [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatTube]    -fill gray60  -width 1.0      -tags {__CenterLine__    seatpost}
+                # ------ seattube
+            # $cv_Name create line   [ appUtil::flatten_nestedList  $TopTube_SeatTube     $SeatTube_BBracket]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
+                # ------ seatstay
+            $cv_Name create line     [ appUtil::flatten_nestedList  $SeatStay_SeatTube    $RearWheel        ]    -fill gray60  -width 1.0      -tags {__CenterLine__    seatstay}
+                # ------ toptube
+            $cv_Name create line     [ appUtil::flatten_nestedList  $TopTube_SeatTube     $TopTube_Steerer  ]    -fill gray60  -width 1.0      -tags {__CenterLine__    toptube}
+                # ------ stem
+            $cv_Name create line     [ appUtil::flatten_nestedList  $HandleBar $Steerer_Stem $HeadTube_Stem ]    -fill gray60  -width 1.0      -tags {__CenterLine__    stem}
+                # ------ steerer
+            $cv_Name create line     [ appUtil::flatten_nestedList  $HeadTube_Stem        $Steerer_Fork     ]    -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
+                # ------ downtube
+            $cv_Name create line     [ appUtil::flatten_nestedList  $DownTube_Steerer     $BB_Position      ]    -fill gray60  -width 1.0      -tags {__CenterLine__    downtube}
+                # ------ fork
+            $cv_Name create line     [ appUtil::flatten_nestedList  $Steerer_Fork         $FrontWheel       ]    -fill gray60  -width 1.0      -tags {__CenterLine__    fork}
+    
+                
+                # ------ saddlemount
+            $cv_Name create line     [ appUtil::flatten_nestedList  $Saddle $SeatPost_Saddle ] -fill gray60  -width 0.5      -tags {__CenterLine__    saddlemount}
+    
+    
+                # ------ crankset representation
+            $cv_Name create arc     $BottomBracket  -radius $CrankSetLength      -start -95  -extent 170  -style arc  -outline gray \
+                                                                                                                               -width 1.0      -tags {__CenterLine__    crankset}
+                # ------ saddle proposal
+            $cv_Name create arc     $BottomBracket  -radius $Saddle_PropRadius   -start [expr 177 - $SeatTube_Angle]   -extent 6   -style arc  -outline darkmagenta \
+                                                                                                                               -width 1.0      -tags {__CenterLine__    saddleproposal}
+                # ------ seatpost pivot
+            $cv_Name create arc     $SeatPost_Pivot -radius $SeatPost_Radius     -start  55   -extent 70   -style arc  -outline darkmagenta \
+                                                                                                                               -width 1.0      -tags {__CenterLine__    saddlepivot}
+    
+                # ------ saddle representation
+                    set saddle_polygon {}
+                    set x_04   [ expr [rattleCAD::model::get_Scalar Saddle  NoseLength] + [rattleCAD::model::get_Scalar Saddle Offset_x] ]
+                    set x_03   [ expr $x_04 - 20 ]
+                    set x_02   [ expr $x_04 - 30 ]
+                    set x_01   [ expr $x_04 - [rattleCAD::model::get_Scalar Saddle Length]]
+                    foreach xy [ list [list $x_01 4] {0 0} [list $x_02 -1] [list $x_03 -5] [list $x_04 -12] ] {
+                        set saddle_polygon [ lappend saddle_polygon [vectormath::addVector $Saddle $xy ] ]
+                    }
+            $cv_Name create line  $saddle_polygon        -fill gray60  -width 1.0      -tags {__CenterLine__    saddle}
+
+    
+                # ------ virtual top- and seattube 
+            switch -exact $rattleCAD::view::gui::frame_configMethod {
+                {Hybrid} {
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $SeatTube_BBracket] -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
+                        }
+                {StackReach} -
+                {Lugs} {
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatTube]   -fill gray60  -width 1.0      -tags {__CenterLine__    seatpost}
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $TopTube_SeatVirtual $SeatTube_BBracket]                  -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
+                        }
+                 {Classic} {
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatTube]   -fill gray60  -width 1.0      -tags {__CenterLine__    seatpost}
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $HeadTube_Stem $TopTube_SeatVirtual $SeatTube_BBracket]   -fill gray60  -width 1.0      -tags {__CenterLine__    virtualtoptube}
+                        }       
+                default {
+                }
+            }     
+                
+                
+                
+                # puts "  $highlightList "
+                # --- highlightList
+                    # set highlight(colour) firebrick
+                    # set highlight(colour) darkorchid
+                    # set highlight(colour) darkred
+                    # set highlight(colour) firebrick
+                    # set highlight(colour) blue
+                set highlight(colour) red
+                set highlight(width)  2.0
+                    #
+                # --- create position points
+            $cv_Name create circle  $BottomBracket      -radius 20  -outline $highlight(colour)     -tags {__CenterLine__  bottombracket}  \
+                                                                                                                            -width $highlight(width)
+            $cv_Name create circle  $HandleBar          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $Saddle             -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $FrontWheel         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $RearWheel          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $BaseCenter         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $SeatPost_Saddle    -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $HeadTube_Stem      -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+                # $cv_Name create circle    $SeatPost_SeatTube  -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+                # $cv_Name create circle    $LegClearance   -radius 10  -outline $highlight(colour)
+  
+                    #
+                    #
+                    #
+                    #
+                set highlight(colour) red
+                set highlight(width)  3.0
+                    # ------------------------
+            foreach item $highlightList_1 {
+                catch {$cv_Name itemconfigure $item  -fill      $highlight(colour) -width $highlight(width) } error
+                catch {$cv_Name itemconfigure $item  -outline   $highlight(colour) -width $highlight(width) } error
+            }
+    
+                set highlight(colour) darkorange
+                set highlight(colour) orange
+                set highlight(colour) goldenrod
+                set highlight(colour) gray70
+                    # ------------------------
+            foreach item $highlightList_2 {
+                catch {$cv_Name itemconfigure $item  -fill      $highlight(colour) -width $highlight(width) } error
+                catch {$cv_Name itemconfigure $item  -outline   $highlight(colour) -width $highlight(width) } error
+            }
+    
+            foreach item $backgroundList {
+                catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
+                catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
+            }
+    
+            puts "  $excludeList "
+                # --- highlightList
+            foreach item $excludeList {
+                catch {$cv_Name delete $item } error
+            }
+            
+                    # --- bindings -----------
+            #foreach item {steerer fork bottombracket} {}
+            #    rattleCAD::view::gui::object_CursorBinding     $cv_Name    $item 
+            #{}
+            
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    stem            group_FrontGeometry
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    steerer         group_FrontGeometry
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    fork            group_FrontGeometry
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    bottombracket   group_BottomBracket_DepthHeight
+       
+        }
+
+
+    proc rattleCAD::rendering::createFrame_Centerline_old {cv_Name BB_Position {highlightList_1 {}} {highlightList_2 {}} {backgroundList {}} {excludeList {}} } {
     
     
                 # --- get stageScale

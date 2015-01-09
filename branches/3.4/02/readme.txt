@@ -1,5 +1,15 @@
 
 
+3.4.02.23  - 2014.01.09
+-------------------------------------------------------------------------------
+    feature:
+        ... rename ::APPL_Config(FrameConfig) to 
+            ... rattleCAD::view::gui::frame_configMethod
+            ... Hybrid / Lugs / Classic / Stack & Reach (StackReach)
+        ... selectable $rattleCAD::view::gui::show_backgroundDimension
+            ... display of background / result / secondary dimensions
+            
+
 3.4.02.22  - 2014.01.05
 -------------------------------------------------------------------------------
     feature
