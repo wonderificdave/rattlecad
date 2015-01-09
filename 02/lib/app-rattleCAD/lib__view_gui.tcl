@@ -53,8 +53,11 @@
     variable    stageScale
 
     variable    external_canvasCAD  ;   array    set external_canvasCAD {}
-	
-     
+    
+    variable    frame_configMethod          {Hybrid}
+    variable    show_secondaryDimension     1
+    variable    show_resultDimension        1
+    variable    show_backgroundDimension    1
 
 
                             
@@ -939,8 +942,8 @@
                                 }
                         FrameConfigMode {
                                     # -- create a Button to change config mode of Frame: free, lug ...
-                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameConfig %s} $cv]
-                        }
+                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameConfig %s %s %s} $cv $x_Position $y_Position]
+                                }
                         changeFrameJigVariant {
                                     # -- create a Button to set FrameJigVersion
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameJig %s %s %s} $cv $x_Position $y_Position ]
@@ -949,7 +952,7 @@
                                     # -- create a Button to set Rendering: BottleCage, Fork, ...
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
                         } 
-                       rem_ChainStayRendering {
+                        rem_ChainStayRendering {
                                     # -- create a Button to set ChainStayRendering
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::rendering_ChainStay %s} $cv]
                                     
@@ -992,29 +995,13 @@
     #-------------------------------------------------------------------------
        #  change Rendering Settings 
        #
-    proc change_FrameConfig {cv {type {default}}} {
-            if {$::APPL_Config(FrameConfig) == {freeAngle}} {
-                set ::APPL_Config(FrameConfig) {lugAngle}
-            } else {
-                set ::APPL_Config(FrameConfig) {freeAngle}
-            }
-            rattleCAD::view::updateView force
-    }
-
-
-    #-------------------------------------------------------------------------
-       #  create menue to change scale and size of Stage 
-       #
-    proc change_FormatScale {cv x y {type {default}}}  {
-    
+    proc change_FrameConfig {cv x y {type {default}}} {
+                #
+            variable frame_configMethod
+            variable show_backgroundDimension
+                #
             set cv_Name [lindex [split $cv .] end-1]
-            
-                # puts "  change_FormatScale:  cv: $cv"
-                # puts "  change_FormatScale:  cv_Name: $cv_Name"
-            
-            set     rattleCAD::view::gui::stageFormat    A4
-            set     rattleCAD::view::gui::stageScale     0.20        
-            
+                #
             if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
                     catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
                             $cv create window $x $y \
@@ -1028,39 +1015,102 @@
                     $cv delete     __Select__SubMenue__
                     $cv dtag       __Select__SubMenue__
                     destroy        .f_subMenue_$cv_Name
-                    #$cv.f_format destroy
                     return
             }
-            
-            
-            set f_DIN_Format    [frame $baseFrame.select.din_Format]
-                    radiobutton $f_DIN_Format.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_DIN_Format.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_DIN_Format.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_DIN_Format.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_DIN_Format.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                pack $f_DIN_Format.a4 \
-                     $f_DIN_Format.a3 \
-                     $f_DIN_Format.a2 \
-                     $f_DIN_Format.a1 \
-                     $f_DIN_Format.a0
-            
-            set f_Scale        [frame $baseFrame.select.scale]
-            if {$type == {default}} {
-                    radiobutton $f_Scale.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_Scale.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_Scale.s033 -text "1:3  "     -value 0.33 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_Scale.s040 -text "1:2,5"     -value 0.40 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_Scale.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $f_Scale.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                pack $f_Scale.s020 \
-                     $f_Scale.s025 \
-                     $f_Scale.s040 \
-                     $f_Scale.s050 \
-                     $f_Scale.s100
+                #
+                # ... see rattleCAD::cv_custom::DraftingColour
+                #       secondary  darkmagenta
+                #       result     darkblue
+                #       background gray50    
+                #
+            label       $baseFrame.select.label_1      -text "Frame Config"      
+            radiobutton $baseFrame.select.hybrid       -text "Hybrid"            -value {Hybrid}        -variable rattleCAD::view::gui::frame_configMethod  -command {rattleCAD::view::updateView force}
+            radiobutton $baseFrame.select.stackreach   -text "Stack & Reach"     -value {StackReach}    -variable rattleCAD::view::gui::frame_configMethod  -command {rattleCAD::view::updateView force}
+            radiobutton $baseFrame.select.classic      -text "Classic"           -value {Classic}       -variable rattleCAD::view::gui::frame_configMethod  -command {rattleCAD::view::updateView force}
+            radiobutton $baseFrame.select.lugs         -text "Follow Lugs"       -value {Lugs}          -variable rattleCAD::view::gui::frame_configMethod  -command {rattleCAD::view::updateView force}
+            ttk::separator $baseFrame.select.seperator
+            label       $baseFrame.select.label_2      -text "Show Dimension"      
+            checkbutton $baseFrame.select.dimSec       -text "Secondary"         -variable rattleCAD::view::gui::show_secondaryDimension                    -command {rattleCAD::view::updateView force}
+            checkbutton $baseFrame.select.dimRes       -text "Result"            -variable rattleCAD::view::gui::show_resultDimension                       -command {rattleCAD::view::updateView force}
+            checkbutton $baseFrame.select.dimBack      -text "Background"        -variable rattleCAD::view::gui::show_backgroundDimension                   -command {rattleCAD::view::updateView force}
+                #
+            grid config $baseFrame.select.label_1      -column 0 -row 0 -sticky "w"
+            grid config $baseFrame.select.hybrid       -column 0 -row 1 -sticky "w"
+            grid config $baseFrame.select.stackreach   -column 0 -row 2 -sticky "w"
+            grid config $baseFrame.select.classic      -column 0 -row 3 -sticky "w"
+            grid config $baseFrame.select.lugs         -column 0 -row 4 -sticky "w"
+            grid config $baseFrame.select.seperator    -column 0 -row 5 -sticky "nsew"
+            grid config $baseFrame.select.label_2      -column 0 -row 6 -sticky "w"
+            grid config $baseFrame.select.dimSec       -column 0 -row 7 -sticky "w"
+            grid config $baseFrame.select.dimRes       -column 0 -row 8 -sticky "w"
+            grid config $baseFrame.select.dimBack      -column 0 -row 9 -sticky "w"
+                #
+            $baseFrame.select.dimSec    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(secondary)   -activeforeground white
+            $baseFrame.select.dimRes    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(result)      -activeforeground white
+            $baseFrame.select.dimBack   configure  -activebackground $rattleCAD::cv_custom::DraftingColour(background)  -activeforeground white
+                #
+            set newFont [format {%s bold}  [$baseFrame.select.label_2 cget -font]]
+            $baseFrame.select.label_1 configure   -font $newFont
+            $baseFrame.select.label_2 configure   -font $newFont
+                #
+            return
+                #
+    }
+
+
+    #-------------------------------------------------------------------------
+       #  create menue to change scale and size of Stage 
+       #
+    proc change_FormatScale {cv x y {type {default}}}  {
+                #
+            set cv_Name [lindex [split $cv .] end-1]
+                #
+            set     rattleCAD::view::gui::stageFormat    A4
+            set     rattleCAD::view::gui::stageScale     0.20        
+                #
+            if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
+                    catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
+                            $cv create window $x $y \
+                                    -window $baseFrame \
+                                    -anchor nw \
+                                    -tags __Select__SubMenue__
+                            frame $baseFrame.select
+                            pack  $baseFrame.select
+                          }
+            } else {
+                    $cv delete     __Select__SubMenue__
+                    $cv dtag       __Select__SubMenue__
+                    destroy        .f_subMenue_$cv_Name
+                    return
             }
-            
-            pack $f_DIN_Format $f_Scale -side left
+                #
+            radiobutton $baseFrame.select.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $baseFrame.select.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $baseFrame.select.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $baseFrame.select.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $baseFrame.select.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                #
+            grid config $baseFrame.select.a4   -column 0 -row 0 -sticky "w"
+            grid config $baseFrame.select.a3   -column 0 -row 1 -sticky "w"
+            grid config $baseFrame.select.a2   -column 0 -row 2 -sticky "w"
+            grid config $baseFrame.select.a1   -column 0 -row 3 -sticky "w"
+            grid config $baseFrame.select.a0   -column 0 -row 4 -sticky "w"
+                #
+            if {$type == {default}} {
+                    radiobutton $baseFrame.select.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $baseFrame.select.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $baseFrame.select.s033 -text "1:3  "     -value 0.33 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $baseFrame.select.s040 -text "1:2,5"     -value 0.40 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $baseFrame.select.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $baseFrame.select.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                        #
+                    grid config $baseFrame.select.s020 -column 1 -row 0 -sticky "w"
+                    grid config $baseFrame.select.s025 -column 1 -row 1 -sticky "w"
+                    grid config $baseFrame.select.s033 -column 1 -row 2 -sticky "w"
+                    grid config $baseFrame.select.s040 -column 1 -row 3 -sticky "w"
+                    grid config $baseFrame.select.s050 -column 1 -row 4 -sticky "w"
+                    grid config $baseFrame.select.s100 -column 1 -row 5 -sticky "w"
+            }
             
             button  $baseFrame.update \
                         -text "update" \
@@ -1211,6 +1261,7 @@
 			  # 
     }
 
+    
     #-------------------------------------------------------------------------
        #  change type of Frame Jig dimensioning
        #

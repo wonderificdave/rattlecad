@@ -21,6 +21,7 @@ package ifneeded   rattleCAD  3.4 "\
         [list source  [file join $dir lib_cv__update.tcl]]; \
         [list source  [file join $dir lib_cv_bikeRendering.tcl]]; \
         [list source  [file join $dir lib_cv_dimension.tcl]]; \
+        [list source  [file join $dir lib_cv_dimension_BaseGeometry.tcl]]; \
         [list source  [file join $dir lib_cv_rearMockup.tcl]]; \
         [list source  [file join $dir lib_cv_frameJig.tcl]]; \
         [list source  [file join $dir lib_cv_compLibrary.tcl]]; \

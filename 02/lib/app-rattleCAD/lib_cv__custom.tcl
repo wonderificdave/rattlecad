@@ -72,6 +72,16 @@
             variable    Position        ;  array set Position       {}
             variable    Length          ;  array set Length         {}
             variable    Vector          ;  array set Vector         {}
+            
+            variable    DraftingColour  ; array set   DraftingColour {
+                                                personal   darkorange
+                                                personal_2 goldenrod
+                                                primary    darkred
+                                                secondary  darkmagenta
+                                                result     darkblue
+                                                background gray50
+                                            }
+                        
 
             
     proc unset_Position {} { 
@@ -104,6 +114,7 @@
 
             
             variable    BottomBracket
+            variable    ChainStay
             variable    DownTube
             variable    Fork
             variable    FrameJig
@@ -130,7 +141,26 @@
             variable    Angle
             variable    Vector
 
+            variable    DraftingColour
 
+                        # colourtable: http://www.ironspider.ca/format_text/fontcolor.htm
+                        # set colour(primary)       red
+                        # set colour(secondary)     darkorange
+                        # set colour(third)         darkblue
+                        # set colour(result)        darkred
+                        # set colour(primary)       darkorange
+                        # set colour(primary)       darkorchid
+                        # set colour(primary)       red
+                        # set colour(primary)       blue
+                        # set colour(secondary)     darkred
+                        # set colour(secondary)     darkorange
+                        # set colour(third)         firebrick
+                        # set colour(result)        firebrick
+                        # set colour(result)        darkorange
+                        # set colour(result)        blue
+            
+            
+            
                 # --- get stageScale
             set stageScale        [ $cv_Name  getNodeAttr  Stage    scale ]
 
@@ -189,6 +219,7 @@
             set SeatTube(Ground)            [ rattleCAD::model::get_Position    SeatTube_Ground         $BB_Position ]
             set Steerer(Ground)             [ rattleCAD::model::get_Position    Steerer_Ground          $BB_Position ]
             set Position(BaseCenter)        [ rattleCAD::model::get_Position    BottomBracket_Ground    $BB_Position ]
+            set ChainStay(Dropout)          [ rattleCAD::model::get_Position    ChainStay_RearWheel     $BB_Position ]
 
             set FrontBrake(Mount)           [ rattleCAD::model::get_Position    FrontBrake_Mount        $BB_Position ]
             set FrontBrake(Help)            [ rattleCAD::model::get_Position    FrontBrake_Help         $BB_Position ]

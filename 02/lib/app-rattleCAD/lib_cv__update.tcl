@@ -51,13 +51,7 @@
 
         switch $cv_Name {
             rattleCAD::view::gui::cv_Custom02  { rattleCAD::cv_custom::update_Reference         $cv_Name  $updatePosition }
-            rattleCAD::view::gui::cv_Custom00  { 
-                                    if {$::APPL_Config(FrameConfig) == {freeAngle}} {
-                                                 rattleCAD::cv_custom::update_BaseGeometry      $cv_Name  $updatePosition 
-                                          } else {
-                                                 rattleCAD::cv_custom::update_BaseGeometryLug   $cv_Name  $updatePosition
-                                          }
-                                    }
+            rattleCAD::view::gui::cv_Custom00  { rattleCAD::cv_custom::update_BaseGeometry      $cv_Name  $updatePosition }
             rattleCAD::view::gui::cv_Custom01  { rattleCAD::cv_custom::update_BaseGeometryLug   $cv_Name  $updatePosition }
             rattleCAD::view::gui::cv_Custom10  { rattleCAD::cv_custom::update_FrameDetails      $cv_Name  $updatePosition }
             rattleCAD::view::gui::cv_Custom20  { rattleCAD::cv_custom::update_RearMockup        $cv_Name  $updatePosition }
@@ -139,11 +133,90 @@
             rattleCAD::rendering::createBaseline     $cv_Name $xy
                 #
             createDimension                   $cv_Name $xy    point_seat
+            createDimension                   $cv_Name $xy    point_frame
+                #
+            rattleCAD::rendering::createFrame_Centerline $cv_Name $xy
+                #
+            createDimension                   $cv_Name $xy    point_personal
+            createDimension                   $cv_Name $xy    point_crank
+                #
+            puts "   ... \$rattleCAD::view::gui::show_backgroundDimension $rattleCAD::view::gui::show_backgroundDimension"
+                #
+            set dimBG   $rattleCAD::view::gui::show_backgroundDimension
+            set dimRes  $rattleCAD::view::gui::show_resultDimension
+            set dimSec  $rattleCAD::view::gui::show_secondaryDimension          
+                #
+            switch -exact $rattleCAD::view::gui::frame_configMethod {
+                    {freeAngle} { 
+                            createDimension $cv_Name $xy    geometry_fg_free 
+                        }
+                    {Hybrid} {      
+                            if {$dimBG}  {createDimension_Geometry_hybrid_background      $cv_Name    $xy}
+                            if {$dimRes} {createDimension_Geometry_hybrid_result          $cv_Name    $xy     active}                    
+                            if {$dimSec} {createDimension_Geometry_hybrid_secondary       $cv_Name    $xy     active}                     
+                            createDimension_Geometry_hybrid_primary         $cv_Name    $xy     active                      
+                            createDimension_Geometry_hybrid_personal        $cv_Name    $xy     active                      
+                        }
+                    {StackReach} { 
+                            if {$dimBG}  {createDimension_Geometry_stackreach_background  $cv_Name    $xy}
+                            if {$dimRes} {createDimension_Geometry_stackreach_result      $cv_Name    $xy     active}
+                            if {$dimSec} {createDimension_Geometry_stackreach_secondary   $cv_Name    $xy     active}
+                            createDimension_Geometry_stackreach_primary     $cv_Name    $xy     active
+                            createDimension_Geometry_stackreach_personal    $cv_Name    $xy     active 
+                        }
+                    {Classic} {
+                            # createDimension                   $cv_Name $xy    cline_frame
+                            # createDimension_CLineFrame                      $cv_Name    $xy
+                            # createDimension $cv_Name $xy    geometry_bg_free
+                            if {$dimBG}  {createDimension_Geometry_classic_background     $cv_Name    $xy}
+                            if {$dimRes} {createDimension_Geometry_classic_result         $cv_Name    $xy     active} 
+                            if {$dimSec} {createDimension_Geometry_classic_secondary      $cv_Name    $xy     active} 
+                            createDimension_Geometry_classic_primary        $cv_Name    $xy    active 
+                            createDimension_Geometry_classic_personal       $cv_Name    $xy    active 
+                        }
+                    {Lugs} { 
+                            if {$dimBG}  {createDimension_Geometry_lugs_background        $cv_Name    $xy}
+                            if {$dimRes} {createDimension_Geometry_lugs_result            $cv_Name    $xy     active}
+                            if {$dimSec} {createDimension_Geometry_lugs_secondary         $cv_Name    $xy     active}
+                            createDimension_Geometry_lugs_primary           $cv_Name    $xy     active
+                            createDimension_Geometry_lugs_personal          $cv_Name    $xy     active
+                        }
+                    default {   
+                            createDimension $cv_Name $xy    geometry_fg_lug 
+                        }
+            }
+                #
+            createDimension                   $cv_Name $xy    point_reference
+                #
+            update_renderCenterline           $cv_Name
+                #
+            createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
+                #
+            rattleCAD::view::gui::notebook_createButton    $cv_Name       FrameConfigMode
+                #
+    }
+
+
+
+    proc rattleCAD::cv_custom::update_BaseGeometryHybrid {cv_Name updatePosition} {
+                #
+                # -- base geometry
+                #
+            variable     bottomCanvasBorder
+                #
+            set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
+            $cv_Name        clean_StageContent
+                #
+            update_cv_Parameter               $cv_Name $xy
+                #
+            rattleCAD::rendering::createBaseline     $cv_Name $xy
+                #
+            createDimension                   $cv_Name $xy    point_seat
             createDimension                   $cv_Name $xy    cline_frame
             createDimension                   $cv_Name $xy    point_frame
             createDimension                   $cv_Name $xy    geometry_bg_free
                 #
-            rattleCAD::rendering::createFrame_Centerline $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
+            rattleCAD::rendering::createFrame_Centerline_old $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
                 #
             createDimension                   $cv_Name $xy    point_personal
             createDimension                   $cv_Name $xy    point_crank
@@ -176,7 +249,7 @@
             createDimension                   $cv_Name $xy    point_frame
             createDimension                   $cv_Name $xy    geometry_bg_lug
                 #
-            rattleCAD::rendering::createFrame_Centerline $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
+            rattleCAD::rendering::createFrame_Centerline_old $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
                 #
             createDimension                   $cv_Name $xy    point_personal
             createDimension                   $cv_Name $xy    point_crank
