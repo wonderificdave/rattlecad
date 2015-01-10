@@ -556,6 +556,8 @@
 2014.12.13                    6:00   3.4.02 ... 18 ... bikeGeometry 1.27   ... set_to_project
 2014.12...                    5:00   3.4.02 ... 21 ... bikeGeometry 1.30   ... tubemiter debug
 2014.01.04                   40:00   3.4.02 ... 22 ... bikeGeometry 1.31   ... frame determination via lugs
+2014.01.09                   10:00   3.4.02 ... 23 ... configure BaseGeometry Visualisation
+2014.01.09                    5:00   3.4.02 ... 24 ... cleanup
 
 
 
@@ -571,6 +573,5 @@
 
 
                            
-                           
-2014.11.07                    1:00   3.4.02 ... 05 ... bikeGeometry 1.08 move all project-templates to bikeGeometry                            
+                        
                               
