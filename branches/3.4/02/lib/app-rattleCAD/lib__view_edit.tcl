@@ -172,7 +172,7 @@
 
 
     proc rattleCAD::view::edit::group_HandleBar_Parameter               {x y cv_Name} {
-          rattleCAD::view::createEdit  $x $y $cv_Name  {                
+            rattleCAD::view::createEdit  $x $y $cv_Name  {                
                 file://Component(HandleBar)
                        Scalar(HandleBar/PivotAngle)
               } {HandleBar Parameter - 001} 
@@ -571,3 +571,19 @@
                        Scalar(RearMockup/CassetteClearance)
                 } "ChainStay:  Area - 047"
     }
+    proc rattleCAD::view::edit::group_Rendering_Parameter               {x y cv_Name} {
+            rattleCAD::view::createEdit $x $y $cv_Name  {
+                list://Config(Fork@SELECT_ForkType)
+                list://Config(ForkBlade@SELECT_ForkBladeType)
+                list://Config(FrontBrake@SELECT_BrakeType)
+                list://Config(RearBrake@SELECT_BrakeType)
+                list://Config(BottleCage_SeatTube@SELECT_BottleCage)
+                list://Config(BottleCage_DownTube@SELECT_BottleCage)
+                list://Config(BottleCage_DownTube_Lower@SELECT_BottleCage)
+                list://Config(FrontFender@SELECT_Binary_OnOff)
+                list://Config(RearFender@SELECT_Binary_OnOff)
+                file://Component(FrontCarrier)
+                file://Component(RearCarrier)
+               } "Rendering: - 099"
+    } 
+

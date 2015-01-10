@@ -231,8 +231,8 @@
 
                 # -----------------
                 #   Concept - Primary
-            ttk::labelframe $menueFrame.sf.lf_01        -text "Base Concept - Primary Values"
-                pack $menueFrame.sf.lf_01               -side top  -fill x  -expand yes  -pady 2
+            ttk::labelframe $menueFrame.sf.lf_01            -text "Base Concept - Primary Values"
+                pack $menueFrame.sf.lf_01                   -side top  -fill x  -expand yes  -pady 2
                     create_configEdit $menueFrame.sf.lf_01      Scalar/Geometry/HandleBar_Distance      0.20  orangered     ;# Personal(HandleBar_Distance)    
                     create_configEdit $menueFrame.sf.lf_01      Scalar/Geometry/HandleBar_Height        0.20  orangered     ;# Personal(HandleBar_Height)      
                     create_configEdit $menueFrame.sf.lf_01      Scalar/Geometry/Saddle_Distance         0.20  orangered     ;# Personal(Saddle_Distance)       
@@ -242,8 +242,8 @@
 
                 # -----------------
                 #   Concept
-            ttk::labelframe    $menueFrame.sf.lf_02        -text "Base Concept - Secondary Values"
-                pack $menueFrame.sf.lf_02                 -side top  -fill x  -expand yes  -pady 2
+            ttk::labelframe    $menueFrame.sf.lf_02         -text "Base Concept - Secondary Values"
+                pack $menueFrame.sf.lf_02                   -side top  -fill x  -expand yes  -pady 2
                     create_configEdit $menueFrame.sf.lf_01      Scalar/SeatPost/Setback                 0.20  darkred       ;# Component(SeatPost/Setback)     
                     create_configEdit $menueFrame.sf.lf_02      Scalar/Geometry/Fork_Rake               0.20  darkred       ;# Component(Fork/Rake)            
                     create_configEdit $menueFrame.sf.lf_02      Scalar/Geometry/Fork_Height             0.20  darkred       ;# Component(Fork/Height)          
@@ -255,8 +255,8 @@
 
                 # -----------------
                 #   Alternatives
-            ttk::labelframe    $menueFrame.sf.lf_03        -text "Base Concept - Alternative Values"
-                pack $menueFrame.sf.lf_03                 -side top  -fill x  -expand yes  -pady 2
+            ttk::labelframe    $menueFrame.sf.lf_03         -text "Base Concept - Alternative Values"
+                pack $menueFrame.sf.lf_03                   -side top  -fill x  -expand yes  -pady 2
                     create_configEdit $menueFrame.sf.lf_03      Scalar/Geometry/TopTube_Virtual         0.20  darkblue          ;#Result(Length/TopTube/VirtualLength)  
                     create_configEdit $menueFrame.sf.lf_03      Scalar/Geometry/FrontWheel_x            0.20  darkblue          ;#Result(Length/FrontWheel/horizontal)  
                     create_configEdit $menueFrame.sf.lf_03      Scalar/Geometry/FrontWheel_xy           0.20  darkblue          ;#Result(Length/FrontWheel/diagonal)    
@@ -265,8 +265,8 @@
                     
                 # -----------------
                 #   Wheels
-            ttk::labelframe $menueFrame.sf.lf_04        -text "Wheels"
-                pack $menueFrame.sf.lf_04               -side top  -fill x  -pady 2
+            ttk::labelframe $menueFrame.sf.lf_04            -text "Wheels"
+                pack $menueFrame.sf.lf_04                   -side top  -fill x  -pady 2
 
                     create_config_cBox  $menueFrame.sf.lf_04    Scalar/Geometry/RearRim_Diameter        $rattleCAD::model::valueRegistry(Rim)         ;# Component(Wheel/Rear/RimDiameter) 
                     create_configEdit   $menueFrame.sf.lf_04    Scalar/Geometry/RearTyre_Height         0.20                                          ;# Component(Wheel/Rear/TyreHeight)  
