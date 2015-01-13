@@ -54,7 +54,7 @@
 
     variable    external_canvasCAD  ;   array    set external_canvasCAD {}
     
-    variable    frame_configMethod      {Hybrid}
+    variable    frame_configMethod      {Default}
     variable    show_secondaryDimension 1
     variable    show_resultDimension    1
     variable    show_summaryDimension   1
@@ -1036,15 +1036,15 @@
             pack $contentFrame  -fill x
                     #
             label       $contentFrame.label_1      -text "Frame Config:"      
-            radiobutton $contentFrame.hybrid       -text "rattleCAD"         -value {Hybrid}        -variable rattleCAD::view::gui::frame_configMethod  -command {rattleCAD::view::updateView force}
-            radiobutton $contentFrame.stackreach   -text "Stack & Reach"     -value {StackReach}    -variable rattleCAD::view::gui::frame_configMethod  -command {rattleCAD::view::updateView force}
-            radiobutton $contentFrame.classic      -text "Classic"           -value {Classic}       -variable rattleCAD::view::gui::frame_configMethod  -command {rattleCAD::view::updateView force}
-            radiobutton $contentFrame.lugs         -text "Lug Angles"        -value {Lugs}          -variable rattleCAD::view::gui::frame_configMethod  -command {rattleCAD::view::updateView force}
+            radiobutton $contentFrame.hybrid       -text "rattleCAD"         -value {Default}       -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
+            radiobutton $contentFrame.stackreach   -text "Stack & Reach"     -value {StackReach}    -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
+            radiobutton $contentFrame.classic      -text "Classic"           -value {Classic}       -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
+            radiobutton $contentFrame.lugs         -text "Lug Angles"        -value {Lugs}          -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
             ttk::separator $contentFrame.seperator
             label       $contentFrame.label_2      -text "Show Dimension:"      
-            checkbutton $contentFrame.dimSec       -text "Secondary"         -variable rattleCAD::view::gui::show_secondaryDimension                    -command {rattleCAD::view::updateView force}
-            checkbutton $contentFrame.dimRes       -text "Result"            -variable rattleCAD::view::gui::show_resultDimension                       -command {rattleCAD::view::updateView force}
-            checkbutton $contentFrame.dimSum       -text "Summary"           -variable rattleCAD::view::gui::show_summaryDimension                      -command {rattleCAD::view::updateView force}
+            checkbutton $contentFrame.dimSec       -text "Secondary"         -variable rattleCAD::view::gui::show_secondaryDimension                -command {rattleCAD::view::updateView force}
+            checkbutton $contentFrame.dimRes       -text "Result"            -variable rattleCAD::view::gui::show_resultDimension                   -command {rattleCAD::view::updateView force}
+            checkbutton $contentFrame.dimSum       -text "Summary"           -variable rattleCAD::view::gui::show_summaryDimension                  -command {rattleCAD::view::updateView force}
                 #
             grid config $contentFrame.label_1      -column 0 -row 0 -sticky "w"
             grid config $contentFrame.hybrid       -column 0 -row 1 -sticky "w"

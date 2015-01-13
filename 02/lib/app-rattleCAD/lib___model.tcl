@@ -53,6 +53,9 @@ namespace eval rattleCAD::model {
     array set valueRegistry      {}
     
       # ----------------- #	
+    variable geometry_IF   ::bikeGeometry::IF_Default
+      
+      # ----------------- #	
     namespace import ::bikeGeometry::set_newProject
     namespace import ::bikeGeometry::get_projectDOM
     namespace import ::bikeGeometry::get_projectDICT
@@ -71,7 +74,7 @@ namespace eval rattleCAD::model {
     namespace import ::bikeGeometry::set_Component
     namespace import ::bikeGeometry::set_Config
     namespace import ::bikeGeometry::set_ListValue
-    namespace import ::bikeGeometry::set_Scalar        
+    # namespace import ::bikeGeometry::set_Scalar        
         #
     namespace import ::bikeGeometry::get_Polygon
     namespace import ::bikeGeometry::get_Position
@@ -89,11 +92,55 @@ namespace eval rattleCAD::model {
         #
     namespace import ::bikeGeometry::coords_xy_index
         #
-    namespace import ::bikeGeometry::set_Value
-    namespace import ::bikeGeometry::set_resultParameter   
+        # expired namespace import ::bikeGeometry::set_Value
+        # expired namespace import ::bikeGeometry::set_resultParameter   
         #
 }
 	
+    
+    proc rattleCAD::model::set_Scalar {object key value} {
+            #
+        variable  geometry_IF
+        return  [$geometry_IF set_Scalar ${object} ${key} ${value}]
+            #
+    }
+    proc rattleCAD::model::set_geometry_IF {interfaceName} {
+            #
+        variable  geometry_IF
+            #
+        set last_IF $geometry_IF
+            #
+        puts "\n"
+        puts "    =========== rattleCAD::model::set_geometry_IF ==============-start-=="
+            #
+        switch -exact $interfaceName {
+                {Classic}       {set geometry_IF ::bikeGeometry::IF_Classic}
+                {Default}       {set geometry_IF ::bikeGeometry::IF_Default}
+                {Lugs}          {set geometry_IF ::bikeGeometry::IF_LugAngles}
+                {StackReach}    {set geometry_IF ::bikeGeometry::IF_StackReach}
+                default         {}
+        }
+            #
+        puts "          <I> new Interface: $geometry_IF"
+        puts ""
+        foreach {subcmd proc} [namespace ensemble configure $geometry_IF -map] {
+                    puts [format {                   %-30s %-20s  <- %s }     $subcmd [info args $proc] $proc ]
+                }
+        puts ""
+        puts "    =========== rattleCAD::model::set_geometry_IF ================-end-=="
+        puts "\n"
+            #
+        if {$last_IF != $geometry_IF} {
+                # puts " ... $last_IF != $geometry_IF  -> 1"
+            return 1
+        } else {
+                # puts " ... $last_IF == $geometry_IF  -> 0"
+            return 0
+        }
+    }
+    
+    
+    
     proc rattleCAD::model::updateModel {} {
 		variable modelDICT
 		variable modelDOM

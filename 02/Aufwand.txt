@@ -558,6 +558,7 @@
 2014.01.04                   40:00   3.4.02 ... 22 ... bikeGeometry 1.31   ... frame determination via lugs
 2014.01.09                   10:00   3.4.02 ... 23 ... configure BaseGeometry Visualisation
 2014.01.09                    5:00   3.4.02 ... 24 ... cleanup
+2014.01.12                    5:00   3.4.02 ... 25 ... bikeGeometry 1.32   ... implement interfaces
 
 
 
