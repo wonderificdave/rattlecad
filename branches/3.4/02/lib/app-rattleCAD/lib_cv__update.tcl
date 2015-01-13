@@ -147,7 +147,7 @@
             set dimSec  $rattleCAD::view::gui::show_secondaryDimension          
                 #
             switch -exact $rattleCAD::view::gui::frame_configMethod {
-                    {Hybrid} {      
+                    {Default} {      
                             if {$dimSum} {createDimension_Geometry_hybrid_summary       $cv_Name    $xy}
                             if {$dimRes} {createDimension_Geometry_hybrid_result        $cv_Name    $xy     active}                    
                             if {$dimSec} {createDimension_Geometry_hybrid_secondary     $cv_Name    $xy     active}                     

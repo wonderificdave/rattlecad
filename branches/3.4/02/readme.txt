@@ -1,5 +1,14 @@
 
 
+3.4.02.25  - 2014.01.12
+-------------------------------------------------------------------------------
+    refactor:
+        bikeGeometry 1.32 with different behaviour on 
+            rattleCAD::control::frame_configMode
+    debug:
+        ... set SeatTube and DownTube Offset to 0 if using LugAngle Method
+
+
 3.4.02.24  - 2014.01.09
 -------------------------------------------------------------------------------
     refactor:

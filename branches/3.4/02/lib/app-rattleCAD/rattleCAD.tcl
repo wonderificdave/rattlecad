@@ -158,11 +158,7 @@
               # -- Application - Logging  -----------
           set ::APPL_Config(LogFile)          [open [file join $::APPL_Config(USER_Dir) _logFile.txt] w]
           
-          
-              # -- Frame config - mode --------------
-          # set ::APPL_Config(FrameMethod)      {Hybrid}
-
-               
+                         
               # -- MainFrame - Indicator  -----------
           set ::APPL_Config(MainFrameInd_Project)  {}
           set ::APPL_Config(MainFrameInd_Status)   {}

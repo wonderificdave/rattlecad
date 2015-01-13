@@ -62,6 +62,8 @@
                     projectSave       {}
                 }
           # ----------------- #
+        variable    frame_configMode    {Default}
+          # ----------------- #
     }
     
     proc rattleCAD::control::updateControl {} {
@@ -248,6 +250,29 @@
 	
 	}
 
+    proc rattleCAD::control::set_frameConfigMode {} {
+            #
+        variable frame_configMode
+            #
+        switch -exact $frame_configMode {
+                {Default}    -
+                {StackReach} -
+                {Lugs}       -
+                {Classic}   {
+                        if {[rattleCAD::model::set_geometry_IF $frame_configMode]} {
+                                # puts "   <I>  rattleCAD::control::set_frameConfigMode ... $frame_configMode"
+                                # set steering parameter in rattleCAD::view::gui
+                            set rattleCAD::view::gui::frame_configMethod $frame_configMode
+                                # update view
+                            rattleCAD::view::updateView force
+                                #
+                        }
+                }
+                default         {}            
+        }            
+            #
+    }
+    
     proc rattleCAD::control::setSession {name value} {
         variable  Session
         set Session($name) "${value}"

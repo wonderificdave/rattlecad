@@ -1115,7 +1115,7 @@
             set excludeList     {}
                 #
             switch -exact $rattleCAD::view::gui::frame_configMethod {
-                {Hybrid} {
+                {Default} {
                             set highlightList_1 {chainstay fork saddle seattube steerer stem } 
                             set highlightList_2 {} 
                         }
@@ -1200,7 +1200,7 @@
     
                 # ------ virtual top- and seattube 
             switch -exact $rattleCAD::view::gui::frame_configMethod {
-                {Hybrid} {
+                {Default} {
                             $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $SeatTube_BBracket] -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
                         }
                 {StackReach} -
