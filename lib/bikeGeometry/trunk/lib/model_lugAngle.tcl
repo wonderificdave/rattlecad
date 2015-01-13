@@ -70,6 +70,10 @@
             # -- set value to parameter
         bikeGeometry::update_Geometry
             #
+            # -- calculation does not take care about SeatTube & DownTube Offset to BottomBracket
+        bikeGeometry::set_Scalar    SeatTube OffsetBB           0    
+        bikeGeometry::set_Scalar    DownTube OffsetBB           0    
+            #  
         bikeGeometry::set_Scalar    Geometry SeatTube_Angle     $angle_SeatTube    
             #  
         bikeGeometry::set_Scalar    Geometry HeadLug_Angle_Top  $angle_HeadTubeTopTube    
@@ -442,7 +446,7 @@
         set Geometry(BottomBracket_Angle_ChainStay) $angle_SeatTubeChainStay
         set Geometry(BottomBracket_Angle_DownTube)  $angle_SeatTubeDownTube      
         set Geometry(HeadLug_Angle_Bottom)          $angle_HeadTubeDownTube      
-        set Geometry(HeadLug_Angle_Top)              $angle_HeadTubeTopTube       
+        set Geometry(HeadLug_Angle_Top)             $angle_HeadTubeTopTube       
             #
     }
     

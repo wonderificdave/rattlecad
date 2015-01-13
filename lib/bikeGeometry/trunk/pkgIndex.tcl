@@ -8,23 +8,32 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded bikeGeometry  1.31 "\
-            [list source [file join $dir lib project.tcl]]; \
-            [list source [file join $dir lib lib_projectUpdate.tcl]]; \
+package ifneeded bikeGeometry  1.32 "\
+            [list source [file join $dir lib project3x project.tcl]]; \
+            [list source [file join $dir lib project3x lib_projectUpdate.tcl]]; \
+                \
             [list source [file join $dir lib bikeGeometry.tcl]]; \
             [list source [file join $dir lib model_freeAngle.tcl]]; \
             [list source [file join $dir lib model_lugAngle.tcl]]; \
             [list source [file join $dir lib lib_bikeGeometry.tcl]]; \
-            [list source [file join $dir lib lib_bikeGeometryResult.tcl]]; \
             [list source [file join $dir lib lib_bikeGeometryExt.tcl]]; \
             [list source [file join $dir lib lib_bikeGeometryFork.tcl]]; \
             [list source [file join $dir lib lib_bikeGeometryComponents.tcl]]; \
             [list source [file join $dir lib lib_bikeGeometryFrameTubes.tcl]]; \
             [list source [file join $dir lib lib_tube.tcl]]; \
             [list source [file join $dir lib lib_reynoldsFEA.tcl]]; \
+                \
+            [list source [file join $dir lib geometry3D geometry3D.tcl]]; \
+            [list source [file join $dir lib geometry3D lib_polyhedron.tcl]]; \
+                \
+            [list source [file join $dir lib IF_Default.tcl]]; \
+            [list source [file join $dir lib IF_StackReach.tcl]]; \
+            [list source [file join $dir lib IF_LugAngles.tcl]]; \
+            [list source [file join $dir lib IF_Classic.tcl]]; \
         "
-#             [list source [file join $dir lib fruit.tcl]]; 
 
+# [list source [file join $dir lib lib_bikeGeometryResult.tcl]]; \      
+# [list source [file join $dir lib fruit.tcl]]; 
 # [list source [file join $dir lib lib_geometry.tcl]]; \
 # [list source [file join $dir lib lib_components.tcl]]; \
 # [list source [file join $dir lib lib_frametubes.tcl]]; \

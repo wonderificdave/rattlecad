@@ -46,7 +46,7 @@
     
     # --------------------------------------------
         # Export as global command
-    variable packageHomeDir [file normalize [file join [pwd] [file dirname [info script]]] ]
+    variable packageHomeDir [file normalize [file join [pwd] [file dirname [file dirname [info script]]]] ]
     
     
     #-------------------------------------------------------------------------

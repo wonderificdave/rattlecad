@@ -431,11 +431,11 @@
             set Geometry(HeadLug_Angle_Bottom)          [format "%.4f" [ get_resultAngle $Position(DownTube_End)    $BB_Position        $Position(Steerer_Start)      ]]  ;# Result(Angle/HeadTube/DownTube)      
             set Geometry(SeatLug_Angle_TopTube)         [format "%.4f" [ get_resultAngle $Position(TopTube_Start)   $BB_Position        $Position(TopTube_End)  ]]  ;# Result(Angle/SeatTube/TopTube)       
             set Geometry(SeatLug_Angle_SeatStay)        [format "%.4f" [ get_resultAngle $Position(SeatStay_End)    $ChainSt_SeatSt_IS  $BB_Position        ]]  ;# Result(Angle/SeatTube/SeatStay)      
-            puts "  ... set Geometry(BottomBracket_Angle_DownTube)"
             set Geometry(BottomBracket_Angle_DownTube)  [format "%.4f" [ get_resultAngle $BB_Position               $Position(DownTube_End)     $Position(TopTube_Start)  ]]  ;# Result(Angle/BottomBracket/DownTube) 
-            puts "  ... set $Geometry(BottomBracket_Angle_DownTube)"
             set Geometry(BottomBracket_Angle_ChainStay) [format "%.4f" [ get_resultAngle $BB_Position               $Position(TopTube_Start)    $ChainSt_SeatSt_IS  ]]  ;# Result(Angle/BottomBracket/ChainStay)
             set Geometry(BottomBracket_Angle_SeatStay)  [format "%.4f" [ get_resultAngle $ChainSt_SeatSt_IS         $BB_Position        $Position(SeatStay_End) ]]  ;# Result(Angle/SeatStay/ChainStay)                 
+                # puts "  ... set Geometry(BottomBracket_Angle_DownTube)"
+                # puts "  ... set $Geometry(BottomBracket_Angle_DownTube)"
                 #
                 # --- Reference Position ------------------------------
                 #             
