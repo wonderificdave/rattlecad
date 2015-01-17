@@ -1,10 +1,21 @@
 
 
+3.4.02.26  - 2014.01.17
+-------------------------------------------------------------------------------
+    refactor:
+        ... bikeGeometry 1.33 cleanup 
+        ... rattleCAD::cv_custom::update_BaseGeometry
+        ... rattleCAD::control::frame_configMode
+        ... rattleCAD::rendering::createFrame_Centerline
+    debug
+        ... frameConfigMode: LugAngles
+        
+        
 3.4.02.25  - 2014.01.12
 -------------------------------------------------------------------------------
     refactor:
-        bikeGeometry 1.32 with different behaviour on 
-            rattleCAD::control::frame_configMode
+        ... bikeGeometry 1.32 with different behaviour on 
+            ... rattleCAD::control::frame_configMode
     debug:
         ... set SeatTube and DownTube Offset to 0 if using LugAngle Method
 

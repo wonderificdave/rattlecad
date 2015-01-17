@@ -140,14 +140,14 @@
             createDimension                   $cv_Name $xy    point_personal
             createDimension                   $cv_Name $xy    point_crank
                 #
-            puts "   ... \$rattleCAD::view::gui::show_summaryDimension $rattleCAD::view::gui::show_summaryDimension"
+            # puts "   ... \$rattleCAD::view::gui::show_summaryDimension $rattleCAD::view::gui::show_summaryDimension"
                 #
             set dimSum  $rattleCAD::view::gui::show_summaryDimension
             set dimRes  $rattleCAD::view::gui::show_resultDimension
             set dimSec  $rattleCAD::view::gui::show_secondaryDimension          
                 #
             switch -exact $rattleCAD::view::gui::frame_configMethod {
-                    {Default} {      
+                    {OutsideIn} {      
                             if {$dimSum} {createDimension_Geometry_hybrid_summary       $cv_Name    $xy}
                             if {$dimRes} {createDimension_Geometry_hybrid_result        $cv_Name    $xy     active}                    
                             if {$dimSec} {createDimension_Geometry_hybrid_secondary     $cv_Name    $xy     active}                     
@@ -162,11 +162,11 @@
                             createDimension_Geometry_stackreach_personal                $cv_Name    $xy     active 
                         }
                     {Classic} {
-                            if {$dimSum} {createDimension_Geometry_classic_summary  $cv_Name    $xy}
+                            if {$dimSum} {createDimension_Geometry_classic_summary      $cv_Name    $xy}
                             if {$dimRes} {createDimension_Geometry_classic_result       $cv_Name    $xy     active} 
                             if {$dimSec} {createDimension_Geometry_classic_secondary    $cv_Name    $xy     active} 
-                            createDimension_Geometry_classic_primary                    $cv_Name    $xy    active 
-                            createDimension_Geometry_classic_personal                   $cv_Name    $xy    active 
+                            createDimension_Geometry_classic_primary                    $cv_Name    $xy     active 
+                            createDimension_Geometry_classic_personal                   $cv_Name    $xy     active 
                         }
                     {Lugs} { 
                             if {$dimSum} {createDimension_Geometry_lugs_summary         $cv_Name    $xy}
