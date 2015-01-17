@@ -184,76 +184,7 @@
                 #
             createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name       FrameConfigMode
-                #
-    }
-
-
-
-    proc rattleCAD::cv_custom::update_BaseGeometryHybrid {cv_Name updatePosition} {
-                #
-                # -- base geometry
-                #
-            variable     bottomCanvasBorder
-                #
-            set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
-            $cv_Name        clean_StageContent
-                #
-            update_cv_Parameter               $cv_Name $xy
-                #
-            rattleCAD::rendering::createBaseline     $cv_Name $xy
-                #
-            createDimension                   $cv_Name $xy    point_seat
-            createDimension                   $cv_Name $xy    cline_frame
-            createDimension                   $cv_Name $xy    point_frame
-            createDimension                   $cv_Name $xy    geometry_bg_free
-                #
-            rattleCAD::rendering::createFrame_Centerline_old $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
-                #
-            createDimension                   $cv_Name $xy    point_personal
-            createDimension                   $cv_Name $xy    point_crank
-            createDimension                   $cv_Name $xy    geometry_fg_free
-            createDimension                   $cv_Name $xy    point_reference
-                #
-            update_renderCenterline           $cv_Name
-                #
-            createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
-                #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name       FrameConfigMode
-                #
-    }
-
-    proc rattleCAD::cv_custom::update_BaseGeometryLug {cv_Name updatePosition} {
-               #
-                # -- base geometry
-                #
-            variable     bottomCanvasBorder
-                #
-            set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
-            $cv_Name        clean_StageContent
-                #
-            update_cv_Parameter               $cv_Name $xy
-                #
-            rattleCAD::rendering::createBaseline     $cv_Name $xy
-                #
-            createDimension                   $cv_Name $xy    point_seat
-            createDimension                   $cv_Name $xy    cline_frame
-            createDimension                   $cv_Name $xy    point_frame
-            createDimension                   $cv_Name $xy    geometry_bg_lug
-                #
-            rattleCAD::rendering::createFrame_Centerline_old $cv_Name $xy    {saddle steerer chainstay fork} {seattube} {rearWheel frontWheel baseLine}
-                #
-            createDimension                   $cv_Name $xy    point_personal
-            createDimension                   $cv_Name $xy    point_crank
-            createDimension                   $cv_Name $xy    geometry_fg_lug
-            createDimension                   $cv_Name $xy    point_reference
-                #
-            update_renderCenterline           $cv_Name
-                #
-            createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
-                #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        FrameConfigMode
-                # rattleCAD::view::gui::notebook_createButton    $cv_Name        TubingCheckAngles
+            rattleCAD::view::gui::notebook_createButton    $cv_Name       change_FrameConfigMode
                 #
     }
 
@@ -319,7 +250,7 @@
                 #
             createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        TubingCheckAngles
+            rattleCAD::view::gui::notebook_createButton    $cv_Name        check_TubingAngles
                 #
     }
 
@@ -346,7 +277,7 @@
                 #
             update_renderCanvas               $cv_Name
                 #    
-            rattleCAD::view::gui::notebook_createButton    $cv_Name         {changeFormatScale}
+            rattleCAD::view::gui::notebook_createButton    $cv_Name         change_FormatScale
                 #
     }
 
@@ -415,7 +346,7 @@
                 #
             createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        changeFormatScale   format
+            rattleCAD::view::gui::notebook_createButton    $cv_Name        change_FormatScale   format
                 #
     }
 
@@ -459,7 +390,7 @@
                 #
             update_renderCanvas               $cv_Name         wheat
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        changeFormatScale
+            rattleCAD::view::gui::notebook_createButton    $cv_Name        change_FormatScale
                 #
     }
 
@@ -506,7 +437,7 @@
                 #
             update_renderCanvas               $cv_Name        wheat   gray98  gray93  gray93
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        changeRendering
+            rattleCAD::view::gui::notebook_createButton    $cv_Name        change_Rendering
                 #   
     }
 
@@ -562,7 +493,7 @@
                 #
             update_renderCanvas               $cv_Name        wheat
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        {changeFormatScale changeFrameJigVariant}
+            rattleCAD::view::gui::notebook_createButton    $cv_Name        change_FrameJigMode
                 #
     }
 

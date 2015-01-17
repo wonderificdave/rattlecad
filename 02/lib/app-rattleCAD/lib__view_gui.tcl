@@ -921,37 +921,32 @@
             
             set idx 0
             foreach cv_Button $cv_ButtonList {
-                set x_Position  20
-                set y_Position  20
+                set x_Position  4
+                set y_Position  4
                   # set x_Position  [expr 10 + $idx * 25]
                   # set y_Position  [expr 10 + $idx * 25]
                 incr idx
                 switch -regexp $cv_Button {
-                        changeFormatScale {
-                                    if {$type != {default}} {
-                                        set buttonText "Format"
-                                    } else {
-                                        set buttonText "Format & Scale"
-                                    }
+                        change_FormatScale {
                                     # -- create a Button to change Format and Scale of Stage
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FormatScale %s %s %s %s} $cv $x_Position $y_Position $type ]
                                 }
-                        TubingCheckAngles {
-                                    # -- create a Button to execute tubing_checkAngles
-                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::tubing_checkAngles %s} $cv]                   
-                                }
-                        FrameConfigMode {
+                        change_FrameConfigMode {
                                     # -- create a Button to change config mode of Frame: free, lug ...
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameConfig %s %s %s} $cv $x_Position $y_Position]
                                 }
-                        changeFrameJigVariant {
+                        change_FrameJigMode {
                                     # -- create a Button to set FrameJigVersion
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameJig %s %s %s} $cv $x_Position $y_Position ]
                                 }
-                        changeRendering {
+                        change_Rendering {
                                     # -- create a Button to set Rendering: BottleCage, Fork, ...
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
                         } 
+                        check_TubingAngles {
+                                    # -- create a Button to execute tubing_checkAngles
+                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::tubing_checkAngles %s} $cv]                   
+                                }
                         rem_ChainStayRendering {
                                     # -- create a Button to set ChainStayRendering
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::rendering_ChainStay %s} $cv]
@@ -1032,30 +1027,36 @@
                 #       result     darkblue
                 #       background gray50    
                 #
-            set contentFrame    [frame $baseFrame.select.content -relief sunken -bd 2]
-            pack $contentFrame  -fill x
+            set contentFrame    [frame $baseFrame.select.content -relief flat -bd 2 ]
+            pack $contentFrame  -fill x -expand yes
                     #
             label       $contentFrame.label_1      -text "Frame Config:"      
+            ttk::separator $contentFrame.seperator_1
+                # button $contentFrame.hybrid       -text "Outside-In"        -command {rattleCAD::view::gui::pushedButtonState OutsideIn }
+                # button $contentFrame.stackreach   -text "Stack & Reach"     -command {rattleCAD::view::gui::pushedButtonState StackReach}
+                # button $contentFrame.classic      -text "Classic"           -command {rattleCAD::view::gui::pushedButtonState Classic   }
+                # button $contentFrame.lugs         -text "Lug Angles"        -command {rattleCAD::view::gui::pushedButtonState Lugs      }
             radiobutton $contentFrame.hybrid       -text "Outside-In"        -value {OutsideIn}     -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
             radiobutton $contentFrame.stackreach   -text "Stack & Reach"     -value {StackReach}    -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
             radiobutton $contentFrame.classic      -text "Classic"           -value {Classic}       -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
             radiobutton $contentFrame.lugs         -text "Lug Angles"        -value {Lugs}          -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
-            ttk::separator $contentFrame.seperator
+            ttk::separator $contentFrame.seperator_2
             label       $contentFrame.label_2      -text "Show Dimension:"      
             checkbutton $contentFrame.dimSec       -text "Secondary"         -variable rattleCAD::view::gui::show_secondaryDimension                -command {rattleCAD::view::updateView force}
             checkbutton $contentFrame.dimRes       -text "Result"            -variable rattleCAD::view::gui::show_resultDimension                   -command {rattleCAD::view::updateView force}
             checkbutton $contentFrame.dimSum       -text "Summary"           -variable rattleCAD::view::gui::show_summaryDimension                  -command {rattleCAD::view::updateView force}
                 #
-            grid config $contentFrame.label_1      -column 0 -row 0 -sticky "w"
-            grid config $contentFrame.hybrid       -column 0 -row 1 -sticky "w"
-            grid config $contentFrame.stackreach   -column 0 -row 2 -sticky "w"
-            grid config $contentFrame.classic      -column 0 -row 3 -sticky "w"
-            grid config $contentFrame.lugs         -column 0 -row 4 -sticky "w"
-            grid config $contentFrame.seperator    -column 0 -row 5 -sticky "nsew"
-            grid config $contentFrame.label_2      -column 0 -row 6 -sticky "w"
-            grid config $contentFrame.dimSec       -column 0 -row 7 -sticky "w"
-            grid config $contentFrame.dimRes       -column 0 -row 8 -sticky "w"
-            grid config $contentFrame.dimSum       -column 0 -row 9 -sticky "w"
+            grid config $contentFrame.label_1      -column 0 -row  0 -sticky "w"
+            #grid config $contentFrame.seperator_1  -column 0 -row  1 -sticky "nsew"
+            grid config $contentFrame.hybrid       -column 0 -row  2 -sticky "w"
+            grid config $contentFrame.stackreach   -column 0 -row  3 -sticky "w"
+            grid config $contentFrame.classic      -column 0 -row  4 -sticky "w"
+            grid config $contentFrame.lugs         -column 0 -row  5 -sticky "w"
+            grid config $contentFrame.seperator_2  -column 0 -row  6 -sticky "nsew"
+            grid config $contentFrame.label_2      -column 0 -row  7 -sticky "w"
+            grid config $contentFrame.dimSec       -column 0 -row  8 -sticky "w"
+            grid config $contentFrame.dimRes       -column 0 -row  9 -sticky "w"
+            grid config $contentFrame.dimSum       -column 0 -row 10 -sticky "w"
                 #
             $contentFrame.dimSec    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(secondary)   -activeforeground white
             $contentFrame.dimRes    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(result)      -activeforeground white
@@ -1068,7 +1069,49 @@
             return
                 #
     }
-
+    proc pushedButtonState mode {
+        
+        if {$mode != {}} {
+            switch -exact $mode {
+                    {OutsideIn}  -
+                    {StackReach} -
+                    {Lugs}       -
+                    {Classic}   { 
+                                set rattleCAD::control::frame_configMode $mode
+                                rattleCAD::control::set_frameConfigMode
+                            }
+                    default return
+            }
+        }
+        
+        foreach button [list $contentFrame.hybrid   ] {
+            $button configure -relief raised
+        }
+        switch -exact $mode {
+                {OutsideIn}  { $contentFrame.hybrid     configure -relief sunken }
+                {StackReach} { $contentFrame.stackreach configure -relief sunken}
+                {Lugs}       { $contentFrame.classic    configure -relief sunken}
+                {Classic}    { $contentFrame.lugs       configure -relief sunken}
+                default {}
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        return
+        
+        puts $colour
+        set label [.$colour cget -text]
+        foreach c $::colours {
+            .$c configure -relief [expr {$c eq $label ? "sunken" : "raised"}]
+        }
+    }
 
     #-------------------------------------------------------------------------
        #  create menue to change scale and size of Stage 
@@ -1087,11 +1130,11 @@
                                     -anchor nw \
                                     -tags __Select__SubMenue__
                             frame   $baseFrame.select 
-                            pack    $baseFrame.select       
-                            frame   $baseFrame.select.lf       
-                            pack    $baseFrame.select.lf       -padx 2 -pady 2 -fill x
+                            pack    $baseFrame.select          -fill x
+                            frame   $baseFrame.select.lf             
+                            pack    $baseFrame.select.lf       -padx 2 -pady 2 -fill x -expand yes
                             label   $baseFrame.select.lf.label -text "Drafting Details:" -fg white -bg gray60 -justify left
-                            pack    $baseFrame.select.lf.label -fill x
+                            pack    $baseFrame.select.lf.label -fill x -expand yes
                                 #
                             set newFont [format {%s bold}  [$baseFrame.select.lf.label cget -font]]
                             $baseFrame.select.lf.label configure   -font $newFont
@@ -1105,27 +1148,29 @@
                     return
             }
                 #
-            set contentFrame    [frame $baseFrame.select.content -relief sunken -bd 2]
-            pack $contentFrame  -fill x
-                #
-            label       $contentFrame.label_1      -text "DIN Format:"      
-            radiobutton $contentFrame.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-            radiobutton $contentFrame.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-            radiobutton $contentFrame.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-            radiobutton $contentFrame.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-            radiobutton $contentFrame.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                #
-            grid config $contentFrame.label_1   -column 0 -row 0 -sticky "w"
-            grid config $contentFrame.a4        -column 0 -row 1 -sticky "w"
-            grid config $contentFrame.a3        -column 0 -row 2 -sticky "w"
-            grid config $contentFrame.a2        -column 0 -row 3 -sticky "w"
-            grid config $contentFrame.a1        -column 0 -row 4 -sticky "w"
-            grid config $contentFrame.a0        -column 0 -row 5 -sticky "w"
-                #
-            set newFont [format {%s bold}  [$contentFrame.label_1 cget -font]]
-            $contentFrame.label_1 configure   -font $newFont
-                #
+            set contentFrame    [frame $baseFrame.select.content -relief flat -bd 2]
+            pack $contentFrame  -fill x -expand yes
+                        #
+                    label       $contentFrame.label_1      -text "DIN Format:"      
+                    radiobutton $contentFrame.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $contentFrame.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $contentFrame.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $contentFrame.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                    radiobutton $contentFrame.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                        #
+                    grid config $contentFrame.label_1   -column 0 -row 0 -sticky "w"
+                    grid config $contentFrame.a4        -column 0 -row 1 -sticky "w"
+                    grid config $contentFrame.a3        -column 0 -row 2 -sticky "w"
+                    grid config $contentFrame.a2        -column 0 -row 3 -sticky "w"
+                    grid config $contentFrame.a1        -column 0 -row 4 -sticky "w"
+                    grid config $contentFrame.a0        -column 0 -row 5 -sticky "w"
+                        #
+                    set newFont [format {%s bold}  [$contentFrame.label_1 cget -font]]
+                    $contentFrame.label_1 configure   -font $newFont
+                        #
             if {$type == {default}} {
+                    ttk::separator $contentFrame.seperator
+                        #
                     label       $contentFrame.label_2      -text "Scale:"      
                     radiobutton $contentFrame.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
                     radiobutton $contentFrame.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
@@ -1134,13 +1179,14 @@
                     radiobutton $contentFrame.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
                     radiobutton $contentFrame.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
                         #
-                    grid config $contentFrame.label_2   -column 1 -row 0 -sticky "w"
-                    grid config $contentFrame.s020      -column 1 -row 1 -sticky "w"
-                    grid config $contentFrame.s025      -column 1 -row 2 -sticky "w"
-                    grid config $contentFrame.s033      -column 1 -row 3 -sticky "w"
-                    grid config $contentFrame.s040      -column 1 -row 4 -sticky "w"
-                    grid config $contentFrame.s050      -column 1 -row 5 -sticky "w"
-                    grid config $contentFrame.s100      -column 1 -row 6 -sticky "w"
+                    grid config $contentFrame.seperator -column 0 -row  6 -sticky "news"
+                    grid config $contentFrame.label_2   -column 0 -row  7 -sticky "w"
+                    grid config $contentFrame.s020      -column 0 -row  8 -sticky "w"
+                    grid config $contentFrame.s025      -column 0 -row  9 -sticky "w"
+                    grid config $contentFrame.s033      -column 0 -row 10 -sticky "w"
+                    grid config $contentFrame.s040      -column 0 -row 11 -sticky "w"
+                    grid config $contentFrame.s050      -column 0 -row 12 -sticky "w"
+                    grid config $contentFrame.s100      -column 0 -row 13 -sticky "w"
                         #
                     $contentFrame.label_2 configure   -font $newFont
             }
@@ -1160,24 +1206,24 @@
               # puts "   ... \$cv $cv"
               # puts "   ... \$cv_Name $cv_Name"
             
-            if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
+            if {[ $cv find withtag __Select__SubMenue__ ] == {} } {   
                     catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
                             $cv create window $x $y \
                                     -window $baseFrame \
                                     -anchor nw \
                                     -tags __Select__SubMenue__
-                                                        frame   $baseFrame.select 
+                            frame   $baseFrame.select 
                             pack    $baseFrame.select       
                             frame   $baseFrame.select.lf       
                             pack    $baseFrame.select.lf       -padx 2 -pady 2 -fill x
                             label   $baseFrame.select.lf.label -text "Jig Selection:" -fg white -bg gray60 -justify left
                             pack    $baseFrame.select.lf.label -fill x
                                 #
-                            set newFont [format {%s bold}  [$baseFrame.select.label cget -font]]
-                            $baseFrame.select.label configure   -font $newFont                          
+                            set newFont [format {%s bold}  [$baseFrame.select.lf.label cget -font]]
+                            $baseFrame.select.lf.label configure   -font $newFont
                                 #
                             bind $baseFrame.select.lf.label  <Button-1>    [list destroy $baseFrame]
-                          }
+                    }
             } else {
                     $cv delete     __Select__SubMenue__
                     $cv dtag       __Select__SubMenue__
@@ -1185,8 +1231,8 @@
                     return
             }
                 #
-            set contentFrame    [frame $baseFrame.select.content -relief sunken -bd 2]
-            pack $contentFrame  -fill x
+            set contentFrame    [frame $baseFrame.select.content -relief flat -bd 2]
+            pack $contentFrame  -fill x 
                 #
             set f_FrameJig    [frame $contentFrame.jigType ]
               # foreach jig $::APPL_Config(list_FrameJigTypes) {}
@@ -1197,7 +1243,7 @@
                                         -anchor w  \
                                         -variable ::APPL_Config(FrameJigType)  \
                                         -command {rattleCAD::view::gui::updateFrameJig}
-                pack $f_FrameJig.option_$jig -expand yes -fill x -side top
+                pack $f_FrameJig.option_$jig -fill x -expand yes -side top
             }
             pack $f_FrameJig -side left -fill x
          
