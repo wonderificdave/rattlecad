@@ -60,6 +60,7 @@
                      puts "\n\n       -- 3.4.xx -----------"
                     project::update_ProjectVersion {3.4.00}
                     project::update_ProjectVersion {3.4.01}
+                    project::update_ProjectVersion {3.4.02}
             }
             
               # -- replace old result-Definition of projectXML with the newer one
@@ -1386,7 +1387,30 @@
                                                     </Carrier>"
                         }
                     }       
-                        
+                {3.4.02} {
+                                # -- get Rendering Saddle/Offset
+                        set node [$projectDOM selectNode /root/Custom/SeatTube/LengthVirtual/text()]
+                        if {$node == {}} {
+                                set sourceNode      [$projectDOM selectNode /root/Result/Length/Saddle/SeatTube_BB/text()]
+                                set parentNode      [$projectDOM selectNode /root/Custom/SeatTube]
+                                    # set HeadTube_End    [[$projectDOM selectNode /root/Result/Tubes/HeadTube/End/text()] nodeValue]
+                                    # set help_02         [list -2 [lindex $HeadTube_End 1]]
+                                    # set SeatTube_Start  [split [[$projectDOM selectNode /root/Result/Tubes/SeatTube/Start/text()] nodeValue] ,]
+                                    # set SeatTube_End    [split [[$projectDOM selectNode /root/Result/Tubes/SeatTube/End/text()]   nodeValue] ,]
+                                    # set SeatTube_Virt   [vectormath::intersectPoint $HeadTube_End $help_02 $SeatTube_Start $SeatTube_End ]  
+                                    # set virtualLength   [vectormath::length {0 0} $SeatTube_Virt] 
+                                
+                                if {$sourceNode != {}} {
+                                    set seatTubeLength      [$sourceNode nodeValue]
+                                    set virtualLength       [expr 0.8 * $seatTubeLength]
+                                } else {
+                                    set virtualLength       550 
+                                }
+                                puts "                           ... update File ... /root/Custom/SeatTube/LengthVirtual"
+                                $parentNode appendXML  "<LengthVirtual>$virtualLength</LengthVirtual>"
+                        } 
+                    }
+                
                 {ab-xy} {	
                         set node {}
                         set node [$projectDOM selectNode /root/Project/rattleCADVersion/text()]

@@ -57,7 +57,7 @@
                 #
             set vct_angle   [ vectormath::dirAngle      $Position(RearWheel)  {0 0}]
             set vct_xy      [ list $RearDropout(OffsetCS) [expr -1.0 * $RearDropout(OffsetCSPerp)]]
-            set vct_xyAngle [ vectormath::dirAngle {0 0} $vct_xy]
+                # set vct_xyAngle [ vectormath::dirAngle {0 0} $vct_xy]
                 # puts "   get_ChainStay: ... \$Config(RearDropoutOrient) $Config(RearDropoutOrient)"
             switch -exact  $Config(RearDropoutOrient) {
                 ChainStay  -
@@ -360,6 +360,7 @@
             variable HeadSet
             variable Steerer
                 #
+            variable Geometry
             variable Result
                 #
             set Direction(HeadTube)         [ vectormath::unifyVector     $Position(Steerer_Start)        $Position(Steerer_End) ]

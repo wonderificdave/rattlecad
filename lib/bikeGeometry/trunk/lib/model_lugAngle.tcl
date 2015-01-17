@@ -47,7 +47,8 @@
         #
     variable angle_HeadTube
     variable angle_SeatTube
-        #
+    variable depth_BottomBracket    
+                #
     variable angle_SeatTubeChainStay    $[namespace parent]::Geometry(BottomBracket_Angle_ChainStay)
     variable angle_SeatTubeDownTube     $[namespace parent]::Geometry(BottomBracket_Angle_DownTube)
     variable angle_HeadTubeDownTube     $[namespace parent]::Geometry(HeadLug_Angle_Bottom)  ;# ... refactor this to HeadLugBottom_Angle
@@ -55,85 +56,38 @@
         # 
  }
         #
-        # --- update Model
-        #
-    proc bikeGeometry::model_lugAngle::update_ModelGeometry {} {
-            #
-        variable angle_HeadTube
-        variable angle_SeatTube
-        variable angle_HeadTubeTopTube
-            #
-        set angle_HeadTube          [get_HeadTubeAngle {140 20}]
-            #
-        update_GeometryValues       
-            #
-            # -- set value to parameter
-        bikeGeometry::update_Geometry
-            #
-            # -- calculation does not take care about SeatTube & DownTube Offset to BottomBracket
-        bikeGeometry::set_Scalar    SeatTube OffsetBB           0    
-        bikeGeometry::set_Scalar    DownTube OffsetBB           0    
-            #  
-        bikeGeometry::set_Scalar    Geometry SeatTube_Angle     $angle_SeatTube    
-            #  
-        bikeGeometry::set_Scalar    Geometry HeadLug_Angle_Top  $angle_HeadTubeTopTube    
-            #
-    }
-        #
         # ---
-        #
-    proc bikeGeometry::model_lugAngle::init_Angles {} {
-            #
-        variable angle_SeatTubeChainStay
-        variable angle_SeatTubeDownTube 
-        variable angle_HeadTubeDownTube 
-        variable angle_HeadTubeTopTube 
-            #
-        variable [namespace parent]::Geometry 
-            #
-        set angle_SeatTubeChainStay $Geometry(BottomBracket_Angle_ChainStay)
-        set angle_SeatTubeDownTube  $Geometry(BottomBracket_Angle_DownTube)
-        set angle_HeadTubeDownTube  $Geometry(HeadLug_Angle_Bottom)     ;# ... refactor this to HeadLugBottom_Angle
-        set angle_HeadTubeTopTube   $Geometry(HeadLug_Angle_Top)
-         
-            #
-        puts ""
-        puts "          <i> ... \$angle_SeatTubeChainStay ... $angle_SeatTubeChainStay"
-        puts "          <i> ... \$angle_SeatTubeDownTube .... $angle_SeatTubeDownTube "
-        puts "          <i> ... \$angle_HeadTubeDownTube .... $angle_HeadTubeDownTube "
-        puts "          <i> ... \$angle_HeadTubeTopTube ..... $angle_HeadTubeTopTube "
-        puts ""
-            # 
-    }
+        #    
     proc bikeGeometry::model_lugAngle::set_Angle {key value} {
             #
         variable angle_SeatTubeChainStay
         variable angle_SeatTubeDownTube 
         variable angle_HeadTubeDownTube 
-        variable angle_HeadTubeTopTube 
             #
-        init_Angles    
+        init_Values    
             #
         switch -exact $key {
                 ChainStaySeatTube {set angle_SeatTubeChainStay $value}
                 SeatTubeDownTube  {set angle_SeatTubeDownTube  $value}
                 HeadTubeDownTube  {set angle_HeadTubeDownTube  $value}
-                HeadTubeTopTube   {set angle_HeadTubeTopTube   $value}
                 default {
                         puts "\n              <W> bikeGeometry::model_lugAngle::set_Angle ... \$value not accepted! ... $value"
                         return {}
                     }
         }            
+            #   HeadTubeTopTube   {set angle_HeadTubeTopTube   $value}
             #
         puts ""
         puts "          <i> ... \$angle_SeatTubeChainStay ... $angle_SeatTubeChainStay"
         puts "          <i> ... \$angle_SeatTubeDownTube .... $angle_SeatTubeDownTube "
         puts "          <i> ... \$angle_HeadTubeDownTube .... $angle_HeadTubeDownTube "
-        puts "          <i> ... \$angle_HeadTubeTopTube ..... $angle_HeadTubeTopTube "
         puts ""
             #
         set scalarValue [bikeGeometry::model_lugAngle::get_Angle $key ]
-        puts "              <I> bikeGeometry::bikeGeometry::model_lugAngle::set_Angle ... $key -> $scalarValue"
+            #
+        puts "\n"
+        puts "          <i> bikeGeometry::bikeGeometry::model_lugAngle::set_Angle ... $key -> $scalarValue"
+        puts "\n"
             #
         update_ModelGeometry
             #
@@ -145,19 +99,84 @@
         variable angle_SeatTubeChainStay
         variable angle_SeatTubeDownTube 
         variable angle_HeadTubeDownTube 
-        variable angle_HeadTubeTopTube 
             #
         switch -exact $key {
                 SeatTubeChainStay {return $angle_SeatTubeChainStay}
                 SeatTubeDownTube  {return $angle_SeatTubeDownTube}
                 HeadTubeDownTube  {return $angle_HeadTubeDownTube}
-                HeadTubeTopTube   {return $angle_HeadTubeTopTube}
                 default           {return {}}
         }
     }
         #
+        # --- update Model
+        #
+    proc bikeGeometry::model_lugAngle::update_ModelGeometry {} {
+            #
+        variable angle_HeadTube
+        variable angle_SeatTube
+        variable depth_BottomBracket
+            #
+        variable [namespace parent]::Geometry
+            #
+            #
+        get_HeadTubeAngle {140 20}
+            #
+            # puts "          \$angle_HeadTube          $angle_HeadTube       "
+            # puts "          \$angle_SeatTube          $angle_SeatTube       "
+            # puts "          \$depth_BottomBracket     $depth_BottomBracket  "
+            #
+        set HeadTube_Angle      [expr 360 - $angle_HeadTube] 
+        set SeatTube_Angle      [expr 360 - $angle_SeatTube] 
+        set BottomBracket_Depth $depth_BottomBracket 
+            #
+            # puts "          \$HeadTube_Angle          $HeadTube_Angle       "
+            # puts "          \$SeatTube_Angle          $SeatTube_Angle       "
+            # puts "          \$BottomBracket_Depth     $BottomBracket_Depth  "
+            #
+        set Geometry(HeadTube_Angle)        $HeadTube_Angle
+        set Geometry(BottomBracket_Depth)   $BottomBracket_Depth
+            #
+            # -- set value to parameter
+        bikeGeometry::update_Geometry
+            #
+        bikeGeometry::IF_OutsideIn  set_Scalar    Geometry SeatTube_Angle $SeatTube_Angle    
+            # 
+        puts "\n"
+        puts "      --------------------------------------------------------------"
+        puts "          bikeGeometry::model_lugAngle::update_ModelGeometry    "
+        puts "                \$angle_HeadTube          $angle_HeadTube       "
+        puts "                \$angle_SeatTube          $angle_SeatTube       "
+        puts "                \$depth_BottomBracket     $depth_BottomBracket  "
+        puts "\n"
+            #
+    }
+        #
         # ---
         #
+    proc bikeGeometry::model_lugAngle::init_Values {} {
+            #
+        variable angle_SeatTubeChainStay
+        variable angle_SeatTubeDownTube 
+        variable angle_HeadTubeDownTube 
+            #
+        variable [namespace parent]::Geometry 
+            #
+        set angle_SeatTubeChainStay [set Geometry(BottomBracket_Angle_ChainStay)]
+        set angle_SeatTubeDownTube  [set Geometry(BottomBracket_Angle_DownTube) ]
+        set angle_HeadTubeDownTube  [set Geometry(HeadLug_Angle_Bottom)         ] ;# ... refactor this to HeadLugBottom_Angle
+         
+            #
+        puts ""
+        puts "          <i> ... \$angle_SeatTubeChainStay ... $angle_SeatTubeChainStay"
+        puts "          <i> ... \$angle_SeatTubeDownTube .... $angle_SeatTubeDownTube "
+        puts "          <i> ... \$angle_HeadTubeDownTube .... $angle_HeadTubeDownTube "
+        puts ""
+            #
+            # -- calculation does not take care about SeatTube & DownTube Offset to BottomBracket
+        bikeGeometry::set_Scalar    SeatTube OffsetBB           0    
+        bikeGeometry::set_Scalar    DownTube OffsetBB           0    
+            #
+    }
     proc bikeGeometry::model_lugAngle::get_HeadTubeAngle {border} {
             #
         for {set l 6} {$l <= 6} {incr l} {
@@ -193,11 +212,7 @@
         set chgBorder   0      
         set lastValue   0      
             #
-           # puts "   < $startAngle - $endAngle >"
-           # puts "       \$rangeAngle ... $rangeAngle"
-           # puts "       \$stepAngle .... $stepAngle"
             #
-        # puts "   ... $startAngle °"
         for {set i 0} {$i <= $maxLoops} {incr i} {
             set ht_angle [expr $startAngle + $i*$stepAngle]
                 #puts "           \$ht_angle .... $ht_angle"
@@ -227,27 +242,31 @@
         variable angle_HeadTubeDownTube 
         variable angle_HeadTubeTopTube 
             #
+        variable angle_HeadTube         
+        variable angle_SeatTube         
+        variable depth_BottomBracket    
             #
         set angle_Stem              $[namespace parent]::Geometry(Stem_Angle)
-        #set angle_SeatTubeChainStay $[namespace parent]::Geometry::BottomBracket_Angle_ChainStay
-        #set angle_SeatTubeDownTube  $[namespace parent]::Geometry::BottomBracket_Angle_DownTube
-        #set angle_HeadTubeDownTube  $[namespace parent]::Geometry::HeadLug_Angle_Bottom
             #
-        set Reach                   $[namespace parent]::Geometry(HandleBar_Distance)
-        set Stack                   $[namespace parent]::Geometry(HandleBar_Height)
-        set StemLength              $[namespace parent]::Geometry(Stem_Length)
-        set ChainStayOffset         $[namespace parent]::RearDropout(OffsetCSPerp) 
-        set ChainStay               $[namespace parent]::Geometry(ChainStay_Length)
+        set Reach                   [set [namespace parent]::Geometry(HandleBar_Distance)]
+        set Stack                   [set [namespace parent]::Geometry(HandleBar_Height)  ]
+        set StemLength              [set [namespace parent]::Geometry(Stem_Length)       ]
+        set ChainStayOffset         [set [namespace parent]::RearDropout(OffsetCSPerp)   ]
+        set ChainStayLength         [set [namespace parent]::Geometry(ChainStay_Length)  ]
             #                       
-        set DownTubeDiameter        $[namespace parent]::DownTube(DiameterHT)
-        set HeadTubeDiameter        $[namespace parent]::HeadTube(Diameter)
-        set HeadTubeDownTubeOffset  $[namespace parent]::DownTube(OffsetHT)
-        set HeadSetHeight           $[namespace parent]::HeadSet(Height_Bottom)
-        set ForkHeight              $[namespace parent]::Geometry(Fork_Height)
-        set ForkRake                $[namespace parent]::Geometry(Fork_Rake)
+        set DropOut_OffsetCS        [set [namespace parent]::RearDropout(OffsetCS)       ]
+        set DropOut_Rotate          [set [namespace parent]::RearDropout(RotationOffset) ]
+        set DropOut_Orient          [set [namespace parent]::Config(RearDropoutOrient)   ]
             #                      
-        set FrontWheelRadius        $[namespace parent]::Geometry(FrontWheel_Radius)
-        set RearWheelRadius         $[namespace parent]::Geometry(RearWheel_Radius)
+        set DownTubeDiameter        [set [namespace parent]::DownTube(DiameterHT)   ]
+        set HeadTubeDiameter        [set [namespace parent]::HeadTube(Diameter)     ]
+        set HeadTubeDownTubeOffset  [set [namespace parent]::DownTube(OffsetHT)     ]
+        set HeadSetHeight           [set [namespace parent]::HeadSet(Height_Bottom) ]
+        set ForkHeight              [set [namespace parent]::Geometry(Fork_Height)  ]
+        set ForkRake                [set [namespace parent]::Geometry(Fork_Rake)    ]
+            #
+        set FrontWheelRadius        [set [namespace parent]::Geometry(FrontWheel_Radius) ]
+        set RearWheelRadius         [set [namespace parent]::Geometry(RearWheel_Radius)  ]
             #
             #
         # puts "\n"
@@ -258,8 +277,10 @@
         if $printDebug {
             puts "\n\n"
             puts "\n -- angle_HeadTube -------------\n"
-            puts "      ->  $headTubeAngle"
-            puts "      ... $angle_HeadTube"
+            puts "          ->  \$headTubeAngle ............. $angle_HeadTube"
+            puts "          ... \$angle_SeatTubeChainStay ... $angle_SeatTubeChainStay"
+            puts "          ... \$angle_SeatTubeDownTube .... $angle_SeatTubeDownTube "
+            puts "          ... \$angle_HeadTubeDownTube .... $angle_HeadTubeDownTube "
         }
             #
         set angle_DownTube  [expr $angle_HeadTube - $angle_HeadTubeDownTube] 
@@ -306,9 +327,8 @@
             # ----------------------------------------------------
             #
         set ForkHeightCompl [expr \
-                                $DownTubeDiameter * 0.5 * sin($radFactor *  $angle_HeadTubeDownTube)    \
-                            +   ($DownTubeDiameter * 0.5 * cos($radFactor *  $angle_HeadTubeDownTube)    \
-                                +   $HeadTubeDiameter * 0.5) / tan($radFactor *  $angle_HeadTubeDownTube)    \
+                                $DownTubeDiameter * 0.5 / sin($radFactor *  $angle_HeadTubeDownTube)    \
+                            +   $HeadTubeDiameter * 0.5 / tan($radFactor *  $angle_HeadTubeDownTube)    \
                             +   $HeadTubeDownTubeOffset \
                             +   $HeadSetHeight          \
                             +   $ForkHeight             \
@@ -316,6 +336,7 @@
             # -- printDebug ---------------
         if $printDebug {
             puts "\n -- ForkHeightCompl ------------\n"
+            puts "                    ...   $angle_HeadTubeDownTube"
             puts "                  [expr $DownTubeDiameter * 0.5 * sin($radFactor *  $angle_HeadTubeDownTube)]"
             puts "                  [expr ($DownTubeDiameter * 0.5 * cos($radFactor *  $angle_HeadTubeDownTube)    \
                                         +   $HeadTubeDiameter * 0.5) / tan($radFactor *  $angle_HeadTubeDownTube)]"
@@ -356,30 +377,95 @@
             # ----------------------------------------------------
             #
         set angle_ChainStay [expr $angle_HeadTube - $angle_HeadTubeDownTube - (180 - $angle_SeatTubeChainStay - $angle_SeatTubeDownTube)]
-            # puts $angle_ChainStay
-        set res_RearWheel_x [expr \
-                            +   $ChainStayOffset * cos($radFactor * ($angle_ChainStay - 90))   \
-                            +   $ChainStay       * cos($radFactor * ($angle_ChainStay))   \
-                        ]
-        set res_RearWheel_y [expr \
-                                $ChainStayOffset * sin($radFactor * ($angle_ChainStay - 90))   \
-                            +   $ChainStay       * sin($radFactor * ($angle_ChainStay))   \
-                        ]
-            # -- printDebug ---------------
+            #
+        switch -exact  $DropOut_Orient {
+                ChainStay  -
+                Chainstay  { 
+                        set do_angle    [expr 360 - $DropOut_Rotate]
+                        set vct_xy      [ list $DropOut_OffsetCS [expr -1.0 * $ChainStayOffset]]
+                        set do_angle    [expr 360 - $DropOut_Rotate]
+                        set vct_CS      [vectormath::rotatePoint   {0 0}  $vct_xy  $do_angle]
+                        set pt_cs       [vectormath::addVector     [list [expr -1.0 * $ChainStayLength] 0] $vct_CS]
+                            # puts "\n  <I> \$pt_cs $pt_cs \n"
+                        foreach {x y} $pt_cs break;
+                        set angle_DropoutOffset [vectormath::dirAngle      $pt_cs  {0 0}]
+                            # puts "\n  <I> \$angle_DropoutOffset $angle_DropoutOffset \n"
+                        set angle_ChainStay_eff [expr $angle_ChainStay - $angle_DropoutOffset]
+                            # puts "\n  <I> \$angle_ChainStay_eff $angle_ChainStay_eff \n"
+                            #
+                        set res_RearWheel_x [expr \
+                                            +   $ChainStayLength       * cos($radFactor * $angle_ChainStay_eff)   \
+                                        ]
+                        set res_RearWheel_y [expr \
+                                            +   $ChainStayLength       * sin($radFactor * $angle_ChainStay_eff)   \
+                                        ]
+                            
+                    }
+                horizontal { 
+                            #     offset   
+                            #       +-----+-------------+ radius (ChainStayLength)
+                            #             |  offsetPerp
+                            #             +
+                            #              \
+                            #               \
+                            #                \  secant (angle_ChainStay)
+                            #                 \
+                            #                  +    
+                            #      
+                            # secant
+                        set my_x $DropOut_OffsetCS 
+                        set my_y [expr -1.0 * $ChainStayOffset]
+                        puts "  -> angle_ChainStay $angle_ChainStay "
+                        set my_k [expr tan($radFactor * (180 + $angle_ChainStay))]
+                        set my_d [expr $my_y - $my_x * $my_k]
+                        puts "   \$my_x $my_x"
+                        puts "   \$my_y $my_y"
+                        puts "   \$my_k $my_k"
+                        puts "   \$my_d $my_d"
+                            #
+                        set my_a [expr 1 + pow($my_k, 2)]
+                        set my_b [expr 2 * $my_k * $my_d]
+                        set my_c [expr pow($my_d, 2) - pow($ChainStayLength, 2)]
+                        puts "   \$my_a $my_a"
+                        puts "   \$my_b $my_b"
+                        puts "   \$my_c $my_c"
+                        # 2015-01-17 - https://gatechgrad.wordpress.com/2011/09/25/quadratic-formula/
+                        # 
+                        foreach {my_x1 my_x2} [solve_quadraticFormula $my_a $my_b $my_c] {break}
+                        puts "   \$my_x1 $my_x1"
+                        puts "   \$my_x2 $my_x2"
+                        if {$my_x1 > $my_x2} {
+                                set res_RearWheel_x $my_x1
+                        } else {
+                                set res_RearWheel_x $my_x2
+                        }
+                        set res_RearWheel_y [expr $res_RearWheel_x * $my_k + $my_d]
+                            #
+                        set res_RearWheel_y [expr -1.0 * $res_RearWheel_y]  ;# in view of BottomBracket
+                            #
+                        puts "     \$res_RearWheel_x $res_RearWheel_x"
+                        puts "     \$res_RearWheel_y $res_RearWheel_y"
+                    }
+                default    {exit}
+        }
+             # -- printDebug ---------------
         if $printDebug {
             puts "\n -- RearWheel -----------------\n"
-            puts "                  $angle_HeadTube °"
             puts "                  $angle_HeadTubeDownTube °"
-            puts "                  $angle_SeatTubeChainStay °"
+            puts "                  $angle_SeatTubeChainStay ° - $angle_DropoutOffset °"
             puts "                  $angle_SeatTubeDownTube °"
             puts "          ... $angle_ChainStay °"
-            puts "                  [expr $ChainStayOffset * cos($radFactor * ($angle_ChainStay - 90))]"
-            puts "                  [expr $ChainStay       * cos($radFactor * ($angle_ChainStay))]"
+            puts "                  [expr $ChainStayLength       * cos($radFactor * ($angle_ChainStay))]"
             puts "          ... $res_RearWheel_x"
-            puts "                  [expr $ChainStayOffset * sin($radFactor * ($angle_ChainStay - 90))]"
-            puts "                  [expr $ChainStay       * sin($radFactor * ($angle_ChainStay))]"
+            puts "                  [expr $ChainStayLength       * sin($radFactor * ($angle_ChainStay))]"
             puts "          ... $res_RearWheel_y"
         }
+            #
+            # -- set result Values
+            # ----------------------------------------------------
+            #
+        set angle_SeatTube      [expr $angle_HeadTube  - $angle_HeadTubeDownTube + $angle_SeatTubeDownTube]
+        set depth_BottomBracket $res_RearWheel_y
             #
             # -- check offset
             # ----------------------------------------------------
@@ -393,6 +479,13 @@
             #
             # -- printDebug ---------------
         if $printDebug {
+            puts "\n -- resultValues --------------\n"
+            puts "          ->  \$angle_HeadTube ............ $angle_HeadTube ([expr 360 - $angle_HeadTube]("
+            puts "          ->  \$angle_SeatTube ............ $angle_SeatTube ([expr 360 - $angle_SeatTube]("
+            puts "          ->  \$depth_BottomBracket ....... $depth_BottomBracket"
+            puts "          ... \$angle_SeatTubeChainStay ... $angle_SeatTubeChainStay"
+            puts "          ... \$angle_SeatTubeDownTube .... $angle_SeatTubeDownTube "
+            puts "          ... \$angle_HeadTubeDownTube .... $angle_HeadTubeDownTube "
             puts "\n -- delta ---------------------\n"
             puts "                  $vert_WheelOffset ($RearWheelRadius - $FrontWheelRadius)"
             puts "                  $res_WheelOffset (res_RearWheel_y - $res_FrontWheel_y)"
@@ -403,51 +496,28 @@
         return $delta   
             #   
     }
-        #
-        # ---
-        #
-    proc bikeGeometry::model_lugAngle::update_GeometryValues {} {
-            #
-        variable radFactor
-            #
-        variable angle_HeadTube
-        variable angle_SeatTube
-            #
-        variable angle_SeatTubeChainStay
-        variable angle_SeatTubeDownTube 
-        variable angle_HeadTubeDownTube 
-        variable angle_HeadTubeTopTube 
-            #
-        variable [namespace parent]::Geometry
-        variable [namespace parent]::RearDropout
-            #
-            # (BottomBracket_Angle_ChainStay)
-            # set angle_SeatTubeDownTube  $[namespace parent]::Geometry(BottomBracket_Angle_DownTube)
-            # set angle_HeadTubeDownTube  $[namespace parent]::Geometry(HeadLug_Angle_Bottom)
-            #
-        set angle_SeatTube          [expr $angle_HeadTube - $angle_SeatTubeDownTube + $angle_HeadTubeDownTube]
-            #
-        puts "   ... \$angle_SeatTube       $angle_SeatTube" 
-            #
-        set angle_ChainStay [expr $angle_SeatTube - $angle_SeatTubeChainStay]
-            #
-        puts "   ... \$angle_ChainStay      $angle_ChainStay"
-            #
-        set ChainStayOffset         $RearDropout(OffsetCSPerp) 
-        set ChainStay               $Geometry(ChainStay_Length)
-            #
-        set depth_BottomBracket     [expr $ChainStay * sin($radFactor * $angle_ChainStay) + $ChainStayOffset * cos($radFactor * $angle_ChainStay)]
-            #
-        puts "   ... \$depth_BottomBracket  $depth_BottomBracket" 
-            #
-        set Geometry(HeadTube_Angle)                $angle_HeadTube
-        set Geometry(BottomBracket_Depth)           $depth_BottomBracket
-            #
-        set Geometry(BottomBracket_Angle_ChainStay) $angle_SeatTubeChainStay
-        set Geometry(BottomBracket_Angle_DownTube)  $angle_SeatTubeDownTube      
-        set Geometry(HeadLug_Angle_Bottom)          $angle_HeadTubeDownTube      
-        set Geometry(HeadLug_Angle_Top)             $angle_HeadTubeTopTube       
-            #
+    
+    proc bikeGeometry::model_lugAngle::solve_quadraticFormula {a b c} {
+                # https://gatechgrad.wordpress.com/2011/09/25/quadratic-formula/
+                # 2015-01-17
+            # puts "    -> $a $b $c"    
+                #
+            set fRoot1 {}    
+            set fRoot2 {}    
+                #
+                # set value_01 [expr (-1.0 * $b)]
+                # set value_02 [expr sqrt(pow($b, 2) - (4 * $a * $c))]
+                # set value_03 [expr (2 * $a)]
+                # 
+                # puts "     \$value_01 $value_01"
+                # puts "     \$value_02 $value_02"
+                # puts "     \$value_03 $value_03"
+                #
+            set fRoot1 [expr (-1.0 * $b + sqrt(pow($b, 2) - (4 * $a * $c))) / (2 * $a)]
+            set fRoot2 [expr (-1.0 * $b - sqrt(pow($b, 2) - (4 * $a * $c))) / (2 * $a)]
+                #
+            #puts [format "x=%.2f, x=%.2f" $fRoot1 $fRoot2]
+                #
+                # puts "    -> $fRoot1 $fRoot2"    
+            return [list $fRoot1 $fRoot2]
     }
-    
-    

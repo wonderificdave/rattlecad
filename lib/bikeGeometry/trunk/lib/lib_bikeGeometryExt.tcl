@@ -280,6 +280,7 @@
                 #
             variable Geometry
             variable Position
+            variable Direction
             variable Reference
                 #
             variable BottomBracket
@@ -351,19 +352,24 @@
             set value        [ format "%.3f" [lindex $position 1] ]
             set Geometry(SeatTube_TubeHeight)   $value
                 #
+                # --- VirtualSeatTube ----------------------------------
+                #
+            set position_BB          {0 0}
+            set Position(SeatTube_VirtualTopTube)   [ vectormath::addVector $position_BB  $Direction(SeatTube) $Geometry(SeatTube_Virtual)]
+                #
                 # --- VirtualTopTube ----------------------------------
                 #
-            set Position(SeatTube_VirtualTopTube)   [ vectormath::intersectPoint [list -500 [lindex $Position(HeadTube_End) 1]]  $Position(HeadTube_End)  $Position(SeatTube_Start) $Position(SeatPost_SeatTube) ]
+            set Position(HeadTube_VirtualTopTube)   [ vectormath::intersectPoint $Position(SeatTube_VirtualTopTube) [list 1000 [lindex $Position(SeatTube_VirtualTopTube) 1]] $Position(Steerer_Start)    $Position(Steerer_End) ]
+                #
+                # --- HeadTube/VirtualLength ----------------------
+                #
+            set value       [vectormath::length $Position(HeadTube_VirtualTopTube) $Position(Steerer_Start) ]
+            set Geometry(HeadTube_Virtual)  [ format "%.3f" $value ]
                 #
                 # --- TopTube/VirtualLength -----------------------
                 #
-            set value       [expr [lindex $Position(HeadTube_End) 0] - [lindex $Position(SeatTube_VirtualTopTube) 0] ]
+            set value       [vectormath::length $Position(HeadTube_VirtualTopTube) $Position(SeatTube_VirtualTopTube)]
             set Geometry(TopTube_Virtual)   [ format "%.3f" $value ]
-                #
-                # --- SeatTube/VirtualLength ----------------------
-                #
-            set value       [vectormath::length $Position(SeatTube_VirtualTopTube) {0 0}]
-            set Geometry(SeatTube_Virtual)  [ format "%.3f" $value]
                 #
                 # --- Saddle ------------------------------------------
                 #

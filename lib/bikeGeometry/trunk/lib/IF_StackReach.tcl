@@ -190,8 +190,6 @@
                 #
             set_StackReach_SaddleOffset_HB      $store_HandleBarOffset
                 #
-            # set_Scalar     HeadTube Length      $store_HeadTubeLength    
-                #
             puts "    <2> set_StackReach_HeadTubeDirection   ... check $Geometry(FrontWheel_xy)  ->  $value"
                 #
             return $Geometry(FrontWheel_xy)

@@ -392,6 +392,7 @@
             set Geometry(Stem_Angle)                    $project::Component(Stem/Angle)
             set Geometry(Stem_Length)                   $project::Component(Stem/Length)
             set Geometry(TopTube_Angle)                 $project::Custom(TopTube/Angle)
+            set Geometry(SeatTube_Virtual)              $project::Custom(SeatTube/LengthVirtual)
                     
                 #       
                 # --- get RearMockup  ----------------------
@@ -736,6 +737,7 @@
             project::setValue Component(Stem/Angle)                                 value       $Geometry(Stem_Angle)                     
             project::setValue Component(Stem/Length)                                value       $Geometry(Stem_Length)                    
             project::setValue Custom(TopTube/Angle)                                 value       $Geometry(TopTube_Angle)                  
+            project::setValue Custom(SeatTube/LengthVirtual)                        value       $Geometry(SeatTube_Virtual)                         
                                                                                     
                 #                                                                   
                 # --- get RearMockup  ------------------                            
@@ -1115,6 +1117,7 @@
             project::setValue Result(Tubes/SeatTube/CenterLine)                     value       $CenterLine(SeatTube)                                   
             project::setValue Result(Tubes/SeatTube/Direction)                      direction   $Direction(SeatTube)                                  
             project::setValue Result(Tubes/SeatTube/End)                            position    $Position(SeatTube_End)
+            project::setValue Result(Tubes/SeatTube/EndVirtual)                     position    $Position(SeatTube_VirtualTopTube)                                           
             project::setValue Result(Tubes/SeatTube/Polygon)                        polygon     $Polygon(SeatTube)
             project::setValue Result(Tubes/SeatTube/Profile/xy)                     value       $Result(Tubes/SeatTube/Profile/xy)
             project::setValue Result(Tubes/SeatTube/Profile/xz)                     value       $Result(Tubes/SeatTube/Profile/xz)
