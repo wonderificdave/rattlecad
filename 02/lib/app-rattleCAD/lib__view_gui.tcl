@@ -54,7 +54,7 @@
 
     variable    external_canvasCAD  ;   array    set external_canvasCAD {}
     
-    variable    frame_configMethod      {Default}
+    variable    frame_configMethod      {OutsideIn}
     variable    show_secondaryDimension 1
     variable    show_resultDimension    1
     variable    show_summaryDimension   1
@@ -1036,7 +1036,7 @@
             pack $contentFrame  -fill x
                     #
             label       $contentFrame.label_1      -text "Frame Config:"      
-            radiobutton $contentFrame.hybrid       -text "rattleCAD"         -value {Default}       -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
+            radiobutton $contentFrame.hybrid       -text "Outside-In"        -value {OutsideIn}     -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
             radiobutton $contentFrame.stackreach   -text "Stack & Reach"     -value {StackReach}    -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
             radiobutton $contentFrame.classic      -text "Classic"           -value {Classic}       -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
             radiobutton $contentFrame.lugs         -text "Lug Angles"        -value {Lugs}          -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}

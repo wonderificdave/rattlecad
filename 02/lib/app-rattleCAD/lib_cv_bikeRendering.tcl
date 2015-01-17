@@ -1088,6 +1088,7 @@
             set TopTube_SeatVirtual [ rattleCAD::model::get_Position        SeatTube_VirtualTopTube $BB_Position ]
             set TopTube_Steerer     [ rattleCAD::model::get_Position        TopTube_End             $BB_Position ]
             set HeadTube_Stem       [ rattleCAD::model::get_Position        HeadTube_End            $BB_Position ]
+            set TopTube_HeadVirtual [ rattleCAD::model::get_Position        HeadTube_VirtualTopTube $BB_Position ]
             set Steerer_Stem        [ rattleCAD::model::get_Position        Steerer_End             $BB_Position ]
             set Steerer_Fork        [ rattleCAD::model::get_Position        Steerer_Start           $BB_Position ]
             set DownTube_Steerer    [ rattleCAD::model::get_Position        DownTube_End            $BB_Position ]
@@ -1115,7 +1116,7 @@
             set excludeList     {}
                 #
             switch -exact $rattleCAD::view::gui::frame_configMethod {
-                {Default} {
+                {OutsideIn} {
                             set highlightList_1 {chainstay fork saddle seattube steerer stem } 
                             set highlightList_2 {} 
                         }
@@ -1128,14 +1129,13 @@
                             set highlightList_2 {seatpost stem} 
                         }
                 {Lugs} {
-                            $cv_Name create line    [ appUtil::flatten_nestedList  $RearWheel    $ChainStay_Dropout  $BottomBracket ]       -fill gray60  -width 1.0      -tags {__CenterLine__    chainstaydropout}
-                                #
                             set highlightList_1 {chainstay downtube fork saddle seattube steerer stem} 
-                            set highlightList_2 {seatpost} 
+                            set highlightList_2 {seatpost}
+                                #
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $RearWheel    $ChainStay_Dropout  $BottomBracket ]       -fill gray60  -width 1.0      -tags {__CenterLine__    chainstaydropout}
+                            $cv_Name create circle  $ChainStay_Dropout                                                       -radius 7   -outline gray60  -width 1.0      -tags {__CenterLine__    chainstaydropout}  
                         }
-                        
-                default {
-                }
+                default {}
             }     
                 #
                 
@@ -1150,22 +1150,14 @@
             $cv_Name create centerline [ appUtil::flatten_nestedList  $Steerer_Fork       $Steerer_Ground   ]    -fill gray60                  -tags __CenterLine__
                 # ------ seattube extension to ground
             $cv_Name create centerline [ appUtil::flatten_nestedList  $SeatTube_BBracket  $SeatTube_Ground  ]    -fill gray60                  -tags {__CenterLine__    seattube_center}
-    
+                
     
                 # ------ chainstay
             $cv_Name create line     [ appUtil::flatten_nestedList  $RearWheel            $BottomBracket    ]    -fill gray60  -width 1.0      -tags {__CenterLine__    chainstay}
                 # ------ seatpost
-            # $cv_Name create line     [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatTube]    -fill gray60  -width 1.0      -tags {__CenterLine__    seatpost}
-                # ------ seattube
-            # $cv_Name create line   [ appUtil::flatten_nestedList  $TopTube_SeatTube     $SeatTube_BBracket]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
-                # ------ seatstay
             $cv_Name create line     [ appUtil::flatten_nestedList  $SeatStay_SeatTube    $RearWheel        ]    -fill gray60  -width 1.0      -tags {__CenterLine__    seatstay}
                 # ------ toptube
             $cv_Name create line     [ appUtil::flatten_nestedList  $TopTube_SeatTube     $TopTube_Steerer  ]    -fill gray60  -width 1.0      -tags {__CenterLine__    toptube}
-                # ------ stem
-            $cv_Name create line     [ appUtil::flatten_nestedList  $HandleBar $Steerer_Stem $HeadTube_Stem ]    -fill gray60  -width 1.0      -tags {__CenterLine__    stem}
-                # ------ steerer
-            $cv_Name create line     [ appUtil::flatten_nestedList  $HeadTube_Stem        $Steerer_Fork     ]    -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
                 # ------ downtube
             $cv_Name create line     [ appUtil::flatten_nestedList  $DownTube_Steerer     $BB_Position      ]    -fill gray60  -width 1.0      -tags {__CenterLine__    downtube}
                 # ------ fork
@@ -1200,24 +1192,47 @@
     
                 # ------ virtual top- and seattube 
             switch -exact $rattleCAD::view::gui::frame_configMethod {
-                {Default} {
+                {OutsideIn} {
+                                # ------ stem
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $HandleBar $Steerer_Stem $HeadTube_Stem ]                -fill gray60  -width 1.0      -tags {__CenterLine__    stem}
+                                # ------ steerer
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $HeadTube_Stem    $Steerer_Fork]                         -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
+                                # ------ seattube
                             $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $SeatTube_BBracket] -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
                         }
-                {StackReach} -
-                {Lugs} {
-                            $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatTube]   -fill gray60  -width 1.0      -tags {__CenterLine__    seatpost}
-                            $cv_Name create line    [ appUtil::flatten_nestedList  $TopTube_SeatVirtual $SeatTube_BBracket]                  -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
+                {StackReach} {
+                                # ------ stem
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $HandleBar $Steerer_Stem $HeadTube_Stem ]                -fill gray60  -width 1.0      -tags {__CenterLine__    stem}
+                                # ------ steerer
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $HeadTube_Stem    $Steerer_Fork]                         -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
+                                # ------ seatpost
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatTube]  -fill gray60  -width 1.0      -tags {__CenterLine__    seatpost}
+                                # ------ seattube
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $TopTube_SeatVirtual $SeatTube_BBracket]                 -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
                         }
-                 {Classic} {
-                            $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatTube]   -fill gray60  -width 1.0      -tags {__CenterLine__    seatpost}
-                            $cv_Name create line    [ appUtil::flatten_nestedList  $HeadTube_Stem $TopTube_SeatVirtual $SeatTube_BBracket]   -fill gray60  -width 1.0      -tags {__CenterLine__    virtualtoptube}
+                {Lugs} {
+                                # ------ stem
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $HandleBar $Steerer_Stem $TopTube_HeadVirtual ]          -fill gray60  -width 1.0      -tags {__CenterLine__    stem}
+                                # ------ steerer
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $TopTube_HeadVirtual    $Steerer_Fork]                   -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
+                                # ------ seatpost
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatTube]  -fill gray60  -width 1.0      -tags {__CenterLine__    seatpost}
+                                # ------ seattube
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $TopTube_SeatVirtual $SeatTube_BBracket]                 -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
+                        }
+                {Classic} {
+                                # ------ stem
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $HandleBar $Steerer_Stem $TopTube_HeadVirtual ]          -fill gray60  -width 1.0      -tags {__CenterLine__    stem}
+                                # ------ steerer
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $TopTube_HeadVirtual $Steerer_Fork]                           -fill gray60  -width 1.0  -tags {__CenterLine__    steerer}
+                                # ------ seatpost
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $SeatPost_Saddle  $SeatPost_SeatTube $TopTube_SeatVirtual]    -fill gray60  -width 1.0  -tags {__CenterLine__    seatpost}
+                                # ------ virtualtoptube
+                            $cv_Name create line    [ appUtil::flatten_nestedList  $TopTube_HeadVirtual $TopTube_SeatVirtual $SeatTube_BBracket] -fill gray60  -width 1.0  -tags {__CenterLine__    virtualtoptube}
                         }       
-                default {
-                }
+                default {}
             }     
-                
-                
-                
+                #
                 # puts "  $highlightList "
                 # --- highlightList
                     # set highlight(colour) firebrick
@@ -1229,16 +1244,23 @@
                 set highlight(width)  2.0
                     #
                 # --- create position points
-            $cv_Name create circle  $BottomBracket      -radius 20  -outline $highlight(colour)     -tags {__CenterLine__  bottombracket}  \
-                                                                                                                            -width $highlight(width)
-            $cv_Name create circle  $HandleBar          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle  $Saddle             -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle  $FrontWheel         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle  $RearWheel          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle  $BaseCenter         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle  $SeatPost_Saddle    -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-            $cv_Name create circle  $HeadTube_Stem      -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                # $cv_Name create circle    $SeatPost_SeatTube  -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $BottomBracket          -radius 20  -outline $highlight(colour)     -tags {__CenterLine__  bottombracket}  \
+                                                                                                                                -width $highlight(width)
+            $cv_Name create circle  $HandleBar              -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $Saddle                 -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $FrontWheel             -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $RearWheel              -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $BaseCenter             -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+            $cv_Name create circle  $SeatPost_Saddle        -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
+                #
+            switch -exact $rattleCAD::view::gui::frame_configMethod {
+                {StackReach} {  $cv_Name create circle  $HeadTube_Stem          -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)    }
+                {Classic}    {  $cv_Name create circle  $TopTube_HeadVirtual    -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)    }       
+                default { }
+            }
+
+
+            # $cv_Name create circle    $SeatPost_SeatTube  -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
                 # $cv_Name create circle    $LegClearance   -radius 10  -outline $highlight(colour)
   
                     #

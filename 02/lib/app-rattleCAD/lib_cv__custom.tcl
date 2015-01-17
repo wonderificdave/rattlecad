@@ -256,7 +256,7 @@
                 set pt_04                   [ rattleCAD::model::coords_xy_index $HeadTube(polygon) 0 ]
             set HeadTube(vct_Top)       [ list $pt_01 $pt_02 ]
             set HeadTube(vct_Bottom)    [ list $pt_03 $pt_04 ]
-
+ 
             set SeatTube(Diameter)      [ rattleCAD::model::get_Scalar      SeatTube        DiameterTT]
             set SeatTube(polygon)       [ rattleCAD::model::get_Polygon     SeatTube        $BB_Position  ]
                 set pt_01                   [ rattleCAD::model::coords_xy_index $SeatTube(polygon) 3 ]
@@ -285,6 +285,7 @@
             set DownTube(polygon)       [ rattleCAD::model::get_Polygon     DownTube        $BB_Position ]
                 # --- help points for virtual horizontal TopTube -----
             set TopTube(SeatVirtual)   [ rattleCAD::model::get_Position     SeatTube_VirtualTopTube $BB_Position ]
+            set TopTube(HeadVirtual)   [ rattleCAD::model::get_Position     HeadTube_VirtualTopTube $BB_Position ]
                 # puts "\n \$TopTube(SeatVirtual)  $TopTube(SeatVirtual)"
 
 

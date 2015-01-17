@@ -53,7 +53,7 @@ namespace eval rattleCAD::model {
     array set valueRegistry      {}
     
       # ----------------- #	
-    variable geometry_IF   ::bikeGeometry::IF_Default
+    variable geometry_IF   ::bikeGeometry::IF_OutsideIn
       
       # ----------------- #	
     namespace import ::bikeGeometry::set_newProject
@@ -115,8 +115,8 @@ namespace eval rattleCAD::model {
             #
         switch -exact $interfaceName {
                 {Classic}       {set geometry_IF ::bikeGeometry::IF_Classic}
-                {Default}       {set geometry_IF ::bikeGeometry::IF_Default}
                 {Lugs}          {set geometry_IF ::bikeGeometry::IF_LugAngles}
+                {OutsideIn}     {set geometry_IF ::bikeGeometry::IF_OutsideIn}
                 {StackReach}    {set geometry_IF ::bikeGeometry::IF_StackReach}
                 default         {}
         }

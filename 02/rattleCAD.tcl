@@ -79,7 +79,7 @@ exec wish "$0" "$@"
     
     package require   appUtil       0.15
     package require   vectormath    0.5
-    package require   bikeGeometry  1.32
+    package require   bikeGeometry  1.33
     package require   canvasCAD     0.52
     package require   extSummary    0.4
     package require   osEnv         0.8

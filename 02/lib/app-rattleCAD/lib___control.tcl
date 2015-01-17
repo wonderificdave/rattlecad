@@ -62,7 +62,7 @@
                     projectSave       {}
                 }
           # ----------------- #
-        variable    frame_configMode    {Default}
+        variable    frame_configMode    {OutsideIn}
           # ----------------- #
     }
     
@@ -255,7 +255,7 @@
         variable frame_configMode
             #
         switch -exact $frame_configMode {
-                {Default}    -
+                {OutsideIn}  -
                 {StackReach} -
                 {Lugs}       -
                 {Classic}   {

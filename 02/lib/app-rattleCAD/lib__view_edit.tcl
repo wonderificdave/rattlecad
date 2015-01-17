@@ -67,6 +67,7 @@
     proc rattleCAD::view::edit::single_Result_HeadTube_ReachLength      {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Reach_Length)            }  ;# Result(Length/HeadTube/ReachLength)       
     proc rattleCAD::view::edit::single_Result_SeatTube_Angle            {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SeatTube_Angle)          }  ;# Result(Angle/SeatTube/Direction)          
     proc rattleCAD::view::edit::single_Result_HeadTube_TopTubeAngle     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/HeadLug_Angle_Top))      }  ;# Scalar(Result/Angle_HeadTubeTopTube)      
+    proc rattleCAD::view::edit::single_Result_HeadTube_VirtualLength    {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/HeadTube_Virtual))       }  ;# Scalar(Result/Angle_HeadTubeTopTube)      
     proc rattleCAD::view::edit::single_Result_RearWheel_horizontal      {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/RearWheel_x)             }  ;# Result(Length/RearWheel/horizontal)       
     proc rattleCAD::view::edit::single_Result_SaddleNose_HB             {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SaddleNose_HB)           }  ;# Result(Length/Personal/SaddleNose_HB)     
     proc rattleCAD::view::edit::single_Result_Saddle_Offset_BB_Nose     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SaddleNose_BB_x)         }  ;# Result(Length/Saddle/Offset_BB_Nose)      
@@ -570,6 +571,14 @@
                        Scalar(RearMockup/CrankClearance)
                        Scalar(RearMockup/CassetteClearance)
                 } "ChainStay:  Area - 047"
+    }
+    proc rattleCAD::view::edit::group_RearDropout_Parameter_02          {x y cv_Name} {
+          rattleCAD::view::createEdit  $x $y $cv_Name  {
+                list://Config(RearDropoutOrient@SELECT_DropOutDirection)
+                       Scalar(RearDropout/RotationOffset)
+                       Scalar(RearDropout/OffsetCSPerp)
+                       Scalar(RearDropout/OffsetCS)
+              } {RearDropout Parameter - 048} 
     }
     proc rattleCAD::view::edit::group_Rendering_Parameter               {x y cv_Name} {
             rattleCAD::view::createEdit $x $y $cv_Name  {

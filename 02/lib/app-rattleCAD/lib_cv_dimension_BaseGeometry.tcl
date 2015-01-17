@@ -310,7 +310,7 @@
                             $dimColour ]  \
                     group_Saddle_Parameter_01
                         #
-            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+            # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension    length  \
                             [ appUtil::flatten_nestedList  $Steerer(Fork)  $HeadTube(Stem) ] \
                             aligned \
@@ -407,7 +407,7 @@
                             $dimColour ]    \
                     single_Result_SaddleNose_HB
                         #
-            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+            # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $HeadTube(Stem)          $BottomBracket(Position) ] \
                             horizontal  \
@@ -415,7 +415,7 @@
                             $dimColour ]    \
                     single_Result_HeadTube_ReachLength
                         #
-            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+            # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $HeadTube(Stem)          $BottomBracket(Position) ] \
                             vertical    \
@@ -810,7 +810,7 @@
                             $dimColour ]    \
                     single_Result_BottomBracket_Height
                 #
-            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+            # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $Steerer(Fork)  $HeadTube(Stem) ] \
                             aligned \
@@ -1109,7 +1109,7 @@
                 
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
-                            [ appUtil::flatten_nestedList  $TopTube(SeatVirtual)    $HeadTube(Stem)] \
+                            [ appUtil::flatten_nestedList  $TopTube(SeatVirtual)    $TopTube(HeadVirtual)] \
                             aligned \
                             [expr   80 * $stageScale]   [expr  -80 * $stageScale] \
                             $dimColour ]    \
@@ -1301,6 +1301,7 @@
             variable    RearWheel
             variable    Saddle
             variable    Steerer
+            variable    TopTube
                 #
             variable    Position
                 #
@@ -1327,6 +1328,14 @@
                                                 
                 #
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $Steerer(Fork)  $TopTube(HeadVirtual) ] \
+                            aligned \
+                            [expr   100 * $stageScale]   0 \
+                            $dimColour ]    \
+                    single_Result_HeadTube_VirtualLength
+                #
+            # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $Steerer(Fork)  $HeadTube(Stem) ] \
                             aligned \
@@ -1612,74 +1621,74 @@
                 # ---
                 #
                 
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  angle \
-                        [ appUtil::flatten_nestedList [list $DownTube(Steerer) $DownTube(BBracket) $Steerer(Ground)] ] \
-                        250   0 \
-                        $dimColour ]    \
-                single_LugDetermination_HeadLug
-                    #
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  angle \
-                        [ appUtil::flatten_nestedList [list $pt_base  $DownTube(Steerer) $TopTube(SeatTube) ] ] \
-                        250   0 \
-                        $dimColour ]    \
-                single_LugDetermination_DownTube
-                    #
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  angle \
-                        [ appUtil::flatten_nestedList [list $pt_base $TopTube(SeatTube) $Position(IS_ChainSt_SeatSt)] ] \
-                        250   0 \
-                        $dimColour ]    \
-                single_LugDetermination_ChainStay
-                    #
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  length    \
-                        [ appUtil::flatten_nestedList  $RearWheel(Position)      $BottomBracket(Position)] \
-                        aligned \
-                        [expr   100 * $stageScale]   0 \
-                        $dimColour ]    \
-                single_RearWheel_Distance
-                    #
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  length    \
-                        [ appUtil::flatten_nestedList  $RearWheel(Position)      $RearWheel(Ground) ] \
-                        vertical    \
-                        [expr   130 * $stageScale]    0 \
-                        $dimColour ]    \
-                group_RearWheel_Parameter
-                    #
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  length    \
-                        [ appUtil::flatten_nestedList  $FrontWheel(Position)     $FrontWheel(Ground) ] \
-                        vertical    \
-                        [expr  -150 * $stageScale]    0 \
-                        $dimColour ] \
-                group_FrontWheel_Parameter_01
-                    #      
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  length    \
-                        [ appUtil::flatten_nestedList  $HandleBar(Position)      $Steerer(Stem) ] \
-                        aligned     \
-                        [expr    80 * $stageScale]    0 \
-                        $dimColour ]    \
-                single_Stem_Length
-                    #
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  length    \
-                        [ appUtil::flatten_nestedList  $Steerer(Stem)  $help_fk $FrontWheel(Position) ] \
-                        perpendicular   \
-                        [expr  100 * $stageScale]    [expr  -80 * $stageScale] \
-                        $dimColour ]    \
-                single_Fork_Rake
-                    #
-        rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
-                [ $cv_Name dimension  length    \
-                        [ appUtil::flatten_nestedList  $BottomBracket(Position) $RearWheel(Position) $ChainStay(Dropout)] \
-                        perpendicular   \
-                        [expr   80 * $stageScale]    [expr   60 * $stageScale] \
-                        $dimColour ]    \
-                single_ChainStay_DropoutOffset
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  angle \
+                            [ appUtil::flatten_nestedList [list $DownTube(Steerer) $DownTube(BBracket) $Steerer(Ground)] ] \
+                            250   0 \
+                            $dimColour ]    \
+                    single_LugDetermination_HeadLug
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  angle \
+                            [ appUtil::flatten_nestedList [list $pt_base  $DownTube(Steerer) $TopTube(SeatTube) ] ] \
+                            250   0 \
+                            $dimColour ]    \
+                    single_LugDetermination_DownTube
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  angle \
+                            [ appUtil::flatten_nestedList [list $pt_base $TopTube(SeatTube) $Position(IS_ChainSt_SeatSt)] ] \
+                            250   0 \
+                            $dimColour ]    \
+                    single_LugDetermination_ChainStay
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $RearWheel(Position)      $BottomBracket(Position)] \
+                            aligned \
+                            [expr   100 * $stageScale]   0 \
+                            $dimColour ]    \
+                    single_RearWheel_Distance
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $RearWheel(Position)      $RearWheel(Ground) ] \
+                            vertical    \
+                            [expr   130 * $stageScale]    0 \
+                            $dimColour ]    \
+                    group_RearWheel_Parameter
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $FrontWheel(Position)     $FrontWheel(Ground) ] \
+                            vertical    \
+                            [expr  -150 * $stageScale]    0 \
+                            $dimColour ] \
+                    group_FrontWheel_Parameter_01
+                        #      
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $HandleBar(Position)      $Steerer(Stem) ] \
+                            aligned     \
+                            [expr    80 * $stageScale]    0 \
+                            $dimColour ]    \
+                    single_Stem_Length
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $Steerer(Stem)  $help_fk $FrontWheel(Position) ] \
+                            perpendicular   \
+                            [expr  100 * $stageScale]    [expr  -80 * $stageScale] \
+                            $dimColour ]    \
+                    single_Fork_Rake
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $BottomBracket(Position) $RearWheel(Position) $ChainStay(Dropout)] \
+                            perpendicular   \
+                            [expr   80 * $stageScale]    [expr   60 * $stageScale] \
+                            $dimColour ]    \
+                    group_RearDropout_Parameter_02
                         #
                         #  
             if {$Stem(Angle) > 0} {
@@ -1760,7 +1769,7 @@
                             $dimColour ]    \
                     group_Saddle_Parameter_01
                         #
-            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+            # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $Steerer(Fork)  $HeadTube(Stem) ] \
                             aligned \
@@ -1807,8 +1816,10 @@
                 #
             variable    stageScale
                 #
+            variable    DownTube
             variable    HandleBar
             variable    Saddle
+            variable    SeatTube
                 #
             variable    Position
             variable    Length
@@ -1817,12 +1828,30 @@
                 #
             set dimColour    $DraftingColour(result)  
                 #            
+            set pt_base     [ vectormath::intersectPoint  $DownTube(Steerer) $DownTube(BBracket) $SeatTube(BBracket) $SeatTube(TopTube) ]
+                #
+                # ---
+                #
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $HandleBar(Position)     $Saddle(Position) ] \
                             vertical    [expr  310 * $stageScale]   [expr -100 * $stageScale]  \
                             $dimColour ]    \
                     single_Result_Saddle_Offset_HB
+                        #
+            #rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  angle \
+                            [ appUtil::flatten_nestedList [list $pt_base $DownTube(Steerer) $Position(IS_ChainSt_SeatSt)] ] \
+                            310   [expr 100 * $stageScale] \
+                            $dimColour ]    \
+                    single_LugDetermination_ChainStay
+                        #
+            #rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  angle \
+                            [ appUtil::flatten_nestedList [list $DownTube(Steerer) $DownTube(BBracket) $Steerer(Ground)] ] \
+                            250   0 \
+                            $dimColour ]    \
+                    single_LugDetermination_HeadLug
                         #
                 #      
             return
@@ -1834,6 +1863,7 @@
             variable    stageScale
                 #
             variable    BottomBracket
+            variable    DownTube
             variable    FrontWheel
             variable    HandleBar
             variable    HeadTube
@@ -1857,8 +1887,16 @@
             set help_00             [ vectormath::addVector   $SeatTube(Ground) {-200 0} ]
             set help_01             [ list [lindex $BottomBracket(Position) 0] [lindex $LegClearance(Position) 1] ]
                 #
+            set pt_base     [ vectormath::intersectPoint  $DownTube(Steerer) $DownTube(BBracket) $SeatTube(BBracket) $SeatTube(TopTube) ]
+                #
                 # ---
                 #
+            set _dim_BB_Angle \
+                    [ $cv_Name dimension  angle \
+                            [ appUtil::flatten_nestedList [list $pt_base $DownTube(Steerer) $Position(IS_ChainSt_SeatSt)] ] \
+                            310   [expr 100 * $stageScale] \
+                            $dimColour ] 
+                    
             set _dim_SD_Height  \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $Position(BaseCenter)  $Saddle(Position) ] \

@@ -55,17 +55,6 @@
                 
                 geometry_bg                     { createDimension_Geometry_BG                   $cv_Name $BB_Position $type;            return }
                 
-                geometry_stackreach_personal    { createDimension_Geometry_stackreach_personal  $cv_Name $BB_Position $type $active;    return }
-                geometry_stackreach_primary     { createDimension_Geometry_stackreach_primary   $cv_Name $BB_Position $type $active;    return }
-                geometry_stackreach_secondary   { createDimension_Geometry_stackreach_secondary $cv_Name $BB_Position $type $active;    return }
-                geometry_stackreach_result      { createDimension_Geometry_stackreach_result    $cv_Name $BB_Position $type $active;    return }
-                
-                geometry_lugs_personal          { createDimension_Geometry_lugs_personal        $cv_Name $BB_Position $type $active;    return }
-                geometry_lugs_primary           { createDimension_Geometry_lugs_primary         $cv_Name $BB_Position $type $active;    return }
-                geometry_lugs_secondary         { createDimension_Geometry_lugs_secondary       $cv_Name $BB_Position $type $active;    return }
-                geometry_lugs_result            { createDimension_Geometry_lugs_result          $cv_Name $BB_Position $type $active;    return }
-                geometry_lugs_background        { createDimension_Geometry_BG_Lug               $cv_Name $BB_Position $type;            return }
-                
                 geometry_bg_free                { createDimension_Geometry_BG_Free              $cv_Name $BB_Position $type;            return }
                 geometry_fg_free                { createDimension_Geometry_FG_Free              $cv_Name $BB_Position $type $active;    return }
                 geometry_bg_lug                 { createDimension_Geometry_BG_Lug               $cv_Name $BB_Position $type;            return }
