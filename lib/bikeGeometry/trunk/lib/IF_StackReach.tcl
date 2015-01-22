@@ -3,40 +3,41 @@
         namespace ensemble create -command ::bikeGeometry::IF_StackReach \
                 -map {
         
-                    set_Component                        set_Component
-                    set_Config                           set_Config
-                    set_ListValue                        set_ListValue
-                    set_Scalar                           set_Scalar_StackReach
-                                                         
-                    set_newProject                       set_newProject
-                    
-                    get_projectDOM                       get_projectDOM
-                    get_projectDICT                      get_projectDICT
-                                                         
-                    import_ProjectSubset                 import_ProjectSubset
-                                                         
-                    get_Component                        get_Component
-                    get_Config                           get_Config
-                    get_ListValue                        get_ListValue
-                    get_Scalar                           get_Scalar
-                                                         
-                    get_Polygon                          get_Polygon
-                    get_Position                         get_Position
-                    get_Direction                        get_Direction
-                    get_BoundingBox                      get_BoundingBox
-                    get_TubeMiter                        get_TubeMiter
-                    get_CenterLine                       get_CenterLine
-                                                         
-                    get_ComponentDir                     get_ComponentDir 
-                    get_ComponentDirectories             get_ComponentDirectories
-                    get_ListBoxValues                    get_ListBoxValues 
-                                                         
-                    get_DebugGeometry                    get_DebugGeometry
-                    get_ReynoldsFEAContent               get_ReynoldsFEAContent
-                                                         
-                    coords_xy_index                      coords_xy_index
-                                                        
-            }
+                        set_Component                        set_Component
+                        set_Config                           set_Config
+                        set_ListValue                        set_ListValue
+                        set_Scalar                           set_Scalar_StackReach
+                                                             
+                        set_newProject                       set_newProject
+                        
+                        get_projectDOM                       get_projectDOM
+                        get_projectDICT                      get_projectDICT
+                                                             
+                        import_ProjectSubset                 import_ProjectSubset
+                                                             
+                        get_Component                        get_Component
+                        get_Config                           get_Config
+                        get_ListValue                        get_ListValue
+                        get_Scalar                           get_Scalar
+                                                             
+                        get_Polygon                          get_Polygon
+                        get_Position                         get_Position
+                        get_Direction                        get_Direction
+                        get_BoundingBox                      get_BoundingBox
+                        get_TubeMiter                        get_TubeMiter
+                        get_CenterLine                       get_CenterLine
+                                                             
+                        get_ComponentDir                     get_ComponentDir 
+                        get_ComponentDirectories             get_ComponentDirectories
+                        get_ListBoxValues                    get_ListBoxValues 
+                                                             
+                        get_DebugGeometry                    get_DebugGeometry
+                        get_ReynoldsFEAContent               get_ReynoldsFEAContent
+                        get_openSCADContent                  get_openSCADContent
+                        
+                        coords_xy_index                      coords_xy_index
+                                                            
+                    }
 
     }
 

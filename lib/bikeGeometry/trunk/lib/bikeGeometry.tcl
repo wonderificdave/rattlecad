@@ -159,6 +159,9 @@
  #      debug
  #          FrameConfigMode: IF_LugAngles
  #          project::update_Project 3.4.02 -> virtualLength
+ # 1.34 implement 
+ #          remove geometry3D completly
+ #          new extensionpackage bikeGeometry_3D
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -167,7 +170,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.33
+    package provide bikeGeometry 1.34
         #
     package require vectormath
         #
@@ -970,8 +973,12 @@
     proc bikeGeometry::get_ReynoldsFEAContent {} {
         return [::bikeGeometry::lib_reynoldsFEA::get_Content]    
     }
-    
-
+        #
+    proc bikeGeometry::get_openSCADContent {} {
+        set scadDict [bikeGeometry::geometry3D::get_scadContent]
+        return $scadDict
+    }
+        #
     #-------------------------------------------------------------------------
        #  check mathValue
     proc bikeGeometry::check_mathValue {value} {

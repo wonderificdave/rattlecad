@@ -120,7 +120,7 @@
             set l_02  [vectormath::length $pt_00 $pt_02]
             set l_03  [vectormath::length $pt_00 $pt_03]
             set l_04  [vectormath::length $pt_00 {0 0}]
-            set Polygon(ChainStay_zx)   [list [format "%s,%s %s,%s %s,%s %s,%s %s,%s" \
+            set Polygon(ChainStay_xz)   [list [format "%s,%s %s,%s %s,%s %s,%s %s,%s" \
                                                                                 $l_00 [expr 0.5*$ChainStay(DiameterSS)] \
                                                                                 $l_01 [expr 0.5*$ChainStay(Height)] \
                                                                                 $l_02 [expr 0.5*$ChainStay(Height)] \
@@ -332,7 +332,7 @@
             set l_02  [expr $l_01 + $profile_x02]
             set l_03  [expr $l_02 + $profile_x03]
             set l_04  [expr $l_03 + 250]
-            set Result(Tubes/ChainStay/Profile/xy)   [list [format "%s,%s %s,%s %s,%s %s,%s" \
+            set Polygon(ChainStay_xy)   [list [format "%s,%s %s,%s %s,%s %s,%s" \
                                                                                 $l_00 [expr 0.5 * $profile_y00] \
                                                                                 $l_01 [expr 0.5 * $profile_y01] \
                                                                                 $l_02 [expr 0.5 * $profile_y02] \
@@ -383,9 +383,11 @@
             set Polygon(HeadTube)       $polygon
             # set Result(Tubes/HeadTube/Polygon)      $polygon
                 # --- side View
-            set Result(Tubes/HeadTube/Profile/xz)   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
+            set Polygon(HeadTube_xz)   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
+                # set Result(Tubes/HeadTube/Profile/xz)   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
                 # --- top View
-            set Result(Tubes/HeadTube/Profile/xy)   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
+            set Polygon(HeadTube_xy)   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
+                # set Result(Tubes/HeadTube/Profile/xy)   [list [format "%s,%s %s,%s" 0 [expr 0.5*$HeadTube(Diameter)]  $HeadTube(Length) [expr 0.5*$HeadTube(Diameter)]]]
                 #
     }
 
@@ -461,16 +463,27 @@
                     set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
                     set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_13 ]]
                 # --- side View
-            set Result(Tubes/TopTube/Profile/xz)    \
+            set Polygon(TopTube_xz)    \
                                         [list [format "%s,%s %s,%s %s,%s %s,%s" \
                                                 $l_00  [expr 0.5*$TopTube(DiameterHT)] \
                                                 $l_01  [expr 0.5*$TopTube(DiameterHT)] \
                                                 $l_02  [expr 0.5*$TopTube(DiameterST)] \
                                                 $l_03  [expr 0.5*$TopTube(DiameterST)] \
-                                            ]
+                                            ] \
                                         ]
               # --- top View
-            set Result(Tubes/TopTube/Profile/xy)  $Result(Tubes/TopTube/Profile/xz)
+            set Polygon(TopTube_xy)  $Polygon(TopTube_xz)
+              #
+            # set Result(Tubes/TopTube/Profile/xz)    \
+                                        [list [format "%s,%s %s,%s %s,%s %s,%s" \
+                                                $l_00  [expr 0.5*$TopTube(DiameterHT)] \
+                                                $l_01  [expr 0.5*$TopTube(DiameterHT)] \
+                                                $l_02  [expr 0.5*$TopTube(DiameterST)] \
+                                                $l_03  [expr 0.5*$TopTube(DiameterST)] \
+                                            ] \
+                                        ]
+              # --- top View
+            # set Result(Tubes/TopTube/Profile/xy)  $Result(Tubes/TopTube/Profile/xz)
               #
                         #
                     set pt_01       $Position(SeatTube_End)
@@ -503,7 +516,7 @@
                     set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
                     set l_03  [expr $l_02 + [ vectormath::length $pt_12 $pt_13 ]]
                         # --- side View
-            set Result(Tubes/SeatTube/Profile/xz)    \
+            set Polygon(SeatTube_xz)    \
                                         [list [format "%s,%s %s,%s %s,%s %s,%s" \
                                                 $l_00  [expr 0.5*$SeatTube(DiameterBB)] \
                                                 $l_01  [expr 0.5*$SeatTube(DiameterBB)] \
@@ -511,8 +524,18 @@
                                                 $l_03  [expr 0.5*$SeatTube(DiameterTT)] \
                                             ]
                                         ]
+            set Polygon(SeatTube_xy)  $Polygon(SeatTube_xz)
+            
+            # set Result(Tubes/SeatTube/Profile/xz)    \
+                                        [list [format "%s,%s %s,%s %s,%s %s,%s" \
+                                                $l_00  [expr 0.5*$SeatTube(DiameterBB)] \
+                                                $l_01  [expr 0.5*$SeatTube(DiameterBB)] \
+                                                $l_02  [expr 0.5*$SeatTube(DiameterTT)] \
+                                                $l_03  [expr 0.5*$SeatTube(DiameterTT)] \
+                                            ] \
+                                        ]
                         # --- top View
-            set Result(Tubes/SeatTube/Profile/xy)  $Result(Tubes/SeatTube/Profile/xz)
+            # set Result(Tubes/SeatTube/Profile/xy)  $Result(Tubes/SeatTube/Profile/xz)
                         #
          
     }
@@ -587,16 +610,25 @@
                         #
                     
                     # --- side View
-            set Result(Tubes/DownTube/Profile/xz)    \
+            set Polygon(DownTube_xz)    \
                                         [list [format "%s,%s %s,%s %s,%s %s,%s" \
                                                 $l_00  [expr 0.5*$DownTube(DiameterBB)] \
                                                 $l_01  [expr 0.5*$DownTube(DiameterBB)] \
                                                 $l_02  [expr 0.5*$DownTube(DiameterHT)] \
                                                 $l_03  [expr 0.5*$DownTube(DiameterHT)] \
-                                            ]
+                                            ] \
+                                        ]
+            set Polygon(DownTube_xy)   $Polygon(DownTube_xz)
+            # set Result(Tubes/DownTube/Profile/xz)    \
+                                        [list [format "%s,%s %s,%s %s,%s %s,%s" \
+                                                $l_00  [expr 0.5*$DownTube(DiameterBB)] \
+                                                $l_01  [expr 0.5*$DownTube(DiameterBB)] \
+                                                $l_02  [expr 0.5*$DownTube(DiameterHT)] \
+                                                $l_03  [expr 0.5*$DownTube(DiameterHT)] \
+                                            ] \
                                         ]
                     # --- top View
-            set Result(Tubes/DownTube/Profile/xy)   $Result(Tubes/DownTube/Profile/xz)
+            # set Result(Tubes/DownTube/Profile/xy)   $Result(Tubes/DownTube/Profile/xz)
                 #
                 #
             return
@@ -670,15 +702,24 @@
             set l_01  [expr $l_00 + [ vectormath::length $pt_10 $pt_11 ]]
             set l_02  [expr $l_01 + [ vectormath::length $pt_11 $pt_12 ]]
                         # --- side View
-            set Result(Tubes/SeatStay/Profile/xz)    \
+            set Polygon(SeatStay_xz)    \
                                         [list [format "%s,%s %s,%s %s,%s" \
                                                 $l_00  [expr 0.5*$SeatStay(DiameterCS)] \
                                                 $l_01  [expr 0.5*$SeatStay(DiameterST)] \
                                                 $l_02  [expr 0.5*$SeatStay(DiameterST)] \
-                                            ]
+                                            ] \
+                                        ]
+            set Polygon(SeatStay_xy)   $Polygon(SeatStay_xz)
+            
+            # set Result(Tubes/SeatStay/Profile/xz)    \
+                                        [list [format "%s,%s %s,%s %s,%s" \
+                                                $l_00  [expr 0.5*$SeatStay(DiameterCS)] \
+                                                $l_01  [expr 0.5*$SeatStay(DiameterST)] \
+                                                $l_02  [expr 0.5*$SeatStay(DiameterST)] \
+                                            ] \
                                         ]
                         # --- top View
-            set Result(Tubes/SeatStay/Profile/xy)   $Result(Tubes/SeatStay/Profile/xz)
+            # set Result(Tubes/SeatStay/Profile/xy)   $Result(Tubes/SeatStay/Profile/xz)
                         #
 
                         #
