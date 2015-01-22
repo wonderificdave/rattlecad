@@ -152,6 +152,7 @@
           set ::APPL_Config(EXPORT_HTML)      [rattleCAD::model::file::check_user_dir rattleCAD/html]
           set ::APPL_Config(EXPORT_PDF)       [rattleCAD::model::file::check_user_dir rattleCAD/pdf]
           set ::APPL_Config(EXPORT_FEA)       [rattleCAD::model::file::check_user_dir rattleCAD/analysis]
+          set ::APPL_Config(EXPORT_SCAD)      [rattleCAD::model::file::check_user_dir rattleCAD/scad]
           set ::APPL_Config(TEMPLATE_Dir)     [rattleCAD::model::file::check_user_dir rattleCAD/_template/rattleCAD]
                      
                      

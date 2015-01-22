@@ -5,6 +5,7 @@
 	<projects>
 		<project>appUtil</project>
 		<project>bikeGeometry</project>
+		<project>bikrGeometry_3D</project>
 		<project>canvasCAD</project>
 		<project>extSummary</project>
 		<project>osEnv</project>

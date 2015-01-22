@@ -88,7 +88,6 @@ namespace eval rattleCAD::model {
     namespace import ::bikeGeometry::get_ListBoxValues 
         #
     namespace import ::bikeGeometry::get_DebugGeometry
-    namespace import ::bikeGeometry::get_ReynoldsFEAContent    
         #
     namespace import ::bikeGeometry::coords_xy_index
         #
@@ -97,13 +96,7 @@ namespace eval rattleCAD::model {
         #
 }
 	
-    
-    proc rattleCAD::model::set_Scalar {object key value} {
-            #
-        variable  geometry_IF
-        return  [$geometry_IF set_Scalar ${object} ${key} ${value}]
-            #
-    }
+
     proc rattleCAD::model::set_geometry_IF {interfaceName} {
             #
         variable  geometry_IF
@@ -138,9 +131,26 @@ namespace eval rattleCAD::model {
             return 0
         }
     }
-    
-    
-    
+    proc rattleCAD::model::set_Scalar {object key value} {
+            #
+        variable  geometry_IF
+        return  [$geometry_IF set_Scalar ${object} ${key} ${value}]
+            #
+    }
+    proc rattleCAD::model::get_ReynoldsFEAContent {} {
+        variable  geometry_IF
+        return [$geometry_IF    get_ReynoldsFEAContent]
+    }
+	proc rattleCAD::model::get_openSCAD {} {
+            #
+        # if {[catch {set content [::bikeGeometry_3D get_openSCADContent]} eID]} {}
+        if {[catch {set content [::bikeGeometry_3D::get_scadContent]} eID]} {
+            return {}
+        } else {
+            return $content
+        }
+            #
+    }
     proc rattleCAD::model::updateModel {} {
 		variable modelDICT
 		variable modelDOM
@@ -189,9 +199,6 @@ namespace eval rattleCAD::model {
 		[namespace current]::updateModel
 		  #
     }	
-
-	
-	
 	
 	proc rattleCAD::model::unifyKey {key} {
         

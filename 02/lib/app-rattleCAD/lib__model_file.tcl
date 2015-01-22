@@ -841,6 +841,74 @@
 
     
     #-------------------------------------------------------------------------
+       #  export project and prepared for eReynoldsFEA
+       #
+    proc create_openSCAD {exportDir fileName {postEvent {open}}} {
+            
+                # --- set exportFile
+            # set fileName      reynolds_FEA.csv
+            set fileName    [ file join $exportDir $fileName ]
+            set fileName    [ file normalize $fileName]
+
+                # --- get file content
+            set openSCAD_Dict   [rattleCAD::model::get_openSCAD]
+                #
+            if {$openSCAD_Dict  == {}} {
+                return {}
+            }
+                #
+            set mainContent     [dict get $openSCAD_Dict exportComplete]
+            set compSaddle      [dict get $openSCAD_Dict components saddle]
+            set compHandleBar   [dict get $openSCAD_Dict components handlebar]
+                # -- open File for writing
+            if {[file exist $fileName]} {
+                if {[file writable $fileName]} {
+                    set fp [open $fileName w]
+                    # fconfigure $fp -translation {crlf cr}
+                    puts -nonewline $fp $mainContent
+                    close $fp
+                    puts ""
+                    puts "         -- update ----------------------"
+                    puts "           ... write:"   
+                    puts "                       $fileName"
+                    puts "                   ... done"
+                } else {
+                    tk_messageBox -icon error -message "File: \n   $fileName\n  ... not writeable!"
+                }
+            } else {
+                    set fp [open $fileName w]
+                    # fconfigure $fp -translation {crlf cr}
+                    puts -nonewline $fp $mainContent
+                    close $fp
+                    puts ""
+                    puts "         -- new--------------------------"
+                    puts "           ... write:"  
+                    puts "                       $fileName "
+                    puts "                   ... done"
+            }
+                # ---
+            puts ""
+            puts "          \$compHandleBar [set compHandleBar]"
+            puts "          \$compSaddle    [set compSaddle]"
+            puts ""
+            puts "          \$sourceDir     [file dirname $compHandleBar]"
+            puts "          \$exportDir     [set exportDir]"
+            puts ""
+                #tk_getOpenFile -initialdir [file dirname $compHandleBar]
+                #tk_getOpenFile -initialdir [set exportDir]
+                #puts ""
+            catch [file copy -force $compHandleBar  $exportDir]
+            catch [file copy -force $compSaddle     $exportDir]
+                #file copy -force $compHandleBar  $exportDir
+                #file copy -force $compSaddle     $exportDir
+            puts ""
+                # ---
+            return $fileName
+                #
+    }
+
+    
+    #-------------------------------------------------------------------------
         #  ...
         #
     proc getTemplateFile {type} {
