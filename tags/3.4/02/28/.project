@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>rattleCAD 3.4.01</name>
+	<comment></comment>
+	<projects>
+		<project>appUtil</project>
+		<project>bikeGeometry</project>
+		<project>bikrGeometry_3D</project>
+		<project>canvasCAD</project>
+		<project>extSummary</project>
+		<project>osEnv</project>
+		<project>vectorMath</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/build_rattleCAD_4_0.launch</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.dltk.core.scriptbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.dltk.tcl.core.nature</nature>
+	</natures>
+</projectDescription>
