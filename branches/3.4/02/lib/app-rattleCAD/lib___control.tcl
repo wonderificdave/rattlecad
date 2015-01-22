@@ -63,6 +63,7 @@
                 }
           # ----------------- #
         variable    frame_configMode    {OutsideIn}
+        variable    frame_chainStayType {}
           # ----------------- #
     }
     
@@ -267,6 +268,25 @@
                             rattleCAD::view::updateView force
                                 #
                         }
+                }
+                default         {}            
+        }            
+            #
+    }
+    
+    proc rattleCAD::control::set_chainStayType {} {
+            #
+        variable frame_chainStayType
+            #
+        switch -exact $frame_chainStayType {
+                {straight}  -
+                {bent} -
+                {off}   {
+                            rattleCAD::model::set_Config ChainStay $frame_chainStayType
+                                # puts "   <I>  rattleCAD::control::set_frameConfigMode ... $frame_configMode"
+                                # update view
+                            rattleCAD::view::updateView force
+                                #
                 }
                 default         {}            
         }            

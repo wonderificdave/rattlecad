@@ -184,7 +184,7 @@
                 #
             createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name       change_FrameConfigMode
+            rattleCAD::view::gui::notebook_createButton    $cv_Name     {configMode_Frame,configMode_BaseDimension}
                 #
     }
 
@@ -250,7 +250,7 @@
                 #
             createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        check_TubingAngles
+            rattleCAD::view::gui::notebook_createButton    $cv_Name     check_TubingAngles
                 #
     }
 
@@ -277,7 +277,7 @@
                 #
             update_renderCanvas               $cv_Name
                 #    
-            rattleCAD::view::gui::notebook_createButton    $cv_Name         change_FormatScale
+            rattleCAD::view::gui::notebook_createButton    $cv_Name     {configMode_ChainStay,pageConfig_Scale,pageConfig_Format}
                 #
     }
 
@@ -346,7 +346,7 @@
                 #
             createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        change_FormatScale   format
+            rattleCAD::view::gui::notebook_createButton    $cv_Name     {pageConfig_Scale,pageConfig_Format}
                 #
     }
 
@@ -390,7 +390,7 @@
                 #
             update_renderCanvas               $cv_Name         wheat
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        change_FormatScale
+            rattleCAD::view::gui::notebook_createButton    $cv_Name     {pageConfig_Scale,pageConfig_Format}
                 #
     }
 
@@ -437,7 +437,7 @@
                 #
             update_renderCanvas               $cv_Name        wheat   gray98  gray93  gray93
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        change_Rendering
+            rattleCAD::view::gui::notebook_createButton    $cv_Name     change_Rendering
                 #   
     }
 
@@ -493,7 +493,7 @@
                 #
             update_renderCanvas               $cv_Name        wheat
                 #
-            rattleCAD::view::gui::notebook_createButton    $cv_Name        change_FrameJigMode
+            rattleCAD::view::gui::notebook_createButton    $cv_Name     configMode_FrameJig
                 #
     }
 

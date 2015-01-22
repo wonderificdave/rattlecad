@@ -58,13 +58,14 @@
     variable    show_secondaryDimension 1
     variable    show_resultDimension    1
     variable    show_summaryDimension   1
+ }
 
 
                             
     #-------------------------------------------------------------------------
        #  create MainFrame with Menue  
        #
-    proc create_MainFrame {} {        
+    proc rattleCAD::view::gui::create_MainFrame {} {        
             
         set mainframe_Menue {
             "&File"   all file 0 {
@@ -110,13 +111,14 @@
                 {command "&Export SVG"      {}  "Export to SVG"         {}            -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
                 {command "&Export DXF"      {}  "Export to DXF"         {}            -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
                 {command "&Export PS"       {}  "Export to PostScript"  {}            -command { rattleCAD::view::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
+                {command "&Export openSCAD" {}  "Export to openSCAD"    {Ctrl O}      -command { rattleCAD::view::gui::export_openSCAD } }
                 {command "&Export Reynolds FEA" {} "Export Reynolds FEA" {Ctrl f}     -command { rattleCAD::view::gui::export_reynoldsFEA  1.0} }
             }
             "Demo"   all info 0 {
-                {command "Samples"          {}  "Example Projects"      {}            -command { rattleCAD::test:::runDemo loopSamples } }
-                {command "rattleCAD Method" {}  "HandleBar and Saddle"  {CtrlAlt r}   -command { rattleCAD::test:::runDemo method_rattleCAD_HandleBarandSaddle } }
-                {command "classic Method"   {}  "Seat- and TopTube"     {}            -command { rattleCAD::test:::runDemo method_classic_SeatandTopTube } }
-                {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD::test:::runDemo demo_01 } }
+                {command "Samples"          {}  "Example Projects"      {}            -command { rattleCAD::test::runDemo loopSamples } }
+                {command "rattleCAD Method" {}  "HandleBar and Saddle"  {CtrlAlt r}   -command { rattleCAD::test::runDemo method_rattleCAD_HandleBarandSaddle } }
+                {command "classic Method"   {}  "Seat- and TopTube"     {}            -command { rattleCAD::test::runDemo method_classic_SeatandTopTube } }
+                {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD::test::runDemo demo_01 } }
                 {command "Stop Demo"        {}  "Stop running Demo"     {Ctrl b}      -command { rattleCAD::test::stopDemo} }
                 {separator}      
                 {command "Integration Test" {}  "Integration Test"      {CtrlAlt i}   -command { rattleCAD::test:::runDemo integrationTest_00} }
@@ -144,7 +146,7 @@
     #-------------------------------------------------------------------------
         #  create MainFrame with Menue  
         #
-    proc create_ButtonBar {tb_frame } {    
+    proc rattleCAD::view::gui::create_ButtonBar {tb_frame } {    
             variable iconArray
 		
             Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { rattleCAD::model::file::openProject_xml }  
@@ -208,7 +210,7 @@
     #-------------------------------------------------------------------------
         #  register notebookCanvas in notebook - Tabs   
         #
-    proc create_Notebook {frame} {
+    proc rattleCAD::view::gui::create_Notebook {frame} {
             variable canvasGeometry
             variable canvasUpdate
             variable noteBook_top
@@ -270,7 +272,7 @@
     #-------------------------------------------------------------------------
         #  register notebookCanvas in notebook - Tabs   
         #
-    proc create_canvasCAD {notebook varname title stageFormat stageScale stageBorder args} {
+    proc rattleCAD::view::gui::create_canvasCAD {notebook varname title stageFormat stageScale stageBorder args} {
             # rattleCAD::view::gui::create_canvasCAD  $noteBook_top  cv_Custom30  "Dimension Summary"  A4  0.2 -bd 2  -bg white  -relief sunken
         variable canvasGeometry
         variable notebookCanvas
@@ -293,7 +295,7 @@
     #-------------------------------------------------------------------------
         #  exit application   
         #
-    proc exit_rattleCAD {{type {yesnocancel}} {exitMode {}}} {   
+    proc rattleCAD::view::gui::exit_rattleCAD {{type {yesnocancel}} {exitMode {}}} {   
                 
               set changeIndex [rattleCAD::control::changeList::get_changeIndex]
                 
@@ -363,7 +365,7 @@
     #-------------------------------------------------------------------------
         #  get current canvasCAD   
         #
-    proc current_canvasCAD {} {
+    proc rattleCAD::view::gui::current_canvasCAD {} {
             variable noteBook_top        
             set current_cv [$noteBook_top select]
                 # puts "        current canvasCAD: $current_cv"
@@ -374,7 +376,7 @@
     #-------------------------------------------------------------------------
         #  select specific canvasCAD tab   
         #
-    proc select_canvasCAD {cv} {
+    proc rattleCAD::view::gui::select_canvasCAD {cv} {
             variable noteBook_top        
             
                 puts " ... <D>  select_canvasCAD $cv"
@@ -397,7 +399,7 @@
     #-------------------------------------------------------------------------
         #  fill canvasCAD   
         #
-    proc fill_canvasCAD {{varName {}}} {
+    proc rattleCAD::view::gui::fill_canvasCAD {{varName {}}} {
             variable noteBook_top
             
             puts "         -------------------------------"
@@ -446,7 +448,7 @@
     #-------------------------------------------------------------------------
        #  get notebook window    
        #
-    proc notebook_getWidget {varName} {
+    proc rattleCAD::view::gui::notebook_getWidget {varName} {
             variable notebookCanvas
             
             foreach index [array names notebookCanvas] {
@@ -459,7 +461,7 @@
     #-------------------------------------------------------------------------
         #  get notebook id    
         #
-    proc notebook_getTabInfo {varName} {
+    proc rattleCAD::view::gui::notebook_getTabInfo {varName} {
              variable noteBook_top       
                # puts "\n --------"
                # puts "[$noteBook_top tabs]"
@@ -479,7 +481,7 @@
     #-------------------------------------------------------------------------
        #  get notebook window    
        #
-    proc notebook_getVarName {tabID} {
+    proc rattleCAD::view::gui::notebook_getVarName {tabID} {
                 # tabID:      [$noteBook_top select]
                 #            .mainframe.frame.f2.nb.cv_Custom30
             variable notebookCanvas
@@ -507,7 +509,7 @@
     #-------------------------------------------------------------------------
        #  register external canvasCAD-Widgets
        #
-    proc register_external_canvasCAD {tabID cvID} {
+    proc rattleCAD::view::gui::register_external_canvasCAD {tabID cvID} {
             variable external_canvasCAD
             set external_canvasCAD($tabID) $cvID    
             puts "\n            register_external_canvasCAD: $tabID $external_canvasCAD($tabID)"
@@ -518,7 +520,7 @@
     #-------------------------------------------------------------------------
        #  scale canvasCAD in current notebook-Tab  
        #
-    proc notebook_scaleCanvas {value} {
+    proc rattleCAD::view::gui::notebook_scaleCanvas {value} {
             variable noteBook_top
 
             set currentTab [$noteBook_top select]
@@ -539,7 +541,7 @@
     #-------------------------------------------------------------------------
        #  refit notebookCanvas in current notebook-Tab  
        #
-    proc notebook_refitCanvas {} {
+    proc rattleCAD::view::gui::notebook_refitCanvas {} {
             variable noteBook_top
 
             set currentTab [$noteBook_top select]
@@ -569,7 +571,7 @@
     #-------------------------------------------------------------------------
        #  clean canvasCAD in current notebook-Tab  
        #
-    proc notebook_cleanCanvas {} {
+    proc rattleCAD::view::gui::notebook_cleanCanvas {} {
             variable noteBook_top
 
             set currentTab [$noteBook_top select]
@@ -585,7 +587,7 @@
     #-------------------------------------------------------------------------
         #  switch notebook-Tab  
         #
-    proc notebook_switchTab {cvTab} {
+    proc rattleCAD::view::gui::notebook_switchTab {cvTab} {
         variable noteBook_top
           # puts ""
           # puts " ---------------"
@@ -608,23 +610,44 @@
     #-------------------------------------------------------------------------
        #  export canvasCAD from every notebook-Tab
        #
-    proc export_reynoldsFEA {versionFEA} {
-              # ---
+    proc rattleCAD::view::gui::export_reynoldsFEA {versionFEA} {
+                # ---
             set exportDir $::APPL_Config(EXPORT_FEA)
-              # ---
+                # ---
             set fileName [rattleCAD::model::file::create_reynoldsFEA  $exportDir]
-              #
-            tk_messageBox -title "Reynolds FEA - Export" -message "current project exported to:\n          $fileName"
-              #
+                #
+            tk_messageBox -icon question -title "Reynolds FEA - Export" -message "current project exported to:\n          $fileName"
+                #
             return
-              #            
-    }
-    
-    
+                #            
+    } 
+
+
     #-------------------------------------------------------------------------
        #  export canvasCAD from every notebook-Tab
        #
-    proc export_Project { {type {html}}} {
+    proc rattleCAD::view::gui::export_openSCAD {} {
+                # ---
+            set exportDir $::APPL_Config(EXPORT_SCAD)
+                # ---
+            set fileName [rattleCAD::model::file::create_openSCAD  $exportDir export_complete.scad]
+                #
+            if {$fileName == {}} {
+                tk_messageBox -icon question -message "... could not get 3D extension for rattleCAD"
+                return
+            } else {
+                tk_messageBox -icon question -title "openSCAD - Export" -message "current project exported to:\n          $fileName"
+            }    
+                #
+            return
+                #            
+    }
+
+  
+    #-------------------------------------------------------------------------
+       #  export canvasCAD from every notebook-Tab
+       #
+    proc rattleCAD::view::gui::export_Project { {type {html}}} {
             variable noteBook_top
             variable notebookCanvas     
             
@@ -742,7 +765,7 @@
     #-------------------------------------------------------------------------
        #  export canvasCAD from current notebook-Tab as PostScript 
        #
-    proc notebook_exportPS {printDir {postEvent {open}}} {
+    proc rattleCAD::view::gui::notebook_exportPS {printDir {postEvent {open}}} {
             variable noteBook_top
 
                 # --- get currentTab
@@ -804,7 +827,7 @@
     #-------------------------------------------------------------------------
        #  export canvasCAD from current notebook-Tab as Standard Vector Graphic
        #
-    proc notebook_exportSVG {printDir {postEvent {open}}} {
+    proc rattleCAD::view::gui::notebook_exportSVG {printDir {postEvent {open}}} {
             variable noteBook_top
 
                 # --- get currentTab
@@ -849,7 +872,7 @@
     #-------------------------------------------------------------------------
        #  export canvasCAD from current notebook-Tab as SVG Graphic
        #
-    proc notebook_exportDXF {printDir {postEvent {open}}} {
+    proc rattleCAD::view::gui::notebook_exportDXF {printDir {postEvent {open}}} {
             variable noteBook_top
 
                 # --- get currentTab
@@ -892,35 +915,44 @@
     #-------------------------------------------------------------------------
        #  create a Button inside a canvas of notebookCanvas
        #
-    proc notebook_createButton {nb_Canvas cv_ButtonList    {type {default}}} {
+    proc rattleCAD::view::gui::notebook_createButton {nb_Canvas cv_ButtonContent    {type {default}}} {
             
             puts ""
             puts "         -------------------------------"
             puts "          rattleCAD::view::gui::notebook_createButton"
-            puts "             cv_ButtonList:   $$cv_ButtonList"
+            puts "             cv_ButtonContent:   $cv_ButtonContent"
             set cv_Name [lindex [split $nb_Canvas :] end]
             set cv      [rattleCAD::view::gui::notebook_getWidget  $cv_Name]
-            
-            
-                # puts "  notebook_createButton $cv"
-                # puts [$cv find withtag __NB_Button__]
-            foreach cv_Window [$cv find withtag __NB_Button__] {
-                #puts "   <D> $cv_Window"
-                #set cv_Button [$cv itemcget $cv_Window -window]
-                #puts "   <D> $cv_Button"
-                #destroy     $cv_Window  ; # delete containing window           
-                #$cv delete  $cv_Button  ; # delete button
-            }
-                # puts "   <D> [$cv find withtag __NB_Button__]"
             
             catch { destroy $cv.buttonFrame }
             frame   $cv.buttonFrame            
                 # button  $cv.buttonFrame.bt -text test
-                # pack $cv.buttonFrame.bt
-            
-            
+                #
             set idx 0
-            foreach cv_Button $cv_ButtonList {
+            set x_Position  4
+            set y_Position  4
+                #
+            puts "  <I> $nb_Canvas"
+                #
+            switch -exact $cv_ButtonContent {
+                    change_Rendering {
+                                # -- create a Button to set Rendering: BottleCage, Fork, ...
+                                $nb_Canvas configCorner [format {rattleCAD::view::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
+                            } 
+                    check_TubingAngles {
+                                # -- create a Button to execute tubing_checkAngles
+                                $nb_Canvas configCorner [format {rattleCAD::view::gui::tubing_checkAngles %s} $cv]                   
+                            }
+                    default {
+                                $nb_Canvas configCorner [format {rattleCAD::view::gui::notebook_ButtonEvent %s %s} $cv $cv_ButtonContent ]
+                        }
+            }
+            
+                #
+            return
+
+            
+            foreach cv_Button $cv_ButtonContent {
                 set x_Position  4
                 set y_Position  4
                   # set x_Position  [expr 10 + $idx * 25]
@@ -942,7 +974,7 @@
                         change_Rendering {
                                     # -- create a Button to set Rendering: BottleCage, Fork, ...
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
-                        } 
+                                } 
                         check_TubingAngles {
                                     # -- create a Button to execute tubing_checkAngles
                                     $nb_Canvas configCorner [format {rattleCAD::view::gui::tubing_checkAngles %s} $cv]                   
@@ -979,26 +1011,62 @@
     }            
 
 
-    #-------------------------------------------------------------------------
-       #  update Personal Geometry with parameters of Reference Geometry 
-       #
-    proc tubing_checkAngles {cv {type {default}}} {
-            rattleCAD::view::check_TubingAngles
-    }
-    
-    
-    #-------------------------------------------------------------------------
-       #  change Rendering Settings 
-       #
-    proc change_FrameConfig {cv x y {type {default}}} {
+    proc rattleCAD::view::gui::notebook_ButtonEvent {cv contentList} {
                 #
-            variable frame_configMethod
-            variable show_summaryDimension
+            set x_Position  4
+            set y_Position  4
+                #
+            puts "\n      \$cv     $cv"
+                #
+            set contentFrame [notebook_createConfigContainer $cv $x_Position $y_Position ]
+                #
+            if {$contentFrame == {}} { return }
+                #
+            puts "\n      \$contentFrame  $contentFrame"
+            puts "\n      \$cv  $cv"
+            puts "\n      \$contentList  $contentList"
+                #
+            foreach addConfig [split $contentList ,] {
+                lappend thisContent $addConfig 
+                lappend thisContent separator 
+            }
+            
+            set id 0
+            foreach addConfig [lrange $thisContent 0 end-1] {
+                incr id
+                switch -exact $addConfig {
+                        separator {                 add_ConfigSeparator     $contentFrame $id}
+                        configMode_Frame {          add_ConfigFrameMode     $contentFrame }
+                        configMode_BaseDimension {  add_ConfigBaseDimension $contentFrame }
+                        configMode_ChainStay {      add_ConfigChainStay     $contentFrame }
+                        configMode_FrameJig {       add_ConfigFrameJig      $contentFrame }
+                        change_FormatScale {        add_ConfigFormatScale   $contentFrame }
+                        pageConfig_Scale {          add_ConfigScale         $contentFrame }
+                        pageConfig_Format {         add_ConfigFormat        $contentFrame }
+                        default {}
+                }
+            }
+    } 
+
+
+    proc rattleCAD::view::gui::notebook_createConfigContainer {cv x y {title {Config}}} {
+                #
+            puts "\n      \$cv     $cv"
                 #
             set cv_Name [lindex [split $cv .] end-1]
                 #
-            if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
-                    catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
+            puts "\n      \$cv_Name     $cv_Name"
+                #
+            if {[ $cv find withtag __Select__SubMenue__ ] != {} } {
+                    $cv delete     __Select__SubMenue__
+                    $cv dtag       __Select__SubMenue__
+                    destroy        .f_subMenue_$cv_Name
+                    #tk_messageBox -message "delete Container"        
+                    return {}
+            } else {
+                    if {[catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]} eID]} {
+                        return {}
+                    } else {
                             $cv create window $x $y \
                                     -window $baseFrame \
                                     -anchor nw \
@@ -1007,69 +1075,51 @@
                             pack    $baseFrame.select       
                             frame   $baseFrame.select.lf       
                             pack    $baseFrame.select.lf       -padx 2 -pady 2 -fill x
-                            label   $baseFrame.select.lf.label -text "Config Details:" -fg white -bg gray60 -justify left
+                            label   $baseFrame.select.lf.label -text $title -fg white -bg gray60 -justify left
                             pack    $baseFrame.select.lf.label -fill x
                                 #
                             set newFont [format {%s bold}  [$baseFrame.select.lf.label cget -font]]
                             $baseFrame.select.lf.label configure   -font $newFont
                                 #
                             bind $baseFrame.select.lf.label  <Button-1>    [list destroy $baseFrame]
-                          }
-            } else {
-                    $cv delete     __Select__SubMenue__
-                    $cv dtag       __Select__SubMenue__
-                    destroy        .f_subMenue_$cv_Name
-                    return
-            }
+                                #
+                            set contentFrame    [frame $baseFrame.select.content -relief flat -bd 2 ]
+                            pack $contentFrame  -fill x -expand yes
+                                    #
+                            #tk_messageBox -message "new Container"        
+                                    #
+                            return $contentFrame 
+                    }
+                    
+                    #tk_messageBox -message "not successfull"        
+                    
+            }      
+    } 
+
+
+    proc rattleCAD::view::gui::add_ConfigSeparator {w index} {
                 #
-                # ... see rattleCAD::cv_custom::DraftingColour
-                #       secondary  darkmagenta
-                #       result     darkblue
-                #       background gray50    
+            variable frame_configMethod
+            variable show_summaryDimension
                 #
-            set contentFrame    [frame $baseFrame.select.content -relief flat -bd 2 ]
-            pack $contentFrame  -fill x -expand yes
-                    #
-            label       $contentFrame.label_1      -text "Frame Config:"      
-            ttk::separator $contentFrame.seperator_1
-                # button $contentFrame.hybrid       -text "Outside-In"        -command {rattleCAD::view::gui::pushedButtonState OutsideIn }
-                # button $contentFrame.stackreach   -text "Stack & Reach"     -command {rattleCAD::view::gui::pushedButtonState StackReach}
-                # button $contentFrame.classic      -text "Classic"           -command {rattleCAD::view::gui::pushedButtonState Classic   }
-                # button $contentFrame.lugs         -text "Lug Angles"        -command {rattleCAD::view::gui::pushedButtonState Lugs      }
-            radiobutton $contentFrame.hybrid       -text "Outside-In"        -value {OutsideIn}     -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
-            radiobutton $contentFrame.stackreach   -text "Stack & Reach"     -value {StackReach}    -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
-            radiobutton $contentFrame.classic      -text "Classic"           -value {Classic}       -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
-            radiobutton $contentFrame.lugs         -text "Lug Angles"        -value {Lugs}          -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
-            ttk::separator $contentFrame.seperator_2
-            label       $contentFrame.label_2      -text "Show Dimension:"      
-            checkbutton $contentFrame.dimSec       -text "Secondary"         -variable rattleCAD::view::gui::show_secondaryDimension                -command {rattleCAD::view::updateView force}
-            checkbutton $contentFrame.dimRes       -text "Result"            -variable rattleCAD::view::gui::show_resultDimension                   -command {rattleCAD::view::updateView force}
-            checkbutton $contentFrame.dimSum       -text "Summary"           -variable rattleCAD::view::gui::show_summaryDimension                  -command {rattleCAD::view::updateView force}
+            set frameName [format {%s.sep_%s} $w $index]
+            set frameName [format {sep_%s} $index]
+            set contentFrame [frame $w.$frameName]
+            pack $contentFrame -fill x
                 #
-            grid config $contentFrame.label_1      -column 0 -row  0 -sticky "w"
-            #grid config $contentFrame.seperator_1  -column 0 -row  1 -sticky "nsew"
-            grid config $contentFrame.hybrid       -column 0 -row  2 -sticky "w"
-            grid config $contentFrame.stackreach   -column 0 -row  3 -sticky "w"
-            grid config $contentFrame.classic      -column 0 -row  4 -sticky "w"
-            grid config $contentFrame.lugs         -column 0 -row  5 -sticky "w"
-            grid config $contentFrame.seperator_2  -column 0 -row  6 -sticky "nsew"
-            grid config $contentFrame.label_2      -column 0 -row  7 -sticky "w"
-            grid config $contentFrame.dimSec       -column 0 -row  8 -sticky "w"
-            grid config $contentFrame.dimRes       -column 0 -row  9 -sticky "w"
-            grid config $contentFrame.dimSum       -column 0 -row 10 -sticky "w"
-                #
-            $contentFrame.dimSec    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(secondary)   -activeforeground white
-            $contentFrame.dimRes    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(result)      -activeforeground white
-            $contentFrame.dimSum    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(background)  -activeforeground white
-                #
-            set newFont [format {%s bold}  [$contentFrame.label_2 cget -font]]
-            $contentFrame.label_1 configure   -font $newFont
-            $contentFrame.label_2 configure   -font $newFont
+            ttk::separator $contentFrame.seperator
+            #grid config $contentFrame.seperator   -column 0 -row  1 -sticky "nsew"
+            pack $contentFrame.seperator -fill x
                 #
             return
                 #
     }
-    proc pushedButtonState mode {
+  
+    proc rattleCAD::view::gui::pushedButtonState mode {
+        
+            #
+            #  not implemented yet
+            #
         
         if {$mode != {}} {
             switch -exact $mode {
@@ -1096,14 +1146,6 @@
         }
         
         
-        
-        
-        
-        
-        
-        
-        
-        
         return
         
         puts $colour
@@ -1112,127 +1154,198 @@
             .$c configure -relief [expr {$c eq $label ? "sunken" : "raised"}]
         }
     }
-
+    
+    
+    
     #-------------------------------------------------------------------------
-       #  create menue to change scale and size of Stage 
+       #  update Personal Geometry with parameters of Reference Geometry 
        #
-    proc change_FormatScale {cv x y {type {default}}}  {
-                #
-            set cv_Name [lindex [split $cv .] end-1]
-                #
-            set     rattleCAD::view::gui::stageFormat    A4
-            set     rattleCAD::view::gui::stageScale     0.20        
-                #
-            if {[ $cv find withtag __Select__SubMenue__ ] == {} } {
-                    catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
-                            $cv create window $x $y \
-                                    -window $baseFrame \
-                                    -anchor nw \
-                                    -tags __Select__SubMenue__
-                            frame   $baseFrame.select 
-                            pack    $baseFrame.select          -fill x
-                            frame   $baseFrame.select.lf             
-                            pack    $baseFrame.select.lf       -padx 2 -pady 2 -fill x -expand yes
-                            label   $baseFrame.select.lf.label -text "Drafting Details:" -fg white -bg gray60 -justify left
-                            pack    $baseFrame.select.lf.label -fill x -expand yes
-                                #
-                            set newFont [format {%s bold}  [$baseFrame.select.lf.label cget -font]]
-                            $baseFrame.select.lf.label configure   -font $newFont
-                                #
-                            bind $baseFrame.select.lf.label  <Button-1>    [list destroy $baseFrame]
-                          }
-            } else {
-                    $cv delete     __Select__SubMenue__
-                    $cv dtag       __Select__SubMenue__
-                    destroy        .f_subMenue_$cv_Name
-                    return
-            }
-                #
-            set contentFrame    [frame $baseFrame.select.content -relief flat -bd 2]
-            pack $contentFrame  -fill x -expand yes
-                        #
-                    label       $contentFrame.label_1      -text "DIN Format:"      
-                    radiobutton $contentFrame.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
-                        #
-                    grid config $contentFrame.label_1   -column 0 -row 0 -sticky "w"
-                    grid config $contentFrame.a4        -column 0 -row 1 -sticky "w"
-                    grid config $contentFrame.a3        -column 0 -row 2 -sticky "w"
-                    grid config $contentFrame.a2        -column 0 -row 3 -sticky "w"
-                    grid config $contentFrame.a1        -column 0 -row 4 -sticky "w"
-                    grid config $contentFrame.a0        -column 0 -row 5 -sticky "w"
-                        #
-                    set newFont [format {%s bold}  [$contentFrame.label_1 cget -font]]
-                    $contentFrame.label_1 configure   -font $newFont
-                        #
-            if {$type == {default}} {
-                    ttk::separator $contentFrame.seperator
-                        #
-                    label       $contentFrame.label_2      -text "Scale:"      
-                    radiobutton $contentFrame.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.s033 -text "1:3  "     -value 0.33 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.s040 -text "1:2,5"     -value 0.40 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                    radiobutton $contentFrame.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
-                        #
-                    grid config $contentFrame.seperator -column 0 -row  6 -sticky "news"
-                    grid config $contentFrame.label_2   -column 0 -row  7 -sticky "w"
-                    grid config $contentFrame.s020      -column 0 -row  8 -sticky "w"
-                    grid config $contentFrame.s025      -column 0 -row  9 -sticky "w"
-                    grid config $contentFrame.s033      -column 0 -row 10 -sticky "w"
-                    grid config $contentFrame.s040      -column 0 -row 11 -sticky "w"
-                    grid config $contentFrame.s050      -column 0 -row 12 -sticky "w"
-                    grid config $contentFrame.s100      -column 0 -row 13 -sticky "w"
-                        #
-                    $contentFrame.label_2 configure   -font $newFont
-            }
-                #
-            return    
-                #          
+    proc rattleCAD::view::gui::tubing_checkAngles {cv {type {default}}} {
+            rattleCAD::view::check_TubingAngles
     }
 
 
     #-------------------------------------------------------------------------
+       #  create menue to switch frame configuration mode 
+       #
+    proc rattleCAD::view::gui::add_ConfigFrameMode {w {type {default}}} {
+                #
+            variable frame_configMethod
+            variable show_summaryDimension
+                #                #
+            set contentFrame [frame $w.frameMode]
+            pack $contentFrame -fill x 
+                    #
+            #ttk::separator $contentFrame.seperator_1
+            label       $contentFrame.label      -text "Frame Config:"      
+            #ttk::separator $contentFrame.seperator_1
+                # button $contentFrame.hybrid       -text "Outside-In"        -command {rattleCAD::view::gui::pushedButtonState OutsideIn }
+                # button $contentFrame.stackreach   -text "Stack & Reach"     -command {rattleCAD::view::gui::pushedButtonState StackReach}
+                # button $contentFrame.classic      -text "Classic"           -command {rattleCAD::view::gui::pushedButtonState Classic   }
+                # button $contentFrame.lugs         -text "Lug Angles"        -command {rattleCAD::view::gui::pushedButtonState Lugs      }
+            radiobutton $contentFrame.hybrid       -text "Outside-In"        -value {OutsideIn}     -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
+            radiobutton $contentFrame.stackreach   -text "Stack & Reach"     -value {StackReach}    -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
+            radiobutton $contentFrame.classic      -text "Classic"           -value {Classic}       -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
+            radiobutton $contentFrame.lugs         -text "Lug Angles"        -value {Lugs}          -variable rattleCAD::control::frame_configMode  -command {rattleCAD::control::set_frameConfigMode}
+                #
+            #grid config $contentFrame.seperator_1   -column 0 -row  1 -sticky "nsew"
+            grid config $contentFrame.label         -column 0 -row  0 -sticky "w"
+            #grid config $contentFrame.seperator_2   -column 0 -row  1 -sticky "nsew"
+            grid config $contentFrame.hybrid        -column 0 -row  2 -sticky "w"
+            grid config $contentFrame.stackreach    -column 0 -row  3 -sticky "w"
+            grid config $contentFrame.classic       -column 0 -row  4 -sticky "w"
+            grid config $contentFrame.lugs          -column 0 -row  5 -sticky "w"
+                #                #
+            set newFont [format {%s bold}  [$contentFrame.label cget -font]]
+            $contentFrame.label configure   -font $newFont
+                #
+            return
+                #
+    }
+    #-------------------------------------------------------------------------
+       #  create menue to show dimension in BaseConfig
+       #
+    proc rattleCAD::view::gui::add_ConfigBaseDimension {w {type {default}}} {
+                #
+            variable frame_configMethod
+            variable show_summaryDimension
+                #                #
+            set contentFrame [frame $w.baseDim]
+            pack $contentFrame -fill x 
+                    #
+            #ttk::separator $contentFrame.seperator  
+            label       $contentFrame.label        -text "Show Dimension:"      
+            checkbutton $contentFrame.dimSec       -text "Secondary"         -variable rattleCAD::view::gui::show_secondaryDimension                -command {rattleCAD::view::updateView force}
+            checkbutton $contentFrame.dimRes       -text "Result"            -variable rattleCAD::view::gui::show_resultDimension                   -command {rattleCAD::view::updateView force}
+            checkbutton $contentFrame.dimSum       -text "Summary"           -variable rattleCAD::view::gui::show_summaryDimension                  -command {rattleCAD::view::updateView force}
+                #
+            #grid config $contentFrame.seperator    -column 0 -row  1 -sticky "nsew"
+            grid config $contentFrame.label        -column 0 -row  2 -sticky "w"
+            grid config $contentFrame.dimSec       -column 0 -row  3 -sticky "w"
+            grid config $contentFrame.dimRes       -column 0 -row  4 -sticky "w"
+            grid config $contentFrame.dimSum       -column 0 -row  5 -sticky "w"
+                #
+            $contentFrame.dimSec    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(secondary)   -activeforeground white
+            $contentFrame.dimRes    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(result)      -activeforeground white
+            $contentFrame.dimSum    configure  -activebackground $rattleCAD::cv_custom::DraftingColour(background)  -activeforeground white
+                #
+            set newFont [format {%s bold}  [$contentFrame.label cget -font]]
+            $contentFrame.label configure   -font $newFont
+                #
+            return
+                #
+    }
+    #-------------------------------------------------------------------------
+       #  create menue to switch ChainStayMode
+       #
+    proc rattleCAD::view::gui::add_ConfigChainStay {w {type {default}}} {
+                #
+            set rattleCAD::control::frame_chainStayType [rattleCAD::model::get_Config ChainStay]
+                
+                #
+            set contentFrame [frame $w.chainStay]
+            pack $contentFrame -fill x 
+                    #
+            #ttk::separator $contentFrame.seperator  
+            label       $contentFrame.label     -text "ChainStay Type:"      
+            radiobutton $contentFrame.straight  -text "straight"         -value {straight}   -variable rattleCAD::control::frame_chainStayType   -command {rattleCAD::control::set_chainStayType} 
+            radiobutton $contentFrame.bent      -text "bent"             -value {bent}       -variable rattleCAD::control::frame_chainStayType   -command {rattleCAD::control::set_chainStayType} 
+            radiobutton $contentFrame.hide      -text "hide"             -value {off}        -variable rattleCAD::control::frame_chainStayType   -command {rattleCAD::control::set_chainStayType} 
+                #
+            #grid config $contentFrame.seperator    -column 0 -row  1 -sticky "nsew"
+            grid config $contentFrame.label     -column 0 -row  2 -sticky "w"
+            grid config $contentFrame.straight  -column 0 -row  3 -sticky "w"
+            grid config $contentFrame.bent      -column 0 -row  4 -sticky "w"
+            grid config $contentFrame.hide      -column 0 -row  5 -sticky "w"
+                #
+            set newFont [format {%s bold}  [$contentFrame.label cget -font]]
+            $contentFrame.label configure   -font $newFont
+                #
+            return
+                #
+    }
+    #-------------------------------------------------------------------------
+       #  create menue to change size of Stage 
+       #
+    proc rattleCAD::view::gui::add_ConfigFormat {w {type {default}}}  {
+                #
+            set     rattleCAD::view::gui::stageFormat    A4
+            set     rattleCAD::view::gui::stageScale     0.20        
+                #
+                #
+            set contentFrame [frame $w.pageFormat]
+            pack $contentFrame -fill x 
+                #
+            # ttk::separator $contentFrame.seperator
+                #
+            label       $contentFrame.label     -text "DIN Format:"      
+                #
+            radiobutton $contentFrame.a4 -text A4 -value A4    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.a3 -text A3 -value A3    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.a2 -text A2 -value A2    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.a1 -text A1 -value A1    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.a0 -text A0 -value A0    -variable rattleCAD::view::gui::stageFormat  -command {rattleCAD::view::gui::notebook_formatCanvas}
+                #
+            # grid config $contentFrame.seperator -column 0 -row 0 -sticky "news"
+            grid config $contentFrame.label     -column 0 -row 1 -sticky "w"
+            grid config $contentFrame.a4        -column 0 -row 2 -sticky "w"
+            grid config $contentFrame.a3        -column 0 -row 3 -sticky "w"
+            grid config $contentFrame.a2        -column 0 -row 4 -sticky "w"
+            grid config $contentFrame.a1        -column 0 -row 5 -sticky "w"
+            grid config $contentFrame.a0        -column 0 -row 6 -sticky "w"
+                #
+            set newFont [format {%s bold}  [$contentFrame.label cget -font]]
+            $contentFrame.label configure   -font $newFont
+                #
+            return    
+                #          
+    }
+    #-------------------------------------------------------------------------
+       #  create menue to change scale of Stage 
+       #
+    proc rattleCAD::view::gui::add_ConfigScale {w {type {default}}}  {
+                #
+            set     rattleCAD::view::gui::stageFormat    A4
+            set     rattleCAD::view::gui::stageScale     0.20        
+                #
+                #
+            set contentFrame [frame $w.pageScale]
+            pack $contentFrame -fill x 
+                #
+            # ttk::separator $contentFrame.seperator
+                #
+            label       $contentFrame.label     -text "Page Scale:"
+                #
+            radiobutton $contentFrame.s020 -text "1:5  "     -value 0.20 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.s025 -text "1:4  "     -value 0.25 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.s033 -text "1:3  "     -value 0.33 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.s040 -text "1:2,5"     -value 0.40 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+            radiobutton $contentFrame.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
+                #
+            # grid config $contentFrame.seperator -column 0 -row  1 -sticky "news"
+            grid config $contentFrame.label     -column 0 -row  2 -sticky "w"
+            grid config $contentFrame.s020      -column 0 -row  3 -sticky "w"
+            grid config $contentFrame.s025      -column 0 -row  4 -sticky "w"
+            grid config $contentFrame.s033      -column 0 -row  5 -sticky "w"
+            grid config $contentFrame.s040      -column 0 -row  6 -sticky "w"
+            grid config $contentFrame.s050      -column 0 -row  7 -sticky "w"
+            grid config $contentFrame.s100      -column 0 -row  8 -sticky "w"
+                #
+            set newFont [format {%s bold}  [$contentFrame.label cget -font]]
+            $contentFrame.label configure   -font $newFont
+
+                #
+            return    
+                #          
+    }
+    #-------------------------------------------------------------------------
        #  create menue to change change FrameJig Version 
        #
-    proc change_FrameJig {cv x y}  {
-            variable noteBook_top
-            
-            set cv_Name [lindex [split $cv .] end-1]
-              # puts "   ... \$cv $cv"
-              # puts "   ... \$cv_Name $cv_Name"
-            
-            if {[ $cv find withtag __Select__SubMenue__ ] == {} } {   
-                    catch { set baseFrame [frame .f_subMenue_$cv_Name  -relief raised -border 1]
-                            $cv create window $x $y \
-                                    -window $baseFrame \
-                                    -anchor nw \
-                                    -tags __Select__SubMenue__
-                            frame   $baseFrame.select 
-                            pack    $baseFrame.select       
-                            frame   $baseFrame.select.lf       
-                            pack    $baseFrame.select.lf       -padx 2 -pady 2 -fill x
-                            label   $baseFrame.select.lf.label -text "Jig Selection:" -fg white -bg gray60 -justify left
-                            pack    $baseFrame.select.lf.label -fill x
-                                #
-                            set newFont [format {%s bold}  [$baseFrame.select.lf.label cget -font]]
-                            $baseFrame.select.lf.label configure   -font $newFont
-                                #
-                            bind $baseFrame.select.lf.label  <Button-1>    [list destroy $baseFrame]
-                    }
-            } else {
-                    $cv delete     __Select__SubMenue__
-                    $cv dtag       __Select__SubMenue__
-                    destroy        .f_subMenue_$cv_Name
-                    return
-            }
+    proc rattleCAD::view::gui::add_ConfigFrameJig {w {type {default}}}  {
                 #
-            set contentFrame    [frame $baseFrame.select.content -relief flat -bd 2]
-            pack $contentFrame  -fill x 
+            set contentFrame [frame $w.frameJig]
+            pack $contentFrame -fill x 
                 #
             set f_FrameJig    [frame $contentFrame.jigType ]
               # foreach jig $::APPL_Config(list_FrameJigTypes) {}
@@ -1253,7 +1366,7 @@
     #-------------------------------------------------------------------------
        #  update Personal Geometry with parameters of Reference Geometry 
        #
-    proc geometry_reference2personal {} {
+    proc rattleCAD::view::gui::geometry_reference2personal {} {
         
             set answer    [tk_messageBox -icon question -type okcancel -title "Reference to Personal" -default cancel\
                                         -message "Do you really wants to overwrite your \"Personal\" parameter \n with \"Reference\" settings" ]
@@ -1272,7 +1385,7 @@
     #-------------------------------------------------------------------------
        #  change Rendering Settings 
        #
-    proc change_Rendering  {{cv {}} {x 5} {y 20} {type {}}}  {
+    proc rattleCAD::view::gui::change_Rendering  {{cv {}} {x 5} {y 20} {type {}}}  {
                 #
             set x 0
             set y 140
@@ -1286,7 +1399,7 @@
     #-------------------------------------------------------------------------
        #  change canvasCAD Format and Scale
        #
-    proc notebook_formatCanvas {} {
+    proc rattleCAD::view::gui::notebook_formatCanvas {} {
             variable canvasUpdate
             variable noteBook_top
 
@@ -1318,7 +1431,7 @@
     #-------------------------------------------------------------------------
        #  change type of Frame Jig dimensioning
        #
-    proc updateFrameJig {} {
+    proc rattleCAD::view::gui::updateFrameJig {} {
             variable noteBook_top
             
             set currentTab [$noteBook_top select]
@@ -1338,7 +1451,7 @@
     #-------------------------------------------------------------------------
        #  load Template from File
        #
-    proc load_Template {type} {
+    proc rattleCAD::view::gui::load_Template {type} {
             variable canvasUpdate
             variable noteBook_top
 
@@ -1354,7 +1467,7 @@
     }
 
 
-    proc global_kb_Binding {ab} {
+    proc rattleCAD::view::gui::global_kb_Binding {ab} {
             variable noteBook_top
 
             # puts "\n   -----> keyboard binding \n -------------"
@@ -1380,7 +1493,7 @@
     #-------------------------------------------------------------------------
        #  dimension binding on canvas
        #
-    proc dimension_CursorBinding {cv_Name tag procedureName {cursor {hand2}} } {
+    proc rattleCAD::view::gui::dimension_CursorBinding {cv_Name tag procedureName {cursor {hand2}} } {
             $cv_Name bind $tag    <Enter>                   [list $cv_Name configure -cursor $cursor]
             $cv_Name bind $tag    <Leave>                   [list $cv_Name configure -cursor {}]
             $cv_Name bind $tag    <Double-ButtonPress-1>    [list rattleCAD::view::edit::$procedureName %x %y  $cv_Name ]
@@ -1388,14 +1501,14 @@
     #-------------------------------------------------------------------------
        #  cursor binding on canvas objects
        #
-    proc object_CursorBinding {cv_Name tag {cursor {hand2}} } {
+    proc rattleCAD::view::gui::object_CursorBinding {cv_Name tag {cursor {hand2}} } {
             $cv_Name bind $tag    <Enter> [list $cv_Name configure -cursor $cursor]
             $cv_Name bind $tag    <Leave> [list $cv_Name configure -cursor {}]
     }
     #-------------------------------------------------------------------------
        #  move canvas content
        #
-    proc move_Canvas {x y} {
+    proc rattleCAD::view::gui::move_Canvas {x y} {
             variable canvasUpdate
             variable noteBook_top
 
@@ -1412,7 +1525,7 @@
     #-------------------------------------------------------------------------
        #  move canvas content
        #
-    proc bind_MouseWheel {type value} {
+    proc rattleCAD::view::gui::bind_MouseWheel {type value} {
             variable canvasUpdate
             variable noteBook_top
 
@@ -1467,7 +1580,7 @@
        #  modify standard widget bindings
        #
        #       http://wiki.tcl.tk/2944
-    proc binding_copyClass {class newClass} {
+    proc rattleCAD::view::gui::binding_copyClass {class newClass} {
         set bindingList [bind $class]
         #puts $bindingList
 
@@ -1475,7 +1588,7 @@
           bind $newClass $binding [bind $class $binding]
         }
     }
-    proc binding_removeAllBut {class bindList} {
+    proc rattleCAD::view::gui::binding_removeAllBut {class bindList} {
         foreach binding $bindList {
           array set tmprab "<${binding}> 0"
         }
@@ -1487,7 +1600,7 @@
           bind $class $binding {}
         }
     }
-    proc binding_removeOnly {class bindList} {
+    proc rattleCAD::view::gui::binding_removeOnly {class bindList} {
         foreach binding $bindList {
           array set tmprab "<${binding}> 0"
         }
@@ -1500,11 +1613,10 @@
           # bind $class $binding {}
         }
     }
-    proc binding_reportBindings {class} {
+    proc rattleCAD::view::gui::binding_reportBindings {class} {
         puts "    reportBindings: $class"
         foreach binding [bind $class] {
             puts "           $binding"
         }
     }    
-}
 
