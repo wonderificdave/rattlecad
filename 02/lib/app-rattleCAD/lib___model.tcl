@@ -137,36 +137,20 @@ namespace eval rattleCAD::model {
         return  [$geometry_IF set_Scalar ${object} ${key} ${value}]
             #
     }
-    proc rattleCAD::model::get_ReynoldsFEAContent {} {
-        variable  geometry_IF
-        return [$geometry_IF    get_ReynoldsFEAContent]
-    }
-	proc rattleCAD::model::get_openSCAD {} {
-            #
-        # if {[catch {set content [::bikeGeometry_3D get_openSCADContent]} eID]} {}
-        if {[catch {set content [::bikeGeometry_3D::get_scadContent]} eID]} {
-            return {}
-        } else {
-            return $content
-        }
-            #
-    }
     proc rattleCAD::model::updateModel {} {
-		variable modelDICT
+            #
+        variable modelDICT
 		variable modelDOM
 		variable modelUpdate 
-
-	
-		  # update control-model
+            #
+            # update control-model
 		set      modelDICT  [get_projectDICT]
 		set      modelDOM   [get_projectDOM]
-	
-		
-          # update timestamp
+            #
+            # update timestamp
 		set modelUpdate     [clock milliseconds]
-          # set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
-          #
-
+            # set ::APPL_Config(canvasCAD_Update) [clock milliseconds]
+            #
 	}
 
 	proc rattleCAD::model::newProject {projectDOM} {

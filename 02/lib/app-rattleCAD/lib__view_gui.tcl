@@ -53,6 +53,8 @@
     variable    stageScale
 
     variable    external_canvasCAD  ;   array    set external_canvasCAD {}
+    variable    rattleCAD_AddOn     ;   array    set rattleCAD_AddOn {}
+             
     
     variable    frame_configMethod      {OutsideIn}
     variable    show_secondaryDimension 1
@@ -66,76 +68,81 @@
        #  create MainFrame with Menue  
        #
     proc rattleCAD::view::gui::create_MainFrame {} {        
-            
+            #
+        variable    rattleCAD_AddOn
+            #
+            #
         set mainframe_Menue {
             "&File"   all file 0 {
-                {command "&New"             {}  "New Project File"      {Ctrl n}      -command { rattleCAD::model::file::newProject_xml } }
-                {command "&Open"            {}  "0pen Project File"     {Ctrl o}      -command { rattleCAD::model::file::openProject_xml } }
-                {command "&Save"            {}  "Save Project File"     {Ctrl s}      -command { rattleCAD::model::file::saveProject_xml } }
-                {command "Save &As ..."     {}  "Save Project File As"  {CtrlAlt s}   -command { rattleCAD::model::file::saveProject_xml saveAs} }
+                {command "&New"             {}  "New Project File"      {Ctrl n}        -command { rattleCAD::model::file::newProject_xml } }
+                {command "&Open"            {}  "0pen Project File"     {Ctrl o}        -command { rattleCAD::model::file::openProject_xml } }
+                {command "&Save"            {}  "Save Project File"     {Ctrl s}        -command { rattleCAD::model::file::saveProject_xml } }
+                {command "Save &As ..."     {}  "Save Project File As"  {CtrlAlt s}     -command { rattleCAD::model::file::saveProject_xml saveAs} }
+                            
+                {separator}         
+                            
+                {command "Undo"             {}  "Undo"                  {Ctrl z}        -command { rattleCAD::control::changeList::previous} }
+                {command "Redo"             {}  "Redo"                  {Ctrl y}        -command { rattleCAD::control::changeList::next} }
+                            
+                {separator}         
+                            
+                {command "&Copy Reference"  {}  "Copy Reference"        {Ctrl r}        -command { rattleCAD::view::gui::notebook_switchTab  cv_Custom02} }
+                            
+                {separator}         
+                            
+                {command "Impo&rt"          {}  "import Parameter"      {Ctrl i}        -command { rattleCAD::model::file::openProject_Subset_xml } }
+                {command "&Rendering"       {}  "Rendering Settings"    {}              -command { rattleCAD::view::gui::change_Rendering } }
+                                    
+                {separator}         
+                                    
+                {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}        -command { rattleCAD::configPanel::create } }
+                            
+                {separator}         
+                            
+                {command "&SVG-Component"   {}  "open simplify_SVG"     {}              -command { rattleCAD::control::tool::start_simplifySVG } }
+                {command "&SVG-ChainWheel"  {}  "open chainWheel_SVG"   {}              -command { rattleCAD::control::tool::start_chainWheelSVG } }
+                                            
+                {separator}         
+                                    
+                {command "&Update"          {}  "update Configuration"  {Ctrl u}        -command { rattleCAD::view::updateView force } }
+                                                                                                                                                                
+                {separator}         
+                                    
+                {command "E&xit"            {}  "Exit rattle_CAD"       {Ctrl x}        -command { rattleCAD::view::gui::exit_rattleCAD } }
+            }           
+            "Export"   all info 0 {         
+                {command "&Export PDF"      {}  "Export PDF-Report"     {Ctrl p}        -command { rattleCAD::view::gui::export_Project      pdf} }
+                {command "&Export HTML"     {}  "Export HTML-Report"    {Ctrl t}        -command { rattleCAD::view::gui::export_Project      html} }
+                {command "&Export SVG"      {}  "Export to SVG"         {}              -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
+                {command "&Export DXF"      {}  "Export to DXF"         {}              -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
+                {command "&Export PS"       {}  "Export to PostScript"  {}              -command { rattleCAD::view::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
                 
                 {separator}
-                
-                {command "Undo"             {}  "Undo"                  {Ctrl z}      -command { rattleCAD::control::changeList::previous} }
-                {command "Redo"             {}  "Redo"                  {Ctrl y}      -command { rattleCAD::control::changeList::next} }
-                
-                {separator}
-                
-                {command "&Copy Reference"  {}  "Copy Reference"        {Ctrl r}      -command { rattleCAD::view::gui::notebook_switchTab  cv_Custom02} }
-                
-                {separator}
-                
-                {command "Impo&rt"          {}  "import Parameter"      {Ctrl i}      -command { rattleCAD::model::file::openProject_Subset_xml } }
-                {command "&Rendering"       {}  "Rendering Settings"    {}            -command { rattleCAD::view::gui::change_Rendering } }
                         
-                {separator}
-                        
-                {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}      -command { rattleCAD::configPanel::create } }
-                
-                {separator}
-                
-                {command "&SVG-Component"   {}  "open simplify_SVG"     {}            -command { rattleCAD::control::tool::start_simplifySVG } }
-                {command "&SVG-ChainWheel"  {}  "open chainWheel_SVG"   {}            -command { rattleCAD::control::tool::start_chainWheelSVG } }
-                                
-                {separator}
-                        
-                {command "&Update"          {}  "update Configuration"  {Ctrl u}      -command { rattleCAD::view::updateView force } }
-                                                                                                                                                            
-                {separator}
-                        
-                {command "E&xit"            {}  "Exit rattle_CAD"       {Ctrl x}      -command { rattleCAD::view::gui::exit_rattleCAD } }
-            }
-            "Export"   all info 0 {
-                {command "&Export PDF"      {}  "Export PDF-Report"     {Ctrl p}      -command { rattleCAD::view::gui::export_Project      pdf} }
-                {command "&Export HTML"     {}  "Export HTML-Report"    {Ctrl t}      -command { rattleCAD::view::gui::export_Project      html} }
-                {command "&Export SVG"      {}  "Export to SVG"         {}            -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) } }
-                {command "&Export DXF"      {}  "Export to DXF"         {}            -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) } }
-                {command "&Export PS"       {}  "Export to PostScript"  {}            -command { rattleCAD::view::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) } }
-                {command "&Export openSCAD" {}  "Export to openSCAD"    {Ctrl O}      -command { rattleCAD::view::gui::export_openSCAD } }
-                {command "&Export Reynolds FEA" {} "Export Reynolds FEA" {Ctrl f}     -command { rattleCAD::view::gui::export_reynoldsFEA  1.0} }
+                {command "rattleCAD AddOn"  {}  "additional rattleCAD Features" {Alt a} -command { rattleCAD::control::start_AddOn } }
             }
             "Demo"   all info 0 {
-                {command "Samples"          {}  "Example Projects"      {}            -command { rattleCAD::test::runDemo loopSamples } }
-                {command "rattleCAD Method" {}  "HandleBar and Saddle"  {CtrlAlt r}   -command { rattleCAD::test::runDemo method_rattleCAD_HandleBarandSaddle } }
-                {command "classic Method"   {}  "Seat- and TopTube"     {}            -command { rattleCAD::test::runDemo method_classic_SeatandTopTube } }
-                {command "Demo"             {}  "rattleCAD Demo"        {}            -command { rattleCAD::test::runDemo demo_01 } }
-                {command "Stop Demo"        {}  "Stop running Demo"     {Ctrl b}      -command { rattleCAD::test::stopDemo} }
-                {separator}      
-                {command "Integration Test" {}  "Integration Test"      {CtrlAlt i}   -command { rattleCAD::test:::runDemo integrationTest_00} }
-                {separator}      
-                {command "Debug Special"    {}  "Debug Special"         {}            -command { rattleCAD::test:::runDemo integrationTest_special} }
-                {separator}      
-                {command "Intro-Image"      {}  "Show Intro Window"     {}            -command { create_intro .intro } }
-            }
-            "Info"   all info 0 {
-                {command "&Info"            {}  "Information"           {Ctrl w}      -command { rattleCAD::infoPanel::create  .v_info 0} }
-                {command "&Help"            {}  "Help"                  {Ctrl h}      -command { rattleCAD::infoPanel::create  .v_info 1} }
-                {command "ChangeLog"        {}  "ChangeLog"             {}            -command { rattleCAD::infoPanel::create  .v_info 7} }
-                {separator}
-                {command "rattleCAD WebSite"      {}  "about rattleCAD"       {}      -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
-                {command "rattleCAD Features"     {}  "rattleCAD Features"    {}      -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
-                {command "project @ sourceforge"  {}  "sourceforge.net"       {}      -command { rattleCAD::model::file::open_URL {http://sourceforge.net/projects/rattlecad} } }
-                {command "like rattleCAD"         {}  "donate"                {}      -command { rattleCAD::model::file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
+                {command "Samples"          {}  "Example Projects"      {}              -command { rattleCAD::test::runDemo loopSamples } }
+                {command "rattleCAD Method" {}  "HandleBar and Saddle"  {CtrlAlt r}     -command { rattleCAD::test::runDemo method_rattleCAD_HandleBarandSaddle } }
+                {command "classic Method"   {}  "Seat- and TopTube"     {}              -command { rattleCAD::test::runDemo method_classic_SeatandTopTube } }
+                {command "Demo"             {}  "rattleCAD Demo"        {}              -command { rattleCAD::test::runDemo demo_01 } }
+                {command "Stop Demo"        {}  "Stop running Demo"     {Ctrl b}        -command { rattleCAD::test::stopDemo} }
+                {separator}         
+                {command "Integration Test" {}  "Integration Test"      {CtrlAlt i}     -command { rattleCAD::test:::runDemo integrationTest_00} }
+                {separator}         
+                {command "Debug Special"    {}  "Debug Special"         {}              -command { rattleCAD::test:::runDemo integrationTest_special} }
+                {separator}         
+                {command "Intro-Image"      {}  "Show Intro Window"     {}              -command { create_intro .intro } }
+            }   
+            "Info"   all info 0 {   
+                {command "&Info"            {}  "Information"           {Ctrl w}        -command { rattleCAD::infoPanel::create  .v_info 0} }
+                {command "&Help"            {}  "Help"                  {Ctrl h}        -command { rattleCAD::infoPanel::create  .v_info 1} }
+                {command "ChangeLog"        {}  "ChangeLog"             {}              -command { rattleCAD::infoPanel::create  .v_info 7} }
+                {separator} 
+                {command "rattleCAD WebSite"      {}  "about rattleCAD"       {}        -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
+                {command "rattleCAD Features"     {}  "rattleCAD Features"    {}        -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
+                {command "project @ sourceforge"  {}  "sourceforge.net"       {}        -command { rattleCAD::model::file::open_URL {http://sourceforge.net/projects/rattlecad} } }
+                {command "like rattleCAD"         {}  "donate"                {}        -command { rattleCAD::model::file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
             }
         }
         
@@ -147,10 +154,17 @@
         #  create MainFrame with Menue  
         #
     proc rattleCAD::view::gui::create_ButtonBar {tb_frame } {    
+                #
             variable iconArray
+                #
+            variable rattleCAD_AddOn    
+                #
+                #append_rattleCAD_AddOn $tb_frame.rattleCAD_AddOn
 		
             Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { rattleCAD::model::file::openProject_xml }  
             Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { rattleCAD::model::file::saveProject_xml } 
+            
+            set rattleCAD_AddOn(ButtonFrame)    [frame     $tb_frame.rattleCAD_AddOn]
             
             Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::control::changeList::previous }          
             Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::control::changeList::next }          
@@ -190,6 +204,7 @@
                 #        $tb_frame.render   $tb_frame.sp3  \
                 #
             pack    $tb_frame.open       $tb_frame.save         $tb_frame.sp0  \
+                    $tb_frame.rattleCAD_AddOn \
                     $tb_frame.backward   $tb_frame.forward      $tb_frame.sp1  \
                     $tb_frame.render     $tb_frame.clear        $tb_frame.sp2  \
                     $tb_frame.set_rd     $tb_frame.set_mb       $tb_frame.sp3  \
@@ -204,6 +219,42 @@
                     $tb_frame.resize    $tb_frame.scale_p   $tb_frame.scale_m   \
                     $tb_frame.sp7       $tb_frame.cfg       \
                 -side right 
+                
+                # ---------------------------------------------
+                # check existance of package rattleCAD_Xtnd
+                # if yes fill frame $tb_frame.rattleCAD_Xtnd
+                #
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  check existance of package rattleCAD_Xtnd   
+        #
+    proc rattleCAD::view::gui::append_rattleCAD_AddOn {} {
+                #
+            variable rattleCAD_AddOn   
+            variable iconArray
+                #
+            if {[namespace ensemble exists ::rattleCAD_AddOn]} {
+                label   $rattleCAD_AddOn(ButtonFrame).sp0   -text   " "
+                pack    $rattleCAD_AddOn(ButtonFrame).sp0 -side right
+                Button  $rattleCAD_AddOn(ButtonFrame).addOn -image  $iconArray(addon)   -helptext "rattleCAD AddOn" -command {rattleCAD::control::start_AddOn}   
+                pack    $rattleCAD_AddOn(ButtonFrame).addOn -fill y -expand yes -side right
+                # Button  $rattleCAD_AddOn(ButtonFrame).addOn -text AddOn      -helptext "rattleCAD AddOn" -command {rattleCAD::control::start_AddOn}   
+                                
+            } else {
+                puts "\n\n"
+                puts "       <I>"
+                puts "       <I> ... libraries not found for package ::append_rattleCAD_AddOn"
+                puts "       <I>"
+                puts "\n\n"
+            }
+                #
+            return
+                #
+                #    {command "&Export openSCAD" {}  "Export to openSCAD"    {Ctrl O}      -command { rattleCAD::view::gui::export_openSCAD } }
+                #    {command "&Export Reynolds FEA" {} "Export Reynolds FEA" {Ctrl f}     -command { rattleCAD::view::gui::export_reynoldsFEA  1.0} }
+                #
     }
 
 
@@ -607,41 +658,8 @@
     }
 
 
-    #-------------------------------------------------------------------------
-       #  export canvasCAD from every notebook-Tab
-       #
-    proc rattleCAD::view::gui::export_reynoldsFEA {versionFEA} {
-                # ---
-            set exportDir $::APPL_Config(EXPORT_FEA)
-                # ---
-            set fileName [rattleCAD::model::file::create_reynoldsFEA  $exportDir]
-                #
-            tk_messageBox -icon question -title "Reynolds FEA - Export" -message "current project exported to:\n          $fileName"
-                #
-            return
-                #            
-    } 
 
 
-    #-------------------------------------------------------------------------
-       #  export canvasCAD from every notebook-Tab
-       #
-    proc rattleCAD::view::gui::export_openSCAD {} {
-                # ---
-            set exportDir $::APPL_Config(EXPORT_SCAD)
-                # ---
-            set fileName [rattleCAD::model::file::create_openSCAD  $exportDir export_complete.scad]
-                #
-            if {$fileName == {}} {
-                tk_messageBox -icon question -message "... could not get 3D extension for rattleCAD"
-                return
-            } else {
-                tk_messageBox -icon question -title "openSCAD - Export" -message "current project exported to:\n          $fileName"
-            }    
-                #
-            return
-                #            
-    }
 
   
     #-------------------------------------------------------------------------

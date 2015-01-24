@@ -1,11 +1,26 @@
 
 
+3.4.02.29  - 2014.01.24
+-------------------------------------------------------------------------------
+    feature:
+        ... button for rattleCAD_Xtnd
+            ... containing all fututre extensions based on rattleCAD
+    refactor:
+        ... bikeGeometry 1.35 cleanup 
+        ... check ensemble rattleCAD_AddOn for custom extensions
+            ... optional Button if rattleCAD_AddOn available
+        ... remove 
+            ... Menu -> Export -> Export openSCAD
+            ... Menu -> Export -> Export ReynoldsFEA
+
+
 3.4.02.28  - 2014.01.22
 -------------------------------------------------------------------------------
     refactor:
         ... notebook_createButton
     feature
-        ... button for extension bikeGeometry_3D
+        ... Menu -> Export -> Export openSCAD 
+            ... for extension bikeGeometry_3D
 
 
 3.4.02.27  - 2014.01.17

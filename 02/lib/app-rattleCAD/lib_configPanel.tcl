@@ -79,26 +79,28 @@
     #-------------------------------------------------------------------------
        #  create config widget
        #
-       # proc create {main w {mode {}}}
+       # proc create {master w {mode {}}}
     proc rattleCAD::configPanel::create {} {
             # ->
             # return
             
             variable cfg_Position
 
-			set main . 
+			set master . 
 			set w    .cfg
 			
                 # -----------------
-                # main window information
-            set root_xy [split  [wm geometry $main] +]
-            set root_w     [winfo width $main]
-            set root_x    [lindex $root_xy 1]
-            set root_y    [lindex $root_xy 2]
+                # master window information
+            set root_xy [split  [wm geometry $master] +]
+            set root_w  [winfo width $master]
+            set root_x  [lindex $root_xy 1]
+            set root_y  [lindex $root_xy 2]
                 #
-            set pos_x     [expr $root_x - 20 + $root_w]
-            set pos_y     [expr $root_y - 10]
-            
+            set pos_x   [expr $root_x - 20 + $root_w - 200]
+            set pos_y   [expr $root_y - 10 + 150]
+                #
+            set cfg_Position [list $root_x $root_y $root_w [expr $root_x+8+$root_w] 0 ]
+                #
                 # -----------------
                 # check if window exists
             if {[winfo exists $w]} {
@@ -106,55 +108,51 @@
                     # puts "   ... $w allready exists!"
                 wm geometry     $w +$pos_x+$pos_y
                 wm deiconify    $w
-                wm deiconify    $main
+                wm deiconify    $master
                 focus           $w
                 return
             }
-
-
+                #
                 # -----------------
                 # create a toplevel window to edit the attribute values
                 #
             toplevel    $w
-            wm title    $w "Configuration Panel"
+                #
                 # create iconBitmap  -----
             if {$::tcl_platform(platform) == {windows}} {
                 wm iconbitmap $w [file join $::APPL_Config(BASE_Dir) tclkit.ico]
             } else {
                 wm iconphoto  $w [image create photo .ico1 -format gif -file [file join $::APPL_Config(BASE_Dir)  icon16.gif] ]
             }
-                # puts "    geometry:  [wm geometry .]"
-            wm geometry    $w +$pos_x+$pos_y
-
-
+                #
                 # -----------------
                 # create content
-            create_Content $main $w
-
+            create_Content  $w
+                #
                 # -----------------
                 #
-            set cfg_Position [list $root_x $root_y $root_w [expr $root_x+8+$root_w] 0 ]
-
-                # -----------------
+            bind $w         <Configure> [list [namespace current]::register_relative_position     $master $w]
+            bind $master    <Configure> [list [namespace current]::reposition_to_master           $master $w]
                 #
-            bind $w        <Configure> [list [namespace current]::register_relative_position     $main $w]
-            bind $main     <Configure> [list [namespace current]::reposition_to_main             $main $w]
-
-                # -----------------
                 #
-            wm deiconify    $main
-
+            wm deiconify    $master
+                #
+            wm geometry     $w +$pos_x+$pos_y
+            wm title        $w "Configuration Panel"
+            wm attributes   $w -toolwindow 
+            wm transient    $w $master  
+                #
             focus           $w
-
-            #$nb_Config select 1
-
+                #
+            return
+                #
     }
 
 
     #-------------------------------------------------------------------------
        #  create config Content
        #
-    proc rattleCAD::configPanel::create_Content {main w} {
+    proc rattleCAD::configPanel::create_Content {w} {
 
             variable compCanvas
 
@@ -693,9 +691,9 @@
 
 
     #-------------------------------------------------------------------------
-       #  postion config panel to main window
+       #  postion config panel to master window
        #
-    proc rattleCAD::configPanel::reposition_to_main {main w} {
+    proc rattleCAD::configPanel::reposition_to_master {master w} {
 
             variable cfg_Position
 
@@ -703,8 +701,8 @@
 
             # wm deiconify   $w
 
-            set root_xy [split  [wm geometry $main] +]
-            set root_w    [winfo  width $main]
+            set root_xy [split  [wm geometry $master] +]
+            set root_w    [winfo  width $master]
             set root_x    [lindex $root_xy 1]
             set root_y    [lindex $root_xy 2]
 
@@ -718,7 +716,7 @@
                 yes {
                         set dx [lindex $cfg_Position 3]
                         set dy [lindex $cfg_Position 4]
-						  # puts "   -> reposition_to_main  - $w +[expr $root_x+$dx]+[expr $root_y+$dy]"
+						  # puts "   -> reposition_to_master  - $w +[expr $root_x+$dx]+[expr $root_y+$dy]"
                         catch {wm geometry    $w +[expr $root_x+$dx]+[expr $root_y+$dy]}
                     }
                 resize {
@@ -733,15 +731,15 @@
     #-------------------------------------------------------------------------
        #  register_relative_position
        #
-    proc rattleCAD::configPanel::register_relative_position {main w} {
+    proc rattleCAD::configPanel::register_relative_position {master w} {
 
             variable cfg_Position
 
-            set root_xy [split  [wm geometry $main] +]
-            set root_w  [winfo width $main]
+            set root_xy [split  [wm geometry $master] +]
+            set root_w  [winfo width $master]
             set root_x  [lindex $root_xy 1]
             set root_y  [lindex $root_xy 2]
-                # puts "    main: $main: $root_x  $root_y"
+                # puts "    master: $master: $root_x  $root_y"
 
             set w_xy [split  [wm geometry $w] +]
                 # puts "    w   .... $w_xy"

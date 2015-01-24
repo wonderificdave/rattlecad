@@ -767,5 +767,3 @@ namespace eval rattleCAD::view {
      
  
  
-    bind . <F9> {puts "F9"}
-    # rattleCAD::view::gui::export_openSCAD
