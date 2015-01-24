@@ -29,7 +29,8 @@
         <image name="scale_m"           src="scale_minus.gif" />
         <image name="resize"            src="resize.gif" />
         <image name="exit"              src="exit.gif" />
-        <image name="cfg_panel"         src="cfg_panel.gif" />
+        <image name="addon"             src="addon.gif" />
+		<image name="cfg_panel"         src="cfg_panel.gif" />
         <image name="config_panel"      src="config_panel.gif" />
         <image name="iconClose"         src="iconClose.gif" />
         <image name="confirm"           src="confirm.gif" />

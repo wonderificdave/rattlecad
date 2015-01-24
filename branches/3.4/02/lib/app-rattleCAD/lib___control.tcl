@@ -66,7 +66,7 @@
         variable    frame_chainStayType {}
           # ----------------- #
     }
-    
+
     proc rattleCAD::control::updateControl {} {
         
         puts "\n"
@@ -273,7 +273,7 @@
         }            
             #
     }
-    
+
     proc rattleCAD::control::set_chainStayType {} {
             #
         variable frame_chainStayType
@@ -292,7 +292,7 @@
         }            
             #
     }
-    
+
     proc rattleCAD::control::setSession {name value} {
         variable  Session
         set Session($name) "${value}"
@@ -341,9 +341,23 @@
 		  #
           
     }
-	
-
-
+        #
+    proc rattleCAD::control::start_AddOn {} {
+            if {[namespace ensemble exists ::rattleCAD_AddOn]} {
+                puts "\n\n"
+                puts "      ... rattleCAD::control::start_AddOn"
+                puts "\n\n"
+                ::rattleCAD_AddOn create
+            } else {
+                puts "\n\n"
+                puts "      ... rattleCAD::control::start_AddOn"
+                puts ""
+                puts "      ... ::rattleCAD_AddOn not available"
+                puts "\n\n"
+            }
+    }
+    
+    
     #-------------------------------------------------------------------------
        #  get sizeinfo:  http://www2.tcl.tk/8423
        #

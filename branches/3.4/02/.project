@@ -5,10 +5,11 @@
 	<projects>
 		<project>appUtil</project>
 		<project>bikeGeometry</project>
-		<project>bikrGeometry_3D</project>
+		<project>bikeGeometry_3D</project>
 		<project>canvasCAD</project>
 		<project>extSummary</project>
 		<project>osEnv</project>
+		<project>rattleCAD_Xtnd</project>
 		<project>vectorMath</project>
 	</projects>
 	<buildSpec>

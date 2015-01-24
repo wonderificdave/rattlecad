@@ -67,7 +67,7 @@ exec wish "$0" "$@"
         # -- Libraries  ---------------
         #
     lappend auto_path           [file join $BASE_Dir lib]
-    lappend auto_path           [file join [file dirname $BASE_Dir] extension]
+    lappend auto_path           [file join [file dirname $BASE_Dir] addon]
 
         # puts "  \$auto_path  $auto_path"
     
@@ -80,22 +80,20 @@ exec wish "$0" "$@"
                     
     package     require appUtil             0.15
     package     require vectormath          0.5
-    package     require bikeGeometry        1.34
+    package     require bikeGeometry        1.35
     package     require canvasCAD           0.52
     package     require extSummary          0.4
     package     require osEnv               0.8
                 
     package     require rattleCAD           3.4 
 
-    catch { 
-        package require bikeGeometry_3D     0.02 
+    catch {
+            # tcl package containing not public extensions
+        package require rattleCAD_AddOn
     }
-    
-    
-    
-    
-    if { $::tcl_platform(platform) == "windows" } {
-        package require registry 1.1
+    catch {
+            # tcl package for windows only
+        package require registry            1.1
     }    
     
     

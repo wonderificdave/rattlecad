@@ -294,7 +294,7 @@
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                        Scalar(ChainStay/DiameterSS)
                        Scalar(ChainStay/Height)
-                       Scalar(ChainStay/HeigthBB)
+                       Scalar(ChainStay/HeightBB)
                        Scalar(ChainStay/TaperLength)
                        Scalar(RearDropout/OffsetCSPerp)
                        Scalar(RearDropout/OffsetCS)

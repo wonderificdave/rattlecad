@@ -152,7 +152,7 @@
           set ::APPL_Config(EXPORT_HTML)      [rattleCAD::model::file::check_user_dir rattleCAD/html]
           set ::APPL_Config(EXPORT_PDF)       [rattleCAD::model::file::check_user_dir rattleCAD/pdf]
           set ::APPL_Config(EXPORT_FEA)       [rattleCAD::model::file::check_user_dir rattleCAD/analysis]
-          set ::APPL_Config(EXPORT_SCAD)      [rattleCAD::model::file::check_user_dir rattleCAD/scad]
+          set ::APPL_Config(EXPORT_SCAD)      [rattleCAD::model::file::check_user_dir rattleCAD/mockup3D]
           set ::APPL_Config(TEMPLATE_Dir)     [rattleCAD::model::file::check_user_dir rattleCAD/_template/rattleCAD]
                      
                      
@@ -207,8 +207,11 @@
         puts "    osEnv:         [package require osEnv]"
         puts "    appUtil:       [package require appUtil]"
         puts "    extSummary:    [package require extSummary]"
-        if { $::tcl_platform(platform) == "windows" } {
+        catch  {
             puts "    registry:      [package require registry 1.1]"
+        }
+        catch  {
+            puts "    registry:      [package require rattleCAD_AddOn]"
         }
         
         puts "  ----------------------------------------------"
@@ -371,7 +374,9 @@
             pack  $bb_frame  -padx 0  -pady 3  -expand no   -fill x
         rattleCAD::view::gui::create_ButtonBar $bb_frame 
 
-
+            # ---     handle existance rattleCAD Addon
+        rattleCAD::view::gui::append_rattleCAD_AddOn
+        
             # ---     notebook frame  -------
         set nb_frame [ frame $frame.f2  -relief sunken        -bd 1  ]
             pack  $nb_frame  -padx 0  -pady 0  -expand yes  -fill both
