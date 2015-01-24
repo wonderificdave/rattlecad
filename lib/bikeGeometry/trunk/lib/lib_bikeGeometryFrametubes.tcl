@@ -104,8 +104,8 @@
                     
                     set vct_01      [ vectormath::parallel          $pt_00 $pt_01 [expr 0.5*$ChainStay(DiameterSS)] ]
                     set vct_02      [ vectormath::parallel          $pt_01 $pt_02 [expr 0.5*$ChainStay(Height)]    ]
-                    set vct_03      [ vectormath::parallel          $pt_03 $Position(ChainStay_BottomBracket) [expr 0.5*$ChainStay(HeigthBB)] ]
-                    set vct_04      [ vectormath::parallel          $pt_03 $Position(ChainStay_BottomBracket) [expr 0.5*$ChainStay(HeigthBB)] left]
+                    set vct_03      [ vectormath::parallel          $pt_03 $Position(ChainStay_BottomBracket) [expr 0.5*$ChainStay(HeightBB)] ]
+                    set vct_04      [ vectormath::parallel          $pt_03 $Position(ChainStay_BottomBracket) [expr 0.5*$ChainStay(HeightBB)] left]
                     set vct_05      [ vectormath::parallel          $pt_01 $pt_02 [expr 0.5*$ChainStay(Height)]     left]
                     set vct_06      [ vectormath::parallel          $pt_00 $pt_01 [expr 0.5*$ChainStay(DiameterSS)] left]
 
@@ -124,8 +124,8 @@
                                                                                 $l_00 [expr 0.5*$ChainStay(DiameterSS)] \
                                                                                 $l_01 [expr 0.5*$ChainStay(Height)] \
                                                                                 $l_02 [expr 0.5*$ChainStay(Height)] \
-                                                                                $l_03 [expr 0.5*$ChainStay(HeigthBB)] \
-                                                                                $l_04 [expr 0.5*$ChainStay(HeigthBB)] \
+                                                                                $l_03 [expr 0.5*$ChainStay(HeightBB)] \
+                                                                                $l_04 [expr 0.5*$ChainStay(HeightBB)] \
                                                                               ]
                                                                         ]
 

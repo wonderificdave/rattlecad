@@ -486,7 +486,7 @@
         
                 #       
                 # --- get ChainStay ------------------------
-            set ChainStay(HeigthBB)                     $project::FrameTubes(ChainStay/HeightBB)
+            set ChainStay(HeightBB)                     $project::FrameTubes(ChainStay/HeightBB)
             set ChainStay(DiameterSS)                   $project::FrameTubes(ChainStay/DiameterSS)
             set ChainStay(Height)                       $project::FrameTubes(ChainStay/Height)
             set ChainStay(TaperLength)                  $project::FrameTubes(ChainStay/TaperLength)
@@ -832,7 +832,7 @@
                                                                                     
                 #                                                                   
                 # --- get ChainStay --------------------                            
-            project::setValue FrameTubes(ChainStay/HeightBB)                        value       $ChainStay(HeigthBB)                      
+            project::setValue FrameTubes(ChainStay/HeightBB)                        value       $ChainStay(HeightBB)                      
             project::setValue FrameTubes(ChainStay/DiameterSS)                      value       $ChainStay(DiameterSS)                    
             project::setValue FrameTubes(ChainStay/Height)                          value       $ChainStay(Height)                        
             project::setValue FrameTubes(ChainStay/TaperLength)                     value       $ChainStay(TaperLength)                   

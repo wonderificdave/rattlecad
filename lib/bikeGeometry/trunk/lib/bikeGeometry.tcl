@@ -161,7 +161,13 @@
  #          project::update_Project 3.4.02 -> virtualLength
  # 1.34 implement 
  #          remove geometry3D completly
- #          new extensionpackage bikeGeometry_3D
+ #
+ # 1.35 implement 
+ #          remove reynoldsFEA completly
+ #          remove reynoldsFEA completly
+ #      refactor
+ #          rename HeigthBB to HeightBB
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -170,7 +176,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.34
+    package provide bikeGeometry 1.35
         #
     package require vectormath
         #
@@ -426,7 +432,7 @@
             #            
         dict set projDict   Scalar      ChainStay DiameterSS                $::bikeGeometry::ChainStay(DiameterSS)                          ;#[bikeGeometry::get_Scalar           ChainStay DiameterSS              ]                ;# set _lastValue(FrameTubes/ChainStay/DiameterSS)                         
         dict set projDict   Scalar      ChainStay Height                    $::bikeGeometry::ChainStay(Height)                              ;#[bikeGeometry::get_Scalar           ChainStay Height                  ]                ;# set _lastValue(FrameTubes/ChainStay/Height)                             
-        dict set projDict   Scalar      ChainStay HeigthBB                  $::bikeGeometry::ChainStay(HeigthBB)                            ;#[bikeGeometry::get_Scalar           ChainStay HeigthBB                ]                ;# set _lastValue(FrameTubes/ChainStay/HeightBB)                           
+        dict set projDict   Scalar      ChainStay HeightBB                  $::bikeGeometry::ChainStay(HeightBB)                            ;#[bikeGeometry::get_Scalar           ChainStay HeigthBB                ]                ;# set _lastValue(FrameTubes/ChainStay/HeightBB)                           
         dict set projDict   Scalar      ChainStay TaperLength               $::bikeGeometry::ChainStay(TaperLength)                         ;#[bikeGeometry::get_Scalar           ChainStay TaperLength             ]                ;# set _lastValue(FrameTubes/ChainStay/TaperLength)                        
         dict set projDict   Scalar      ChainStay WidthBB                   $::bikeGeometry::ChainStay(WidthBB)                             ;#[bikeGeometry::get_Scalar           ChainStay WidthBB                 ]                ;# set _lastValue(FrameTubes/ChainStay/TaperLength)                        
         dict set projDict   Scalar      ChainStay completeLength            $::bikeGeometry::ChainStay(completeLength)                      ;#[bikeGeometry::get_Scalar           ChainStay completeLength          ]                ;# set _lastValue(FrameTubes/ChainStay/Profile/completeLength)             
