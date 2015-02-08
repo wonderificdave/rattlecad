@@ -166,7 +166,8 @@
  #          remove reynoldsFEA completly
  #      refactor
  #          rename HeigthBB to HeightBB
- # 1.36 debug 
+ # 1.36 - 20150208
+ #      debug 
  #          default setting in bikeGeometry::create_Fork: 
  #              set Direction(ForkDropout)  $Direction(Steerer)
  #      refactor
@@ -176,6 +177,10 @@
  #              bikeGeometry::tube::cut_centerLine
  #      new ... to be continued for better usability in ChainStay Mockup
  #          bikeGeometry::tube::init_checkCenterLine
+ # 1.37 - 20150209
+ #      debug 
+ #          bikeGeometry::create_Fork_SteelLuggedMAX -> $Position(ForkBlade_End)
+ #              bikeGeometry::tube::cut_centerLine_inside
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -184,7 +189,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.36
+    package provide bikeGeometry 1.37
         #
     package require vectormath
         #

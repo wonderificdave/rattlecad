@@ -371,9 +371,9 @@ namespace eval bikeGeometry::tube {
                 set lastLength  $newLength
                 set lastXY      $xy
                 lappend centerLineCut $xy
-                    # puts "   -> $x  <- $length_x"
+                     puts "   -> $x  <- $length_x"
             } else {
-                    # puts "   -> $x  <- $length_x ... exception"
+                     puts "   -> $x  <- $length_x ... exception"
                 foreach {last_x last_y} $lastXY break
                 set seg_x       [expr $length_x - $last_x]
                 set segVct      [vectormath::unifyVector $lastXY $xy]
@@ -393,13 +393,45 @@ namespace eval bikeGeometry::tube {
             }
 
         }
-          #
-        #puts "   -> [llength $centerLine]"
-        #puts "   -> [llength $centerLineCut]"
-          #
-          
-          # -- exception if length is longer than the profile
-        return  $centerLineCut
+            #
+            #
+            #
+            # ... in case of centerLine definition does not reach length_x
+            #
+            # puts "\n\n\n\n   <E> cut_centerLine exception \n\n\n\n "
+            # puts "\n ------"
+            # puts "   -> $x  ... did not reach $length_x"
+            # puts "   ... \$length_x   $length_x"
+            # puts "   ... \$lastLength $lastLength"
+            # puts "   ... \$lastXY     $lastXY"
+            #
+        # just give it a try ( a copy from cut_centerLine) ... not analyzed    
+            #
+        set prevXY  [lindex $centerLineCut end-1]
+            # puts "   ... \$prevXY     $prevXY"
+        set delta_X [expr $length_x - [lindex $lastXY 0]]
+            # puts "   ... \$delta_X     $delta_X"
+            # puts "   ... [expr $length_x / $lastLength]"
+        if {[expr $length_x / $lastLength] < 1.001} {
+            return [list $centerLineCut $lastLength]
+        }
+            #
+        set dirVct  [vectormath::unifyVector $prevXY $lastXY]
+        set delta_L [expr [lindex $dirVct 0] / $delta_X]
+            #
+        set cuttingLength [expr $lastLength + $delta_L]
+            #puts "   ... \$cuttingLength     $cuttingLength"
+            #
+        set vctExt  [vectormath::unifyVector $prevXY $lastXY $delta_L]
+            #
+        lappend centerLineCut [vectormath::addVector $lastXY $vctExt]
+            #
+            # puts "\n ------"
+            #
+        return [list $centerLineCut $cuttingLength]
+            #
+            # -- exception if length is longer than the profile
+        # return  $centerLineCut
     }
 
     proc bikeGeometry::tube::init_tubeProfile {profileDef args} {

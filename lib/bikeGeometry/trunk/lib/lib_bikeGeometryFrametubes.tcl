@@ -64,7 +64,7 @@
                 Chainstay  { set do_angle         [expr $vct_angle - $RearDropout(RotationOffset)]}
                 horizontal { set do_angle         [expr 360 - $RearDropout(RotationOffset)]
                        }
-                default    {exit}
+                default    {}
             }
                 # 
             set Direction(RearDropout)  [ vectormath::rotatePoint   {0 0} {1 0} $do_angle]

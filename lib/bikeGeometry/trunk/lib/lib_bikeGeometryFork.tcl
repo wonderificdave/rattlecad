@@ -412,7 +412,18 @@
                 #
             set Position(ForkBlade_Start)   [vectormath::addVector $forkBladePos  $dropOutPos];
                 #
-            set Position(ForkBlade_End) [split [lindex $centerLine_Format end] ,]
+            set Position(ForkBlade_End)     [split [lindex $centerLine_Format end] ,]
+
+                # puts "\n"
+                # puts "      \$Position(ForkBlade_Start) $Position(ForkBlade_Start)  "
+                # puts "      \$centerLine                $centerLine  "
+                # puts "      \$centerLine_Format         $centerLine_Format  "
+                # puts "      \$Position(ForkBlade_End)   $Position(ForkBlade_End)  "
+                # puts "       "
+                # puts "       -> 450.074507,377.41432 "
+                # puts "\n"
+                # exit
+
                 # puts "  -> \$outLine       $outLine"
                 # puts "  -> \$dropOutPos    $dropOutPos"
                 # puts "  -> \$dropOutAngle  $dropOutAngle"
