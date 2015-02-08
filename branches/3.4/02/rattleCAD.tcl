@@ -79,7 +79,7 @@ exec wish "$0" "$@"
     package     require tdom    
                     
     package     require appUtil             0.15
-    package     require vectormath          0.5
+    package     require vectormath          0.6
     package     require bikeGeometry        1.35
     package     require canvasCAD           0.52
     package     require extSummary          0.4
@@ -170,7 +170,7 @@ exec wish "$0" "$@"
     }
     
       # -- run a debug procedure
-    rattleCAD::debug::run_debug
+    # rattleCAD::debug::run_debug
 
     
     #osEnv::open_fileDefault "E:/manfred/Dateien/rattleCAD/html/index.html"

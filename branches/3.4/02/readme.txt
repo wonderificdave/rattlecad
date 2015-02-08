@@ -1,9 +1,19 @@
 
 
+3.4.02.30  - 2014.02.08
+-------------------------------------------------------------------------------
+    debug:
+        ... bikeGeometry 1.36 
+            ... bikeGeometry::create_Fork 
+            ... bikeGeometry::create_ChainStay_RearMockup 
+        ... vectormath   0.6
+            ... tangent_2_circles
+
+
 3.4.02.29  - 2014.01.24
 -------------------------------------------------------------------------------
     feature:
-        ... button for rattleCAD_Xtnd
+        ... button for rattleCAD_AddOn
             ... containing all fututre extensions based on rattleCAD
     refactor:
         ... bikeGeometry 1.35 cleanup 
