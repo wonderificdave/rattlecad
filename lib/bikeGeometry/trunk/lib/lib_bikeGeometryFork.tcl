@@ -56,6 +56,7 @@
                 #
                 #
             set Direction(ForkCrown)    $Direction(Steerer)
+            set Direction(ForkDropout)  $Direction(Steerer)
                 #
             set CenterLine(ForkBlade)           {}    
             set Position(ForkBlade_Start)       {0 0}    
@@ -652,7 +653,7 @@
                 #
             set do_angle       [ vectormath::angle $pt_01 $Position(FrontWheel) $help_02  ] 
             set pt_99          [ vectormath::rotatePoint {0 0} {1 0} $do_angle]
-            set Direction(ForkDropout) [ vectormath::unifyVector {0 0} $pt_99 ]
+            set Direction(ForkDropout)  [ vectormath::unifyVector {0 0} $pt_99 ]
                 #
                 # tk_messageBox -message "$polygon"
                 #

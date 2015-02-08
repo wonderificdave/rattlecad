@@ -41,10 +41,11 @@
 namespace eval bikeGeometry::tube {
 
     variable arcPrecission 5 ;# number of segments per arc
-    
-    
-    proc init_centerLine {centerLineDef} {
-        
+
+}    
+
+    proc bikeGeometry::tube::init_centerLine {centerLineDef} {
+            #
         variable arcPrecission
         variable centerLineDirAngle;  array set centerLineDirAngle  {} 
         variable centerLineRadius;    array set centerLineRadius    {} 
@@ -52,21 +53,25 @@ namespace eval bikeGeometry::tube {
         variable centerLineDefLength; array set centerLineDefLength {} 
         variable centerLinePosition;  array set centerLinePosition  {} 
         variable centerLineEnd
-          # puts "  -> $arcPrecission"
+            # puts "  -> $arcPrecission"
         
-          # --
-          # puts "   ->[llength $centerLineDef] < 14"
+            #
+        set centerLineDef [init_checkCenterLine $centerLineDef]
+            #
+      
+            # --
+            # puts "   ->[llength $centerLineDef] < 14"
         if {[llength $centerLineDef] < 14} {
             foreach {S01_length S02_length S03_length S04_length S05_length \
                      P01_angle  P02_angle  P03_angle  P04_angle \
                      S01_radius S02_radius S03_radius S04_radius \
                     } $centerLineDef break
-                    set cuttingLength [expr $S01_length + $S02_length + $S03_length + $S04_length + $S05_length]
+                    set cuttingLength_x [expr $S01_length + $S02_length + $S03_length + $S04_length + $S05_length]
         } else {
             foreach {S01_length S02_length S03_length S04_length S05_length \
                      P01_angle  P02_angle  P03_angle  P04_angle \
                      S01_radius S02_radius S03_radius S04_radius \
-                     cuttingLength\
+                     cuttingLength_x \
                     } $centerLineDef break
         }
                  
@@ -101,46 +106,82 @@ namespace eval bikeGeometry::tube {
         set centerLineRadius(4)    $S04_radius
         set centerLineRadius(5)    0
         
-        set centerLine             [list {0 0}]
+        set centerLineUncut        [list {0 0}]
         set ctrlPoints             {}
         
-          #
-          # puts " -> centerLineDefLength [array size centerLineDefLength]"
-          #
+        
+            #
+            # puts " -> centerLineDefLength [array size centerLineDefLength]"
+            #
         set i 0
         while {$i <= [array size centerLineDefLength]-1} {
-              # puts "\n"
-              # puts " == <$i> ==========================="
+                # puts "\n"
+                # puts " == <$i> ==========================="
             set lastId $i
             set nextId [expr $i+1]
             set retValue    [init_centerLineNextPosition   \
-                                                    $centerLine $ctrlPoints\
+                                                    $centerLineUncut $ctrlPoints\
                                                     $centerLineRadius($lastId)  $centerLineAngle($lastId)  $centerLineDirection($lastId) \
                                                     $centerLineDefLength($nextId) \
                                                     $centerLineRadius($nextId)  $centerLineAngle($nextId)  $centerLineDirection($nextId)]
-            set centerLine  [lindex $retValue 0]
-            set ctrlPoints  [lindex $retValue 1] 
-              # puts "  -> $ctrlPoints"
+            set centerLineUncut     [lindex $retValue 0]
+            set ctrlPoints          [lindex $retValue 1] 
+                # puts "  -> $ctrlPoints"
                 #if {$i == 20} { exit }
             
             incr i
         }
-          #
+            #
         set controlPoints [list {0 0}]
         set i 0
         foreach {start end} $ctrlPoints {
             lappend controlPoints $start $end
         }
-          #
-        set centerLineCut [cut_centerLine $centerLine $cuttingLength]
-          # puts "  -> $centerLine"
-          # puts "  -> $centerLineCut"
-          #
-        return [list $centerLine $controlPoints $centerLineCut]
-          #
+            #
+            # puts "  -> $cuttingLength_x"
+        set retValue [cut_centerLine_inside $centerLineUncut $cuttingLength_x]
+        set centerLineCut [lindex $retValue 0]
+        set cuttingLength [lindex $retValue 1]
+            # puts "  -> $centerLine"
+            # puts "  -> $centerLineCut"
+            #
+        return [list $centerLineUncut $controlPoints $centerLineCut $cuttingLength]
+            # return [list $centerLine $controlPoints]
+            #
     }
     
-    proc init_centerLineNextPosition {polyLine ctrlPoints lastRadius lastAngle lastDir distance nextRadius nextAngle nextDir} {
+    proc bikeGeometry::tube::init_checkCenterLine {centerLineDef} {
+            #
+        foreach {S01_length S02_length S03_length S04_length S05_length \
+                 P01_angle  P02_angle  P03_angle  P04_angle \
+                 S01_radius S02_radius S03_radius S04_radius \
+                } $centerLineDef break
+            #
+        puts "\n\n"    
+        puts "     \$S01_length  $S01_length"    
+        puts "     \$S02_length  $S02_length"    
+        puts "     \$S03_length  $S03_length"    
+        puts "     \$S04_length  $S04_length"    
+        puts "     \$S05_length  $S05_length"    
+        puts ""                 
+        puts "     \$P01_angle   $P01_angle"    
+        puts "     \$P02_angle   $P02_angle"    
+        puts "     \$P03_angle   $P03_angle"    
+        puts "     \$P04_angle   $P04_angle"    
+        puts ""                 
+        puts "     \$S01_radius  $S01_radius"    
+        puts "     \$S02_radius  $S02_radius"    
+        puts "     \$S03_radius  $S03_radius"    
+        puts "     \$S04_radius  $S04_radius"    
+    
+        puts "\n\n"    
+            
+        
+        return $centerLineDef
+    }
+    
+    
+    proc bikeGeometry::tube::init_centerLineNextPosition {polyLine ctrlPoints lastRadius lastAngle lastDir distance nextRadius nextAngle nextDir} {
           #
         variable arcPrecission
           #
@@ -231,11 +272,88 @@ namespace eval bikeGeometry::tube {
         return [list $polyLine $ctrlPoints]
     }
 
-    proc cut_centerLine {centerLine length} {
+    proc bikeGeometry::tube::cut_centerLine {centerLine length_x} {
         set centerLineCut {}
           # puts "\n ------"
           # puts "   -> \$centerLine $centerLine"
-          # puts "   -> \$length     $length"
+          # puts "   -> \$length_x   $length_x"
+          # puts " ------\n"
+        set newLength     0
+        set lastLength    0
+        set lastXY       {0 0}
+        set i 0
+        foreach {x y} $centerLine {
+            incr i
+            set xy [list $x $y]
+                # puts "     $i -> $xy"
+                #
+                # $x .......... running x-coordinate of centerLine
+                # $length_x ... x-length of intersection with BB-Center
+                #
+            if {$x < $length_x} {
+                set offset      [vectormath::length $lastXY $xy]
+                    # puts "   -> offset        -> $offset  <- $lastXY / $xy"
+                set newLength   [expr $lastLength + $offset]
+                lappend centerLineCut $xy
+                set lastXY      $xy
+                set lastLength  $newLength
+                    # puts "   -> $x  <- $length_x    ($y)"
+            } else {
+                    #
+                    # ... in case of centerLine definition reaches length_x
+                    #
+                foreach {last_x last_y} $lastXY break
+                set seg_x       [expr $length_x - $last_x]
+                set segVct      [vectormath::unifyVector $lastXY $xy]
+                set dx          [expr $seg_x * [lindex $segVct 0]]
+                set dy          [expr $seg_x * [lindex $segVct 1]]
+                set segEnd      [vectormath::addVector $lastXY [list $dx $dy]]
+                
+                lappend centerLineCut $segEnd
+                    #
+                set cuttingLength [expr $lastLength + [vectormath::length {0 0} [list $dx $dy]] ]
+                    #
+                return [list $centerLineCut $cuttingLength]
+            }
+        }
+        
+            #
+            # ... in case of centerLine definition does not reach length_x
+            #
+            # puts "\n ------"
+            # puts "   -> $x  ... did not reach $length_x"
+            # puts "   ... \$length_x   $length_x"
+            # puts "   ... \$lastLength $lastLength"
+            # puts "   ... \$lastXY     $lastXY"
+            #
+        set prevXY  [lindex $centerLineCut end-1]
+            # puts "   ... \$prevXY     $prevXY"
+        set delta_X [expr $length_x - [lindex $lastXY 0]]
+            # puts "   ... \$delta_X     $delta_X"
+        set dirVct  [vectormath::unifyVector $prevXY $lastXY]
+        set delta_L [expr [lindex $dirVct 0] / $delta_X]
+            #
+        set cuttingLength [expr $lastLength + $delta_L]
+            #
+        set vctExt  [vectormath::unifyVector $prevXY $lastXY $delta_L]
+            #
+        lappend centerLineCut [vectormath::addVector $lastXY $vctExt]
+            #
+            # puts "   -> [llength $centerLine]"
+            # puts "   -> [llength $centerLineCut]"
+            # puts "   -> [llength $centerLineCut]"
+            # puts "   -> $centerLineCut"
+            # -- exception if length is longer than the profile
+            # puts "\n\n\n\n   <E> cut_centerLine exception \n\n\n\n "
+        return [list $centerLineCut $cuttingLength]
+            #
+    } 
+
+    proc bikeGeometry::tube::cut_centerLine_inside {centerLine length_x} {
+        set centerLineCut {}
+          # puts "\n ------"
+          # puts "   -> \$centerLine $centerLine"
+          # puts "   -> \$length_x   $length_x"
           # puts " ------\n"
         set newLength     0
         set lastLength    0
@@ -243,20 +361,37 @@ namespace eval bikeGeometry::tube {
         set i 0
         foreach {xy} $centerLine {
             incr i
-              # puts "     $i -> $xy"
+                # puts "     $i -> $xy"
+            foreach {x y} $xy break
             set offset      [vectormath::length $lastXY $xy]
-              # puts "               -> $offset  <- $lastXY"
+                # puts "               -> $offset  <- $lastXY"
             set newLength   [expr $newLength + $offset]
-            if  {$newLength > $length} {
-                set deltaOffset  [expr $length - $lastLength]
-                set lastPosVct   [vectormath::unifyVector $lastXY $xy $deltaOffset]
-                lappend centerLineCut [vectormath::addVector $lastXY $lastPosVct]
-                return  $centerLineCut
-            } else {
+                #
+            if {$x < $length_x} {
                 set lastLength  $newLength
                 set lastXY      $xy
                 lappend centerLineCut $xy
+                    # puts "   -> $x  <- $length_x"
+            } else {
+                    # puts "   -> $x  <- $length_x ... exception"
+                foreach {last_x last_y} $lastXY break
+                set seg_x       [expr $length_x - $last_x]
+                set segVct      [vectormath::unifyVector $lastXY $xy]
+                set dx          [expr $seg_x * [lindex $segVct 0]]
+                set dy          [expr $seg_x * [lindex $segVct 1]]
+                set segEnd      [vectormath::addVector $lastXY [list $dx $dy]]
+                
+                #set deltaOffset  [expr $length - $lastLength]
+                #set lastPosVct   [vectormath::unifyVector $lastXY $xy $deltaOffset]
+                lappend centerLineCut $segEnd
+                    #
+                set cuttingLength [expr $lastLength + [vectormath::length {0 0} [list $dx $dy]] ]
+                    #
+                    # puts "   -> [lindex $segEnd 0]  <- $length_x"
+                    #
+                return [list $centerLineCut $cuttingLength]
             }
+
         }
           #
         #puts "   -> [llength $centerLine]"
@@ -267,7 +402,7 @@ namespace eval bikeGeometry::tube {
         return  $centerLineCut
     }
 
-    proc init_tubeProfile {profileDef args} {
+    proc bikeGeometry::tube::init_tubeProfile {profileDef args} {
 
         variable unbentShape
         
@@ -311,7 +446,7 @@ namespace eval bikeGeometry::tube {
     }
 
 
-    proc create_ForkBlade {valueDict} {
+    proc bikeGeometry::tube::create_ForkBlade {valueDict} {
 
         
         # variable max_Offset
@@ -651,6 +786,7 @@ namespace eval bikeGeometry::tube {
         set centerLineCut   [lindex $retValues 2]
         
             # -- draw shape of tube
+        
         set outLineLeft   [bikeGeometry::tube::create_tubeShape    $centerLine $tubeProfile left  ]
         set outLineRight  [bikeGeometry::tube::create_tubeShape    $centerLine $tubeProfile right ]
         set outLine       [bikeGeometry::flatten_nestedList   $outLineLeft $outLineRight]
@@ -698,7 +834,7 @@ namespace eval bikeGeometry::tube {
     }
 
 
-    proc get_tubeProfileOffset {profile position} {
+    proc bikeGeometry::tube::get_tubeProfileOffset {profile position} {
         
         variable unbentShape
 
@@ -730,91 +866,88 @@ namespace eval bikeGeometry::tube {
     }
 
 
-    proc create_tubeShape {centerLine tubeProfile side} {
+    proc bikeGeometry::tube::create_tubeShape {centerLine tubeProfile side} {
       
         variable arcPrecission
         
         set linePosition 0
           # set bentProfile {}
-        
+          
         set lineOffset  [get_tubeProfileOffset $tubeProfile $linePosition]
         if {$side == {left}} {
-          lappend bentProfile [list $linePosition $lineOffset]
+            #lappend bentProfile [list $linePosition $lineOffset]
         } else {
-          lappend bentProfile [list $linePosition [expr -1.0 * $lineOffset]]
+            #lappend bentProfile [list $linePosition [expr -1.0 * $lineOffset]]
         }
           # puts "        ---> $bentProfile"
-        set xLast {}
-        set yLast {}
+        set xPrev {}
+        set yPrev {}
           #
-        set pLast [lindex $centerLine 0]
-        foreach {xLast yLast} $pLast break
-          #
-      
-        foreach p [lrange $centerLine 1 end] {
-            foreach {x y} $p break
-              # puts "$xLast -> $x  | $yLast -> $y"
-              # -- get offset / depending on segments
-            set p_SegStart  [list $xLast $yLast]
-            set p_SegEnd    [list $x $y]
-            set angle       [vectormath::dirAngle $p_SegStart $p_SegEnd]
-            set l_segment   [vectormath::length   $p_SegStart $p_SegEnd]
-              # puts "\n-----------"
-              # puts "     -> start:    $p_SegStart"
-              # puts "     -> end:      $p_SegEnd"
-              # puts "       -> angle:     $angle"
-              # puts "       -> segment:   $l_segment\n"
-          
-            set nrSegments  [expr abs(round($l_segment/$arcPrecission))]
-            if {$nrSegments < 1} {
-                  # puts "    -> nrSegments: $nrSegments"
-                set nrSegments 1
-            }
-            set l_segment   [expr $l_segment/$nrSegments]
-          
+        set p_last [lindex $centerLine end]
+        foreach {x y} $p_last break
+        set p_apnd [list [expr $x + 20] $y]
+        lappend centerLine $p_apnd
+            #
+        set i 0
+        while {$i < [llength $centerLine]-1} {
+            set xy1 [lindex $centerLine $i]
+            set xy2 [lindex $centerLine $i+1]         
+            incr i
+                #
+            foreach {x1 y1} $xy1 break 
+            foreach {x2 y2} $xy2 break 
+                # puts "   $xy1"
+                # puts "   $xy2"
+                #
+            set angle       [vectormath::dirAngle $xy1 $xy2]
+            set segLength   [vectormath::length   $xy1 $xy2]
+                #
             if {$side == {left}} {
                 set offsetAngle [expr $angle + 90]
             } else {
                 set offsetAngle [expr $angle - 90]
             }
-          
-            set p_Start    $p_SegStart
+                #
+            set nrSegments  [expr abs(round($segLength/$arcPrecission))]
+            if {$nrSegments < 1} {
+                  # puts "    -> nrSegments: $nrSegments"
+                set nrSegments 1
+            }
+            set segLength   [expr $segLength/$nrSegments]            
+                #
+            set p_Start    $xy1
             set lastOffset {}
-            set i 0
-            while {$i < $nrSegments} {
-                set linePosition  [expr $linePosition + $l_segment]
+            set j 0
+            while {$j < $nrSegments} {
+                set linePosition  [expr $linePosition + $segLength]
                 set lineOffset    [get_tubeProfileOffset $tubeProfile $linePosition]
-                set p_End         [vectormath::rotateLine $p_Start $l_segment   $angle]
-                set p_Offset      [vectormath::rotateLine $p_End   $lineOffset  $offsetAngle]
+                set p_Offset      [vectormath::rotateLine $p_Start $lineOffset  $offsetAngle]
+                set p_Next        [vectormath::rotateLine $p_Start $segLength   $angle]
                   # -- add to bentProfile
                 if {$p_Offset != $lastOffset} {
                     lappend bentProfile $p_Offset
                 }
-                    #puts "        ---> [lindex $bentProfile end]"
-                    #puts "         ->  + $l_segment = $linePosition / $lineOffset  |  $offsetAngle"
-                  # -- prepare next loop
-                set p_Start    $p_End
+                    # puts "        ---> [lindex $bentProfile end]"
+                    # puts "         ->  + $segLength = $linePosition / $lineOffset  |  $offsetAngle"
+                    # -- prepare next loop
+                set p_Start    $p_Next
                 set lastOffset $p_Offset
-                incr i
-            }
-          
-              # -- prepare next loop
-            set xLast $x
-            set yLast $y     
+                incr j
+            }             
+
         }
-        foreach xy $bentProfile {
-            # puts "   -> $xy"
-        }
-        
+            #
+            #
         if {$side == {left}} {
             return $bentProfile
         } else {
             return [lreverse $bentProfile]
         }
-    }
+            #
+    } 
 
 
-    proc get_shapeInterSection {shape length} {
+    proc bikeGeometry::tube::get_shapeInterSection {shape length} {
         
         set shape_llength [llength $shape]  
         set pLast {0 0}
@@ -869,4 +1002,3 @@ namespace eval bikeGeometry::tube {
  
  
  
-}

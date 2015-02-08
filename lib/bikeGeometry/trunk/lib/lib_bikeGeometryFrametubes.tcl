@@ -167,12 +167,26 @@
             set Center(ChainStay_DO)    [ vectormath::addVector $Center(RearHub) [ list $RearDropout(OffsetCS)  [ expr $Length(04) + $RearDropout(OffsetCS_TopView)] ] ]
             set Center(00)              [ list [expr -1.0 * $Length(01)] $Length(03) ] 
             set Center(ChainStay_00)    [ vectormath::cathetusPoint $Center(ChainStay_DO) $Center(00) [expr 0.5 * $ChainStay(WidthBB)] opposite ]
+            set ChainStay_x             [ expr abs([lindex $Center(ChainStay_DO) 0 ])]
+                
                 # puts "  -> \$Center(ChainStay_DO) $Center(ChainStay_DO)"
-                        
+                # puts "  -> \$Geometry(ChainStay_Length) $Geometry(ChainStay_Length)"
+                # puts "  -> \$ChainStay_x  $ChainStay_x"
+            
             set p_CS_BB [list [expr -1.0 * $Length(01)] $Length(03)]                   
                 # puts "   \$p_CS_BB                   $p_CS_BB"
       
       
+                # -- check tubeLength complete
+            set segmentSummary [expr $ChainStay(profile_x01) + $ChainStay(profile_x02) + $ChainStay(profile_x03)]
+                # puts "  -- 01  $ChainStay(profile_x01)"
+                # puts "  -- 02  $ChainStay(profile_x02)"
+                # puts "  -- 03  $ChainStay(profile_x03)"
+                # puts "  -- ++  $ChainStay(completeLength)"
+            if {$segmentSummary > $ChainStay(completeLength)} {
+                set ChainStay(completeLength) [expr $segmentSummary + 10]
+            }
+                # puts "  -- ++  $ChainStay(completeLength)"
                 # -- tube profile
             set profile_y00   $ChainStay(profile_y00)
             set profile_x01   $ChainStay(profile_x01)
@@ -213,7 +227,7 @@
                     set S02_radius     320
                     set S03_radius     320
                     set S04_radius     320
-                    set cuttingLength  $ChainStay(cuttingLength)
+                    # set cuttingLength  $ChainStay(cuttingLength)
                   }
               default {
                       # -- bent                                                
@@ -225,7 +239,7 @@
                     set S02_radius     $ChainStay(segmentRadius_02)
                     set S03_radius     $ChainStay(segmentRadius_03)
                     set S04_radius     $ChainStay(segmentRadius_04)
-                    set cuttingLength  $ChainStay(cuttingLength)
+                    # set cuttingLength  $ChainStay(cuttingLength)
                 }
             }
                 # --- check angle: S04_angle
@@ -242,89 +256,77 @@
                 set my_S04_angle  $S04_angle
                 set my_S05_length $S05_length
             }
-                # -- check cuttingLength
-            if {$cuttingLength > $max_length} {
-                set my_cuttingLength $max_length
-            } else {
-                set my_cuttingLength $cuttingLength
-            }
                 #
             set centerLineDef [list \
                         $S01_length $S02_length $S03_length $S04_length $my_S05_length \
                         $S01_angle  $S02_angle  $S03_angle  $my_S04_angle \
                         $S01_radius $S02_radius $S03_radius $S04_radius \
-                        $my_cuttingLength]
-
-                #
-                # --- why -- set orient_select  left
-
+                        $ChainStay_x]
                                     
                 # -- get smooth centerLine
-            set retValues        [bikeGeometry::tube::init_centerLine $centerLineDef] 
-            set centerLineUnCut  [lindex $retValues 0]
-            set ctrLines         [lindex $retValues 1]
-            set centerLine       [lindex $retValues 2]
-                # puts "  -> \$centerLine $centerLine"
-                # puts "  -> \$centerLine [llength $centerLine]"
-                # exit
-                # -- get shape of tube
-            set outLineOrient    [bikeGeometry::tube::create_tubeShape  $centerLineUnCut  $tubeProfile left  ]
+            set retValues       [bikeGeometry::tube::init_centerLine $centerLineDef] 
+            set centerLineUnCut [lindex $retValues 0]
+            set ctrLines        [lindex $retValues 1]
+            set centerLine      [lindex $retValues 2]
+                #
+                
+                # -- get outline
+            set outLineOrient   [bikeGeometry::tube::create_tubeShape  $centerLineUnCut  $tubeProfile left  ]
+               
+                # -- get orientation of tube
+            set length          [vectormath::length   $Center(ChainStay_DO) $p_CS_BB]
+            set angle           [vectormath::dirAngle $Center(ChainStay_DO) $p_CS_BB]
+                # puts "  -> \$length $length"
+                # puts "  -> \$angle $angle"
+            set pointIS         [bikeGeometry::tube::get_shapeInterSection $outLineOrient $length]       
+            set angleIS         [vectormath::dirAngle {0 0} $pointIS]
+            set angleRotation   [expr $angle - $angleIS]
+                # puts "  -> \$point_IS $point_IS"
+                # puts "  -> \$angleIS $angleIS"
+                # puts "  -> \$angleRotation $angleRotation"
+                
+                # -- prepare $outLine for exprot 
+            set outLineOriented [vectormath::rotatePointList {0 0} [bikeGeometry::flatten_nestedList $outLineOrient]    $angleRotation]    
+            
+                # -- orient $centerLineUnCut
+                #puts " ---> \$centerLineUnCut $centerLineUnCut"
+            set centerLineUnCut [vectormath::rotatePointList {0 0} [bikeGeometry::flatten_nestedList $centerLineUnCut]  $angleRotation]    
+                #puts " ---> \$centerLineUnCut $centerLineUnCut"
+                
+                # -- get centerLine & cutLength (center BB]
+                
+            set retValue [bikeGeometry::tube::cut_centerLine $centerLineUnCut $ChainStay_x]
+            set centerLine    [lindex $retValue 0]
+            set cuttingLength [lindex $retValue 1]
+                #
+            set ChainStay(cuttingLength) $cuttingLength
+                #
             set outLineLeft      [bikeGeometry::tube::create_tubeShape  $centerLine       $tubeProfile left  ]
             set outLineRight     [bikeGeometry::tube::create_tubeShape  $centerLine       $tubeProfile right ]
             set outLine          [bikeGeometry::flatten_nestedList      $outLineLeft      $outLineRight]
-            # set outLine          [appUtil::flatten_nestedList          $outLineLeft      $outLineRight]
-                # -- move outline to centerLine
-            set vct              [lindex $centerLine 0]
-            set vct              [list [lindex $vct 0] [expr -1.0*[lindex $vct 1]]]
-            set outLine          [vectormath::addVectorPointList       $vct $outLine]
-                # puts "\n    -> \$outLineLeft   $outLineLeft"
-                # puts "\n    -> \$outLineRight  $outLineRight"
-                # puts "\n    -> \$outLine       $outLine "
-            
-            
-                # get orientation of tube
-            set length           [vectormath::length   $Center(ChainStay_DO) $p_CS_BB]
-            set angle            [vectormath::dirAngle $Center(ChainStay_DO) $p_CS_BB]
-                  # puts "  -> \$length $length"
-                  # puts "  -> \$angle $angle"
-            set pointIS          [bikeGeometry::tube::get_shapeInterSection $outLineOrient $length]       
-            set angleIS          [vectormath::dirAngle {0 0} $pointIS]
-            set angleRotation    [expr $angle - $angleIS]
-                  # puts "  -> \$point_IS $point_IS"
-                  # puts "  -> \$angleIS $angleIS"
-                  # puts "  -> \$angleRotation $angleRotation"
-                # -- prepare $outLine for exprot 
-            set outLine          [vectormath::rotatePointList {0 0} $outLine $angleRotation]    
-                
-                # -- prepare $centerLineUnCut for export 
-            set centerLineUnCut  [bikeGeometry::flatten_nestedList $centerLineUnCut]
-            set centerLineUnCut  [vectormath::rotatePointList {0 0} $centerLineUnCut $angleRotation]    
-                
-                # -- prepare $centerLine for export 
-            set centerLine       [bikeGeometry::flatten_nestedList $centerLine]
-            set centerLine       [vectormath::rotatePointList {0 0} $centerLine $angleRotation]    
-             
+                #
+            set Position(ChainStay_RearMockup)          $Center(ChainStay_DO)
+            set Polygon(ChainStay_RearMockup)           $outLine
+                #
+                #
+              
                 # -- prepare $ctrLines for export 
             set ctrLines         [bikeGeometry::flatten_nestedList $ctrLines]
             set ctrLines         [vectormath::rotatePointList {0 0} $ctrLines $angleRotation]    
-            
-                  
-            
-                # -- format Values
+                #
+                #
+                #
             proc format_XcommaY {xyList} {
                 set commaList {}
                 foreach {x y} $xyList { append commaList "$x,$y "}
                 return $commaList
             }
+                #
                 # -- store Values
-            set Position(ChainStay_RearMockup)          $Center(ChainStay_DO)
-            set Polygon(ChainStay_RearMockup)           $outLine
                 # 
             set CenterLine(RearMockup_CtrLines) [format_XcommaY $ctrLines]
-            set CenterLine(RearMockup)          [format_XcommaY $centerLine]
+            set CenterLine(RearMockup)          [format_XcommaY [bikeGeometry::flatten_nestedList $centerLine]]
             set CenterLine(RearMockup_UnCut)    [format_XcommaY $centerLineUnCut]
-                # 
-                # puts "\n===================\n -> \$outLine $outLine\n"
                 #
                 # --- top View
             set l_00  0
@@ -343,7 +345,6 @@
                 # --- return values
             return
                 # 
-            
     }
 
         

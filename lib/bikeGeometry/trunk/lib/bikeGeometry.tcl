@@ -161,22 +161,30 @@
  #          project::update_Project 3.4.02 -> virtualLength
  # 1.34 implement 
  #          remove geometry3D completly
- #
  # 1.35 implement 
  #          remove reynoldsFEA completly
  #          remove reynoldsFEA completly
  #      refactor
  #          rename HeigthBB to HeightBB
- #
+ # 1.36 debug 
+ #          default setting in bikeGeometry::create_Fork: 
+ #              set Direction(ForkDropout)  $Direction(Steerer)
+ #      refactor
+ #          cleanup bikeGeometry::update_Geometry
+ #              remove bikeGeometry::set_to_project and project::runTime_2_dom
+ #          bikeGeometry::create_ChainStay_RearMockup
+ #              bikeGeometry::tube::cut_centerLine
+ #      new ... to be continued for better usability in ChainStay Mockup
+ #          bikeGeometry::tube::init_checkCenterLine
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
-
+ #
  #
   
     package require tdom
         #
-    package provide bikeGeometry 1.35
+    package provide bikeGeometry 1.36
         #
     package require vectormath
         #
@@ -367,7 +375,7 @@
 
     #-------------------------------------------------------------------------
        #  import a subset of a project	
-	proc bikeGeometry::import_ProjectSubset {nodeRoot} {
+    proc bikeGeometry::import_ProjectSubset {nodeRoot} {
 			project::import_ProjectSubset $nodeRoot
 	}
 

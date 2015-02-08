@@ -206,9 +206,10 @@
             
             # ----------------------------------
                 # finally update projectDOM
-            set_to_project
+                # removed 20150129 ... is allready part of  bikeGeometry::get_projectDOM
+            # set_to_project
                 #
-			project::runTime_2_dom
+			# project::runTime_2_dom
             
     }
 
