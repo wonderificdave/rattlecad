@@ -38,15 +38,16 @@
  #
  #
 
-  package provide vectormath 0.5
+    package provide vectormath 0.6
   
-  namespace eval vectormath {
-   
-         variable  CONST_PI [ expr 4*atan(1) ]
-						#	[ expr {2*asin(1.0)} ]
-            
+    namespace eval vectormath {
+            #
+        variable  CONST_PI [ expr 4*atan(1) ]
+					#	   [ expr {2*asin(1.0)} ]
+            #
+    }        
 
-    proc rotatePointList { p_cent p_list angle } {
+    proc vectormath::rotatePointList { p_cent p_list angle } {
         set newList {}
         foreach {x y} $p_list {
           set xy [rotatePoint $p_cent [list $x $y] $angle]
@@ -54,7 +55,7 @@
         }
         return $newList
     }
-    proc addVectorPointList {v  p_list {scaling 1}} {
+    proc vectormath::addVectorPointList {v  p_list {scaling 1}} {
         set newList {}
               foreach {x1 y1} $v break
               foreach {xl yl} $p_list { 
@@ -65,7 +66,7 @@
         return $newList
     }
 
-    proc rotatePoint { p_cent p_rot angle } { 
+    proc vectormath::rotatePoint { p_cent p_rot angle } { 
         # start at 3 o'clock counterclockwise
         # angle in degree
         foreach {x y} [ subVector $p_rot $p_cent ]  break			
@@ -73,38 +74,38 @@
         return 		[ addVector [ VRotate  $p0 $angle grad ] $p_cent ]
     }
 
-    proc rotateLine { p l angle } { 
+    proc vectormath::rotateLine { p l angle } { 
         # start at 3 o'clock counterclockwise
         # angle in degree
         set  p1  [addVector  $p  [list $l 0]]
         return [rotatePoint  $p  $p1  $angle]
     }
 
-    proc dirAngle { p1 p2} { 
+    proc vectormath::dirAngle { p1 p2} { 
         # angle from positive x-axis
         # angle in degree
         variable CONST_PI
         set xy [subVector $p2 $p1]
         foreach {x y} $xy  break
             # debug::print "    $x  $y"
-                  # y - axis
-              if { $x == 0 } { 
-           if {$y > 0 } {
-              return  90 
-           } else {
-                        return -90
-                   }
+            # y - axis
+        if { $x == 0 } {
+            if {$y > 0 } {
+                return  90 
+            } else {
+                return -90
+            }
         }
-                  
+            #       
         set angle  [expr atan(1.0*$y/$x)*180/$CONST_PI]
-        if { $x <  0 } { 
-          return [ expr $angle+180] 
-        } {
-          return $angle
+        if { $x <  0 } {
+            return [ expr $angle+180] 
+        } else {
+            return $angle
         }
     }
       
-    proc dirAngle_Coincidence {p1 p2 tolerance p_perp} {
+    proc vectormath::dirAngle_Coincidence {p1 p2 tolerance p_perp} {
             set distance [checkPointCoincidence $p1 $p2 $tolerance]
             if { $distance  == 0 } {
                     # puts "       --> $distance / coincident  in ($tolerance)"
@@ -117,7 +118,7 @@
             }
     }    
       
-    proc checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
+    proc vectormath::checkPointCoincidence {p1 p2 {tolerance {0.0001}}} {
               set disctance [length $p1 $p2]
               if { $disctance < $tolerance} {
                   return 0
@@ -126,7 +127,7 @@
               }            
     }
 
-    proc mirrorPoint { p1 p2 p3 } { 
+    proc vectormath::mirrorPoint { p1 p2 p3 } { 
         # mirror p3 by vector(p1,p2)
               set p_IS_Perp   [intersectPerp $p1 $p2 $p3]
               set vct_perp    [ subVector $p_IS_Perp $p3 ]
@@ -134,7 +135,7 @@
               return $mP
     }
 
-    proc intersectPerp { p1 p2 p3 } { 
+    proc vectormath::intersectPerp { p1 p2 p3 } { 
         # perpendicular intersectPoint from vector(p1,p2) through p3
         set vct_h1	[ subVector [ rotatePoint $p1 $p2 90 ] $p1]
         set p4_1	[ rotatePoint $p1 $p2 90 ]
@@ -149,13 +150,13 @@
         #return		[ intersectPoint $p1 $p2 $p3 $p4 ]
     }
 
-    proc distancePerp { p1 p2 p3 } { 
+    proc vectormath::distancePerp { p1 p2 p3 } { 
         # perpendicular distance from vector(p1,p2) through p3 
         set p4      [ intersectPerp $p1 $p2 $p3]
         return      [ length $p3 $p4 ]
     }
 
-    proc offsetOrientation { p1 p2 p3 } { 
+    proc vectormath::offsetOrientation { p1 p2 p3 } { 
           # check if <p3> is on left or right side of line <p1,p2>
           # right ->   1
           # online ->  0
@@ -170,27 +171,27 @@
         return  0
     }
 
-    proc length { p1 p2 } { 
+    proc vectormath::length { p1 p2 } { 
         # distance from  p1  to  p2 
         set vector [ subVector $p2 $p1 ]
         set length [ expr hypot([lindex $vector 0],[lindex $vector 1]) ] 
         return $length
     }
 
-    proc center { p1 p2 } { 
+    proc vectormath::center { p1 p2 } { 
         set v_line      [ subVector $p2 $p1 ]
         set v_line_c    [ list [ expr [lindex $v_line 0] * 0.5 ] [ expr [lindex $v_line 1] * 0.5 ] ]
         return          [ addVector $p1 $v_line_c]
     }
 
-    proc unifyVectorPointList {vct {length {1.0}}} {
+    proc vectormath::unifyVectorPointList {vct {length {1.0}}} {
               set p1 [lindex $vct 0]
               set p2 [lindex $vct 1]
               set vector [unifyVector $p1 $p2 $length]
               return $vector
       }
       
-    proc unifyVector { p1 p2 {length {1.0}}} {
+    proc vectormath::unifyVector { p1 p2 {length {1.0}}} {
         # return vector with length 1 as default
         set vector 		[ addVector $p2 $p1 -1 ] 
         set vctLength 	[ expr hypot([lindex $vector 0],[lindex $vector 1]) ]
@@ -202,7 +203,7 @@
         return $vector                     
     }
     
-    proc scalePointList { pRef ptList scale} {
+    proc vectormath::scalePointList { pRef ptList scale} {
         # return vector with length 1 as default
         foreach	{xRef yRef} $pRef break
         set PointList {}
@@ -214,7 +215,7 @@
         return $PointList
     }
 
-    proc cathetusPoint { p1 p2 cathetus {position {close}}} { 
+    proc vectormath::cathetusPoint { p1 p2 cathetus {position {close}}} { 
         # return third point of rectangular triangle
         #   p3  locates perpendicular Angle
         #       allways on right side from p1 to p2 
@@ -234,7 +235,7 @@
         return $p3
     }
 
-    proc parallel { p1 p2 distance {direction {right}}} { 
+    proc vectormath::parallel { p1 p2 distance {direction {right}}} { 
         # return vector parallel to p1,p2 with distance 
         #   and direction from p1 to p2
         variable CONST_PI
@@ -254,9 +255,8 @@
         foreach {x y} $v break	
         return [list [expr $x*$s] [expr $y*$s] ]
     }
-    
-    
-    proc angle_Triangle {a b c} {
+
+    proc vectormath::angle_Triangle {a b c} {
         # returns alpha as opposite Angle of a
         #
         variable CONST_PI
@@ -269,6 +269,106 @@
         set alpha    [expr acos($cosAlpha)*180/$CONST_PI]
         puts "   -> $alpha"
         return $alpha
+    }
+
+    proc vectormath::tangent_2_circles {p1 p2 r1 r2 {type {outside}} {side {right}}} {
+            #
+            #
+            #
+        set my_p1 $p1
+        set my_r1 $r1
+        set my_p2 $p2
+        set my_r2 $r2
+            #
+        if {$r2 > $r1} {
+            if {$type == {outside}} {
+                set my_p1 $p2
+                set my_r1 $r2
+                set my_p2 $p1
+                set my_r2 $r1
+                if {$side == {right}} {
+                    set side left
+                } else {
+                    set side right
+                }
+            }
+        }
+            #
+        switch -exact $type {
+            inside {
+                    set length [length $my_p1 $my_p2]
+                    set radSum [expr $my_r1 + $my_r2]
+                    if {$length == $radSum} {
+                        set center [center $my_p1 $my_p2]
+                        return [list $center $center] 
+                    }
+                        #
+                    if {$length < $radSum} {
+                        error "Error generated by error" "no possible tangent in case of summary of radius is longer then distance"      1
+                    }
+                        #
+                    if {$my_r2 < $my_r1} {
+                        set sumRad [expr $my_r2+$my_r1]
+                    } else {
+                        set sumRad [expr 1 * ($my_r2+$my_r1)]
+                    }
+                        #
+                    switch -exact $side {
+                        left {      set p_hlp   [cathetusPoint $my_p2 $my_p1 $sumRad close]    }
+                        right -
+                        default {   set p_hlp   [cathetusPoint $my_p1 $my_p2 $sumRad opposite] }
+                    }
+                        #
+                    set vct_p2  [unifyVector $p_hlp $my_p2 [expr -1 * $my_r2]]
+                    set vct_p1  [unifyVector $p_hlp $my_p2 $my_r1]
+                    set p02     [addVector $my_p2 $vct_p2]
+                    set p01     [addVector $my_p1 $vct_p1]
+                        #
+                        # puts "     -> $p_hlp"
+                        # puts "     -> $p2"
+                        # puts "     ->  $vct_p2"
+                        # puts "     -> $p1"
+                        # puts "     ->  $vct_p1"
+                        # puts "     -> $p01"
+                        # puts "     -> $p02"
+                        #
+                    return [list $p01 $p02]
+
+                }
+            outside -
+            default {
+                    if {$my_r2 != $my_r1} {
+                        set diffRad [expr $my_r2-$my_r1]
+                    } else {
+                        set diffRad -1
+                    }
+                        #
+                    switch -exact $side {
+                        left {      set p_hlp   [cathetusPoint $my_p1 $my_p2 $diffRad opposite] }
+                        right -
+                        default {   set p_hlp   [cathetusPoint $my_p2 $my_p1 $diffRad close] }
+                    }
+                        #
+                    set vct_p2  [unifyVector $p_hlp $my_p2 $my_r2]
+                    set vct_p1  [unifyVector $p_hlp $my_p2 $my_r1]
+                    set p02     [addVector $my_p2 $vct_p2]
+                    set p01     [addVector $my_p1 $vct_p1]
+                        #
+                        # puts "     -> $p_hlp"
+                        # puts "     -> $p2"
+                        # puts "     ->  $vct_p2"
+                        # puts "     -> $p1"
+                        # puts "     ->  $vct_p1"
+                        # puts "     -> $p01"
+                        # puts "     -> $p02"
+                        #
+                    if {$r1 > $r2} {
+                        return [list $p01 $p02]
+                    } else {
+                        return [list $p02 $p01]
+                    }
+                }
+        }
     }
     
     
@@ -287,17 +387,17 @@
                #   we want K,J where p1+K(v1) = p3+J(v3)
                #   convert into and solve matrix equation (a b / c d) ( K / J) = ( e / f )
                #            
-    proc intersectVector {v1 v2   {errorMode {}} } {
+    proc vectormath::intersectVector {v1 v2   {errorMode {}} } {
         set p1 [lindex $v1 0]
         set p2 [lindex $v1 1]
         set p3 [lindex $v2 0]
         set p4 [lindex $v2 1]
         return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
     } 
-    proc intersectPoint {p1 p2 p3 p4   {errorMode {}} } {
+    proc vectormath::intersectPoint {p1 p2 p3 p4   {errorMode {}} } {
         return [intersectPointVector $p1 [subVector $p2 $p1] $p3 [subVector $p4 $p3]  $errorMode]
     } 
-    proc intersectPointVector {p1 v1 p3 v3   {errorMode {}} } {
+    proc vectormath::intersectPointVector {p1 v1 p3 v3   {errorMode {}} } {
         foreach {x1 y1} $p1 {vx1 vy1} $v1 {x3 y3} $p3 {vx3 vy3} $v3 break
 
         set a $vx1
@@ -333,7 +433,7 @@
                # use cosinus - satz
                # Angle-Center is   pc
                #
-    proc angle {p1 pc p3} {
+    proc vectormath::angle {p1 pc p3} {
         variable CONST_PI
         foreach {x1 y1} [subVector $p1 $pc] {x2 y2} [subVector $p3 $pc] break
 
@@ -363,7 +463,7 @@
                #
                # bisectAngle -- returns point on bisector of the angle formed by p1,p2,p3
                #
-    proc bisectAngle {p1 p2 p3} {
+    proc vectormath::bisectAngle {p1 p2 p3} {
         foreach {x1 y1} [subVector $p1 $p2] {x2 y2} [subVector $p3 $p2] break
 
         set s1 [expr {100.0 / hypot($x1, $y1)}]
@@ -378,7 +478,7 @@
                # the angle created by points p1,p2,p3. We use the cross product to tell
                # us clockwise ordering.
                #
-    proc trisectAngle {p1 p2 p3} {
+    proc vectormath::trisectAngle {p1 p2 p3} {
         set cross [VCross [subVector $p2 $p1] [subVector $p2 $p3]]
         if {$cross < 0} {foreach {p1 p3} [list $p3 $p1] break}
 
@@ -403,20 +503,20 @@
                
                ##+##########################################################################
                #   addVector -- adds two vectors w/ scaling of 2nd vector
-    proc addVector {v1 v2 {scaling 1}} {
+    proc vectormath::addVector {v1 v2 {scaling 1}} {
         foreach {x1 y1} $v1 {x2 y2} $v2 break
         return [list [expr {$x1 + $scaling*$x2}] [expr {$y1 + $scaling*$y2}]]
     }	 
                ##+##########################################################################
                #   subVector -- subtract two vectors
-    proc subVector {v1 v2} { return [addVector $v1 $v2 -1] }
+    proc vectormath::subVector {v1 v2} { return [addVector $v1 $v2 -1] }
                ##+##########################################################################
                #   converts from grad to rad an viceversa
-    proc rad  {arc} {
+    proc vectormath::rad  {arc} {
         variable  CONST_PI
         return [expr {$arc * $CONST_PI / 180}] 
     }
-    proc grad {arc} {
+    proc vectormath::grad {arc} {
         variable  CONST_PI
         return [expr {$arc * 180 / $CONST_PI}]
     }
@@ -424,13 +524,13 @@
     
                ##+##########################################################################
                #   VCross -- returns the cross product for 2D vectors (z=0)
-    proc VCross {v1 v2} {
+    proc vectormath::VCross {v1 v2} {
         foreach {x1 y1} $v1 {x2 y2} $v2 break
         return [expr {($x1*$y2) - ($y1*$x2)}]
     }
                ##+##########################################################################
                #   VRotate -- rotates vector counter-clockwise  beta [rad]
-    proc VRotate {v beta {unit {rad}}} {
+    proc vectormath::VRotate {v beta {unit {rad}}} {
         variable  CONST_PI
           if {$unit != {rad}} {
               set beta [ expr $beta * $CONST_PI / 180 ]
@@ -440,7 +540,6 @@
         set xx [expr {$x * cos($beta) - $y * sin($beta)}]
         set yy [expr {$x * sin($beta) + $y * cos($beta)}]
         return [list $xx $yy]
-    }
-  }  
+    } 
  
 
