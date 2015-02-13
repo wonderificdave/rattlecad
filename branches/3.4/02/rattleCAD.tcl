@@ -79,8 +79,8 @@ exec wish "$0" "$@"
     package     require tdom    
                     
     package     require appUtil             0.15
-    package     require vectormath          0.6
-    package     require bikeGeometry        1.37
+    package     require vectormath          0.7
+    package     require bikeGeometry        1.38
     package     require canvasCAD           0.52
     package     require extSummary          0.4
     package     require osEnv               0.8

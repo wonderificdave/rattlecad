@@ -1175,64 +1175,7 @@
             #
             #
         return 
-            #
-            
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_01
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_02
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_03
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_04
-            #
-            #
-            
-        # rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_dim_length_05
-        
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_01
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_02
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_03
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_04
-        # rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $_obj_line_05
-        
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_01
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_02
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_03
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_04
-        
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_11
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_12
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_13
-        #rattleCAD::view::gui::object_CursorBinding     $ext_cvName    $ctrlArea_14
-        # rattleCAD::view::gui::object_CursorBinding   $ext_cvName    $ctrlArea_15
-        
-        
-                                     # -- current_cv     object_ID      update_Command                        reference_Name
-        # canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_11   [namespace current]::move_ctrlPoints  1
-        # canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_12   [namespace current]::move_ctrlPoints  2
-        # canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_13   [namespace current]::move_ctrlPoints  3
-        # canvasCAD::register_dragObjects   $ext_cvName    $ctrlArea_14   [namespace current]::move_ctrlPoints  4
-        # canvasCAD::register_dragObjects   $ext_cvName  $ctrlArea_15   [namespace current]::move_ctrlPoints  5
-        
-        
-        return          
-            # $ext_cvName bind  $_dim_length_01   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_01)]
-            # $ext_cvName bind  $_dim_length_02   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_02)]
-            # $ext_cvName bind  $_dim_length_03   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_03)]
-            # $ext_cvName bind  $_dim_length_04   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_04)]
-            # $ext_cvName bind  $_dim_length_05 <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_05)]
-        
-        return          
-            # $ext_cvName bind  $_obj_line_01     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_01)]
-            # $ext_cvName bind  $_obj_line_02     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_02)]
-            # $ext_cvName bind  $_obj_line_03     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_03)]
-            # $ext_cvName bind  $_obj_line_04     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_04)]
-            # $ext_cvName bind  $_obj_line_05   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   FrameTubes(ChainStay/CenterLine/length_05)]
-        return        
-            # $ext_cvName bind  $ctrlArea_01      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   { FrameTubes(ChainStay/CenterLine/angle_01) FrameTubes(ChainStay/CenterLine/radius_01)  FrameTubes(ChainStay/CenterLine/length_01)  FrameTubes(ChainStay/CenterLine/length_02) }   {ChainStay:  Bent 01}]
-            # $ext_cvName bind  $ctrlArea_02      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   { FrameTubes(ChainStay/CenterLine/angle_02) FrameTubes(ChainStay/CenterLine/radius_02)  FrameTubes(ChainStay/CenterLine/length_02)  FrameTubes(ChainStay/CenterLine/length_03) }   {ChainStay:  Bent 02}]
-            # $ext_cvName bind  $ctrlArea_03      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   { FrameTubes(ChainStay/CenterLine/angle_03) FrameTubes(ChainStay/CenterLine/radius_03)  FrameTubes(ChainStay/CenterLine/length_03)  FrameTubes(ChainStay/CenterLine/length_04) }   {ChainStay:  Bent 03}]                                 
-            # $ext_cvName bind  $ctrlArea_04      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   { FrameTubes(ChainStay/CenterLine/angle_04) FrameTubes(ChainStay/CenterLine/radius_04)  FrameTubes(ChainStay/CenterLine/length_04) }   {ChainStay:  Bent 04}]
-
-
-                               
+            #          
     }
 
     proc rattleCAD::cv_custom::get_ChainWheel {z w position} {                    
@@ -1351,6 +1294,11 @@
                 set lastValues(S04)     [vectormath::length   $ctrl_Points(3)  $ctrl_Points(4) ]
                 set lastValues(S05)     [vectormath::length   $ctrl_Points(4)  $ctrl_Points(5) ]
                 
+                set lastValues(A01)     [set ctrl_Points(1)]
+                set lastValues(A02)     [set ctrl_Points(2)]
+                set lastValues(A03)     [set ctrl_Points(3)]
+                set lastValues(A04)     [set ctrl_Points(4)]
+                
                 set lastValues(P00)     [set ctrl_Points(0)]
                 set lastValues(P01)     [set ctrl_Points(1)]
                 set lastValues(P02)     [set ctrl_Points(2)]
@@ -1378,20 +1326,20 @@
                   # puts "\n-------------------\n\n\n\n"
             }  else {                
                   # ---
-                #set leftID         [expr $id - 1]
-                #set rightID        [expr $id + 1]
-                #set leftPos        [set ctrl_Points($leftID)]
-                #set rightPos       [set ctrl_Points($rightID)]
-                  # ---
-                #set lastPos        [set ctrl_Points($id)]
-                #set lastOffset     [vectormath::distancePerp $leftPos $lastPos $rightPos]
+                    #set leftID         [expr $id - 1]
+                    #set rightID        [expr $id + 1]
+                    #set leftPos        [set ctrl_Points($leftID)]
+                    #set rightPos       [set ctrl_Points($rightID)]
+                      # ---
+                    #set lastPos        [set ctrl_Points($id)]
+                    #set lastOffset     [vectormath::distancePerp $leftPos $lastPos $rightPos]
                   # ---
                 set myPos          [vectormath::addVector $ctrl_Points($id) [list $x [expr -1.0*$y]]]    
-                #set newOffset      [vectormath::distancePerp $leftPos $myPos $rightPos]
-                #set myRadius       [rattleCAD__model__getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $id]]
-                #set myAngle        [vectormath::angle $leftPos $myPos $rightPos]
-                #set myArcLength    [expr  $myRadius * ( 2 * $vectormath::CONST_PI * $myAngle / 360)]
-                  # ---
+                    #set newOffset      [vectormath::distancePerp $leftPos $myPos $rightPos]
+                    #set myRadius       [rattleCAD__model__getValue [format "FrameTubes/ChainStay/CenterLine/radius_0%i" $id]]
+                    #set myAngle        [vectormath::angle $leftPos $myPos $rightPos]
+                    #set myArcLength    [expr  $myRadius * ( 2 * $vectormath::CONST_PI * $myAngle / 360)]
+                      # ---
                 
                 set ctrl_Points($id) $myPos
 
@@ -1413,6 +1361,11 @@
             set P03_angle  [expr $S03_orient * (-180 + [vectormath::angle    $ctrl_Points(2) $ctrl_Points(3) $ctrl_Points(4)])]
             set P04_angle  [expr $S04_orient * (-180 + [vectormath::angle    $ctrl_Points(3) $ctrl_Points(4) $ctrl_Points(5)])]
                 #
+            set S01_radius [rattleCAD::model::get_Scalar ChainStay segmentRadius_01]
+            set S02_radius [rattleCAD::model::get_Scalar ChainStay segmentRadius_02]
+            set S03_radius [rattleCAD::model::get_Scalar ChainStay segmentRadius_03]
+            set S04_radius [rattleCAD::model::get_Scalar ChainStay segmentRadius_04]
+                #
             proc update_ctrlPointValues {keyValueList} {
                 set myList {}
                 foreach {key value} $keyValueList { 
@@ -1432,34 +1385,55 @@
                 rattleCAD::control::setValue $myList
             }
                 #
+                # -- check configuration of ChainStay CenterLine
+            set dict_ChainStay [dict create \
+                            segment_01  $S01_length \
+                            segment_02  $S02_length \
+                            segment_03  $S03_length \
+                            segment_04  $S04_length \
+                            segment_05  $S05_length \
+                            angle_01    $P01_angle \
+                            angle_02    $P02_angle \
+                            angle_03    $P03_angle \
+                            angle_04    $P04_angle \
+                            radius_01   $S01_radius \
+                            radius_02   $S02_radius \
+                            radius_03   $S03_radius \
+                            radius_04   $S04_radius \
+            ]
+                #
+            if {! [rattleCAD::model::validate_ChainStayCenterLine $dict_ChainStay]} {
+                    #
+                #tk_messageBox -type ok -message "   ... this is not a valid configuration: check radius at bent!"
+                    #
+                    # -- current config does not fit to radius, segment length and angles
+                    #      set the previous values as current
+                set S01_length [rattleCAD::model::get_Scalar ChainStay segmentLength_01]
+                set S02_length [rattleCAD::model::get_Scalar ChainStay segmentLength_02]
+                set S03_length [rattleCAD::model::get_Scalar ChainStay segmentLength_03]
+                set S04_length [rattleCAD::model::get_Scalar ChainStay segmentLength_04]
+                    #
+                set P01_angle  [rattleCAD::model::get_Scalar ChainStay segmentAngle_01]
+                set P02_angle  [rattleCAD::model::get_Scalar ChainStay segmentAngle_02]
+                set P03_angle  [rattleCAD::model::get_Scalar ChainStay segmentAngle_03]
+                set P04_angle  [rattleCAD::model::get_Scalar ChainStay segmentAngle_04]
+            }
+                #
+                #
             set keyValueList {}
-            
+                #
             lappend keyValueList Scalar/ChainStay/segmentLength_01      $S01_length
             lappend keyValueList Scalar/ChainStay/segmentLength_02      $S02_length
             lappend keyValueList Scalar/ChainStay/segmentLength_03      $S03_length
             lappend keyValueList Scalar/ChainStay/segmentLength_04      $S04_length
-                                      
+                #
             lappend keyValueList Scalar/ChainStay/segmentAngle_01       $P01_angle             
             lappend keyValueList Scalar/ChainStay/segmentAngle_02       $P02_angle
             lappend keyValueList Scalar/ChainStay/segmentAngle_03       $P03_angle
-            lappend keyValueList Scalar/ChainStay/segmentAngle_04       $P04_angle
-            
-              # lappend keyValueList FrameTubes/ChainStay/CenterLine/length_01        $S01_length
-              # lappend keyValueList FrameTubes/ChainStay/CenterLine/length_02        $S02_length
-              # lappend keyValueList FrameTubes/ChainStay/CenterLine/length_03        $S03_length
-              # lappend keyValueList FrameTubes/ChainStay/CenterLine/length_04        $S04_length
-              #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-              # lappend keyValueList FrameTubes/ChainStay/CenterLine/angle_01         $P01_angle
-              # lappend keyValueList FrameTubes/ChainStay/CenterLine/angle_02         $P02_angle
-              # lappend keyValueList FrameTubes/ChainStay/CenterLine/angle_03         $P03_angle
-              # lappend keyValueList FrameTubes/ChainStay/CenterLine/angle_04         $P04_angle
-              #
-              
-
+            lappend keyValueList Scalar/ChainStay/segmentAngle_04       $P04_angle           
+                 #
             update_ctrlPointValues $keyValueList
-              #
-              
-             
+                #
             puts "\n   -------------------------------"
             puts "       -> S01_length     [rattleCAD::model::get_Scalar ChainStay segmentLength_01]"
             puts "       -> S02_length     [rattleCAD::model::get_Scalar ChainStay segmentLength_02]"
@@ -1469,12 +1443,17 @@
             puts "       -> P02_angle      [rattleCAD::model::get_Scalar ChainStay segmentAngle_02]"
             puts "       -> P03_angle      [rattleCAD::model::get_Scalar ChainStay segmentAngle_03]"
             puts "       -> P04_angle      [rattleCAD::model::get_Scalar ChainStay segmentAngle_04]"
+            puts "       -> P01_radius     [rattleCAD::model::get_Scalar ChainStay segmentRadius_01]"
+            puts "       -> P02_radius     [rattleCAD::model::get_Scalar ChainStay segmentRadius_02]"
+            puts "       -> P03_radius     [rattleCAD::model::get_Scalar ChainStay segmentRadius_03]"
+            puts "       -> P04_radius     [rattleCAD::model::get_Scalar ChainStay segmentRadius_04]"
             
-              #set cv_Name     [rattleCAD::view::gui::current_canvasCAD]
-              #rattleCAD::cv_custom::clean_StageContent   $cv_Name
+                #set cv_Name     [rattleCAD::view::gui::current_canvasCAD]
+                #rattleCAD::cv_custom::clean_StageContent   $cv_Name
             rattleCAD::cv_custom::updateView [rattleCAD::view::gui::current_canvasCAD]
-            
+                #
             return
+                #
     }
 
     proc rattleCAD::cv_custom::create_sectionField {cv_Name xy {tag {}}} {
