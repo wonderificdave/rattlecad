@@ -54,19 +54,9 @@ puts "\n\n ====== I N I T ============================ \n\n"
         foreach {x1 y1} $p01 break
         foreach {x2 y2} $p02 break
         .c create line   $x1 $y1 $x2 $y2 -fill green -width 1
+        .c create oval   [expr $x1 - 2] [expr $y1 - 2] [expr $x1 + 2] [expr $y1 + 2] -outline red -width 2
             #
-        return    
-            # outside left
-        set vctTngt [vectormath::tangent2Circles $p1 $p2 $r1 $r2 outside left]
-        set p01 [lindex $vctTngt 0]
-        set p02 [lindex $vctTngt 1]
-        puts "------"
-        puts "     \$p1 \$p01 ....   $p1    $p01"
-        puts "     \$p2 \$p02 ....   $p2    $p02"
-        foreach {x1 y1} $p01 break
-        foreach {x2 y2} $p02 break
-        .c create line   $x1 $y1 $x2 $y2 -fill darkgreen -width 1
-            #
+
     }
 
     

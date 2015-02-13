@@ -36,9 +36,11 @@
  #	namespace:  vectormath
  # ---------------------------------------------------------------------------
  #
+ #  0.7 ... proc tangent_2_circles ... exception on equal radius
+ #      ... proc angleVector (use proc angle)
  #
 
-    package provide vectormath 0.6
+    package provide vectormath 0.7
   
     namespace eval vectormath {
             #
@@ -362,7 +364,7 @@
                         # puts "     -> $p01"
                         # puts "     -> $p02"
                         #
-                    if {$r1 > $r2} {
+                    if {$r1 >= $r2} {
                         return [list $p01 $p02]
                     } else {
                         return [list $p02 $p01]
@@ -456,6 +458,13 @@
         set theta [ expr $theta * 180 / $CONST_PI ]
           # puts "       -> $theta"
         return $theta
+    }
+    proc vectormath::angleVector {vct} {
+        variable CONST_PI
+        foreach {pc p2} $vct break
+        set p1 [addVector $pc {1 0}]
+        set angle [angle $p1 $pc $p2]
+        return $angle
     }
 
      
