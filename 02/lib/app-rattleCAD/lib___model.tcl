@@ -89,6 +89,8 @@ namespace eval rattleCAD::model {
         #
     namespace import ::bikeGeometry::get_DebugGeometry
         #
+    namespace import ::bikeGeometry::validate_ChainStayCenterLine
+        #
     namespace import ::bikeGeometry::coords_xy_index
         #
         # expired namespace import ::bikeGeometry::set_Value
@@ -137,6 +139,15 @@ namespace eval rattleCAD::model {
         return  [$geometry_IF set_Scalar ${object} ${key} ${value}]
             #
     }
+    
+
+    proc rattleCAD::model::validate_ChainStayCenterLine {dict} {
+            #
+        variable  geometry_IF
+        return  [$geometry_IF validate_ChainStayCenterLine $dict]
+            #
+    }    
+    
     proc rattleCAD::model::updateModel {} {
             #
         variable modelDICT
