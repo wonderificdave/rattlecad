@@ -182,6 +182,10 @@
  #          bikeGeometry::create_Fork_SteelLuggedMAX -> $Position(ForkBlade_End)
  #              bikeGeometry::tube::cut_centerLine_inside
  #
+ # 1.38 - 20150214
+ #      feature 
+ #          bikeGeometry::validate_ChainStayCenterLine
+ #
  # 1.xx refactor
  #          split project completely from bikeGeometry
  #
@@ -189,7 +193,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.37
+    package provide bikeGeometry 1.38
         #
     package require vectormath
         #
@@ -989,13 +993,13 @@
         return $dict_Geometry
     }
         #
-    proc bikeGeometry::get_ReynoldsFEAContent {} {
-        return [::bikeGeometry::lib_reynoldsFEA::get_Content]    
+    proc bikeGeometry::get_ReynoldsFEAContent_removed {} {
+        # return [::bikeGeometry::lib_reynoldsFEA::get_Content]    
     }
         #
-    proc bikeGeometry::get_openSCADContent {} {
-        set scadDict [bikeGeometry::geometry3D::get_scadContent]
-        return $scadDict
+    proc bikeGeometry::get_openSCADContent_removed {} {
+        # set scadDict [bikeGeometry::geometry3D::get_scadContent]
+        # return $scadDict
     }
         #
     #-------------------------------------------------------------------------

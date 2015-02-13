@@ -371,9 +371,9 @@ namespace eval bikeGeometry::tube {
                 set lastLength  $newLength
                 set lastXY      $xy
                 lappend centerLineCut $xy
-                     puts "   -> $x  <- $length_x"
+                    # puts "   -> $x  <- $length_x"
             } else {
-                     puts "   -> $x  <- $length_x ... exception"
+                    # puts "   -> $x  <- $length_x ... exception"
                 foreach {last_x last_y} $lastXY break
                 set seg_x       [expr $length_x - $last_x]
                 set segVct      [vectormath::unifyVector $lastXY $xy]
