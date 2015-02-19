@@ -194,7 +194,7 @@
     } 
     proc rattleCAD::view::edit::group_Chain_Parameter_15                {x y cv_Name} {
           rattleCAD::view::createEdit  $x $y $cv_Name  {
-                text://ListValue/CrankSetChainRings)
+                text://ListValue(CrankSetChainRings)
                        Scalar(RearDerailleur/Pulley_x)
                        Scalar(RearDerailleur/Pulley_y)
                        Scalar(RearDerailleur/Pulley_teeth)
@@ -559,7 +559,7 @@
             rattleCAD::view::createEdit $x $y $cv_Name {
                        Scalar(CrankSet/ChainLine)
                        Scalar(CrankSet/Q-Factor)
-                text://ListValue/CrankSetChainRings)
+                text://ListValue(CrankSetChainRings)
                 } "Crankset:  Parameter - 046"                        
     } 
     proc rattleCAD::view::edit::group_ChainStay_Area                    {x y cv_Name} {
