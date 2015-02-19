@@ -186,6 +186,10 @@
  #      feature 
  #          bikeGeometry::validate_ChainStayCenterLine
  #
+ # 1.39 - 20150219
+ #      cleanup 
+ #          remove bikeGeometry::tube::init_checkCenterLine
+ #
  # 1.xx refactor
  #          split project completely from bikeGeometry
  #
@@ -193,7 +197,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.38
+    package provide bikeGeometry 1.39
         #
     package require vectormath
         #

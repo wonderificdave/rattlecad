@@ -56,7 +56,7 @@ namespace eval bikeGeometry::tube {
             # puts "  -> $arcPrecission"
         
             #
-        set centerLineDef [init_checkCenterLine $centerLineDef]
+        # set centerLineDef [init_checkCenterLine $centerLineDef]
             #
       
             # --
@@ -150,7 +150,7 @@ namespace eval bikeGeometry::tube {
             #
     }
     
-    proc bikeGeometry::tube::init_checkCenterLine {centerLineDef} {
+    proc bikeGeometry::tube::init_checkCenterLine_remove {centerLineDef} {
             #
         foreach {S01_length S02_length S03_length S04_length S05_length \
                  P01_angle  P02_angle  P03_angle  P04_angle \
@@ -179,8 +179,7 @@ namespace eval bikeGeometry::tube {
         
         return $centerLineDef
     }
-    
-    
+
     proc bikeGeometry::tube::init_centerLineNextPosition {polyLine ctrlPoints lastRadius lastAngle lastDir distance nextRadius nextAngle nextDir} {
           #
         variable arcPrecission
