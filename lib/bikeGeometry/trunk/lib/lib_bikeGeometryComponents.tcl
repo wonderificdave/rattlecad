@@ -318,11 +318,11 @@
                 puts "\n                     -> <i> \$FrontFender(Radius) .......... $FrontFender(Radius)"
             }
                 #
-            set AngleHeadTube   [vectormath::dirAngle {0 0} $Direction(HeadTube)]
+            set AngleHeadTube       [vectormath::dirAngle {0 0} $Direction(HeadTube)]
                 #
-            set AngleStart      [expr $AngleHeadTube - $FrontFender(OffsetAngleFront)]
+            set AngleStart          [expr $AngleHeadTube - $FrontFender(OffsetAngleFront)]
                 #
-            set polygon         [_createFender $FrontFender(Radius) $AngleStart $FrontFender(OffsetAngle)  $FrontFender(Height)]
+            set polygon             [_createFender $FrontFender(Radius) $AngleStart $FrontFender(OffsetAngle)  $FrontFender(Height)]
                 #
             set Polygon(FrontFender)    [bikeGeometry::flatten_nestedList $polygon]
                 #
@@ -365,4 +365,49 @@
         return [bikeGeometry::flatten_nestedList $pointList]
             #
     }
+
+
+
+    #-------------------------------------------------------------------------
+        #  CrankSet
+    proc bikeGeometry::create_CrankArm {} {
+            #
+        variable CrankSet
+        variable Polygon
+        variable BottomBracket
+            #
+        set length_PedalMount   [expr 0.5 * $CrankSet(Q-Factor)  ]
+        set length_BB           [expr 0.5 * $BottomBracket(Width)]
+            #
+            
+            # -- help points
+        set pt_00       [ list [expr -1.0 * $CrankSet(Length)] [expr -1.0 *  $length_PedalMount + $CrankSet(ArmWidth) + 10] ]
+        set pt_02       [ list [expr -1.0 * $CrankSet(Length)] [expr -1.0 *  $length_PedalMount] ]
+        set pt_01       [ list [expr -1.0 * $CrankSet(Length)] [expr -1.0 *  $length_PedalMount + $CrankSet(ArmWidth)] ]
+        set pt_03       [ list [expr -1.0 * $CrankSet(Length)] [expr -1.0 * ($length_PedalMount + 10)] ]
+                
+            # -- polygon points: pedal mount
+        set pt_10       [ vectormath::addVector $pt_01 { 30.0 0} ]
+        set pt_11       [ vectormath::addVector $pt_01 [list [expr -1.0 * $CrankSet(PedalEye)] 0] ]
+        set pt_12       [ vectormath::addVector $pt_02 [list [expr -1.0 * $CrankSet(PedalEye)] 0] ]
+        set pt_13       [ vectormath::addVector $pt_02 { 40.0 0} ]
+        
+            # -- polygon points: BottomBracket mount
+        set pt_25       [ list -35 [expr -1.0 * ($length_BB + 15) ] ]
+        set pt_24       [ list -19 [expr -1.0 * ($length_BB + 10) ] ]
+        set pt_23       [ list -20 [expr -1.0 * ($length_BB +  5) ] ]
+        set pt_22       [ list  20 [expr -1.0 * ($length_BB +  5) ] ]
+        set pt_21       [ list  18 [expr -1.0 * ($length_BB + 30) ] ]
+        set pt_20       [ list -30 [expr -1.0 * ($length_BB + 30) ] ]
+            
+            #
+        set polygon         [ appUtil::flatten_nestedList   $pt_10  $pt_11  $pt_12  $pt_13 \
+                                                $pt_20  $pt_21  $pt_22  $pt_23  $pt_24  $pt_25] 
+            #
+        set Polygon(CrankArm_xy)    [bikeGeometry::flatten_nestedList $polygon]
+            #
+        return    
+            #
+    }
+    
 

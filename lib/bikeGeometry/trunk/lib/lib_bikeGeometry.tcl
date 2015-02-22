@@ -198,6 +198,9 @@
             create_FrontFender
             
                 #
+            create_CrankArm
+            
+                #
             create_FrameJig
 
                 #
@@ -589,6 +592,7 @@
                 # --- get CrankSet  -----------------------------
             set CrankSet(ArmWidth)                      $project::Component(CrankSet/ArmWidth)
             set CrankSet(ChainLine)                     $project::Component(CrankSet/ChainLine)
+            set CrankSet(ChainRingOffset)               $project::Component(CrankSet/ChainRingOffset)
             set CrankSet(Length)                        $project::Component(CrankSet/Length)
             set CrankSet(PedalEye)                      $project::Component(CrankSet/PedalEye)
             set CrankSet(Q-Factor)                      $project::Component(CrankSet/Q-Factor)
@@ -935,6 +939,7 @@
                 # --- get CrankSet  --------------------                            
             project::setValue Component(CrankSet/ArmWidth)                          value       $CrankSet(ArmWidth)                       
             project::setValue Component(CrankSet/ChainLine)                         value       $CrankSet(ChainLine)                      
+            project::setValue Component(CrankSet/ChainRingOffset)                   value       $CrankSet(ChainRingOffset)                      
             project::setValue Component(CrankSet/Length)                            value       $CrankSet(Length)                         
             project::setValue Component(CrankSet/PedalEye)                          value       $CrankSet(PedalEye)                       
             project::setValue Component(CrankSet/Q-Factor)                          value       $CrankSet(Q-Factor)                       

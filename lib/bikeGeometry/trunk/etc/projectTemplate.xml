@@ -302,6 +302,7 @@
             <ArmWidth>13.75</ArmWidth>
             <ChainLine>43.50</ChainLine>
             <ChainRings>22-32-44</ChainRings>
+            <ChainRingOffset>7</ChainRingOffset>
         </CrankSet>
         <Derailleur>
             <Front>

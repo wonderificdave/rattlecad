@@ -190,6 +190,13 @@
  #      cleanup 
  #          remove bikeGeometry::tube::init_checkCenterLine
  #
+ # 1.40 - 20150221
+ #      feature 
+ #          add Scalar: CrankSet(ChainRingOffset)
+ #          add proc bikeGeometry::create_CrankArm
+ #
+ #
+ #
  # 1.xx refactor
  #          split project completely from bikeGeometry
  #
@@ -197,7 +204,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.39
+    package provide bikeGeometry 1.40
         #
     package require vectormath
         #
@@ -480,9 +487,11 @@
             #            
         dict set projDict   Scalar      CrankSet ArmWidth                   $::bikeGeometry::CrankSet(ArmWidth)                             ;#[bikeGeometry::get_Scalar           CrankSet ArmWidth                 ]                ;# set _lastValue(Component/CrankSet/ArmWidth)                             
         dict set projDict   Scalar      CrankSet ChainLine                  $::bikeGeometry::CrankSet(ChainLine)                            ;#[bikeGeometry::get_Scalar           CrankSet ChainLine                ]                ;# set _lastValue(Component/CrankSet/ChainLine)                            
+        dict set projDict   Scalar      CrankSet ChainRingOffset            $::bikeGeometry::CrankSet(ChainRingOffset)                                     
         dict set projDict   Scalar      CrankSet Length                     $::bikeGeometry::CrankSet(Length)                               ;#[bikeGeometry::get_Scalar           CrankSet Length                   ]                ;# set _lastValue(Component/CrankSet/Length)                               
         dict set projDict   Scalar      CrankSet PedalEye                   $::bikeGeometry::CrankSet(PedalEye)                             ;#[bikeGeometry::get_Scalar           CrankSet PedalEye                 ]                ;# set _lastValue(Component/CrankSet/PedalEye)                             
         dict set projDict   Scalar      CrankSet Q-Factor                   $::bikeGeometry::CrankSet(Q-Factor)                             ;#[bikeGeometry::get_Scalar           CrankSet Q-Factor                 ]                ;# set _lastValue(Component/CrankSet/Q-Factor)                             
+            #
         dict set projDict   Scalar      DownTube DiameterBB                 $::bikeGeometry::DownTube(DiameterBB)                           ;#[bikeGeometry::get_Scalar           DownTube DiameterBB               ]                ;# set _lastValue(FrameTubes/DownTube/DiameterBB)                          
         dict set projDict   Scalar      DownTube DiameterHT                 $::bikeGeometry::DownTube(DiameterHT)                           ;#[bikeGeometry::get_Scalar           DownTube DiameterHT               ]                ;# set _lastValue(FrameTubes/DownTube/DiameterHT)                          
         dict set projDict   Scalar      DownTube OffsetBB                   $::bikeGeometry::DownTube(OffsetBB)                             ;#[bikeGeometry::get_Scalar           DownTube OffsetBB                 ]                ;# set _lastValue(Custom/DownTube/OffsetBB)                                

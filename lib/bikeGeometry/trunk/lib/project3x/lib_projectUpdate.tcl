@@ -1409,6 +1409,13 @@
                                 puts "                           ... update File ... /root/Custom/SeatTube/LengthVirtual"
                                 $parentNode appendXML  "<LengthVirtual>$virtualLength</LengthVirtual>"
                         } 
+                                # -- get Crankset ChainRingOffset
+                        set node [$projectDOM selectNode /root/Component/CrankSet/ChainRingOffset]
+                        if {$node == {}} {
+                                set parentNode      [$projectDOM selectNode /root/Component/CrankSet]
+                                puts "                           ... update File ... /root/Component/CrankSet/ChainRingOffset"
+                                $parentNode appendXML  "<ChainRingOffset>5</ChainRingOffset>"
+                        }
                     }
                 
                 {ab-xy} {	
