@@ -75,6 +75,7 @@
             set Length(PedalEye)            [rattleCAD::model::get_Scalar CrankSet PedalEye]
             set Length(CrankSet_ArmWidth)   [rattleCAD::model::get_Scalar CrankSet ArmWidth]
             set Length(ChainLine)           [rattleCAD::model::get_Scalar CrankSet ChainLine]
+            set Length(ChainRingOffset)     [rattleCAD::model::get_Scalar CrankSet ChainRingOffset]
 
                  #   puts "     BottomBracket(Position) -> $BottomBracket(Position)"
                  #   puts "     RearWheel(Position)    -> $RearWheel(Position)"
@@ -172,6 +173,7 @@
                                   # return
                                 }
             }
+            
                 # -- format Values
             proc format_XspaceY {xyList} {
                 set spaceList {}
@@ -182,6 +184,9 @@
                 return $spaceList
             }
             
+            
+            
+                # -- ChainStay
             switch [rattleCAD::model::get_Config ChainStay] {
                    {straight}   -
                    {bent}     { set ChainStay(start)           [rattleCAD::model::get_Position ChainStay_RearMockup]
@@ -194,14 +199,6 @@
                                 set ChainStay(centerLineUnCut) [vectormath::addVectorPointList $ChainStay(start) $ChainStay(centerLineUnCut)]
                                 set ChainStay(polygon)         [vectormath::addVectorPointList $ChainStay(start) $ChainStay(polygon)]
                                   #    
-                                    #
-                                    # replaced 3.4.01.60 - 2014.05.16
-                                    # set ChainStay(centerLine)    [lindex $retValues 0]
-                                    # set ChainStay(polygon)       [lindex $retValues 1]
-                                    # set ChainStay(ctrLines)      [lindex $retValues 2]
-                                    # set ChainStay(centerLine) [lindex $retValues 3]
-                                    # puts "   \$ChainStay(ctrLines) $ChainStay(ctrLines)"
-                                
                                 
                                   # puts "\n --> \$ChainStay(ctrLines) $ChainStay(ctrLines)"
                                 set tube_CS_left    [ $cv_Name create polygon  $ChainStay(polygon)        -fill $rattleCAD::view::colorSet(chainStay) \
@@ -214,45 +211,37 @@
                                     }  
                                 set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite       -fill $rattleCAD::view::colorSet(chainStay) \
                                                                                                           -outline black  -tags {__Tube__} ]
-
-                                    #$ext_cvName  create   polygon $outLine    -tags __Tube__         -fill lightgray
-                                    #$ext_cvName  create   line    $centerLine -tags __CenterLine__   -fill blue
-                                    #$ext_cvName  create   polygon      ...                           -fill gray -outline black  
                                   
                                 rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $tube_CS_CLine      option_ChainStay
                                 rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $tube_CS_left       option_ChainStay
                                 rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $tube_CS_right      option_ChainStay
                                     #
-                                    
-                                #rattleCAD::view::gui::object_CursorBinding   $cv_Name    $tube_CS_CLine
-                                #rattleCAD::view::gui::object_CursorBinding   $cv_Name    $tube_CS_left
-                                #rattleCAD::view::gui::object_CursorBinding   $cv_Name    $tube_CS_right
-                                 
-                                #$cv_Name bind   $tube_CS_CLine    <Double-ButtonPress-1>      [list rattleCAD::view::createEdit  %x %y  $cv_Name  { list://Rendering(ChainStay@SELECT_ChainStay) } {ChainStay:  CenterLine}]                               
-                                #$cv_Name bind   $tube_CS_left     <Double-ButtonPress-1>      [list rattleCAD::view::createEdit  %x %y  $cv_Name  { list://Rendering(ChainStay@SELECT_ChainStay) } {ChainStay:  Type}]
-                                #$cv_Name bind   $tube_CS_right    <Double-ButtonPress-1>      [list rattleCAD::view::createEdit  %x %y  $cv_Name  { list://Rendering(ChainStay@SELECT_ChainStay) } {ChainStay:  Type}]
                               }
                    default    { set ChainStay(polygon) {} }
             }
 
+               
+               
                # -- finisch Bottom Bracket  - Inner Shell
             $cv_Name create rectangle   $BB_InSide   -outline $rattleCAD::view::colorSet(frameTube_OL) \
                                                      -fill $rattleCAD::view::colorSet(chainStay_2) \
                                                      -width 1.0  -tags __Lug__
 
+               
+               
                # -- create BrakeDisc
             set brakeDisc [create_BrakeDisc]
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $brakeDisc       group_RearDiscBrake
-                # rattleCAD::view::gui::object_CursorBinding   $cv_Name    $brakeDisc
-                # $cv_Name bind   $brakeDisc    <Double-ButtonPress-1>        [list rattleCAD::view::createEdit  %x %y  $cv_Name  { Rendering(RearMockup/DiscDiameter)    Rendering(RearMockup/DiscWidth) Rendering(RearMockup/DiscClearance) }   {DiscBrake Details}]
+
+
 
                # -- create control Curves
             create_ControlCurves    
 
+
+
                # -- create tubeProfile Edit
-               # -- create centerLine Edit
-               
-               
+               # -- create centerLine Edit    
             switch -exact [rattleCAD::model::get_Config ChainStay] {
                    {bent} { create_centerLine_Edit   $ChainStay(ctrLines) {0 85}
                             create_tubeProfile_Edit  {0 140}
@@ -314,13 +303,6 @@
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Tyre_Width        single_RearWheel_TyreWidth
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Tyre_Radius       single_RearWheel_TyreWidthRadius
                    
-                    
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_CapHeight
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Width
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Tyre_Radius       
-                    # $cv_Name bind $_dim_Tyre_CapHeight  <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Result(Length/RearWheel/TyreShoulder) ]
-                    # $cv_Name bind $_dim_Tyre_Width      <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/TyreWidth) ]
-                    # $cv_Name bind $_dim_Tyre_Radius     <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/TyreWidthRadius) ]
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
                 # -- ChainStay length
@@ -330,8 +312,6 @@
                     
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_Length         single_RearWheel_Distance
                     
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_CS_Length
-                    # $cv_Name bind $_dim_CS_Length       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Custom(WheelPosition/Rear) ]
 
                     
                 # -- BottomBracket
@@ -353,14 +333,6 @@
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BB_Width          single_BottomBracket_Width  
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_BB_Offset      single_BottomBracket_CS_Offset_TopView   
                     
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_BB_Diam_inside       
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_BB_Diam_outside       
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_BB_Width       
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_CS_BB_Offset       
-                    # $cv_Name bind $_dim_BB_Diam_inside  <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/inside) ]
-                    # $cv_Name bind $_dim_BB_Diam_outside <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Diameter/outside) ]
-                    # $cv_Name bind $_dim_BB_Width        <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/Width) ]
-                    # $cv_Name bind $_dim_CS_BB_Offset    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Lugs(BottomBracket/ChainStay/Offset_TopView) ]
 
                     
                 # -- BrakeDisc
@@ -372,11 +344,11 @@
                                                                     $Colour(result) ] 
             set _dim_BrakeDisc_Diameter [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(CL_RearHub_02)  $Center(p_brakeDisc_01) ] \
                                                                     horizontal      [expr -10 * $stageScale]    0 \
-                                                                    $Colour(result) ] 
+                                                                    $Colour(primary) ] 
             
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BrakeDisc_Dist_Hub    single_RearHub_DiscOffset      
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_BrakeDisc_Dist_Hub       
-                    # $cv_Name bind $_dim_BrakeDisc_Dist_Hub  <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Rendering(RearMockup/DiscOffset) ]
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_BrakeDisc_Diameter    single_RearHub_DiscDiameter      
+
 
 
                 # -- RearHub
@@ -393,15 +365,9 @@
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Hub_Width         single_RearHub_Width      
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_DO_Distance    single_RearDropOut_CS_Offset    
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CS_DO_Offset      single_RearDropOut_CS_OffsetTopView       
-                    
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Hub_Width            
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_CS_DO_Distance
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_CS_DO_Offset
-                    # $cv_Name bind $_dim_Hub_Width       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(Wheel/Rear/HubWidth) ]
-                    # $cv_Name bind $_dim_CS_DO_Distance  <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Lugs(RearDropOut/ChainStay/Offset) ]
-                    # $cv_Name bind $_dim_CS_DO_Offset    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Lugs(RearDropOut/ChainStay/Offset_TopView) ]
-                  
-                                                                                      
+
+
+            
                 # -- CrankSet
             set _dim_Crank_Length       [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(Q_Factor) $Center(CL_BB_01) ] \
                                                                     horizontal        [expr   20 * $stageScale]    [expr -30 * $stageScale]  \
@@ -419,36 +385,33 @@
             set _dim_ChainLine          [ $cv_Name dimension  length      [ appUtil::flatten_nestedList   $Center(BottomBracket) $Center(ChainLine) ] \
                                                                     vertical        [expr  -90 * $stageScale]    [expr  0 * $stageScale]  \
                                                                     $Colour(primary) ]
-                    
-                    
+                                                                    
+                # -- create chainring offset dimension 
+            if {[llength $Center(list_ChainRing)] > 1} {
+                set pos_0 [lindex $Center(list_ChainRing) end-1]
+                set pos_1 [lindex $Center(list_ChainRing) end]
+                set _dim_ChainRingOffset [ $cv_Name dimension length      [ appUtil::flatten_nestedList   $pos_0 $pos_1 ] \
+                                                                    vertical        [expr -100 * $stageScale]    [expr 10 * $stageScale]  \
+                                                                    $Colour(primary) ]
+                rattleCAD::view::gui::dimension_CursorBinding  $cv_Name $_dim_ChainRingOffset  single_CrankSet_ChainRingOffset       
+            }
+
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Crank_Length      single_CrankSet_Length        
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_PedalEye          single_CrankSet_PedalEye    
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_Crank_Q_Factor    single_CrankSet_QFactor        
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_CrankArmWidth     single_CrankSet_ArmWidth    
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ChainLine         single_CrankSet_ChainLine
-                    
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Crank_Length       
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_PedalEye       
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_Crank_Q_Factor
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_CrankArmWidth       
-                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $_dim_ChainLine
-                    # $cv_Name bind $_dim_Crank_Length    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(CrankSet/Length) ]
-                    # $cv_Name bind $_dim_PedalEye        <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(CrankSet/PedalEye) ]
-                    # $cv_Name bind $_dim_Crank_Q_Factor  <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(CrankSet/Q-Factor) ]
-                    # $cv_Name bind $_dim_CrankArmWidth   <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(CrankSet/ArmWidth) ]
-                    # $cv_Name bind $_dim_ChainLine       <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  Component(CrankSet/ChainLine) ]
-           
-           
-           
+
+
+
                 # -- create CrankArm
-            #create_CrankArm
             $cv_Name raise {__CrankArm__}
             
             
             return           
 
     }
-    
+
     proc rattleCAD::cv_custom::create_Tyre {} {
             upvar  1 cv_Name        ext_cvName              
             upvar  1 Length         ext_Length
@@ -512,7 +475,7 @@
             
             
                 # -- create first Sprocket of Cassete
-            set sp_position     [ vectormath::addVector  $ext_Center(RearHub) {0 1} [ expr $ext_Length(04) - 3 ] ]
+            set sp_position     [ vectormath::addVector  $ext_Center(RearHub) {0 1} [ expr -1 * ($ext_Length(04) - 3) ] ]
             set sp_object       [ get_ChainWheel [rattleCAD::model::get_Scalar RearWheel FirstSprocket] 2 $sp_position ]
             set sp_polygon      [ lindex $sp_object 1 ]
             set sp_clearance    [ lindex $sp_object 2 ]
@@ -616,6 +579,10 @@
     }
 
     proc rattleCAD::cv_custom::create_CrankArm {} {
+                #
+            variable BottomBracket    
+                #
+            
             upvar  1 cv_Name            ext_cvName
             upvar  1 stageScale         ext_stageScale
             
@@ -650,6 +617,13 @@
                 # -- create canvas Object
             set polygon         [ appUtil::flatten_nestedList   $pt_10  $pt_11  $pt_12  $pt_13 \
                                                                 $pt_20  $pt_21  $pt_22  $pt_23  $pt_24  $pt_25] 
+            puts $polygon
+
+            set polygon         [ rattleCAD::model::get_Polygon CrankArm_xy  {0 0}]            
+            #set polygon         [ rattleCAD::model::get_Polygon CrankArm_xy  $BottomBracket(Position)]            
+            
+            puts $polygon
+                                                    
             
             set componentCrank  [ $ext_cvName create polygon         $polygon    -fill gray -outline black  -tags  {__Component__ __CrankArm__}]
             
@@ -669,21 +643,23 @@
             set ext_Center(CrankArm)        $pt_11 
             set ext_Center(PedalEye)        $pt_12 
             set ext_Center(ChainLine)       [ list 0 [expr -1.0 * $ext_Length(ChainLine) ] ]
+            set ext_Center(list_ChainRing)  {}
 
 
                 # -- create chainwheels
             set chainLine           [rattleCAD::model::get_Scalar CrankSet ChainLine]
-            set chainWheelDistance  5
+            set chainWheelDistance  [rattleCAD::model::get_Scalar CrankSet ChainRingOffset]
+            #set chainWheelDistance  5
             set chainWheelWidth     2
             set list_ChainRings     [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]]
                 # puts "  <D> create_CrankArm: [llength $list_ChainRings]"
             
             switch [llength $list_ChainRings] {
-                3   {   set chainWheelPos   [list 0 [expr $chainLine - $chainWheelDistance]] }
-                2   {   set chainWheelPos   [list 0 [expr $chainLine - 0.5 * $chainWheelDistance]] }
-                1   {   set chainWheelPos   [list 0 $chainLine] }
+                3   {   set chainWheelPos   [list 0 [expr -1 * ($chainLine -       $chainWheelDistance)]] }
+                2   {   set chainWheelPos   [list 0 [expr -1 * ($chainLine - 0.5 * $chainWheelDistance)]] }
+                1   {   set chainWheelPos   [list 0 [expr -1 * $chainLine]] }
                 default {
-                        set chainWheelPos   [list 0 $chainLine]
+                        set chainWheelPos   [list 0 [expr -1 * $chainLine]]
                         set list_ChainRings {}
                         tk_messageBox -message "max ChainWheel amount: 3\n      given Arguments: $list_ChainRings"
                     }
@@ -696,9 +672,10 @@
                     set cw_clearance    [ lindex $cw_object 0 ]
                     set cw_polygon      [ lindex $cw_object 1 ]
                     $ext_cvName create polygon     $cw_polygon     -fill gray -outline black  -tags {__Component__ __CrankArm__} 
-                
+                        #
+                    lappend ext_Center(list_ChainRing) $chainWheelPos
                         # -- position of next chainwheel
-                    set chainWheelPos   [ vectormath::addVector $chainWheelPos {0 1} $chainWheelDistance ]
+                    set chainWheelPos   [ vectormath::addVector $chainWheelPos {0 -1} $chainWheelDistance ]
                         
                         # -- add position to ext_ClearChainWheel
                     incr cw_index
@@ -818,7 +795,7 @@
             # rattleCAD::view::gui::object_CursorBinding    $ext_cvName $chainstayArea
             # $ext_cvName bind    $chainstayArea  <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $ext_cvName   { list://Rendering(ChainStay@SELECT_ChainStay)  Rendering(RearMockup/TyreClearance) Rendering(RearMockup/ChainWheelClearance)   Rendering(RearMockup/CrankClearance)    Rendering(RearMockup/CassetteClearance) }   {ChainStay:  Area}]                    
             return
-    }                   
+    }
 
     proc rattleCAD::cv_custom::create_ControlCurves {} {
             upvar  1 cv_Name    ext_cvName
@@ -1195,7 +1172,7 @@
             set pt_07           [ list [ expr -0.5 * $cw_Diameter_TK ] [expr -0.5 * $cw_Width] ]
             set pt_08           [ list [ expr -0.5 * $cw_Diameter    ] [expr -0.5 * ($cw_Width - 0.5)] ]
             
-            set position        [ list [lindex $position 0] [expr -1 * [lindex $position 1]] ]
+            # set position        [ list [lindex $position 0] [expr -1 * [lindex $position 1]] ]
             set pt_Clearance_l  [ vectormath::addVector [ list [ expr -0.5 * $cw_Diameter ] 0]  $position  ]
             set pt_Clearance_r  [ vectormath::addVector [ list [ expr  0.5 * $cw_Diameter ] 0]  $position  ]
             

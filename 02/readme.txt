@@ -1,5 +1,14 @@
 
 
+3.4.02.34  - 2014.02.21
+-------------------------------------------------------------------------------
+    feature:
+        ... RearMocku: edit rear BrakeDisc by dimension
+        ... bikeGeometry 1.40 
+            ... Scalar(CrankSet/ChainRingOffset) 
+            ... bikeGeometry::create_CrankArm 
+
+
 3.4.02.33  - 2014.02.19
 -------------------------------------------------------------------------------
     debug:
