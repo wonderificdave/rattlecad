@@ -195,6 +195,10 @@
  #          add Scalar: CrankSet(ChainRingOffset)
  #          add proc bikeGeometry::create_CrankArm
  #
+ # 1.41 - 20150223
+ #      refactor 
+ #          update proc bikeGeometry::create_CrankArm 
+ #
  #
  #
  # 1.xx refactor
@@ -204,7 +208,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.40
+    package provide bikeGeometry 1.41
         #
     package require vectormath
         #

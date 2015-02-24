@@ -394,10 +394,10 @@
         
             # -- polygon points: BottomBracket mount
         set pt_25       [ list -35 [expr -1.0 * ($length_BB + 15) ] ]
-        set pt_24       [ list -19 [expr -1.0 * ($length_BB + 10) ] ]
-        set pt_23       [ list -20 [expr -1.0 * ($length_BB +  5) ] ]
-        set pt_22       [ list  20 [expr -1.0 * ($length_BB +  5) ] ]
-        set pt_21       [ list  18 [expr -1.0 * ($length_BB + 30) ] ]
+        set pt_24       [ list -23 [expr -1.0 * ($length_BB + 10) ] ]
+        set pt_23       [ list -23 [expr -1.0 * ($length_BB +  5) ] ]
+        set pt_22       [ list  23 [expr -1.0 * ($length_BB +  5) ] ]
+        set pt_21       [ list  21 [expr -1.0 * ($length_BB + 30) ] ]
         set pt_20       [ list -30 [expr -1.0 * ($length_BB + 30) ] ]
             
             #
