@@ -199,6 +199,10 @@
  #      refactor 
  #          update proc bikeGeometry::create_CrankArm 
  #
+ # 1.42 - 20150310
+ #      refactor 
+ #          update proc bikeGeometry::create_CrankArm 
+ #
  #
  #
  # 1.xx refactor
@@ -208,7 +212,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.41
+    package provide bikeGeometry 1.42
         #
     package require vectormath
         #

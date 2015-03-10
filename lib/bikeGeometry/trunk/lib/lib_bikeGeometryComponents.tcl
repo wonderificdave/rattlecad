@@ -393,16 +393,24 @@
         set pt_13       [ vectormath::addVector $pt_02 { 40.0 0} ]
         
             # -- polygon points: BottomBracket mount
-        set pt_25       [ list -35 [expr -1.0 * ($length_BB + 15) ] ]
-        set pt_24       [ list -23 [expr -1.0 * ($length_BB + 10) ] ]
-        set pt_23       [ list -23 [expr -1.0 * ($length_BB +  5) ] ]
-        set pt_22       [ list  23 [expr -1.0 * ($length_BB +  5) ] ]
+            # set pt_25       [ list -35 [expr -1.0 * ($length_BB + 15) ] ]
+            # set pt_24       [ list -23 [expr -1.0 * ($length_BB + 10) ] ]
+            # set pt_23       [ list -23 [expr -1.0 * ($length_BB +  5) ] ]
+            # set pt_22       [ list  23 [expr -1.0 * ($length_BB +  5) ] ]
+            # set pt_21       [ list  21 [expr -1.0 * ($length_BB + 30) ] ]
+            # set pt_20       [ list -30 [expr -1.0 * ($length_BB + 30) ] ]
+                 #
+            # set polygon         [ appUtil::flatten_nestedList   $pt_10  $pt_11  $pt_12  $pt_13 \
+                                                     #$pt_20  $pt_21  $pt_22  $pt_23  $pt_24  $pt_25] 
+            #
+        set pt_26       [ list -65 [expr -1.0 * ($length_BB + 17) ] ]
+        set pt_25       [ list -35 [expr -1.0 * ($length_BB + 13) ] ]
+        set pt_22       [ list  22 [expr -1.0 * ($length_BB + 13) ] ]
         set pt_21       [ list  21 [expr -1.0 * ($length_BB + 30) ] ]
         set pt_20       [ list -30 [expr -1.0 * ($length_BB + 30) ] ]
-            
             #
         set polygon         [ appUtil::flatten_nestedList   $pt_10  $pt_11  $pt_12  $pt_13 \
-                                                $pt_20  $pt_21  $pt_22  $pt_23  $pt_24  $pt_25] 
+                                                $pt_20  $pt_21  $pt_22  $pt_25 ] 
             #
         set Polygon(CrankArm_xy)    [bikeGeometry::flatten_nestedList $polygon]
             #
