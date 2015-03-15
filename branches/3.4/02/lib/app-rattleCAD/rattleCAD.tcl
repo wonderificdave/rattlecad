@@ -163,11 +163,11 @@
               # -- MainFrame - Indicator  -----------
           set ::APPL_Config(MainFrameInd_Project)  {}
           set ::APPL_Config(MainFrameInd_Status)   {}
-
+              #
           
     }
-        
-	
+
+
     #-------------------------------------------------------------------------
         #  set initialze rattleCAD
         #
@@ -599,7 +599,6 @@
     }
 
 
-        
     #-------------------------------------------------------------------------
         # check user settings in $::APPL_Config(USER_Dir)/_rattleCAD_[info hostname].init
         #            
@@ -768,19 +767,24 @@
                 read_userInit
         }
     }
-    
-    
+
+
     #-------------------------------------------------------------------------
        #  startup intro image
        #
     proc create_intro {w {type toplevel} {cv_border 0} } {
 
         variable APPL_Config
-        
+            
+            #
         puts "\n"
         puts "  create_intro: \$APPL_Config(IMAGE_Dir)  $APPL_Config(IMAGE_Dir)"
-
-        
+            #
+            
+            #
+        catch {destroy .intro}
+            #
+            
         proc intro_content {w cv_border} {
       
             global APPL_Config
@@ -820,7 +824,7 @@
         if { $type != "toplevel" } {        
             return [intro_content $w $cv_border]
         }
-
+        
         toplevel $w  -bd 0
 
         wm withdraw           $w  
@@ -856,6 +860,7 @@
         set  APPL_Config(WINDOW_Title)  "rattleCAD  $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision) - $filename"
         wm title . $APPL_Config(WINDOW_Title)
     }
+
 
     #-------------------------------------------------------------------------
        #  set Window Title

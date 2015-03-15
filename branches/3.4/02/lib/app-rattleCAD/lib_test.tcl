@@ -42,12 +42,17 @@
     proc runDemo {{testProcedure {}}} {
         variable runningStatus on
         
+            #
+        catch {destroy .intro}
+            #
+            
         if {$testProcedure == {}} {
             set testProcedure   integrationTest_00     
-        }  
+        }
+            #
         set timeStart    [clock milliseconds]
         set messageValue "... runDemo started"
-          #
+            #
         
         switch -exact $testProcedure {
             integrationTest_00 {
