@@ -1,5 +1,16 @@
 
 
+3.4.02.37  - 2014.03.15
+-------------------------------------------------------------------------------
+    refactor:
+        ... bikeGeometry 1.43
+            ... bikeGeometry::create_CrankArm 
+        ... create_intro 
+            ... destroy .intro if exist
+        ... rattleCAD::test
+            ... destroy .intro if exist
+
+
 3.4.02.36  - 2014.03.10
 -------------------------------------------------------------------------------
     refactor:
