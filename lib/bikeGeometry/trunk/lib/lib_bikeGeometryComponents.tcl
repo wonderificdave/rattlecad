@@ -390,7 +390,7 @@
         set pt_10       [ vectormath::addVector $pt_01 { 30.0 0} ]
         set pt_11       [ vectormath::addVector $pt_01 [list [expr -1.0 * $CrankSet(PedalEye)] 0] ]
         set pt_12       [ vectormath::addVector $pt_02 [list [expr -1.0 * $CrankSet(PedalEye)] 0] ]
-        set pt_13       [ vectormath::addVector $pt_02 { 40.0 0} ]
+        set pt_13       [ vectormath::addVector $pt_02 { 35.0 0} ]
         
             # -- polygon points: BottomBracket mount
             # set pt_25       [ list -35 [expr -1.0 * ($length_BB + 15) ] ]
@@ -404,7 +404,7 @@
                                                      #$pt_20  $pt_21  $pt_22  $pt_23  $pt_24  $pt_25] 
             #
         set pt_26       [ list -65 [expr -1.0 * ($length_BB + 17) ] ]
-        set pt_25       [ list -35 [expr -1.0 * ($length_BB + 13) ] ]
+        set pt_25       [ list -33 [expr -1.0 * ($length_BB + 13) ] ]
         set pt_22       [ list  22 [expr -1.0 * ($length_BB + 13) ] ]
         set pt_21       [ list  21 [expr -1.0 * ($length_BB + 30) ] ]
         set pt_20       [ list -30 [expr -1.0 * ($length_BB + 30) ] ]
