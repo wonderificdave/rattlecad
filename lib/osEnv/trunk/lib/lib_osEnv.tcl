@@ -38,7 +38,7 @@ exec wish "$0" "$@"
  #
   
 
-      proc osEnv::_init_tcl_info {} {
+    proc osEnv::_init_tcl_info {} {
         variable registryDOM
             #
         set domNode [$registryDOM selectNode tcl]
@@ -65,8 +65,8 @@ exec wish "$0" "$@"
             #
         set domNode [$registryDOM selectNode tcl/platform]
             #
-        puts "\n   ... init_tcl_platform" 
-        #
+        # puts "\n   ... init_tcl_platform" 
+            #
         foreach key [lsort [array names ::tcl_platform]] {
               # puts "   ... $key  $::env($key)"
             catch {_dom_add_nameValue $domNode $key  "$::tcl_platform($key)"}
@@ -79,8 +79,8 @@ exec wish "$0" "$@"
             #
         set domNode [$registryDOM selectNode os/env]
             #
-        puts "\n   ... init_os_env" 
-        #
+        # puts "\n   ... init_os_env" 
+            #
         foreach key [lsort [array names ::env]] {
               # puts "   ... $key  $::env($key)"
             switch -glob -- $key {
@@ -117,129 +117,129 @@ exec wish "$0" "$@"
     }
 
 
-  proc osEnv::_add_Executable {execName} {
-      variable registryDOM
-          #
-      set domDOC    [$registryDOM ownerDocument]
-          # puts "   ->  _add_Executable $execName"   
-      switch -exact $execName {
-          GhostScript -
-          gs {
-              set applCmd [_get_ghostscriptExec]
-          }
-          default {
-              set applCmd {}
-          }
-      }    
-          #
-      if {$applCmd != {}} {
-          set domNode [$registryDOM selectNode os/exec]
-              #       
-          set domDOC    [$domNode ownerDocument]
-          set execNode  [$domDOC createElement exec]
-              #
-          $execNode setAttribute name $execName
-              #
-          $domNode appendChild $execNode
-              #
-          $execNode appendChild [$domDOC createTextNode "$applCmd"] 
-      }
-  } 
+    proc osEnv::_add_Executable {execName} {
+        variable registryDOM
+            #
+        set domDOC    [$registryDOM ownerDocument]
+            # puts "   ->  _add_Executable $execName"   
+        switch -exact $execName {
+            GhostScript -
+            gs {
+                set applCmd [_get_ghostscriptExec]
+            }
+            default {
+                set applCmd {}
+            }
+        }    
+            #
+        if {$applCmd != {}} {
+            set domNode [$registryDOM selectNode os/exec]
+                #       
+            set domDOC    [$domNode ownerDocument]
+            set execNode  [$domDOC createElement exec]
+                #
+            $execNode setAttribute name $execName
+                #
+            $domNode appendChild $execNode
+                #
+            $execNode appendChild [$domDOC createTextNode "$applCmd"] 
+        }
+    } 
 
 
-
-  proc osEnv::_get_exec_inPATH {execName} {  
-          # puts "   -> osEnv::_get_exec_Application $execName"
-      switch -exact $::tcl_platform(platform) {
-          "windows" { 
-               set dirList [split $::env(PATH) \;]
-          }
-          default {
-               set dirList [split $::env(PATH) \;]
-          }
-      }
-      # -------------
-          # puts "  -> $dirList"
-      # -------------
-      foreach directory $dirList {
-          set executable [file join $directory $execName]
-              # puts "$executable"
-          if {[file executable $executable]} {
-              return "$executable"
-          }
-      }
-      return {}
-  }
-
-   
-  proc osEnv::_init_os_mimeType {} {
-          #
-      puts "\n   ... init_os_mimeType" 
-      #
-      _add_ApplMimeType .ps
-      _add_ApplMimeType .pdf
-      _add_ApplMimeType .html
-      _add_ApplMimeType .svg
-      _add_ApplMimeType .dxf
-      _add_ApplMimeType .jpg
-      _add_ApplMimeType .gif
-  }
+    proc osEnv::_get_exec_inPATH {execName} {  
+            # puts "   -> osEnv::_get_exec_Application $execName"
+        switch -exact $::tcl_platform(platform) {
+            "windows" { 
+                 set dirList [split $::env(PATH) \;]
+            }
+            default {
+                 set dirList [split $::env(PATH) \;]
+            }
+        }
+            # -------------
+            # puts "  -> $dirList"
+            # -------------
+        foreach directory $dirList {
+            set executable [file join $directory $execName]
+                # puts "$executable"
+            if {[file executable $executable]} {
+                return "$executable"
+            }
+        }
+            #
+        return {}
+    }
 
 
-  proc osEnv::_init_os_executable {} {
-          #
-      puts "\n   ... init_os_executable" 
-      #
-      _add_Executable gs         ; # {GPL Ghostscript}
-  }     
+    proc osEnv::_init_os_mimeType {} {
+            #
+        puts "\n   ... init_os_mimeType" 
+            #
+        _add_ApplMimeType .ps
+        _add_ApplMimeType .pdf
+        _add_ApplMimeType .html
+        _add_ApplMimeType .svg
+        _add_ApplMimeType .dxf
+        _add_ApplMimeType .jpg
+        _add_ApplMimeType .gif
+    }
 
 
+    proc osEnv::_init_os_executable {} {
+            #
+        puts "\n   ... init_os_executable" 
+            #
+        _add_Executable gs         ; # {GPL Ghostscript}
+    }     
 
-  proc osEnv::_add_ApplMimeType {mimeType} {
-      variable registryDOM
-          #
-      set domDOC    [$registryDOM ownerDocument]
-      set applCmd [find_mimeType_Application $mimeType]
-          #
-      if {$applCmd != {}} {  
-          set domNode  [$registryDOM selectNode os/mime]
-              #
-          set mimeNode  [$domDOC createElement mime]
-              #
-          $mimeNode setAttribute name $mimeType
-              #
-          $domNode appendChild $mimeNode
-              #
-          $mimeNode appendChild [$domDOC createTextNode "$applCmd"] 
-      }   
-  }
 
-  
-  proc osEnv::_dom_add_nameValue {domNode nodeName nodeValue} {
-  
-        # puts "-> _dom_add_nameValue $domNode $nodeName $nodeValue"
-	  set domDOC    [$domNode ownerDocument]
-      set nameNode  [$domDOC createElement $nodeName]
-      $domNode appendChild "$nameNode"
-      
+    
+    proc osEnv::_add_ApplMimeType {mimeType} {
+        variable registryDOM
+            #
+        set domDOC    [$registryDOM ownerDocument]
+        set applCmd [find_mimeType_Application $mimeType]
+            #
+        if {$applCmd != {}} {  
+            set domNode  [$registryDOM selectNode os/mime]
+                #
+            set mimeNode  [$domDOC createElement mime]
+                #
+            $mimeNode setAttribute name $mimeType
+                #
+            $domNode appendChild $mimeNode
+                #
+            $mimeNode appendChild [$domDOC createTextNode "$applCmd"] 
+        }   
+    }
 
-      if {[llength $nodeValue] == 1} {
-          $nameNode appendChild [$domDOC createTextNode $nodeValue] 
-      } else {
-          foreach arg $nodeValue {
-              switch -exact $nodeName {
-                  {loaded} {
-                           foreach {value name} $arg break
-                      }
-                  default {
-                           foreach {name value} $arg break
-                      }
-              }
-                # puts "        ... $name / $value"
-              set listNode  [$domDOC createElement $name]
-              $nameNode appendChild $listNode
-              $listNode appendChild [$domDOC createTextNode $value] 
-          }
-      }
-  }
-  
+
+    proc osEnv::_dom_add_nameValue {domNode nodeName nodeValue} {
+    
+          # puts "-> _dom_add_nameValue $domNode $nodeName $nodeValue"
+	    set domDOC    [$domNode ownerDocument]
+        set nameNode  [$domDOC createElement $nodeName]
+        $domNode appendChild "$nameNode"
+        
+    
+        if {[llength $nodeValue] == 1} {
+            $nameNode appendChild [$domDOC createTextNode $nodeValue] 
+        } else {
+            foreach arg $nodeValue {
+                switch -exact $nodeName {
+                    {loaded} {
+                             foreach {value name} $arg break
+                        }
+                    default {
+                             foreach {name value} $arg break
+                        }
+                }
+                  # puts "        ... $name / $value"
+                set listNode  [$domDOC createElement $name]
+                $nameNode appendChild $listNode
+                $listNode appendChild [$domDOC createTextNode $value] 
+            }
+        }
+    }
+    
