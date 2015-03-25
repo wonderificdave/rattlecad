@@ -139,10 +139,12 @@
                 {command "&Help"            {}  "Help"                  {Ctrl h}        -command { rattleCAD::infoPanel::create  .v_info 1} }
                 {command "ChangeLog"        {}  "ChangeLog"             {}              -command { rattleCAD::infoPanel::create  .v_info 7} }
                 {separator} 
-                {command "rattleCAD WebSite"      {}  "about rattleCAD"       {}        -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/index.html} } }
+                {command "rattleCAD WebSite"      {}  "about rattleCAD"       {}        -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/index.html}    } }
                 {command "rattleCAD Features"     {}  "rattleCAD Features"    {}        -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/features.html} } }
-                {command "project @ sourceforge"  {}  "sourceforge.net"       {}        -command { rattleCAD::model::file::open_URL {http://sourceforge.net/projects/rattlecad} } }
-                {command "like rattleCAD"         {}  "donate"                {}        -command { rattleCAD::model::file::open_URL {https://sourceforge.net/project/project_donations.php?group_id=301054} } }
+                {command "project @ sourceforge"  {}  "sourceforge.net"       {}        -command { rattleCAD::model::file::open_URL {http://sourceforge.net/projects/rattlecad}      } }
+            }
+            " ... contribute"   all info 0 {   
+                {command "... to the rattleCAD Project" {} "like and donate"  {}        -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/donate.html}   } }
             }
         }
         
@@ -182,12 +184,15 @@
             Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
             Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
             
-            Button    $tb_frame.scale_p  -image  $iconArray(scale_p)        -helptext "scale plus"              -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 3.0/2] }  
-            Button    $tb_frame.scale_m  -image  $iconArray(scale_m)        -helptext "scale minus"             -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 2.0/3] }  
-            Button    $tb_frame.resize   -image  $iconArray(resize)         -helptext "resize"                  -command { rattleCAD::view::gui::notebook_refitCanvas }  
+            Button    $tb_frame.scale_p   -image  $iconArray(scale_p)       -helptext "scale plus"              -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 3.0/2] }  
+            Button    $tb_frame.scale_m   -image  $iconArray(scale_m)       -helptext "scale minus"             -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 2.0/3] }  
+            Button    $tb_frame.resize    -image  $iconArray(resize)        -helptext "resize"                  -command { rattleCAD::view::gui::notebook_refitCanvas }  
             
-            Button    $tb_frame.cfg      -image  $iconArray(cfg_panel)      -helptext "open config Panel"       -command { rattleCAD::configPanel::create } 
-            Button    $tb_frame.exit     -image  $iconArray(exit)                                               -command { rattleCAD::view::gui::exit_rattleCAD }
+            Button    $tb_frame.cfg       -image  $iconArray(cfg_panel)     -helptext "open config Panel"       -command { rattleCAD::configPanel::create } 
+            
+            Button    $tb_frame.donate    -image  $iconArray(donate)        -helptext "donate to rattleCAD"     -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/donate.html}   } 
+            
+            Button    $tb_frame.exit      -image  $iconArray(exit)                                              -command { rattleCAD::view::gui::exit_rattleCAD }
               
             label   $tb_frame.sp0      -text   " "
             label   $tb_frame.sp1      -text   " "
@@ -197,6 +202,7 @@
             label   $tb_frame.sp5      -text   "      "
             label   $tb_frame.sp6      -text   " "
             label   $tb_frame.sp7      -text   " "
+			label   $tb_frame.sp8      -text   " "
 					
               
                 # pack    $tb_frame.open     $tb_frame.save     $tb_frame.clear    $tb_frame.print    $tb_frame.sp0  \
@@ -214,10 +220,11 @@
                        
                 # pack    $tb_frame.exit   $tb_frame.sp6  \
                 #        $tb_frame.resize $tb_frame.scale_p $tb_frame.scale_m   \
-                #
-            pack    $tb_frame.exit      $tb_frame.sp6       \
-                    $tb_frame.resize    $tb_frame.scale_p   $tb_frame.scale_m   \
-                    $tb_frame.sp7       $tb_frame.cfg       \
+                # $tb_frame.donate    $tb_frame.sp7       \
+                #    
+            pack    $tb_frame.exit      $tb_frame.sp8       \
+                    $tb_frame.resize    $tb_frame.scale_p   $tb_frame.scale_m   $tb_frame.sp6  \
+                    $tb_frame.cfg       \
                 -side right 
                 
                 # ---------------------------------------------

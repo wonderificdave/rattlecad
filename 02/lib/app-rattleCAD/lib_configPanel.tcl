@@ -139,8 +139,9 @@
                 #
             wm geometry     $w +$pos_x+$pos_y
             wm title        $w "Configuration Panel"
-            wm attributes   $w -toolwindow 
             wm transient    $w $master  
+                #
+                # wm attributes   $w -toolwindow
                 #
             focus           $w
                 #
