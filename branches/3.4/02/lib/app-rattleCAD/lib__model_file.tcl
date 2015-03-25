@@ -526,8 +526,8 @@
     #-------------------------------------------------------------------------
        #  open web URL
        #
-    proc open_URL {url} {
-            osEnv::open_by_mimeType_DefaultApp  $url
+    proc open_URL {url {mimeType {}}} {
+            osEnv::open_by_mimeType_DefaultApp  $url $mimeType
             return
     }
 

@@ -417,7 +417,7 @@
                                             $cv_Name addtag  __Decoration__ withtag $RearFender(object)
                 
                 if {$updateCommand != {}} {
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $RearFender(object)      group_FrontFender_Parameter_0
+                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $RearFender(object)      group_FrontFender_Parameter_08
                 }
             }
         

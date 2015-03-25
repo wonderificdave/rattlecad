@@ -34,6 +34,7 @@
         <image name="config_panel"      src="config_panel.gif" />
         <image name="iconClose"         src="iconClose.gif" />
         <image name="confirm"           src="confirm.gif" />
+        <image name="donate"            src="paypal_donate_grey.gif" />
       </images>
     </lib_gui>	
     

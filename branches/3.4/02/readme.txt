@@ -1,5 +1,15 @@
 
 
+3.4.02.38  - 2014.03.23
+-------------------------------------------------------------------------------
+    debug:
+        ... rear-fender edit
+            ... rattleCAD::view::edit::group_FrontFender_Parameter_08
+        ... remove   "wm attributes   $w -toolwindow" for MacOS and others
+    refactor:
+        ... add donate to the MenuBar
+
+
 3.4.02.37  - 2014.03.15
 -------------------------------------------------------------------------------
     refactor:
