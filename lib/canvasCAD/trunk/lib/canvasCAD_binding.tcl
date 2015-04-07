@@ -284,14 +284,27 @@
         #   
     proc canvasCAD::dragContent {w id x y} {
             variable  CANVAS_Point 
-     
+              #
+            # puts "    -> proc canvasCAD::dragContent $w $id $x $y"
+              #
             set xDiff [expr $x - $CANVAS_Point(x1)]
             set yDiff [expr $y - $CANVAS_Point(y1)]
-            
+              #
             set CANVAS_Point(x1) $x
             set CANVAS_Point(y1) $y
-            
-              # puts "    -> proc canvasCAD::dragContent $w $id $x $y"
+              #
+            set tagList [$w gettags $id]
+              # -- drag -> x ----
+            if {[lsearch $tagList {__dragObject_x__}] > 0} {
+                $w move $id $xDiff 0
+                return 
+            }
+              # -- drag -> y ----
+            if {[lsearch $tagList {__dragObject_y__}] > 0} {
+                $w move $id 0 $yDiff
+                return 
+            }
+              # -- default
             $w move $id $xDiff $yDiff
             return
     } 
@@ -405,7 +418,7 @@
 
  				#--------------------------------------------------------
 					#  update configCorner
-            configCorner::update $w                     
+            configCorner::updateSelf $w                     
     }
 
 	#-------------------------------------------------------------------------
@@ -482,7 +495,7 @@
 
  				#--------------------------------------------------------
 					#  update configCorner
-            configCorner::update $w         
+            configCorner::updateSelf $w         
     } 
     
     

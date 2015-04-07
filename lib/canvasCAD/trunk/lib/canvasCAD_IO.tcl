@@ -42,43 +42,43 @@
   #-------------------------------------------------------------------------
     #  read SVG from File
     #
-  proc canvasCAD::readSVG {canvasDOMNode file {canvasPosition {0 0}} {angle {0}} {customTag {}} } {
+    proc canvasCAD::readSVG {canvasDOMNode file {canvasPosition {0 0}} {angle {0}} {customTag {}} } {
     
-      set fp [open $file]
-          
-      fconfigure    $fp -encoding utf-8
-      set xml [read $fp]
-      close         $fp
-      
-      set doc  [dom parse  $xml]
-      set root [$doc documentElement]
-
-      set center_Node [$root find id center_00]
-      if { $center_Node != {} } {
-          set svgPosition(x)  [$center_Node getAttribute cx]
-          set svgPosition(y)  [$center_Node getAttribute cy]
-      } else {
+        set fp [open $file]
+            
+        fconfigure    $fp -encoding utf-8
+        set xml [read $fp]
+        close         $fp
+        
+        set doc  [dom parse  $xml]
+        set root [$doc documentElement]
+    
+        set center_Node [$root find id center_00]
+        if { $center_Node != {} } {
+            set svgPosition(x)  [$center_Node getAttribute cx]
+            set svgPosition(y)  [$center_Node getAttribute cy]
+        } else {
             # puts "     ... no id=\"center_00\""
-          set svgPosition(x)  0
-          set svgPosition(y)  0
-      }
+            set svgPosition(x)  0
+            set svgPosition(y)  0
+        }
             set svgCenter [list $svgPosition(x) $svgPosition(y)]
-
+    
                     # puts "  -> [namespace current]"
                     # puts "\n [$root nodeName]\n"
                 
                 #
         # -- define a unique id for svgContent
         #
-      set w       [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]        
-      if {$customTag eq {}} { 
+        set w       [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]        
+        if {$customTag eq {}} { 
         set svgTag      [format "svg_%s" [llength [$w find withtag all]] ]
         set $svgTag     {}
-      } else {
+        } else {
         set svgTag     $customTag
-      }
-      
-      # set svgTag      [format "svg_%s" [llength [$w find withtag all]] ]
+        }
+        
+        # set svgTag      [format "svg_%s" [llength [$w find withtag all]] ]
     
                 #
         # -- get graphic content nodes
@@ -90,7 +90,7 @@
         $w addtag $svgTag withtag $newNode
                 set svgNode [$svgNode nextSibling]
             }            
-      return $svgTag
+        return $svgTag
             
             set nodeList [$root childNodes]
             foreach svgNode $nodeList {
@@ -98,29 +98,29 @@
                 set newNode [write_svgNode $canvasDOMNode $svgNode $canvasPosition $svgCenter $angle $svgTag]
         $w addtag $svgTag withtag $newNode
             }            
-      # return $svgTag 
+        # return $svgTag 
     }
     
-  #-------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
     #  read SVG from File
     #
-  proc write_svgNode {canvasDOMNode svgNode canvasPosition svgCenter angle svgTag {svgTag {}}} {
+    proc write_svgNode {canvasDOMNode svgNode canvasPosition svgCenter angle svgTag {svgTag_20141118 {}}} {
             
         #
         # -- canvasPosition
         #
-      foreach {pos_x pos_y} $canvasPosition break
+        foreach {pos_x pos_y} $canvasPosition break
         #
         # -- get center SVG
         #    
             set svgPosition(x)  [lindex $svgCenter 0]
-      set svgPosition(y)  [lindex $svgCenter 1]
+        set svgPosition(y)  [lindex $svgCenter 1]
             set svgPosition(xy)  [list $svgPosition(x) $svgPosition(y)]
             
         #
         # -- define item container
         #
-      set w       [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]        
+        set w       [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]        
                 
                 # -- handle exceptions
             if {[$svgNode nodeType] != {ELEMENT_NODE}} return
@@ -135,7 +135,7 @@
             
                 # -- set defaults
             set objectPoints {}
-
+    
                 # -- get transform attribute
             set transform {_no_transformation_}
             catch {set transform    [ $svgNode getAttribute transform ] }
@@ -291,7 +291,7 @@
                             default   {}
                 }
             } else {
-                 switch -exact [$svgNode nodeName] {
+                switch -exact [$svgNode nodeName] {
                             rect      { $w addtag $svgTag withtag [canvasCAD::create polygon   $canvasDOMNode $pos_objectPoints -outline black -fill white ]}
                             polygon   { $w addtag $svgTag withtag [canvasCAD::create polygon   $canvasDOMNode $pos_objectPoints -outline black -fill white ]}
                             polyline  { $w addtag $svgTag withtag [canvasCAD::create line      $canvasDOMNode $pos_objectPoints                -fill black ]}
@@ -299,146 +299,146 @@
                             circle    { $w addtag $svgTag withtag [canvasCAD::create oval      $canvasDOMNode $pos_objectPoints -outline black -fill white ]}
                             default   {}
                 }
-           }
-      #{}
-
-      
+            }
+        #{}
+    
+        
         #
         # -- add each to unique $svgTag
         #    
-      return $svgTag
-
-  }  
-  
-
-  #-------------------------------------------------------------------------
+        return $svgTag
+    
+    }  
+    
+    
+    #-------------------------------------------------------------------------
     #  export Stage-Content to a SVG File
     #
-  proc canvasCAD::exportSVG {canvasDOMNode svgFile} {
+    proc canvasCAD::exportSVG {canvasDOMNode svgFile} {
     
-      set cv           [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
-      set wScale       [ getNodeAttribute  $canvasDOMNode  Canvas   scale ]      
-      set stageScale   [ getNodeAttribute  $canvasDOMNode  Stage  scale ]      
-      set stageUnit    [ getNodeAttribute  $canvasDOMNode  Stage  unit  ]      
-      set font         [ getNodeAttribute  $canvasDOMNode  Style    font  ]
-      set unitScale    [ get_unitRefScale   $stageUnit    ]
-      
-      set stageFormat  [ getNodeAttribute  $canvasDOMNode  Stage  format ]   
-      set stageWidth   [ getNodeAttribute  $canvasDOMNode  Stage  width  ]   
-      set stageHeight  [ getNodeAttribute  $canvasDOMNode  Stage  height ]   
-      
-      set scalePixel   [ getNodeAttributeRoot /root/_package_/UnitScale p ]
-      set scaleInch    [ getNodeAttributeRoot /root/_package_/UnitScale i ]
-      set scaleMetric  [ getNodeAttributeRoot /root/_package_/UnitScale m ]
-      
-
-          # -------------------------
-          #  get SVG-Units and scale 
-      case $stageUnit {
+        set cv           [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
+        set wScale       [ getNodeAttribute  $canvasDOMNode  Canvas   scale ]      
+        set stageScale   [ getNodeAttribute  $canvasDOMNode  Stage  scale ]      
+        set stageUnit    [ getNodeAttribute  $canvasDOMNode  Stage  unit  ]      
+        set font         [ getNodeAttribute  $canvasDOMNode  Style    font  ]
+        set unitScale    [ get_unitRefScale   $stageUnit    ]
+        
+        set stageFormat  [ getNodeAttribute  $canvasDOMNode  Stage  format ]   
+        set stageWidth   [ getNodeAttribute  $canvasDOMNode  Stage  width  ]   
+        set stageHeight  [ getNodeAttribute  $canvasDOMNode  Stage  height ]   
+        
+        set scalePixel   [ getNodeAttributeRoot /root/_package_/UnitScale p ]
+        set scaleInch    [ getNodeAttributeRoot /root/_package_/UnitScale i ]
+        set scaleMetric  [ getNodeAttributeRoot /root/_package_/UnitScale m ]
+        
+    
+            # -------------------------
+            #  get SVG-Units and scale 
+        case $stageUnit {
             m  {   set svgUnit  "mm"; }
             c  {   set svgUnit  "cm"}
             i  {   set svgUnit  "in"}
             p  {   set svgUnit  "px"}
-      }
-
-          # -------------------------
-          #  get canvs scaling and reposition
-      set cv_ViewBox    [ $cv coords __Stage__ ]
-      set cv_View_x0    [ lindex $cv_ViewBox 0 ]
-      set cv_View_y0    [ lindex $cv_ViewBox 1 ]
-      set cv_View_x1    [ lindex $cv_ViewBox 2 ]
-      set cv_View_y1    [ lindex $cv_ViewBox 3 ]
-      set cv_ViewWidth  [ expr $cv_View_x1 - $cv_View_x0 ]
+        }
+    
+            # -------------------------
+            #  get canvs scaling and reposition
+        set cv_ViewBox    [ $cv coords __Stage__ ]
+        set cv_View_x0    [ lindex $cv_ViewBox 0 ]
+        set cv_View_y0    [ lindex $cv_ViewBox 1 ]
+        set cv_View_x1    [ lindex $cv_ViewBox 2 ]
+        set cv_View_y1    [ lindex $cv_ViewBox 3 ]
+        set cv_ViewWidth  [ expr $cv_View_x1 - $cv_View_x0 ]
                 # set cv_ViewHeight  [ expr [ lindex $cv_ViewBox 0 ] - $cv_View_y0 ]
             set cv_ViewHeight  [ expr $cv_View_y1 - $cv_View_y0 ]
-      
-      set svgScale  [ expr  $unitScale * $wScale ]
-          
-          # -------------------------
-          #  debug info
-      puts "        --------------------------------------------"
-      puts "           \$stageFormat $stageFormat  "
-      puts "                   \$stageUnit      $stageUnit"
-      puts "                   \$svgUnit        $svgUnit  "
-      puts "                   \$unitScale      [ format "%.5f"  $unitScale ]"
-      puts "                   \$stageWidth     $stageWidth  "
-      puts "                   \$stageHeight    $stageHeight "
-      puts "        --------------------------------------------"
-      puts "               \$wScale         [ format "%.5f  %.5f"  $wScale        [ expr 1.0/$wScale] ]"
-      puts "               \$stageScale     [ format "%.5f  %.5f"  $stageScale    [ expr 1.0/$stageScale] ]"
-      puts "        --------------------------------------------"
-      puts "               \$cv_ViewBox      $cv_ViewBox"
-      puts "                   \$cv_View_x0      $cv_View_x0"
-      puts "                   \$cv_View_y0      $cv_View_y0"
-      puts "                   \$cv_View_x1      $cv_View_x1"
-      puts "                   \$cv_View_y1      $cv_View_y1"
-      puts "                   \$cv_ViewWidth    $cv_ViewWidth"
-      puts "                   \$cv_ViewHeight   $cv_ViewHeight"
-      puts "        --------------------------------------------"
-      puts "               \$svgScale       ( $unitScale * $wScale )"
-      puts "               \$svgScale       [ format "%.5f "  $svgScale ]"
-      puts "        --------------------------------------------"
-      
-          
-          # -------------------------
-          #  create bounding boxes
-      $cv create rectangle   [$cv coords __Stage__]   \
-                  -tags    {__SheetFormat__ __Content__}  \
-                  -outline black    \
-                  -width   0.01
-          
-          # -------------------------
-          #  get svgViewBox
-      set svgViewBox    [ list  $cv_View_x0 $cv_View_y0 [expr $svgScale * $stageWidth]  [expr $svgScale * $stageHeight] ]
-          
-          
-          # -------------------------
-          #  create bounding boxes
-      set      svgContent  "<svg xmlns=\"http://www.w3.org/2000/svg\" \n"
-      append   svgContent  "         width=\"$stageWidth$svgUnit\" \n"
-      append   svgContent  "         height=\"$stageHeight$svgUnit\"\n"
-      append   svgContent  "         viewBox=\"$svgViewBox\"\n"
-      append   svgContent  "     >\n"
-      
-      append   svgContent  "<g  id=\"__root__\">\n\n"
-
+        
+        set svgScale  [ expr  $unitScale * $wScale ]
             
-      # ========================================================================
-          # -------------------------
-          #  for each item
-          #
-          #          
-      foreach cvItem   [$cv find withtag {__Content__}] {
-      
-          set cv_Type     [$cv type $cvItem]
-          set svgCoords  {}
-          set svgAtts   {}
-          
-          
+            # -------------------------
+            #  debug info
+        puts "        --------------------------------------------"
+        puts "           \$stageFormat $stageFormat  "
+        puts "                   \$stageUnit      $stageUnit"
+        puts "                   \$svgUnit        $svgUnit  "
+        puts "                   \$unitScale      [ format "%.5f"  $unitScale ]"
+        puts "                   \$stageWidth     $stageWidth  "
+        puts "                   \$stageHeight    $stageHeight "
+        puts "        --------------------------------------------"
+        puts "               \$wScale         [ format "%.5f  %.5f"  $wScale        [ expr 1.0/$wScale] ]"
+        puts "               \$stageScale     [ format "%.5f  %.5f"  $stageScale    [ expr 1.0/$stageScale] ]"
+        puts "        --------------------------------------------"
+        puts "               \$cv_ViewBox      $cv_ViewBox"
+        puts "                   \$cv_View_x0      $cv_View_x0"
+        puts "                   \$cv_View_y0      $cv_View_y0"
+        puts "                   \$cv_View_x1      $cv_View_x1"
+        puts "                   \$cv_View_y1      $cv_View_y1"
+        puts "                   \$cv_ViewWidth    $cv_ViewWidth"
+        puts "                   \$cv_ViewHeight   $cv_ViewHeight"
+        puts "        --------------------------------------------"
+        puts "               \$svgScale       ( $unitScale * $wScale )"
+        puts "               \$svgScale       [ format "%.5f "  $svgScale ]"
+        puts "        --------------------------------------------"
+        
+            
+            # -------------------------
+            #  create bounding boxes
+        $cv create rectangle   [$cv coords __Stage__]   \
+                    -tags    {__SheetFormat__ __Content__}  \
+                    -outline black    \
+                    -width   0.01
+            
+            # -------------------------
+            #  get svgViewBox
+        set svgViewBox    [ list  $cv_View_x0 $cv_View_y0 [expr $svgScale * $stageWidth]  [expr $svgScale * $stageHeight] ]
+            
+            
+            # -------------------------
+            #  create bounding boxes
+        set      svgContent  "<svg xmlns=\"http://www.w3.org/2000/svg\" \n"
+        append   svgContent  "         width=\"$stageWidth$svgUnit\" \n"
+        append   svgContent  "         height=\"$stageHeight$svgUnit\"\n"
+        append   svgContent  "         viewBox=\"$svgViewBox\"\n"
+        append   svgContent  "     >\n"
+        
+        append   svgContent  "<g  id=\"__root__\">\n\n"
+    
+            
+        # ========================================================================
+            # -------------------------
+            #  for each item
+            #
+            #          
+        foreach cvItem   [$cv find withtag {__Content__}] {
+        
+            set cv_Type     [$cv type $cvItem]
+            set svgCoords  {}
+            set svgAtts   {}
+            
+            
             # --- get attributes
-          catch {set lineColour [format_xColor [$cv itemcget $cvItem -outline]]}    {set lineColour   gray50}
-          catch {set lineWidth  [$cv itemcget $cvItem -width]}                      {set lineWidth     0.1}
-          catch {set lineDash   [$cv itemcget $cvItem -dash]}                       {set lineDash     {none}}
-          catch {set itemFill   [format_xColor [$cv itemcget $cvItem -fill]]}       {set itemFill     gray50}
-          
+            catch {set lineColour [format_xColor [$cv itemcget $cvItem -outline]]}    {set lineColour   gray50}
+            catch {set lineWidth  [$cv itemcget $cvItem -width]}                      {set lineWidth     0.1}
+            catch {set lineDash   [$cv itemcget $cvItem -dash]}                       {set lineDash     {none}}
+            catch {set itemFill   [format_xColor [$cv itemcget $cvItem -fill]]}       {set itemFill     gray50}
+            
             # --- preformat attribues
-          if {$lineDash == ""} {set lineDash     {none}}
-          set lineDash  [string map {{ } {,}} $lineDash]          
+            if {$lineDash == ""} {set lineDash     {none}}
+            set lineDash  [string map {{ } {,}} $lineDash]          
             # --- get coords
-          foreach {x0 y0 x1 y1} \
+            foreach {x0 y0 x1 y1} \
             [string map {".0 " " "} "[$cv coords $cvItem] "] break
             
             # --- get coords
-          set cvPoints {}
-          foreach {x y} [$cv coords $cvItem] {
+            set cvPoints {}
+            foreach {x y} [$cv coords $cvItem] {
             lappend cvPoints [list $x $y]
-          }
+            }
         
-
-          # -------------------------
-          #  handle types      
-          switch -exact $cv_Type {
-              arc {
+    
+            # -------------------------
+            #  handle types      
+            switch -exact $cv_Type {
+                arc {
                     set svgType path
                         set cx 	  	[expr {($x0+$x1)/2}]
                         set cy 	  	[expr {($y0+$y1)/2}]
@@ -446,15 +446,15 @@
                         set ry 		[expr {($y1-$y0)/2}]
                     
                     set angleStart	[$cv itemcget $cvItem -start]
-										set angleExtent	[$cv itemcget $cvItem -extent]
+                                        set angleExtent	[$cv itemcget $cvItem -extent]
                     
                     set p_start_x   [expr $cx + $rx * cos([vectormath::rad $angleStart])]
                     set p_start_y   [expr $cy - $ry * sin([vectormath::rad $angleStart])]
                     set p_end_x     [expr $cx + $rx * cos([vectormath::rad [expr $angleStart + $angleExtent]])]
                     set p_end_y     [expr $cy - $ry * sin([vectormath::rad [expr $angleStart + $angleExtent]])]
-										
+                                        
                     set p_start	[list $p_start_x $p_start_y]  
-										set p_end	  [list $p_end_x   $p_end_y]   
+                                        set p_end	  [list $p_end_x   $p_end_y]   
                     
                     append svgAtts 	[format_itemAttribute cx $cx]
                     append svgAtts 	[format_itemAttribute cy $cy]
@@ -463,23 +463,23 @@
                     append svgAtts 	[format_itemAttribute fill $itemFill "#000000"]
                     append svgAtts 	[format_itemAttribute stroke $lineColour none]
                     append svgAtts 	[format_itemAttribute stroke-width $lineWidth 0.1]
-                      # append svgAtts 	[format_itemAttribute p_start $p_start]
-                      # append svgAtts 	[format_itemAttribute p_end   $p_end]
-
+                        # append svgAtts 	[format_itemAttribute p_start $p_start]
+                        # append svgAtts 	[format_itemAttribute p_end   $p_end]
+    
                     if {$angleExtent > 180} {
                         set largeArc 1
                     } else {
                         set largeArc 0
                     }
                     if {[$cv itemcget $cvItem -style] == {pieslice}} {
-                          # pieslice segment of a circle results in a closed figure through the center point
+                            # pieslice segment of a circle results in a closed figure through the center point
                         set d		"M $p_start_x $p_start_y  A $rx,$ry 0 $largeArc 0 $p_end_x $p_end_y L $cx,$cy z"                                    
                         # puts "  -> arcStyle:  pieslice"
                     } else {
                         set d		"M $p_start_x $p_start_y  A $rx,$ry 0 $largeArc 0 $p_end_x $p_end_y"                                    
                         # puts " -> SVG-Export \"M $p_start_x $p_start_y  A $rx,$ry 0 $largeArc 0 $p_end_x $p_end_y\""                         
                     }
-                  append svgAtts		[format_itemAttribute d $d]								
+                    append svgAtts		[format_itemAttribute d $d]								
                         # Bogen läuft gegen den Uhrzeigersinn
                         # rx, ry
                         # x-axis-rotation   drehung der Ellipse
@@ -490,224 +490,224 @@
                         #    * the arc ends at point (x, y)
                         #    * the ellipse has the two radii (rx, ry)
                         #    * the x-axis of the ellipse is rotated by x-axis-rotation relative to the x-axis of the current coordinate system	
-              }                       
-              line -
-              polyline {
-                  set    svgType     polyline
-                  append svgCoords  [format_itemAttribute points [join $cvPoints ", "]]
-                  append svgAtts     [format_itemAttribute fill   "none"    "none"]
-                  append svgAtts     [format_itemAttribute stroke $itemFill "#000000"]
-                  append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
-                  append svgAtts     [format_itemAttribute stroke-dasharray $lineDash {12,1,1,1}]
-              }
-              polygon {
-                  set    svgType     polygon
-                  append svgCoords   [format_itemAttribute points [join $cvPoints ", "]]
-                  append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
-                  append svgAtts     [format_itemAttribute stroke $lineColour "none"]
-                  append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
-              }
-              oval {
-                  set    svgType     ellipse
-                  append svgAtts     [format_itemAttribute cx [expr {($x0+$x1)/2}]]
-                  append svgAtts     [format_itemAttribute cy [expr {($y0+$y1)/2}]]
-                  append svgAtts     [format_itemAttribute rx [expr {($x1-$x0)/2}]]
-                  append svgAtts     [format_itemAttribute ry [expr {($y1-$y0)/2}]]
-                  append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
-                  append svgAtts     [format_itemAttribute stroke $lineColour none]
-                  append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
-              }
-              rectangle {
-                  set    svgType     rect
-                  append svgAtts     [format_itemAttribute x $x0]
-                  append svgAtts     [format_itemAttribute y $y0]
-                  append svgAtts     [format_itemAttribute width  [expr {$x1-$x0}]]
-                  append svgAtts     [format_itemAttribute height [expr {$y1-$y0}]]
-                  append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
-                  append svgAtts     [format_itemAttribute stroke $lineColour none]
-                  append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
-              }
-              text {
-                  set    svgType     text
-                  append svgAtts     [format_itemAttribute x $x0]
-                  append svgAtts     [format_itemAttribute y $y0]
-                  append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
-                  # set text [$c itemcget $item -text]
+                }                       
+                line -
+                polyline {
+                    set    svgType     polyline
+                    append svgCoords  [format_itemAttribute points [join $cvPoints ", "]]
+                    append svgAtts     [format_itemAttribute fill   "none"    "none"]
+                    append svgAtts     [format_itemAttribute stroke $itemFill "#000000"]
+                    append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
+                    append svgAtts     [format_itemAttribute stroke-dasharray $lineDash {12,1,1,1}]
+                }
+                polygon {
+                    set    svgType     polygon
+                    append svgCoords   [format_itemAttribute points [join $cvPoints ", "]]
+                    append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
+                    append svgAtts     [format_itemAttribute stroke $lineColour "none"]
+                    append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
+                }
+                oval {
+                    set    svgType     ellipse
+                    append svgAtts     [format_itemAttribute cx [expr {($x0+$x1)/2}]]
+                    append svgAtts     [format_itemAttribute cy [expr {($y0+$y1)/2}]]
+                    append svgAtts     [format_itemAttribute rx [expr {($x1-$x0)/2}]]
+                    append svgAtts     [format_itemAttribute ry [expr {($y1-$y0)/2}]]
+                    append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
+                    append svgAtts     [format_itemAttribute stroke $lineColour none]
+                    append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
+                }
+                rectangle {
+                    set    svgType     rect
+                    append svgAtts     [format_itemAttribute x $x0]
+                    append svgAtts     [format_itemAttribute y $y0]
+                    append svgAtts     [format_itemAttribute width  [expr {$x1-$x0}]]
+                    append svgAtts     [format_itemAttribute height [expr {$y1-$y0}]]
+                    append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
+                    append svgAtts     [format_itemAttribute stroke $lineColour none]
+                    append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
+                }
+                text {
+                    set    svgType     text
+                    append svgAtts     [format_itemAttribute x $x0]
+                    append svgAtts     [format_itemAttribute y $y0]
+                    append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
+                    # set text [$c itemcget $item -text]
                                     set text [$cv itemcget $cvItem -text]
                                     
-              }
-              default {
-                  # error "type $type not(yet) dumpable to SVG"
-                  puts "type $cv_Type not(yet) dumpable to SVG"
-              }
-          }
-          
+                }
+                default {
+                    # error "type $type not(yet) dumpable to SVG"
+                    puts "type $cv_Type not(yet) dumpable to SVG"
+                }
+            }
+            
             # -------------------------
             #  canvas item attributes
-          append svgContent         "    <!-- $cv_Type:-->\n"
-          append svgContent         "        <!--    cvPoints:    $cvPoints   -->\n"
-          append svgContent         "        <!--    svgCoords:   $svgCoords   -->\n"
-              # foreach attribute [$cv itemconfigure $cvItem] ;#{
-              #     append svgContent   "        <!--    $attribute   -->\n"
-              # }
-          
+            append svgContent         "    <!-- $cv_Type:-->\n"
+            append svgContent         "        <!--    cvPoints:    $cvPoints   -->\n"
+            append svgContent         "        <!--    svgCoords:   $svgCoords   -->\n"
+                # foreach attribute [$cv itemconfigure $cvItem] ;#{
+                #     append svgContent   "        <!--    $attribute   -->\n"
+                # }
+            
             # -------------------------
             #  SVG item, depending on cv_Type
             #     $style
-          append svgContent "  <$svgType \n      $svgAtts\n      $svgCoords"        
-          if {$cv_Type=="text"} {
+            append svgContent "  <$svgType \n      $svgAtts\n      $svgCoords"        
+            if {$cv_Type=="text"} {
             append svgContent ">$text</$svgType>\n"
-          } else {
+            } else {
             append svgContent " />\n"
-          }
-      }
-      
+            }
+        }
+        
         # -- close svg-Tag
         #
-      append svgContent "</g>\n"
-      append svgContent "</svg>"
+        append svgContent "</g>\n"
+        append svgContent "</svg>"
     
-
+    
         # -- cleanup canvas
         #
-      $cv delete -tags {__SheetFormat__}  
-
+        $cv delete -tags {__SheetFormat__}  
+    
         #
         # -- fill export svgFile
         #
-      set     fp [open $svgFile w]          
-      fconfigure  $fp -encoding utf-8
-      puts     $fp $svgContent
-      close       $fp
-      
+        set     fp [open $svgFile w]          
+        fconfigure  $fp -encoding utf-8
+        puts     $fp $svgContent
+        close       $fp
+        
         #
         # -- fill export svgFile
         #
-      if {[file exists $svgFile]} {
+        if {[file exists $svgFile]} {
         return $svgFile
-      } else {
+        } else {
         return {_noFile_}
-      }
-      
-  }      
-
-  #-------------------------------------------------------------------------
+        }
+        
+    }      
+    
+    #-------------------------------------------------------------------------
     #  export Stage-Content to a DXF File
     #
-  proc canvasCAD::exportDXF {canvasDOMNode dxfFile} {
+    proc canvasCAD::exportDXF {canvasDOMNode dxfFile} {
     
-      variable unitScale
-      variable wScale
-      variable cv_ViewCenter_x
-      variable cv_ViewCenter_y
-      
-      variable dxfContent
-                 
-      set cv           [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
-      set wScale       [ getNodeAttribute  $canvasDOMNode  Canvas   scale ]      
-      set stageScale   [ getNodeAttribute  $canvasDOMNode  Stage  scale ]      
-      set stageUnit    [ getNodeAttribute  $canvasDOMNode  Stage  unit  ]      
-      set font         [ getNodeAttribute  $canvasDOMNode  Style    font  ]
-      set unitScale    [ get_unitRefScale   $stageUnit    ]
-      
-      set stageFormat  [ getNodeAttribute  $canvasDOMNode  Stage  format ]   
-      set stageWidth   [ getNodeAttribute  $canvasDOMNode  Stage  width  ]   
-      set stageHeight  [ getNodeAttribute  $canvasDOMNode  Stage  height ]   
-      
-      set scalePixel   [ getNodeAttributeRoot /root/_package_/UnitScale p ]
-      set scaleInch    [ getNodeAttributeRoot /root/_package_/UnitScale i ]
-      set scaleMetric  [ getNodeAttributeRoot /root/_package_/UnitScale m ]
-      
-
-          # -------------------------
-          #  get SVG-Units and scale 
-      case $stageUnit {
+        variable unitScale
+        variable wScale
+        variable cv_ViewCenter_x
+        variable cv_ViewCenter_y
+        
+        variable dxfContent
+                
+        set cv           [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
+        set wScale       [ getNodeAttribute  $canvasDOMNode  Canvas   scale ]      
+        set stageScale   [ getNodeAttribute  $canvasDOMNode  Stage  scale ]      
+        set stageUnit    [ getNodeAttribute  $canvasDOMNode  Stage  unit  ]      
+        set font         [ getNodeAttribute  $canvasDOMNode  Style    font  ]
+        set unitScale    [ get_unitRefScale   $stageUnit    ]
+        
+        set stageFormat  [ getNodeAttribute  $canvasDOMNode  Stage  format ]   
+        set stageWidth   [ getNodeAttribute  $canvasDOMNode  Stage  width  ]   
+        set stageHeight  [ getNodeAttribute  $canvasDOMNode  Stage  height ]   
+        
+        set scalePixel   [ getNodeAttributeRoot /root/_package_/UnitScale p ]
+        set scaleInch    [ getNodeAttributeRoot /root/_package_/UnitScale i ]
+        set scaleMetric  [ getNodeAttributeRoot /root/_package_/UnitScale m ]
+        
+    
+            # -------------------------
+            #  get SVG-Units and scale 
+        case $stageUnit {
             m  {   set svgUnit  "mm"; }
             c  {   set svgUnit  "cm"}
             i  {   set svgUnit  "in"}
             p  {   set svgUnit  "px"}
-      }
-
-          # -------------------------
-          #  get canvs scaling and reposition
-      set cv_ViewBox    [ $cv coords __Stage__ ]
-      set cv_View_x0    [ lindex $cv_ViewBox 0 ]
-      set cv_View_y0    [ lindex $cv_ViewBox 1 ]
-      set cv_View_x1    [ lindex $cv_ViewBox 2 ]
-      set cv_View_y1    [ lindex $cv_ViewBox 3 ]
-      set cv_ViewWidth  [ expr $cv_View_x1 - $cv_View_x0 ]
+        }
+    
+            # -------------------------
+            #  get canvs scaling and reposition
+        set cv_ViewBox    [ $cv coords __Stage__ ]
+        set cv_View_x0    [ lindex $cv_ViewBox 0 ]
+        set cv_View_y0    [ lindex $cv_ViewBox 1 ]
+        set cv_View_x1    [ lindex $cv_ViewBox 2 ]
+        set cv_View_y1    [ lindex $cv_ViewBox 3 ]
+        set cv_ViewWidth  [ expr $cv_View_x1 - $cv_View_x0 ]
                 # set cv_ViewHeight  [ expr [ lindex $cv_ViewBox 0 ] - $cv_View_y0 ]
             set cv_ViewHeight  [ expr $cv_View_y1 - $cv_View_y0 ]
             set cv_ViewCenter_x [ expr 0.5*($cv_View_x0 + $cv_View_x1) ]
             set cv_ViewCenter_y [ expr 0.5*($cv_View_y0 + $cv_View_y1) ]
-      
-      set svgScale  [ expr  $unitScale * $wScale ]
-          
-          # -------------------------
-          #  debug info
-      puts "        --------------------------------------------"
-      puts "           \$stageFormat $stageFormat  "
-      puts "                   \$stageUnit      $stageUnit"
-      puts "                   \$svgUnit        $svgUnit  "
-      puts "                   \$unitScale      [ format "%.5f"  $unitScale ]"
-      puts "                   \$stageWidth     $stageWidth  "
-      puts "                   \$stageHeight    $stageHeight "
-      puts "        --------------------------------------------"
-      puts "               \$wScale         [ format "%.5f  %.5f"  $wScale        [ expr 1.0/$wScale] ]"
-      puts "               \$stageScale     [ format "%.5f  %.5f"  $stageScale    [ expr 1.0/$stageScale] ]"
-      puts "        --------------------------------------------"
-      puts "               \$cv_ViewBox      $cv_ViewBox"
-      puts "                   \$cv_ViewCenter_x $cv_ViewCenter_x"
-      puts "                   \$cv_ViewCenter_y $cv_ViewCenter_y"
-      puts "                   \$cv_View_x0      $cv_View_x0"
-      puts "                   \$cv_View_y0      $cv_View_y0"
-      puts "                   \$cv_View_x1      $cv_View_x1"
-      puts "                   \$cv_View_y1      $cv_View_y1"
-      puts "                   \$cv_ViewWidth    $cv_ViewWidth"
-      puts "                   \$cv_ViewHeight   $cv_ViewHeight"
-      puts "        --------------------------------------------"
-      puts "               \$svgScale       ( $unitScale * $wScale )"
-      puts "               \$svgScale       [ format "%.5f "  $svgScale ]"
-      puts "        --------------------------------------------"
-      
-          
-          # -------------------------
-          #  create bounding boxes
-      puts "  -> all             -> [$cv coords all] "
-      puts "  -> __Stage__       -> [$cv coords __Stage__] "
-      puts "  -> __SheetFormat__ -> [$cv coords __SheetFormat__] "
-
-
-
-         
-      variable colors
-      variable lineType 0
-      variable layer 0
-          
-      array set colors {
-              red             1
-              yellow          2
-              green           3
-              cyan            4
-              blue            5
-              magenta         6
-              black           7
-              gray            8
-              lt-gray         9
-      }
-      set   [namespace current]::dxfContent  {}
-
-
- 
-      $cv create rectangle   [$cv coords __Stage__]   \
-                  -tags    {__SheetFormat__ __Content__}  \
-                  -outline black    \
-                  -width   0.01
-          
-          # -------------------------
-          #  get svgViewBox
-      set svgViewBox    [ list  $cv_View_x0 $cv_View_y0 [expr $svgScale * $stageWidth]  [expr $svgScale * $stageHeight] ]
-          
+        
+        set svgScale  [ expr  $unitScale * $wScale ]
+            
+            # -------------------------
+            #  debug info
+        puts "        --------------------------------------------"
+        puts "           \$stageFormat $stageFormat  "
+        puts "                   \$stageUnit      $stageUnit"
+        puts "                   \$svgUnit        $svgUnit  "
+        puts "                   \$unitScale      [ format "%.5f"  $unitScale ]"
+        puts "                   \$stageWidth     $stageWidth  "
+        puts "                   \$stageHeight    $stageHeight "
+        puts "        --------------------------------------------"
+        puts "               \$wScale         [ format "%.5f  %.5f"  $wScale        [ expr 1.0/$wScale] ]"
+        puts "               \$stageScale     [ format "%.5f  %.5f"  $stageScale    [ expr 1.0/$stageScale] ]"
+        puts "        --------------------------------------------"
+        puts "               \$cv_ViewBox      $cv_ViewBox"
+        puts "                   \$cv_ViewCenter_x $cv_ViewCenter_x"
+        puts "                   \$cv_ViewCenter_y $cv_ViewCenter_y"
+        puts "                   \$cv_View_x0      $cv_View_x0"
+        puts "                   \$cv_View_y0      $cv_View_y0"
+        puts "                   \$cv_View_x1      $cv_View_x1"
+        puts "                   \$cv_View_y1      $cv_View_y1"
+        puts "                   \$cv_ViewWidth    $cv_ViewWidth"
+        puts "                   \$cv_ViewHeight   $cv_ViewHeight"
+        puts "        --------------------------------------------"
+        puts "               \$svgScale       ( $unitScale * $wScale )"
+        puts "               \$svgScale       [ format "%.5f "  $svgScale ]"
+        puts "        --------------------------------------------"
+        
+            
+            # -------------------------
+            #  create bounding boxes
+        puts "  -> all             -> [$cv coords all] "
+        puts "  -> __Stage__       -> [$cv coords __Stage__] "
+        puts "  -> __SheetFormat__ -> [$cv coords __SheetFormat__] "
+    
+    
+    
+        
+        variable colors
+        variable lineType 0
+        variable layer 0
+            
+        array set colors {
+                red             1
+                yellow          2
+                green           3
+                cyan            4
+                blue            5
+                magenta         6
+                black           7
+                gray            8
+                lt-gray         9
+        }
+        set   [namespace current]::dxfContent  {}
+    
+    
+    
+        $cv create rectangle   [$cv coords __Stage__]   \
+                    -tags    {__SheetFormat__ __Content__}  \
+                    -outline black    \
+                    -width   0.01
+            
+            # -------------------------
+            #  get svgViewBox
+        set svgViewBox    [ list  $cv_View_x0 $cv_View_y0 [expr $svgScale * $stageWidth]  [expr $svgScale * $stageHeight] ]
+            
             
             proc scale_Value_flipXY {args} {
                 variable unitScale
@@ -753,7 +753,7 @@
                         dxf_format 9   \$LIMMIN         10  0.0 20  0.0
                         dxf_format 9   \$LIMMAX         10  0.0 20  0.0
                     dxf_format 0 ENDSEC
-
+    
                     dxf_format 0 SECTION 2 TABLES
                         dxf_format 0 TABLE 2 LTYPE 70 2
                             dxf_LType 0
@@ -781,7 +781,7 @@
                     } else {
                         foreach { code value } [lrange $args 0 end-1] { 
                             lappend dxfContent   [format "%3d\n%s" $code $value]
-                         }
+                        }
                         foreach { code value } $lastArg { 
                             lappend dxfContent   [format "%3d\n%s" $code $value]
                         }
@@ -801,28 +801,28 @@
                     dxf_format 70 $flags 6 $ltype 62 $color
             }
             
-           
+            
             proc dxf_rect { x y w h { t 0 } { o 0 } } {
                     set sin_t [expr sin($t * (3.14159265358979323846 * 2 / 360))]
                     set cos_t [expr cos($t * (3.14159265358979323846 * 2 / 360))]
-
+    
                     set wdx [expr $w / 2.0 * $cos_t]
                     set wdy [expr $w / 2.0 * $sin_t]
                     set hdx [expr $h / 2.0 * $sin_t]
                     set hdy [expr $h / 2.0 * $cos_t]
                     set odx [expr $o     * $sin_t]
                     set ody [expr $o     * $cos_t]
-
+    
                     set x1 [expr $x - $wdx - $hdx - $odx]
                     set y1 [expr $y - $wdy + $hdy - $ody]
                     set x2 [expr $x - $wdx + $hdx + $odx]
                     set y2 [expr $y - $wdy - $hdy + $ody]
-
+    
                     set x3 [expr $x + $wdx + $hdx + $odx]
                     set y3 [expr $y + $wdy - $hdy + $ody]
                     set x4 [expr $x + $wdx - $hdx - $odx]
                     set y4 [expr $y + $wdy + $hdy - $ody]
-
+    
                     dxf_polygon $x1 $y1 $x2 $y2 $x3 $y3 $x4 $y4
             }            
             proc dxf_solid { x1 y1 x2 y2 x3 y3 x4 y4 } {
@@ -833,114 +833,114 @@
             proc dxf_solidbox  { x1 y1 x2 y2 { color 256 } } {
                     dxf_solid $x1 $y1 $x1 $y2 $x2 $y2 $x2 $y1
             }
-          
             
-      # ========================================================================
-          # -------------------------
-          #  create DXF Header
+            
+        # ========================================================================
+            # -------------------------
+            #  create DXF Header
                     #
                     #
             dxf_Header  $cv_View_x0 $cv_View_y0 $cv_View_x1 $cv_View_y1  
             
-      # ========================================================================
-          # -------------------------
-          #  for each item
-          #
-          #          
-      foreach cvItem [$cv find withtag __Content__] {
-      
-          set cv_Type     [$cv type $cvItem]
-          set svgCoords  {}
-          set svgAtts   {}
+        # ========================================================================
+            # -------------------------
+            #  for each item
+            #
+            #          
+        foreach cvItem [$cv find withtag __Content__] {
+        
+            set cv_Type     [$cv type $cvItem]
+            set svgCoords  {}
+            set svgAtts   {}
                     # puts "   $cv_Type"
-          
-          
+            
+            
             # --- get attributes
-          catch {set lineColour   [format_xColor [$cv itemcget $cvItem -outline]]}  {set lineColour   gray50}
-          catch {set lineWidth  [$cv itemcget $cvItem -width]}                      {set lineWidth     0.1}
-          catch {set lineDash   [$cv itemcget $cvItem -dash]}                        {set lineDash     {none}}
-          catch {set itemFill   [format_xColor [$cv itemcget $cvItem -fill]]}        {set itemFill     gray50}
-          
+            catch {set lineColour   [format_xColor [$cv itemcget $cvItem -outline]]}  {set lineColour   gray50}
+            catch {set lineWidth  [$cv itemcget $cvItem -width]}                      {set lineWidth     0.1}
+            catch {set lineDash   [$cv itemcget $cvItem -dash]}                        {set lineDash     {none}}
+            catch {set itemFill   [format_xColor [$cv itemcget $cvItem -fill]]}        {set itemFill     gray50}
+            
             # --- preformat attribues
-          if {$lineDash == ""} {set lineDash     {none}}
-          set lineDash  [string map {{ } {,}} $lineDash]          
+            if {$lineDash == ""} {set lineDash     {none}}
+            set lineDash  [string map {{ } {,}} $lineDash]          
             # --- get coords
-          foreach {x0 y0 x1 y1} \
+            foreach {x0 y0 x1 y1} \
             [string map {".0 " " "} "[$cv coords $cvItem] "] break
             
             # --- get coords
-          set cvPoints {}
-          foreach {x y} [$cv coords $cvItem] {
+            set cvPoints {}
+            foreach {x y} [$cv coords $cvItem] {
             lappend cvPoints [list $x $y]
-          }
+            }
         
-
-          # -------------------------
-          #  handle types      
-          switch -exact $cv_Type {
-              arc {
-                      set c       [scale_Value_flipXY [expr {($x0+$x1)/2}]  [expr {($y0+$y1)/2}] ]
-                      set cx     [lindex $c 0]
-                      set cy     [lindex $c 1]
-                      set rx     [scale_Value [expr {($x1-$x0)/2}]]
-                      set ry     [scale_Value [expr {($y1-$y0)/2}]]
-                      set start  [$cv itemcget $cvItem -start]
-                      set extend  [$cv itemcget $cvItem -extent]
-                      set end     [expr $start + $extend]
-                      # set start   [expr 360 - $start]
-                      # set end     [expr 360 - $end]
+    
+            # -------------------------
+            #  handle types      
+            switch -exact $cv_Type {
+                arc {
+                        set c       [scale_Value_flipXY [expr {($x0+$x1)/2}]  [expr {($y0+$y1)/2}] ]
+                        set cx     [lindex $c 0]
+                        set cy     [lindex $c 1]
+                        set rx     [scale_Value [expr {($x1-$x0)/2}]]
+                        set ry     [scale_Value [expr {($y1-$y0)/2}]]
+                        set start  [$cv itemcget $cvItem -start]
+                        set extend  [$cv itemcget $cvItem -extent]
+                        set end     [expr $start + $extend]
+                        # set start   [expr 360 - $start]
+                        # set end     [expr 360 - $end]
                     
-                      set layer       0
-                      set lineType    0
-                      dxf_format      0 ARC        8 $layer  6 $lineType 10 $cx  20 $cy  40 $rx  50 $start  51 $end
-              }            
-              line_ {
-                      puts "  line:\n        -> $cvPoints"
-                      foreach {x1 y1 x2 y2}      [scale_Value_flipXY [flatten_nestedList $cvPoints]] break
-                      set layer       0
-                      set lineType    0
-                      dxf_format      0 LINE       8 $layer 6 $lineType   10 $x1 20 $y1 11 $x2 21 $y2                
-              }
-              line -
-              polyline {
+                        set layer       0
+                        set lineType    0
+                        dxf_format      0 ARC        8 $layer  6 $lineType 10 $cx  20 $cy  40 $rx  50 $start  51 $end
+                }            
+                line_ {
+                        puts "  line:\n        -> $cvPoints"
+                        foreach {x1 y1 x2 y2}      [scale_Value_flipXY [flatten_nestedList $cvPoints]] break
+                        set layer       0
+                        set lineType    0
+                        dxf_format      0 LINE       8 $layer 6 $lineType   10 $x1 20 $y1 11 $x2 21 $y2                
+                }
+                line -
+                polyline {
                         #set    svgType     polyline
                         #append svgCoords  [format_itemAttribute points [join $cvPoints ", "]]
                         #append svgAtts     [format_itemAttribute fill   "none"    "none"]
                         #append svgAtts     [format_itemAttribute stroke $itemFill "#000000"]
                         #append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
                         #append svgAtts     [format_itemAttribute stroke-dasharray $lineDash {15,1,1,1}]
-
-                      set layer       0
-                      set lineType    0
-                      dxf_format      0 POLYLINE   8 $layer 62 0   70 0    66 1    10 0.0  20 0.0  30 0.0                
-                      set run 0
-                      foreach {x y} [scale_Value_flipXY [flatten_nestedList  $cvPoints]] {
-                          # puts "   polyline [incr run]"
-                          dxf_format 0 VERTEX 8 $layer    10 $x 20 $y
-                      }
-                      dxf_format 0 SEQEND 8 $layer
-              }
-              polygon {
+    
+                        set layer       0
+                        set lineType    0
+                        dxf_format      0 POLYLINE   8 $layer 62 0   70 0    66 1    10 0.0  20 0.0  30 0.0                
+                        set run 0
+                        foreach {x y} [scale_Value_flipXY [flatten_nestedList  $cvPoints]] {
+                            # puts "   polyline [incr run]"
+                            dxf_format 0 VERTEX 8 $layer    10 $x 20 $y
+                        }
+                        dxf_format 0 SEQEND 8 $layer
+                }
+                polygon {
                         #set    svgType     polygon
                         #append svgCoords   [format_itemAttribute points [join $cvPoints ", "]]
                         #append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
                         #append svgAtts     [format_itemAttribute stroke $lineColour "none"]
                         #append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
-
-                      set layer       0
-                      set lineType    0
-                      dxf_format      0 POLYLINE 8 $layer 62 0   70 1    66 1    10 0.0  20 0.0  30 0.0                
-                      foreach {x y} [scale_Value_flipXY [flatten_nestedList  $cvPoints]] {
-                          dxf_format  0 VERTEX 8 $layer    10 $x 20 $y
-                      }
-                      dxf_format      0 SEQEND 8 $layer
-              }
-              oval {
-                      set cx [expr {($x0+$x1)/2}]
-                      set cy [expr {($y0+$y1)/2}]
-                      set rx [expr {($x1-$x0)/2}]
-                      set ry [expr {($y1-$y0)/2}]
-                      
+    
+                        set layer       0
+                        set lineType    0
+                        dxf_format      0 POLYLINE 8 $layer 62 0   70 1    66 1    10 0.0  20 0.0  30 0.0                
+                        foreach {x y} [scale_Value_flipXY [flatten_nestedList  $cvPoints]] {
+                            dxf_format  0 VERTEX 8 $layer    10 $x 20 $y
+                        }
+                        dxf_format      0 SEQEND 8 $layer
+                }
+                oval {
+                        set cx [expr {($x0+$x1)/2}]
+                        set cy [expr {($y0+$y1)/2}]
+                        set rx [expr {($x1-$x0)/2}]
+                        set ry [expr {($y1-$y0)/2}]
+                        
                         #append svgAtts     [format_itemAttribute cx [expr {($x0+$x1)/2}]]
                         #append svgAtts     [format_itemAttribute cy [expr {($y0+$y1)/2}]]
                         #append svgAtts     [format_itemAttribute rx [expr {($x1-$x0)/2}]]
@@ -949,22 +949,22 @@
                         #append svgAtts     [format_itemAttribute stroke $lineColour none]
                         #append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
                                     
-                      set _c      [scale_Value_flipXY $cx $cy ] 
-                      set _cx     [lindex $_c 0]
-                      set _cy     [lindex $_c 1]
-                      set _rx [scale_Value $rx]
-                      set _ry [scale_Value $ry]
-                      set layer       0
-                      set lineType    0
-                      if {$rx == $ry} {
-                          dxf_format  0 CIRCLE 8 $layer 6 $lineType   10 $_cx  20 $_cy  40 $_rx 
-                      } else {
-                          dxf_format  0 CIRCLE 8 $layer 6 $lineType   10 $_cx  20 $_cy  40 $_rx
-                          dxf_format  0 CIRCLE 8 $layer 6 $lineType   10 $_cx  20 $_cy  40 $_ry
-                      }
-
-              }
-              rectangle {
+                        set _c      [scale_Value_flipXY $cx $cy ] 
+                        set _cx     [lindex $_c 0]
+                        set _cy     [lindex $_c 1]
+                        set _rx [scale_Value $rx]
+                        set _ry [scale_Value $ry]
+                        set layer       0
+                        set lineType    0
+                        if {$rx == $ry} {
+                            dxf_format  0 CIRCLE 8 $layer 6 $lineType   10 $_cx  20 $_cy  40 $_rx 
+                        } else {
+                            dxf_format  0 CIRCLE 8 $layer 6 $lineType   10 $_cx  20 $_cy  40 $_rx
+                            dxf_format  0 CIRCLE 8 $layer 6 $lineType   10 $_cx  20 $_cy  40 $_ry
+                        }
+    
+                }
+                rectangle {
                         #set    svgType     rect
                         #append svgAtts     [format_itemAttribute x $x0]
                         #append svgAtts     [format_itemAttribute y $y0]
@@ -974,125 +974,125 @@
                         #append svgAtts     [format_itemAttribute stroke $lineColour none]
                         #append svgAtts     [format_itemAttribute stroke-width $lineWidth 0.1]
                                     
-                      set layer       0
-                      set lineType    0
-                      dxf_format      0 POLYLINE 8 $layer 62 0   70 1    66 1    10 0.0  20 0.0  30 0.0                
-                      foreach {x0 y0 x1 y1} [scale_Value_flipXY [flatten_nestedList  $cvPoints]] {
-                          dxf_format  0 VERTEX 8 $layer    10 $x0 20 $y0
-                          dxf_format  0 VERTEX 8 $layer    10 $x1 20 $y0
-                          dxf_format  0 VERTEX 8 $layer    10 $x1 20 $y1
-                          dxf_format  0 VERTEX 8 $layer    10 $x0 20 $y1
-                      }
-                      dxf_format      0 SEQEND 8 $layer
-              }
-              _text {
-                      set    svgType     text
-                      append svgAtts     [format_itemAttribute x $x0]
-                      append svgAtts     [format_itemAttribute y $y0]
-                      append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
+                        set layer       0
+                        set lineType    0
+                        dxf_format      0 POLYLINE 8 $layer 62 0   70 1    66 1    10 0.0  20 0.0  30 0.0                
+                        foreach {x0 y0 x1 y1} [scale_Value_flipXY [flatten_nestedList  $cvPoints]] {
+                            dxf_format  0 VERTEX 8 $layer    10 $x0 20 $y0
+                            dxf_format  0 VERTEX 8 $layer    10 $x1 20 $y0
+                            dxf_format  0 VERTEX 8 $layer    10 $x1 20 $y1
+                            dxf_format  0 VERTEX 8 $layer    10 $x0 20 $y1
+                        }
+                        dxf_format      0 SEQEND 8 $layer
+                }
+                _text {
+                        set    svgType     text
+                        append svgAtts     [format_itemAttribute x $x0]
+                        append svgAtts     [format_itemAttribute y $y0]
+                        append svgAtts     [format_itemAttribute fill $itemFill "#000000"]
                         # set text [$c itemcget $item -text]
                                         set text [$cv itemcget $cvItem -text]
                                     
-              }
-              default {
+                }
+                default {
                         # error "type $type not(yet) dumpable to SVG"
-                      puts "type $cv_Type not (yet) dumpable to DXF"
-              }
-          }
-          
+                        puts "type $cv_Type not (yet) dumpable to DXF"
+                }
+            }
+            
             # -------------------------
             #  canvas item attributes
-              #append dxfContent         "    <!-- $cv_Type:-->\n"
-              #append dxfContent         "        <!--    cvPoints:    $cvPoints   -->\n"
-              #append dxfContent         "        <!--    svgCoords:   $svgCoords   -->\n"
-              # foreach attribute [$cv itemconfigure $cvItem] ;#{
-              #     append dxfContent   "        <!--    $attribute   -->\n"
-              # }
-          
+                #append dxfContent         "    <!-- $cv_Type:-->\n"
+                #append dxfContent         "        <!--    cvPoints:    $cvPoints   -->\n"
+                #append dxfContent         "        <!--    svgCoords:   $svgCoords   -->\n"
+                # foreach attribute [$cv itemconfigure $cvItem] ;#{
+                #     append dxfContent   "        <!--    $attribute   -->\n"
+                # }
+            
             # -------------------------
             #  SVG item, depending on cv_Type
             #     $style
-              #append dxfContent "  <$svgType \n      $svgAtts\n      $svgCoords"        
-          if {$cv_Type=="text"} {
+                #append dxfContent "  <$svgType \n      $svgAtts\n      $svgCoords"        
+            if {$cv_Type=="text"} {
             #append dxfContent ">$text</$svgType>\n"
-          } else {
+            } else {
             #append dxfContent " />\n"
-          }
-      }
-      
+            }
+        }
+        
             
-      # ========================================================================
-          # -------------------------
-          #  close DXF
+        # ========================================================================
+            # -------------------------
+            #  close DXF
                     #
                     #
-      dxf_format 0 ENDSEC              
-      dxf_format 0 EOF
+        dxf_format 0 ENDSEC              
+        dxf_format 0 EOF
     
-
+    
         # -- cleanup canvas
         #
-      $cv delete -tags {__SheetFormat__}  
-
+        $cv delete -tags {__SheetFormat__}  
+    
         #
         # -- fill export svgFile
         #
-      set     fp [open $dxfFile w]          
-      fconfigure  $fp -encoding utf-8
+        set     fp [open $dxfFile w]          
+        fconfigure  $fp -encoding utf-8
             #set dxfContent $::[namespace current]::dxfContent
             foreach line $dxfContent {
                 puts     $fp "${line}"
             }
-      close       $fp
-      
+        close       $fp
+        
         #
         # -- fill export dxfFile
         #
-      if {[file exists $dxfFile]} {
+        if {[file exists $dxfFile]} {
         return $dxfFile
-      } else {
+        } else {
         return {_noFile_}
-      }
-      
-  }      
-  #-----------------------------------------
+        }
+        
+    }      
+    #-----------------------------------------
     #  helper procedures ....
     #
     #
-  proc transform_SVGObject {valueList matrix} {
-  
-      set valueList_Return {}
-          # puts "    transform_SVGObject: $matrix"
-      foreach {a b c d tx ty} $matrix break
-          # puts "          $a $b $tx  /  $c $d $ty " 
-      foreach {x y} $valueList {
-          # puts "       -> $x $y"
+    proc transform_SVGObject {valueList matrix} {
+    
+        set valueList_Return {}
+            # puts "    transform_SVGObject: $matrix"
+        foreach {a b c d tx ty} $matrix break
+            # puts "          $a $b $tx  /  $c $d $ty " 
+        foreach {x y} $valueList {
+            # puts "       -> $x $y"
         set xt [ expr $a*$x - $b*$y + $tx ]
         set yt [ expr $c*$x - $d*$y - $ty ]
         set valueList_Return [lappend valueList_Return $xt [expr -1*$yt] ]
-          # puts "             function   x:  $a*$x - $b*$y + $tx    $xt"
-          # puts "             function   y:  $c*$x - $d*$y - $ty    $yt"
-      }
-      return $valueList_Return
-  }
-
-  proc format_itemAttribute {name value {default {}}} {
-      if {$value != $default} {return " $name=\"$value\""}
-      return " $name=\"$default\""
-
-  }
-
-  proc format_styleAttribute {style name value {default -}} {
-      # variable canvasCAD::styleAttribute
-      set style [string range $style 0 end-1]
-      if {$value != $default} {return "$style;$name:$value\""}
-  }
-
-  proc format_xColor {rgb} {
-      if {$rgb == ""} {return none}
-      foreach {r g b} [winfo rgb . $rgb] break
-      return [format "#%02x%02x%02x" [expr {$r/256}] [expr {$g/256}] [expr {$b/256}] ]
-  }
+            # puts "             function   x:  $a*$x - $b*$y + $tx    $xt"
+            # puts "             function   y:  $c*$x - $d*$y - $ty    $yt"
+        }
+        return $valueList_Return
+    }
+    
+    proc format_itemAttribute {name value {default {}}} {
+        if {$value != $default} {return " $name=\"$value\""}
+        return " $name=\"$default\""
+    
+    }
+    
+    proc format_styleAttribute {style name value {default -}} {
+        # variable canvasCAD::styleAttribute
+        set style [string range $style 0 end-1]
+        if {$value != $default} {return "$style;$name:$value\""}
+    }
+    
+    proc format_xColor {rgb} {
+        if {$rgb == ""} {return none}
+        foreach {r g b} [winfo rgb . $rgb] break
+        return [format "#%02x%02x%02x" [expr {$r/256}] [expr {$g/256}] [expr {$b/256}] ]
+    }
   
    
   

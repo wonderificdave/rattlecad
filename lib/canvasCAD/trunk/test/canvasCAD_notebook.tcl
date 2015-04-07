@@ -228,22 +228,10 @@
 	#-------------------------------------------------------------------------
 		#  open File Type: xml
 		#
-	proc add_cfgCorner {cv cmd} {
-		
-		$cv configCorner ${cmd}
-        
-        
-        
+	proc add_cfgCorner {cv cmd} {	
+		$cv configCorner ${cmd}  
         return
 
-		if {$file == {} } {
-			set file [tk_getOpenFile]
-		}
-		
-
-        $cv03 readSVG $file {120 200} 0 AB
-		$cv03 readSVG $file {320 400} 
-		
 	}
 			
 			

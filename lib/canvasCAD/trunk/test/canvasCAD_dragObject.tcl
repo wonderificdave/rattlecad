@@ -75,20 +75,6 @@
 	}
 	proc updateValue {varName args} {
 	    puts "   ... updateValue:  $varName $args"
-      return
-      
-	    switch -exact $varName {
-            sketchboard::teethCount {
-                    update 
-                    # puts "   -> $varName $value"
-                    set value $sketchboard::teethCount
-                    set $varName $value
-                    return
-                }
-            default {
-                # puts "   default -> $varName $value"
-            }
-        }
 	}
 ##+######################
 
@@ -150,31 +136,8 @@
       bind $dragObj <B3-Motion> [list [namespace current]::drag.canvas.item [$myCanvas getPath] $id %X %Y]
       
       return $myCanvas
-      
-      
-      
-      
-      
-      puts "\n ... $myCanvas\n ... [$myCanvas getPath]"
-      set obj_1 [$myCanvas  create   circle  	{160 60}   -radius 50 -tags {Line_01}  -fill blue   -width 2]
-      #bind $obj_1 <3>         [list position.canvas.item [$myCanvas getPath] $obj_1 %X %Y]
-      #bind $obj_1 <B1-Motion> [list drag.canvas.item     [$myCanvas getPath] $obj_1 %X %Y]
-      
-      set obj_2 [canvas.canvas.item [$myCanvas getPath] obj_01 30 40]
-      
-        #set obj_2 [button [$myCanvas getPath].obj_2  -relief raised  -text "Action"]
-        #set obj_2 [canvas [$myCanvas getPath].obj_2  -relief raised  -height 30 -width 50]
-        #set obj_2 [$myCanvas  create   circle  	{160 60}   -radius 50 -tags {Line_01}  -fill blue   -width 2]
-        #puts "\n ... $obj_2"
-      update
-        #[$myCanvas getPath] create window 1 25  -anchor w  -window $obj_2
-        
-        #set obj_2 [$myCanvas  create   window  	{260 160} ]
-        #bind $obj_2 <3>         [list position.canvas.item .c $obj_1 %X %Y]
-        #bind $obj_2 <B1-Motion> [list drag.canvas.item .c $obj_1 %X %Y]
-      
-			return $myCanvas
-		}
+
+    }
     
     proc canvas.canvas.item {canWin objName x y} {
         set cv_obj   [canvas $canWin.objName  -relief raised  -height 30 -width 30]
@@ -207,125 +170,6 @@
 		
     proc update_board {{value {0}} args} {
         
-            return
-            
-            
-            variable  myCanvas
-            
-            variable  start_angle 
-            variable  start_length
-            variable  teethCount
-            variable  end_length
-            variable  dim_size
-            variable  dim_dist
-            variable  dim_offset
-            variable  dim_font_select
-            variable  dim_type_select
-            variable  std_fnt_scl
-            variable  font_colour
-            variable  demo_type
-            variable  drw_scale 
-            
-            #set value $teethCount
-            puts "   -> $value "
-            if {$value == {update}} {
-                # --- values on bind are: sketchboard::teethCount {} write 
-                set value $teethCount
-                puts "   --> $value "
-            }
-
-            
-            $myCanvas clean_StageContent
-            set board [ $myCanvas getNodeAttr Canvas  path ]
-        
-            if {$font_colour == {default}} { set font_colour [ $myCanvas getNodeAttr Style  fontcolour ]}
-            
-            puts "\n\n============================="
-            puts "   -> drw_scale:          $drw_scale"
-            puts "   -> font_colour:        $font_colour"
-            puts "   -> dim_size:           $dim_size"
-            puts "   -> dim_font_select:    $dim_font_select"
-            puts "\n============================="
-            puts "   -> Drawing:            [[$myCanvas getNode Stage] asXML]"
-            puts "\n============================="
-            puts "   -> Style:              [[$myCanvas getNode Style] asXML]"
-            puts "\n============================="
-            #$myCanvas reportMyDictionary
-            puts "\n============================="
-            puts "\n\n"
-
-            $myCanvas setNodeAttr Stage scale       $drw_scale
-            $myCanvas setNodeAttr Style fontstyle   $dim_font_select
-            $myCanvas setNodeAttr Style fontsize    $dim_size
-            
-            
-            if {$demo_type != {dimension} } {
-                sketchboard::demo_canvasCAD 
-                return
-            }
-            
-            # ------------------------------------
-                    # update $myCanvas ->
-            
-            set p_end   [vectormath::rotateLine  {0 0}  $end_length    $teethCount]
-         
-            $myCanvas addtag {__ChainWheel__} withtag  [$myCanvas  create   circle {0 0}    -radius 2  -outline red     -fill white]
-
-            $myCanvas addtag {__ChainWheel__} withtag  [$myCanvas  create   line [list  0 0  [lindex $p_end 0]  [lindex $p_end 1] ] -tags dimension  -fill blue ]
-            
-            # ------ create circle as chain-representation
-            set toothWith           12.7
-            set toothWithAngle      [expr 2*$vectormath::CONST_PI/$teethCount]
-            set chainWheelRadius    [expr 0.5*$toothWith/sin([expr 0.5*$toothWithAngle])]
-                    # =0,5*H6/SIN(D13)
-            set index 0
-            set toothProfileList {}
-            while { $index < $teethCount } {
-                set currentAngle [expr $index * [vectormath::grad $toothWithAngle]]
-                set pos [vectormath::rotateLine {0 0} $chainWheelRadius $currentAngle ]
-                $myCanvas addtag {__ChainWheel__} withtag  [$myCanvas  create   circle  $pos -radius 3.8]  
-                
-                set pt_00 {2 5}                                 ; foreach {x0 y0} $pt_00 break
-                set pt_01 [vectormath::rotateLine {0 0} 3.8 100]    ; foreach {x1 y1} $pt_01 break
-                set pt_02 [vectormath::rotateLine {0 0} 3.8 125]    ; foreach {x2 y2} $pt_02 break
-                set pt_03 [vectormath::rotateLine {0 0} 3.8 150]    ; foreach {x3 y3} $pt_03 break
-                set pt_04 [vectormath::rotateLine {0 0} 3.8 170]    ; foreach {x4 y4} $pt_04 break
-                set tmpList_00 [list $x0 -$y0    $x1 -$y1    $x2 -$y2    $x3 -$y3    $x4 -$y4    $x4 $y4    $x3 $y3    $x2 $y2    $x1 $y1    $x0 $y0]
-                set tmpList_01 {}
-                foreach {x y} $tmpList_00 {
-                    set pt_xy [list $x $y]
-                    set pt_xy [vectormath::rotatePoint {0 0} $pt_xy $currentAngle]
-                    set pt_xy [vectormath::addVector $pos $pt_xy]
-                    set tmpList_01 [lappend tmpList_01 [canvasCAD::flatten_nestedList $pt_xy] ]
-                }
-                set toothProfileList [lappend toothProfileList [canvasCAD::flatten_nestedList $tmpList_01]]
-                set index [expr $index + 1]
-            }
-            set toothProfileList [canvasCAD::flatten_nestedList $toothProfileList]
-            set chainWheelProfile [$myCanvas  create polygon $toothProfileList -fill white -outline black]
-            $myCanvas addtag {__ChainWheel__} withtag  $chainWheelProfile           
-                
-            $::f_report.text delete 1.0  end 
-            $::f_report.text insert end "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
-            
-            
-            $::f_report.text insert end "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
-            $::f_report.text insert end "width=\"500mm\" height=\"500mm\"\n" 
-            $::f_report.text insert end "viewBox=\"-250 -250 500 500\"\n"
-            $::f_report.text insert end "version=\"1.1\">\n"
-            
-            $::f_report.text insert end "<g>\n"
-            $::f_report.text insert end "   <polygon points=\""
-            foreach {x y} $toothProfileList {
-                $::f_report.text insert end "$x,$y  "
-            }
-            $::f_report.text insert end "\"  />"
-            $::f_report.text insert end "\n"
-            $::f_report.text insert end "   <circle  cx=\"00\" cy=\"00\" r=\"4.5\" id=\"center_00\"/>\n"
-            $::f_report.text insert end "</g>\n"
-            $::f_report.text insert end "</svg>\n"
-            sketchboard::moveto_StageCenter {__ChainWheel__}
-
     }
 
 

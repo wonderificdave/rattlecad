@@ -57,16 +57,33 @@
  #
  #  0.50    test-scripts: add  lappend auto_path "$APPL_ROOT_Dir/../app-vectormath"
  #              for use in packed rattleCAD
+ #
+ #  0.53    add feature:
+ #              transform
+ #              getCanvas (same as getPath)
+ #          extend: print -> canvasCAD::printPostScript  
+ #              ... add comment to postscript  
+ #
+ #  0.54    add feature:
+ #              exportPDF ... possibility to replace print in the future
+ #
+ #  0.55    refactor/cleanup:
+ #              
+ #
+ #
 
 
 
-package provide canvasCAD 0.51
-package require tdom
+    package provide canvasCAD 0.55
+        #
+    package require tdom
+    package require snit
+    package require pdf4tcl
 
-  # -----------------------------------------------------------------------------------
-  #
-  #: Functions : namespace      c a n v a s C A D
-  #
+    # -----------------------------------------------------------------------------------
+    #
+    #: Functions : namespace      c a n v a s C A D
+    #
   
     namespace eval canvasCAD {
 
@@ -88,14 +105,14 @@ package require tdom
             
             set __packageDoc  [dom parse $__packageXML]
             set __packageRoot [$__packageDoc documentElement]
-
+    }
 
 
         
         # -------------------------------------------- 
             # initial exported creation procedure
             #   cv_width cv_height st_width st_height
-        proc newCanvas {name w title cv_width cv_height stageFormat stageScale stageBorder args} {
+        proc canvasCAD::newCanvas {name w title cv_width cv_height stageFormat stageScale stageBorder args} {
                     # stageFormat:
                     #     A0, A1, A2, ...   
                     #     passive
@@ -193,15 +210,15 @@ package require tdom
                     default    {
                                 __create_Stage  $canvasDOMNode    sheet                    
                                 # update
-                                bind $cv <Motion>         [ list canvasCAD::reportPointerPostion $name %x %y ]
-                                bind $cv <Configure>     [ namespace code [list resizeCanvas $w] ]
+                                bind $cv <Motion>           [ list canvasCAD::reportPointerPostion $name %x %y ]
+                                bind $cv <Configure>        [ namespace code [list resizeCanvas $w] ]
                                     # Set up event bindings for move canvas:
-                                bind $cv <1>                        "canvasCAD::click_B1     $cv %x %y"
-                                bind $cv <B1-Motion>                "canvasCAD::motion_B1    $cv %x %y"
-                                bind $cv <ButtonRelease-1>          "canvasCAD::release_B1   $cv %x %y  $name"
-                                bind $cv <3>                        "canvasCAD::click_B3     $cv %x %y"
-                                bind $cv <B3-Motion>                "canvasCAD::motion_B3    $cv %x %y"
-                                bind $cv <ButtonRelease-3>          "canvasCAD::release_B3   $cv %x %y  $name"
+                                bind $cv <1>                "canvasCAD::click_B1     $cv %x %y"
+                                bind $cv <B1-Motion>        "canvasCAD::motion_B1    $cv %x %y"
+                                bind $cv <ButtonRelease-1>  "canvasCAD::release_B1   $cv %x %y  $name"
+                                bind $cv <3>                "canvasCAD::click_B3     $cv %x %y"
+                                bind $cv <B3-Motion>        "canvasCAD::motion_B3    $cv %x %y"
+                                bind $cv <ButtonRelease-3>  "canvasCAD::release_B3   $cv %x %y  $name"
                             }
                 }
                 
@@ -220,7 +237,7 @@ package require tdom
         #-------------------------------------------------------------------------
             #  create SketchStage
             #
-        proc __create_Stage { canvasDOMNode {type {sheet}}} {
+        proc canvasCAD::__create_Stage { canvasDOMNode {type {sheet}}} {
                     # stageFormat:
                     #     sheet     (A0. A1, A2, ... )
                     #     passive        
@@ -311,7 +328,7 @@ package require tdom
                         
                         set stage_x        [ expr $x2 - $x1]
                         set stage_y        [ expr $y2 - $y1]
-                        set w_width_st    [ expr $w_width  - 2*$cvBorder ]
+                        set w_width_st     [ expr $w_width  - 2*$cvBorder ]
                         set w_height_st    [ expr $w_height - 2*$cvBorder ]
                         set scale_x        [ format "%.4f" [ expr $w_width_st  / $stage_x ] ]
                         set scale_y        [ format "%.4f" [ expr $w_height_st / $stage_y ] ]
@@ -411,7 +428,7 @@ package require tdom
         # --------------------------------------------
             #     operation handler
             #     each operation has to be registered
-        proc ObjectMethods {name method argList} {
+        proc canvasCAD::ObjectMethods {name method argList} {
                 # puts " ObjectMethods  $name  $method  $argList"
             switch -exact -- $method {
                     # ------------------------            
@@ -434,6 +451,15 @@ package require tdom
                                     set argList         [lrange $argList 2 end]
                                     return [ create     $type $canvasDOMNode $CoordList $argList ]
                                     # return [ create     $type $cv_Object $CoordList $argList ]
+                                }
+                    # ------------------------
+                transform {         set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                                    set tagID           [lindex $argList 0]
+                                    set transform       [lindex $argList 1]
+                                    set scale           [lindex $argList 2]
+                                    set orient          [lindex $argList 3]
+                                    return [ transform     $tagID $canvasDOMNode $transform $scale $orient]
+                                    # proc canvasCAD::transform {tagID canvasDOMNode {transform {0 0}} {scale {0 0}} {orient {center}} args}
                                 }
                     # ------------------------   
                 configCorner {      set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
@@ -480,7 +506,8 @@ package require tdom
                                         # puts "[$canvasDOMNode asXML]"
                                     return [ getNodeAttribute $canvasDOMNode [lindex $argList 0] [lindex $argList 1] ]
                                 }
-                getPath {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
+                getPath -
+                getCanvas {         set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     return [getNodeAttribute $canvasDOMNode Canvas path]
                                 }
                 getNode {           set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
@@ -520,8 +547,21 @@ package require tdom
                                     exportDXF $canvasDOMNode [lindex $argList 0]
                                 }
                     # ------------------------            
-                print {             set printFile       [lindex $argList 0]
-                                    printPostScript $name $printFile }
+                exportPDF {         switch [llength $argList] {
+                                        1 { return [ exportPDF $name [lindex $argList 0] ] }
+                                        2 { return [ exportPDF $name [lindex $argList 0] [lindex $argList 1] ] }
+                                        3 { return [ exportPDF $name [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
+                                        4 { return [ exportPDF $name [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
+                                    }
+                                }
+                    # ------------------------            
+                print {             switch [llength $argList] {
+                                        1 { return [ export_PostScript $name [lindex $argList 0] ] }
+                                        2 { return [ export_PostScript $name [lindex $argList 0] [lindex $argList 1] ] }
+                                        3 { return [ export_PostScript $name [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
+                                        4 { return [ export_PostScript $name [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
+                                    }
+                                }
                     # ------------------------            
                 clean_StageContent {set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     set cv              [getNodeAttribute $canvasDOMNode Canvas path]
@@ -540,7 +580,7 @@ package require tdom
         #-------------------------------------------------------------------------
             #  get canvasCAD Instances
             #
-        proc get_cvList {{searchString {}}} {
+        proc canvasCAD::get_cvList {{searchString {}}} {
             reportXML $__packageRoot
             puts "[reportXML $__packageRoot]"
         }
@@ -549,7 +589,7 @@ package require tdom
         #-------------------------------------------------------------------------
             #  create line, polygon, rectangle, oval, arc, circle
             #
-        proc create {type canvasDOMNode CoordList args} {
+        proc canvasCAD::create {type canvasDOMNode CoordList args} {
 
             # reportXMLRoot
 
@@ -561,7 +601,7 @@ package require tdom
             set font         [ getNodeAttribute    $canvasDOMNode    Style      font  ]
             set unitScale    [ get_unitRefScale    $stageUnit    ]
 
-            set moveVector  [ get_BottomLeft $w ]
+            set moveVector   [ get_BottomLeft $w ]
             
             set fontSize        5
             #puts "  create: $new_args"
@@ -578,13 +618,13 @@ package require tdom
                 line -    
                 centerline {    set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }    
                 polygon    -
-                rectangle -
-                oval    {       set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }        
+                rectangle  -
+                oval {          set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] }        
                 ovalarc {       set CoordList    [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]] 
                                 set type         arc
                         }        
                 arc -
-                circle    {    
+                circle {    
                             set new_args     [ flatten_nestedList $args ]
                             set args        {}
                             for {set x 0} {$x<[llength $new_args]} {incr x} {
@@ -607,7 +647,7 @@ package require tdom
                             set CoordList   [ list [expr $x-$Radius] [expr $y+$Radius] [expr $x+$Radius] [expr $y-$Radius] ]
                             set CoordList   [ convert_BottomLeft [expr $wScale*$stageScale] [flatten_nestedList $CoordList]]
                         }
-                text     {
+                text {
                             set new_args     [ flatten_nestedList $args ]
                             set args        {}
                             for {set x 0} {$x<[llength $new_args]} {incr x} {
@@ -730,9 +770,108 @@ package require tdom
         } 
         
         #-------------------------------------------------------------------------
+            #  create line, polygon, rectangle, oval, arc, circle
+            #
+        proc canvasCAD::transform {tagID canvasDOMNode {transform {0 0}} {scale {0 0}} {orient {center}} args} {
+
+                # puts ""
+                # puts "   \$tagID $tagID"
+                # puts "   \$canvasDOMNode $canvasDOMNode"
+                # puts "   \$transform $transform"
+                # puts "   \$scale $scale"
+                # puts "   \$args $args"
+                # puts "   \$orient $orient"
+                # puts ""
+
+                # tk_messageBox -message "create:  \n    $w  $type \n    $cv_Config\n    $CoordList \n    $args "            
+            set w            [ getNodeAttribute    $canvasDOMNode    Canvas     path  ]            
+            set wScale       [ getNodeAttribute    $canvasDOMNode    Canvas     scale ]            
+            set stageScale   [ getNodeAttribute    $canvasDOMNode    Stage      scale ]            
+            set stageUnit    [ getNodeAttribute    $canvasDOMNode    Stage      unit  ]            
+            set font         [ getNodeAttribute    $canvasDOMNode    Style      font  ]
+            set unitScale    [ get_unitRefScale    $stageUnit    ]
+
+            set moveVector   [ get_BottomLeft $w ]
+            
+                                        
+                # ------ ceck $w ----------------
+            if { $w == {} } {
+                error "canvasCAD::create -> Error:  could not get \$w" 
+            }
+
+                # puts "   ... inside"
+            
+            set objCoords   [$w bbox $tagID]
+            set objSize	    [get_BBoxInfo   size    $objCoords ]
+            set objCenter   [get_BBoxInfo   center  $objCoords ]
+            set objWidth	[lindex $objSize 0]
+            set objHeight	[lindex $objSize 1]
+            set obj_x       [lindex $objCenter 0]
+            set obj_y       [lindex $objCenter 1]
+                # puts "               objCoords         $objCoords	"
+                # puts "               objWidth   $objWidth"
+                # puts "               objHeight  $objHeight"
+                # puts "               obj_x      $obj_x"
+                # puts "               obj_y      $obj_y"
+                     ##
+                # puts "              \$wScale            $wScale        "
+                # puts "              \$stageScale        $stageScale    "
+                # puts "              \$unitScale         $unitScale     "
+                #
+                # puts "   ... size $objWidth / $objHeight"
+                #
+                
+                #
+                # orient
+            set _left  [expr -0.5 * $objWidth]
+            set _down  [expr  0.5 * $objHeight]
+            set _right [expr  0.5 * $objWidth]
+            set _up    [expr -0.5 * $objHeight]
+                #
+            switch -exact $orient {
+                n  {        set orient_x    0       ;   set orient_y    $_down}
+                ne {        set orient_x    $_left  ;   set orient_y    $_down}
+                e  {        set orient_x    $_left  ;   set orient_y    0}
+                se {        set orient_x    $_left  ;   set orient_y    $_up}
+                s  {        set orient_x    0       ;   set orient_y    $_up}
+                sw {        set orient_x    $_right ;   set orient_y    $_up}
+                w  {        set orient_x    $_right ;   set orient_y    0}
+                nw {        set orient_x    $_right ;   set orient_y    $_down}
+                center -
+                default {   set orient_x    0       ;   set orient_y    0}
+            }
+                # puts "   ... move $orient_x / $orient_y"
+            $w move  $tagID  $orient_x      $orient_y
+                #
+                
+                #
+                # scale
+            set scale_x     [expr [lindex $scale 0] / $stageScale]
+            set scale_y     [expr [lindex $scale 1] / $stageScale]
+            $w scale $tagID  $obj_x $obj_y  $scale_x $scale_y
+                #
+
+                #
+                # move
+            set transform_x            [lindex $transform 0]    
+            set transform_y [expr -1 * [lindex $transform 1]]    
+            set resTransform_x [expr $transform_x * $wScale * $unitScale]
+            set resTransform_y [expr $transform_y * $wScale * $unitScale]
+            $w move  $tagID  $resTransform_x $resTransform_y
+                #
+            # puts "  $transform_x    $transform_y"    
+            # puts "  $resTransform_x $resTransform_y"    
+                #
+                
+                #
+            return $tagID
+                #
+        } 
+        
+        #-------------------------------------------------------------------------
             #  create Dimension   length, angle
             #
-        proc dimension {type canvasDOMNode CoordList args} {
+        proc canvasCAD::dimension {type canvasDOMNode CoordList args} {
                 #tk_messageBox -message "canvasCAD::dimension $CoordList $args"
             set w           [ getNodeAttribute    $canvasDOMNode    Canvas path    ]            
             set wScale      [ getNodeAttribute    $canvasDOMNode    Canvas     scale ]            
@@ -793,9 +932,9 @@ package require tdom
 
         #-------------------------------------------------------------------------
             #  
-        proc centerLine {canvasDOMNode CoordList args} {
+        proc canvasCAD::centerLine {canvasDOMNode CoordList args} {
                 # centerline    { set myItem     [ create_Line     $canvasDOMNode     $type   $CoordList  [flatten_nestedList $args] ] }
-            set w             [ canvasCAD::getNodeAttribute  $canvasDOMNode    Canvas     path         ]            
+            set w              [ canvasCAD::getNodeAttribute  $canvasDOMNode    Canvas     path         ]            
             set stageScale     [ canvasCAD::getNodeAttribute  $canvasDOMNode    Stage    scale         ]            
             set lineWidth      [ canvasCAD::getNodeAttribute  $canvasDOMNode    Style      linewidth    ]
             
@@ -815,7 +954,7 @@ package require tdom
     
         #-------------------------------------------------------------------------
             #  
-        proc characterList {} {     
+        proc canvasCAD::characterList {} {     
             # puts "  -- characterList_Vector"
             return [vectorfont::get_characterList]
         }
@@ -826,7 +965,7 @@ package require tdom
             #
             # changes precision of dimension for just this canvasCAD
             #       
-        proc setPrecision {canvasDOMNode newPrecision styleArgument} {            
+        proc canvasCAD::setPrecision {canvasDOMNode newPrecision styleArgument} {            
             set defaultValue [getNodeAttribute  $canvasDOMNode  Style  defaultprecision]
             set currentValue [getNodeAttribute  $canvasDOMNode  Style  precision]
             
@@ -859,8 +998,6 @@ package require tdom
             return $defaultValue
         }
 
-    
-    } ;# end of namespace
 
 
     # --------------------------------------------

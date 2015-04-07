@@ -43,25 +43,27 @@
         variable cornerIndex 0 
         variable cfgRegistry;  array set cfgRegistry {}
         variable styleArray;   array set styleArray {}
+    }    
         
-        
-        proc register {canvasDOMNode cmd} {
+        proc canvasCAD::configCorner::register {canvasDOMNode cmd} {
             variable cfgRegistry
             set w       [ canvasCAD::getNodeAttribute  $canvasDOMNode  Canvas   path ]
             set cfgRegistry($canvasDOMNode) ${cmd}
             set cfgRegistry($w)             ${cmd}
-            [namespace current]::update $w
+            [namespace current]::updateSelf $w
         }
         
-        proc update   {w} {
+        proc canvasCAD::configCorner::updateSelf   {w} {
             variable cfgRegistry
             variable styleArray
             
-              # puts "canvasCAD::configCorner::update $w"
+              # puts "canvasCAD::configCorner::updateSelf $w"
               
               # -- just for fun
             if {[catch {set cfgRegistry($w)} fid]} {
-                puts "  -> $fid"
+                puts "      <I> canvasCAD::configCorner::updateSelf"
+                puts "      <I>   $fid"
+                puts "      <I> ... no configCorner to update"
                 return
             } else {
                 set cmd [set cfgRegistry($w)]
@@ -121,12 +123,12 @@
               #
         }
         
-        proc deleteCorner {w} {
+        proc canvasCAD::configCorner::deleteCorner {w} {
             catch {$w delete __configCorner__}
         }
 
 
-        proc execute {w} {
+        proc canvasCAD::configCorner::execute {w} {
               # puts "\n   -> execute: "
             variable cfgRegistry
             
@@ -145,7 +147,7 @@
             eval ${command} {*}$values
         }
         
-        proc setStyleArray {styleNode} {
+        proc canvasCAD::configCorner::setStyleArray {styleNode} {
             variable styleArray
             
             set styleText   [$styleNode text]
@@ -159,7 +161,7 @@
             # parray styleArray            
         }
         
-        proc formatPolygon {w item styleList} {
+        proc canvasCAD::configCorner::formatPolygon {w item styleList} {
             variable styleArray
               # puts "     -> formatPolygon: $item"
               # puts "     -> formatPolygon: $styleList"
@@ -181,4 +183,4 @@
                 }
             }
         }
-    }
+

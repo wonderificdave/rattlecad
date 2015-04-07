@@ -135,7 +135,7 @@
 		#  get rectangle size and center
 		#
 	proc canvasCAD::get_BBoxInfo { type rect } {
-			foreach {x0 y0 x1 y1} $rect  break
+            foreach {x0 y0 x1 y1} $rect  break
 			switch $type {
 				   size    { return  "[ expr $x1 - $x0 ]  [ expr $y1 - $y0 ] "}
 				   center  { return  "[ expr ( $x1 - $x0 ) * 0.5 + $x0 ]  [ expr ( $y1 - $y0 ) * 0.5 + $y0 ] " }
