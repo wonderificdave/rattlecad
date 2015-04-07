@@ -409,9 +409,12 @@
                     create_configEdit_title $menueFrame.sf.lf_06  {SeatTube/SeatStay}           Scalar/Lugs/SeatLug_SeatStay_Angle              0.10    darkred      ;# Lugs(SeatTube/SeatStay/Angle/value)           
                     create_configEdit_title $menueFrame.sf.lf_06    {      Tolerance +/-}       Scalar/Lugs/SeatLug_SeatStay_Tolerance          0.10                 ;# Lugs(SeatTube/SeatStay/Angle/plus_minus)      
 
-                    button     $menueFrame.sf.lf_06.bt_f    -bd 4       -relief flat
-                        pack $menueFrame.sf.lf_06.bt_f      -fill both  -expand yes
-                    button  $menueFrame.sf.lf_06.bt_f.bt_check      -text {switch: check Frame Angles}  -width 30   -bd 1 -command [namespace current]::tubing_checkAngles
+                        # button     $menueFrame.sf.lf_06.bt_f    -bd 4       -relief flat
+                        # button  $menueFrame.sf.lf_06.bt_f.bt_check      -text {switch: check Frame Angles}  -width 30   -bd 1 -command [namespace current]::tubing_checkAngles
+                        #
+                    frame $menueFrame.sf.lf_06.bt_f        
+                        pack $menueFrame.sf.lf_06.bt_f               -side top  -fill x  -expand yes  -pady 5
+                    ttk::button  $menueFrame.sf.lf_06.bt_f.bt_check      -text {switch: check Frame Angles}  -width 30   -command [namespace current]::tubing_checkAngles
                         pack $menueFrame.sf.lf_06.bt_f.bt_check     -side right -fill both -expand yes
                         
                         

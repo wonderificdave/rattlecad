@@ -29,7 +29,7 @@
 ----------------------------------------
 
 
-       rattle_cad
+       rattleCAD
       ---------------------------------------------
             by Manfred ROSENBERGER
 
@@ -37,28 +37,23 @@
 
        BWidget
       ------------------------------------------
-            Version: 1.9 
-            http://tcllib.sourceforge.net/BWman/ 
-              ... see License of BWidgets
-
+            http://sourceforge.net/projects/tcllib/ 
+                ... see License of tcllib (BSD)
             
-       struct
+       snit (tcllib)
       ------------------------------------------
-            Version: 1.12   
-            http://npg.dl.ac.uk/MIDAS/manual/ActiveTcl8.4.4.0-html/tcllib/struct/struct_tree.html 
-              ... see License of struct
-               
-                    tree-operations:
-                            http://wiki.tcl.tk/ ...
+            http://sourceforge.net/projects/tcllib/ 
+                ... see License of tcllib (BSD)
+
+       pdf4tcl (tcllib)
+      ------------------------------------------
+            http://core.tcl.tk/jenglish/gutter/packages/pdf4tcl.html 
+                ... see License of tcllib (BSD)
 
        tdom
       ------------------------------------------
-            Version: 0.8.3  
-            http://www.tdom.org/   ... owner and content of url changed
-              ... see License of tdom
-              
-                    xml-operations:
-                            http://wiki.tcl.tk/ ...
+            http://docs.activestate.com/activetcl/8.5/tdom/tdomcmd.html
+                ... see License of tdom
 
        canvasCAD
       ------------------------------------------

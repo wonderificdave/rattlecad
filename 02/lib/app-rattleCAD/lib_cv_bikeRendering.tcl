@@ -43,18 +43,18 @@
     # --- check existance of File --- regarding on user/etc
     proc rattleCAD::rendering::checkFileString {fileString} {
         switch -glob $fileString {
-                user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
-                etc:*   {   set svgFile [file join $::APPL_Config(COMPONENT_Dir)         [lindex [split $fileString :] 1] ]}
-                default {   set svgFile [file join $::APPL_Config(COMPONENT_Dir)         $fileString ]}
-            }
+            user:*  {   set svgFile [file join $::APPL_Config(USER_Dir)/components   [lindex [split $fileString :] 1] ]}
+            etc:*   {   set svgFile [file join $::APPL_Config(COMPONENT_Dir)         [lindex [split $fileString :] 1] ]}
+            default {   set svgFile [file join $::APPL_Config(COMPONENT_Dir)         $fileString ]}
+        }
 			
             #
 		  # puts "            ... rattleCAD::rendering::checkFileString: $fileString"
 		  # puts "                        ... $svgFile"
 		    #
         if {![file exists $svgFile]} {
-                    # puts "           ... does not exist, therfore .."
-                set svgFile [file join $::APPL_Config(COMPONENT_Dir) default_exception.svg]
+                # puts "           ... does not exist, therfore .."
+            set svgFile [file join $::APPL_Config(COMPONENT_Dir) default_exception.svg]
         }
             # puts "            ... createDecoration::checkFileString $svgFile"
         return $svgFile
@@ -530,7 +530,7 @@
             }
                 #
     }
-    proc rattleCAD::rendering::createDecoration_RearWheel_Rep    {cv_Name BB_Position type {updateCommand {}}} {
+    proc rattleCAD::rendering::createDecoration_RearWheel_Rep {cv_Name BB_Position type {updateCommand {}}} {
                 #
             set Hub(position)       [ rattleCAD::model::get_Position    RearWheel   $BB_Position ]
             set RimHeight           [ rattleCAD::model::get_Scalar RearWheel RimHeight ]
@@ -540,7 +540,7 @@
             set my_Wheel            [ $cv_Name create arc   $Hub(position)  -radius [expr 0.5 * $RimDiameter ]              -start -25  -extent 100 -style arc -outline gray60  -tags __Decoration__  -width 0.35]
                 #
     }
-    proc rattleCAD::rendering::createDecoration_FrontWheel_Rep    {cv_Name BB_Position type {updateCommand {}}} {
+    proc rattleCAD::rendering::createDecoration_FrontWheel_Rep {cv_Name BB_Position type {updateCommand {}}} {
                 #
             set Hub(position)       [ rattleCAD::model::get_Position    FrontWheel  $BB_Position ]
             set RimHeight           [ rattleCAD::model::get_Scalar      FrontWheel  RimHeight]
@@ -1307,361 +1307,6 @@
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    bottombracket   group_BottomBracket_DepthHeight
        
         }
-
-
-    proc rattleCAD::rendering::createFrame_Centerline_old {cv_Name BB_Position {highlightList_1 {}} {highlightList_2 {}} {backgroundList {}} {excludeList {}} } {
-    
-    
-                # --- get stageScale
-            set stageScale     [ $cv_Name  getNodeAttr  Stage    scale ]
-    
-    
-                # --- get defining Values ----------
-            set CrankSetLength      [ rattleCAD::model::get_Scalar CrankSet Length]
-                # --- get defining Point coords ----------
-            set BottomBracket       $BB_Position
-            set RearWheel           [ rattleCAD::model::get_Position        RearWheel               $BB_Position ]
-            set FrontWheel          [ rattleCAD::model::get_Position        FrontWheel              $BB_Position ]
-            set Saddle              [ rattleCAD::model::get_Position        Saddle                  $BB_Position ]
-            set Saddle_Proposal     [ rattleCAD::model::get_Position        SaddleProposal          $BB_Position ]
-            set SeatPost_Saddle     [ rattleCAD::model::get_Position        SeatPost_Saddle         $BB_Position ]
-            set SeatPost_SeatTube   [ rattleCAD::model::get_Position        SeatPost_SeatTube       $BB_Position ]
-            set SeatPost_Pivot      [ rattleCAD::model::get_Position        SeatPost_Pivot          $BB_Position ]
-            set SeatTube_Ground     [ rattleCAD::model::get_Position        SeatTube_Ground         $BB_Position ]
-            set SeatTube_BBracket   [ rattleCAD::model::get_Position        SeatTube_Start          $BB_Position ]
-            set SeatStay_SeatTube   [ rattleCAD::model::get_Position        SeatStay_End            $BB_Position ]
-            set SeatStay_RearWheel  [ rattleCAD::model::get_Position        SeatStay_Start          $BB_Position ]
-            set TopTube_SeatTube    [ rattleCAD::model::get_Position        TopTube_Start           $BB_Position ]
-            set TopTube_Steerer     [ rattleCAD::model::get_Position        TopTube_End             $BB_Position ]
-            set HeadTube_Stem       [ rattleCAD::model::get_Position        HeadTube_End            $BB_Position ]
-            set Steerer_Stem        [ rattleCAD::model::get_Position        Steerer_End             $BB_Position ]
-            set Steerer_Fork        [ rattleCAD::model::get_Position        Steerer_Start           $BB_Position ]
-            set DownTube_Steerer    [ rattleCAD::model::get_Position        DownTube_End            $BB_Position ]
-            set HandleBar           [ rattleCAD::model::get_Position        HandleBar               $BB_Position ]
-            set BaseCenter          [ rattleCAD::model::get_Position        BottomBracket_Ground    $BB_Position ]
-            set Steerer_Ground      [ rattleCAD::model::get_Position        Steerer_Ground          $BB_Position ]
-    
-            set Saddle_PropRadius   [ vectormath::length                $Saddle_Proposal   $BB_Position]
-            set SeatTube_Angle      [ vectormath::angle                 $SeatPost_SeatTube $BB_Position [list -500 [lindex $BB_Position 1] ] ]
-            set SeatPost_Radius     [ vectormath::length                $SeatPost_Saddle   $SeatPost_Pivot] 
-                
-            set RimDiameter_Front   [rattleCAD::model::get_Scalar Geometry FrontRim_Diameter]
-            set TyreHeight_Front    [rattleCAD::model::get_Scalar Geometry FrontTyre_Height]
-            set RimDiameter_Rear    [rattleCAD::model::get_Scalar Geometry RearRim_Diameter]
-            set TyreHeight_Rear     [rattleCAD::model::get_Scalar Geometry RearTyre_Height]
-    
-    
-                # ------ rearwheel representation
-            $cv_Name create circle     $RearWheel   -radius [ expr 0.5*$RimDiameter_Rear + $TyreHeight_Rear ]    -outline gray60 -width 1.0    -tags {__CenterLine__    rearWheel}
-                # ------ frontwheel representation
-            $cv_Name create circle     $FrontWheel  -radius [ expr 0.5*$RimDiameter_Front + $TyreHeight_Front ]  -outline gray60 -width 1.0    -tags {__CenterLine__    frontWheel}
-    
-    
-                # ------ headtube extension to ground
-            $cv_Name create centerline [ appUtil::flatten_nestedList  $Steerer_Fork       $Steerer_Ground   ]    -fill gray60                 -tags __CenterLine__
-                # ------ seattube extension to ground
-            $cv_Name create centerline [ appUtil::flatten_nestedList  $SeatTube_BBracket  $SeatTube_Ground  ]    -fill gray60                 -tags {__CenterLine__    seattube_center}
-    
-    
-                # ------ chainstay
-            $cv_Name create line     [ appUtil::flatten_nestedList  $RearWheel            $BottomBracket    ]    -fill gray60  -width 1.0      -tags {__CenterLine__    chainstay}
-                # ------ seattube
-            $cv_Name create line     [ appUtil::flatten_nestedList  $SeatPost_Saddle $SeatPost_SeatTube    $SeatTube_BBracket]    -fill gray60  -width 1.0      -tags {__CenterLine__    seattube}
-                # ------ seatstay
-            $cv_Name create line     [ appUtil::flatten_nestedList  $SeatStay_SeatTube    $RearWheel        ]    -fill gray60  -width 1.0      -tags {__CenterLine__    seatstay}
-                # ------ toptube
-            $cv_Name create line     [ appUtil::flatten_nestedList  $TopTube_SeatTube     $TopTube_Steerer  ]    -fill gray60  -width 1.0      -tags {__CenterLine__    toptube}
-                # ------ steerer / stem
-            $cv_Name create line     [ appUtil::flatten_nestedList  $HandleBar  $Steerer_Stem  $Steerer_Fork]    -fill gray60  -width 1.0      -tags {__CenterLine__    steerer}
-                # ------ downtube
-            $cv_Name create line     [ appUtil::flatten_nestedList  $DownTube_Steerer     $BB_Position      ]    -fill gray60  -width 1.0      -tags {__CenterLine__    downtube}
-                # ------ fork
-            $cv_Name create line     [ appUtil::flatten_nestedList  $Steerer_Fork         $FrontWheel       ]    -fill gray60  -width 1.0      -tags {__CenterLine__    fork}
-    
-                # ------ seatpost
-            $cv_Name create line     [ appUtil::flatten_nestedList  $Saddle $SeatPost_Saddle ] -fill gray60  -width 0.5      -tags {__CenterLine__    saddlemount}
-    
-                # ------ seattube
-                # $cv_Name create line  [ appUtil::flatten_nestedList  $Saddle  $SeatPost_SeatTube   $BottomBracket     ]  \
-                # ------ seatpost
-                # $cv_Name create line  [ appUtil::flatten_nestedList  $Saddle $SeatPost_Saddle  $SeatPost_SeatTube ] -fill gray60  -width 1.0      -tags {__CenterLine__    saddlemount}
-    
-    
-                # ------ crankset representation
-            $cv_Name create arc     $BottomBracket  -radius $CrankSetLength      -start -95  -extent 170  -style arc  -outline gray \
-                                                                                                                               -width 1.0      -tags {__CenterLine__    crankset}
-                # ------ saddle proposal
-            $cv_Name create arc     $BottomBracket  -radius $Saddle_PropRadius   -start [expr 177 - $SeatTube_Angle]   -extent 6   -style arc  -outline darkmagenta \
-                                                                                                                               -width 1.0      -tags {__CenterLine__    saddleproposal}
-                # ------ seatpost pivot
-            $cv_Name create arc     $SeatPost_Pivot -radius $SeatPost_Radius     -start  55   -extent 70   -style arc  -outline darkmagenta \
-                                                                                                                               -width 1.0      -tags {__CenterLine__    saddlepivot}
-    
-                # ------ saddle representation
-                    set saddle_polygon {}
-                    set x_04   [ expr [rattleCAD::model::get_Scalar Saddle  NoseLength] + [rattleCAD::model::get_Scalar Saddle Offset_x] ]
-                    set x_03   [ expr $x_04 - 20 ]
-                    set x_02   [ expr $x_04 - 30 ]
-                    set x_01   [ expr $x_04 - [rattleCAD::model::get_Scalar Saddle Length]]
-                    foreach xy [ list [list $x_01 4] {0 0} [list $x_02 -1] [list $x_03 -5] [list $x_04 -12] ] {
-                        set saddle_polygon [ lappend saddle_polygon [vectormath::addVector $Saddle $xy ] ]
-                    }
-            $cv_Name create line  $saddle_polygon        -fill gray60  -width 1.0      -tags {__CenterLine__    saddle}
-
-    
-                # puts "  $highlightList "
-                # --- highlightList
-                    # set highlight(colour) firebrick
-                    # set highlight(colour) darkorchid
-                    # set highlight(colour) darkred
-                    # set highlight(colour) firebrick
-                    # set highlight(colour) blue
-    
-    
-                set highlight(colour) red
-                set highlight(width)  2.0
-                    # --- create position points
-                $cv_Name create circle  $BottomBracket      -radius 20  -outline $highlight(colour)     -tags {__CenterLine__  bottombracket}  \
-                                                                                                                                -width $highlight(width)
-                $cv_Name create circle  $HandleBar          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                $cv_Name create circle  $Saddle             -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                $cv_Name create circle  $FrontWheel         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                $cv_Name create circle  $RearWheel          -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                $cv_Name create circle  $BaseCenter         -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                $cv_Name create circle  $SeatPost_Saddle    -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                $cv_Name create circle  $HeadTube_Stem      -radius 10  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                    # $cv_Name create circle    $SeatPost_SeatTube  -radius 15  -outline $highlight(colour)     -tags {__CenterLine__}  -width $highlight(width)
-                    # $cv_Name create circle    $LegClearance   -radius 10  -outline $highlight(colour)
-    
-    
-    
-                set highlight(colour) red
-                set highlight(width)  3.0
-                    # ------------------------
-            foreach item $highlightList_1 {
-                catch {$cv_Name itemconfigure $item  -fill      $highlight(colour) -width $highlight(width) } error
-                catch {$cv_Name itemconfigure $item  -outline   $highlight(colour) -width $highlight(width) } error
-            }
-    
-                set highlight(colour) darkorange
-                    # ------------------------
-            foreach item $highlightList_2 {
-                catch {$cv_Name itemconfigure $item  -fill      $highlight(colour) -width $highlight(width) } error
-                catch {$cv_Name itemconfigure $item  -outline   $highlight(colour) -width $highlight(width) } error
-            }
-    
-            foreach item $backgroundList {
-                catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
-                catch {$cv_Name itemconfigure $item  -width $highlight(width) } error
-            }
-    
-            puts "  $excludeList "
-                # --- highlightList
-            foreach item $excludeList {
-                catch {$cv_Name delete $item } error
-            }
-            
-                    # --- bindings -----------
-            #foreach item {steerer fork bottombracket} {}
-            #    rattleCAD::view::gui::object_CursorBinding     $cv_Name    $item 
-            #{}
-            
-            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    steerer         group_FrontGeometry
-            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    fork            group_FrontGeometry
-            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    bottombracket   group_BottomBracket_DepthHeight
-            # $cv_Name bind  steerer        <Double-ButtonPress-1>    [list rattleCAD::view::createEdit  %x %y  $cv_Name  { Component(Stem/Angle)     Component(Stem/Length)  Component(Fork/Height) Component(Fork/Rake) }   {Steerer/Fork:  Settings}]
-            # $cv_Name bind  fork           <Double-ButtonPress-1>    [list rattleCAD::view::createEdit  %x %y  $cv_Name  { Component(Stem/Angle)     Component(Stem/Length)  Component(Fork/Height) Component(Fork/Rake) }   {Steerer/Fork:  Settings}]
-            # $cv_Name bind  bottombracket  <Double-ButtonPress-1>    [list rattleCAD::view::createEdit  %x %y  $cv_Name  { Custom(BottomBracket/Depth)   Result(Length/BottomBracket/Height) }                               {BottomBracket:  Settings}]
-       
-        }
-
-
-    proc rattleCAD::rendering::createTubemiter {cv_Name xy type {rotation {no}}} {
-
-
-            # -- read from domProject
-        set     minorAngle          2
-        set     majorAngle          50
-        set     polygon_out         {}
-        set     polygon_in          {}
-        set     diameter_addText    {}
-            #
-            # puts "   ... $type"
-            #
-        switch $type {
-            TopTube_Head {
-                    set Miter(header)       "TopTube / HeadTube"
-                    set     polygon             [ rattleCAD::model::get_TubeMiter   TopTube_Head    ]
-                    set     minorDiameter       [ rattleCAD::model::get_Scalar      TopTube     DiameterHT  ]
-                    set     minorDirection      [ rattleCAD::model::get_Direction   TopTube ]
-                    set     majorDiameter       [ rattleCAD::model::get_Scalar      HeadTube    Diameter    ]
-                    set     majorDirection      [ rattleCAD::model::get_Direction   HeadTube ]
-                    set     offSet              0
-                }
-            TopTube_Seat {
-                    set Miter(header)       "TopTube / SeatTube"
-                    set     polygon             [ rattleCAD::model::get_TubeMiter   TopTube_Seat    ]
-                    set     majorDiameter       [ rattleCAD::model::get_Scalar      SeatTube    DiameterTT  ]
-                    set     majorDirection      [ rattleCAD::model::get_Direction   SeatTube ]
-                    set     minorDiameter       [ rattleCAD::model::get_Scalar      TopTube     DiameterST  ]
-                    set     minorDirection      [ rattleCAD::model::get_Direction   TopTube ]
-                    set     offSet              0
-                }
-            DownTube_Head {
-                    set Miter(header)       "DownTube / HeadTube"
-                    set     polygon             [ rattleCAD::model::get_TubeMiter   DownTube_Head   ]
-                    set     majorDiameter       [ rattleCAD::model::get_Scalar      HeadTube    Diameter    ]
-                    set     majorDirection      [ rattleCAD::model::get_Direction   HeadTube ]
-                    set     minorDiameter       [ rattleCAD::model::get_Scalar      DownTube    DiameterHT  ]
-                    set     minorDirection      [ rattleCAD::model::get_Direction   DownTube ]
-                    set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
-                    set     offSet              0
-                }
-            DownTube_Seat {
-                    set Miter(header)       "DownTube / SeatTube"
-                    set     polygon             [ rattleCAD::model::get_TubeMiter   DownTube_Seat   ]
-                    set     polygon_out         [ rattleCAD::model::get_TubeMiter   DownTube_BB_out ]
-                    set     polygon_in          [ rattleCAD::model::get_TubeMiter   DownTube_BB_in  ]
-                    set     majorDiameter       [ rattleCAD::model::get_Scalar      DownTube    DiameterBB  ]
-                    set     majorDirection      [ rattleCAD::model::get_Direction   DownTube ]
-                    set     minorDiameter       [ rattleCAD::model::get_Scalar      SeatTube    DiameterBB  ]
-                    set     minorDirection      [ rattleCAD::model::get_Direction   SeatTube ]
-                    set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
-                    set     offSet              0
-                    set     diameter_addText    "([rattleCAD::model::get_Scalar BottomBracket OutsideDiameter]/[rattleCAD::model::get_Scalar BottomBracket InsideDiameter])"
-                }
-            SeatTube_Down {
-                    set Miter(header)       "SeatTube / DownTube"
-                    set     polygon             [ rattleCAD::model::get_TubeMiter   SeatTube_Down   ]
-                    set     polygon_out         [ rattleCAD::model::get_TubeMiter   SeatTube_BB_out ]
-                    set     polygon_in          [ rattleCAD::model::get_TubeMiter   SeatTube_BB_in  ]
-                    set     majorDiameter       [ rattleCAD::model::get_Scalar      SeatTube    DiameterBB  ]
-                    set     majorDirection      [ rattleCAD::model::get_Direction   DownTube ]
-                    set     minorDiameter       [ rattleCAD::model::get_Scalar      DownTube    DiameterBB  ]
-                    set     minorDirection      [ rattleCAD::model::get_Direction   SeatTube ]
-                    set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
-                    set     offSet              0
-                    set     diameter_addText    "([rattleCAD::model::get_Scalar BottomBracket OutsideDiameter]/[rattleCAD::model::get_Scalar BottomBracket InsideDiameter])"
-                }
-            SeatStay_01 {
-                    set Miter(header)       "SeatStay / SeatTube"
-                    set     polygon             [ rattleCAD::model::get_TubeMiter   SeatStay_01 ]
-                    set     majorDiameter       [ rattleCAD::model::get_Scalar      SeatStay    SeatTubeMiterDiameter   ]
-                    set     majorDirection      [ rattleCAD::model::get_Direction   SeatTube ]
-                    set     minorDiameter       [ rattleCAD::model::get_Scalar      SeatStay    DiameterST  ]
-                    set     minorDirection      [ rattleCAD::model::get_Direction   SeatStay ]
-                    set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
-                    set     offSet              [ format "%.3f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
-                }
-            SeatStay_02 {
-                    set Miter(header)       "SeatStay / SeatTube"
-                    set     polygon             [ rattleCAD::model::get_TubeMiter   SeatStay_02 ]
-                    set     majorDiameter       [ rattleCAD::model::get_Scalar      SeatStay    SeatTubeMiterDiameter   ]
-                    set     majorDirection      [ rattleCAD::model::get_Direction   SeatTube ]
-                    set     minorDiameter       [ rattleCAD::model::get_Scalar      SeatStay    DiameterST  ]
-                    set     minorDirection      [ rattleCAD::model::get_Direction   SeatStay ]
-                    set     majorDirection      [ vectormath::unifyVector {0 0} $majorDirection -1 ]
-                    set     offSet              [ format "%.3f" [ expr 0.5 * ($majorDiameter - $majorDirection) ] ]
-                }
-            Reference {
-                    set Miter(header)       "Reference"
-                    set       polygon           [ rattleCAD::model::get_TubeMiter    Reference  ]
-                }
-            default {return}
-        }
-
-        
-          # puts "  -> \$polygon     $polygon"
-          # puts "  -> \$polygon_in  $polygon_in"
-          # puts "  -> \$polygon_out $polygon_out"
-        
-        
-        catch {set polygon_out [lrange $polygon_out 0 end-2]}
-        catch {set polygon_in  [lrange $polygon_in  0 end-2]}
-        
-        if {$rotation == {no}} {
-            set Miter(polygon)      [ vectormath::addVectorPointList $xy  $polygon]
-            set Miter(polygon_out)  [ vectormath::addVectorPointList $xy  $polygon_out]
-            set Miter(polygon_in)   [ vectormath::addVectorPointList $xy  $polygon_in]
-        } else {                        
-            set       polygon       [ vectormath::rotatePointList {0 -35} $polygon    180]
-            set       polygon_out   [ vectormath::rotatePointList {0 -35} $polygon_out 180]
-            set       polygon_in    [ vectormath::rotatePointList {0 -35} $polygon_in  180]
-            set Miter(polygon)      [ vectormath::addVectorPointList $xy  $polygon]
-            set Miter(polygon_out)  [ vectormath::addVectorPointList $xy  $polygon_out]
-            set Miter(polygon_in)   [ vectormath::addVectorPointList $xy  $polygon_in]
-        }
-
-                # --- mitter polygon
-                #
-        $cv_Name create polygon $Miter(polygon)     -fill white -outline black
-        catch {$cv_Name create line    $Miter(polygon_in)  -fill black}
-        catch {$cv_Name create line    $Miter(polygon_out) -fill black}
-        
-                # --- polygon reference lines
-                #
-        switch $type {
-
-            Reference {
-                            # --- defining values
-                            #
-                        set Miter(text_01)     "Reference: 100.00 x 10.00 "
-                        set textPos     [vectormath::addVector $xy {10 3}]
-                    $cv_Name create draftText $textPos  -text $Miter(text_01) -size 2.5
-                    }
-            default {                   
-                            # --- defining values
-                            #
-                        set Miter(text_01)     "diameter: $majorDiameter / $minorDiameter $diameter_addText"
-                        set     minorAngle          [ vectormath::angle {0 1} {0 0} $minorDirection   ]
-                        set     majorAngle          [ vectormath::angle {0 1} {0 0} $majorDirection   ]                         
-                        set     angle               [ expr abs($majorAngle - $minorAngle) ]
-                            if {$angle > 90} {set angle [expr 180 - $angle]}
-                        set     angle [ format "%.3f" $angle ]
-                        set     angleComplement     [ format "%.3f" [ expr 180 - $angle ] ]
-                        set Miter(text_02)     "angle:  $angle / $angleComplement"
-                        set Miter(text_03)     "offset: $offSet"
-                        
-                        set pt_01   [ vectormath::addVector $xy {0  5} ]
-                        set pt_02   [ vectormath::addVector $xy {0 -75} ]
-
-                        if {$rotation == {no}} {                
-                                set pt_03   [ rattleCAD::model::coords_xy_index $Miter(polygon) end ]
-                                    # puts "\$Miter(polygon) $Miter(polygon)"
-                                    # puts "\$pt_03 $pt_03"
-                                set pt_03   [ vectormath::addVector $pt_03 {+5  20} ]
-                                set pt_04   [ rattleCAD::model::coords_xy_index $Miter(polygon) end-1]
-                                set pt_04   [ vectormath::addVector $pt_04 {-5  20} ]
-                                set pt_05   [ vectormath::addVector $pt_03 { 0  50} ]
-                                set pt_06   [ vectormath::addVector $pt_04 { 0  50} ]
-                                set pt_11   [ vectormath::addVector $xy    {-20 -48}]
-                                set pt_12   [ vectormath::addVector $xy    {-20 -55}]
-                                set pt_13   [ vectormath::addVector $xy    {-20 -60}]
-                                set pt_14   [ vectormath::addVector $xy    {-20 -65}]                                
-                       } else {    
-                                set pt_03   [ rattleCAD::model::coords_xy_index $Miter(polygon) end ]
-                                set pt_03   [ vectormath::addVector $pt_03 {-5 -20} ]
-                                set pt_04   [ rattleCAD::model::coords_xy_index $Miter(polygon) end-1]
-                                set pt_04   [ vectormath::addVector $pt_04 {+5 -20} ]
-                                set pt_05   [ vectormath::addVector $pt_03 { 0 -50} ]
-                                set pt_06   [ vectormath::addVector $pt_04 { 0 -50} ] 
-                                set pt_11   [ vectormath::addVector $xy    {-20 -25}]
-                                set pt_12   [ vectormath::addVector $xy    {-20 -18}]
-                                set pt_13   [ vectormath::addVector $xy    {-20 -13}]
-                                set pt_14   [ vectormath::addVector $xy    {-20  -8}]                         }
-                    
-                    $cv_Name create centerline     [ appUtil::flatten_nestedList $pt_01 $pt_02 ]  -fill red  -width 0.25
-                    $cv_Name create line         [ appUtil::flatten_nestedList $pt_03 $pt_04 ]  -fill blue -width 0.25
-                    $cv_Name create centerline     [ appUtil::flatten_nestedList $pt_05 $pt_06 ]  -fill red  -width 0.25
-                    
-                    $cv_Name create draftText $pt_11  -text $Miter(header)  -size 3.5
-                    $cv_Name create draftText $pt_12  -text $Miter(text_01) -size 2.5
-                    $cv_Name create draftText $pt_13  -text $Miter(text_02) -size 2.5
-                    $cv_Name create draftText $pt_14  -text $Miter(text_03) -size 2.5
-                }
-        }
-
-    } 
 
 
     proc rattleCAD::rendering::create_copyReference {cv_Name BB_Position} {

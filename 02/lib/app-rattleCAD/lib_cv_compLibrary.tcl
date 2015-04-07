@@ -160,9 +160,9 @@
                  $menueFrame.bf.scale   -expand yes  -side top  -fill x  -pady 4
 
             # -- Button
-        button  $menueFrame.bf.update.l_clear     -text {clear List}           -width 20    -command [list [namespace current]::cleanupTree $list_Selection]
-        button  $menueFrame.bf.update.l_update    -text {update List}          -width 20    -command [list [namespace current]::update_compList {} ]
-        button  $menueFrame.bf.update.c_update    -text {update Canvas}        -width 20    -command [list [namespace current]::updateCanvas]
+        ttk::button  $menueFrame.bf.update.l_clear     -text {clear List}           -width 20    -command [list [namespace current]::cleanupTree $list_Selection]
+        ttk::button  $menueFrame.bf.update.l_update    -text {update List}          -width 20    -command [list [namespace current]::update_compList {} ]
+        ttk::button  $menueFrame.bf.update.c_update    -text {update Canvas}        -width 20    -command [list [namespace current]::updateCanvas]
         pack    $menueFrame.bf.update.l_clear \
                 $menueFrame.bf.update.l_update \
                 $menueFrame.bf.update.c_update \
@@ -177,7 +177,7 @@
                 $menueFrame.bf.scale.angle \
                 -side top
 
-        button  $menueFrame.bf.scale.reset    -text {reset}            -width 20    -command [list [namespace current]::reset_Positioning ]
+        ttk::button  $menueFrame.bf.scale.reset    -text {reset}            -width 20    -command [list [namespace current]::reset_Positioning ]
         pack    $menueFrame.bf.scale.reset \
                 -side top
 

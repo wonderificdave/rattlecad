@@ -80,8 +80,9 @@ namespace eval rattleCAD::model {
     namespace import ::bikeGeometry::get_Position
     namespace import ::bikeGeometry::get_Direction
     namespace import ::bikeGeometry::get_BoundingBox
-    namespace import ::bikeGeometry::get_TubeMiter
     namespace import ::bikeGeometry::get_CenterLine
+    namespace import ::bikeGeometry::get_TubeMiter
+    namespace import ::bikeGeometry::get_TubeMiterDICT
         #
     namespace import ::bikeGeometry::get_ComponentDir 
     namespace import ::bikeGeometry::get_ComponentDirectories

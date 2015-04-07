@@ -10,6 +10,8 @@
 		<project>extSummary</project>
 		<project>osEnv</project>
 		<project>rattleCAD_Xtnd</project>
+		<project>snit</project>
+		<project>tcllib</project>
 		<project>vectorMath</project>
 	</projects>
 	<buildSpec>

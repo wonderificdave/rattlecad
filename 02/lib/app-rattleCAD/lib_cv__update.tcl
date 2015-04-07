@@ -178,11 +178,13 @@
                     default {}
             }
                 #
-            createDimension                   $cv_Name $xy    point_reference
+            createDimension                 $cv_Name    $xy    point_reference
                 #
-            update_renderCenterline           $cv_Name
+            update_renderCenterline         $cv_Name
                 #
-            createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
+            createWaterMark                 $cv_Name    [rattleCAD::control::getSession projectFile]   [rattleCAD::control::getSession dateModified]
+                #
+            createWaterMark_Logo            $cv_Name    0.4
                 #
             rattleCAD::view::gui::notebook_createButton    $cv_Name     {configMode_Frame,configMode_BaseDimension}
                 #
@@ -219,36 +221,38 @@
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Stem
             rattleCAD::rendering::createDecoration   $cv_Name $xy    LegClearance_Rep
                 #
-            createCenterline                  $cv_Name $xy    Saddle
-                #
-            createDimension                   $cv_Name $xy    point_frame_dimension
-            createDimension                   $cv_Name $xy    cline_brake
-            createDimension                   $cv_Name $xy    frameTubing_bg
-                #
-            createDimensionType               $cv_Name $xy    RearWheel_Clearance
-            createDimensionType               $cv_Name $xy    LegClearance
-            createDimensionType               $cv_Name $xy    DerailleurMount         editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    HeadTube_Length         editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    SeatTube_Extension      editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    SeatStay_Offset         editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    HeadTube_OffsetTT       editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    HeadTube_OffsetDT       editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    DownTube_Offset         editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    SeatTube_Offset         editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    TopTube_Angle           editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    HeadSet_Top             editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    HeadSet_Bottom          editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    ForkHeight              editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    Brake_Rear              editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    Brake_Front             editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    TopHeadTube_Angle       editable   ;# $updateCommand
-            createDimensionType               $cv_Name $xy    BottleCage              editable   ;# $updateCommand
+            createCenterline                $cv_Name $xy    Saddle
+                #   
+            createDimension                 $cv_Name $xy    point_frame_dimension
+            createDimension                 $cv_Name $xy    cline_brake
+            createDimension                 $cv_Name $xy    frameTubing_bg
+                #   
+            createDimensionType             $cv_Name $xy    RearWheel_Clearance
+            createDimensionType             $cv_Name $xy    LegClearance
+            createDimensionType             $cv_Name $xy    DerailleurMount         editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    HeadTube_Length         editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    SeatTube_Extension      editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    SeatStay_Offset         editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    HeadTube_OffsetTT       editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    HeadTube_OffsetDT       editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    DownTube_Offset         editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    SeatTube_Offset         editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    TopTube_Angle           editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    HeadSet_Top             editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    HeadSet_Bottom          editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    ForkHeight              editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    Brake_Rear              editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    Brake_Front             editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    TopHeadTube_Angle       editable   ;# $updateCommand
+            createDimensionType             $cv_Name $xy    BottleCage              editable   ;# $updateCommand
                 #
             rattleCAD::rendering::debug_geometry   $cv_Name $xy
                 #
-            update_renderCanvas               $cv_Name        wheat
+            update_renderCanvas             $cv_Name    wheat
                 #
-            createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
+            createWaterMark                 $cv_Name    [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
+                #
+            createWaterMark_Logo            $cv_Name    0.4
                 #
             rattleCAD::view::gui::notebook_createButton    $cv_Name     check_TubingAngles
                 #
@@ -334,17 +338,19 @@
             rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierRear     editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierFront    editable   ;# $updateCommand
                 #
-            createDimension                   $cv_Name $xy    cline_angle
+            createDimension                 $cv_Name $xy    cline_angle
                 #
-            createDimension                   $cv_Name $xy    summary_bg
+            createDimension                 $cv_Name $xy    summary_bg
                 #
-            createDimension                   $cv_Name $xy    summary_fg
+            createDimension                 $cv_Name $xy    summary_fg
                 #
             rattleCAD::rendering::createBaseline     $cv_Name $xy    black
                 #
-            update_renderCanvas               $cv_Name        wheat   gray98  gray93  gray93
+            update_renderCanvas             $cv_Name    wheat   gray98  gray93  gray93
                 #
-            createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
+            createWaterMark                 $cv_Name    [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
+                #
+            createWaterMark_Logo            $cv_Name    0.4
                 #
             rattleCAD::view::gui::notebook_createButton    $cv_Name     {pageConfig_Scale,pageConfig_Format}
                 #
@@ -431,11 +437,13 @@
             rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierRear     editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierFront    editable   ;# $updateCommand
                 #
-            update_renderCanvas               $cv_Name
+            update_renderCanvas             $cv_Name
                 #
-            createWaterMark                   $cv_Name        [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
+            createWaterMark                 $cv_Name    [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
-            update_renderCanvas               $cv_Name        wheat   gray98  gray93  gray93
+            update_renderCanvas             $cv_Name    wheat   gray98  gray93  gray93
+                #
+            createWaterMark_Logo            $cv_Name    0.4
                 #
             rattleCAD::view::gui::notebook_createButton    $cv_Name     change_Rendering
                 #   
@@ -447,25 +455,15 @@
                 #
             variable     bottomCanvasBorder
                 #
-            $cv_Name        clean_StageContent
+            $cv_Name    clean_StageContent
                 #
-            rattleCAD::rendering::createTubemiter    $cv_Name { 80 250}  TopTube_Head
-            rattleCAD::rendering::createTubemiter    $cv_Name { 80 145}  TopTube_Seat   rotate
+            rattleCAD::tubeMiter::create    $cv_Name 
                 #
-            rattleCAD::rendering::createTubemiter    $cv_Name {200 250}  DownTube_Head
-            rattleCAD::rendering::createTubemiter    $cv_Name {200 145}  DownTube_Seat  rotate
+            update_renderCanvas             $cv_Name
                 #
-            rattleCAD::rendering::createTubemiter    $cv_Name {330 145}  SeatTube_Down  rotate
+            createWaterMark                 $cv_Name    [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
-            rattleCAD::rendering::createTubemiter    $cv_Name {300 250}  SeatStay_02
-            rattleCAD::rendering::createTubemiter    $cv_Name {360 250}  SeatStay_01
-                #
-            rattleCAD::rendering::createTubemiter    $cv_Name {325  45}  Reference
-                # [clock format [clock seconds] -format {%Y.%m.%d %H:%M}]
-                #
-            update_renderCanvas               $cv_Name
-                #
-            createWaterMark                   $cv_Name [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
+            createWaterMark_Logo            $cv_Name    0.4
                 #
     }
 

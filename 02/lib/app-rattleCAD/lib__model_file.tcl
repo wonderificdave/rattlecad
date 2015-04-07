@@ -37,13 +37,13 @@
  #
  #
 
- namespace eval rattleCAD::model::file {
+ namespace eval rattleCAD::model::file {}
 
 
     #-------------------------------------------------------------------------
         #  save File Type: xml
         #
-    proc check_saveCurrentProject {} {
+    proc rattleCAD::model::file::check_saveCurrentProject {} {
     
             set changeIndex [rattleCAD::control::changeList::get_changeIndex]
                 
@@ -80,7 +80,7 @@
     #-------------------------------------------------------------------------
         #  save File Type: xml
         #
-    proc newProject_xml {} {
+    proc rattleCAD::model::file::newProject_xml {} {
     
                 
                 # -- check current Project for modification
@@ -146,7 +146,7 @@
     #-------------------------------------------------------------------------
         #  open File Type: xml
         #
-    proc openProject_xml { {fileName {}} {windowTitle {}} } {
+    proc rattleCAD::model::file::openProject_xml { {fileName {}} {windowTitle {}} } {
 
                 # --- check current Project for modification
             if {[check_saveCurrentProject] == {break}} {
@@ -226,7 +226,7 @@
     #-------------------------------------------------------------------------
         #  open Template File Type: xml
         #
-    proc openTemplate_xml {type} {
+    proc rattleCAD::model::file::openTemplate_xml {type} {
             
                 # --- check current Project for modification
             if {[check_saveCurrentProject] == {break}} {
@@ -278,7 +278,7 @@
     #-------------------------------------------------------------------------
         #  save File Type: xml
         #
-    proc saveProject_xml { {mode {save}} {type {Road}} } {
+    proc rattleCAD::model::file::saveProject_xml { {mode {save}} {type {Road}} } {
 
                 # --- select File
             set types {
@@ -460,7 +460,7 @@
     #-------------------------------------------------------------------------
         #  open a File, containing just a subset of a Project-xml
         #
-    proc openProject_Subset_xml {{fileName {}}} {
+    proc rattleCAD::model::file::openProject_Subset_xml {{fileName {}}} {
             set types {
                 {{Project Files 3.x }       {.xml}  }
             }
@@ -489,7 +489,7 @@
     #-------------------------------------------------------------------------
         #  ... renamed from openFile_xml to get_XMLContent  2012.07.29
         #
-    proc get_XMLContent {{file {}} {show {}}} {
+    proc rattleCAD::model::file::get_XMLContent {{file {}} {show {}}} {
 
             set types {
                     {{xml }       {.xml}  }
@@ -526,7 +526,7 @@
     #-------------------------------------------------------------------------
        #  open web URL
        #
-    proc open_URL {url {mimeType {}}} {
+    proc rattleCAD::model::file::open_URL {url {mimeType {}}} {
             osEnv::open_by_mimeType_DefaultApp  $url $mimeType
             return
     }
@@ -535,7 +535,7 @@
     #-------------------------------------------------------------------------
        #  open File by OS - Definition
        #
-    proc open_localFile {fileName} {
+    proc rattleCAD::model::file::open_localFile {fileName} {
             osEnv::open_by_mimeType_DefaultApp  $fileName
             return
     }
@@ -544,7 +544,7 @@
     #-------------------------------------------------------------------------
        #  open File by Extension
        #
-    proc openFile_byExtension {fileName {altExtension {}}} {
+    proc rattleCAD::model::file::openFile_byExtension {fileName {altExtension {}}} {
             osEnv::open_by_mimeType_DefaultApp $fileName $altExtension          
             return
     }
@@ -554,7 +554,7 @@
     #-------------------------------------------------------------------------
         #  get user project directory
         #
-    proc check_user_dir {checkDir} {
+    proc rattleCAD::model::file::check_user_dir {checkDir} {
 
             # changed since 3.2.78.03
 
@@ -595,133 +595,205 @@
     #-------------------------------------------------------------------------
        #  summ up ps-Files and create pdf
        #
-    proc create_summaryPDF {exportDir {postEvent {open}}} {
+    proc rattleCAD::model::file::create_summaryPDF {exportDir {postEvent {open}}} {
+                #
             puts "\n"
             puts  "    ------------------------------------------------"
             puts  "      create_summaryPDF: "
             puts  "         ... $exportDir"
             puts  ""
+                #
+            set ps_Dict     [collect_Data       $exportDir]
+                #
+            set pdf_files   [create_batchFile   $ps_Dict] 
+                #
+                #
+            if {$postEvent == {open}} {
+                puts "\n\n\n"
+                puts "    ------------------------------------------------"
+                foreach pdfFile $pdf_files {
+                    puts "\n"
+                    puts "      ... open $pdfFile"
+                        # catch {rattleCAD::model::file::openFile_byExtension "$pdfFile"}
+                    catch {osEnv::open_by_mimeType_DefaultApp "$pdfFile"}
+                }
+            }
+            puts "    ------------------------------------------------"
+            puts ""
+                #
+                #
+            return 
+    }
 
-            set ps_Dict   [dict create directory $exportDir fileFormat {}]
-          
-              #-------------------------------------------------------------------------
+    proc rattleCAD::model::file::collect_Data {exportDir} {
+                #
+                #-------------------------------------------------------------------------
                 # check ghostscript installation
                 #
             set ghostScript [osEnv::get_Executable gs]   
-              # puts "    -> \$ghostScript $ghostScript"
+                # puts "    -> \$ghostScript $ghostScript"
             if {$ghostScript == {}} {
                 tk_messageBox -title "PDF Export" -message "Ghostscript Error:\n     ... could not initialize ghostScript installation" -icon warning
                 return
-            }                        
-
-        
-              #-------------------------------------------------------------------------
+            }  
+                #
+                #-------------------------------------------------------------------------
+                # create dictionary
+                #
+            set ps_Dict   [dict create \
+                                exportDir   $exportDir \
+                                ghostScript $ghostScript \
+                                fileFormat  {} ]
+                #
+                #-------------------------------------------------------------------------
                 # get_file_Info
                 #
             set psFiles [glob -directory $exportDir *.ps]
+                #
             foreach psFile $psFiles {
-                # puts "\n ------------------------"
+                    # puts "\n ------------------------"
                 puts "            ... $psFile"
-                  # puts "         ... [file tail $psFile]"
+                    # puts "         ... [file tail $psFile]"
                 set fp [open $psFile r]
                 set file_data [read $fp]
                 close $fp
-                
-                     # Process data file
+                    #
+                    # Process data file
                 set data [split $file_data "\n"]
                 foreach line $data {
                     set searchString {%%BoundingBox: }
                     if {[string equal  -length [string length $searchString] $line $searchString] } {
-                          # puts "   ... $searchString [string length $searchString]"
-                          # puts "   ... $line"
+                            # puts "   ... $searchString [string length $searchString]"
+                            # puts "   ... $line"
                         set values [split [string range  $line [string length $searchString] end] ]
-                          # puts "      -> $values"
+                            # puts "      -> $values"
                         foreach {y0 x0 y1 x1} $values break
-                          # puts "        -> $x0 $y0"
-                          # puts "        -> $x1 $y1"
+                            # puts "        -> $x0 $y0"
+                            # puts "        -> $x1 $y1"
                         set pageWidth     [expr $x1 - $x0]
                         set pageHeight    [expr $y1 - $y0]
-                          # set pageWidth     [canvasCAD::get_DIN_Length $pageWidth]
-                          # set pageHeight    [canvasCAD::get_DIN_Length $pageHeight]
-                          # set formatString  [format "%s_%s" [canvasCAD::get_DIN_Length $pageWidth] [canvasCAD::get_DIN_Length $pageHeight]]
-                        set formatString  [canvasCAD::get_DIN_Format $pageWidth  $pageHeight]
-                          # puts "        -> $pageWidth x $pageHeight"
-                          # puts "\n"
+                            # puts "        -> $pageWidth x $pageHeight"
+                            # puts "\n"
                     }
-                    
+                        #
                     if {[string equal  $line {%%EndComments}]} break
+                        #
                 }
-                
+                    # puts "  <I>  \$formatString $formatString"
+                    #
+                set   fd [open $psFile "r"]
+                    #
+                gets $fd psAttribute(first)    
+                gets $fd psAttribute(second)    
+                gets $fd psAttribute(third)   
+                    # puts " <i> $getLine(first)"
+                    # puts " <i> $getLine(second)"
+                    # puts " <i> $getLine(third)"
+                close $fd 
+                    #
+                set format [lindex [split $psAttribute(second)] end]
+                set orient [lindex [split $psAttribute(third)]  end]
+                    #
+                set formatString [format "%s_%s" $format $orient]      
+                    #        
                 set keyName   [file rootname [file tail $psFile]]
                 set attrList  [list x0 $x0 \
                                     y0 $y0 \
                                     x1 $x1 \
                                     y1 $y1 \
-                                    pageWidth $pageWidth \
-                                    pageHeight $pageHeight ]
-
+                                    pageWidth  $pageWidth \
+                                    pageHeight $pageHeight \
+                                    dinFormat  $format \
+                                    orient     $orient]
+                    #
                 if {![dict exists $ps_Dict fileFormat $formatString]} {
-                      # puts "   ... $formatString missing"
+                        # puts "   ... $formatString missing"
                     dict set ps_Dict fileFormat $formatString [dict create $keyName $attrList]
                 } else {
-                      # puts "   ... $formatString exists"
+                        # puts "   ... $formatString exists"
                     dict set ps_Dict fileFormat  $formatString $keyName $attrList
                 }
             }
                 #
+            return $ps_Dict
+                #
+    }
+
+
+    #-------------------------------------------------------------------------
+       #  summ up ps-Files and create pdf
+       #
+    proc rattleCAD::model::file::create_batchFile {ps_Dict} { 
                 # 
-            set pdf_fileList {}            
+            set exportDir       [dict get $ps_Dict  exportDir] 
+            set ghostScript     [dict get $ps_Dict  ghostScript] 
+                #
+            set pdf_fileList {}
+                #
             foreach fileFormat [dict keys [dict get $ps_Dict fileFormat]] {
                 puts "\n"
                 puts "    ------------------------------------------------"
                 puts "        ... $fileFormat"
-                
+                    #
                 set fileString {}
                 foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
-                      puts "         ... $fileKey"   
-                      set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
-                      append fileString " " \"$inputFile\"
+                    puts "         ... $fileKey"   
+                    set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
+                    append fileString " " \"$inputFile\"
                 }        
-                
-
+                    #
+                    #
                 foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
                         # puts "         ... $fileKey"
-                      set x0          [dict get $ps_Dict fileFormat $fileFormat $fileKey x0]
-                      set y0          [dict get $ps_Dict fileFormat $fileFormat $fileKey y0]
-                      set pageWidth   [dict get $ps_Dict fileFormat $fileFormat $fileKey pageWidth]
-                      set pageHeight  [dict get $ps_Dict fileFormat $fileFormat $fileKey pageHeight]
-                      set offSet_X    [expr int (-1 * $x0)]
-                      set offSet_Y    [expr int (-1 * $y0)]
+                    set x0          [dict get $ps_Dict fileFormat $fileFormat $fileKey x0]
+                    set y0          [dict get $ps_Dict fileFormat $fileFormat $fileKey y0]
+                    set pageWidth   [dict get $ps_Dict fileFormat $fileFormat $fileKey pageWidth]
+                    set pageHeight  [dict get $ps_Dict fileFormat $fileFormat $fileKey pageHeight]
+                    set dinFormat   [dict get $ps_Dict fileFormat $fileFormat $fileKey dinFormat]
+                    set orient      [dict get $ps_Dict fileFormat $fileFormat $fileKey orient]
+                    set offSet_X    [expr int (-1 * $x0)]
+                    set offSet_Y    [expr int (-1 * $y0)]
                         # puts "       ... \$pageWidth  $pageWidth"
                         # puts "       ... \$pageHeight $pageHeight"
                         # puts "       ... \$offSet_X   $offSet_X"
                         # puts "       ... \$offSet_Y   $offSet_Y"
-                      set pg_Format   [format "%sx%s"  [expr 10 * $pageHeight] [expr 10 * $pageWidth]]
                         # set pg_Offset   [format "<</PageOffset \[%i %i\]>> setpagedevice" $offSet_Y $offSet_X]
                 }
-                
-                set fileName  [rattleCAD::control::getSession projectName]
-                set fileName  [string map {{ } _ {.xml} {}} $fileName]
-                set fileName  [format "%s_%s.pdf" $fileName $fileFormat]
+                    #
+                set fileName    [rattleCAD::control::getSession projectName]
+                set fileName    [string map {{ } _ {.xml} {}} $fileName]
+                set fileName    [format "%s_%s.pdf" $fileName $fileFormat]
                 set outputFile  [file nativename [file join $exportDir $fileName]]
-				#set outputFile  [file nativename [file join $exportDir summary_$fileFormat.pdf]]
-                
-                
-                  # -- create batch Files
-                  #                
-                set batchFileName  "summary_$fileFormat"
-                  # -- windows batch-file
+                    #
+                    # -- create batch Files
+                    #                
+                set batchFileName   "summary_$fileFormat"
+                set pg_PaperSize    [format "PAPERSIZE#%s" [string tolower $dinFormat]]
+                set pg_Format       [format "%sx%s"  [expr 10 * $pageHeight] [expr 10 * $pageWidth]]
+                switch $orient {
+                    portrait { set pg_Orient true }
+                    landscape -
+                    default  { set pg_Orient false }
+                }
+                set pg_Format       [format "%sx%s"  [expr 10 * $pageHeight] [expr 10 * $pageWidth]]
+                    #
+                    #
+                    # -- windows batch-file
+                    #
                 set batchFile   [file join $exportDir ${batchFileName}.bat]
-
+                    #
                 set fileId [open $batchFile "w"]
-                    puts $fileId "\"[file nativename $ghostScript]\" ^"
-                    puts $fileId " -dNOPAUSE ^"
-                    puts $fileId " -sDEVICE=pdfwrite ^"
-                    puts $fileId " -g$pg_Format ^"
-                    puts $fileId " -sOutputFile=\"$outputFile\" ^"
-                      # puts $fileId " -c \"$pg_Offset\" ^"
-                    puts $fileId " -dBATCH ^"
-					
+                puts $fileId "\"[file nativename $ghostScript]\" ^"
+                puts $fileId " -sDEVICE=pdfwrite ^"
+                puts $fileId " -s$pg_PaperSize ^"
+                puts $fileId " -sOutputFile=\"$outputFile\" ^"
+                    # puts $fileId " -c \"$pg_Offset\" ^"
+                    # puts $fileId " -g$pg_Format ^"
+                puts $fileId " -dNOPAUSE ^"
+                    # puts $fileId " -dORIENT1=$pg_Orient ^"
+                puts $fileId " -dBATCH ^"
+					#
+                    #
                 foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
                       # puts "         ... $fileKey"   
                     set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
@@ -730,73 +802,67 @@
                       # puts -nonewline $fileId " -dBATCH $fileString "
                 }
                 close $fileId
-                
-                  # -- unix shell script
+                    #
+                    #
+                    # -- unix shell script
+                    #
                 set batchFile   [file join $exportDir ${batchFileName}.sh]
-
+                    #
                 set fileId [open $batchFile "w"]
-                    puts $fileId "\"[file nativename $ghostScript]\" \\"
-                    puts $fileId " -dNOPAUSE \\"
-                    puts $fileId " -sDEVICE=pdfwrite \\"
-                    puts $fileId " -g$pg_Format \\"
-                    puts $fileId " -sOutputFile=\"$outputFile\" \\"
-                      # puts $fileId " -c \"$pg_Offset\" ^"
-                    puts $fileId " -dBATCH \\"
+                puts $fileId "\"[file nativename $ghostScript]\" \\"
+                puts $fileId " -sDEVICE=pdfwrite \\"
+                puts $fileId " -s$pg_PaperSize \\"
+                puts $fileId " -sOutputFile=\"$outputFile\" \\"
+                    # puts $fileId " -c \"$pg_Offset\" ^"
+                    # puts $fileId " -g$pg_Format \\"
+                puts $fileId " -dNOPAUSE \\"
+                    # puts $fileId " -dORIENT1=$pg_Orient \\"
+                puts $fileId " -dBATCH \\"
+                    #
+                    #
                 foreach fileKey [dict keys [dict get $ps_Dict fileFormat $fileFormat]] {
-                      # puts "         ... $fileKey"   
+                        # puts "         ... $fileKey"   
                     set inputFile   [file nativename [file join $exportDir $fileKey.ps]]
-                      # append fileString " " \"$inputFile\"
+                        # append fileString " " \"$inputFile\"
                     puts $fileId "       \"$inputFile\" \\"
-                      # puts -nonewline $fileId " -dBATCH $fileString "
+                        # puts -nonewline $fileId " -dBATCH $fileString "
                 }
                 close $fileId                
-
-                
+                    #
+                    #
                 switch  "$::tcl_platform(platform)" {
                     {windows} {
-                              set batchFile   [file join $exportDir ${batchFileName}.bat]
-                              if {[catch {exec $batchFile} fid]} {
-                                  tk_messageBox -title "rattleCAD - Warning" -icon warning \
-                                        -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"  
-                              } else {
-                                   lappend pdf_fileList [file normalize $outputFile]
-                              }
-                          }
-                     default {
-                              set batchFile   [file join $exportDir ${batchFileName}.sh]
-                              set shellCMD [osEnv::get_Executable sh]
-                              if {[catch {exec $shellCMD $batchFile} fid]} {
-                                  tk_messageBox -title "rattleCAD - Warning" -icon warning \
-                                        -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"  
-                              } else {
-                                   lappend pdf_fileList [file normalize $outputFile]
-                              }
-                     }
+                            set batchFile   [file join $exportDir ${batchFileName}.bat]
+                            if {[catch {exec $batchFile} fid]} {
+                                tk_messageBox -title "rattleCAD - Warning" -icon warning \
+                                      -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"  
+                            } else {
+                                 lappend pdf_fileList [file normalize $outputFile]
+                            }
+                        }
+                    default {
+                            set batchFile   [file join $exportDir ${batchFileName}.sh]
+                            set shellCMD [osEnv::get_Executable sh]
+                            if {[catch {exec $shellCMD $batchFile} fid]} {
+                                tk_messageBox -title "rattleCAD - Warning" -icon warning \
+                                      -message "could not create pdf-File\n  $outputFile\n\n ... maybe it is still opened by an application"  
+                            } else {
+                                 lappend pdf_fileList [file normalize $outputFile]
+                            }
+                        }
                 }
             }        
-            
-            
-        
-            if {$postEvent == {open}} {
-                puts "\n\n\n"
-                puts "    ------------------------------------------------"
-                foreach pdfFile $pdf_fileList {
-                    puts "\n"
-                    puts "      ... open $pdfFile"
-                      # catch {rattleCAD::model::file::openFile_byExtension "$pdfFile"}
-                    catch {osEnv::open_by_mimeType_DefaultApp "$pdfFile"}
-                }
-            }
-            puts "    ------------------------------------------------"
-            puts ""
-                          
+                #
+            return $pdf_fileList    
+                #
+
     }
 
  
     #-------------------------------------------------------------------------
         #  ...
         #
-    proc getTemplateFile {type} {
+    proc rattleCAD::model::file::getTemplateFile {type} {
 
             set TemplateRoad    [file join $::APPL_Config(USER_Dir) [format "%s%s.xml" $::APPL_Config(USER_InitString) Road] ]
             set TemplateMTB     [file join $::APPL_Config(USER_Dir) [format "%s%s.xml" $::APPL_Config(USER_InitString) MTB ] ]
@@ -824,7 +890,7 @@
     #-------------------------------------------------------------------------
         # http://stackoverflow.com/questions/429386/tcl-recursively-search-subdirectories-to-source-all-tcl-files
         # 2010.10.15
-    proc findFiles { basedir pattern } {
+    proc rattleCAD::model::file::findFiles { basedir pattern } {
                     # Fix the directory name, this ensures the directory name is in the
                     # native format for the platform and contains a final directory seperator
             set basedir [string trimright [file join [file normalize $basedir] { }]]
@@ -853,7 +919,7 @@
     #-------------------------------------------------------------------------
         # component alternatives
         #
-    proc get_componentAlternatives {key} {
+    proc rattleCAD::model::file::get_componentAlternatives {key} {
 
             set directory    [lindex [array get ::APPL_CompLocation $key ] 1 ]
                         # puts "     ... directory  $directory"
@@ -900,5 +966,5 @@
     }
 
 
-}
+
 

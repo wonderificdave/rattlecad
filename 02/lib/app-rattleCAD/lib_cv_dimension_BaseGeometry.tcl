@@ -360,10 +360,18 @@
                         #
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $Saddle(Position)      $HandleBar(Position) ] \
+                            horizontal  \
+                            [expr  -210 * $stageScale]    0 \
+                            $dimColour ]    \
+                    single_Result_Saddle_Offset_HB_X
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $HandleBar(Position)     $Saddle(Position) ] \
                             vertical    [expr  310 * $stageScale]   [expr -100 * $stageScale]  \
                             $dimColour ]    \
-                    single_Result_Saddle_Offset_HB
+                    single_Result_Saddle_Offset_HB_Y
                         #
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
@@ -462,7 +470,7 @@
                             [expr -380 * $stageScale]  [expr  230 * $stageScale]  \
                             $dimColour ]
                             
-            set _dim_SD_HB_Length   \
+            # set _dim_SD_HB_Length   \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $Saddle(Position)      $HandleBar(Position) ] \
                             horizontal  \
@@ -563,7 +571,7 @@
                             [ appUtil::flatten_nestedList  $HandleBar(Position)     $Saddle(Position) ] \
                             vertical    [expr  310 * $stageScale]   [expr -100 * $stageScale]  \
                             $dimColour ]    \
-                    single_Result_Saddle_Offset_HB
+                    single_Result_Saddle_Offset_HB_Y
                         #
 
                 #
@@ -983,7 +991,7 @@
                             [expr  -80 * $stageScale]    0 \
                             $dimColour ]
             
-            # set _dim_SD_HB_Height  \
+            set _dim_SD_HB_Height  \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $HandleBar(Position)   $Saddle(Position) ] \
                             vertical    \
@@ -1071,7 +1079,7 @@
                             [ appUtil::flatten_nestedList  $HandleBar(Position)     $Saddle(Position) ] \
                             vertical    [expr  310 * $stageScale]   [expr -100 * $stageScale]  \
                             $dimColour ]    \
-                    single_Result_Saddle_Offset_HB
+                    single_Result_Saddle_Offset_HB_Y
                          
                 #
             return
@@ -1819,6 +1827,7 @@
             variable    DownTube
             variable    HandleBar
             variable    Saddle
+            variable    SaddleNose
             variable    SeatTube
                 #
             variable    Position
@@ -1832,12 +1841,28 @@
                 #
                 # ---
                 #
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $Saddle(Position)      $HandleBar(Position) ] \
+                            horizontal  \
+                            [expr  -210 * $stageScale]    0 \
+                            $dimColour ]    \
+                    single_Result_Saddle_Offset_HB_X
+                        #                
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $HandleBar(Position)     $Saddle(Position) ] \
                             vertical    [expr  310 * $stageScale]   [expr -100 * $stageScale]  \
                             $dimColour ]    \
-                    single_Result_Saddle_Offset_HB
+                    single_Result_Saddle_Offset_HB_Y
+                        #
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
+                    [ $cv_Name dimension  length    \
+                            [ appUtil::flatten_nestedList  $SaddleNose(Position)    $HandleBar(Position)] \
+                            horizontal      [expr  -80 * $stageScale]    0 \
+                            $dimColour ]    \
+                    single_Result_SaddleNose_HB            
                         #
             #rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    \
                     [ $cv_Name dimension  angle \
@@ -2020,7 +2045,7 @@
                             [expr    70 * $stageScale]   0 \
                             $dimColour ]    
                   
-            set _dim_SN_HandleBar  \
+            # set _dim_SN_HandleBar  \
                     [ $cv_Name dimension  length    \
                             [ appUtil::flatten_nestedList  $SaddleNose(Position)    $HandleBar(Position)] \
                             horizontal  \

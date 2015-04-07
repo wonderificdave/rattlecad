@@ -68,17 +68,17 @@
             -fill both     -side left
         pack configure $treeFrame    -expand yes
 
-        button  $menueFrame.open    -text {Open xml-File}                   -width 30   -command { rattleCAD::model::file::get_XMLContent {}    visualize}
-        button  $menueFrame.bt01    -text {canvasCAD}                       -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $canvasCAD::__packageRoot    }
-        button  $menueFrame.bt02    -text {rattleCAD_init.xml}              -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $APPL_Config(root_InitDOM) }
-        button  $menueFrame.bt03    -text {Template Road}                   -width 30   -command { rattleCAD::model::file::get_XMLContent [rattleCAD::model::file::getTemplateFile Road]     visualize}
-        button  $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { rattleCAD::model::file::get_XMLContent [rattleCAD::model::file::getTemplateFile MTB ]     visualize}
+        ttk::button  $menueFrame.open    -text {Open xml-File}                   -width 30   -command { rattleCAD::model::file::get_XMLContent {}    visualize}
+        ttk::button  $menueFrame.bt01    -text {canvasCAD}                       -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $canvasCAD::__packageRoot    }
+        ttk::button  $menueFrame.bt02    -text {rattleCAD_init.xml}              -width 30   -command { rattleCAD::cfg_report::fillTree_Variable $APPL_Config(root_InitDOM) }
+        ttk::button  $menueFrame.bt03    -text {Template Road}                   -width 30   -command { rattleCAD::model::file::get_XMLContent [rattleCAD::model::file::getTemplateFile Road]     visualize}
+        ttk::button  $menueFrame.bt04    -text {Template OffRoad}                -width 30   -command { rattleCAD::model::file::get_XMLContent [rattleCAD::model::file::getTemplateFile MTB ]     visualize}
 
 
-        button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {currentProject} }
-        button  $menueFrame.bt07    -text {rattleCAD - Runtime}             -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {runTime} }
-        button  $menueFrame.bt08    -text {OS - Environment}                -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {osEnv} }
-        button  $menueFrame.clear   -text {clear Tree}                      -width 30   -command { rattleCAD::cfg_report::cleanupTree }
+        ttk::button  $menueFrame.bt06    -text {current Project}                 -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {currentProject} }
+        ttk::button  $menueFrame.bt07    -text {rattleCAD - Runtime}             -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {runTime} }
+        ttk::button  $menueFrame.bt08    -text {OS - Environment}                -width 30   -command { rattleCAD::cfg_report::fillTree_Variable {osEnv} }
+        ttk::button  $menueFrame.clear   -text {clear Tree}                      -width 30   -command { rattleCAD::cfg_report::cleanupTree }
         
               # $menueFrame.open \
                 $menueFrame.bt03 \
