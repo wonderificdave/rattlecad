@@ -1,6 +1,36 @@
 
 
-3.4.02.38  - 2014.03.23
+3.4.02.40  - 2014.04.02
+-------------------------------------------------------------------------------
+    refactor: 
+        ... require Tcl 8.6 now
+        ... canvasCAD 0.54
+            ... use snit to use pdf4tcl
+            ... use pdf4tcl replacing ghostscript?
+                ... http://sourceforge.net/projects/pdf4tcl/
+                ... BSD License
+        ... bikeGeometry 1.45
+            ... update Interfaces for BaseGeometry
+            ... add bikeGeometry::Geometry(Saddle_HB_x)
+        ... add rattleCAD::view::setTooltip 
+            ... to use ttk:button instead of BWidgets Button
+        ... remove background of icons in iconbar
+
+
+3.4.02.39  - 2014.04.02
+-------------------------------------------------------------------------------
+    refactor: pdf-print, tubeMiter
+        ... canvasCAD 0.53
+            ... canvasCAD::printPostScript
+        ... bikeGeometry 1.44
+            ... bikeGeometry::get_TubeMiterDICT 
+        ... change from tclkit8513.exe
+            ... to tclkit-8.6.3-win32-ix86.exe
+        ... rename rattleCAD::rendering::createTubemiter
+            ... to rattleCAD::tubeMiter::create
+        
+
+3.4.02.38  - 2014.03.24
 -------------------------------------------------------------------------------
     debug:
         ... rear-fender edit

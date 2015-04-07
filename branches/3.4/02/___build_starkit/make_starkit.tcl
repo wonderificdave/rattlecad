@@ -38,9 +38,14 @@ set dirInit    [file normalize .]
 set dirBase    [file dirname $dirInit]
 set dirExport  [file join $dirBase ___build]
 
-set tclkit_Bin tclkit8513.exe               ;# http://www.patthoyts.tk/tclkit/win32-ix86/8.5.13/
 set sdx_Kit    sdx-20110317.kit
+    #
+set tclkit_Bin tclkit-8.6.3-win32-ix86.exe
+# set tclkit_Bin tclkit-8.6.3-win32-x86_64.exe
+    #
 # set tclkit_Bin tclkit-8.5.8-win32.upx.exe
+# set tclkit_Bin tclkit8513.exe               ;# http://www.patthoyts.tk/tclkit/win32-ix86/8.5.13/
+# set tclkit_Bin tclkit-gui-8_6_3-twapi-4_0_61-x86-max.exe
 
 
 

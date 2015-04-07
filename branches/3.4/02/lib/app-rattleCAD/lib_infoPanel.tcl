@@ -159,6 +159,8 @@
         $w  insert end "\n"
         $w  insert end "       Tk:             [package require Tk]\n"
         $w  insert end "       BWidget:        [package require BWidget]\n"
+        $w  insert end "       snit:           [package require snit]\n"
+        $w  insert end "       pdf4tcl:        [package require pdf4tcl]\n"
         $w  insert end "       rattleCAD:      [package require rattleCAD]\n"
         $w  insert end "       bikeGeometry:   [package require bikeGeometry]\n"
         $w  insert end "       canvasCAD:      [package require canvasCAD]\n"

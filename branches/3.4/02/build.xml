@@ -15,22 +15,22 @@
     ein!
     //-->
     
-    <property name = "rattleCAD_Version"  value = "3.4.02.38" />
+    <property name = "rattleCAD_Version"  value = "3.4.02.40" />
     <property name = "build.dir"          value = "___build" />
 
+    <property name = "tcl_8.x"            value = "tclsh" />
     <property name = "tcl_8.5"            value = "tclsh" />
     <property name = "tcl_8.6"            value = "C:\Program Files (x86)\Tcl\8.6\bin\tclsh" />
     
-    <property name = "appUtil_home"       location = "../appUtil" />
-    <property name = "bikeGeometry_home"  location = "../bikeGeometry" />
-    <property name = "canvasCAD_home"     location = "../canvasCAD" />
-    <property name = "extSummary_home"    location = "../extSummary" />
-    <property name = "osEnv_home"         location = "../osEnv" />
-    <property name = "vectorMath_home"    location = "../vectorMath" />
-    
-    <property name = "rattleCAD_fileList" value = "main.tcl, rattleCAD.tcl, rattleCAD_checkEnv.tcl, help.txt, readme.txt, license.txt, exclusion.txt, icon16.gif, tclkit.ico, tclkit.inf, " />
-                    
-
+    <property name = "home_snit"          location = "../snit" />
+    <property name = "home_pdf4tcl"       location = "../pdf4tcl" />
+    <property name = "home_appUtil"       location = "../appUtil" />
+    <property name = "home_bikeGeometry"  location = "../bikeGeometry" />
+    <property name = "home_canvasCAD"     location = "../canvasCAD" />
+    <property name = "home_extSummary"    location = "../extSummary" />
+    <property name = "home_osEnv"         location = "../osEnv" />
+    <property name = "home_vectorMath"    location = "../vectorMath" />
+              
     
     <target   name = "rattleCAD_build_3.4">
     
@@ -88,104 +88,126 @@
 
 
             
-      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil">
-          <filelist dir = "${appUtil_home}" files = "pkgIndex.tcl"/>
-      </copy>
-      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil/lib">
-          <fileset dir = "${appUtil_home}/lib"/>
-      </copy>   
-      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil/test">
-          <fileset dir = "${appUtil_home}/test"/>
-      </copy>   
-      <echo>     ... content of folder ${appUtil_home} was copied.</echo>
-      
-      <echo> </echo>
-
-  
-      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry">
-           <filelist dir="${bikeGeometry_home}" files="pkgIndex.tcl"/>
-      </copy>
-      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/lib">
-          <fileset dir="${bikeGeometry_home}/lib"/>
-      </copy>
-      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/etc">
-          <fileset dir="${bikeGeometry_home}/etc"/>
-      </copy>
-      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/test">
-          <fileset dir="${bikeGeometry_home}/test"/>
-      </copy>
-      <echo>     ... content of folder ${bikeGeometry_home} was copied.</echo>
-      
-      <echo> </echo>
-      
-      
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-snit">
+                <fileset dir = "${home_snit}" includes="**/*.tcl" />
+            </copy>   
+            <echo>     ... content of folder ${home_snit} was copied.</echo>
+            
+            <echo> </echo>
+            
+            
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-pdf4tcl">
+                <fileset dir = "${home_pdf4tcl}" excludes="**/.buildpath, , **/.project" />
+            </copy>  
+            <echo>     ... content of folder ${home_pdf4tcl} was copied.</echo>
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-pdf4tcl/bitmaps">
+                 <fileset dir = "${home_pdf4tcl}" includes="**/*.xbm"/>
+            </copy>
+            <echo>     ... content of folder ${home_pdf4tcl} was copied.</echo>
+            
+            <echo> </echo>
+            
+            
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil">
+                <filelist dir = "${home_appUtil}" files = "pkgIndex.tcl"/>
+            </copy>
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil/lib">
+                <fileset dir = "${home_appUtil}/lib"/>
+            </copy>   
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-appUtil/test">
+                <fileset dir = "${home_appUtil}/test"/>
+            </copy>   
+            <echo>     ... content of folder ${home_appUtil} was copied.</echo>
+            
+            <echo> </echo>
+            
+            
+            <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry">
+                <filelist dir="${home_bikeGeometry}" files="pkgIndex.tcl"/>
+            </copy>
+            <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/lib">
+                <fileset dir="${home_bikeGeometry}/lib"/>
+            </copy>
+            <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/etc">
+                <fileset dir="${home_bikeGeometry}/etc"/>
+            </copy>
+            <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-bikeGeometry/test">
+                <fileset dir="${home_bikeGeometry}/test"/>
+            </copy>
+            <echo>     ... content of folder ${home_bikeGeometry} was copied.</echo>
+            
+            <echo> </echo>
+            
+            
             <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-canvasCAD">
-                <filelist dir="${canvasCAD_home}" files="pkgIndex.tcl"/>
+                <filelist dir="${home_canvasCAD}" files="pkgIndex.tcl"/>
             </copy>
             <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-canvasCAD/lib">
-            <fileset dir="${canvasCAD_home}/lib"/>
+            <fileset dir="${home_canvasCAD}/lib"/>
             </copy>
             <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-canvasCAD/font">
-            <fileset dir="${canvasCAD_home}/font"/>
+            <fileset dir="${home_canvasCAD}/font"/>
             </copy>
             <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-canvasCAD/test">
-            <fileset dir="${canvasCAD_home}/test"/>
+            <fileset dir="${home_canvasCAD}/test"/>
             </copy>
-            <echo>     ... content of folder ${canvasCAD_home} was copied.</echo>
+            <echo>     ... content of folder ${home_canvasCAD} was copied.</echo>
             
             <echo> </echo>
-
-        
+            
+            
             <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-extSummary">
-            <filelist dir = "${extSummary_home}" files = "pkgIndex.tcl"/>
+                <filelist dir = "${home_extSummary}" files = "pkgIndex.tcl"/>
             </copy>
             <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-extSummary/lib">
-            <fileset dir = "${extSummary_home}/lib"/>
+                <fileset dir = "${home_extSummary}/lib"/>
             </copy>   
             <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-extSummary/test">
-            <fileset dir = "${extSummary_home}/test"/>
+                <fileset dir = "${home_extSummary}/test"/>
             </copy>   
-            <echo>     ... content of folder ${extSummary_home} was copied.</echo>
+            <echo>     ... content of folder ${home_extSummary} was copied.</echo>
             
             <echo> </echo>
-    
             
-      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv">
-          <filelist dir = "${osEnv_home}" files = "pkgIndex.tcl"/>
-      </copy>
-      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/lib">
-          <fileset dir = "${osEnv_home}/lib"/>
-      </copy>   
-      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/etc">
-          <fileset dir = "${osEnv_home}/etc"/>
-      </copy>   
-      <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/test">
-          <fileset dir = "${osEnv_home}/test"/>
-      </copy>   
-      <echo>     ... content of folder ${osEnv_home} was copied.</echo>
-      
-      <echo> </echo>
-      
-  
-      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath">
-          <filelist dir="${vectorMath_home}" files="pkgIndex.tcl"/>
-      </copy>
-      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath/lib">
-          <fileset dir="${vectorMath_home}/lib"/>
-      </copy>
-      <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath/test">
-          <fileset dir="${vectorMath_home}/test"/>
-      </copy>
-      <echo>     ... content of folder ${vectorMath_home} was copied.</echo>
-      
-      <echo> </echo>
+                
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv">
+                <filelist dir = "${home_osEnv}" files = "pkgIndex.tcl"/>
+            </copy>
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/lib">
+                <fileset dir = "${home_osEnv}/lib"/>
+            </copy>   
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/etc">
+                <fileset dir = "${home_osEnv}/etc"/>
+            </copy>   
+            <copy todir = "${build.dir}/${rattleCAD_Version}/lib/app-osEnv/test">
+                <fileset dir = "${home_osEnv}/test"/>
+            </copy>   
+            <echo>     ... content of folder ${home_osEnv} was copied.</echo>
+            
+            <echo> </echo>
+            
+            
+            <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath">
+                <filelist dir="${home_vectorMath}" files="pkgIndex.tcl"/>
+            </copy>
+            <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath/lib">
+                <fileset dir="${home_vectorMath}/lib"/>
+            </copy>
+            <copy todir="${build.dir}/${rattleCAD_Version}/lib/app-vectorMath/test">
+                <fileset dir="${home_vectorMath}/test"/>
+            </copy>
+            <echo>     ... content of folder ${home_vectorMath} was copied.</echo>
+            
+            <echo> </echo>
 
 
             
             <copy todir="${build.dir}/${rattleCAD_Version}">
-                <filelist dir = "."   files="${rattleCAD_fileList}"/>      
+                <fileset dir = "." excludes="**/.buildpath, , **/.project, **/a_tclsh.bat, **/build*.xml" />
+            
                     
                     <!--
+                    <filelist dir = "."   files="${rattleCAD_fileList}"/>      
                     <include name="rattleCAD.tcl, help.txt, readme.txt, license.txt, exclusion.txt, icon16.gif, tclkit.ico, tclkit.inf"/>
                     <exclude name="./.*"/>
                     -->

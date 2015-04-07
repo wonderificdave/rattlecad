@@ -162,37 +162,38 @@
             variable rattleCAD_AddOn    
                 #
                 #append_rattleCAD_AddOn $tb_frame.rattleCAD_AddOn
-		
-            Button    $tb_frame.open      -image  $iconArray(open)          -helptext "open ..."                -command { rattleCAD::model::file::openProject_xml }  
-            Button    $tb_frame.save      -image  $iconArray(save)          -helptext "save ..."                -command { rattleCAD::model::file::saveProject_xml } 
+            # $tb_frame configure -fg black    
+                #
+            ttk::button    $tb_frame.open      -image  $iconArray(open)          -command { rattleCAD::model::file::openProject_xml }  
+            ttk::button    $tb_frame.save      -image  $iconArray(save)          -command { rattleCAD::model::file::saveProject_xml } 
             
             set rattleCAD_AddOn(ButtonFrame)    [frame     $tb_frame.rattleCAD_AddOn]
             
-            Button    $tb_frame.backward  -image  $iconArray(backward)      -helptext "... backward"            -command { rattleCAD::control::changeList::previous }          
-            Button    $tb_frame.forward   -image  $iconArray(forward)       -helptext "forward ..."             -command { rattleCAD::control::changeList::next }          
+            ttk::button    $tb_frame.backward  -image  $iconArray(backward)      -command { rattleCAD::control::changeList::previous }          
+            ttk::button    $tb_frame.forward   -image  $iconArray(forward)       -command { rattleCAD::control::changeList::next }          
             
-            Button    $tb_frame.render    -image  $iconArray(update)        -helptext "update Canvas..."        -command { rattleCAD::view::updateView force}  
-            Button    $tb_frame.clear     -image  $iconArray(clear)         -helptext "clear Canvas..."         -command { rattleCAD::view::gui::notebook_cleanCanvas} 
+            ttk::button    $tb_frame.render    -image  $iconArray(update)        -command { rattleCAD::view::updateView force}  
+            ttk::button    $tb_frame.clear     -image  $iconArray(clear)         -command { rattleCAD::view::gui::notebook_cleanCanvas} 
               
-            Button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -helptext "a roadbike Template"     -command { rattleCAD::view::gui::load_Template  Road }  
-            Button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -helptext "a offroad Template"      -command { rattleCAD::view::gui::load_Template  MTB  }  
+            ttk::button    $tb_frame.set_rd    -image  $iconArray(reset_r)       -command { rattleCAD::view::gui::load_Template  Road }  
+            ttk::button    $tb_frame.set_mb    -image  $iconArray(reset_o)       -command { rattleCAD::view::gui::load_Template  MTB  }  
             
-            Button    $tb_frame.print_htm -image  $iconArray(print_html)    -helptext "export HTML"             -command { rattleCAD::view::gui::export_Project      html }          
-            Button    $tb_frame.print_pdf -image  $iconArray(print_pdf)     -helptext "export PDF"              -command { rattleCAD::view::gui::export_Project      pdf }          
+            ttk::button    $tb_frame.print_htm -image  $iconArray(print_html)    -command { rattleCAD::view::gui::export_Project      html }          
+            ttk::button    $tb_frame.print_pdf -image  $iconArray(print_pdf)     -command { rattleCAD::view::gui::export_Project      pdf }          
 
-            Button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -helptext "print Postscript"        -command { rattleCAD::view::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) }          
-            Button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -helptext "print DXF"               -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
-            Button    $tb_frame.print_svg -image  $iconArray(print_svg)     -helptext "print SVG"               -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
+            ttk::button    $tb_frame.print_ps  -image  $iconArray(print_ps)      -command { rattleCAD::view::gui::notebook_exportPS   $APPL_Config(EXPORT_Dir) }          
+            ttk::button    $tb_frame.print_dxf -image  $iconArray(print_dxf)     -command { rattleCAD::view::gui::notebook_exportDXF  $APPL_Config(EXPORT_Dir) }          
+            ttk::button    $tb_frame.print_svg -image  $iconArray(print_svg)     -command { rattleCAD::view::gui::notebook_exportSVG  $APPL_Config(EXPORT_Dir) }          
             
-            Button    $tb_frame.scale_p   -image  $iconArray(scale_p)       -helptext "scale plus"              -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 3.0/2] }  
-            Button    $tb_frame.scale_m   -image  $iconArray(scale_m)       -helptext "scale minus"             -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 2.0/3] }  
-            Button    $tb_frame.resize    -image  $iconArray(resize)        -helptext "resize"                  -command { rattleCAD::view::gui::notebook_refitCanvas }  
+            ttk::button    $tb_frame.scale_p   -image  $iconArray(scale_p)       -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 3.0/2] }  
+            ttk::button    $tb_frame.scale_m   -image  $iconArray(scale_m)       -command { rattleCAD::view::gui::notebook_scaleCanvas  [expr 2.0/3] }  
+            ttk::button    $tb_frame.resize    -image  $iconArray(resize)        -command { rattleCAD::view::gui::notebook_refitCanvas }  
             
-            Button    $tb_frame.cfg       -image  $iconArray(cfg_panel)     -helptext "open config Panel"       -command { rattleCAD::configPanel::create } 
+            ttk::button    $tb_frame.cfg       -image  $iconArray(cfg_panel)     -command { rattleCAD::configPanel::create } 
             
-            Button    $tb_frame.donate    -image  $iconArray(donate)        -helptext "donate to rattleCAD"     -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/donate.html}   } 
+            ttk::button    $tb_frame.donate    -image  $iconArray(donate)        -command { rattleCAD::model::file::open_URL {http://rattlecad.sourceforge.net/donate.html}   } 
             
-            Button    $tb_frame.exit      -image  $iconArray(exit)                                              -command { rattleCAD::view::gui::exit_rattleCAD }
+            ttk::button    $tb_frame.exit      -image  $iconArray(exit)          -command { rattleCAD::view::gui::exit_rattleCAD }
               
             label   $tb_frame.sp0      -text   " "
             label   $tb_frame.sp1      -text   " "
@@ -228,9 +229,37 @@
                 -side right 
                 
                 # ---------------------------------------------
-                # check existance of package rattleCAD_Xtnd
-                # if yes fill frame $tb_frame.rattleCAD_Xtnd
+                # bind tooltips
+                # 
+                # rattleCAD::view::setTooltip $widget "Hello World!"    
+            rattleCAD::view::setTooltip    $tb_frame.open      "open ..."               
+            rattleCAD::view::setTooltip    $tb_frame.save      "save ..."               
                 #
+            rattleCAD::view::setTooltip    $tb_frame.backward  "... backward"           
+            rattleCAD::view::setTooltip    $tb_frame.forward   "forward ..."            
+                #
+            rattleCAD::view::setTooltip    $tb_frame.render    "update Canvas..."       
+            rattleCAD::view::setTooltip    $tb_frame.clear     "clear Canvas..."        
+                #
+            rattleCAD::view::setTooltip    $tb_frame.set_rd    "a roadbike Template"    
+            rattleCAD::view::setTooltip    $tb_frame.set_mb    "a offroad Template"     
+                #
+            rattleCAD::view::setTooltip    $tb_frame.print_htm "export HTML"            
+            rattleCAD::view::setTooltip    $tb_frame.print_pdf "export PDF"             
+                #
+            rattleCAD::view::setTooltip    $tb_frame.print_ps  "print Postscript"       
+            rattleCAD::view::setTooltip    $tb_frame.print_dxf "print DXF"              
+            rattleCAD::view::setTooltip    $tb_frame.print_svg "print SVG"              
+                #
+            rattleCAD::view::setTooltip    $tb_frame.scale_p   "scale plus"             
+            rattleCAD::view::setTooltip    $tb_frame.scale_m   "scale minus"            
+            rattleCAD::view::setTooltip    $tb_frame.resize    "resize"                 
+                #
+            rattleCAD::view::setTooltip    $tb_frame.cfg       "open config Panel"      
+                #
+            rattleCAD::view::setTooltip    $tb_frame.donate    "donate to rattleCAD"    
+                #
+                
     }
 
 
@@ -243,11 +272,15 @@
             variable iconArray
                 #
             if {[namespace ensemble exists ::rattleCAD_AddOn]} {
+                    #
                 label   $rattleCAD_AddOn(ButtonFrame).sp0   -text   " "
+                ttk::button  $rattleCAD_AddOn(ButtonFrame).addOn -image  $iconArray(addon)   -command {rattleCAD::control::start_AddOn}   
+                rattleCAD::view::setTooltip    $rattleCAD_AddOn(ButtonFrame).addOn "rattleCAD AddOn"              
+                    #
                 pack    $rattleCAD_AddOn(ButtonFrame).sp0 -side right
-                Button  $rattleCAD_AddOn(ButtonFrame).addOn -image  $iconArray(addon)   -helptext "rattleCAD AddOn" -command {rattleCAD::control::start_AddOn}   
                 pack    $rattleCAD_AddOn(ButtonFrame).addOn -fill y -expand yes -side right
-                # Button  $rattleCAD_AddOn(ButtonFrame).addOn -text AddOn      -helptext "rattleCAD AddOn" -command {rattleCAD::control::start_AddOn}   
+                    # Button  $rattleCAD_AddOn(ButtonFrame).addOn -image  $iconArray(addon)   -helptext "rattleCAD AddOn" -command {rattleCAD::control::start_AddOn}   
+                    # Button  $rattleCAD_AddOn(ButtonFrame).addOn -text AddOn      -helptext "rattleCAD AddOn" -command {rattleCAD::control::start_AddOn}   
                                 
             } else {
                 puts "\n\n"
@@ -774,6 +807,9 @@
                             $w raise {__Select__SubMenue__} all
                             update
                         }
+                            #
+                        rattleCAD::tubeMiter::exportPS_Areas
+                            #
                         rattleCAD::model::file::create_summaryPDF $exportDir
                     }
 

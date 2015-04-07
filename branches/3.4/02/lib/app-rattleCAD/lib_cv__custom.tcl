@@ -82,15 +82,17 @@
                                                 background gray50
                                             }
                         
+ }
 
-            
-    proc unset_Position {} { 
+      
+    proc rattleCAD::cv_custom::unset_Position {} { 
           # removes all position settings of any canvas 
 	    variable  Position
         array unset Position
     }
 
-    proc get_FormatFactor {stageFormat} {
+
+    proc rattleCAD::cv_custom::get_FormatFactor {stageFormat} {
             puts ""
             puts "         -------------------------------"
             puts "          rattleCAD::view::gui::get_FormatFactor"
@@ -104,7 +106,7 @@
     }
 
 
-    proc update_cv_Parameter {cv_Name BB_Position} {
+    proc rattleCAD::cv_custom::update_cv_Parameter {cv_Name BB_Position} {
 
             variable    stageScale
 
@@ -300,7 +302,7 @@
 
      #-------------------------------------------------------------------------
 	     #  return BottomBracket coords
-    proc get_BottomBracket_Position {cv_Name bottomCanvasBorder {updatePosition {recenter}} {option {bicycle}} {stageScale {}}} {
+    proc rattleCAD::cv_custom::get_BottomBracket_Position {cv_Name bottomCanvasBorder {updatePosition {recenter}} {option {bicycle}} {stageScale {}}} {
 	    
 	    variable  Position
 	    
@@ -437,7 +439,7 @@
     }
 
 
-    proc createCenterline {cv_Name BB_Position {extend_Saddle {}}} {
+    proc rattleCAD::cv_custom::createCenterline {cv_Name BB_Position {extend_Saddle {}}} {
 
                 # --- get stageScale
             set stageScale        [ $cv_Name  getNodeAttr  Stage    scale ]
@@ -481,7 +483,7 @@
     }
 
 
-    proc createLugRep {cv_Name BB_Position {type {all}}} {
+    proc rattleCAD::cv_custom::createLugRep {cv_Name BB_Position {type {all}}} {
 
         puts ""
         puts "   -------------------------------"
@@ -640,7 +642,7 @@
     }
 
 
-    proc createDraftingFrame {cv_Name DIN_Format scale projectFile date} {
+    proc rattleCAD::cv_custom::createDraftingFrame {cv_Name DIN_Format scale projectFile date} {
 
             puts ""
             puts "   -------------------------------"
@@ -742,14 +744,14 @@
 
 
 
-    proc createWaterMark {cv_Name projectFile date} {
+    proc rattleCAD::cv_custom::createWaterMark {cv_Name projectFile date} {
 
                 # --- get stageScale
-            set stageWidth          [ $cv_Name    getNodeAttr  Stage  width  ]
-            set stageHeight         [ $cv_Name    getNodeAttr  Stage  height ]
-            set stageScale          [ $cv_Name  getNodeAttr  Stage    scale  ]
+            set stageWidth          [ $cv_Name  getNodeAttr  Stage  width  ]
+            set stageHeight         [ $cv_Name  getNodeAttr  Stage  height ]
+            set stageScale          [ $cv_Name  getNodeAttr  Stage  scale  ]
             set stageFormat         [ $cv_Name  getNodeAttr  Stage  format ]
-
+                #
             set scaleFactor         [ expr 1 / $stageScale ]
                 if {[expr round($scaleFactor)] == $scaleFactor} {
                     set formatScaleFactor   [ expr round($scaleFactor) ]
@@ -757,11 +759,7 @@
                     set formatScaleFactor   [ format "%.1f" $scaleFactor ]
                 }
 
-            proc scale_toStage    {ptList factor} {
-                return [ vectormath::scalePointList {0 0} $ptList $factor ]
-            }
-                        # --- create Text: Software & Version
-
+                # --- create Text: Software & Version
             set textPos             [scale_toStage {7 4}    $scaleFactor]
             set textText            [format "%s  /  %s  / \[DIN %s\] /  rattleCAD  V%s.%s " $projectFile $date $stageFormat $::APPL_Config(RELEASE_Version) $::APPL_Config(RELEASE_Revision) ]
             $cv_Name create draftText $textPos  -text $textText -size 2.5 -anchor sw -fill gray20
@@ -770,7 +768,47 @@
 
     }
 
-    proc update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {compColour {gray98}} {tyreColour {gray95}} } {
+    proc rattleCAD::cv_custom::createWaterMark_Logo {cv_Name {scale {1.0}} {position {}} {orient {se}}} {
+                # --- get stageScale
+            set stageWidth          [ $cv_Name  getNodeAttr  Stage  width  ]
+            set stageHeight         [ $cv_Name  getNodeAttr  Stage  height ]
+            set stageScale          [ $cv_Name  getNodeAttr  Stage  scale  ]
+            set stageFormat         [ $cv_Name  getNodeAttr  Stage  format ]
+                #
+            set scaleFactor         [ expr 1 / $stageScale ]
+                if {[expr round($scaleFactor)] == $scaleFactor} {
+                    set formatScaleFactor   [ expr round($scaleFactor) ]
+                } else {
+                    set formatScaleFactor   [ format "%.1f" $scaleFactor ]
+                }
+
+                puts "\n\n $stageWidth \n\n"
+            set bottomRight     [list [expr $stageWidth -10] 5]
+            if {$position == {}} {
+                set position $bottomRight
+            }
+            set logoPos         [scale_toStage $position    $scaleFactor]
+                # puts $logoPos
+
+                # puts "   ... \$position $position" 
+                # puts "   ... \$scale $scale" 
+                # --- create Logo --------------------
+            set Logo(Angle)             0.00
+            set Logo(position)          $position
+            set Logo(file)              [rattleCAD::rendering::checkFileString [rattleCAD::model::get_Component  Logo]]
+            set Logo(file)              [file join $::APPL_Config(COMPONENT_Dir) logo rattleCAD.svg]
+            set Logo(object)            [$cv_Name readSVG $Logo(file) {0 0}    $Logo(Angle)]
+                # __Watermark_Logo__
+                #
+            # puts "   ... \$Logo(object) $Logo(object)"
+                #
+            $cv_Name transform $Logo(object) $Logo(position) [list $scale $scale] $orient
+                #
+            return $Logo(object)
+                #
+    }
+
+    proc rattleCAD::cv_custom::update_renderCanvas {cv_Name {tubeColour {gray95}} {decoColour {gray98}} {compColour {gray98}} {tyreColour {gray95}} } {
                 #
             foreach cv_Item [$cv_Name find withtag __Frame__] {
                 set cv_Type     [$cv_Name type $cv_Item]
@@ -818,7 +856,7 @@
             }
     }
 
-    proc update_renderCenterline {cv_Name {lineWidth_00 {3.0}} {lineWidth_01 {3.0}}} {
+    proc rattleCAD::cv_custom::update_renderCenterline {cv_Name {lineWidth_00 {3.0}} {lineWidth_01 {3.0}}} {
                 #
             foreach cv_Item [$cv_Name find withtag "__CenterLine__ && baseLine"] {
                 $cv_Name itemconfigure  $cv_Item -width $lineWidth_00
@@ -832,5 +870,7 @@
             foreach cv_Item [$cv_Name find withtag "__CenterPoint__ && personalSaddle"] { $cv_Name delete  $cv_Item }
     }
 
+    proc rattleCAD::cv_custom::scale_toStage    {ptList factor} {
+        return [ vectormath::scalePointList {0 0} $ptList $factor ]
+    }
 
-}

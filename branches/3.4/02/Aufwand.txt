@@ -565,6 +565,8 @@
 
 2014.01.28                   40:00   3.4.02 ... 28 ... bikeGeometry 1.34   ... rattleCAD_AddOn
 
+2014.03.31                   50:00   3.4.02 ... 39 ... bikeGeometry 1.44   ... a lot
+
 
 
 
