@@ -68,7 +68,7 @@
  #              exportPDF ... possibility to replace print in the future
  #
  #  0.55    refactor/cleanup:
- #              
+ #              minor changes
  #
  #
 
