@@ -81,11 +81,11 @@ exec wish "$0" "$@"
     package     require appUtil             0.15
     package     require vectormath          0.7
     package     require bikeGeometry        1.45
-    package     require canvasCAD           0.54
+    package     require canvasCAD           0.55
     package     require extSummary          0.4
     package     require osEnv               0.9
                 
-    package     require rattleCAD           3.4 
+    package     require rattleCAD           3.4.02 
 
     catch {
             # tcl package containing not public extensions

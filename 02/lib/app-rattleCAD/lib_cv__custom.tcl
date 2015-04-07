@@ -782,7 +782,8 @@
                     set formatScaleFactor   [ format "%.1f" $scaleFactor ]
                 }
 
-                puts "\n\n $stageWidth \n\n"
+                # puts "\n\n $stageWidth \n\n"
+                
             set bottomRight     [list [expr $stageWidth -10] 5]
             if {$position == {}} {
                 set position $bottomRight

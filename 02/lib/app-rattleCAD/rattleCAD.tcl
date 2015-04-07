@@ -37,7 +37,7 @@
  #
  # 
   
-  package provide   rattleCAD     3.4
+  package provide   rattleCAD     3.4.02
 
                    
     # -- default Parameters  ----
