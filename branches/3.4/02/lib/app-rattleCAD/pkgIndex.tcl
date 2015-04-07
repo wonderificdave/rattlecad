@@ -8,7 +8,7 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded   rattleCAD  3.4 "\ 
+package ifneeded   rattleCAD  3.4.02 "\ 
         [list source  [file join $dir lib___model.tcl]]; \
         [list source  [file join $dir lib___control.tcl]]; \
         [list source  [file join $dir lib___control.changeList.tcl]]; \
