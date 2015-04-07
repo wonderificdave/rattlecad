@@ -80,8 +80,9 @@
                         {BottomBracket_Angle_DownTube}  {   bikeGeometry::model_lugAngle::set_Angle SeatTubeDownTube  $newValue; return [get_Scalar $object $key] }                     
                         {HeadLug_Angle_Bottom}          {   bikeGeometry::model_lugAngle::set_Angle HeadTubeDownTube  $newValue; return [get_Scalar $object $key] }                     
                         
-                        {HandleBar_Height}              {   bikeGeometry::set_LugAngles_HandleBar_Height    $newValue; return [get_Scalar $object $key] }                     
-                        {Saddle_HB_y}                   {   bikeGeometry::set_LugAngles_SaddleOffset_HB     $newValue; return [get_Scalar $object $key] }
+                        {HandleBar_Height}              {   bikeGeometry::set_LugAngles_HandleBar_Height     $newValue; return [get_Scalar $object $key] }                     
+                        {Saddle_HB_x}                   {   bikeGeometry::set_Default_SaddleOffset_HB_X      $newValue; return [get_Scalar $object $key] }
+                        {Saddle_HB_y}                   {   bikeGeometry::set_LugAngles_SaddleOffset_HB_Y    $newValue; return [get_Scalar $object $key] }
                         
                         default {}
                     }
@@ -134,7 +135,7 @@
             return $Geometry(HandleBar_Height)
                 #    
     }
-    proc bikeGeometry::set_LugAngles_SaddleOffset_HB          {value} {
+    proc bikeGeometry::set_LugAngles_SaddleOffset_HB_X        {value} {
                 #
                 # Length/Saddle/Offset_HB
                 # Geometry(Saddle_HB_y)
@@ -143,7 +144,29 @@
             variable HandleBar
             variable HeadTube
                 #
-            puts "    <1> set_LugAngles_SaddleOffset_HB   ... check $Geometry(Saddle_HB_y)  ->  $value"
+            puts "    <1> set_LugAngles_SaddleOffset_HB_X   ... check $Geometry(Saddle_HB_x)  ->  $value"
+                #
+            set delta_x                     [expr $value - $Geometry(Saddle_HB_y) ]
+                #
+            set Geometry(HandleBar_Height)  [expr $Geometry(HandleBar_Height) + $delta_x ]
+                #
+            set_LugAngles_HandleBar_Height    $Geometry(HandleBar_Height)       
+                #
+            puts "    <2> set_LugAngles_SaddleOffset_HB_X   ... check $Geometry(Saddle_HB_x)  ->  $value"
+                #
+            return $Geometry(Saddle_HB_x)
+                #
+    }        
+    proc bikeGeometry::set_LugAngles_SaddleOffset_HB_Y        {value} {
+                #
+                # Length/Saddle/Offset_HB
+                # Geometry(Saddle_HB_y)
+                #
+            variable Geometry
+            variable HandleBar
+            variable HeadTube
+                #
+            puts "    <1> set_LugAngles_SaddleOffset_HB_Y   ... check $Geometry(Saddle_HB_y)  ->  $value"
                 #
             set delta_y                     [expr $Geometry(Saddle_HB_y) - $value ]
                 #
@@ -151,7 +174,7 @@
                 #
             set_LugAngles_HandleBar_Height    $Geometry(HandleBar_Height)       
                 #
-            puts "    <2> set_LugAngles_SaddleOffset_HB   ... check $Geometry(Saddle_HB_y)  ->  $value"
+            puts "    <2> set_LugAngles_SaddleOffset_HB_Y   ... check $Geometry(Saddle_HB_y)  ->  $value"
                 #
             return $Geometry(Saddle_HB_y)
                 #

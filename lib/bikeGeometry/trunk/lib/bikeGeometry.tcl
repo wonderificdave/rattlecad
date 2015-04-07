@@ -207,7 +207,21 @@
  #      refactor 
  #          update proc bikeGeometry::create_CrankArm 
  #
+ # 1.44 - 20150329
+ #      feature:
+ #          new dropout: paragon_DR0040_58
+ #      refactor 
+ #          lib_tube.tcl ... handle tubemiter 
+ #          new procedure: get_TubeMiterDICT
+ #      debug 
+ #          seatstay mitter based on $::bikeGeometry::SeatStay(SeatTubeMiterDiameter)
+ #      remove 
+ #          lib_reynoldsFEA.tcl
  #
+ # 1.45 - 20150404
+ #      feature: 
+ #          ... update Interfaces for BaseGeometry
+ #          ... add bikeGeometry::Geometry(Saddle_HB_x)
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -216,7 +230,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.43
+    package provide bikeGeometry 1.45
         #
     package require vectormath
         #
@@ -324,6 +338,7 @@
             namespace export get_Direction
             namespace export get_BoundingBox
             namespace export get_TubeMiter
+            namespace export get_TubeMiterDICT
             namespace export get_CenterLine
                 #
             namespace export get_ComponentDir 
@@ -558,8 +573,9 @@
         dict set projDict   Scalar      Geometry SaddleNose_HB              $::bikeGeometry::Geometry(SaddleNose_HB)                        ;#[bikeGeometry::get_Scalar           Geometry SaddleNose_HB            ]                ;# set _lastValue(Result/Length/Personal/SaddleNose_HB)                    
         dict set projDict   Scalar      Geometry Saddle_BB                  $::bikeGeometry::Geometry(Saddle_BB)                            ;#[bikeGeometry::get_Scalar           Geometry Saddle_BB                ]                ;# set _lastValue(Result/Length/Saddle/SeatTube_BB)                        
         dict set projDict   Scalar      Geometry Saddle_Distance            $::bikeGeometry::Geometry(Saddle_Distance)                      ;#[bikeGeometry::get_Scalar           Geometry Saddle_Distance          ]                ;# set _lastValue(Personal/Saddle_Distance)                                
+        dict set projDict   Scalar      Geometry Saddle_HB_x                $::bikeGeometry::Geometry(Saddle_HB_x)                                       
         dict set projDict   Scalar      Geometry Saddle_HB_y                $::bikeGeometry::Geometry(Saddle_HB_y)                          ;#[bikeGeometry::get_Scalar           Geometry Saddle_HB_y              ]                ;# set _lastValue(Result/Length/Saddle/Offset_HB)                          
-        dict set projDict   Scalar      Geometry Saddle_Height              $::bikeGeometry::Geometry(Saddle_Height)                        ;#[bikeGeometry::get_Scalar           Geometry Saddle_Height              ]                ;# set _lastValue(Result/Length/Saddle/Offset_HB)                          
+        dict set projDict   Scalar      Geometry Saddle_Height              $::bikeGeometry::Geometry(Saddle_Height)                        ;#[bikeGeometry::get_Scalar           Geometry Saddle_Height            ]                ;# set _lastValue(Result/Length/Saddle/Offset_HB)                          
         dict set projDict   Scalar      Geometry Saddle_Offset_BB_ST        $::bikeGeometry::Geometry(Saddle_Offset_BB_ST)                  ;#[bikeGeometry::get_Scalar           Geometry Saddle_Offset_BB_ST      ]                ;# set _lastValue(Result/Length/Saddle/Offset_BB_ST)                       
         dict set projDict   Scalar      Geometry SeatTube_Virtual           $::bikeGeometry::Geometry(SeatTube_Virtual)                     ;#[bikeGeometry::get_Scalar           Geometry SeatTubeVirtual          ]                ;# set _lastValue(Result/Length/SeatTube/VirtualLength)                    
         dict set projDict   Scalar      Geometry Stack_Height               $::bikeGeometry::Geometry(Stack_Height)                         ;#[bikeGeometry::get_Scalar           Geometry StackHeightResult        ]                ;# set _lastValue(Result/Length/HeadTube/StackHeight)                      
@@ -744,7 +760,8 @@
                                 {SaddleNose_BB_x}               {   bikeGeometry::set_Default_SaddleOffset_BB_Nose   $newValue; return [get_Scalar $object $key] }
                                 {SaddleNose_HB}                 {   bikeGeometry::set_Default_PersonalSaddleNose_HB  $newValue; return [get_Scalar $object $key] }
                                 {Saddle_BB}                     {   bikeGeometry::set_Default_SaddleSeatTube_BB      $newValue; return [get_Scalar $object $key] }
-                                {Saddle_HB_y}                   {   bikeGeometry::set_Default_SaddleOffset_HB        $newValue; return [get_Scalar $object $key] }
+                                {Saddle_HB_x}                   {   bikeGeometry::set_Default_SaddleOffset_HB_X      $newValue; return [get_Scalar $object $key] }
+                                {Saddle_HB_y}                   {   bikeGeometry::set_Default_SaddleOffset_HB_Y      $newValue; return [get_Scalar $object $key] }
                                 {Saddle_Offset_BB_ST}           {   bikeGeometry::set_Default_SaddleOffset_BB_ST     $newValue; return [get_Scalar $object $key] }
                                 {SeatTube_Angle}                {   bikeGeometry::set_Default_SeatTubeDirection      $newValue; return [get_Scalar $object $key] }
                                 
@@ -889,15 +906,172 @@
         return $boundingBox
     }
         #
+    proc bikeGeometry::get_CenterLine {key} {
+        set centerLine  [lindex [array get [namespace current]::CenterLine $key] 1]
+        return $centerLine
+    }
+        #
     proc bikeGeometry::get_TubeMiter {key} {
         set tubeMiter   [lindex [array get [namespace current]::TubeMiter $key] 1]
         return $tubeMiter
     }
         #
-    proc bikeGeometry::get_CenterLine {key} {
-        set centerLine  [lindex [array get [namespace current]::CenterLine $key] 1]
-        return $centerLine
-    }
+    proc bikeGeometry::get_TubeMiterDICT {} {
+            #
+        variable Direction
+            #
+        variable HeadTube
+        variable SeatTube
+        variable SeatStay
+        variable TopTube
+        variable DownTube
+        variable TubeMiter
+        variable BottomBracket
+            #
+        variable Result
+            #
+        
+        set miterDict   [dict create    TopTube_Seat    {} \
+                                        TopTube_Head    {} \
+                                        DownTube_Head   {} \
+                                        DownTube_Seat   {} \
+                                        SeatTube_Down   {} \
+                                        SeatStay_01     {} \
+                                        SeatStay_02     {} \
+                                        Reference       {} \
+        ]
+
+            #
+        set key             TopTube_Seat
+        set minorDiameter   $::bikeGeometry::TopTube(DiameterHT)                        
+        set minorPerimeter  [expr $minorDiameter * $vectormath::CONST_PI]                        
+            #
+        dict set miterDict  $key    minorName         TopTube                          
+        dict set miterDict  $key    minorDiameter     $minorDiameter                             
+        dict set miterDict  $key    minorDirection    [get_Direction TopTube    degree]                        
+        dict set miterDict  $key    minorPerimeter    $minorPerimeter                        
+        dict set miterDict  $key    majorName         SeatTube                         
+        dict set miterDict  $key    majorDiameter     $SeatTube(DiameterTT) 
+        dict set miterDict  $key    majorDirection    [get_Direction SeatTube   degree]
+        dict set miterDict  $key    offset            [format "%.3f" 0]
+        dict set miterDict  $key    polygon_01        [lindex [array get [namespace current]::TubeMiter $key] 1]  
+            
+            #
+        set key             TopTube_Head
+        set minorDiameter   $::bikeGeometry::TopTube(DiameterHT)                        
+        set minorPerimeter  [expr $minorDiameter * $vectormath::CONST_PI]                        
+            #
+        dict set miterDict  $key    minorName         TopTube                          
+        dict set miterDict  $key    minorDiameter     $minorDiameter                             
+        dict set miterDict  $key    minorDirection    [get_Direction TopTube    degree]                        
+        dict set miterDict  $key    minorPerimeter    $minorPerimeter                        
+        dict set miterDict  $key    majorName         HeadTube                          
+        dict set miterDict  $key    majorDiameter     $HeadTube(Diameter) 
+        dict set miterDict  $key    majorDirection    [get_Direction HeadTube   degree]
+        dict set miterDict  $key    offset            [format "%.3f" 0]
+        dict set miterDict  $key    polygon_01        [lindex [array get [namespace current]::TubeMiter $key] 1]  
+            
+            #
+        set key     DownTube_Head
+        set minorDiameter   $::bikeGeometry::DownTube(DiameterHT)                       
+        set minorPerimeter  [expr $minorDiameter * $vectormath::CONST_PI]                        
+            #
+        dict set miterDict  $key    minorName         DownTube                         
+        dict set miterDict  $key    minorDiameter     $minorDiameter                             
+        dict set miterDict  $key    minorDirection    [get_Direction DownTube   degree]                        
+        dict set miterDict  $key    minorPerimeter    $minorPerimeter                        
+        dict set miterDict  $key    majorName         HeadTube                     
+        dict set miterDict  $key    majorDiameter     $HeadTube(Diameter) 
+        dict set miterDict  $key    majorDirection    [get_Direction HeadTube   degree]
+        dict set miterDict  $key    offset            [format "%.3f" 0]
+        dict set miterDict  $key    polygon_01        [lindex [array get [namespace current]::TubeMiter $key] 1]  
+                                    
+            #
+        set key     DownTube_Seat
+        set minorDiameter   $::bikeGeometry::DownTube(DiameterBB)                        
+        set minorPerimeter  [expr $minorDiameter * $vectormath::CONST_PI]                        
+            #
+        dict set miterDict  $key    minorName         DownTube                         
+        dict set miterDict  $key    minorDiameter     $minorDiameter                             
+        dict set miterDict  $key    minorDirection    [get_Direction DownTube   degree]                        
+        dict set miterDict  $key    minorPerimeter    $minorPerimeter                        
+        dict set miterDict  $key    majorName         SeatTube                     
+        dict set miterDict  $key    majorDiameter     $SeatTube(DiameterBB) 
+        dict set miterDict  $key    majorDirection    [get_Direction SeatTube   degree]
+        dict set miterDict  $key    offset            [format "%.3f" 0]
+        dict set miterDict  $key    polygon_01        [lindex [array get [namespace current]::TubeMiter $key] 1]  
+        dict set miterDict  $key    polygon_02        [lrange [lindex [array get [namespace current]::TubeMiter DownTube_BB_in]  1] 0 end-4] 
+        dict set miterDict  $key    polygon_03        [lrange [lindex [array get [namespace current]::TubeMiter DownTube_BB_out] 1] 0 end-4] 
+        dict set miterDict  $key    diameter_02       $BottomBracket(InsideDiameter)   
+        dict set miterDict  $key    diameter_03       $BottomBracket(OutsideDiameter)   
+        
+            #
+        set key             SeatTube_Down
+        set minorDiameter   $::bikeGeometry::SeatTube(DiameterBB)                        
+        set minorPerimeter  [expr $minorDiameter * $vectormath::CONST_PI]                        
+            #
+        dict set miterDict  $key    minorName         SeatTube                         
+        dict set miterDict  $key    minorDiameter     $minorDiameter                            
+        dict set miterDict  $key    minorDirection    [get_Direction SeatTube   degree]                        
+        dict set miterDict  $key    minorPerimeter    $minorPerimeter                        
+        dict set miterDict  $key    majorName         DownTube                     
+        dict set miterDict  $key    majorDiameter     $DownTube(DiameterBB) 
+        dict set miterDict  $key    majorDirection    [get_Direction DownTube   degree]
+        dict set miterDict  $key    offset            [format "%.3f" 0]
+        dict set miterDict  $key    polygon_01        [lindex [array get [namespace current]::TubeMiter $key] 1]  
+        dict set miterDict  $key    polygon_02        [lrange [lindex [array get [namespace current]::TubeMiter SeatTube_BB_in]  1] 0 end-4]  
+        dict set miterDict  $key    polygon_03        [lrange [lindex [array get [namespace current]::TubeMiter SeatTube_BB_out] 1] 0 end-4]
+        dict set miterDict  $key    diameter_02       $BottomBracket(InsideDiameter)   
+        dict set miterDict  $key    diameter_03       $BottomBracket(OutsideDiameter)   
+        
+            #
+        set key             SeatStay_01
+        set minorDiameter   $::bikeGeometry::SeatStay(DiameterST)                        
+        set minorPerimeter  [expr $minorDiameter * $vectormath::CONST_PI]                        
+        set offset          [expr 0.5 * ($::bikeGeometry::SeatStay(SeatTubeMiterDiameter) - $::bikeGeometry::SeatStay(DiameterST))]
+            #
+            #
+        dict set miterDict  $key    minorName         SeatStay                         
+        dict set miterDict  $key    minorDiameter     $minorDiameter                             
+        dict set miterDict  $key    minorDirection    [get_Direction SeatStay   degree]                        
+        dict set miterDict  $key    minorPerimeter    $minorPerimeter                        
+        dict set miterDict  $key    majorName         SeatTube(Lug)                     
+        dict set miterDict  $key    majorDiameter     $::bikeGeometry::SeatStay(SeatTubeMiterDiameter) 
+        dict set miterDict  $key    majorDirection    [get_Direction SeatTube   degree]
+        dict set miterDict  $key    offset            [format "%.3f" $offset]
+        dict set miterDict  $key    polygon_01        [lindex [array get [namespace current]::TubeMiter $key] 1]  
+        
+            #
+        set key     SeatStay_02
+            #
+        dict set miterDict  $key    minorName         SeatStay                         
+        dict set miterDict  $key    minorDiameter     $minorDiameter                             
+        dict set miterDict  $key    minorDirection    [get_Direction SeatStay   degree]                        
+        dict set miterDict  $key    minorPerimeter    $minorPerimeter                        
+        dict set miterDict  $key    majorName         SeatTube(Lug)                     
+        dict set miterDict  $key    majorDiameter     $::bikeGeometry::SeatStay(SeatTubeMiterDiameter) 
+        dict set miterDict  $key    majorDirection    [get_Direction SeatTube   degree]
+        dict set miterDict  $key    offset            [format "%.3f" $offset]
+        dict set miterDict  $key    polygon_01        [lindex [array get [namespace current]::TubeMiter $key] 1]  
+        
+            #
+        set key     Reference
+            #
+        dict set miterDict  $key    minorName         ReferenceWidth                         
+        dict set miterDict  $key    majorName         ReferenceHeight                     
+        dict set miterDict  $key    minorDiameter     0                             
+        dict set miterDict  $key    minorDirection    0                        
+        dict set miterDict  $key    minorPerimeter    100.00                        
+        dict set miterDict  $key    majorDiameter     0 
+        dict set miterDict  $key    majorDirection    1
+        dict set miterDict  $key    offset            0.00                        
+        dict set miterDict  $key    polygon_01        [lindex [array get [namespace current]::TubeMiter $key] 1]  
+            
+            #
+            #           
+        return $miterDict            
+            #
+    } 
         #
         #
         #
@@ -1016,10 +1190,6 @@
         # http://stackoverflow.com/questions/9676651/converting-a-list-to-an-array
         set dict_Geometry [array get ::bikeGeometry::DEBUG_Geometry]
         return $dict_Geometry
-    }
-        #
-    proc bikeGeometry::get_ReynoldsFEAContent_removed {} {
-        # return [::bikeGeometry::lib_reynoldsFEA::get_Content]    
     }
         #
     proc bikeGeometry::get_openSCADContent_removed {} {

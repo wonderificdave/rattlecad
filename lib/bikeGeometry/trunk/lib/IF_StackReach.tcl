@@ -76,8 +76,9 @@
                         {HeadTube_Angle}                {   bikeGeometry::set_StackReach_HeadTubeDirection   $newValue; return [get_Scalar $object $key] }
                         {Reach_Length}                  {   bikeGeometry::set_StackReach_HeadTubeReachLength $newValue; return [get_Scalar $object $key] }
                         {Stack_Height}                  {   bikeGeometry::set_StackReach_HeadTubeStackHeight $newValue; return [get_Scalar $object $key] }
+                        {Stem_Length}                   {   bikeGeometry::set_StackReach_StemLength          $newValue; return [get_Scalar $object $key] }
                         {FrontWheel_xy}                 {   bikeGeometry::set_StackReach_FrontWheeldiagonal  $newValue; return [get_Scalar $object $key] }
-                        {Saddle_HB_y}                   {   bikeGeometry::set_StackReach_SaddleOffset_HB     $newValue; return [get_Scalar $object $key] }
+                        {Saddle_HB_y}                   {   bikeGeometry::set_StackReach_SaddleOffset_HB_Y   $newValue; return [get_Scalar $object $key] }
                         
                         {SeatTube_Virtual}              {   return [get_Scalar $object $key] }
                         {TopTube_Virtual}               {   return [get_Scalar $object $key] }
@@ -189,7 +190,7 @@
             set_StackReach_HeadTubeStackHeight  $store_StackHeight 
             set_StackReach_HeadTubeReachLength  $store_ReachLength
                 #
-            set_StackReach_SaddleOffset_HB      $store_HandleBarOffset
+            set_StackReach_SaddleOffset_HB_Y    $store_HandleBarOffset
                 #
             puts "    <2> set_StackReach_HeadTubeDirection   ... check $Geometry(FrontWheel_xy)  ->  $value"
                 #
@@ -230,7 +231,7 @@
             set_StackReach_HeadTubeStackHeight  $store_StackHeight 
             set_StackReach_HeadTubeReachLength  $store_ReachLength
                 #
-            set_StackReach_SaddleOffset_HB      $store_HandleBarOffset
+            set_StackReach_SaddleOffset_HB_Y    $store_HandleBarOffset
                 #
             # set_Scalar     HeadTube Length      $store_HeadTubeLength    
                 #
@@ -238,7 +239,7 @@
                 #
             return $Geometry(FrontWheel_xy)
     }
-    proc bikeGeometry::set_StackReach_SaddleOffset_HB          {value} {
+    proc bikeGeometry::set_StackReach_SaddleOffset_HB_Y        {value} {
                 #
                 # Length/Saddle/Offset_HB
                 # Geometry(Saddle_HB_y)
@@ -247,7 +248,7 @@
             variable HandleBar
             variable HeadTube
                 #
-            puts "    <1> set_StackReach_SaddleOffset_HB   ... check $Geometry(Saddle_HB_y)  ->  $value"
+            puts "    <1> set_StackReach_SaddleOffset_HB_Y   ... check $Geometry(Saddle_HB_y)  ->  $value"
                 #
             set delta_y                     [expr $Geometry(Saddle_HB_y) - $value ]
             set delta_x                     [expr $delta_y / tan($Geometry(HeadTube_Angle) * $vectormath::CONST_PI / 180) ]
@@ -257,8 +258,33 @@
                 #
             bikeGeometry::update_Geometry
                 #
-            puts "    <2> set_StackReach_SaddleOffset_HB   ... check $Geometry(Saddle_HB_y)  ->  $value"
+            puts "    <2> set_StackReach_SaddleOffset_HB_Y   ... check $Geometry(Saddle_HB_y)  ->  $value"
                 #
             return $Geometry(Saddle_HB_y)
+                #
+    }
+    proc bikeGeometry::set_StackReach_StemLength               {value} {
+                #
+            variable Geometry
+                #
+            puts "    <1> set_StackReach_StemLength   ... check $Geometry(Stem_Length) ->  $value"
+                #
+            set delta                           [expr $value - $Geometry(Stem_Length)]
+                #
+            set Geometry(Stem_Length)           $value
+                #
+            set stemAngle [expr 90 - $Geometry(HeadTube_Angle) + $Geometry(Stem_Angle)]
+                #
+            set delta_x1   [expr $delta * cos([vectormath::rad $stemAngle])]
+            set delta_y1   [expr $delta * sin([vectormath::rad $stemAngle])]
+            set delta_x2   [expr $delta_y1 / tan([vectormath::rad $Geometry(HeadTube_Angle)])]
+                #
+            set Geometry(HandleBar_Distance)    [expr $Geometry(HandleBar_Distance) + $delta_x1 + $delta_x2 ]
+                #
+            bikeGeometry::update_Geometry
+                #
+            puts "    <2> set_StackReach_StemLength   ... check $Geometry(TopTube_Virtual) ->  $value"
+                #
+            return $Geometry(Stem_Length)
                 #
     }

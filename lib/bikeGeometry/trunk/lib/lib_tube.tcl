@@ -149,7 +149,7 @@ namespace eval bikeGeometry::tube {
             # return [list $centerLine $controlPoints]
             #
     }
-    
+
     proc bikeGeometry::tube::init_checkCenterLine_remove {centerLineDef} {
             #
         foreach {S01_length S02_length S03_length S04_length S05_length \

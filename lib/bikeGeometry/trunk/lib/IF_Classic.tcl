@@ -61,14 +61,14 @@
         switch -exact $object {
             Geometry {
                     switch -exact $key {
-                        {BottomBracket_Height}          {   bikeGeometry::set_Default_BottomBracketHeight   $newValue; return [get_Scalar $object $key] }
-                        {FrontWhee_Radius}              {   bikeGeometry::set_Default_FrontWheelRadius      $newValue; return [get_Scalar $object $key] }
-                        {HeadLug_Angle_Top}             {   bikeGeometry::set_Default_HeadTube_TopTubeAngle $newValue; return [get_Scalar $object $key] }
-                        {RearWheel_Radius}              {   bikeGeometry::set_Default_RearWheelRadius       $newValue; return [get_Scalar $object $key] }
-                        {RearWheel_x}                   {   bikeGeometry::set_Default_RearWheelhorizontal   $newValue; return [get_Scalar $object $key] }
-                        {SaddleNose_BB_x}               {   bikeGeometry::set_Default_SaddleOffset_BB_Nose  $newValue; return [get_Scalar $object $key] }
-                        {SaddleNose_HB}                 {   bikeGeometry::set_Default_PersonalSaddleNose_HB $newValue; return [get_Scalar $object $key] }
-                        {Saddle_BB}                     {   bikeGeometry::set_Default_SaddleSeatTube_BB     $newValue; return [get_Scalar $object $key] }
+                        {BottomBracket_Height}          {   bikeGeometry::set_Default_BottomBracketHeight    $newValue; return [get_Scalar $object $key] }
+                        {FrontWhee_Radius}              {   bikeGeometry::set_Default_FrontWheelRadius       $newValue; return [get_Scalar $object $key] }
+                        {HeadLug_Angle_Top}             {   bikeGeometry::set_Default_HeadTube_TopTubeAngle  $newValue; return [get_Scalar $object $key] }
+                        {RearWheel_Radius}              {   bikeGeometry::set_Default_RearWheelRadius        $newValue; return [get_Scalar $object $key] }
+                        {RearWheel_x}                   {   bikeGeometry::set_Default_RearWheelhorizontal    $newValue; return [get_Scalar $object $key] }
+                        {SaddleNose_BB_x}               {   bikeGeometry::set_Default_SaddleOffset_BB_Nose   $newValue; return [get_Scalar $object $key] }
+                        {SaddleNose_HB}                 {   bikeGeometry::set_Default_PersonalSaddleNose_HB  $newValue; return [get_Scalar $object $key] }
+                        {Saddle_BB}                     {   bikeGeometry::set_Default_SaddleSeatTube_BB      $newValue; return [get_Scalar $object $key] }
                             
                         {Saddle_Offset_BB_ST}           {   return [get_Scalar $object $key] }  
                         {FrontWheel_x}                  {   return [get_Scalar $object $key] }  
@@ -76,13 +76,14 @@
                         {Reach_Length}                  {   return [get_Scalar $object $key] }  
                         {Stack_Height}                  {   return [get_Scalar $object $key] }  
                             
-                        {Saddle_HB_y}                   {   bikeGeometry::set_StackReach_SaddleOffset_HB    $newValue; return [get_Scalar $object $key] }
-                        {FrontWheel_xy}                 {   bikeGeometry::set_StackReach_FrontWheeldiagonal $newValue; return [get_Scalar $object $key] }
+                        {Stem_Length}                   {   bikeGeometry::set_StackReach_StemLength          $newValue; return [get_Scalar $object $key] }
+                        {Saddle_HB_y}                   {   bikeGeometry::set_StackReach_SaddleOffset_HB_Y   $newValue; return [get_Scalar $object $key] }
+                        {FrontWheel_xy}                 {   bikeGeometry::set_StackReach_FrontWheeldiagonal  $newValue; return [get_Scalar $object $key] }
                          
-                        {SeatTube_Angle}                {   bikeGeometry::set_Classic_SeatTubeDirection     $newValue; return [get_Scalar $object $key] }
-                        {HeadTube_Virtual}              {   bikeGeometry::set_Classic_HeadTubeVirtualLength $newValue; return [get_Scalar $object $key] }
-                        {SeatTube_Virtual}              {   bikeGeometry::set_Classic_SeatTubeVirtualLength $newValue; return [get_Scalar $object $key] }
-                        {TopTube_Virtual}               {   bikeGeometry::set_Classic_TopTubeVirtualLength  $newValue; return [get_Scalar $object $key] }
+                        {SeatTube_Angle}                {   bikeGeometry::set_Classic_SeatTubeDirection      $newValue; return [get_Scalar $object $key] }
+                        {HeadTube_Virtual}              {   bikeGeometry::set_Classic_HeadTubeVirtualLength  $newValue; return [get_Scalar $object $key] }
+                        {SeatTube_Virtual}              {   bikeGeometry::set_Classic_SeatTubeVirtualLength  $newValue; return [get_Scalar $object $key] }
+                        {TopTube_Virtual}               {   bikeGeometry::set_Classic_TopTubeVirtualLength   $newValue; return [get_Scalar $object $key] }
                         
                         default {}
                     }
@@ -126,7 +127,7 @@
                 #
             set Geometry(HandleBar_Distance)    [expr $Geometry(HandleBar_Distance)    + $offsetHeadTube_x + $offsetSeatTube_x]
                 #
-            set Geometry(SeatTube_Virtual) $value
+            set Geometry(SeatTube_Virtual)      $value
                 #
             bikeGeometry::update_Geometry
                 #
@@ -144,15 +145,14 @@
             set delta                           [expr $value - $Geometry(TopTube_Virtual)]
                 #
             puts "  \$Geometry(HandleBar_Distance) $Geometry(HandleBar_Distance)"
-            puts "       \$delta $delta"
+                #
             set Geometry(HandleBar_Distance)    [expr $Geometry(HandleBar_Distance)    + $delta ]
-            puts "  \$Geometry(HandleBar_Distance) $Geometry(HandleBar_Distance)"
                 #
             bikeGeometry::update_Geometry
                 #
             puts "    <2> set_Classic_TopTubeVirtualLength   ... check $Geometry(TopTube_Virtual) ->  $value"
                 #
-            return $Geometry(TopTube_Virtual)
+            return $Geometry(Stem_Length)
                 #
     }
     proc bikeGeometry::set_Classic_HeadTubeVirtualLength    {value} {

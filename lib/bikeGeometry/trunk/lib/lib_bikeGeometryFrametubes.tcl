@@ -761,12 +761,13 @@
             set TubeMiter(SeatTube_BB_out)    [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(OutsideDiameter)      {0 1}       right    $SeatTube(OffsetBB)   -90  opposite]
             set TubeMiter(SeatTube_BB_in)     [ tube_miter    $SeatTube(DiameterBB) {1 0}                  $BottomBracket(InsideDiameter)       {0 1}       right    $SeatTube(OffsetBB)   -90  opposite]
                         #
-                set offset      [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
+                # set offset      [ expr 0.5 * ($SeatTube(DiameterTT) - $SeatStay(DiameterST)) ]
+                set offset      [ expr 0.5 * ($SeatStay(SeatTubeMiterDiameter) - $SeatStay(DiameterST)) ]
                 set dir         [ vectormath::scalePointList {0 0} $Direction(SeatStay) -1.0 ]
                         #
                 #
-            set TubeMiter(SeatStay_01)        [ tube_miter    $SeatStay(DiameterST) $dir                   $SeatTube(DiameterTT)    $Direction(SeatTube)    right   -$offset]
-            set TubeMiter(SeatStay_02)        [ tube_miter    $SeatStay(DiameterST) $dir                   $SeatTube(DiameterTT)    $Direction(SeatTube)    right   +$offset]
+            set TubeMiter(SeatStay_01)        [ tube_miter    $SeatStay(DiameterST) $dir                   $SeatStay(SeatTubeMiterDiameter)    $Direction(SeatTube)    right   -$offset]
+            set TubeMiter(SeatStay_02)        [ tube_miter    $SeatStay(DiameterST) $dir                   $SeatStay(SeatTubeMiterDiameter)    $Direction(SeatTube)    right   +$offset]
             set TubeMiter(Reference)          { -50 0  50 0  50 10  -50 10 }
                 #
                 #
@@ -878,7 +879,7 @@
             set radius_isect    [expr 0.5*$diameter_isect]
             set angle         -180
                 # set angle         [expr -180 - $startAngle]
-            set loops       36
+            set loops       72
             set perimeter   [expr $radius * [vectormath::rad 360] ]
             set coordList   {}
                 # while {$angle <= [expr 180 - $startAngle]}

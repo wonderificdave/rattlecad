@@ -392,6 +392,8 @@
                 # 
                 # --- Saddle/Offset_HB --------------------------------
                 #
+            set value       [expr -1.0 * [lindex $position_Saddle 0] + [lindex $position_HandleBar 0]]
+            set Geometry(Saddle_HB_x) [ format "%.3f" $value ]
             set value       [expr [lindex $position_Saddle 1] - [lindex $position_HandleBar 1]]
             set Geometry(Saddle_HB_y) [ format "%.3f" $value ]
                 #
