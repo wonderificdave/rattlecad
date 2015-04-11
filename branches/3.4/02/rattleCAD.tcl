@@ -75,13 +75,13 @@ exec wish "$0" "$@"
         # -- Packages  ----------------
         #
     package     require Tk                  8.6
-    package     require BWidget             
     package     require tdom    
+    package     require BWidget             
         #
-    package     require appUtil             0.15
+    package     require appUtil             0.17
     package     require vectormath          0.7
     package     require bikeGeometry        1.45
-    package     require canvasCAD           0.55
+    package     require canvasCAD           0.56
     package     require extSummary          0.4
     package     require osEnv               0.9
                 
@@ -168,6 +168,8 @@ exec wish "$0" "$@"
 
 	    
     }
+    
+    
     
       # -- run a debug procedure
     # rattleCAD::debug::run_debug

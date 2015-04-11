@@ -1,10 +1,25 @@
 
 
-3.4.02.40  - 2014.04.02
+3.4.02.41  - 2015.04.12
+-------------------------------------------------------------------------------
+    refactor: 
+        ... appUtil 0.16
+            ... rattleCAD::infoPanel::fill_appUtil
+        ... canvasCAD 0.56
+        ... remove use of snit
+        ... remove use of pdf4tcl
+        ... change build procedure
+            ... zip contains plain rattleCAD
+            ... kit contains plain rattleCAD as starkit
+            ... starpacks contain kit and runtime from 
+                ... http://sourceforge.net/projects/kbskit/files/kbs
+
+
+3.4.02.40  - 2015.04.02
 -------------------------------------------------------------------------------
     refactor: 
         ... require Tcl 8.6 now
-        ... canvasCAD 0.54
+        ... canvasCAD 0.55
             ... use snit to use pdf4tcl
             ... use pdf4tcl replacing ghostscript?
                 ... http://sourceforge.net/projects/pdf4tcl/
@@ -17,7 +32,7 @@
         ... remove background of icons in iconbar
 
 
-3.4.02.39  - 2014.04.02
+3.4.02.39  - 2015.04.02
 -------------------------------------------------------------------------------
     refactor: pdf-print, tubeMiter
         ... canvasCAD 0.53
@@ -30,7 +45,7 @@
             ... to rattleCAD::tubeMiter::create
         
 
-3.4.02.38  - 2014.03.24
+3.4.02.38  - 2015.03.24
 -------------------------------------------------------------------------------
     debug:
         ... rear-fender edit
@@ -40,7 +55,7 @@
         ... add donate to the MenuBar
 
 
-3.4.02.37  - 2014.03.15
+3.4.02.37  - 2015.03.15
 -------------------------------------------------------------------------------
     refactor:
         ... bikeGeometry 1.43
@@ -51,21 +66,21 @@
             ... destroy .intro if exist
 
 
-3.4.02.36  - 2014.03.10
+3.4.02.36  - 2015.03.10
 -------------------------------------------------------------------------------
     refactor:
         ... bikeGeometry 1.42 
             ... bikeGeometry::create_CrankArm 
 
 
-3.4.02.35  - 2014.02.24
+3.4.02.35  - 2015.02.24
 -------------------------------------------------------------------------------
     refactor:
         ... bikeGeometry 1.41 
             ... bikeGeometry::create_CrankArm 
 
 
-3.4.02.34  - 2014.02.21
+3.4.02.34  - 2015.02.21
 -------------------------------------------------------------------------------
     feature:
         ... RearMocku: edit rear BrakeDisc by dimension
@@ -74,13 +89,13 @@
             ... bikeGeometry::create_CrankArm 
 
 
-3.4.02.33  - 2014.02.19
+3.4.02.33  - 2015.02.19
 -------------------------------------------------------------------------------
     debug:
         ... display of text://ListValue(CrankSetChainRings) 
 
 
-3.4.02.32  - 2014.02.14
+3.4.02.32  - 2015.02.14
 -------------------------------------------------------------------------------
     refactor:
         ... check chainstay centerline before update
@@ -88,14 +103,14 @@
         ... vectormath   0.7 
 
 
-3.4.02.31  - 2014.02.08
+3.4.02.31  - 2015.02.08
 -------------------------------------------------------------------------------
     debug:
         ... bikeGeometry 1.37 
             ... bikeGeometry::create_Fork 
 
 
-3.4.02.30  - 2014.02.08
+3.4.02.30  - 2015.02.08
 -------------------------------------------------------------------------------
     debug:
         ... bikeGeometry 1.36 
@@ -105,7 +120,7 @@
             ... tangent_2_circles
 
 
-3.4.02.29  - 2014.01.24
+3.4.02.29  - 2015.01.24
 -------------------------------------------------------------------------------
     feature:
         ... button for rattleCAD_AddOn
@@ -119,7 +134,7 @@
             ... Menu -> Export -> Export ReynoldsFEA
 
 
-3.4.02.28  - 2014.01.22
+3.4.02.28  - 2015.01.22
 -------------------------------------------------------------------------------
     refactor:
         ... notebook_createButton
@@ -128,7 +143,7 @@
             ... for extension bikeGeometry_3D
 
 
-3.4.02.27  - 2014.01.17
+3.4.02.27  - 2015.01.17
 -------------------------------------------------------------------------------
     refactor:
         ... notebook_createButton
@@ -136,7 +151,7 @@
             ... changeFormatScale
     
     
-3.4.02.26  - 2014.01.17
+3.4.02.26  - 2015.01.17
 -------------------------------------------------------------------------------
     refactor:
         ... bikeGeometry 1.33 cleanup 
@@ -147,7 +162,7 @@
         ... frameConfigMode: LugAngles
         
         
-3.4.02.25  - 2014.01.12
+3.4.02.25  - 2015.01.12
 -------------------------------------------------------------------------------
     refactor:
         ... bikeGeometry 1.32 with different behaviour on 
@@ -156,13 +171,13 @@
         ... set SeatTube and DownTube Offset to 0 if using LugAngle Method
 
 
-3.4.02.24  - 2014.01.09
+3.4.02.24  - 2015.01.09
 -------------------------------------------------------------------------------
     refactor:
         ... cleanup rattleCAD::cv_custom::createDimension_Geometry_ ...
     
     
-3.4.02.23  - 2014.01.09
+3.4.02.23  - 2015.01.09
 -------------------------------------------------------------------------------
     feature:
         ... rename ::APPL_Config(FrameConfig) to 
@@ -172,7 +187,7 @@
             ... display of background / result / secondary dimensions
             
 
-3.4.02.22  - 2014.01.05
+3.4.02.22  - 2015.01.05
 -------------------------------------------------------------------------------
     feature
         ... bikeGeometry 1.31

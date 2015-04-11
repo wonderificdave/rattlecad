@@ -96,6 +96,7 @@
                 {separator}         
                                     
                 {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}        -command { rattleCAD::configPanel::create } }
+                {command "show Console"     {}  "show log Consolge"     {}              -command { rattleCAD::view::gui::show_Console } }
                             
                 {separator}         
                             
@@ -105,7 +106,7 @@
                 {separator}         
                                     
                 {command "&Update"          {}  "update Configuration"  {Ctrl u}        -command { rattleCAD::view::updateView force } }
-                                                                                                                                                                
+    
                 {separator}         
                                     
                 {command "E&xit"            {}  "Exit rattle_CAD"       {Ctrl x}        -command { rattleCAD::view::gui::exit_rattleCAD } }
@@ -450,6 +451,20 @@
             close $::APPL_Config(LogFile)
             exit
             
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  exit application   
+        #
+    proc rattleCAD::view::gui::show_Console {} {   
+        if {[catch { console show } eID]} {
+            puts ""
+            puts "      <E> rattleCAD::view::gui::show_Console"
+            puts ""
+            puts "            ... $eID"
+            puts ""
+        }
     }
 
 

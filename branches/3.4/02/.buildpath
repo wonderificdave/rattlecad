@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
-	<buildpathentry kind="src" path=""/>
-	<buildpathentry kind="con" path="org.eclipse.dltk.launching.INTERPRETER_CONTAINER">
-		<attributes>
-			<attribute name="auto_dependencies" value="BWidget|TclOO|Tk|log|registry|starkit|tdom|zlib"/>
-		</attributes>
-	</buildpathentry>
+	<buildpathentry kind="con" path="org.eclipse.dltk.launching.INTERPRETER_CONTAINER"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/add__Addon"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/vectorMath"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/bikeGeometry"/>
@@ -13,8 +8,6 @@
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/extSummary"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/appUtil"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/osEnv"/>
-	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/snit"/>
-	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/pdf4tcl"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/add_mockup_3D"/>
 	<buildpathentry combineaccessrules="false" exported="true" kind="prj" path="/add_reynolds_FEA"/>
 </buildpath>

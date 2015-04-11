@@ -101,10 +101,10 @@ exec wish "$0" "$@"
 		# -- Libraries  ---------------
 	lappend auto_path           [file join $APPL_Env(BASE_Dir) lib]
 	
-	package require   Tk		 8.5
+	package require   Tk		 8.6
 	package require   BWidget 	    
-	package require   rattleCAD  3.3 
-	package require   canvasCAD	 0.22
+	package require   rattleCAD  3.4 
+	package require   canvasCAD	 0.56
 	package require	  extSummary 0.1
 
 		# -- Tcl/Tk Runtime  ----------

@@ -1,2 +1,2 @@
 eclipse.preferences.version=1
-org.eclipse.dltk.tcl.core.localValidator=disabled
+org.eclipse.dltk.tcl.core.localValidator=enabled
