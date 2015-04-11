@@ -44,11 +44,12 @@
 
     variable    treeWidget  {}
     variable    menueFrame  {}
+}
 
     #-------------------------------------------------------------------------
        #  create report widget
        #
-    proc createReport {w} {
+    proc rattleCAD::cfg_report::createReport {w} {
         variable treeWidget
         variable menueFrame
         variable APPL_Config
@@ -121,7 +122,7 @@
     #-------------------------------------------------------------------------
        #  cleanup Tree
        #
-    proc cleanupTree {} {
+    proc rattleCAD::cfg_report::cleanupTree {} {
         variable treeWidget
             # puts "  ... $treeWidget "
         foreach childNode [$treeWidget children {} ] {
@@ -135,7 +136,7 @@
     #-------------------------------------------------------------------------
        #  fill Tree - Variable
        #
-    proc fillTree_Variable {var} {
+    proc rattleCAD::cfg_report::fillTree_Variable {var} {
             #
             # -- define global parameters
             #
@@ -143,24 +144,24 @@
             currentProject {
 					set var $rattleCAD::control::currentDOM
                 }
-            runTime {   
-                    set var [appUtil::namespaceReport ::]
+            runTime {
+                    set var [appUtil::namespaceReport :: domNode]
                 }
             osEnv {
                     set var $osEnv::registryDOM
-            }
-   
+                }
             default {}
         }
-            
+            #
         rattleCAD::cfg_report::fillTree "$var" root
+            #
     }
 
 
     #-------------------------------------------------------------------------
        #  fill Tree - File
        #
-    proc fillTree {node parent} {
+    proc rattleCAD::cfg_report::fillTree {node parent} {
         variable treeWidget
         cleanupTree
         # recurseInsert $treeWidget "$node" $parent
@@ -173,7 +174,7 @@
     #-------------------------------------------------------------------------
        #  fill Tree - help function
        #
-    proc recurseInsert {w node parent} {
+    proc rattleCAD::cfg_report::recurseInsert {w node parent} {
 
             proc getAttributes node {
                     if {![catch {$node attributes} res]} {set res}
@@ -234,5 +235,5 @@
     }
 
 
-}
+
 

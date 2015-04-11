@@ -38,12 +38,12 @@
  # 
  namespace eval rattleCAD::infoPanel {
  
-
+ }
    
   #-------------------------------------------------------------------------
       #  create_config_design
        
-    proc create { w {tab 0}} {
+    proc rattleCAD::infoPanel::create { w {tab 0}} {
         
         global APPL_Config
 
@@ -79,7 +79,7 @@
         set text_help          [ create_tab $INFO_Notebook 02 "Help"        $widget_font ]
         set text_env           [ create_tab $INFO_Notebook 03 "Environment" $widget_font ]
         set text_osenv         [ create_tab $INFO_Notebook 04 "osEnv"       $widget_font ]
-        set text_apptil        [ create_tab $INFO_Notebook 05 "appUtil"     $widget_font ]
+        set text_appUtil       [ create_tab $INFO_Notebook 05 "appUtil"     $widget_font ]
         set text_license       [ create_tab $INFO_Notebook 06 "License"     $widget_font ]
         set text_exclusion     [ create_tab $INFO_Notebook 07 "Exclusion"   $widget_font ]
         set text_changelog     [ create_tab $INFO_Notebook 08 "ChangeLog"   $widget_font ]
@@ -87,7 +87,7 @@
         fill_help               $text_help
         fill_env                $text_env
         fill_osenv              $text_osenv
-        fill_apptil             $text_apptil
+        fill_appUtil            $text_appUtil
         fill_license            $text_license
         fill_changelog          $text_changelog
         fill_exclusion          $text_exclusion
@@ -99,7 +99,7 @@
         return $INFO_Notebook
     }
 
-    proc create_tab {nb  index labelText font} {
+    proc rattleCAD::infoPanel::create_tab {nb  index labelText font} {
     
         set _tab          [ $nb insert end $index \
                                            -text      "$labelText" ]
@@ -123,7 +123,7 @@
         return $_text
     }
 
-    proc fill_help {w} {    
+    proc rattleCAD::infoPanel::fill_help {w} {    
 
         global APPL_Config
 
@@ -143,7 +143,7 @@
         $w    insert end "\n\n"
     }
 
-    proc fill_env {w} {    
+    proc rattleCAD::infoPanel::fill_env {w} {    
 
         global APPL_Config
         
@@ -159,8 +159,8 @@
         $w  insert end "\n"
         $w  insert end "       Tk:             [package require Tk]\n"
         $w  insert end "       BWidget:        [package require BWidget]\n"
-        $w  insert end "       snit:           [package require snit]\n"
-        $w  insert end "       pdf4tcl:        [package require pdf4tcl]\n"
+       #$w  insert end "       snit:           [package require snit]\n"
+       #$w  insert end "       pdf4tcl:        [package require pdf4tcl]\n"
         $w  insert end "       rattleCAD:      [package require rattleCAD]\n"
         $w  insert end "       bikeGeometry:   [package require bikeGeometry]\n"
         $w  insert end "       canvasCAD:      [package require canvasCAD]\n"
@@ -227,7 +227,7 @@
         $w  insert end "     \$::argv0:        \n                   ... $::argv0\n"     
     }    
 
-    proc fill_license {w} { 
+    proc rattleCAD::infoPanel::fill_license {w} { 
         
         global APPL_Config
         
@@ -247,7 +247,7 @@
         $w     insert end "\n\n"
     }
 
-    proc fill_changelog {w} { 
+    proc rattleCAD::infoPanel::fill_changelog {w} { 
         
         global APPL_Config
         
@@ -267,7 +267,7 @@
         $w    insert end "\n\n"
     }    
 
-    proc fill_exclusion {w} {    
+    proc rattleCAD::infoPanel::fill_exclusion {w} {    
 
         global APPL_Config
 
@@ -287,7 +287,7 @@
         $w    insert end "\n\n"
     }
 
-    proc fill_apptil {w} {    
+    proc rattleCAD::infoPanel::fill_appUtil {w} {    
 
         global APPL_Config
 
@@ -296,11 +296,20 @@
         $w    insert end "   rattleCAD       $APPL_Config(RELEASE_Version).$APPL_Config(RELEASE_Revision)\n"
         $w    insert end "  ====================================================\n"
         $w    insert end "\n"
-        $w    insert end "[[appUtil::namespaceReport ::] asXML]"
+        
+        # if {[catch {set appUtil_Content [[appUtil::namespaceReport ::] asText]} eID]}
+        if {[catch {set namespaceReport [appUtil::namespaceReport :: asXML]} eID]} {
+            $w    insert end "\n ... namespaceReport failed \n"
+            $w    insert end "§eID"
+        } else {
+            $w    insert end "\n ... namespaceReport OK \n"
+            $w    insert end "\n   ... content asXML \n\n\n"
+            $w    insert end $namespaceReport
+        }
         $w    insert end "\n\n"
     }
 
-    proc fill_osenv {w} {    
+    proc rattleCAD::infoPanel::fill_osenv {w} {    
 
         global APPL_Config
 
@@ -320,5 +329,5 @@
      #  end  namespace eval infoPanel 
      #
 
- }
+
   

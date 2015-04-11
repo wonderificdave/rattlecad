@@ -198,7 +198,7 @@
         puts "  Exec:      [info nameofexecutable]"
         puts "  ----------------------------------------------"
         puts "    Tk:            [package require Tk]"
-        puts "    BWidget:       [package require BWidget]"
+      # puts "    BWidget:       [package require BWidget]"
         puts "    tdom:          [package require tdom]"
         puts "    rattleCAD:     [package require rattleCAD]"
         puts "    bikeGeometry:  [package require bikeGeometry]"
