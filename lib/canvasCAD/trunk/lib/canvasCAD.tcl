@@ -70,15 +70,16 @@
  #  0.55    refactor/cleanup:
  #              minor changes
  #
+ #  0.56    remove feature:
+ #              exportPDF ... 
+ #
  #
 
 
 
-    package provide canvasCAD 0.55
+    package provide canvasCAD 0.56
         #
     package require tdom
-    package require snit
-    package require pdf4tcl
 
     # -----------------------------------------------------------------------------------
     #
@@ -545,14 +546,6 @@
                                 }
                 exportDXF {         set canvasDOMNode   [getNodeRoot [format "/root/instance\[@id='%s'\]" $name] ]
                                     exportDXF $canvasDOMNode [lindex $argList 0]
-                                }
-                    # ------------------------            
-                exportPDF {         switch [llength $argList] {
-                                        1 { return [ exportPDF $name [lindex $argList 0] ] }
-                                        2 { return [ exportPDF $name [lindex $argList 0] [lindex $argList 1] ] }
-                                        3 { return [ exportPDF $name [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] ] }
-                                        4 { return [ exportPDF $name [lindex $argList 0] [lindex $argList 1] [lindex $argList 2] [lindex $argList 3] ] }
-                                    }
                                 }
                     # ------------------------            
                 print {             switch [llength $argList] {
