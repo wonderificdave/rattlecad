@@ -3,8 +3,7 @@
 	<buildpathentry kind="src" path=""/>
 	<buildpathentry kind="con" path="org.eclipse.dltk.launching.INTERPRETER_CONTAINER">
 		<attributes>
-			<attribute name="user_dependencies" value=""/>
-			<attribute name="auto_dependencies" value="tdom|BWidget"/>
+			<attribute name="auto_dependencies" value="BWidget|TclOO|Tk|log|tdom"/>
 		</attributes>
 	</buildpathentry>
 	<buildpathentry combineaccessrules="false" kind="prj" path="/parsetcl"/>

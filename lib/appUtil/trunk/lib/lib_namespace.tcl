@@ -5,26 +5,38 @@ exec tclsh "$0" ${1+"$@"}
 
     #-------------------------------------------------------------------------
         #
-    proc appUtil::namespaceReport {{_namespace {}}} {
+    proc appUtil::namespaceReport {{_namespace {}} {_format {domNode}}} {
+            #
         set xml "<root/>"
         set domDOC  [dom parse $xml]
         set domNode [$domDOC documentElement]      
-        
+            #
         if {$_namespace == {}} {
            set _namespace {::}
         }
-        
+            #
         _add_namespaceReport $domNode $_namespace
-                
-        #puts "[$domNode asXML]"
-        return $domNode
+            #
+        switch -exact $_format {
+            asText {    set retValue [$domNode asText]}
+            asXML {     set retValue [$domNode asXML]}
+            domNode -
+            default {   set retValue $domNode}
+        }
+            #
+            # set fd [open [file join $::APPL_Config(USER_Dir) log_appUtil_namespaceReport.txt] w]      
+            # puts $fd "$retValue"
+            # close $fd
+            #
+        return $retValue
+            #
     }
     #-------------------------------------------------------------------------
         #
     proc appUtil::_add_namespaceReport {domNode namespaceName} {
-        
+            #
         set domDOC [$domNode ownerDocument]
-        
+            #
         set namespaceList   [namespace children $namespaceName]
             # puts "    $namespaceName  -> $namespaceList"
         foreach _element [lsort $namespaceList] {
@@ -39,14 +51,17 @@ exec tclsh "$0" ${1+"$@"}
             } else {
                 $domNode appendChild $_node
                     # -- add next Level
-                _add_namespaceReport $_node $_element
+                catch {_add_namespaceReport $_node $_element}
+                    # change: 0.16: _add_namespaceReport $_node $_element
             }
         }
             # -- add content of current Level
-        _add_namespaceContent $domNode $namespaceName
+        catch {_add_namespaceContent $domNode $namespaceName}
+            #
         return
+            #
     }
-    
+
     proc appUtil::_add_namespaceContent {domNode namespaceName} {
             
             set domDOC [$domNode ownerDocument]
@@ -124,8 +139,6 @@ exec tclsh "$0" ${1+"$@"}
             $domNode appendChild [$domDOC createTextNode $_varValue]
     }
 
-
-    
     proc appUtil::_add_arraykeyValues {domNode arrayName} {
             
             set domDOC [$domNode ownerDocument]
@@ -150,7 +163,7 @@ exec tclsh "$0" ${1+"$@"}
                 }
             }
     }
-    
+
     proc appUtil::_add_varValue {domNode varName} {
             
             set domDOC [$domNode ownerDocument]
@@ -173,7 +186,7 @@ exec tclsh "$0" ${1+"$@"}
         }
         return [lsort $namespaceList]
     }
-    
+
     proc appUtil::_childProcedures {parent_namespace} {
         set procedureList [info procs [format "%s::*" $parent_namespace]]
         foreach _procedure [lsort $procedureList] {
@@ -196,7 +209,7 @@ exec tclsh "$0" ${1+"$@"}
     
         return [lsort $varList]
     }
-    
+
     proc appUtil::_childArrays {parent_namespace} {
         set _varList    [info vars  [format "%s::*" $parent_namespace]]
         set arrayList   {}
@@ -211,7 +224,7 @@ exec tclsh "$0" ${1+"$@"}
 
         return [lsort $arrayList]
     }  
-    
+
     proc check_nodeName {_name} {
         set newName [string map {\\ {_}   \# {_}   {%} {_}   {'} {_}   {.} {_}   {:} {.}} $_name]
         set newName [string map {\\ {_}   \# {_}   {%} {_}   {'} {_}   {.} {_}   {:} {.}} $newName]
@@ -222,7 +235,7 @@ exec tclsh "$0" ${1+"$@"}
         }
         return $newName
     }
-    
+
     proc check_nodeValue {_value} {
         set newValue [string map {{”} {?}} $_value]
         return $newValue
