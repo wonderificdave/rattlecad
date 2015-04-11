@@ -1,0 +1,18 @@
+<root>
+					<_package_ version="0.4">
+						<author prename="Manfred" surname="ROSENBERGER"/>
+						<UnitScale  m=""  c=""  i=""  p=""  std="" />
+						<DIN_Format>
+							<A0 l='1189'   h='841'  f1='10.0'  f2='7.5'  f3='5.0' />
+							<A1 l='841'    h='595'  f1='7.0'   f2='5.0'  f3='3.5' />
+							<A2 l='595'    h='420'  f1='7.0'   f2='5.0'  f3='3.5' />
+							<A3 l='420'    h='297'  f1='5.0'   f2='3.5'  f3='2.5' />
+							<A4 l='297'    h='210'  f1='5.0'   f2='3.5'  f3='2.5' />
+						</DIN_Format>
+						<Object_Template>
+							<Canvas path="" iborder="40" scale="1.0" />
+							<Stage 	unit="m" width="200" height="170" scale="0.5" />
+							<Style  linewidth="0.35" linecolour="black" fontstyle="vector" fontsize="3.5" fontdist="1" font="Arial" fontcolour="black" />
+						</Object_Template>
+					</_package_>
+				</root>
