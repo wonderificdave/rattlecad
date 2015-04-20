@@ -13,9 +13,15 @@
         Many thanks to the 
            Tcl/Tk - Community
 
-        and especially to :
+        and especially to:
            Gerhard REITHOFER   [www.tech-edv.co.at]
            Johann  OBERDORFER
+           
+           
+    If you wanna save the programmer feel free to donate here:
+        
+        http://rattlecad.sourceforge.net/donate.html
+        
 
 
 ...  is based on Tcl/Tk:
@@ -40,16 +46,6 @@
             http://sourceforge.net/projects/tcllib/ 
                 ... see License of tcllib (BSD)
             
-       snit (tcllib)
-      ------------------------------------------
-            http://sourceforge.net/projects/tcllib/ 
-                ... see License of tcllib (BSD)
-
-       pdf4tcl (tcllib)
-      ------------------------------------------
-            http://core.tcl.tk/jenglish/gutter/packages/pdf4tcl.html 
-                ... see License of tcllib (BSD)
-
        tdom
       ------------------------------------------
             http://docs.activestate.com/activetcl/8.5/tdom/tdomcmd.html
@@ -96,25 +92,34 @@
                     ???
             ... see http://wiki.tcl.tk/3834
 
-
+            
+... starpacks: STand Alone Runtime
+----------------------------------------
+            ... using packages of ActiveState Teapot
+                ... base-tk ... 8.6.3.1
+                ... tdom ...... 0.8.3
+                ... BWidget ... 1.9.8           
+            
+            
 
 ... uses following svg - components:
 ----------------------------------------
 
-       crankset/shimano_hollowtech_II.svg
+        .../crankset/shimano_hollowtech_II.svg
             ... iges by Simon Weishaupt
             
-       dropout/rear_dropout_ss_wild_lilies_grow.svg
+        .../dropout/rear_dropout_ss_wild_lilies_grow.svg
             ... dxf  by Michael Wiedemann
             
-       dropout/gp_wilson.svg
-            ... and
-       fork/dropout/gp_wilson.svg
+        .../dropout/gp_wilson.svg
+        .../fork/dropout/gp_wilson.svg
             ... by Paul Wyganowski from 
                   http://wyganowskiframes.com/?attachment_id=189
             
-       logo/rosenberger.svg
-          ./selberbruzzler.svg
-          ./bohemian.svg
-          ./puch.svg
-             ... free to use. Ownership kept by their creators
+        .../logo/
+            ./rosenberger.svg
+            ./selberbruzzler.svg
+            ./bohemian.svg
+            ./puch.svg
+            
+        ... graphics are free to use. Ownership kept by their creators
