@@ -941,17 +941,19 @@
         
           # -- define display length
           # set sectArea_01 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutLeft   __dragObject__]                                    
-        set sectArea_02 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutRight  __dragObject__]                                    
+          # set sectArea_02 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutRight  __dragObject__]                                    
+          # set sectArea_01 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutLeft ]                                    
+        set sectArea_02 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutRight]                                    
           #
           # $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_01
-        $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_02
+          # $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_02
           #
         set sect_Points(0)   $p0
         set sect_Points(1)   $p_cutLeft
         set sect_Points(2)   $p_cutRight
           #
           # canvasCAD::register_dragObjects   $ext_cvName    $sectArea_01   [namespace current]::move_sectPoints  1
-        canvasCAD::register_dragObjects   $ext_cvName    $sectArea_02   [namespace current]::move_sectPoints  2
+          # canvasCAD::register_dragObjects   $ext_cvName    $sectArea_02   [namespace current]::move_sectPoints  2
           #
           # set tagList [$ext_cvName gettags $ctrlArea_99]
           # puts "\n -> $tagList  \n"
@@ -971,7 +973,7 @@
                                                                 $ext_Colour(result) ]
           
           # -- cutting Length
-        # set _dim_c1        [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $sect_Points(0) $sect_Points(1) ] \
+          # set _dim_c1      [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $sect_Points(0) $sect_Points(1) ] \
                                                                 horizontal    [expr -25 * $ext_stageScale]   0 \
                                                                 $ext_Colour(result) ]
         set _dim_c2          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $sect_Points(1) $sect_Points(2) ] \
@@ -1001,7 +1003,7 @@
         rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_x2     single_ChainStay_ProfileLength_02
         rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_x3     single_ChainStay_ProfileLength_03
             #                                                           
-        rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_c2     single_ChainStay_ProfileLengthCut
+        # rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_c2     single_ChainStay_ProfileLengthCut
             #                                                           
         rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_w0     single_ChainStay_ProfileWidth_00
         rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_w1     single_ChainStay_ProfileWidth_01
@@ -1434,23 +1436,39 @@
     }
 
     proc rattleCAD::cv_custom::create_sectionField {cv_Name xy {tag {}}} {
+                #
             set width   8
             set height 18
+                #
             foreach {x y} $xy break
+                #
             set x0 [expr $x]
             set x1 [expr $x - 0.5 * $width]
             set x2 [expr $x + 0.5 * $width]
             set y0 [expr $y]
             set y1 [expr $y - 0.7 * $height]
             set y2 [expr $y - 1.0 * $height]
-              # set coordList [appUtil::flatten_nestedList $x1 $y1  $x2 $y1  $x2 $y2  $x1 $y2]
+                # set coordList [appUtil::flatten_nestedList $x1 $y1  $x2 $y1  $x2 $y2  $x1 $y2]
             set coordList [appUtil::flatten_nestedList $x1 $y1  $x0 $y0  $x2 $y1  $x0 $y2]
+                #
+            set width   5
+            set height 30
+                #
+            set x0 [expr $x]
+            set x1 [expr $x + $width]
+            set x2 [expr $x]
+            set y0 [expr $y]
+            set y1 [expr $y - 0.7 * $height]
+            set y2 [expr $y - 1.0 * $height]
+                #    
+            set coordList [appUtil::flatten_nestedList $x0 $y0  $x1 $y1  $x2 $y2]
+                #
             set ctrlPolygon [$cv_Name create polygon     $coordList   -outline red    -fill lightgray   -width 2.0   -tags [list __CenterLine__ $tag]]
             set returnObj   $ctrlPolygon
-            
+                #
                 # -- return controlField
             return $returnObj    
-    
+                #
     }
 
     proc rattleCAD::cv_custom::move_sectPoints {id xy} {

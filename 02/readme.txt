@@ -1,5 +1,16 @@
 
 
+3.4.02.43  - 2015.04.21
+-------------------------------------------------------------------------------
+    feature:
+        ... add template:
+            ... childbike_mx_dirt_24.xml
+    debug:
+        ... replace ChainStay-Length-Slider in ChainStay Details
+        ... bikeGeometry 1.46
+            ... fork visualisation
+
+
 3.4.02.42  - 2015.04.20
 -------------------------------------------------------------------------------
     refactor: 
