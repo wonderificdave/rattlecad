@@ -200,8 +200,8 @@ namespace eval bikeGeometry::tube {
         set lastSegment [expr abs($lastRadius * [vectormath::rad $lastAngle])]
         set nextSegment [expr abs($nextRadius * [vectormath::rad $nextAngle])]
           #
-        set lastArc      [expr 0.5 * $lastSegment]
-        set nextArc      [expr 0.5 * $nextSegment]
+        set lastArc      [expr 0.5 * $lastSegment]  ;# length of previous arc
+        set nextArc      [expr 0.5 * $nextSegment]  ;# length of next arc
           #        
         
           # -- get sure to have a smooth shape
@@ -479,11 +479,11 @@ namespace eval bikeGeometry::tube {
 
     proc bikeGeometry::tube::create_ForkBlade {valueDict} {
 
-        
-        # variable max_Offset
-
-        # puts $valueDict
-        
+            #
+            # variable max_Offset
+            #
+            # puts $valueDict
+            #
         set dropOutPos      [dict get $valueDict env    dropOutPosition]
         set forkHeight      [dict get $valueDict env    forkHeight]
         set forkRake        [dict get $valueDict env    forkRake]
@@ -492,322 +492,320 @@ namespace eval bikeGeometry::tube {
         set dropOutOffset   [dict get $valueDict env    dropOutOffset]
         set dropOutPerp     [dict get $valueDict env    dropOutPerp]
         set headTube_Angle  [dict get $valueDict env    headTubeAngle]
-        
+            #
         set endLength       [dict get $valueDict blade  endLength]
         set bendRadius      [dict get $valueDict blade  bendRadius]
         set bladeType       [dict get $valueDict blade  type]
-        
+            #
         set profileDef      [dict get $valueDict profile]
         set max_Offset      6.0
-
-        
-
+            #
         set length_bladeDO  [expr $forkHeight - $crownOffset]
         set height_bladeDO  [expr $forkRake - $crownPerp]
-        
+            #
         set orient_01 [list 0 0]
         set orient_02 [list $crownOffset 0]
         set orient_03 [list $crownOffset $crownPerp]
         set orient_04 [list $forkHeight $crownPerp]
         set orient_05 [list $forkHeight $forkRake]          
-        
+            #
         set p_00    [list $length_bladeDO $height_bladeDO]
-        
+            #
             # puts " <I> .. \$bladeType $bladeType"
-        
+            #
         switch -exact $bladeType {
         
           bent {
-
-                  # http://www.mathcentre.ac.uk/resources/workbooks/mathcentre/web-rcostheta-alphaetc.pdf
-              #puts "\n"
-              #puts "   --> \$height_bladeDO $height_bladeDO"
-              #puts "   --> \$dropOutPerp $dropOutPerp"
-              #puts "   ----> [expr $height_bladeDO + $dropOutPerp]"
-
-              set _b    [expr -1.0*($dropOutOffset + $endLength)]
-                      
-              if {$height_bladeDO > $dropOutPerp} {
-              
-                    # puts "\n ==== upper state =========\n"  
-                    
-                  set _a    [expr  1.0*($bendRadius - $dropOutPerp)]
-                  set _R    [expr hypot($_a,$_b)]
-                  set _atan [expr atan($_b/$_a)]
-                  set _quot [expr ($bendRadius - $height_bladeDO)/$_R]
-                  set _acos [expr acos($_quot)]
-
-                  set bendAngle [expr (-180/$vectormath::CONST_PI) * ($_acos + $_atan)]
-                  set segLength [expr abs($bendRadius*$bendAngle)*($vectormath::CONST_PI/180)] 
-                  set dirAngle  [expr -1*$bendAngle]
-                  
-                  set l_t01   [expr $bendRadius * sin($bendAngle*$vectormath::CONST_PI/180)]
-                  
-                  set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
-                  set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
-                  set p_03    [vectormath::rotateLine $p_02 $endLength      [expr 180 + $dirAngle]]
-                  set p_04    [vectormath::subVector $p_03  [list           [expr -1 * $l_t01] [lindex $p_03 1]]]
-                  set p_05    [vectormath::rotateLine $p_03 [expr 0.5 * $segLength] [expr 180 + $dirAngle]]
-                  set p_06    $orient_03
-                  set p_15    [vectormath::addVector $p_04  [list 0         $bendRadius]]
-                  
-              } elseif {$height_bladeDO > 0} {
-              
-                    # puts "\n ==== middle state =========\n" 
-                  
-                  set _a    [expr  1.0*($bendRadius + $dropOutPerp)]
-                  set _R    [expr hypot($_a,$_b)]
-                  set _atan [expr atan($_b/$_a)]
-                  set _quot [expr ($bendRadius + $height_bladeDO)/$_R]
-                  set _acos [expr acos($_quot)]
-
-                  set bendAngle [expr (180/$vectormath::CONST_PI) * ($_acos + $_atan)]
-                  set segLength [expr abs($bendRadius*$bendAngle)*$vectormath::CONST_PI/180] 
-                  set dirAngle  [expr -1*$bendAngle]
-
-                  set l_t01   [expr $bendRadius * sin($bendAngle*$vectormath::CONST_PI/180)]
-
-                  set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
-                  set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
-                  set p_03    [vectormath::rotateLine $p_02 $endLength      [expr 180 + $dirAngle]]
-                  set p_04    [vectormath::subVector $p_03  [list $l_t01    [lindex $p_03 1]]]
-                  set p_05    [vectormath::rotateLine $p_03 [expr 0.5 * $segLength] [expr 180 + $dirAngle]]
-                  set p_06    $orient_03
-                  set p_15    [vectormath::addVector $p_04  [list 0         [expr 1.0 * $bendRadius]]]
-                    
-              } else {
-              
-                    # puts "\n ==== lower state =========\n"  
-                  
-                  set _a      [expr  1.0*($dropOutPerp + $bendRadius)]
-                  set _R      [expr hypot($_a,$_b)]
-                  set _atan   [expr atan($_b/$_a)]
-                  set _quot   [expr ($bendRadius + $height_bladeDO)/$_R]
-                  set _acos   [expr acos($_quot)]
-                 
-                  set bendAngle [expr (180/$vectormath::CONST_PI) * ($_acos + $_atan)]
-                  set segLength [expr abs($bendRadius*$bendAngle)*$vectormath::CONST_PI/180] 
-                  set dirAngle  [expr -1.0 * $bendAngle]
-                  
-                  set l_t01   [expr $bendRadius * sin($bendAngle*$vectormath::CONST_PI/180)]
-                  
-                  set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
-                  set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
-                  set p_03    [vectormath::rotateLine $p_02 $endLength      [expr 180 + $dirAngle]]
-                  set p_04    [vectormath::subVector  $p_03 [list $l_t01    [lindex $p_03 1]]]
-                  set p_05    [vectormath::rotateLine $p_03 [expr 0.5 * $segLength] [expr 180 + $dirAngle]]
-                  set p_06    [list 0 0] 
-                  set p_15    [vectormath::addVector  $p_04 [list 0         [expr -1.0 * $bendRadius]]]
-                  
-              }             
-              
-                  #puts "   -> \$_a $_a"
-                  #puts "   -> \$_b $_b"
-                  #puts "   -> \$_R $_R"
-                  #puts "   -> \$_quot $_quot"
-                  #puts "   -> \$_atan $_atan"
-                  #puts "   -> \$_acos $_acos"
-                  #puts "   -> \$segLength $segLength"
-                  #puts "   -> \$bendAngle $bendAngle\n"
-                  #puts "   -> \$dirAngle $dirAngle\n"
-
-              set angleRotation [expr 180 + $dirAngle]  
-                  #puts "   -> \$angleRotation $angleRotation\n"
-              
-              set S01_length  [expr $endLength + 0.5 * $segLength]
-              set S02_length  [expr [lindex $p_04 0] + 0.5 * $segLength - 20] ;#[expr $length_bladeDO - $S01_length - 20]
-              set S03_length  10 ;#[expr [lindex $p_04 0] - 20]                       
-              set S04_length  10                         
-              set S05_length  10                         
-              set P01_angle   $bendAngle
-              set P02_angle   0                       
-              set P03_angle   0                       
-              set P04_angle   0                       
-              set S01_radius  $bendRadius
-              set S02_radius  0
-              set S03_radius  0            
-              set S04_radius  0            
-
-                # -- set centerLine of bent tube
-              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
-                                      $P01_angle  $P02_angle  $P03_angle   $P04_angle \
-                                      $S01_radius $S02_radius $S03_radius  $S04_radius]              
-              
-
-                # -- set profile of bent tube
-              set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]              
-                  # puts "   -> \$profileDef   $profileDef"
-                  # puts "   -> \$tubeProfile  $tubeProfile"
+                    #
+                    # http://www.mathcentre.ac.uk/resources/workbooks/mathcentre/web-rcostheta-alphaetc.pdf
+                    #puts "\n"
+                    #puts "   --> \$height_bladeDO $height_bladeDO"
+                    #puts "   --> \$dropOutPerp $dropOutPerp"
+                    #puts "   ----> [expr $height_bladeDO + $dropOutPerp]"
+                    #
+                set _b    [expr -1.0*($dropOutOffset + $endLength)]
+                    #
+                if {$height_bladeDO > $dropOutPerp} {
+                        #
+                        # puts "\n ==== upper state =========\n"  
+                        #
+                    set _a    [expr  1.0*($bendRadius - $dropOutPerp)]
+                    set _R    [expr hypot($_a,$_b)]
+                    set _atan [expr atan($_b/$_a)]
+                    set _quot [expr ($bendRadius - $height_bladeDO)/$_R]
+                    set _acos [expr acos($_quot)]
+                        #
+                    set bendAngle [expr (-180/$vectormath::CONST_PI) * ($_acos + $_atan)]
+                    set segLength [expr abs($bendRadius*$bendAngle)*($vectormath::CONST_PI/180)] 
+                    set dirAngle  [expr -1*$bendAngle]
+                        #
+                    set l_t01   [expr $bendRadius * sin($bendAngle*$vectormath::CONST_PI/180)]
+                        #
+                    set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
+                    set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
+                    set p_03    [vectormath::rotateLine $p_02 $endLength      [expr 180 + $dirAngle]]
+                    set p_04    [vectormath::subVector $p_03  [list           [expr -1 * $l_t01] [lindex $p_03 1]]]
+                    set p_05    [vectormath::rotateLine $p_03 [expr 0.5 * $segLength] [expr 180 + $dirAngle]]
+                    set p_06    $orient_03
+                    set p_15    [vectormath::addVector $p_04  [list 0         $bendRadius]]
+                        #
+                } elseif {$height_bladeDO > 0} {
+                        #
+                        # puts "\n ==== middle state =========\n" 
+                        #
+                    set _a    [expr  1.0*($bendRadius + $dropOutPerp)]
+                    set _R    [expr hypot($_a,$_b)]
+                    set _atan [expr atan($_b/$_a)]
+                    set _quot [expr ($bendRadius + $height_bladeDO)/$_R]
+                    set _acos [expr acos($_quot)]
+                        #
+                    set bendAngle [expr (180/$vectormath::CONST_PI) * ($_acos + $_atan)]
+                    set segLength [expr abs($bendRadius*$bendAngle)*$vectormath::CONST_PI/180] 
+                    set dirAngle  [expr -1*$bendAngle]
+                        #
+                    set l_t01   [expr $bendRadius * sin($bendAngle*$vectormath::CONST_PI/180)]
+                        #
+                    set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
+                    set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
+                    set p_03    [vectormath::rotateLine $p_02 $endLength      [expr 180 + $dirAngle]]
+                    set p_04    [vectormath::subVector $p_03  [list $l_t01    [lindex $p_03 1]]]
+                    set p_05    [vectormath::rotateLine $p_03 [expr 0.5 * $segLength] [expr 180 + $dirAngle]]
+                    set p_06    $orient_03
+                    set p_15    [vectormath::addVector $p_04  [list 0         [expr 1.0 * $bendRadius]]]
+                        #
+                } else {
+                        #
+                        # puts "\n ==== lower state =========\n"  
+                        #
+                    set _a      [expr  1.0*($dropOutPerp + $bendRadius)]
+                    set _R      [expr hypot($_a,$_b)]
+                    set _atan   [expr atan($_b/$_a)]
+                    set _quot   [expr ($bendRadius + $height_bladeDO)/$_R]
+                    set _acos   [expr acos($_quot)]
+                        #
+                    set bendAngle [expr (180/$vectormath::CONST_PI) * ($_acos + $_atan)]
+                    set segLength [expr abs($bendRadius*$bendAngle)*$vectormath::CONST_PI/180] 
+                    set dirAngle  [expr -1.0 * $bendAngle]
+                        #
+                    set l_t01   [expr $bendRadius * sin($bendAngle*$vectormath::CONST_PI/180)]
+                        #
+                    set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
+                    set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
+                    set p_03    [vectormath::rotateLine $p_02 $endLength      [expr 180 + $dirAngle]]
+                    set p_04    [vectormath::subVector  $p_03 [list $l_t01    [lindex $p_03 1]]]
+                    set p_05    [vectormath::rotateLine $p_03 [expr 0.5 * $segLength] [expr 180 + $dirAngle]]
+                    set p_06    [list 0 0] 
+                    set p_15    [vectormath::addVector  $p_04 [list 0         [expr -1.0 * $bendRadius]]]
+                        #
+                }             
+                    #
+                    # puts "   -> \$_a $_a"
+                    # puts "   -> \$_b $_b"
+                    # puts "   -> \$_R $_R"
+                    # puts "   -> \$_quot $_quot"
+                    # puts "   -> \$_atan $_atan"
+                    # puts "   -> \$_acos $_acos"
+                    # puts "   -> \$segLength $segLength"
+                    # puts "   -> \$bendAngle $bendAngle\n"
+                    # puts "   -> \$dirAngle $dirAngle\n"
+                    #
+                set angleRotation [expr 180 + $dirAngle]  
+                    # puts "   -> \$angleRotation $angleRotation\n"
+                    #
+                set S01_length  [expr $endLength + 0.5 * $segLength]
+                set S02_length  [expr [lindex $p_04 0] + 0.5 * $segLength - 20] ;#[expr $length_bladeDO - $S01_length - 20]
+                set S03_length  10 ;#[expr [lindex $p_04 0] - 20]                       
+                set S04_length  10                         
+                set S05_length  10                         
+                set P01_angle   $bendAngle
+                set P02_angle   0                       
+                set P03_angle   0                       
+                set P04_angle   0                       
+                set S01_radius  $bendRadius
+                set S02_radius  0
+                set S03_radius  0            
+                set S04_radius  0            
+                    #
+                    # -- set centerLine of bent tube
+                set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
+                                        $P01_angle  $P02_angle  $P03_angle   $P04_angle \
+                                        $S01_radius $S02_radius $S03_radius  $S04_radius]              
+                
+    
+                    # -- set profile of bent tube
+                set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]              
+                    # puts "   -> \$profileDef   $profileDef"
+                    # puts "   -> \$tubeProfile  $tubeProfile"
             }
             
           straight {
-          
-                # puts "\n ==== straight =========\n"  
-                  
-              set _dAngle   [expr atan(1.0*$height_bladeDO/$length_bladeDO)]
-              set _hypot    [expr hypot($length_bladeDO,$height_bladeDO)]
-              set _pAngle   [expr asin($dropOutPerp/$_hypot)]
-              
-              set length    [expr sqrt(pow($_hypot,2) - pow($dropOutPerp,2)) - $dropOutOffset]
-              
-              set dirAngle  [expr (180/$vectormath::CONST_PI) * ($_dAngle - $_pAngle)]
-
-              set segLength 30
-              
-              set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
-              set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
-              set p_03    [vectormath::rotateLine $p_02 $endLength      [expr 180 + $dirAngle]]
-              set p_04    [vectormath::rotateLine $p_03 [expr 1.00 * $segLength]  [expr 180 + $dirAngle]]
-              set p_05    [vectormath::rotateLine $p_04 [expr 1.00 * $segLength]  [expr 180 + $dirAngle]]
-              set p_06    [list 0 0] 
-              set p_15    [vectormath::rotateLine $p_03 100  [expr 170 + $dirAngle]]
-
+                    #
+                    # puts "\n ==== straight =========\n"  
+                    #
+                set _dAngle   [expr atan(1.0*$height_bladeDO/$length_bladeDO)]
+                set _hypot    [expr hypot($length_bladeDO,$height_bladeDO)]
+                set _pAngle   [expr asin($dropOutPerp/$_hypot)]
+                    #
+                set length    [expr sqrt(pow($_hypot,2) - pow($dropOutPerp,2)) - $dropOutOffset]
+                    #
+                set dirAngle  [expr (180/$vectormath::CONST_PI) * ($_dAngle - $_pAngle)]
+                    #
+                set segLength 30
+                    #
+                set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
+                set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
+                set p_03    [vectormath::rotateLine $p_02 $endLength      [expr 180 + $dirAngle]]
+                set p_04    [vectormath::rotateLine $p_03 [expr 1.00 * $segLength]  [expr 180 + $dirAngle]]
+                set p_05    [vectormath::rotateLine $p_04 [expr 1.00 * $segLength]  [expr 180 + $dirAngle]]
+                set p_06    [list 0 0] 
+                set p_15    [vectormath::rotateLine $p_03 100  [expr 170 + $dirAngle]]
+                    #
                     #puts "   --> \$_hypot $_hypot"
                     #puts "   --> \$_dAngle $_dAngle"
                     #puts "   --> \$_pAngle $_pAngle"
                     #puts "   --> \$length $length"
-              
-              set angleRotation [expr 180 + $dirAngle]
+                    #
+                set angleRotation [expr 180 + $dirAngle]
                     #puts "   -> \$angleRotation $angleRotation\n"
-              
-              set S01_length  [expr 0.20 * $length]
-              set S02_length  [expr 0.20 * $length]
-              set S03_length  [expr 0.20 * $length]                       
-              set S04_length  [expr 0.20 * $length]                         
-              set S05_length  [expr 0.20 * $length]                         
-              set P01_angle   0
-              set P02_angle   0                       
-              set P03_angle   0                       
-              set P04_angle   0                       
-              set S01_radius  0
-              set S02_radius  0
-              set S03_radius  0
-              set S04_radius  0
-
-                # -- set centerLine of straight tube
-              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
-                                      $P01_angle  $P02_angle  $P03_angle   $P04_angle \
-                                      $S01_radius $S02_radius $S03_radius  $S04_radius] 
-                                      
-              # -- set profile of straight tube       
-              set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]                          
-                  # puts "   -> \$profileDef   $profileDef"
-                  # puts "   -> \$tubeProfile  $tubeProfile"
+                    #
+                set S01_length  [expr 0.20 * $length]
+                set S02_length  [expr 0.20 * $length]
+                set S03_length  [expr 0.20 * $length]                       
+                set S04_length  [expr 0.20 * $length]                         
+                set S05_length  [expr 0.20 * $length]                         
+                set P01_angle   0
+                set P02_angle   0                       
+                set P03_angle   0                       
+                set P04_angle   0                       
+                set S01_radius  0
+                set S02_radius  0
+                set S03_radius  0
+                set S04_radius  0
+                    #
+                    # -- set centerLine of straight tube
+                set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
+                                        $P01_angle  $P02_angle  $P03_angle   $P04_angle \
+                                        $S01_radius $S02_radius $S03_radius  $S04_radius] 
+                                        
+                    # -- set profile of straight tube       
+                set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]                          
+                    # puts "   -> \$profileDef   $profileDef"
+                    # puts "   -> \$tubeProfile  $tubeProfile"
             }
             
-          MAX -
-          max {
+            MAX -
+            max {
                 
-                # puts "\n ==== MAX =========\n"  
-                  
-              set max_endLength   250
-              set max_bendRadius  [expr 25.0]
-                # puts "   -> \$max_Offset       $max_Offset"  
-                # puts "   -> \$max_bendRadius   $max_bendRadius"                
-                # puts "   -> \$max_endLength    $max_endLength"
-              set bendAngle   [expr atan(1.0*$max_Offset/$max_endLength)]
-                # puts "   -> \$bendAngle $bendAngle"  
-              
-              set l_bend_DO [expr hypot(($max_endLength+$dropOutOffset),$dropOutPerp)]
-                # puts "   -> \$l_bend_DO $l_bend_DO"  
-              set a_bend_DO [expr atan(1.0*$dropOutPerp/($max_endLength+$dropOutOffset))]
-                # puts "   -> \$a_bend_DO $a_bend_DO"               
-              set a_gamma   [expr $vectormath::CONST_PI-($bendAngle+$a_bend_DO)]
-                # puts "   -> \$a_gamma   $a_gamma" 
-              
-              set l_bend_DO_x [expr $l_bend_DO * cos($bendAngle+$a_bend_DO)]
-              set l_bend_DO_y [expr $l_bend_DO * sin($bendAngle+$a_bend_DO)]
-                # puts "   -> \$l_bend_DO_x   $l_bend_DO_x" 
-                # puts "   -> \$l_bend_DO_y   $l_bend_DO_y" 
-              
-              
-              set l_cc      [expr hypot($length_bladeDO,$height_bladeDO)]
-              set l_base    [expr sqrt(pow($l_cc,2) - pow($l_bend_DO_y,2)) - $l_bend_DO_x]
-                # puts "   -> \$l_base   $l_base" 
-              
-              set _a_2       [expr pow($l_bend_DO,2)]
-              set _b_2       [expr pow($l_base,2)]
-              set _c_2       [expr pow($l_cc,2)]
-              set _2ac       [expr 2*$l_bend_DO*$l_cc]
-              
-              set a_beta      [expr acos(($_c_2-$_b_2+$_a_2)/$_2ac)]
-              set a_alpha     [expr $vectormath::CONST_PI - $a_beta - $a_gamma]
-                # puts "   -> \$a_beta   $a_beta"               
-                # puts "   -> \$a_alpha  $a_alpha"     
-
-              set a_offset    [expr atan(1.0*$height_bladeDO/$length_bladeDO)]
-                # puts "   -> \$a_offset   $a_offset"               
-              set dirAngle    [expr $a_offset + $a_beta - $a_bend_DO]
-                # puts "\n"
-                # puts "   -> \$dirAngle  $dirAngle"     
-              set dirAngle    [vectormath::grad $dirAngle]
-                # puts "   -> \$dirAngle  $dirAngle"     
-                # puts "\n"
-              # puts "   -> \$max_Offset $max_Offset"  
-              
-                          
-              set segLength [expr tan(0.5*$bendAngle)*$max_bendRadius] 
-                # puts "   -> \$segLength    $segLength"               
-                # puts "\n"              
-                # puts "\n" 
-
-              set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
-              set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
-              set p_03    [vectormath::rotateLine $p_02 [expr $max_endLength - 30]     [expr 180 + $dirAngle]]
-              set p_04    [vectormath::rotateLine $p_02 $max_endLength  [expr 180 + $dirAngle]]
-              set p_05    [vectormath::rotateLine $p_04 30 [expr 180 + $dirAngle  - $bendAngle*(180/$vectormath::CONST_PI)]]
-              set p_06    [list 0 0] 
-              set p_15    [vectormath::addVector $p_04  [list 0         [expr 1.0 * $max_bendRadius]]]
-
-              set angleRotation [expr 180 + $dirAngle]  
-                # puts "   -> \$angleRotation $angleRotation\n"
-
-              set S01_length  [vectormath::length $p_02 $p_04]
-              set S02_length  [expr [vectormath::length $p_04 $p_06] - 20] ;#[expr $length_bladeDO - $S01_length - 20]
-              set S03_length  10                
-              set S04_length  10                                          
-              set S05_length  10                                          
-              set P01_angle   [expr -1.0 * $bendAngle * (180/$vectormath::CONST_PI)]
-              set P02_angle   0                       
-              set P03_angle   0                       
-              set P04_angle   0                       
-              set S01_radius  $max_bendRadius
-              set S02_radius  0
-              set S03_radius  0  
-              set S04_radius  0  
-                # puts "   -> \$P01_angle $P01_angle\n"
-
-                # -- set centerLine of straight tube
-              set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
-                                      $P01_angle  $P02_angle  $P03_angle   $P04_angle \
-                                      $S01_radius $S02_radius $S03_radius  $S04_radius] 
-                                      
-              # -- set profile of straight tube                
-              set profileDef {}
-                  lappend profileDef [list 0   14]
-                  lappend profileDef [list 250 36]
-                  lappend profileDef [list 250 36]
-                  lappend profileDef [list 250 36]       
-              set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]                 
-                  # puts "   -> \$profileDef   $profileDef"
-                  # puts "   -> \$tubeProfile  $tubeProfile"
+                    # puts "\n ==== MAX =========\n"  
+                    
+                set max_endLength   250
+                set max_bendRadius  [expr 25.0]
+                    # puts "   -> \$max_Offset       $max_Offset"  
+                    # puts "   -> \$max_bendRadius   $max_bendRadius"                
+                    # puts "   -> \$max_endLength    $max_endLength"
+                set bendAngle   [expr atan(1.0*$max_Offset/$max_endLength)]
+                    # puts "   -> \$bendAngle $bendAngle"  
+                    #
+                set l_bend_DO [expr hypot(($max_endLength+$dropOutOffset),$dropOutPerp)]
+                    # puts "   -> \$l_bend_DO $l_bend_DO"  
+                set a_bend_DO [expr atan(1.0*$dropOutPerp/($max_endLength+$dropOutOffset))]
+                    # puts "   -> \$a_bend_DO $a_bend_DO"               
+                set a_gamma   [expr $vectormath::CONST_PI-($bendAngle+$a_bend_DO)]
+                    # puts "   -> \$a_gamma   $a_gamma" 
+                    #
+                set l_bend_DO_x [expr $l_bend_DO * cos($bendAngle+$a_bend_DO)]
+                set l_bend_DO_y [expr $l_bend_DO * sin($bendAngle+$a_bend_DO)]
+                    # puts "   -> \$l_bend_DO_x   $l_bend_DO_x" 
+                    # puts "   -> \$l_bend_DO_y   $l_bend_DO_y" 
+                    #
+                set l_cc      [expr hypot($length_bladeDO,$height_bladeDO)]
+                set l_base    [expr sqrt(pow($l_cc,2) - pow($l_bend_DO_y,2)) - $l_bend_DO_x]
+                    # puts "   -> \$l_base   $l_base" 
+                    #
+                set _a_2       [expr pow($l_bend_DO,2)]
+                set _b_2       [expr pow($l_base,2)]
+                set _c_2       [expr pow($l_cc,2)]
+                set _2ac       [expr 2*$l_bend_DO*$l_cc]
+                    #
+                set a_beta      [expr acos(($_c_2-$_b_2+$_a_2)/$_2ac)]
+                set a_alpha     [expr $vectormath::CONST_PI - $a_beta - $a_gamma]
+                    # puts "   -> \$a_beta   $a_beta"               
+                    # puts "   -> \$a_alpha  $a_alpha"     
+                    #
+                set a_offset    [expr atan(1.0*$height_bladeDO/$length_bladeDO)]
+                    # puts "   -> \$a_offset   $a_offset"               
+                set dirAngle    [expr $a_offset + $a_beta - $a_bend_DO]
+                    # puts "\n"
+                    # puts "   -> \$dirAngle  $dirAngle"     
+                set dirAngle    [vectormath::grad $dirAngle]
+                    # puts "   -> \$dirAngle  $dirAngle"     
+                    # puts "\n"
+                    # puts "   -> \$max_Offset $max_Offset"  
+                    #       
+                set segLength [expr tan(0.5*$bendAngle)*$max_bendRadius] 
+                    # puts "   -> \$segLength    $segLength"               
+                    # puts "\n"              
+                    # puts "\n" 
+                    #
+                set p_01    [vectormath::rotateLine $p_00 $dropOutPerp    [expr 270 + $dirAngle]]
+                set p_02    [vectormath::rotateLine $p_01 $dropOutOffset  [expr 180 + $dirAngle]]
+                set p_03    [vectormath::rotateLine $p_02 [expr $max_endLength - 30]     [expr 180 + $dirAngle]]
+                set p_04    [vectormath::rotateLine $p_02 $max_endLength  [expr 180 + $dirAngle]]
+                set p_05    [vectormath::rotateLine $p_04 30 [expr 180 + $dirAngle  - $bendAngle*(180/$vectormath::CONST_PI)]]
+                set p_06    [list 0 0] 
+                set p_15    [vectormath::addVector $p_04  [list 0         [expr 1.0 * $max_bendRadius]]]
+                    #
+                set angleRotation [expr 180 + $dirAngle]  
+                    # puts "   -> \$angleRotation $angleRotation\n"
+                    #
+                set S01_length  [vectormath::length $p_02 $p_04]
+                set S02_length  [expr [vectormath::length $p_04 $p_06] - 20] ;#[expr $length_bladeDO - $S01_length - 20]
+                set S03_length  10                
+                set S04_length  10                                          
+                set S05_length  10                                          
+                set P01_angle   [expr -1.0 * $bendAngle * (180/$vectormath::CONST_PI)]
+                set P02_angle   0                       
+                set P03_angle   0                       
+                set P04_angle   0                       
+                set S01_radius  $max_bendRadius
+                set S02_radius  0
+                set S03_radius  0  
+                set S04_radius  0  
+                    # puts "   -> \$P01_angle $P01_angle\n"
+    
+                    # -- set centerLine of straight tube
+                set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
+                                        $P01_angle  $P02_angle  $P03_angle   $P04_angle \
+                                        $S01_radius $S02_radius $S03_radius  $S04_radius] 
+                                        
+                    # -- set profile of straight tube                
+                set profileDef {}
+                    lappend profileDef [list 0   14]
+                    lappend profileDef [list 250 36]
+                    lappend profileDef [list 250 36]
+                    lappend profileDef [list 250 36]       
+                set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]                 
+                    #
+                    # puts "   -> \$profileDef   $profileDef"
+                    # puts "   -> \$tubeProfile  $tubeProfile"
+                    #
             }
-          default {}
+            default {}
         }
-            
+            #
         foreach _p {p_00 p_01 p_02 p_03 p_04 p_05 p_06 p_15} {
-          eval set xy \$$_p
-            # puts "   $_p $xy"
-          set xy [vectormath::addVector $xy [list $crownOffset $crownPerp]]
-          set $_p ${xy}
+            eval set xy \$$_p
+                # puts "   $_p $xy"
+            set xy [vectormath::addVector $xy [list $crownOffset $crownPerp]]
+            set $_p ${xy}
         }
-            
-            
-            
+            #
+            #
 
+            #
             # ------------------------------------
-						# update $myCanvas ->
-        # set dropOutPos    {0 0}
+			# update $myCanvas ->
+            # set dropOutPos    {0 0}
         set dropOutAngle  [expr $angleRotation - $headTube_Angle]
                                 
             # -- get smooth centerLine
@@ -817,50 +815,43 @@ namespace eval bikeGeometry::tube {
         set centerLineCut   [lindex $retValues 2]
         
             # -- draw shape of tube
-        
-        set outLineLeft   [bikeGeometry::tube::create_tubeShape    $centerLine $tubeProfile left  ]
-        set outLineRight  [bikeGeometry::tube::create_tubeShape    $centerLine $tubeProfile right ]
-        set outLine       [bikeGeometry::flatten_nestedList   $outLineLeft $outLineRight]
-        # set outLine       [appUtil::flatten_nestedList $outLineLeft $outLineRight]
+        set outLineLeft   [bikeGeometry::tube::create_tubeShape $centerLine $tubeProfile left  ]
+        set outLineRight  [bikeGeometry::tube::create_tubeShape $centerLine $tubeProfile right ]
+        set outLine       [bikeGeometry::flatten_nestedList     $outLineLeft $outLineRight]
         set angleRotation [expr $angleRotation - $headTube_Angle]
-        set brakeDefLine  [lrange $outLineRight 0 1]
 
 
         set addVector [list $dropOutOffset $dropOutPerp]
-          # set addVector [vectormath::addVector $dropOutPos [list $dropOutOffset $dropOutPerp]]
-          # puts "  ->    \$dropOutPos $dropOutPos"     
-          # puts "     ->    $dropOutOffset $dropOutPerp"     
-          # puts "     ->    \$addVector $addVector" 
-          # exit            # get startPosition of ForkBlade
+            # set addVector [vectormath::addVector $dropOutPos [list $dropOutOffset $dropOutPerp]]
+            # puts "  ->    \$dropOutPos $dropOutPos"     
+            # puts "     ->    $dropOutOffset $dropOutPerp"     
+            # puts "     ->    \$addVector $addVector" 
+            # exit            # get startPosition of ForkBlade
         set offsetDO  [vectormath::rotatePoint {0 0}           $addVector $dropOutAngle]
-          # puts "     ->    \$offsetDO $offsetDO" 
+            # puts "     ->    \$offsetDO $offsetDO" 
 
             # -- get oriented tube
         set outLine [vectormath::addVectorPointList            $addVector $outLine]
         set outLine [vectormath::rotatePointList               {0 0}  $outLine $angleRotation]
         set outLine [vectormath::addVectorPointList            $dropOutPos $outLine]
+            # puts "\$outLine       $outLine"    
         
             # -- get oriented centerLine
         set centerLineCut [vectormath::addVectorPointList      $addVector [bikeGeometry::flatten_nestedList $centerLineCut]]
-        # set centerLineCut [vectormath::addVectorPointList      $addVector [appUtil::flatten_nestedList $centerLineCut]]
         set centerLineCut [vectormath::rotatePointList {0 0}   $centerLineCut $angleRotation]
         set centerLineCut [vectormath::addVectorPointList      $dropOutPos $centerLineCut]
-            # set centerLine [vectormath::addVectorPointList       $addVector [appUtil::flatten_nestedList $centerLine]]
-            # set centerLine [vectormath::rotatePointList {0 0}    $centerLine $angleRotation]
-            # set centerLine [vectormath::addVectorPointList       $dropOutPos $centerLine]
             # puts "\$centerLineCut $centerLineCut"    
 
             # -- get oriented brakeDefLine
+        set brakeDefLine  [lrange $outLineLeft end-1 end]
         set brakeDefLine [vectormath::addVectorPointList       $addVector [bikeGeometry::flatten_nestedList $brakeDefLine]]
-            # set brakeDefLine [vectormath::addVectorPointList       $addVector [appUtil::flatten_nestedList $brakeDefLine]]
         set brakeDefLine [vectormath::rotatePointList          {0 0} $brakeDefLine $angleRotation]
         set brakeDefLine [vectormath::addVectorPointList       $dropOutPos $brakeDefLine]
+            # puts "\$brakeDefLine  $brakeDefLine"    
 
             # puts " <I> .. \$outLine $outLine"
-        
-        
         return [list $outLine $centerLineCut $brakeDefLine $dropOutAngle $offsetDO]
-          # return [list $outLine $centerLine $brakeDefLine $dropOutAngle $offsetDO]
+            # return [list $outLine $centerLine $brakeDefLine $dropOutAngle $offsetDO]
 
     }
 
@@ -915,8 +906,9 @@ namespace eval bikeGeometry::tube {
         set yPrev {}
           #
         set p_last [lindex $centerLine end]
-        foreach {x y} $p_last break
-        set p_apnd [list [expr $x + 20] $y]
+        set p_last_1    [lindex $centerLine end-1]
+        set vct_last    [vectormath::unifyVector $p_last $p_last_1 20]
+        set p_apnd      [vectormath::addVector $p_last $vct_last]
         lappend centerLine $p_apnd
             #
         set i 0

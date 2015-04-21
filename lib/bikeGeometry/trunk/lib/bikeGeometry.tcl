@@ -223,6 +223,13 @@
  #          ... update Interfaces for BaseGeometry
  #          ... add bikeGeometry::Geometry(Saddle_HB_x)
  #
+ # 1.46 - 20150421
+ #      debug: 
+ #          ... fork visualisation
+ #              bikeGeometry::tube::create_tubeShape
+ #              bikeGeometry::tube::create_ForkBlade
+ #              
+ #
  # 1.xx refactor
  #          split project completely from bikeGeometry
  #
@@ -230,7 +237,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.45
+    package provide bikeGeometry 1.46
         #
     package require vectormath
         #
