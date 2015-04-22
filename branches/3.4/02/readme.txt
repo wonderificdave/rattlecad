@@ -1,5 +1,16 @@
 
 
+3.4.02.44  - 2015.04.22
+-------------------------------------------------------------------------------
+    feature:
+        ... additional dimension in ChainStay Details:
+            ... angle between ChainStay and BottomBracket
+            ... see proposal from Rob Tedge 
+                http://sourceforge.net/p/rattlecad/discussion/1080423/thread/3b74cb9f/
+            ... and "hermes"
+                http://bikeboard.at/Board/showthread.php?191527-rattleCAD&p=2595552&viewfull=1#post2595552
+
+
 3.4.02.43  - 2015.04.21
 -------------------------------------------------------------------------------
     feature:

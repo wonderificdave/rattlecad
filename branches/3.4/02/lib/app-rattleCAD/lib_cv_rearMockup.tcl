@@ -217,7 +217,10 @@
                                 rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $tube_CS_right      option_ChainStay
                                     #
                               }
-                   default    { set ChainStay(polygon) {} }
+                   default    { 
+                                set ChainStay(polygon)      {} 
+                                set ChainStay(centerLine)   {}
+                              }
             }
 
                
@@ -403,13 +406,34 @@
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $_dim_ChainLine         single_CrankSet_ChainLine
 
 
+            if {$ChainStay(centerLine) != {}} {
+                    #
+                set pt_end  [lrange $ChainStay(centerLine) end-1 end]
+                set pt_prev [lrange $ChainStay(centerLine) end-3 end-2]
+                    #
+                set pt_cnt  [vectormath::intersectPoint $pt_prev $pt_end {0 0} {0 1}]
+                    #
+                set pt_rf   [vectormath::addVector $pt_cnt {0 1}]
+                    #
+                puts "  ... \$pt_end    $pt_end"
+                puts "  ... \$pt_prev   $pt_prev"
+                puts "  ... \$pt_rf     $pt_rf"
+                    #
+                set _dim_CS_Angle           [ $cv_Name dimension  angle     [ appUtil::flatten_nestedList  $pt_cnt $pt_rf $pt_end] \
+                                                                    [expr  35 * $stageScale]   -10  \
+                                                                    $Colour(result) ]
+                    #
+                $cv_Name create circle      $pt_cnt  -radius 1   -outline $Colour(result)   -width 1.0  -tags __CenterLine__
+                    #
+            }
 
                 # -- create CrankArm
             $cv_Name raise {__CrankArm__}
-            
-            
+                #
+                
+                #
             return           
-
+                #
     }
 
     proc rattleCAD::cv_custom::create_Tyre {} {
