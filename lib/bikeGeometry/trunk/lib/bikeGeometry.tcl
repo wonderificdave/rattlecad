@@ -229,6 +229,10 @@
  #              bikeGeometry::tube::create_tubeShape
  #              bikeGeometry::tube::create_ForkBlade
  #              
+ # 1.47 - 20150425
+ #      debug:
+ #          ... bikeGeometry::get_ComponentDir
+ #              ... normalize directory
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -237,7 +241,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.46
+    package provide bikeGeometry 1.47
         #
     package require vectormath
         #
@@ -1087,7 +1091,7 @@
             #
         variable packageHomeDir
             #
-        set componentDir [file join $packageHomeDir  .. etc  components]
+        set componentDir [file normalize [file join $packageHomeDir  .. etc  components]]
             #
         return $componentDir
             #
