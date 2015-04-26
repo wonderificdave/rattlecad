@@ -80,7 +80,7 @@ exec wish "$0" "$@"
         #
     package     require appUtil             0.17
     package     require vectormath          0.7
-    package     require bikeGeometry        1.46
+    package     require bikeGeometry        1.47
     package     require canvasCAD           0.56
     package     require extSummary          0.4
     package     require osEnv               0.9
@@ -105,24 +105,19 @@ exec wish "$0" "$@"
   #
   ###########################################################################
 
-    
+        
+        #
+    init_rattleCAD $BASE_Dir
+        #
     if {$argc == 1} {
-        init_rattleCAD $BASE_Dir [lindex $argv 0]
+        start_rattleCAD [lindex $argv 0]
     } else {	    
-        init_rattleCAD $BASE_Dir
+        start_rattleCAD
     }
+        #
     
  
     puts "\n\n ====== R U N T I M E ============================ \n\n"
-        
-        
-        # -- destroy intro - image ----
-        # after  50 destroy .intro
-    destroy .intro
-
-
-	# -- keep on top --------------
-    wm deiconify .
     
     
 	# -- check commandline args --

@@ -16,6 +16,7 @@ package ifneeded   rattleCAD  3.4.02 "\
         [list source  [file join $dir lib__model_file.tcl]]; \
         [list source  [file join $dir lib__view_gui.tcl]]; \
         [list source  [file join $dir lib__view_edit.tcl]]; \
+        [list source  [file join $dir lib__view_editComponent.tcl]]; \
         [list source  [file join $dir lib__control_tool.tcl]]; \
         [list source  [file join $dir lib_cv__custom.tcl]]; \
         [list source  [file join $dir lib_cv__update.tcl]]; \

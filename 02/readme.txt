@@ -1,4 +1,21 @@
 
+ 
+3.4.02.45  - 2015.04.26
+-------------------------------------------------------------------------------
+    feature:
+        ... rattleCAD::view::svgEdit::create_svgEdit
+    refactor:
+        ... extract rattleCAD::view::create_FileEdit {}
+            ... rattleCAD::view::create_ListEdit {}
+        ... split procedure: init_rattleCAD {} into 
+            ... init_rattleCAD {} and
+            ... start_rattleCAD {}  
+            ... to make it easier to create debug-routines     
+        ... rattleCAD::model::file::get_componentAlternatives
+            ... nornalize path
+    debug:    
+        ... bikeGeometry 1.47
+
 
 3.4.02.44  - 2015.04.22
 -------------------------------------------------------------------------------

@@ -43,13 +43,15 @@ namespace eval rattleCAD::view {
     
     #-------------------------------------------------------------------------
         #  store createEdit-widgets position
+	variable editPosition   {0 0}                          
+
     variable _drag          ; array set _drag        {}
     variable _updateValue   ; array set _updateValue {}
 
 	variable canvasUpdate   ; array set canvasUpdate {}  
     variable canvasRefit    ; array set canvasRefit  {}  
     variable noteBook_top
-	
+
     variable colorSet       ; array set colorSet {
                                     frameTube      {wheat}
                                     frameTube_OL   {black}
@@ -60,8 +62,7 @@ namespace eval rattleCAD::view {
                                     chainStay_CL   {saddle brown}
                                     chainStayArea  {saddle brown}
                                     components     {snow2}
-                              }            
-                              
+                              }           
     } 
 
     proc rattleCAD::view::updateView {{mode {}}} {
@@ -160,7 +161,6 @@ namespace eval rattleCAD::view {
           
     }
 
-
     proc rattleCAD::view::init_configValues {} {
             #
         variable _updateValue
@@ -184,15 +184,16 @@ namespace eval rattleCAD::view {
             # exit
         return
     }
-    
+
     #-------------------------------------------------------------------------
-        #  create ProjectEdit Widget
+        # create ProjectEdit Widget
         # proc createEdit { x y cv_Name updateCommand _arrayNameList {title {Edit:}}}
     proc rattleCAD::view::createEdit { x y cv_Name _arrayNameList {title {Edit:}}} {
             #
             # appUtil::get_procHierarchy
             #
-		# variable _updateValue
+		variable editPosition
+        # variable _updateValue
             #
 			# appUtil::get_procHierarchy
 			# appUtil::appDebug p
@@ -204,6 +205,9 @@ namespace eval rattleCAD::view {
 		puts "       x / y:           $x / $y"
 		puts "       cv_Name:         $cv_Name"
 		puts "       title:           $title"
+            #
+        set editPosition [list $x $y]
+            #
 		if {[llength $_arrayNameList] > 1} {
 			puts "       _arrayNameList:"
 			foreach entry $_arrayNameList {
@@ -229,31 +233,229 @@ namespace eval rattleCAD::view {
                     }
             }
         }
+            
             #
-            # ------
-            # 
-        # refactoring purpose:  
+            # ------ 
+        set cv      [$cv_Name getNodeAttr Canvas path]
             #
-            #
-            #
-		set x_offset 20
-		set cv      [ $cv_Name getNodeAttr Canvas path]
-		if { [catch { set cvEdit [frame $cv.f_edit -bd 2 -relief raised] } errorID ] } {
-				closeEdit $cv $cv.f_edit
-				set cvEdit [frame $cv.f_edit -bd 2 -relief raised]
+            # --- cvContentFrame ---
+        if {[llength $_arrayNameList] == 1 } {
+                set cvEdit [createEdit_SingleLine   $x $y $cv $cv_Name $_arrayNameList]
+		} else {
+                set cvEdit [createEdit_MultiLine    $x $y $cv $cv_Name $title $_arrayNameList]
 		}
+            #
+            # --- reposition if out of canvas border ---
+        fit_FileEditContainer $cv $cvEdit
+            #
+        return
+            #
+        
+        #
+        update
+        
+        
+        
+		set id_bbox   [ $cv bbox $cvEdit ]
+            #
+        set cv_width  [ winfo width  $cv ]
+		set cv_height [ winfo height $cv ]
+			# puts "   -> bbox $id_bbox"
+		foreach {dx dy} {0 0} break
+            #
+		if {[lindex $id_bbox 2] > [expr $cv_width  -4]} { set dx [expr $cv_width  - [lindex $id_bbox 2] -4] }
+		if {[lindex $id_bbox 3] > [expr $cv_height -4]} { set dy [expr $cv_height - [lindex $id_bbox 3] -4] }
+            #
+        $cv move $cvEdit $dx $dy
+            # puts "  -> reposition $dx $dy"
+    }
+
+    proc rattleCAD::view::create_EditContainer { x y cv_Name title lineCount {editLevel {base}}} {
+            #
+            # appUtil::get_procHierarchy
+            #
+		# variable _updateValue
+            #
+			# appUtil::get_procHierarchy
+			# appUtil::appDebug p
+			# appUtil::appDebug f
+            #
+		puts ""
+		puts "   -------------------------------"
+		puts "    create_EditContainer"
+		puts "       x / y:           $x / $y"
+		puts "       cv_Name:         $cv_Name"
+		puts "       title:           $title"
+        puts "       lineCount:       $lineCount"
+        
+            #
+        set x_offset 20
+        set cv      [ $cv_Name getNodeAttr Canvas path]
+            #
+        set frameNameBase $cv.f_edit_base
+        set frameNameExtd $cv.f_edit_extend
+            #
+        #catch {closeEdit $cv $frameNameBase}
+        #catch {closeEdit $cv $frameNameExtd}
+            # 
+        switch -exact $editLevel {
+            base { 
+                    catch {closeEdit $cv $frameNameBase}
+                    catch {closeEdit $cv $frameNameExtd}
+                    set cvEdit  [frame $frameNameBase -bd 2 -relief raised] 
+                }
+            extend { 
+                    pack forget $frameNameBase
+                    catch {closeEdit $cv $frameNameExtd}
+                    set cvEdit  [frame $frameNameExtd -bd 2 -relief raised] 
+                }
+            default {
+                    puts "  ... <E> puts:  $editLevel "
+                    puts "        ... not in base/extend"
+                    return
+                }
+        }
             #
             # --- create Window ---
         $cv_Name    addtag __cvEdit__ withtag $cvEdit
         $cv         create window [expr $x + $x_offset] $y  -window $cvEdit  -anchor w -tags $cvEdit
         $cv_Name    addtag __cvEdit__ withtag $cvEdit
             #
-            # --- cvContentFrame ---
-		if {[llength $_arrayNameList] == 1 } {
-                createEdit_SingleLine   $x $y $cv $cv_Name $cvEdit $_arrayNameList
-		} else {
-                createEdit_MultiLine    $x $y $cv $cv_Name $cvEdit $title $_arrayNameList
-		}
+
+        if {$lineCount > 1} {
+                #
+            set cvTitleFrame    [frame $cvEdit.f_title      -bg gray60  ]
+            set cvContentFrame  [frame $cvEdit.f_content    -bd 1 -relief sunken]
+                #
+            pack $cvTitleFrame $cvContentFrame -side top
+            pack configure $cvTitleFrame    -fill x -padx 2 -pady 2
+            pack configure $cvContentFrame  -fill both
+                # --- title definition ---
+            set cvTitle         [label  $cvTitleFrame.label -text "${title}"  -bg gray60  -fg white -font "Helvetica 8 bold" -justify left]
+            set cvClose         [button $cvTitleFrame.close -image $rattleCAD::view::gui::iconArray(iconClose) -command "[namespace current]::close_allEdit"]
+                #
+            pack $cvTitle -side left
+            pack $cvClose -side right -pady 2
+                #
+            bind $cvTitleFrame  <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
+            bind $cvTitleFrame  <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
+            bind $cvTitle       <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
+            bind $cvTitle       <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
+                #
+        } else {
+                #
+            set cvContentFrame  [frame  $cvEdit.f_content    -bd 1 -relief sunken]
+            set cvClose         [button $cvEdit.close -image $rattleCAD::view::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
+                #
+            pack $cvContentFrame $cvClose -side left
+                #
+            #bind $cvContentFrame  <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
+            #bind $cvContentFrame  <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
+                #
+        } 
+            #
+        switch -exact $editLevel {
+            extend { 
+                    #update
+                    focus $frameNameExtd
+                    #update
+                    #pack forget $frameNameBase
+                    #catch {[namespace current]::closeEdit $cv $frameNameBase } 
+                    # [namespace current]::closeEdit $cv $frameNameBase
+                }
+        }
+            #
+            
+            #
+        return [list $cvEdit $cvContentFrame]  
+            #
+    }
+
+    proc rattleCAD::view::createEdit_SingleLine { x y cv cv_Name _arrayNameList } {
+                #
+                # appUtil::get_procHierarchy
+                #
+            set wList   [create_EditContainer  $x $y $cv_Name {} [llength $_arrayNameList] base ]
+            set cvEdit      [lindex $wList 0]  
+            set cvContainer [lindex $wList 1]  
+                # puts "  ... $cvEdit"
+                # puts "  ... $cvContainer"            
+                #
+                # set cvContentFrame  $cvEdit
+            set cvContentFrame $cvContainer
+                #
+            pack configure $cvContentFrame  -fill both
+                #
+                # --- parameter to edit ---
+            set index       oneLine                    
+                #
+            set key  [lindex $_arrayNameList 0]
+                #
+            puts "              <10> createEdit_SingleLine      -> $key"
+                #
+                #
+            set labelText   [rattleCAD::view::get_LabelText $key]
+                #
+            set cvLabel     [label  $cvContentFrame.label_${index} -text "${labelText} : "]
+            set cvConfig    [create_Config $cv $cv_Name $cvEdit $cvContentFrame $index $key]
+                #
+            grid            $cvLabel    $cvConfig    -sticky news
+            grid configure  $cvLabel    -padx 3 -sticky nws
+            grid configure  $cvConfig   -padx 2
+                #
+            focus $cvConfig
+            $cvConfig selection range 0 end
+                #
+            bind $cvLabel  <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
+            bind $cvLabel  <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
+                #                    
+            return $cvEdit
+                #
+    }
+
+    proc rattleCAD::view::createEdit_MultiLine { x y cv cv_Name title _arrayNameList } {
+                #
+                # appUtil::get_procHierarchy
+                #
+            set wList   [create_EditContainer  $x $y $cv_Name $title [llength $_arrayNameList] base ]
+            set cvEdit      [lindex $wList 0]  
+            set cvContainer [lindex $wList 1]  
+                # puts "  ... $cvEdit"
+                # puts "  ... $cvContainer"            
+                # set cvContentFrame  $cvEdit
+            
+                # set cvContentFrame      [frame $cvEdit.f_content    -bd 1 -relief sunken]
+            set cvContentFrame $cvContainer
+                #
+            pack configure $cvContentFrame  -fill both
+                #
+                # --- parameter to edit ---
+            set updateMode value
+            set index 0
+            foreach key  $_arrayNameList {
+                set index       [expr $index +1]
+                    #
+                #foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
+                    #
+                puts "              <10> createEdit_MultiLine       -> $index   $key"
+                    #
+                    # puts "\n  -> here I am --- $key\n"
+                    #
+                set labelText   [rattleCAD::view::get_LabelText $key]
+                    #
+                set cvLabel     [label  $cvContentFrame.label_${index} -text "${labelText} : "]
+                set cvConfig    [create_Config $cv $cv_Name $cvEdit $cvContentFrame $index $key]
+                    #
+                grid            $cvLabel    $cvConfig   -sticky news
+                grid configure  $cvLabel    -padx 3    -sticky nws
+                grid configure  $cvConfig   -padx 2
+            }
+                #                    
+            return $cvEdit                
+                #
+    }
+
+    proc rattleCAD::view::fit_FileEditContainer {cv cvEdit} {
             #
             # --- reposition if out of canvas border ---
 		update
@@ -269,114 +471,11 @@ namespace eval rattleCAD::view {
             #
         $cv move $cvEdit $dx $dy
             # puts "  -> reposition $dx $dy"
+            #
+        return $cvEdit
+            #
     }
 
-    proc rattleCAD::view::createEdit_SingleLine { x y cv cvName cvEdit _arrayNameList } {
-                #
-                # appUtil::get_procHierarchy
-                #
-            # variable _updateValue
-                #
-                # --- create WindowFrames ---
-            set cvContentFrame       [frame $cvEdit.f_content -bd 1 -relief sunken]
-            pack $cvContentFrame            -side top
-            pack configure $cvContentFrame  -fill both
-                #
-                # --- parameter to edit ---
-            set index       oneLine                    
-                #
-            set key  [lindex $_arrayNameList 0]
-                #
-            puts "              <10> createEdit_SingleLine      -> $key"
-                #
-                # foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
-                #
-                # puts "       _array/_name/path -> $key -> $_array $_name $path"
-                #
-                # puts "\n  -> here I am --- $key\n"
-            # set xPath [format "%s"   [string map {( /  ) ""} $key]]
-            # set value       [rattleCAD::model::getValue  $xPath]
-                # puts "\n  -> here I am --- $value    $xPath\n"
-                # exit
-            # set _updateValue($path) $value
-                #
-            set labelText   [rattleCAD::view::get_LabelText $key]
-                #
-            set cvLabel     [label  $cvContentFrame.label_${index} -text "${labelText} : "]
-            set cvConfig    [create_Config $cv $cvName $cvEdit $cvContentFrame $index $key]
-            set cvClose     [button $cvContentFrame.close -image $rattleCAD::view::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
-                #
-            grid            $cvLabel    $cvConfig   $cvClose -sticky news
-            grid configure  $cvLabel    -padx 3 -sticky nws
-            grid configure  $cvConfig   -padx 2
-                #
-            focus $cvConfig
-            $cvConfig selection range 0 end
-                #
-            bind $cvLabel   <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
-            bind $cvLabel   <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
-                #                    
-            return
-                #
-    }
-    proc rattleCAD::view::createEdit_MultiLine { x y cv cvName cvEdit title _arrayNameList } {
-                #
-                # appUtil::get_procHierarchy
-                #
-            # variable _updateValue
-                #
-                # --- create WindowFrames ---
-                #
-            set cvTitleFrame        [frame $cvEdit.f_title      -bg gray60  ]
-            set cvContentFrame      [frame $cvEdit.f_content    -bd 1 -relief sunken]
-                #
-            pack $cvTitleFrame $cvContentFrame -side top
-            pack configure $cvTitleFrame    -fill x -padx 2 -pady 2
-            pack configure $cvContentFrame  -fill both
-                #
-                # --- title definition ---
-            set cvTitle     [label  $cvTitleFrame.label -text "${title}"  -bg gray60  -fg white -font "Helvetica 8 bold" -justify left]
-            set cvClose     [button $cvTitleFrame.close -image $rattleCAD::view::gui::iconArray(iconClose) -command "[namespace current]::closeEdit $cv $cvEdit"]
-                #
-            pack $cvTitle -side left
-            pack $cvClose -side right -pady 2                
-                #
-                # --- parameter to edit ---
-            set updateMode value
-            set index 0
-            foreach key  $_arrayNameList {
-                set index       [expr $index +1]
-                    #
-                #foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
-                    #
-                puts "              <10> createEdit_MultiLine       -> $index   $key"
-                    #
-                    # puts "\n  -> here I am --- $key\n"
-                # set xPath       [format "%s"   [string map {( /  ) ""} $key]]                
-                    #
-                # set value       [rattleCAD::model::getValue  $xPath]
-                    # puts "\n  -> here I am --- $value    $xPath\n"
-                    # exit
-                # set _updateValue($path) $value
-                    #
-                set labelText   [rattleCAD::view::get_LabelText $key]
-                    #
-                set cvLabel     [label  $cvContentFrame.label_${index} -text "${labelText} : "]
-                set cvConfig    [create_Config $cv $cvName $cvEdit $cvContentFrame $index $key]
-                    #
-                grid            $cvLabel    $cvConfig   -sticky news
-                grid configure  $cvLabel    -padx 3    -sticky nws
-                grid configure  $cvConfig   -padx 2
-            }
-                #
-            bind $cvTitleFrame  <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
-            bind $cvTitleFrame  <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
-            bind $cvTitle       <ButtonPress-1>     [list [namespace current]::dragStart     %X %Y]
-            bind $cvTitle       <B1-Motion>         [list [namespace current]::drag          %X %Y $cv $cvEdit]
-                #                    
-            return
-                #
-    }
     #-------------------------------------------------------------------------
         # get label of configLine
         #    
@@ -443,18 +542,9 @@ namespace eval rattleCAD::view {
 		foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
 		    #
 		puts "              <21>    create_Config           -> $key ... $path"
-            #
-		    # puts "\n  -> here I am --- $key\n"
-		# set xPath [format "%s"   [string map {( /  ) ""} $key]]
-		# set value       [rattleCAD::model::getValue  $xPath]
-		    # puts "\n  -> here I am --- $value    $xPath\n"
-		    # exit
-        # set _updateValue($path) $value
-            #
-        # puts "          <I> rattleCAD::view::create_Config ...  [array get _updateValue $path]"
             #                                                                 
         switch -exact $type {
-            {file} {    set cvConfig    [ create_ListEdit   $cv_Name $cvContentFrame $index $path SELECT_File ] }
+            {file} {    set cvConfig    [ create_FileEdit   $cv_Name $cvContentFrame $index $path ] }
             {list} {    set cvConfig    [ create_ListEdit   $cv_Name $cvContentFrame $index $path $listName   ] }
             {text} {    set cvConfig    [ create_TextEdit   $cv_Name $cvContentFrame $index $path ] }
             default {   set cvConfig    [ create_ValueEdit  $cv_Name $cvContentFrame $index $path ] }
@@ -585,6 +675,89 @@ namespace eval rattleCAD::view {
         set ::$textVar [format "%.3f" $newValue]
     }
 
+    proc rattleCAD::view::create_FileEdit  {cv_Name cvContentFrame index key} {
+            #
+        # puts "                  <30>    create_FileEdit     -> $key "
+            #
+            # parray [namespace current]::_updateValue
+        set currentValue [lindex [array get [namespace current]::_updateValue $key] 1]
+            #
+        puts "                  <30>    create_FileEdit "
+        puts "                          -> $index"
+        puts "                          -> $key <- $currentValue  "
+            #
+            # --- create listBox content ---
+        set listBoxContent $currentValue
+          # set listBoxContent [rattleCAD::control::get_listBoxContent  $type $key]
+          # set listBoxContent [ get_listBoxContent $type $key]
+          # set listBoxContent [ get_listBoxContent $type $key]
+          
+        foreach entry $listBoxContent {
+            puts "         ... $entry"
+        }
+            
+            #
+            # --- create cvLabel, cvEntry, Select ---
+        set cvEntry [entry  $cvContentFrame.value_${index} \
+                        -textvariable [namespace current]::_updateValue($key) \
+                        -justify right \
+                        -relief sunken \
+                        -state disabled \
+                        -bd 1  -width 25]
+            #
+            # --- define bindings ---
+        bind $cvEntry   <Return>                [list [namespace current]::updateConfig            $cv_Name $key $cvEntry]
+        bind $cvEntry   <ButtonPress-1>         [list [namespace current]::create_FileEdit_Extend  %X %Y $cv_Name $key $currentValue]
+        bind $cvEntry   <Double-ButtonPress-1>  [list [namespace current]::create_FileEdit_Extend  %X %Y $cv_Name $key $currentValue]
+           #
+        return $cvEntry
+           #    
+    }
+
+    proc rattleCAD::view::create_FileEdit_Extend  {x y cv_Name key currentValue args} {
+            #
+        variable editPosition
+            #
+        puts "                  <40>    create_FileEdit_Extend"
+        puts "                          -> $x / $y"
+		puts "                          -> $key <- $currentValue"
+            #
+        puts "                          -> $editPosition"
+        foreach {x y} $editPosition break
+            #
+        #return
+            # puts " --- create_FileEdit_Extend ---"
+            # puts "         ... $cv_Name"
+            # puts "         ... $x"
+            # puts "         ... $y"
+            # puts "         ... $key"
+            # puts "         ... $currentValue"
+            # puts "         ... $args"
+            #
+            # set stageScale  [$cv_Name getNodeAttr Stage scale]
+            # puts "         ... $stageScale"
+            #
+        set x [expr $x + 20]   
+        set y [expr $y - 20]
+            # set x [expr $x * $stageScale - 20]   
+            # set y [expr $y * $stageScale + 20]
+            #
+        set wList   [create_EditContainer  $x $y $cv_Name $key   2 extend ]
+        set cvEdit      [lindex $wList 0]  
+        set cvContainer [lindex $wList 1]  
+            # puts "         ... $cvEdit"
+            # puts "         ... $cvContainer"
+        rattleCAD::view::svgEdit::create_svgEdit \
+                $cvContainer  \
+                $key  \
+                $currentValue  \
+                {}
+            #
+        set cv      [$cv_Name getNodeAttr Canvas path]
+        fit_FileEditContainer $cv $cvEdit
+            #
+    }
+
 
 	#-------------------------------------------------------------------------
         #  createEdit - sub procedures 
@@ -701,27 +874,29 @@ namespace eval rattleCAD::view {
     proc rattleCAD::view::closeEdit {cv cvEdit} {
         $cv delete $cvEdit
         destroy $cvEdit
-        catch [ destroy .__select_box ]
+        # catch [ destroy .__select_box ]
     }
 
     #-------------------------------------------------------------------------
         #  close all ProjectEdit Widgets
     proc rattleCAD::view::close_allEdit {} {
-        # puts "  -- closeEdit: $cv $cvEdit"
+            # puts "  -- closeEdit: $cv $cvEdit"
         set cv_Name {}
         set cv_Path {}
         catch {set cv_Name [rattleCAD::view::gui::current_canvasCAD]}
-          # puts "   -> $cv_Name"
+            # puts "   -> $cv_Name"
         catch {set cv_Path [ $cv_Name getNodeAttr Canvas path]}
-          # puts "   -> $cv_Path"
+            # puts "   -> $cv_Path"
+        catch {focus $cv_Path}
+            #
         set items {}
         catch {set items [$cv_Path find withtag __cvEdit__]}
-          # puts "   -> $items"
+            # puts "   -> $items"
         
         foreach cvEdit $items {
             $cv_Path delete $cvEdit
             destroy $cvEdit
-            catch [ destroy .__select_box ]
+            # catch [ destroy .__select_box ]
         }
     }   
 

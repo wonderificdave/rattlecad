@@ -37,28 +37,29 @@
  #
  #
 
- namespace eval rattleCAD::comp_library {
+     namespace eval rattleCAD::comp_library {
 
-    variable    compCanvas      {}
-    variable    menueFrame      {}
+        variable    compCanvas      {}
+        variable    menueFrame      {}
 
-    variable    compList_System {}
-    variable    compList_Custom {}
-    variable    tree_System     {}
-    variable    tree_Custom     {}
-    variable    list_Selection  {}
-    variable    rdials_list     {}
+        variable    compList_System {}
+        variable    compList_Custom {}
+        variable    tree_System     {}
+        variable    tree_Custom     {}
+        variable    list_Selection  {}
+        variable    rdials_list     {}
 
-    variable    compFile        {}
+        variable    compFile        {}
 
-    variable    configValue
-      array set configValue     {}
+        variable    configValue
+          array set configValue     {}
 
+    }
 
     #-------------------------------------------------------------------------
        #  create report widget
        #
-    proc createLibrary {w} {
+    proc rattleCAD::comp_library::createLibrary {w} {
         variable compCanvas
         variable menueFrame
 
@@ -200,20 +201,18 @@
 
     #-------------------------------------------------------------------------
         #  populateRoot
-    proc populateRoot {treeWidget title baseDir} {
+    proc rattleCAD::comp_library::populateRoot {treeWidget title baseDir} {
           # puts "  -> $baseDir"
         set lastNode [$treeWidget insert {} end -text $title -values [list $baseDir directory]]
         populateTree $treeWidget $lastNode
         $treeWidget item $lastNode -open 1
     }
 
-
-
     #-------------------------------------------------------------------------
         #  populateTree
         #
         ## Code to populate a node of the tree
-    proc populateTree {tree {node {}}} {
+    proc rattleCAD::comp_library::populateTree {tree {node {}}} {
         variable list_Selection
         
           # puts "  \n -> populateTree: $node "
@@ -274,11 +273,10 @@
         $tree set $node type processedDirectory
     }
 
-
     #-------------------------------------------------------------------------
         #  selectTree
         #
-    proc selectTree {treeWidget} {
+    proc rattleCAD::comp_library::selectTree {treeWidget} {
         
         variable compFile    
         variable compList_System    
@@ -296,11 +294,10 @@
         return
     }
 
-
     #-------------------------------------------------------------------------
         #  fillList
         #
-    proc fillList {listWidget path} {
+    proc rattleCAD::comp_library::fillList {listWidget path} {
 
         cleanupTree $listWidget
         foreach f [lsort -dictionary [glob -nocomplain -dir $path -types f *.svg]] {
@@ -313,7 +310,7 @@
     #-------------------------------------------------------------------------
         #  selectList
         #
-    proc selectList {listWidget} {
+    proc rattleCAD::comp_library::selectList {listWidget} {
     
         variable compFile    
         
@@ -331,11 +328,10 @@
         puts "   ... tried to open file $compFile"
     }
 
-
     #-------------------------------------------------------------------------
        #  update Component FileList
        #
-    proc update_compList {{mode {}}} {
+    proc rattleCAD::comp_library::update_compList {{mode {}}} {
         variable    tree_System
         variable    tree_Custom
         variable    list_Selection
@@ -353,7 +349,7 @@
     #-------------------------------------------------------------------------
         #  reset Positioning
         #    
-    proc cleanupTree {treeWidget} {
+    proc rattleCAD::comp_library::cleanupTree {treeWidget} {
             # puts "  ... $treeWidget "
         foreach childNode [$treeWidget children {}] {
                 # puts "   .... $childNode"
@@ -365,7 +361,7 @@
     #-------------------------------------------------------------------------
        #  reset Positioning
        #
-    proc reset_Positioning {} {
+    proc rattleCAD::comp_library::reset_Positioning {} {
             variable rdials_list
             variable configValue
             set  configValue(compAngle)     0.0
@@ -380,16 +376,15 @@
     #-------------------------------------------------------------------------
        #  refit Canvas to provided widget
        #
-    proc refitCanvas {} {
+    proc rattleCAD::comp_library::refitCanvas {} {
             variable compCanvas
             $compCanvas refitStage
     }
 
-
     #-------------------------------------------------------------------------
        #  update Canvas
        #
-    proc updateCanvas {{entryVar ""} {value {0}} {drag_Event {}}} {
+    proc rattleCAD::comp_library::updateCanvas {{entryVar ""} {value {0}} {drag_Event {}}} {
             variable compCanvas
             variable compFile
             variable configValue
@@ -437,11 +432,10 @@
 
     }
 
-
     #-------------------------------------------------------------------------
        #  move Item to StageCenter
        #
-    proc moveto_StageCenter {item} {
+    proc rattleCAD::comp_library::moveto_StageCenter {item} {
             variable  compCanvas
 
             set stage         [ $compCanvas getNodeAttr Canvas path ]
@@ -452,11 +446,10 @@
             $stage move $item [expr $cx - $lx] [expr $cy -$ly]
     }
 
-
     #-------------------------------------------------------------------------
        #  create Centerline
        #
-    proc create_Centerline {} {
+    proc rattleCAD::comp_library::create_Centerline {} {
             variable  compCanvas
 
             set stage         [ $compCanvas getNodeAttr Canvas path ]
@@ -491,7 +484,7 @@
     #-------------------------------------------------------------------------
        #  create config_line
        #
-    proc create_config_line {w lb_text entryVar start current end resolution command} {
+    proc rattleCAD::comp_library::create_config_line {w lb_text entryVar start current end resolution command} {
             variable    rdials_list
             set         $entryVar $current
             #puts "   ... \$entryVar [list [format "$%s" $entryVar]]"
@@ -515,5 +508,5 @@
             pack      $w.lb  $w.cfg  $w.f  $w.f.scl    -side left  -fill x
     }
 
-}
+
 
