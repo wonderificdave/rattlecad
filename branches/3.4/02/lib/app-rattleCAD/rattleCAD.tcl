@@ -89,10 +89,12 @@
 
 					 
     array set APPL_CompLocation {}
-
-  
+    
+    variable projectDOM
+        
+        #
     namespace eval rattleCAD {}
-
+        #
  
  
   ###########################################################################
@@ -101,7 +103,7 @@
   #
   ###########################################################################
 
- 
+    
     #-------------------------------------------------------------------------
       #  set initialze rattleCAD
       #
@@ -169,11 +171,14 @@
 
 
     #-------------------------------------------------------------------------
-        #  set initialze rattleCAD
+        #  initialze rattleCAD
         #
-    proc init_rattleCAD {BASE_Dir {startupProject {}}} {
+    proc init_rattleCAD {baseDir} {
 	
-            
+            #
+        variable projectDOM     
+            #
+
         ###########################################################################      
         #
         #                 B  -  A  -  S  -  E 
@@ -181,8 +186,8 @@
         ###########################################################################
 	    
 	    
-    	      # -- Version Info   ----------------------	    
-    	  init_APPL_Config $BASE_Dir  
+    	    # -- Version Info   ----------------------	    
+    	init_APPL_Config $baseDir  
 
           
           
@@ -266,9 +271,11 @@
           
 
             # -- initialize GUI ----------
+        puts "     ... GUI_Font          $::APPL_Config(GUI_Font)"
+            #
         switch $::tcl_platform(platform) {
                 "macintosh" { set ::APPL_Config(GUI_Font)  {Helvetica 10} }
-                "windows"   { set ::APPL_Config(GUI_Font)  $::APPL_Config(GUI_Font) }
+                "_windows"   { set ::APPL_Config(GUI_Font)  $::APPL_Config(GUI_Font) }
         }   
         init_GUI_Settings
 
@@ -278,11 +285,13 @@
         puts "     ... TemplateType      $::APPL_Config(TemplateType)"
         puts "     ... TemplateInit      $::APPL_Config(TemplateInit)"
             
-        
+            
+            #
         set projectDOM    [rattleCAD::model::file::get_XMLContent     $::APPL_Config(TemplateInit)]
-      
+            #
+            
 	    
-        # puts "\n     APPL_CompLocation"
+            # puts "\n     APPL_CompLocation"
         foreach index [array names APPL_CompLocation] {
             puts [format "        -> %-42s %s" $index    $APPL_CompLocation($index)]
         } 
@@ -308,8 +317,19 @@
         rattleCAD::view::gui::binding_removeOnly     mySpinbox [list <Clear>]
             # rattleCAD::view::gui::binding_reportBindings Text
             # rattleCAD::view::gui::binding_reportBindings mySpinbox
-        
-          
+    
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  start rattleCAD
+        #     
+    proc start_rattleCAD {{startupProject {}}} {            
+            
+            #
+        variable projectDOM       
+            #
+            
             
             ###########################################################################
             #
@@ -320,8 +340,6 @@
         puts "\n\n ====== M A I N ============================ \n\n"
           
           
-          
-          
             ###########################################################################
             #
             #                 I  -  N  -  T  -  R  -  O
@@ -330,8 +348,6 @@
           
           
         create_intro  .intro  
-          
-          
           
           
             ###########################################################################
@@ -437,7 +453,16 @@
         update_windowTitle  
         update_MainFrameStatus
             
-          
+        
+            # -- destroy intro - image ----
+            # after  50 destroy .intro
+        destroy .intro
+
+
+            # -- keep on top --------------
+        wm deiconify .
+
+    
             # -- Version Info Summary  ---------------
         puts "\n"
         puts "  ----------------------------------------------"
@@ -452,11 +477,12 @@
         #  load settings from etc/config_initValues.xml
         #
     proc init_GUI_Settings {} {
-        
+                #
             variable APPL_Config
+                #
             set root_InitDOM     $APPL_Config(root_InitDOM)
             set user_InitDOM    {}
-            
+                #
             
                 # --- fill ICON - Array
                 #

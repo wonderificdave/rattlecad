@@ -187,7 +187,7 @@
                 set CrankSet(object)        [ createCrank_Custom  $cv_Name  $CrankSet(position) ]
                                               $cv_Name addtag  __Decoration__ withtag $CrankSet(object)
                 if {$updateCommand != {}}   { 
-                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $$CrankSet(object)      group_Crankset_Parameter_16
+                    rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $CrankSet(object)      group_Crankset_Parameter_16
                         # $cv_Name bind    $CrankSet(object)    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name{   file://Component(CrankSet/File)   Component(CrankSet/Length)  text://Component(CrankSet/ChainRings)   }   {Crankset:  Parameter}]
                         # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $CrankSet(object)
                 }

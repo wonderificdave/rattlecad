@@ -933,24 +933,31 @@
                 return {}
             }
 
-            set userDir     [ file join $::APPL_Config(USER_Dir)         $directory ]
-            set etcDir      [ file join $::APPL_Config(COMPONENT_Dir) .. $directory ]
+            set userDir     [file join $::APPL_Config(USER_Dir)         $directory ]
+            set etcDir      [file normalize [file join $::APPL_Config(COMPONENT_Dir) .. $directory]]
                         # puts "            user: $userDir"
                         # puts "            etc:  $etcDir"
 
 
+            
             catch {
                 foreach file [ glob -directory $userDir  *.svg ] {
                         # puts "     ... fileList: $file"
+                        # puts "                 : $::APPL_Config(USER_Dir)/"
                     set fileString [ string map [list $::APPL_Config(USER_Dir)/components/ {user:} ] $file ]
+                        # puts "                 : $fileString"
                     set listAlternative   [ lappend listAlternative $fileString]
                 }
             }
             foreach file [ glob -directory $etcDir  *.svg ] {
-                        # puts "  ... fileList: $file"
-                set fileString [ string map [list $::APPL_Config(COMPONENT_Dir)/ {etc:} ] $file ]
-                set listAlternative   [ lappend listAlternative $fileString]
+                        # puts "     ... fileList: $file"
+                    set mapString [file normalize $::APPL_Config(COMPONENT_Dir)]
+                        # puts "                 : $mapString/"
+                    set fileString [ string map [list $mapString/ {etc:} ] $file ]
+                        # puts "                 : $fileString"
+                    set listAlternative   [ lappend listAlternative $fileString]
             }
+
 
                 # ------------------------
                 #     some components are not neccessary at all
