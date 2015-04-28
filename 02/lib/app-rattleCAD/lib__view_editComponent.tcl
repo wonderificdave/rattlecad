@@ -71,13 +71,9 @@ namespace eval rattleCAD::view::svgEdit {
                 #
                 # -----------------
                 #   add content
-            set     cvContentFrame  [frame $w.f_content  -relief flat -bd 0]
-            pack    $cvContentFrame -fill both  -side top   -expand yes
-                #
                 # -----------------
                 #   System Components Structure
-            set f_select    [ frame     $cvContentFrame.treeFrame ]
-            pack     $f_select -side left  -expand no -fill none
+            set f_select    [ frame     $w.treeFrame ]
                 #
             set compList    [ ttk::treeview $f_select.tree \
                                                 -show           "" \
@@ -98,7 +94,7 @@ namespace eval rattleCAD::view::svgEdit {
                                   -command "$f_select.tree yview"
                 #
                 # -----------------
-            grid $compList  $f_select.scb_try    -sticky news
+            grid $compList  $f_select.scb_try -sticky news -pady 2
                 #
                 # -----------------
             if {$compCanvas != {}} {
@@ -106,20 +102,16 @@ namespace eval rattleCAD::view::svgEdit {
             }
                 #
                 # -----------------
-            set f_right     [ frame     $cvContentFrame.rightframe ]
-            pack $f_right       -side right
-                #
-            set f_right_cv   [ frame     $f_right.f_cv ]
-            pack $f_right_cv    -side top -expand yes -fill x
+            set f_canvas     [ frame     $w.canvasFrame ]
                 #
             set compCanvas [canvasCAD::newCanvas \
                                     cv_Components \
-                                    $f_right_cv.cvCAD \
+                                    $f_canvas.cvCAD \
                                     "_editComp_"  \
                                     120 100  \
                                     passive  \
                                     1.0  0  \
-                                    -bd 2  \
+                                    -bd 1  \
                                     -bg white  \
                                     -relief sunken]
                 #
@@ -131,9 +123,6 @@ namespace eval rattleCAD::view::svgEdit {
             [namespace current]::fillSelectionList $type $key
                 #
                 # -----------------
-            [namespace current]::selectCurrent
-                #
-                # -----------------
             bind $compList <<TreeviewSelect>>       [list [namespace current]::listSelection  %W]        
             bind $compList <Return>                 [list [namespace current]::commitSelected %W $key]        
             bind $compList <Double-ButtonPress-1>   [list [namespace current]::commitSelected %W $key]        
@@ -142,9 +131,12 @@ namespace eval rattleCAD::view::svgEdit {
             bind $cv       <Double-ButtonPress-1>   [list [namespace current]::commitSelected %W $key]        
                 #
                 # -----------------
-            update
+            # update
+            # [namespace current]::selectCurrent
                 #
-
+                #
+            return [list $f_select $f_canvas]
+                #
     }
 
     #-------------------------------------------------------------------------
@@ -176,7 +168,7 @@ namespace eval rattleCAD::view::svgEdit {
     #-------------------------------------------------------------------------
         #  updateCanvas
         #
-    proc rattleCAD::view::svgEdit::updateCanvas {compFile} {
+    proc rattleCAD::view::svgEdit::updateCanvas {{compFile {}}} {
                 #
             variable compCanvas
                 #
@@ -184,8 +176,8 @@ namespace eval rattleCAD::view::svgEdit {
             puts "   -------------------------------"
             puts "    updateCanvas"
             puts "       compFile:       $compFile"
-            puts "       $::APPL_Config(COMPONENT_Dir)"
-            puts "       $::APPL_Config(USER_Dir)"
+            puts "           $::APPL_Config(COMPONENT_Dir)"
+            puts "           $::APPL_Config(USER_Dir)"
 
             set fileName {}
             switch -glob $compFile {
@@ -194,7 +186,7 @@ namespace eval rattleCAD::view::svgEdit {
                 default {}
             }
                 #
-            puts "       $fileName"
+            puts "           ... $fileName"
                 #
             if {$fileName != {}} {
                     #
@@ -203,6 +195,10 @@ namespace eval rattleCAD::view::svgEdit {
                 $compCanvas fit2Stage $__my_Component__
                 $compCanvas refitStage
                     #
+                puts "           ... canvas updated!"
+            } else {
+                puts "           ... empty canvas updated!"
+                $compCanvas refitStage
             }
     }
 
@@ -263,7 +259,7 @@ namespace eval rattleCAD::view::svgEdit {
         set children [$compList children {}]
             #
         foreach node $children {  
-                # puts "  ... $node"
+                puts "  ... $node"
             set compID  [$compList set $node keyString]
             set key     [$compList set $node key]
             set value   [$compList set $node value]
@@ -276,10 +272,10 @@ namespace eval rattleCAD::view::svgEdit {
                     #
                     # puts ""
                     # puts "           -> ... $checkString"
-                    # puts "           -> ... $nodeString"
+                    puts "           -> ... $nodeString"
                 $compList selection set $node
                 focus $compList
-                    # puts "           -> ... $compID"
+                    puts "           -> ... $compID"
                     #
                 if {[catch {[namespace current]::updateCanvas $compID} fid]} {
                     puts "   ... could not open file $compID"
