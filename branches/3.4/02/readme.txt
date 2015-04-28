@@ -1,4 +1,14 @@
 
+
+3.4.02.46  - 2015.04.27
+-------------------------------------------------------------------------------
+    refactor:
+        ... extract rattleCAD::view::createEdit {}
+        ... extract rattleCAD::view::create_FileEdit {}
+    debug:
+        ... rattleCAD::view::fit_EditContainer
+            ... previous: fit_FileEditContainer
+
  
 3.4.02.45  - 2015.04.26
 -------------------------------------------------------------------------------

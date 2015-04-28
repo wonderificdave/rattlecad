@@ -51,6 +51,7 @@ namespace eval rattleCAD::view {
 	variable canvasUpdate   ; array set canvasUpdate {}  
     variable canvasRefit    ; array set canvasRefit  {}  
     variable noteBook_top
+    variable cboxWidth      20
 
     variable colorSet       ; array set colorSet {
                                     frameTube      {wheat}
@@ -189,85 +190,74 @@ namespace eval rattleCAD::view {
         # create ProjectEdit Widget
         # proc createEdit { x y cv_Name updateCommand _arrayNameList {title {Edit:}}}
     proc rattleCAD::view::createEdit { x y cv_Name _arrayNameList {title {Edit:}}} {
-            #
-            # appUtil::get_procHierarchy
-            #
-		variable editPosition
-        # variable _updateValue
-            #
-			# appUtil::get_procHierarchy
-			# appUtil::appDebug p
-			# appUtil::appDebug f
-            #
-		puts ""
-		puts "   -------------------------------"
-		puts "    createEdit"
-		puts "       x / y:           $x / $y"
-		puts "       cv_Name:         $cv_Name"
-		puts "       title:           $title"
-            #
-        set editPosition [list $x $y]
-            #
-		if {[llength $_arrayNameList] > 1} {
-			puts "       _arrayNameList:"
-			foreach entry $_arrayNameList {
-				puts "                        $entry"
-			}
-		} else {
-			puts "       _arrayNameList:  $_arrayNameList"
-		}
-		puts ""
-        
-            #
-            # ------ 
-        set r [catch {info level [expr [info level] - 1]} e]
-        if {$r} {
-            puts "\n      ... createEdit called directly by the interpreter (e.g.: .tcl on the commandline).\n"
-        } {
-            switch -glob ${e} {
-                rattleCAD::view::edit* {
-                        puts "\n    <--->   ... createEdit called by ${e}.\n"
-                    }
-                default {
-                        puts "\n    <OLD>   ... createEdit called by ${e}.\n"
-                    }
+                #
+                # appUtil::get_procHierarchy
+                #
+            variable editPosition
+            # variable _updateValue
+                #
+                # appUtil::get_procHierarchy
+                # appUtil::appDebug p
+                # appUtil::appDebug f
+                #
+            puts ""
+            puts "   -------------------------------"
+            puts "    createEdit"
+            puts "       x / y:           $x / $y"
+            puts "       cv_Name:         $cv_Name"
+            puts "       title:           $title"
+                #
+            set editPosition [list $x $y]
+                #
+            if {[llength $_arrayNameList] > 1} {
+                puts "       _arrayNameList:"
+                foreach entry $_arrayNameList {
+                    puts "                        $entry"
+                }
+            } else {
+                puts "       _arrayNameList:  $_arrayNameList"
+                set key     [lindex $_arrayNameList 0]
+                set title   [string trim [rattleCAD::view::get_LabelText $key]]
+                set title   [lindex [split $title] end]
             }
-        }
-            
-            #
-            # ------ 
-        set cv      [$cv_Name getNodeAttr Canvas path]
-            #
-            # --- cvContentFrame ---
-        if {[llength $_arrayNameList] == 1 } {
-                set cvEdit [createEdit_SingleLine   $x $y $cv $cv_Name $_arrayNameList]
-		} else {
-                set cvEdit [createEdit_MultiLine    $x $y $cv $cv_Name $title $_arrayNameList]
-		}
-            #
-            # --- reposition if out of canvas border ---
-        fit_FileEditContainer $cv $cvEdit
-            #
-        return
-            #
-        
-        #
-        update
-        
-        
-        
-		set id_bbox   [ $cv bbox $cvEdit ]
-            #
-        set cv_width  [ winfo width  $cv ]
-		set cv_height [ winfo height $cv ]
-			# puts "   -> bbox $id_bbox"
-		foreach {dx dy} {0 0} break
-            #
-		if {[lindex $id_bbox 2] > [expr $cv_width  -4]} { set dx [expr $cv_width  - [lindex $id_bbox 2] -4] }
-		if {[lindex $id_bbox 3] > [expr $cv_height -4]} { set dy [expr $cv_height - [lindex $id_bbox 3] -4] }
-            #
-        $cv move $cvEdit $dx $dy
-            # puts "  -> reposition $dx $dy"
+            puts ""
+
+                #
+                # ------ 
+            set r [catch {info level [expr [info level] - 1]} e]
+            if {$r} {
+                puts "\n      ... createEdit called directly by the interpreter (e.g.: .tcl on the commandline).\n"
+            } {
+                switch -glob ${e} {
+                    rattleCAD::view::edit* {
+                            puts "\n    <--->   ... createEdit called by ${e}.\n"
+                        }
+                    default {
+                            puts "\n    <OLD>   ... createEdit called by ${e}.\n"
+                        }
+                }
+            }
+                
+                #
+                # ------ 
+            set cv      [$cv_Name getNodeAttr Canvas path]
+                #
+                # --- cvContentFrame ---
+            set cvEdit [createEdit_MultiLine    $x $y $cv $cv_Name $title $_arrayNameList]
+                #
+            if {1 == 2} {
+                if {[llength $_arrayNameList] == 1 } {
+                        set cvEdit [createEdit_SingleLine   $x $y $cv $cv_Name $_arrayNameList]
+                } else {
+                        set cvEdit [createEdit_MultiLine    $x $y $cv $cv_Name $title $_arrayNameList]
+                }
+            }
+                #
+                # --- reposition if out of canvas border ---
+            fit_EditContainer $cv $cvEdit
+                #
+            return
+                #
     }
 
     proc rattleCAD::view::create_EditContainer { x y cv_Name title lineCount {editLevel {base}}} {
@@ -289,7 +279,7 @@ namespace eval rattleCAD::view {
         puts "       lineCount:       $lineCount"
         
             #
-        set x_offset 20
+        set x_offset 100
         set cv      [ $cv_Name getNodeAttr Canvas path]
             #
         set frameNameBase $cv.f_edit_base
@@ -371,6 +361,41 @@ namespace eval rattleCAD::view {
             #
     }
 
+    proc rattleCAD::view::fit_EditContainer {cv cvEdit} {
+            #
+            # --- reposition if out of canvas border ---
+		update
+            #
+		set id_bbox   [ $cv bbox $cvEdit ]
+            #
+        set cv_width  [ winfo width  $cv ]
+		set cv_height [ winfo height $cv ]
+			# puts "   -> bbox $id_bbox"
+		foreach {dx dy} {0 0} break
+            #
+		if {[lindex $id_bbox 0] < 4}                    { set dx [expr 4  - [lindex $id_bbox 0]]}
+		if {[lindex $id_bbox 1] < 4}                    { set dy [expr 4  - [lindex $id_bbox 1]]}
+            #
+        if {[lindex $id_bbox 2] > [expr $cv_width  -4]} { set dx [expr $cv_width  - [lindex $id_bbox 2] -4] }
+		if {[lindex $id_bbox 3] > [expr $cv_height -4]} { set dy [expr $cv_height - [lindex $id_bbox 3] -4] }
+            #
+        # puts "            ... $id_bbox"    
+        # puts "            ... $dx / $dy"    
+            #
+        $cv move $cvEdit $dx $dy
+            # puts "  -> reposition $dx $dy"
+            #
+        return $cvEdit
+            #
+    }
+
+    proc rattleCAD::view::create_ConfigLabel {w index title} {
+                #
+            set cvLabel     [label  $w.label__${index} -text "${title} : "]
+            return $cvLabel
+                #
+    }
+
     proc rattleCAD::view::createEdit_SingleLine { x y cv cv_Name _arrayNameList } {
                 #
                 # appUtil::get_procHierarchy
@@ -417,7 +442,8 @@ namespace eval rattleCAD::view {
                 #
                 # appUtil::get_procHierarchy
                 #
-            set wList   [create_EditContainer  $x $y $cv_Name $title [llength $_arrayNameList] base ]
+            set wList   [create_EditContainer  $x $y $cv_Name $title 2 base ]
+                # set wList   [create_EditContainer  $x $y $cv_Name $title [llength $_arrayNameList] base ]
             set cvEdit      [lindex $wList 0]  
             set cvContainer [lindex $wList 1]  
                 # puts "  ... $cvEdit"
@@ -441,39 +467,39 @@ namespace eval rattleCAD::view {
                     #
                     # puts "\n  -> here I am --- $key\n"
                     #
-                set labelText   [rattleCAD::view::get_LabelText $key]
+                
+                set cfgWidgets  [create_Config $cv $cv_Name $cvEdit $cvContentFrame $index $key]
+                set widget_1    [lindex $cfgWidgets 0]
+                set widget_2    [lindex $cfgWidgets 1]
                     #
-                set cvLabel     [label  $cvContentFrame.label_${index} -text "${labelText} : "]
-                set cvConfig    [create_Config $cv $cv_Name $cvEdit $cvContentFrame $index $key]
+                    # puts "    ... $cvContentFrame"    
+                    # puts "    ... $widget_1"    
+                    # puts "    ... $widget_2"    
                     #
-                grid            $cvLabel    $cvConfig   -sticky news
-                grid configure  $cvLabel    -padx 3    -sticky nws
-                grid configure  $cvConfig   -padx 2
+                if {[llength $cfgWidgets] > 1} {
+                    grid            $widget_1    $widget_2    -sticky news
+                    grid configure  $widget_1    -padx 3 -sticky nws
+                    grid configure  $widget_2    -padx 2
+                } else {
+                    grid            $widget_1    -sticky news -columnspan 2
+                    grid configure  $widget_1    -padx 2 -pady 2
+                        # focus $widget_1
+                        # update
+                        # [namespace current]::svgEdit::selectCurrent
+                        #
+                    update
+                        #
+                    catch {[namespace current]::svgEdit::selectCurrent}
+                    catch {[namespace current]::svgEdit::selectCurrent}
+                        #
+                        # 
+                }
+                    #
             }
+
                 #                    
             return $cvEdit                
                 #
-    }
-
-    proc rattleCAD::view::fit_FileEditContainer {cv cvEdit} {
-            #
-            # --- reposition if out of canvas border ---
-		update
-		set id_bbox   [ $cv bbox $cvEdit ]
-            #
-        set cv_width  [ winfo width  $cv ]
-		set cv_height [ winfo height $cv ]
-			# puts "   -> bbox $id_bbox"
-		foreach {dx dy} {0 0} break
-            #
-		if {[lindex $id_bbox 2] > [expr $cv_width  -4]} { set dx [expr $cv_width  - [lindex $id_bbox 2] -4] }
-		if {[lindex $id_bbox 3] > [expr $cv_height -4]} { set dy [expr $cv_height - [lindex $id_bbox 3] -4] }
-            #
-        $cv move $cvEdit $dx $dy
-            # puts "  -> reposition $dx $dy"
-            #
-        return $cvEdit
-            #
     }
 
     #-------------------------------------------------------------------------
@@ -539,25 +565,36 @@ namespace eval rattleCAD::view {
                 }
         }
 		    #
+        set labelText   [rattleCAD::view::get_LabelText $key]
+            #
+        set cvLabel     [create_ConfigLabel  $cvContentFrame $index ${labelText}]
+            #
+            #
+            #
 		foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
 		    #
 		puts "              <21>    create_Config           -> $key ... $path"
             #                                                                 
         switch -exact $type {
-            {file} {    set cvConfig    [ create_FileEdit   $cv_Name $cvContentFrame $index $path ] }
+            {file} {    set cvConfig    [ create_FileEdit   $cv_Name $cvContentFrame $index $path ]
+                        return $cvConfig
+                        #set cvConfig    [ lindex $cvWidgets 1] 
+                    }
             {list} {    set cvConfig    [ create_ListEdit   $cv_Name $cvContentFrame $index $path $listName   ] }
             {text} {    set cvConfig    [ create_TextEdit   $cv_Name $cvContentFrame $index $path ] }
             default {   set cvConfig    [ create_ValueEdit  $cv_Name $cvContentFrame $index $path ] }
         }
             #
-        return $cvConfig
+        return [list $cvLabel $cvConfig]
             #
     }
 
     proc rattleCAD::view::create_ValueEdit {cv_Name cvContentFrame index key} {
             #
             # appUtil::get_procHierarchy
-            # 
+            #
+        variable cboxWidth
+            #
         eval set currentValue $[namespace current]::_updateValue($key)
             #
         puts "                  <30>    create_ValueEdit    -> $key <- $currentValue"
@@ -584,6 +621,8 @@ namespace eval rattleCAD::view {
     }
 
     proc rattleCAD::view::create_TextEdit  {cv_Name cvContentFrame index key} {
+            #
+        variable cboxWidth
             #
         eval set currentValue $[namespace current]::_updateValue($key)
             #
@@ -616,6 +655,8 @@ namespace eval rattleCAD::view {
 
     proc rattleCAD::view::create_ListEdit  {cv_Name cvContentFrame index key type} {
             #
+        variable cboxWidth
+            #
         eval set currentValue $[namespace current]::_updateValue($key)
             #
         puts "                  <30>    create_ListEdit     -> $key <- $currentValue    ... $type"
@@ -641,7 +682,7 @@ namespace eval rattleCAD::view {
         set cvCBox [ ttk::combobox $cvContentFrame.cb_${index} \
                         -textvariable [namespace current]::_updateValue($key) \
                         -values $listBoxContent    \
-                        -width  25 \
+                        -width  $cboxWidth \
                         -height 10 \
                         -justify right ]       
             #
@@ -677,9 +718,8 @@ namespace eval rattleCAD::view {
 
     proc rattleCAD::view::create_FileEdit  {cv_Name cvContentFrame index key} {
             #
-        # puts "                  <30>    create_FileEdit     -> $key "
+        variable cboxWidth
             #
-            # parray [namespace current]::_updateValue
         set currentValue [lindex [array get [namespace current]::_updateValue $key] 1]
             #
         puts "                  <30>    create_FileEdit "
@@ -687,76 +727,26 @@ namespace eval rattleCAD::view {
         puts "                          -> $key <- $currentValue  "
             #
             # --- create listBox content ---
-        set listBoxContent $currentValue
-          # set listBoxContent [rattleCAD::control::get_listBoxContent  $type $key]
-          # set listBoxContent [ get_listBoxContent $type $key]
-          # set listBoxContent [ get_listBoxContent $type $key]
-          
-        foreach entry $listBoxContent {
-            puts "         ... $entry"
-        }
-            
+        set myFrame [frame $cvContentFrame.compFrame]
             #
-            # --- create cvLabel, cvEntry, Select ---
-        set cvEntry [entry  $cvContentFrame.value_${index} \
-                        -textvariable [namespace current]::_updateValue($key) \
-                        -justify right \
-                        -relief sunken \
-                        -state disabled \
-                        -bd 1  -width 25]
+            # --- create cvSelect ---
+        set cfgWidgets [rattleCAD::view::svgEdit::create_svgEdit \
+                            $myFrame  \
+                            $key  \
+                            $currentValue  \
+                            {} ]
+        set cvSelect [lindex $cfgWidgets 0]    
+        set cvCanvas [lindex $cfgWidgets 1]
             #
-            # --- define bindings ---
-        bind $cvEntry   <Return>                [list [namespace current]::updateConfig            $cv_Name $key $cvEntry]
-        bind $cvEntry   <ButtonPress-1>         [list [namespace current]::create_FileEdit_Extend  %X %Y $cv_Name $key $currentValue]
-        bind $cvEntry   <Double-ButtonPress-1>  [list [namespace current]::create_FileEdit_Extend  %X %Y $cv_Name $key $currentValue]
-           #
-        return $cvEntry
-           #    
+        pack $cvSelect $cvCanvas -side left
+        
+            #
+        return $myFrame
+            #
+        return [list $cvSelect $cvCanvas]
+            #  
     }
 
-    proc rattleCAD::view::create_FileEdit_Extend  {x y cv_Name key currentValue args} {
-            #
-        variable editPosition
-            #
-        puts "                  <40>    create_FileEdit_Extend"
-        puts "                          -> $x / $y"
-		puts "                          -> $key <- $currentValue"
-            #
-        puts "                          -> $editPosition"
-        foreach {x y} $editPosition break
-            #
-        #return
-            # puts " --- create_FileEdit_Extend ---"
-            # puts "         ... $cv_Name"
-            # puts "         ... $x"
-            # puts "         ... $y"
-            # puts "         ... $key"
-            # puts "         ... $currentValue"
-            # puts "         ... $args"
-            #
-            # set stageScale  [$cv_Name getNodeAttr Stage scale]
-            # puts "         ... $stageScale"
-            #
-        set x [expr $x + 20]   
-        set y [expr $y - 20]
-            # set x [expr $x * $stageScale - 20]   
-            # set y [expr $y * $stageScale + 20]
-            #
-        set wList   [create_EditContainer  $x $y $cv_Name $key   2 extend ]
-        set cvEdit      [lindex $wList 0]  
-        set cvContainer [lindex $wList 1]  
-            # puts "         ... $cvEdit"
-            # puts "         ... $cvContainer"
-        rattleCAD::view::svgEdit::create_svgEdit \
-                $cvContainer  \
-                $key  \
-                $currentValue  \
-                {}
-            #
-        set cv      [$cv_Name getNodeAttr Canvas path]
-        fit_FileEditContainer $cv $cvEdit
-            #
-    }
 
 
 	#-------------------------------------------------------------------------
@@ -788,6 +778,10 @@ namespace eval rattleCAD::view {
         set ::$textVar [format "%.3f" $newValue]
     }
 
+ 
+ 
+ 
+ 
  
        #  createEdit - sub procedures
     #-------------------------------------------------------------------------
