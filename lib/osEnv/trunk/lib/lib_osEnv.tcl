@@ -43,9 +43,9 @@ exec wish "$0" "$@"
             #
         set domNode [$registryDOM selectNode tcl]
             #
-        puts "\n   ... init_tcl_info" 
+        puts "\n     ... init_tcl_info" 
           #
-        puts "        ... [info library]"
+        puts "          ... [info library]"
           #
         _dom_add_nameValue $domNode patchlevel  [list [info patchlevel]]
             # Returns the value of the global variable tcl_patchLevel;
@@ -65,7 +65,7 @@ exec wish "$0" "$@"
             #
         set domNode [$registryDOM selectNode tcl/platform]
             #
-        # puts "\n   ... init_tcl_platform" 
+        puts "\n     ... init_tcl_platform" 
             #
         foreach key [lsort [array names ::tcl_platform]] {
               # puts "   ... $key  $::env($key)"
@@ -79,7 +79,7 @@ exec wish "$0" "$@"
             #
         set domNode [$registryDOM selectNode os/env]
             #
-        # puts "\n   ... init_os_env" 
+        puts "\n     ... init_os_env" 
             #
         foreach key [lsort [array names ::env]] {
               # puts "   ... $key  $::env($key)"
@@ -117,6 +117,28 @@ exec wish "$0" "$@"
     }
 
 
+    proc osEnv::_init_os_mimeType {} {
+            #
+        puts "\n   ... init_os_mimeType" 
+            #
+        _add_ApplMimeType .ps
+        _add_ApplMimeType .pdf
+        _add_ApplMimeType .html
+        _add_ApplMimeType .svg
+        _add_ApplMimeType .dxf
+        _add_ApplMimeType .jpg
+        _add_ApplMimeType .gif
+    }
+
+
+    proc osEnv::_init_os_executable {} {
+            #
+        puts "\n   ... init_os_executable" 
+            #
+        _add_Executable gs         ; # {GPL Ghostscript}
+    }
+
+
     proc osEnv::_add_Executable {execName} {
         variable registryDOM
             #
@@ -143,6 +165,9 @@ exec wish "$0" "$@"
             $domNode appendChild $execNode
                 #
             $execNode appendChild [$domDOC createTextNode "$applCmd"] 
+                #
+            # puts "               [format {%5s ... %s} $execName $applCmd]"
+                #
         }
     } 
 
@@ -171,31 +196,9 @@ exec wish "$0" "$@"
         return {}
     }
 
-
-    proc osEnv::_init_os_mimeType {} {
-            #
-        puts "\n   ... init_os_mimeType" 
-            #
-        _add_ApplMimeType .ps
-        _add_ApplMimeType .pdf
-        _add_ApplMimeType .html
-        _add_ApplMimeType .svg
-        _add_ApplMimeType .dxf
-        _add_ApplMimeType .jpg
-        _add_ApplMimeType .gif
-    }
-
-
-    proc osEnv::_init_os_executable {} {
-            #
-        puts "\n   ... init_os_executable" 
-            #
-        _add_Executable gs         ; # {GPL Ghostscript}
-    }     
-
-
     
     proc osEnv::_add_ApplMimeType {mimeType} {
+            #
         variable registryDOM
             #
         set domDOC    [$registryDOM ownerDocument]
@@ -211,6 +214,9 @@ exec wish "$0" "$@"
             $domNode appendChild $mimeNode
                 #
             $mimeNode appendChild [$domDOC createTextNode "$applCmd"] 
+                #
+            # puts "               [format {%5s ... %s} $mimeType $applCmd]"
+                #
         }   
     }
 
@@ -242,4 +248,33 @@ exec wish "$0" "$@"
             }
         }
     }
-    
+
+
+    proc osEnv::_register_Executable {nodeName name executable} {
+            #
+        variable registryDOM
+            #
+            # puts "         ->  $nodeName   $name   $executable"    
+            #
+        set domDOC       [$registryDOM ownerDocument]      
+        set parentNode   [$registryDOM selectNode /root/os/$nodeName]
+        set thisNode     {}
+        set thisNode     [lindex [$parentNode find name $name] 0]
+            #
+        if  {$thisNode != {}} {
+            $parentNode removeChild $thisNode
+            $thisNode   delete
+        }
+            #
+        set thisNode  [$domDOC  createElement $nodeName]
+            #
+        $thisNode setAttribute name $name
+            #
+        $parentNode appendChild $thisNode
+            #
+        $thisNode appendChild [$domDOC createTextNode "$executable"] 
+            # 
+        # puts "[$parentNode asXML]"         
+            #
+    }   
+

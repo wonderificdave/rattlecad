@@ -38,9 +38,16 @@ exec wish "$0" "$@"
  #
  
  #
- # 0.9  2015-03-24  debug: open_by_mimeType_DefaultApp
+ # 0.9  2015-03-24  debug: open_by_mimeType_DefaultApp for https://
+ #
+ # 0.10 2015-04-28  
+ #          refactor osEnv::_find_ghostscriptExec
+ #
+ # 0.11 2015-04-29  
+ #          refactor osEnv::find_ghostscriptExec, handle 32/64 bit Windows
  #
  #
+ 
  
   ###########################################################################
   #
@@ -48,35 +55,37 @@ exec wish "$0" "$@"
   #
   ###########################################################################
   
-  package provide osEnv 0.9
+  package provide osEnv 0.11
   
   namespace eval osEnv {
       
-    # --------------------------------------------
-        # initial package definition
-    package require tdom
-    catch {package require registry}
- 
-    # --------------------------------------------
-        # Export as global command
-    variable packageHomeDir [file normalize [file join [pwd] [file dirname [info script]]] ]
+        # --------------------------------------------
+            # initial package definition
+        package require tdom
+        catch {package require registry}
+     
+        # --------------------------------------------
+            # Export as global command
+        variable packageHomeDir [file normalize [file join [pwd] [file dirname [info script]]] ]
 
-    #-------------------------------------------------------------------------
-        #  definitions of template Documents
-    variable registryDOM 
+        #-------------------------------------------------------------------------
+            #  definitions of template Documents
+        variable registryDOM 
 
-    # --------------------------------------------
-        # get report Template
-    set fp [open [file join $packageHomeDir .. etc initTemplate.xml] ]
-    fconfigure      $fp -encoding utf-8
-    set registryXML [read $fp]
-    close           $fp          
-    set registryDoc [dom parse $registryXML]
-    set registryDOM [$registryDoc documentElement]     
+        # --------------------------------------------
+            # get report Template
+        set fp [open [file join $packageHomeDir .. etc initTemplate.xml] ]
+        fconfigure      $fp -encoding utf-8
+        set registryXML [read $fp]
+        close           $fp          
+        set registryDoc [dom parse $registryXML]
+        set registryDOM [$registryDoc documentElement]     
   }
-       
-    # --------------------------------------------
-      # procedures
+
+  
+        # --------------------------------------------
+        #  create base config 
+        #       -> registryDOM
     proc osEnv::init_osEnv {} {                   
         variable registryDOM
         
@@ -90,6 +99,30 @@ exec wish "$0" "$@"
         return $registryDOM               
     }
 
+
+        # --------------------------------------------
+        #  register mime-types per name 
+        #       -> registryDOM
+    proc osEnv::register_mimeType {mimeType executable} {
+        variable registryDOM
+        set nodeName mime
+        _register_Executable $nodeName $mimeType $executable
+    }
+
+
+        # --------------------------------------------
+        #  register executables per name 
+        #       -> registryDOM
+    proc osEnv::register_Executable {execName executable} {
+        variable registryDOM
+        set nodeName exec
+        _register_Executable $nodeName $execName $executable
+    }
+
+
+        # --------------------------------------------
+        #  get application per extension type 
+        #       <- registryDOM
     proc osEnv::get_mimeType_DefaultApp {fileExtension} {
         variable registryDOM
         set node [$registryDOM selectNode /root/os/mime]
@@ -104,8 +137,14 @@ exec wish "$0" "$@"
         }          
     }
 
+
+        # --------------------------------------------
+        #  get application per name 
+        #       <- registryDOM
     proc osEnv::get_Executable {executable} {
+            #
         variable registryDOM
+            #
         set node [$registryDOM selectNode /root/os/exec]
         set extNode [lindex [$node find name $executable] 0]
         if {$extNode != {}} {
@@ -118,40 +157,10 @@ exec wish "$0" "$@"
         }          
     }
 
-    proc osEnv::register_mimeType {mimeType executable} {
-        variable registryDOM
-        set nodeName mime
-        _register_Executable $nodeName $mimeType $executable
-    }
 
-    proc osEnv::register_Executable {execName executable} {
-        variable registryDOM
-        set nodeName exec
-        _register_Executable $nodeName $execName $executable
-    }
-
-    proc osEnv::_register_Executable {nodeName name executable} {
-        variable registryDOM
-        set domDOC       [$registryDOM ownerDocument]      
-        set parentNode   [$registryDOM selectNode /root/os/$nodeName]
-        set thisNode     {}
-        set thisNode     [lindex [$parentNode find name $name] 0]
-                
-        if  {$thisNode != {}} {
-            $parentNode removeChild $thisNode
-            $thisNode   delete
-        }
-        
-        set thisNode  [$domDOC  createElement $nodeName]
-            #
-        $thisNode setAttribute name $name
-            #
-        $parentNode appendChild $thisNode
-            #
-        $thisNode appendChild [$domDOC createTextNode "$executable"] 
-            # puts "[$parentNode asXML]"         
-    }   
-
+        # --------------------------------------------
+        #  find executables per file-extension  
+        #       -> Windows registry
     proc osEnv::find_mimeType_Application {fileExtension} {
           #    http://wiki.tcl.tk/557
           # puts "\n"
@@ -199,6 +208,9 @@ exec wish "$0" "$@"
                     if {[catch {set appCmd [lindex [string map {\\ \\\\} $appCmd] 0]} eID]} {
                         set appCmd {}
                     }
+                        #
+                    # puts "               [format {%-5s ... %s} $fileExtension $appCmd]"
+                        #
 
                 }
             default {}
@@ -206,6 +218,47 @@ exec wish "$0" "$@"
         return "$appCmd"
     }
 
+
+        # --------------------------------------------
+        #  find executable of ghostscript 
+        #       <- Windows registry
+    proc osEnv::find_ghostscriptExec {{bitVersion {}}} {
+            #
+        switch -exact $bitVersion {
+            32 -
+            64 {    
+                    set bitVersionList $bitVersion
+                }
+            default {
+                    set bitVersionList {64 32}
+                }
+        }
+            #
+        set execList {}
+            #
+        foreach bitVersion $bitVersionList {
+                #
+            set gs_bitVersions [osEnv::_find_ghostscriptExec $bitVersion]
+                #
+            foreach gsExec $gs_bitVersions {
+                lappend execList $gsExec 
+            }
+        }
+            #
+        foreach gsExec $execList {
+            # puts "    -> $gsExec"
+        }
+            #
+        set gsExec [lindex $execList 0]
+            #
+        return $gsExec    
+            #
+    }
+
+    
+        # --------------------------------------------
+        #  find executables per name  
+        #       -> Unix PATH
     proc osEnv::find_OS_Application {appName} {
         set appCmd {} ;# set as default
         switch -exact $::tcl_platform(platform) {
@@ -215,8 +268,12 @@ exec wish "$0" "$@"
             default {}      
         }
         return "$appCmd"
-    }      
+    }
 
+
+        # --------------------------------------------
+        #  opens executables per mime-type  
+        #       <- get_mimeType_DefaultApp
     proc osEnv::open_by_mimeType_DefaultApp {fileName {altExtension {}}} {
 
         set fileExtension   [file extension $fileName]

@@ -38,59 +38,80 @@ exec wish "$0" "$@"
  #
   
 
-  proc osEnv::get_ghostscriptExec {} {
-      
-      switch $::tcl_platform(platform) {
-          "windows" {
-                      # init_ghostScript
-                  set ghostScriptName   "gswin32c.exe"
-
-                  set root_gs "HKEY_LOCAL_MACHINE\\SOFTWARE\\GPL Ghostscript"
-                  if { [catch {     set appKeys [registry keys $root_gs]      } errMsg] } {
+    proc osEnv::_find_ghostscriptExec {bitVersion} {
+            #
+            #
+            # parray ::tcl_platform   
+            #
+            # puts "               ->  \$::tcl_platform(machine)   $::tcl_platform(machine)       = amd64"
+            # puts "               ->  \$::tcl_platform(platform)  $::tcl_platform(platform)"
+            #
+            # set proc_info [info level [expr [info level]-1] ]
+            # set proc_name [lindex $proc_info 0 ]
+            #
+            # puts "   ... $proc_info"
+            # puts "   ... $proc_name"
+            # exit
+        set bitSwitch [format "-%sbit" $bitVersion]
+            # puts "    ... $bitSwitch"
+            #
+        set execList {}
+            #
+        switch $::tcl_platform(platform) {
+            "windows" {
+                        # init_ghostScript
+                    set ghostScriptNames   {gswin32c.exe gswin64c.exe}
+                        #
+                    set root_gs "HKEY_LOCAL_MACHINE\\SOFTWARE\\GPL Ghostscript"
+                        #
+                    if { [catch {     set versionDirs [registry $bitSwitch keys $root_gs]      } errMsg] } {
                         puts  "         --<E>----------------------------------------------------"
                         puts  "           <E> ... search for: $root_gs"
                         puts  "           <E>    ... could not get ghostscript Installation"
                         puts  "         --<E>----------------------------------------------------"
                         return {}
-                  } else {
-                        set appKey  [lindex [lsort -decreasing $appKeys] 0]
-                          # puts  "               appKey   $appKey"
-                          # puts  "               appKeys  $appKeys"
-                  }
-                 
-                      # Get the command for opening HTML files
-                  if { [catch {     set appPATH [registry get $root_gs\\$appKey GS_LIB]      } errMsg] } {
-                        puts  "         --<E>----------------------------------------------------"
-                        puts  "           <E> ... search for: $root_gs\\$appKey\\GS_LIB"
-                        puts  "           <E>    ... could not get ghostscript Installation"
-                        puts  "         --<E>----------------------------------------------------"
-                        return {}
-                  }
-
-                  
-                  # -------------
-                  foreach directory [split $appPATH \;] {
-                      set executable [file join $directory $ghostScriptName]
-                        # puts "$executable"
-                      if {[file executable $executable]} {
-                            # puts "          ... \$ghostScriptExec $executable"
-                          return "$executable"
-                      }
-                  }
-                  return {}
-              }
-          default {
-                  #set ghostScriptName   "gs"
-                  #set executable [_get_exec_inPATH $ghostScriptName]
-                  #return "$executable"
-                  return {}
-              }
-      }
-  } 
-  
-  
-  
-  
-  
-  
-  
+                    } else {
+                        set versionDirs [lsort -decreasing $versionDirs]
+                        foreach versionDir $versionDirs {
+                                #
+                            # puts "               ... $bitSwitch ... $versionDir"
+                                #
+                                # get execPath using GS_DLL
+                            if { [catch {     set gsPath [registry $bitSwitch get $root_gs\\$versionDir GS_DLL]      } errMsg] } {
+                                puts  "         --<E>----------------------------------------------------"
+                                puts  "           <E> ... search for: $root_gs\\$versionDir\\GS_LIB"
+                                puts  "           <E>    ... could not get ghostscript Installation"
+                                puts  "         --<E>----------------------------------------------------"
+                                continue
+                                # return {}
+                            }    
+                                #
+                                # puts "               ... $bitSwitch ... $gsPath"
+                            set gsPath [file dirname $gsPath]
+                                # puts "               ... $bitSwitch ... $gsPath"
+                                #
+                            foreach ghostScriptName $ghostScriptNames {
+                                set execFile    [file join $gsPath $ghostScriptName]
+                                if {[file exists $execFile]} {
+                                    if {[file executable $execFile]} {
+                                            #
+                                        lappend execList "$execFile"
+                                            #
+                                    }
+                                }
+                            }
+                                #
+                        }
+                            #
+                        return $execList
+                            #
+                    }
+                }
+            default {
+                    #set ghostScriptName   "gs"
+                    #set executable [_get_exec_inPATH $ghostScriptName]
+                    #return "$executable"
+                    return {}
+                }
+        }
+    }
