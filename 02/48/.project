@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>rattleCAD_3.4.02</name>
+	<comment></comment>
+	<projects>
+		<project>_build_rattleCAD</project>
+		<project>add__Addon</project>
+		<project>appUtil</project>
+		<project>bikeGeometry</project>
+		<project>canvasCAD</project>
+		<project>extSummary</project>
+		<project>osEnv</project>
+		<project>vectorMath</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.dltk.core.scriptbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/Tcl [Builder].launch</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.dltk.tcl.core.nature</nature>
+	</natures>
+</projectDescription>
