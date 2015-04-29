@@ -91,6 +91,7 @@
     array set APPL_CompLocation {}
     
     variable projectDOM
+    variable exec_GhostScript
         
         #
     namespace eval rattleCAD {}
@@ -177,6 +178,7 @@
 	
             #
         variable projectDOM     
+        variable exec_GhostScript
             #
 
         ###########################################################################      
@@ -271,11 +273,12 @@
           
 
             # -- initialize GUI ----------
-        puts "     ... GUI_Font          $::APPL_Config(GUI_Font)"
+        puts "     ... GUI_Font"
+        puts "         ... $::APPL_Config(GUI_Font)\n"
             #
         switch $::tcl_platform(platform) {
                 "macintosh" { set ::APPL_Config(GUI_Font)  {Helvetica 10} }
-                "_windows"   { set ::APPL_Config(GUI_Font)  $::APPL_Config(GUI_Font) }
+                "_windows"  { set ::APPL_Config(GUI_Font)  $::APPL_Config(GUI_Font) }
         }   
         init_GUI_Settings
 
@@ -297,7 +300,12 @@
         } 
 
           
-          
+            
+        if {$exec_GhostScript == {}} {
+            #
+            # ... implement disable pdf-export button
+            #
+        }          
           
             ###########################################################################
             #
@@ -317,7 +325,7 @@
         rattleCAD::view::gui::binding_removeOnly     mySpinbox [list <Clear>]
             # rattleCAD::view::gui::binding_reportBindings Text
             # rattleCAD::view::gui::binding_reportBindings mySpinbox
-    
+
     }
 
 
@@ -578,49 +586,59 @@
         # init OS Settings
         #  
     proc init_OS_Settings {} {
+        
+            variable exec_GhostScript
+            
+            osEnv::init_osEnv
+            
+            switch -glob $::tcl_platform(platform) {
+                windows {
+                        foreach mimeType {.pdf .html .svg .dxf .jpg .gif .ps} {
+                            set defaultApp {}
+                            set defaultApp [osEnv::find_mimeType_Application $mimeType]
+                            puts "         ... $mimeType -> $defaultApp"
+                            if {$defaultApp != {}} {
+                                osEnv::register_mimeType $mimeType $defaultApp
+                            }
+                        }
+                        
+                        puts "\n     ... get ghostScript"
+                        set exec_GhostScript  [osEnv::find_ghostscriptExec]
+                            # set exec_GhostScript  {}
+                        if {$exec_GhostScript != {}} {
+                            puts "         ... $exec_GhostScript \n"
+                            osEnv::register_Executable gs $exec_GhostScript
+                        } else {
+                            tk_messageBox   -icon warning \
+                                            -title "ghostScript Installation" \
+                                            -message "... could not get ghostScript installation\n pdf-Export will not work" \
+                                            -detail " rattleCAD recommends ghostScript from\nhttp://www.ghostscript.com"
+                        }
+                        
+                    }
+                unix {
+                        foreach {mimeType appName} {.html firefox .svg firefox .ps evince .pdf evince .txt nedit} {
+                            puts "         ... $mimeType -> $appName "
+                            set defaultApp {}
+                            set defaultApp [osEnv::find_OS_Application $appName]
+                            puts "         ... $defaultApp"
+                            puts "         ... $mimeType -> $appName -> $defaultApp"
+                            if {$defaultApp != {}} {
+                                osEnv::register_mimeType $mimeType $defaultApp
+                            }
+                        }
+                        foreach appName {sh gs} {
+                            set defaultApp {}
+                            set defaultApp [osEnv::find_OS_Application $appName]
+                            puts "         ... $appName -> $defaultApp"
+                            if {$defaultApp != {}} {
+                                osEnv::register_Executable $appName $defaultApp
+                            }
+                        }
     
-          osEnv::init_osEnv
-          
-          switch -glob $::tcl_platform(platform) {
-              windows {
-                      foreach mimeType {.pdf .html .svg .dxf .jpg .gif .ps} {
-                          set defaultApp {}
-                          set defaultApp [osEnv::find_mimeType_Application $mimeType]
-                          puts "         ... $mimeType -> $defaultApp"
-                          if {$defaultApp != {}} {
-                              osEnv::register_mimeType $mimeType $defaultApp
-                          }
-                      }
-                      
-                      set exec_GhostScript  [osEnv::get_ghostscriptExec]
-                      if {$exec_GhostScript != {}} {
-                          osEnv::register_Executable gs $exec_GhostScript
-                      }
-                      
-                   }
-              unix {
-                      foreach {mimeType appName} {.html firefox .svg firefox .ps evince .pdf evince .txt nedit} {
-                          puts "         ... $mimeType -> $appName "
-                          set defaultApp {}
-                          set defaultApp [osEnv::find_OS_Application $appName]
-                          puts "         ... $defaultApp"
-                          puts "         ... $mimeType -> $appName -> $defaultApp"
-                          if {$defaultApp != {}} {
-                              osEnv::register_mimeType $mimeType $defaultApp
-                          }
-                      }
-                      foreach appName {sh gs} {
-                          set defaultApp {}
-                          set defaultApp [osEnv::find_OS_Application $appName]
-                          puts "         ... $appName -> $defaultApp"
-                          if {$defaultApp != {}} {
-                              osEnv::register_Executable $appName $defaultApp
-                          }
-                      }
-
-                   }
-              default {}
-          }
+                    }
+                default {}
+            }
     
     }
 
@@ -976,7 +994,8 @@
         #
     proc check_templateDirecty {} {
 
-        puts "  ->   check_templateDirecty  "
+        puts ""
+		puts "     ... check_templateDirecty  \n"
 		puts "            ... \$::APPL_Config(TEMPLATE_Dir) $::APPL_Config(TEMPLATE_Dir)"
 		
 		if {[catch {glob -directory $::APPL_Config(TEMPLATE_Dir) *} errMsg]} {
@@ -985,7 +1004,7 @@
 				file copy -force [file normalize ${sampleFile}] $::APPL_Config(TEMPLATE_Dir)
 			}
 		} else {
-            puts "\n           ... not updated, because of not empty!\n" 
+            puts "\n            ... not updated, because of not empty!\n" 
 		}
 		
 		return

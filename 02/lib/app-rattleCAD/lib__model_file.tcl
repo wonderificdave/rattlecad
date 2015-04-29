@@ -461,27 +461,29 @@
         #  open a File, containing just a subset of a Project-xml
         #
     proc rattleCAD::model::file::openProject_Subset_xml {{fileName {}}} {
+                #
             set types {
                 {{Project Files 3.x }       {.xml}  }
             }
+                #
             if {$fileName == {}} {
                 set fileName    [tk_getOpenFile -title "Import" -initialdir $::APPL_Config(USER_Dir) -filetypes $types]
             } else {
                 return
             }
             
-			  #
+                #
 			set content [rattleCAD::model::file::get_XMLContent $fileName]
             rattleCAD::control::importSubset $content
-              # 
+                # 
 			
-              #
+                #
             rattleCAD::control::changeList::reset
-              #
+                #
             
-              # -- fill tree
+                # -- fill tree
             rattleCAD::cfg_report::fillTree $rattleCAD::control::currentDOM root
-              #
+                #
 
     }
 

@@ -83,7 +83,7 @@ exec wish "$0" "$@"
     package     require bikeGeometry        1.47
     package     require canvasCAD           0.56
     package     require extSummary          0.4
-    package     require osEnv               0.9
+    package     require osEnv               0.11
                 
     package     require rattleCAD           3.4.02 
 
