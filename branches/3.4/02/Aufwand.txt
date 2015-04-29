@@ -555,17 +555,21 @@
 2014.12.12                    6:00   3.4.02 ... 18 ... bikeGeometry 1.27
 2014.12.13                    6:00   3.4.02 ... 18 ... bikeGeometry 1.27   ... set_to_project
 2014.12...                    5:00   3.4.02 ... 21 ... bikeGeometry 1.30   ... tubemiter debug
-2014.01.04                   40:00   3.4.02 ... 22 ... bikeGeometry 1.31   ... frame determination via lugs
-2014.01.09                   10:00   3.4.02 ... 23 ... configure BaseGeometry Visualisation
-2014.01.09                    5:00   3.4.02 ... 24 ... cleanup
-2014.01.12                    5:00   3.4.02 ... 25 ... bikeGeometry 1.32   ... implement interfaces
-2014.01.17                   15:00   3.4.02 ... 26 ... bikeGeometry 1.33   ... update IF_LugAngles
+2015.01.04                   40:00   3.4.02 ... 22 ... bikeGeometry 1.31   ... frame determination via lugs
+2015.01.09                   10:00   3.4.02 ... 23 ... configure BaseGeometry Visualisation
+2015.01.09                    5:00   3.4.02 ... 24 ... cleanup
+2015.01.12                    5:00   3.4.02 ... 25 ... bikeGeometry 1.32   ... implement interfaces
+2015.01.17                   15:00   3.4.02 ... 26 ... bikeGeometry 1.33   ... update IF_LugAngles
 --------------------------------------------------------------------------
                              92:00  1896,00        3.4.02.26
 
-2014.01.28                   40:00   3.4.02 ... 28 ... bikeGeometry 1.34   ... rattleCAD_AddOn
-
-2014.03.31                   50:00   3.4.02 ... 39 ... bikeGeometry 1.44   ... a lot
+2015.01.28                   40:00   3.4.02 ... 28 ... bikeGeometry 1.34   ... rattleCAD_AddOn
+2015.03.31                   50:00   3.4.02 ... 39 ... bikeGeometry 1.44   ... a lot
+2015.04.29                   60:00   3.4.02 ... 48 ... create_FileEdit     ... and much more
+                                                   ... bikeGeometry 1.47 
+                                                   ... osEnv 0.11          ... handle ghostscript on windows 
+--------------------------------------------------------------------------
+                            15:00  2046,00         3.4.02.48
 
 
 
