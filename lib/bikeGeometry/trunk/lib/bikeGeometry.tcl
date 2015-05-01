@@ -234,6 +234,12 @@
  #          ... bikeGeometry::get_ComponentDir
  #              ... normalize directory
  #
+ # 1.48 - 20150501
+ #      debug:
+ #          ... bikeGeometry::create_ChainStay_RearMockup
+ #              ... handle shorter completLength then resulting length of chainstay
+ #
+ #
  # 1.xx refactor
  #          split project completely from bikeGeometry
  #
@@ -241,7 +247,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.47
+    package provide bikeGeometry 1.48
         #
     package require vectormath
         #

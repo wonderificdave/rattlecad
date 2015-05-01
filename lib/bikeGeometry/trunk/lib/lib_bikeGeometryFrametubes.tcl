@@ -167,25 +167,16 @@
             set Center(ChainStay_DO)    [ vectormath::addVector $Center(RearHub) [ list $RearDropout(OffsetCS)  [ expr $Length(04) + $RearDropout(OffsetCS_TopView)] ] ]
             set Center(00)              [ list [expr -1.0 * $Length(01)] $Length(03) ] 
             set Center(ChainStay_00)    [ vectormath::cathetusPoint $Center(ChainStay_DO) $Center(00) [expr 0.5 * $ChainStay(WidthBB)] opposite ]
-            set ChainStay_x             [ expr abs([lindex $Center(ChainStay_DO) 0 ])]
+            set ChainStay_Start_X       [ expr abs([lindex $Center(ChainStay_DO) 0 ])]
                 
                 # puts "  -> \$Center(ChainStay_DO) $Center(ChainStay_DO)"
                 # puts "  -> \$Geometry(ChainStay_Length) $Geometry(ChainStay_Length)"
-                # puts "  -> \$ChainStay_x  $ChainStay_x"
+                # puts "  -> \$ChainStay_Start_X  $ChainStay_Start_X"
             
             set p_CS_BB [list [expr -1.0 * $Length(01)] $Length(03)]                   
                 # puts "   \$p_CS_BB                   $p_CS_BB"
       
       
-                # -- check tubeLength complete
-            set segmentSummary [expr $ChainStay(profile_x01) + $ChainStay(profile_x02) + $ChainStay(profile_x03)]
-                # puts "  -- 01  $ChainStay(profile_x01)"
-                # puts "  -- 02  $ChainStay(profile_x02)"
-                # puts "  -- 03  $ChainStay(profile_x03)"
-                # puts "  -- ++  $ChainStay(completeLength)"
-            if {$segmentSummary > $ChainStay(completeLength)} {
-                set ChainStay(completeLength) [expr $segmentSummary + 10]
-            }
                 # puts "  -- ++  $ChainStay(completeLength)"
                 # -- tube profile
             set profile_y00   $ChainStay(profile_y00)
@@ -209,7 +200,9 @@
       
       
                 # -- tube centerline
-            set max_length     $ChainStay(completeLength)
+                # max_length > $Geometry(ChainStay_Length)
+                # set max_length     $ChainStay(completeLength)
+            set max_length     [expr $Geometry(ChainStay_Length) - $RearDropout(OffsetCS) + 20]
             set S01_length     $ChainStay(segmentLength_01)       
             set S02_length     $ChainStay(segmentLength_02)       
             set S03_length     $ChainStay(segmentLength_03)       
@@ -261,7 +254,7 @@
                         $S01_length $S02_length $S03_length $S04_length $my_S05_length \
                         $S01_angle  $S02_angle  $S03_angle  $my_S04_angle \
                         $S01_radius $S02_radius $S03_radius $S04_radius \
-                        $ChainStay_x]
+                        $ChainStay_Start_X]
                                     
                 # -- get smooth centerLine
             set retValues       [bikeGeometry::tube::init_centerLine $centerLineDef] 
@@ -285,7 +278,7 @@
                 # puts "  -> \$angleIS $angleIS"
                 # puts "  -> \$angleRotation $angleRotation"
                 
-                # -- prepare $outLine for exprot 
+                # -- prepare $outLine for export 
             set outLineOriented [vectormath::rotatePointList {0 0} [bikeGeometry::flatten_nestedList $outLineOrient]    $angleRotation]    
             
                 # -- orient $centerLineUnCut
@@ -295,7 +288,7 @@
                 
                 # -- get centerLine & cutLength (center BB]
                 
-            set retValue [bikeGeometry::tube::cut_centerLine $centerLineUnCut $ChainStay_x]
+            set retValue [bikeGeometry::tube::cut_centerLine $centerLineUnCut $ChainStay_Start_X]
             set centerLine    [lindex $retValue 0]
             set cuttingLength [lindex $retValue 1]
                 #
@@ -328,20 +321,52 @@
             set CenterLine(RearMockup)          [format_XcommaY [bikeGeometry::flatten_nestedList $centerLine]]
             set CenterLine(RearMockup_UnCut)    [format_XcommaY $centerLineUnCut]
                 #
-                # --- top View
-            set l_00  0
-            set l_01  [expr $l_00 + $profile_x01]
-            set l_02  [expr $l_01 + $profile_x02]
-            set l_03  [expr $l_02 + $profile_x03]
-            set l_04  [expr $l_03 + 250]
-            set Polygon(ChainStay_xy)   [list [format "%s,%s %s,%s %s,%s %s,%s" \
-                                                                                $l_00 [expr 0.5 * $profile_y00] \
-                                                                                $l_01 [expr 0.5 * $profile_y01] \
-                                                                                $l_02 [expr 0.5 * $profile_y02] \
-                                                                                $l_03 [expr 0.5 * $profile_y03] \
-                                                                                $l_04 [expr 0.5 * $profile_y03] \
-                                                                              ]
-                                                                        ]
+                # --- top Profile View
+                # $ChainStay(completeLength)
+                # set l_00  0
+                # set l_01  [expr $l_00 + $profile_x01]
+                # set l_02  [expr $l_01 + $profile_x02]
+                # set l_03  [expr $l_02 + $profile_x03]
+                # set l_04  [expr $l_03 + 250]
+                #
+                # set dy_01  [expr ($profile_y01 - $profile_y00) / $profile_x01]
+                # set dy_02  [expr ($profile_y02 - $profile_y01) / $profile_x02]
+                # set dy_03  [expr ($profile_y03 - $profile_y02) / $profile_x03]
+                #
+            set summLength  0
+            set prev_xy     [list 0 [expr 0.5 * $profile_y00]]
+            set polygon     $prev_xy
+                # puts "\n   ... -> \$ChainStay(completeLength) $ChainStay(completeLength)"
+                # set ChainStay(completeLength) 180
+                # puts "\n   ... -> \$ChainStay(completeLength) $ChainStay(completeLength)"
+            foreach {segment_x segment_y} [list $profile_x01 $profile_y01 \
+                                                $profile_x02 $profile_y02 \
+                                                $profile_x03 $profile_y03 \
+                                                $ChainStay(completeLength)  $profile_y03] {
+                    # puts "    $segment_x $segment_y"
+                foreach {prev_x prev_y} $prev_xy break
+                set newLength [expr $prev_x + $segment_x]
+                if {$newLength < $ChainStay(completeLength)} {
+                        # puts " $prev_x $prev_y"
+                    set newWidth    [expr 0.5 * $segment_y]
+                    set this_xy     [list $newLength $newWidth]
+                    lappend polygon $newLength $newWidth
+                        # puts "     ... $this_xy"
+                    set prev_xy $this_xy
+                } else {
+                    set diffLength  [expr $ChainStay(completeLength) - $prev_x]
+                    set newLength   [expr $prev_x + $diffLength]
+                    set segment_y   [expr 0.5 * $segment_y]
+                    set newWidth    [expr $prev_y + (($segment_y - $prev_y) / $segment_x) * $diffLength]
+                    set this_xy [list $newLength $newWidth]
+                    lappend polygon $newLength $newWidth
+                        # puts "     ... $this_xy"
+                    break
+                }
+            }
+                #                                
+            set Polygon(ChainStay_xy)   $polygon
+                                                
                 # --- return values
             return
                 # 
