@@ -198,7 +198,11 @@
                                 set ChainStay(centerLine)      [vectormath::addVectorPointList $ChainStay(start) $ChainStay(centerLine)]
                                 set ChainStay(centerLineUnCut) [vectormath::addVectorPointList $ChainStay(start) $ChainStay(centerLineUnCut)]
                                 set ChainStay(polygon)         [vectormath::addVectorPointList $ChainStay(start) $ChainStay(polygon)]
-                                  #    
+                                  # 
+
+                                #
+                                #
+                                # puts "\n<I>     ... \$ChainStay(start) $ChainStay(start)\n"  
                                 
                                   # puts "\n --> \$ChainStay(ctrLines) $ChainStay(ctrLines)"
                                 set tube_CS_left    [ $cv_Name create polygon  $ChainStay(polygon)        -fill $rattleCAD::view::colorSet(chainStay) \
@@ -434,6 +438,50 @@
                 #
             return           
                 #
+    }
+
+    proc rattleCAD::cv_custom::___create_ChainStay______tbd {} {            
+                # -- ChainStay
+            switch [rattleCAD::model::get_Config ChainStay] {
+                   {straight}   -
+                   {bent}     { set ChainStay(start)           [rattleCAD::model::get_Position ChainStay_RearMockup]
+                                set ChainStay(polygon)         [rattleCAD::model::get_Polygon  ChainStay_RearMockup {0 0}]
+                                set ChainStay(ctrLines)        [format_XspaceY [rattleCAD::model::get_CenterLine RearMockup_CtrLines]]
+                                set ChainStay(centerLine)      [format_XspaceY [rattleCAD::model::get_CenterLine RearMockup]]
+                                set ChainStay(centerLineUnCut) [format_XspaceY [rattleCAD::model::get_CenterLine RearMockup_UnCut]]
+                                    # 
+                                set ChainStay(centerLine)      [vectormath::addVectorPointList $ChainStay(start) $ChainStay(centerLine)]
+                                set ChainStay(centerLineUnCut) [vectormath::addVectorPointList $ChainStay(start) $ChainStay(centerLineUnCut)]
+                                set ChainStay(polygon)         [vectormath::addVectorPointList $ChainStay(start) $ChainStay(polygon)]
+                                  #    
+                                
+                                puts "\n<D>   -> \$profile_xcl $profile_xcl \n"
+                                puts "\n<D>   -> \$profile_xcl $profile_xcl \n"
+
+                                
+                                  # puts "\n --> \$ChainStay(ctrLines) $ChainStay(ctrLines)"
+                                set tube_CS_left    [ $cv_Name create polygon  $ChainStay(polygon)        -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                                                          -outline black  -tags __Tube__ ]
+                                set tube_CS_CLine   [ $cv_Name create line     $ChainStay(centerLine)  -fill $rattleCAD::view::colorSet(chainStay_CL) \
+                                                                                                          -tags __CenterLine__ ]
+                                    set polygon_opposite {}
+                                    foreach {x y}  $ChainStay(polygon) {
+                                            lappend polygon_opposite $x [expr -1.0 * $y]
+                                    }  
+                                set tube_CS_right   [ $cv_Name create polygon     $polygon_opposite       -fill $rattleCAD::view::colorSet(chainStay) \
+                                                                                                          -outline black  -tags {__Tube__} ]
+                                  
+                                rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $tube_CS_CLine      option_ChainStay
+                                rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $tube_CS_left       option_ChainStay
+                                rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $tube_CS_right      option_ChainStay
+                                    #
+                              }
+                   default    { 
+                                set ChainStay(polygon)      {} 
+                                set ChainStay(centerLine)   {}
+                              }
+            }
+    
     }
 
     proc rattleCAD::cv_custom::create_Tyre {} {
@@ -864,25 +912,25 @@
     }
 
     proc rattleCAD::cv_custom::create_tubeProfile_Edit {offset} {
-          #
+            #
         variable sect_Points
-          #
+            #
         upvar  1 cv_Name    ext_cvName 
         upvar  1 stageScale ext_stageScale
-          #
+            #
         upvar  1 Length     ext_Length
         upvar  1 Center     ext_Center
         upvar  1 ChainStay  ext_ChainStay
-          #
+            #
         upvar  1 Colour     ext_Colour
-          #
+            #
             # puts "  -> create_tubeProfile_Edit: \$ext_Length"
             # parray  ext_Length
             # puts "  -> create_tubeProfile_Edit: \$ext_Center"
             # parray ext_Center
             # puts "  -> create_tubeProfile_Edit: \$ext_ChainStay"
             # parray ext_ChainStay
-            
+            #
         set profile_y00   [rattleCAD::model::get_Scalar ChainStay profile_y00]
         set profile_x01   [rattleCAD::model::get_Scalar ChainStay profile_x01]
         set profile_y01   [rattleCAD::model::get_Scalar ChainStay profile_y01]
@@ -890,8 +938,9 @@
         set profile_y02   [rattleCAD::model::get_Scalar ChainStay profile_y02]
         set profile_x03   [rattleCAD::model::get_Scalar ChainStay profile_x03]
         set profile_y03   [rattleCAD::model::get_Scalar ChainStay WidthBB]
-          # set profile_y03   [rattleCAD::model::get_Scalar ChainStay profile_y03]
+            # set profile_y03   [rattleCAD::model::get_Scalar ChainStay profile_y03]
         set profile_xcl   [rattleCAD::model::get_Scalar ChainStay completeLength]
+            #
             # puts "$profile_y00"
             # puts "$profile_x01"
             # puts "$profile_y01"
@@ -899,61 +948,75 @@
             # puts "$profile_y02"
             # puts "$profile_x03"
             # puts "\$profile_y03 $profile_y03"
-            # puts "$profile_xcl"
-            # exit
-
-          #
+            #
+            #
         set cuttingLeft   [rattleCAD::model::get_Scalar ChainStay cuttingLeft]
         set cuttingLength [rattleCAD::model::get_Scalar ChainStay cuttingLength]   
-
-          #    
-        # set length       $profile_xcl
-        # set length       [expr $profile_x01 + $profile_x02 + $profile_x03]
-          # set profile_x04   [expr $ext_Length(ChainStay) - $length + 15]
-        
-          # set p00  [list [expr -1 * $ext_Length(ChainStay)] 0]
+            #
+            # set p00  [list [expr -1 * $ext_Length(ChainStay)] 0]
         set p0    [vectormath::addVector $ext_Center(ChainStay_DO)  $offset]
         set p1    [vectormath::addVector  $p0  [list $profile_x01   0]]
         set p2    [vectormath::addVector  $p1  [list $profile_x02   0]]
         set p3    [vectormath::addVector  $p2  [list $profile_x03   0]]
         set p4    [vectormath::addVector  $p0  [list $profile_xcl   0]]
-          # 
+            # 
         set p_cutLeft  [vectormath::addVector  $p0         [list $cuttingLeft   0]]
         set p_cutRight [vectormath::addVector  $p_cutLeft  [list $cuttingLength 0]]
-          #
-          # puts " .. ChainStay - TubeProfile: [appUtil::flatten_nestedList $p0 $p1 $p2 $p3 $p4]"
+            #
+            # puts " .. ChainStay - TubeProfile: [appUtil::flatten_nestedList $p0 $p1 $p2 $p3 $p4]"
         
         set p00 [vectormath::addVector $p0  [list 0 [expr  0.5 * $profile_y00]]]
+            #
+        set chainStayProfile_north [rattleCAD::model::get_Polygon ChainStay_xy]
+        set chainStayProfile_south {} 
+        foreach {x y} $chainStayProfile_north {
+            set y [expr -1 * $y]
+            lappend chainStayProfile_south [list $x $y]
+        }
+            #
+        set chainStayProfile $chainStayProfile_north
+            #
+        foreach {xy} [lreverse $chainStayProfile_south] {
+            foreach {x y} $xy break
+            lappend chainStayProfile $x $y
+        }
+            #
+        set chainStayProfile [vectormath::addVectorPointList $p0 $chainStayProfile]
+            #
+        $ext_cvName  create polygon \
+                            $chainStayProfile    \
+                            -fill $rattleCAD::view::colorSet(chainStay) \
+                            -outline $rattleCAD::view::colorSet(frameTube_OL) \
+                            -tags __CenterLine__
+            #
+        $ext_cvName  create   centerline \
+                            [appUtil::flatten_nestedList $p0 $p4] \
+                            -fill $rattleCAD::view::colorSet(chainStay_CL) \
+                            -tags __CenterLine__   
+            #
+        set textPosition [vectormath::addVector $p0  [list -70 -2.5]]
+        set item  [$ext_cvName create draftText $textPosition -text "ChainStay Profile" -size [expr 5*$ext_stageScale]]
+        $ext_cvName    addtag __CenterLine__ withtag  $item
+            #
+            #
+          # $ext_cvName create circle     $p0       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
+          # $ext_cvName create circle     $p1       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
+          # $ext_cvName create circle     $p2       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
+          # $ext_cvName create circle     $p3       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
+            #
+            #
         set p01 [vectormath::addVector $p1  [list 0 [expr  0.5 * $profile_y01]]]
         set p02 [vectormath::addVector $p2  [list 0 [expr  0.5 * $profile_y02]]]
         set p03 [vectormath::addVector $p3  [list 0 [expr  0.5 * $profile_y03]]]
         set p04 [vectormath::addVector $p4  [list 0 [expr  0.5 * $profile_y03]]]
-        
+            #
         set p14 [vectormath::addVector $p4  [list 0 [expr -0.5 * $profile_y03]]]
         set p13 [vectormath::addVector $p3  [list 0 [expr -0.5 * $profile_y03]]]
         set p12 [vectormath::addVector $p2  [list 0 [expr -0.5 * $profile_y02]]]
         set p11 [vectormath::addVector $p1  [list 0 [expr -0.5 * $profile_y01]]]
         set p10 [vectormath::addVector $p0  [list 0 [expr -0.5 * $profile_y00]]]
-        
-        set pointList [appUtil::flatten_nestedList $p00 $p01 $p02 $p03 $p04   $p14 $p13 $p12 $p11 $p10]   
-        
-        $ext_cvName  create   polygon $pointList                                  -fill $rattleCAD::view::colorSet(chainStay) \
-                                                                                  -outline $rattleCAD::view::colorSet(frameTube_OL) \
-                                                                                  -tags __CenterLine__
-                                                                                  
-        $ext_cvName  create   centerline    [appUtil::flatten_nestedList $p0 $p4] -fill $rattleCAD::view::colorSet(chainStay_CL) \
-                                                                                  -tags __CenterLine__   
-        
-        set textPosition [vectormath::addVector $p0  [list -70 -2.5]]
-        set item  [$ext_cvName create draftText $textPosition -text "ChainStay Profile" -size [expr 5*$ext_stageScale]]
-        $ext_cvName    addtag __CenterLine__ withtag  $item
-          
-          
-          # $ext_cvName create circle     $p0       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
-          # $ext_cvName create circle     $p1       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
-          # $ext_cvName create circle     $p2       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
-          # $ext_cvName create circle     $p3       -radius 2  -outline red         -width 1.0        -tags __CenterLine__
-        
+            #
+            #
         $ext_cvName create circle     $p00       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
         $ext_cvName create circle     $p01       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
         $ext_cvName create circle     $p02       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
@@ -962,27 +1025,27 @@
         $ext_cvName create circle     $p11       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
         $ext_cvName create circle     $p12       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
         $ext_cvName create circle     $p13       -radius 1  -outline red         -width 1.0        -tags __CenterLine__
-        
-          # -- define display length
-          # set sectArea_01 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutLeft   __dragObject__]                                    
-          # set sectArea_02 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutRight  __dragObject__]                                    
-          # set sectArea_01 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutLeft ]                                    
+            #
+            # -- define display length
+            # set sectArea_01 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutLeft   __dragObject__]                                    
+            # set sectArea_02 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutRight  __dragObject__]                                    
+            # set sectArea_01 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutLeft ]                                    
         set sectArea_02 [rattleCAD::cv_custom::create_sectionField  $ext_cvName  $p_cutRight]                                    
-          #
-          # $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_01
-          # $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_02
-          #
+            #
+            # $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_01
+            # $ext_cvName addtag   __dragObject_x__  withtag  $sectArea_02
+            #
         set sect_Points(0)   $p0
         set sect_Points(1)   $p_cutLeft
         set sect_Points(2)   $p_cutRight
-          #
-          # canvasCAD::register_dragObjects   $ext_cvName    $sectArea_01   [namespace current]::move_sectPoints  1
-          # canvasCAD::register_dragObjects   $ext_cvName    $sectArea_02   [namespace current]::move_sectPoints  2
-          #
-          # set tagList [$ext_cvName gettags $ctrlArea_99]
-          # puts "\n -> $tagList  \n"
+            #
+            # canvasCAD::register_dragObjects   $ext_cvName    $sectArea_01   [namespace current]::move_sectPoints  1
+            # canvasCAD::register_dragObjects   $ext_cvName    $sectArea_02   [namespace current]::move_sectPoints  2
+            #
+            # set tagList [$ext_cvName gettags $ctrlArea_99]
+            # puts "\n -> $tagList  \n"
 
-          # -- dimension
+            # -- dimension
         set _dim_x0          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p0 $p4 ] \
                                                                 horizontal    [expr -38 * $ext_stageScale]   0 \
                                                                 $ext_Colour(result) ]
@@ -996,15 +1059,15 @@
                                                                 horizontal    [expr -25 * $ext_stageScale]   0 \
                                                                 $ext_Colour(result) ]
           
-          # -- cutting Length
-          # set _dim_c1      [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $sect_Points(0) $sect_Points(1) ] \
+            # -- cutting Length
+            # set _dim_c1      [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $sect_Points(0) $sect_Points(1) ] \
                                                                 horizontal    [expr -25 * $ext_stageScale]   0 \
                                                                 $ext_Colour(result) ]
         set _dim_c2          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $sect_Points(1) $sect_Points(2) ] \
                                                                 horizontal    [expr  25 * $ext_stageScale]   0 \
                                                                 $ext_Colour(result) ]
           
-          # --
+            # --
         set _dim_w0          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p00 $p10 ] \
                                                                 vertical      [expr  15 * $ext_stageScale]    0 \
                                                                 $ext_Colour(result) ]
@@ -1017,11 +1080,11 @@
         set _dim_w3          [ $ext_cvName dimension  length      [ appUtil::flatten_nestedList   $p03 $p13 ] \
                                                                 vertical      [expr -15 * $ext_stageScale]    0 \
                                                                 $ext_Colour(result) ]
-          #
+            #
         $ext_cvName raise $sectArea_02
-          #
+            #
           
-          #
+            #
         rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_x0     single_ChainStay_ProfileLengthComplete
         rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_x1     single_ChainStay_ProfileLength_01
         rattleCAD::view::gui::dimension_CursorBinding   $ext_cvName     $_dim_x2     single_ChainStay_ProfileLength_02
