@@ -629,7 +629,7 @@ namespace eval bikeGeometry::tube {
                     # -- set centerLine of bent tube
                 set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
                                         $P01_angle  $P02_angle  $P03_angle   $P04_angle \
-                                        $S01_radius $S02_radius $S03_radius  $S04_radius]              
+                                        $S01_radius $S02_radius $S03_radius  $S04_radius ]              
                 
     
                     # -- set profile of bent tube
@@ -685,7 +685,7 @@ namespace eval bikeGeometry::tube {
                     # -- set centerLine of straight tube
                 set centerLineDef [list $S01_length $S02_length $S03_length  $S04_length  $S05_length \
                                         $P01_angle  $P02_angle  $P03_angle   $P04_angle \
-                                        $S01_radius $S02_radius $S03_radius  $S04_radius] 
+                                        $S01_radius $S02_radius $S03_radius  $S04_radius ] 
                                         
                     # -- set profile of straight tube       
                 set tubeProfile [bikeGeometry::tube::init_tubeProfile $profileDef]                          
@@ -820,7 +820,7 @@ namespace eval bikeGeometry::tube {
         set outLine       [bikeGeometry::flatten_nestedList     $outLineLeft $outLineRight]
         set angleRotation [expr $angleRotation - $headTube_Angle]
 
-
+            #
         set addVector [list $dropOutOffset $dropOutPerp]
             # set addVector [vectormath::addVector $dropOutPos [list $dropOutOffset $dropOutPerp]]
             # puts "  ->    \$dropOutPos $dropOutPos"     
@@ -843,12 +843,12 @@ namespace eval bikeGeometry::tube {
             # puts "\$centerLineCut $centerLineCut"    
 
             # -- get oriented brakeDefLine
-        set brakeDefLine  [lrange $outLineLeft end-1 end]
+        set brakeDefLine [lrange $outLineRight 0 1]
         set brakeDefLine [vectormath::addVectorPointList       $addVector [bikeGeometry::flatten_nestedList $brakeDefLine]]
         set brakeDefLine [vectormath::rotatePointList          {0 0} $brakeDefLine $angleRotation]
         set brakeDefLine [vectormath::addVectorPointList       $dropOutPos $brakeDefLine]
             # puts "\$brakeDefLine  $brakeDefLine"    
-
+        
             # puts " <I> .. \$outLine $outLine"
         return [list $outLine $centerLineCut $brakeDefLine $dropOutAngle $offsetDO]
             # return [list $outLine $centerLine $brakeDefLine $dropOutAngle $offsetDO]
@@ -893,7 +893,7 @@ namespace eval bikeGeometry::tube {
         variable arcPrecission
         
         set linePosition 0
-          # set bentProfile {}
+            # set bentProfile {}
           
         set lineOffset  [get_tubeProfileOffset $tubeProfile $linePosition]
         if {$side == {left}} {
@@ -901,15 +901,16 @@ namespace eval bikeGeometry::tube {
         } else {
             #lappend bentProfile [list $linePosition [expr -1.0 * $lineOffset]]
         }
-          # puts "        ---> $bentProfile"
+            # puts "        ---> $bentProfile"
         set xPrev {}
         set yPrev {}
-          #
+            #
         set p_last [lindex $centerLine end]
         set p_last_1    [lindex $centerLine end-1]
-        set vct_last    [vectormath::unifyVector $p_last $p_last_1 20]
-        set p_apnd      [vectormath::addVector $p_last $vct_last]
-        lappend centerLine $p_apnd
+            # removed by 1.49
+            # set vct_last    [vectormath::unifyVector $p_last_1 $p_last 0.5]
+            # set p_apnd      [vectormath::addVector $p_last $vct_last]
+            # lappend centerLine $p_apnd
             #
         set i 0
         while {$i < [llength $centerLine]-1} {

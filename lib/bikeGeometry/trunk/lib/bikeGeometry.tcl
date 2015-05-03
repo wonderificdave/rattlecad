@@ -239,6 +239,10 @@
  #          ... bikeGeometry::create_ChainStay_RearMockup
  #              ... handle shorter completLength then resulting length of chainstay
  #
+ # 1.49 - 20150503
+ #      debug:
+ #          ... bikeGeometry::tube::create_tubeShape
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -247,7 +251,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.48
+    package provide bikeGeometry 1.49
         #
     package require vectormath
         #
