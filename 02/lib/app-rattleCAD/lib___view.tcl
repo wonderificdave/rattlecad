@@ -457,6 +457,10 @@ namespace eval rattleCAD::view {
                 #
                 # --- parameter to edit ---
             set updateMode value
+                #
+            set editConfig_Components   {}
+            set editConfig_Entries      {}
+                #
             set index 0
             foreach key  $_arrayNameList {
                 set index       [expr $index +1]
@@ -480,6 +484,9 @@ namespace eval rattleCAD::view {
                     grid            $widget_1    $widget_2    -sticky news
                     grid configure  $widget_1    -padx 3 -sticky nws
                     grid configure  $widget_2    -padx 2
+                        #
+                    lappend editConfig_Entries $widget_2    
+                        #
                 } else {
                     grid            $widget_1    -sticky news -columnspan 2
                     grid configure  $widget_1    -padx 2 -pady 2
@@ -487,9 +494,10 @@ namespace eval rattleCAD::view {
                         # update
                         # [namespace current]::svgEdit::selectCurrent
                         #
+                    lappend editConfig_Components $widget_1
+                        #
                     update
                         #
-                    catch {[namespace current]::svgEdit::selectCurrent}
                     catch {[namespace current]::svgEdit::selectCurrent}
                         #
                         # 
@@ -497,7 +505,18 @@ namespace eval rattleCAD::view {
                     #
             }
 
-                #                    
+                #
+                #
+            # puts "    ... \$editConfig_Components [llength $editConfig_Components] - $editConfig_Components"    
+            # puts "    ... \$editConfig_Entries    [llength $editConfig_Entries] - $editConfig_Entries"    
+                #
+            if {[llength $editConfig_Components] < 1} {
+                set cvEntry [lindex $editConfig_Entries 0]
+                    #puts "   ... $cvEntry"
+                catch {focus $cvEntry}
+                catch {$cvEntry selection range 0 end}
+            }
+                #
             return $cvEdit                
                 #
     }
@@ -801,7 +820,7 @@ namespace eval rattleCAD::view {
         rattleCAD::cv_custom::updateView         [rattleCAD::view::gui::current_canvasCAD]
         return
     } 
-    
+
 
     #-------------------------------------------------------------------------
         #  update Project               
