@@ -499,6 +499,7 @@ namespace eval rattleCAD::view {
                     update
                         #
                     catch {[namespace current]::svgEdit::selectCurrent}
+                    catch {[namespace current]::svgEdit::selectCurrent}
                         #
                         # 
                 }
