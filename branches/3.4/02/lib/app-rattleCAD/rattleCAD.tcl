@@ -91,7 +91,7 @@
     array set APPL_CompLocation {}
     
     variable projectDOM
-    variable exec_GhostScript
+    variable exec_GhostScript {}
         
         #
     namespace eval rattleCAD {}
