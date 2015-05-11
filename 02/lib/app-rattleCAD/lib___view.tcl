@@ -35,7 +35,7 @@
 #    namespace:  rattleCAD::view
 # ---------------------------------------------------------------------------
 #
-# 
+#
 
 
 namespace eval rattleCAD::view {
@@ -43,15 +43,15 @@ namespace eval rattleCAD::view {
     
     #-------------------------------------------------------------------------
         #  store createEdit-widgets position
-	variable editPosition   {0 0}                          
+    variable editPosition   {0 0}                          
 
     variable _drag          ; array set _drag        {}
     variable _updateValue   ; array set _updateValue {}
 
-	variable canvasUpdate   ; array set canvasUpdate {}  
+    variable canvasUpdate   ; array set canvasUpdate {}  
     variable canvasRefit    ; array set canvasRefit  {}  
     variable noteBook_top
-    variable cboxWidth      20
+    variable cboxWidth      15
 
     variable colorSet       ; array set colorSet {
                                     frameTube      {wheat}
@@ -68,26 +68,26 @@ namespace eval rattleCAD::view {
 
     proc rattleCAD::view::updateView {{mode {}}} {
             
-			variable noteBook_top
+            variable noteBook_top
             variable canvasUpdate
             variable canvasRefit
             
-			set currentTab         [$rattleCAD::view::gui::noteBook_top select]
-			set cvName             [rattleCAD::view::gui::notebook_getVarName $currentTab]
-			set varName            [lindex [split $cvName {::}] end]
-		
+            set currentTab         [$rattleCAD::view::gui::noteBook_top select]
+            set cvName             [rattleCAD::view::gui::notebook_getVarName $currentTab]
+            set varName            [lindex [split $cvName {::}] end]
+        
             set updateDone         {no}
-			set refitDone          {no}
-			
+            set refitDone          {no}
+            
                 # -- register each canvas
-			if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
+            if { [catch { set lastUpdate $canvasUpdate($varName) } msg] } {
                 set canvasUpdate($varName) [ expr $rattleCAD::control::model_Update -1 ]
-				set lastUpdate             $canvasUpdate($varName)
+                set lastUpdate             $canvasUpdate($varName)
             }
            
-			if { [catch { set lastRefit $canvasRefit($varName) } msg] } {
+            if { [catch { set lastRefit $canvasRefit($varName) } msg] } {
                 set canvasRefit($varName)  [ expr $rattleCAD::control::window_Update -1 ]
-				set lastRefit              $canvasRefit($varName)
+                set lastRefit              $canvasRefit($varName)
             }
            
             set timeStart     [clock milliseconds]
@@ -96,9 +96,9 @@ namespace eval rattleCAD::view {
                 # -- update stage content if parameters changed
             puts "\n"
             puts "     -------------------------------"
-			puts "      rattleCAD::view:updateView  "
+            puts "      rattleCAD::view:updateView  "
             puts "         \$canvasUpdate($varName)"
-			puts "               last:   $canvasUpdate($varName)  -> [clock format [expr $canvasUpdate($varName)/1000] -format {%Y.%m.%d / %H:%M:%S}]"
+            puts "               last:   $canvasUpdate($varName)  -> [clock format [expr $canvasUpdate($varName)/1000] -format {%Y.%m.%d / %H:%M:%S}]"
             puts "               new:    $rattleCAD::control::model_Update  -> [clock format [expr $rattleCAD::control::model_Update/1000] -format {%Y.%m.%d / %H:%M:%S}]"
             puts "               ---------------------------------"
             puts "            -> $rattleCAD::control::model_Update\n"
@@ -129,11 +129,11 @@ namespace eval rattleCAD::view {
                 #
                 # -- refit stage if window size changed
             if { $lastRefit < $rattleCAD::control::window_Update } {
-					puts "\n             ... rattleCAD::view:updateView ... refitStage ........ $varName\n"
-					update
-					# catch {$varName refitStage}
-					rattleCAD::view::gui::notebook_refitCanvas
-					set refitDone  {done}       
+                    puts "\n             ... rattleCAD::view:updateView ... refitStage ........ $varName\n"
+                    update
+                    # catch {$varName refitStage}
+                    rattleCAD::view::gui::notebook_refitCanvas
+                    set refitDone  {done}       
             }
                 #
                 # -- configure cursor
@@ -150,13 +150,13 @@ namespace eval rattleCAD::view {
             if {$updateDone == {done}} {
                 set canvasUpdate($varName) [ clock milliseconds ]
             }
-			if {$refitDone == {done}} {
+            if {$refitDone == {done}} {
                 set canvasRefit($varName)  [ clock milliseconds ]
             }
-			
-			puts ""
-			puts "           -> \$canvasUpdate($varName) $canvasUpdate($varName)"
-			puts "           -> \$canvasRefit($varName)  $canvasRefit($varName)\n"
+            
+            puts ""
+            puts "           -> \$canvasUpdate($varName) $canvasUpdate($varName)"
+            puts "           -> \$canvasRefit($varName)  $canvasRefit($varName)\n"
             puts "      rattleCAD::view:updateView  ... done"
             puts "     -------------------------------"
           
@@ -264,18 +264,18 @@ namespace eval rattleCAD::view {
             #
             # appUtil::get_procHierarchy
             #
-		# variable _updateValue
+        # variable _updateValue
             #
-			# appUtil::get_procHierarchy
-			# appUtil::appDebug p
-			# appUtil::appDebug f
+            # appUtil::get_procHierarchy
+            # appUtil::appDebug p
+            # appUtil::appDebug f
             #
-		puts ""
-		puts "   -------------------------------"
-		puts "    create_EditContainer"
-		puts "       x / y:           $x / $y"
-		puts "       cv_Name:         $cv_Name"
-		puts "       title:           $title"
+        puts ""
+        puts "   -------------------------------"
+        puts "    create_EditContainer"
+        puts "       x / y:           $x / $y"
+        puts "       cv_Name:         $cv_Name"
+        puts "       title:           $title"
         puts "       lineCount:       $lineCount"
         
             #
@@ -364,20 +364,20 @@ namespace eval rattleCAD::view {
     proc rattleCAD::view::fit_EditContainer {cv cvEdit} {
             #
             # --- reposition if out of canvas border ---
-		update
+        update
             #
-		set id_bbox   [ $cv bbox $cvEdit ]
+        set id_bbox   [ $cv bbox $cvEdit ]
             #
         set cv_width  [ winfo width  $cv ]
-		set cv_height [ winfo height $cv ]
-			# puts "   -> bbox $id_bbox"
-		foreach {dx dy} {0 0} break
+        set cv_height [ winfo height $cv ]
+            # puts "   -> bbox $id_bbox"
+        foreach {dx dy} {0 0} break
             #
-		if {[lindex $id_bbox 0] < 4}                    { set dx [expr 4  - [lindex $id_bbox 0]]}
-		if {[lindex $id_bbox 1] < 4}                    { set dy [expr 4  - [lindex $id_bbox 1]]}
+        if {[lindex $id_bbox 0] < 4}                    { set dx [expr 4  - [lindex $id_bbox 0]]}
+        if {[lindex $id_bbox 1] < 4}                    { set dy [expr 4  - [lindex $id_bbox 1]]}
             #
         if {[lindex $id_bbox 2] > [expr $cv_width  -4]} { set dx [expr $cv_width  - [lindex $id_bbox 2] -4] }
-		if {[lindex $id_bbox 3] > [expr $cv_height -4]} { set dy [expr $cv_height - [lindex $id_bbox 3] -4] }
+        if {[lindex $id_bbox 3] > [expr $cv_height -4]} { set dy [expr $cv_height - [lindex $id_bbox 3] -4] }
             #
         # puts "            ... $id_bbox"    
         # puts "            ... $dx / $dy"    
@@ -543,11 +543,11 @@ namespace eval rattleCAD::view {
                 }
             default    {}
         }
-		    #
+            #
         set key     [string map {/File {}} $key]
             #
-		foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
-		    #
+        foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
+            #
         # set labelText [format "%s ( %s )" $_array [string trim [ string map {{/} { / }} $_name] " "] ]
         set labelText   [format "%s "   [string trim [ string map {{/} { / }} $_name] " "] ]
             #
@@ -584,16 +584,16 @@ namespace eval rattleCAD::view {
                     set type      {}
                 }
         }
-		    #
+            #
         set labelText   [rattleCAD::view::get_LabelText $key]
             #
         set cvLabel     [create_ConfigLabel  $cvContentFrame $index ${labelText}]
             #
             #
             #
-		foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
-		    #
-		puts "              <21>    create_Config           -> $key ... $path"
+        foreach {_array _name path} [rattleCAD::model::unifyKey $key] break
+            #
+        puts "              <21>    create_Config           -> $key ... $path"
             #                                                                 
         switch -exact $type {
             {file} {    set cvConfig    [ create_FileEdit   $cv_Name $cvContentFrame $index $path ]
@@ -626,7 +626,8 @@ namespace eval rattleCAD::view {
                         -textvariable [namespace current]::_updateValue($key) \
                         -justify right \
                         -relief sunken \
-                        -width 10 -bd 1]
+                        -width $cboxWidth \
+                        -bd 1]
         $cvEntry configure -command \
                         "[namespace current]::change_ValueEdit [namespace current]::_updateValue($key) %d"
             #
@@ -660,9 +661,10 @@ namespace eval rattleCAD::view {
         set cvEntry [entry  $cvContentFrame.value_${index} \
                         -textvariable [namespace current]::_updateValue($key) \
                         -justify right \
-                        -relief sunken \
-                        -bd 1  -width 10]
-        	#
+                        -relief  sunken \
+                        -width   $cboxWidth \
+                        -bd 1  ]
+            #
             # --- define bindings ---
         # bind $cvEntry  <MouseWheel>           [list [namespace current]::bind_MouseWheel  [namespace current]::_updateValue($key)  %D]
         bind $cvEntry   <Return>                [list [namespace current]::updateConfig    $cv_Name $key $cvEntry]
@@ -718,8 +720,8 @@ namespace eval rattleCAD::view {
     }
 
     proc rattleCAD::view::change_ValueEdit {textVar direction} {
-			#
-			# --- dynamic update value ---
+            #
+            # --- dynamic update value ---
         set currentValue [set ::$textVar]
             #
             
@@ -758,7 +760,7 @@ namespace eval rattleCAD::view {
         set cvSelect [lindex $cfgWidgets 0]    
         set cvCanvas [lindex $cfgWidgets 1]
             #
-        pack $cvSelect $cvCanvas -side left
+        pack $cvSelect $cvCanvas -side left -fill both -expand true
         
             #
         return $myFrame
@@ -769,7 +771,7 @@ namespace eval rattleCAD::view {
 
 
 
-	#-------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
         #  createEdit - sub procedures 
     proc rattleCAD::view::debug_compare {a b} {
         if {$a != $b} {
@@ -780,10 +782,10 @@ namespace eval rattleCAD::view {
             puts   "       $a"
             puts   "       $b\n"
         }
-    }  	
+    }      
 
 
-	#-------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
         #  bind MouseWheel 
     proc rattleCAD::view::bind_MouseWheel {textVar value} {
         set currentValue [set ::$textVar]
@@ -919,41 +921,41 @@ namespace eval rattleCAD::view {
         #  binding: drag
     proc rattleCAD::view::drag {x y cv id} {
               # appUtil::get_procHierarchy
-		variable _drag
-		set dx [expr {$x - $_drag(lastx)}]
-		set dy [expr {$y - $_drag(lasty)}]
-		set cv_width  [ winfo width  $cv ]
-		set cv_height [ winfo height $cv ]
-		set id_bbox   [ $cv bbox $id ]
-		if {[lindex $id_bbox 0] < 4} {set dx  1}
-		if {[lindex $id_bbox 1] < 4} {set dy  1}
-		if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
-		if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
-	
-		$cv move $id $dx $dy
-		set _drag(lastx) $x
-		set _drag(lasty) $y
+        variable _drag
+        set dx [expr {$x - $_drag(lastx)}]
+        set dy [expr {$y - $_drag(lasty)}]
+        set cv_width  [ winfo width  $cv ]
+        set cv_height [ winfo height $cv ]
+        set id_bbox   [ $cv bbox $id ]
+        if {[lindex $id_bbox 0] < 4} {set dx  1}
+        if {[lindex $id_bbox 1] < 4} {set dy  1}
+        if {[lindex $id_bbox 2] > [expr $cv_width  -4]} {set dx -1}
+        if {[lindex $id_bbox 3] > [expr $cv_height -4]} {set dy -1}
+    
+        $cv move $id $dx $dy
+        set _drag(lastx) $x
+        set _drag(lasty) $y
     }
 
     #-------------------------------------------------------------------------
         #  binding: dragStart
     proc rattleCAD::view::dragStart {x y} {
               # appUtil::get_procHierarchy
-		variable _drag
-		set [namespace current]::_drag(lastx) $x
-		set [namespace current]::_drag(lasty) $y
-		puts "      ... dragStart: $x $y"
+        variable _drag
+        set [namespace current]::_drag(lastx) $x
+        set [namespace current]::_drag(lasty) $y
+        puts "      ... dragStart: $x $y"
     }
 
     #-------------------------------------------------------------------------
         #  create createSelectBox
     proc rattleCAD::view::bind_parent_move {toplevel_widget parent} {
-		  # appUtil::get_procHierarchy
-		if {![winfo exists $toplevel_widget]} {return}
-		set toplevel_x    [winfo rootx $parent]
-		set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
-		wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
-		wm  deiconify     $toplevel_widget
+          # appUtil::get_procHierarchy
+        if {![winfo exists $toplevel_widget]} {return}
+        set toplevel_x    [winfo rootx $parent]
+        set toplevel_y    [expr [winfo rooty $parent]+ [winfo reqheight $parent]]
+        wm  geometry      $toplevel_widget +$toplevel_x+$toplevel_y
+        wm  deiconify     $toplevel_widget
     }
 
 

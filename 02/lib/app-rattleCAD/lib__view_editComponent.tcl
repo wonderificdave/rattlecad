@@ -96,6 +96,9 @@ namespace eval rattleCAD::view::svgEdit {
                 # -----------------
             grid $compList  $f_select.scb_try -sticky news -pady 2
                 #
+            grid rowconfigure    $f_select $compList -weight 1
+            grid columnconfigure $f_select $compList -weight 1
+                #
                 # -----------------
             if {$compCanvas != {}} {
                 $compCanvas destroy
