@@ -244,6 +244,10 @@
  #          ... bikeGeometry::tube::create_tubeShape
  #          ... bikeGeometry::tube::create_ForkBlade
  #
+ # 1.50 - 20150515
+ #      debug:
+ #          ... reformat Polygon(ChainStay_xz)
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -252,7 +256,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.49
+    package provide bikeGeometry 1.50
         #
     package require vectormath
         #

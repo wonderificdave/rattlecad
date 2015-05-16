@@ -1081,7 +1081,7 @@
             project::setValue Result(Tubes/ChainStay/Direction)                     direction   $Direction(ChainStay)
             project::setValue Result(Tubes/ChainStay/End)                           position    $Position(ChainStay_BottomBracket)
             project::setValue Result(Tubes/ChainStay/Polygon)                       polygon     $Polygon(ChainStay)
-            project::setValue Result(Tubes/ChainStay/Profile/xz)                    value       $Polygon(ChainStay_xz)
+            project::setValue Result(Tubes/ChainStay/Profile/xz)                    value       [list $Polygon(ChainStay_xz)]
             project::setValue Result(Tubes/ChainStay/Profile/xy)                    value       [list $Polygon(ChainStay_xy)]
             project::setValue Result(Tubes/ChainStay/RearMockup/CenterLine)         value       [list $CenterLine(RearMockup)]
             project::setValue Result(Tubes/ChainStay/RearMockup/CenterLineUnCut)    value       [list $CenterLine(RearMockup_UnCut)]

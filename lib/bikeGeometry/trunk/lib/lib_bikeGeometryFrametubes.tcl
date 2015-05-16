@@ -120,15 +120,14 @@
             set l_02  [vectormath::length $pt_00 $pt_02]
             set l_03  [vectormath::length $pt_00 $pt_03]
             set l_04  [vectormath::length $pt_00 {0 0}]
-            set Polygon(ChainStay_xz)   [list [format "%s,%s %s,%s %s,%s %s,%s %s,%s" \
-                                                                                $l_00 [expr 0.5*$ChainStay(DiameterSS)] \
-                                                                                $l_01 [expr 0.5*$ChainStay(Height)] \
-                                                                                $l_02 [expr 0.5*$ChainStay(Height)] \
-                                                                                $l_03 [expr 0.5*$ChainStay(HeightBB)] \
-                                                                                $l_04 [expr 0.5*$ChainStay(HeightBB)] \
-                                                                              ]
-                                                                        ]
-
+                #
+            set Polygon(ChainStay_xz)   [list   \
+                                            $l_00 [expr 0.5*$ChainStay(DiameterSS)] \
+                                            $l_01 [expr 0.5*$ChainStay(Height)] \
+                                            $l_02 [expr 0.5*$ChainStay(Height)] \
+                                            $l_03 [expr 0.5*$ChainStay(HeightBB)] \
+                                            $l_04 [expr 0.5*$ChainStay(HeightBB)] \
+                                        ]
     }
 
         
