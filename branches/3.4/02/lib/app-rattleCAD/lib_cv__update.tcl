@@ -207,10 +207,12 @@
             rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Rep
             rattleCAD::rendering::createDecoration   $cv_Name $xy    FrontWheel_Rep
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Fender_Rep              editable   ;# $updateCommand
-            rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierRear             editable   ;# $updateCommand
                 #
             rattleCAD::rendering::createFork         $cv_Name $xy    editable   ;# $updateCommand
             rattleCAD::rendering::createFrame_Tubes  $cv_Name $xy    editable   ;# $updateCommand
+                #
+            rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierRear             editable   ;# $updateCommand
+            rattleCAD::rendering::createDecoration   $cv_Name $xy    CarrierFront            editable   ;# $updateCommand
                 #
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo                    editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    RearWheel_Pos
