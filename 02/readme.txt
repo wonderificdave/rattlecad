@@ -1,5 +1,15 @@
 
 
+3.4.02.59  - 2015.06.20
+-------------------------------------------------------------------------------
+    refactor:
+        ... Base Geometry: change behaviour of BottomBracket Depth/Height in  
+            Stack & Reach 
+            ... bikeGeometry 1.52
+                ... bikeGeometry::set_StackReach_BottomBracketDepth  
+                ... bikeGeometry::set_StackReach_BottomBracketHeight
+
+
 3.4.02.58  - 2015.06.19
 -------------------------------------------------------------------------------
     feature:
