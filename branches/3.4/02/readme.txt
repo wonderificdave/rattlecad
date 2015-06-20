@@ -1,5 +1,13 @@
 
 
+3.4.02.58  - 2015.06.19
+-------------------------------------------------------------------------------
+    feature:
+        ... additional dimension in Frame Deatails for Stack & Reach
+        ... bikeGeometry 1.51
+            ... bikeGeometry::Geometry(HeadTube_Summary)
+
+
 3.4.02.57  - 2015.05.16
 -------------------------------------------------------------------------------
     feature:
