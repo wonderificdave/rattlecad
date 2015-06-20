@@ -286,6 +286,7 @@
             variable BottomBracket
             variable Fork
             variable HeadTube
+            variable HeadSet
             variable TopTube
             variable Steerer
             variable RearWheel
@@ -425,9 +426,13 @@
                 #
                 # set Geometry(RearWheel_Diameter)    [ format "%.3f" $Geometry(RearWheel_Diameter) ]
                 #
-                # --- RearWheel/TyreShoulder --------------------------------
+                # --- RearWheel/TyreShoulder --------------------------
                 #
             set RearWheel(TyreShoulder)     [ expr $Geometry(RearWheel_Radius) - $RearWheel(TyreWidthRadius) ]
+                #
+                # --- HeadTube/Summary --------------------------------
+                #
+            set Geometry(HeadTube_Summary)  [ expr $HeadTube(Length) + $HeadSet(Height_Bottom) ]
                 #
                 # --- FrontWheel/Radius -------------------------------
                 #

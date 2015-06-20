@@ -248,6 +248,10 @@
  #      debug:
  #          ... reformat Polygon(ChainStay_xz)
  #
+ # 1.51 - 20150616
+ #      feature:
+ #          ... bikeGeometry::Geometry(HeadTube_Summary)
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -256,7 +260,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.50
+    package provide bikeGeometry 1.51
         #
     package require vectormath
         #
@@ -612,6 +616,7 @@
         dict set projDict   Scalar      Geometry SeatTube_Angle             $::bikeGeometry::Geometry(SeatTube_Angle)                       ;#[bikeGeometry::get_Scalar           SeatTube Angle                    ]                ;# set _lastValue(Result/Angle/SeatTube/Direction)                         
         dict set projDict   Scalar      Geometry Fork_Height                $::bikeGeometry::Geometry(Fork_Height)                          ;#[bikeGeometry::get_Scalar           Fork Height                       ]                ;# set _lastValue(Component/Fork/Height)                                   
         dict set projDict   Scalar      Geometry Fork_Rake                  $::bikeGeometry::Geometry(Fork_Rake)                            ;#[bikeGeometry::get_Scalar           Fork Rake                         ]                ;# set _lastValue(Component/Fork/Rake)                                     
+        dict set projDict   Scalar      Geometry HeadTube_Summary           $::bikeGeometry::Geometry(HeadTube_Summary)                          ;#[bikeGeometry::get_Scalar           Fork Height                       ]                ;# set _lastValue(Component/Fork/Height)                                   
             # 
         dict set projDict   Scalar      Geometry BottomBracket_Angle_ChainStay  $::bikeGeometry::Geometry(BottomBracket_Angle_ChainStay)                                
         dict set projDict   Scalar      Geometry BottomBracket_Angle_DownTube   $::bikeGeometry::Geometry(BottomBracket_Angle_DownTube)                                
@@ -791,11 +796,12 @@
                                 {Saddle_Offset_BB_ST}           {   bikeGeometry::set_Default_SaddleOffset_BB_ST     $newValue; return [get_Scalar $object $key] }
                                 {SeatTube_Angle}                {   bikeGeometry::set_Default_SeatTubeDirection      $newValue; return [get_Scalar $object $key] }
                                 
-                                {Reach_Length}                  {   bikeGeometry::set_StackReach_HeadTubeReachLength    $newValue; return [get_Scalar $object $key] }
-                                {Stack_Height}                  {   bikeGeometry::set_StackReach_HeadTubeStackHeight    $newValue; return [get_Scalar $object $key] }
+                                {Reach_Length}                  {   bikeGeometry::set_StackReach_HeadTubeReachLength $newValue; return [get_Scalar $object $key] }
+                                {Stack_Height}                  {   bikeGeometry::set_StackReach_HeadTubeStackHeight $newValue; return [get_Scalar $object $key] }
+                                {HeadTube_Summary}              {   bikeGeometry::set_StackReach_HeadTubeSummary     $newValue; return [get_Scalar $object $key] }
                                 
-                                {SeatTube_Virtual}              {   bikeGeometry::set_Classic__SeatTubeVirtualLength    $newValue; return [get_Scalar $object $key] }
-                                {TopTube_Virtual}               {   bikeGeometry::set_Classic_TopTubeVirtualLength      $newValue; return [get_Scalar $object $key] }
+                                {SeatTube_Virtual}              {   bikeGeometry::set_Classic__SeatTubeVirtualLength $newValue; return [get_Scalar $object $key] }
+                                {TopTube_Virtual}               {   bikeGeometry::set_Classic_TopTubeVirtualLength   $newValue; return [get_Scalar $object $key] }
 
                                 {BottomBracket_Angle_ChainStay} {   bikeGeometry::model_lugAngle::set_Angle ChainStaySeatTube $newValue; return [get_Scalar $object $key] }                     
                                 {BottomBracket_Angle_DownTube}  {   bikeGeometry::model_lugAngle::set_Angle SeatTubeDownTube  $newValue; return [get_Scalar $object $key] }                     

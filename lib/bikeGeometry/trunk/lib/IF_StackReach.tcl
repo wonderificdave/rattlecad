@@ -74,6 +74,7 @@
                         {SeatTube_Angle}                {   bikeGeometry::set_Default_SeatTubeDirection      $newValue; return [get_Scalar $object $key] }
                         
                         {HeadTube_Angle}                {   bikeGeometry::set_StackReach_HeadTubeDirection   $newValue; return [get_Scalar $object $key] }
+                        {HeadTube_Summary}              {   bikeGeometry::set_StackReach_HeadTubeSummary     $newValue; return [get_Scalar $object $key] }
                         {Reach_Length}                  {   bikeGeometry::set_StackReach_HeadTubeReachLength $newValue; return [get_Scalar $object $key] }
                         {Stack_Height}                  {   bikeGeometry::set_StackReach_HeadTubeStackHeight $newValue; return [get_Scalar $object $key] }
                         {Stem_Length}                   {   bikeGeometry::set_StackReach_StemLength          $newValue; return [get_Scalar $object $key] }
@@ -118,7 +119,7 @@
         #
     proc bikeGeometry::set_StackReach_HeadTubeReachLength      {value} {
                 #
-                # Length/HeadTube/ReachLengt
+                # Length/HeadTube/ReachLength
                 # Geometry(Reach_Length)
                 #
             variable Geometry
@@ -195,6 +196,26 @@
             puts "    <2> set_StackReach_HeadTubeDirection   ... check $Geometry(FrontWheel_xy)  ->  $value"
                 #
             return $Geometry(FrontWheel_xy)
+    }
+    proc bikeGeometry::set_StackReach_HeadTubeSummary          {value} {
+                #
+            variable Geometry
+            variable HeadTube
+            variable Fork
+                #
+            puts "    <1> set_StackReach_HeadTubeSummary   ... check $Geometry(HeadTube_Summary) ->  $value"
+                #
+            set delta                           [expr $value - $Geometry(HeadTube_Summary)]
+                #
+            set HeadTube(Length)                [expr $HeadTube(Length)      + $delta]
+            set Geometry(Fork_Height)           [expr $Geometry(Fork_Height) - $delta]
+                #
+            bikeGeometry::update_Geometry
+                #
+            puts "    <2> set_StackReach_HeadTubeSummary   ... check $Geometry(HeadTube_Summary) ->  $value"
+                #
+            return $Geometry(HeadTube_Summary)
+                #
     }
     proc bikeGeometry::set_StackReach_FrontWheeldiagonal       {value} {
                 #
