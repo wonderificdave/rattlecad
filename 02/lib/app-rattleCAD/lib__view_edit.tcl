@@ -78,7 +78,9 @@
     proc rattleCAD::view::edit::single_Result_SeatTube_VirtualLength    {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/SeatTube_Virtual)       }   ;# Result(Length/SeatTube/VirtualLength)     
     proc rattleCAD::view::edit::single_Result_StackHeight               {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/Stack_Height)           }   ;# Result(Length/HeadTube/StackHeight)       
     proc rattleCAD::view::edit::single_Result_TopTube_VirtualLength     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/TopTube_Virtual)        }   ;# Result(Length/TopTube/VirtualLength)      
-        #                                                                                                                                                                           
+        #
+    proc rattleCAD::view::edit::single_Result_HeadTube_Length           {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Geometry/HeadTube_Summary)       }   ;# Result(Length/TopTube/VirtualLength)
+        #
     proc rattleCAD::view::edit::single_Result_Reference_Heigth_SN_HB    {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Reference/SaddleNose_HB_y)       }   ;# Result(Length/Reference/Heigth_SN_HB)     
     proc rattleCAD::view::edit::single_Result_Reference_SaddleNose_HB   {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(Reference/SaddleNose_HB)         }   ;# Result(Length/Reference/SaddleNose_HB)    
     proc rattleCAD::view::edit::single_Result_RearWheelTyreShoulder     {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   Scalar(RearWheel/TyreShoulder)          }   ;# Result(Length/RearWheel/TyreShoulder)     
