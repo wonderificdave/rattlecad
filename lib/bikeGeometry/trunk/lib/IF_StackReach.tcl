@@ -61,7 +61,6 @@
         switch -exact $object {
             Geometry {
                     switch -exact $key {
-                        {BottomBracket_Height}          {   bikeGeometry::set_Default_BottomBracketHeight    $newValue; return [get_Scalar $object $key] }
                         {FrontWheel_Radius}             {   bikeGeometry::set_Default_FrontWheelRadius       $newValue; return [get_Scalar $object $key] }
                         {FrontWheel_x}                  {   bikeGeometry::set_Default_FrontWheelhorizontal   $newValue; return [get_Scalar $object $key] }
                         {HeadLug_Angle_Top}             {   bikeGeometry::set_Default_HeadTube_TopTubeAngle  $newValue; return [get_Scalar $object $key] }
@@ -73,13 +72,15 @@
                         {Saddle_Offset_BB_ST}           {   bikeGeometry::set_Default_SaddleOffset_BB_ST     $newValue; return [get_Scalar $object $key] }
                         {SeatTube_Angle}                {   bikeGeometry::set_Default_SeatTubeDirection      $newValue; return [get_Scalar $object $key] }
                         
+                        {BottomBracket_Depth}           {   bikeGeometry::set_StackReach_BottomBracketDepth  $newValue; return [get_Scalar $object $key] }
+                        {BottomBracket_Height}          {   bikeGeometry::set_StackReach_BottomBracketHeight $newValue; return [get_Scalar $object $key] }
+                        {FrontWheel_xy}                 {   bikeGeometry::set_StackReach_FrontWheeldiagonal  $newValue; return [get_Scalar $object $key] }
                         {HeadTube_Angle}                {   bikeGeometry::set_StackReach_HeadTubeDirection   $newValue; return [get_Scalar $object $key] }
                         {HeadTube_Summary}              {   bikeGeometry::set_StackReach_HeadTubeSummary     $newValue; return [get_Scalar $object $key] }
                         {Reach_Length}                  {   bikeGeometry::set_StackReach_HeadTubeReachLength $newValue; return [get_Scalar $object $key] }
-                        {Stack_Height}                  {   bikeGeometry::set_StackReach_HeadTubeStackHeight $newValue; return [get_Scalar $object $key] }
-                        {Stem_Length}                   {   bikeGeometry::set_StackReach_StemLength          $newValue; return [get_Scalar $object $key] }
-                        {FrontWheel_xy}                 {   bikeGeometry::set_StackReach_FrontWheeldiagonal  $newValue; return [get_Scalar $object $key] }
                         {Saddle_HB_y}                   {   bikeGeometry::set_StackReach_SaddleOffset_HB_Y   $newValue; return [get_Scalar $object $key] }
+                        {Stack_Height}                  {   bikeGeometry::set_StackReach_HeadTubeStackHeight $newValue; return [get_Scalar $object $key] }
+                        {Stem_Length}                   {   bikeGeometry::set_StackReach_StemLength          $newValue; return [get_Scalar $object $key] }                        
                         
                         {SeatTube_Virtual}              {   return [get_Scalar $object $key] }
                         {TopTube_Virtual}               {   return [get_Scalar $object $key] }
@@ -117,6 +118,58 @@
     }
         #
         #
+    proc bikeGeometry::set_StackReach_BottomBracketDepth       {value} {
+                #
+                # Length/HeadTube/StackHeight
+                # Geometry(Stack_Height)
+                #
+            variable Geometry
+            variable HeadTube
+            variable HandleBar
+                #
+            puts "    <1> set_StackReach_BottomBracketDepth   ... check $Geometry(BottomBracket_Depth)  ->  $value"
+                #
+            set delta                   [expr $value - $Geometry(BottomBracket_Depth)]
+            set myStack                 $Geometry(Stack_Height)
+            set myReach                 $Geometry(Reach_Length)
+
+            set Geometry(BottomBracket_Depth)   $value   
+            set Geometry(HandleBar_Height)      [expr $Geometry(HandleBar_Height) + $delta]
+                #
+                #
+            bikeGeometry::update_Geometry
+                #
+            set_StackReach_HeadTubeReachLength  $myReach
+            set_StackReach_HeadTubeStackHeight  $myStack
+                #
+            puts "    <2> set_StackReach_BottomBracketDepth   ... check $Geometry(BottomBracket_Depth)  ->  $value"
+                #
+            return $Geometry(BottomBracket_Depth)
+                #
+    }
+    proc bikeGeometry::set_StackReach_BottomBracketHeight      {value} {
+                #
+                # Length/HeadTube/StackHeight
+                # Geometry(Stack_Height)
+                #
+            variable Geometry
+            variable HeadTube
+            variable HandleBar
+                #
+            puts "    <1> set_StackReach_BottomBracketHeight   ... check $Geometry(BottomBracket_Height)  ->  $value"
+                #
+            set delta                   [expr $value - $Geometry(BottomBracket_Height)]
+            
+            set myBottomBracket_Depth   [expr $Geometry(BottomBracket_Depth) - $delta]
+                #
+            set_StackReach_BottomBracketDepth $myBottomBracket_Depth    
+                #
+            puts "    <2> set_StackReach_BottomBracketHeight   ... check $Geometry(BottomBracket_Height)  ->  $value"
+                #
+            return $Geometry(BottomBracket_Height)
+                #
+    }
+    
     proc bikeGeometry::set_StackReach_HeadTubeReachLength      {value} {
                 #
                 # Length/HeadTube/ReachLength

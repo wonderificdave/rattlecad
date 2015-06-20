@@ -248,10 +248,15 @@
  #      debug:
  #          ... reformat Polygon(ChainStay_xz)
  #
- # 1.51 - 20150616
+ # 1.51 - 20150619
  #      feature:
  #          ... bikeGeometry::Geometry(HeadTube_Summary)
  #
+ # 1.52 - 20150620
+ #      feature:
+ #          ... IF_StackReach  
+ #              ... bikeGeometry::set_StackReach_BottomBracketDepth  
+ #              ... bikeGeometry::set_StackReach_BottomBracketHeight
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -260,7 +265,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.51
+    package provide bikeGeometry 1.52
         #
     package require vectormath
         #
