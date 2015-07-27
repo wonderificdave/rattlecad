@@ -90,6 +90,7 @@
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
               #
+            rattleCAD::rendering::createDecoration   $cv_Name $xy    Cassette        editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Chain           editable   ;# $updateCommand
               #
             rattleCAD::rendering::createFork         $cv_Name $xy    selectable                 ;# $updateCommand
@@ -322,6 +323,7 @@
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
               #
+            rattleCAD::rendering::createDecoration   $cv_Name $xy    Cassette        editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Chain           editable   ;# $updateCommand
               #
             rattleCAD::rendering::createFork         $cv_Name $xy    selectable                 ;# $updateCommand
@@ -420,6 +422,7 @@
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Brake           editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    SeatPost
                 #
+            rattleCAD::rendering::createDecoration   $cv_Name $xy    Cassette        editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Chain           editable   ;# $updateCommand
                 #
             rattleCAD::rendering::createFork         $cv_Name $xy    selectable                  ;# $updateCommand
@@ -427,7 +430,6 @@
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Logo            editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    BottleCage      editable   ;# $updateCommand
                 #
-            rattleCAD::rendering::createDecoration   $cv_Name $xy    Chain           editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Saddle          editable   ;# $updateCommand
             rattleCAD::rendering::createDecoration   $cv_Name $xy    HeadSet
             rattleCAD::rendering::createDecoration   $cv_Name $xy    Stem

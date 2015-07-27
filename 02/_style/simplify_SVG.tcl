@@ -91,7 +91,7 @@ exec wish "$0" "$@"
     }
 
 
-	  proc mirrorPoint {p a} {
+	proc mirrorPoint {p a} {
             # reflects point p on line {{0 0} a}
         
             foreach {px py} $p  {ax ay} $a  break;
@@ -2187,18 +2187,18 @@ exec wish "$0" "$@"
  
         # --- result deep svg  - treeview---
         #
-	  set deepTree [ ttk::treeview $deepTreeFrame.t   \
+	set deepTree [ ttk::treeview $deepTreeFrame.t   \
                     -columns 		"nodeID nodeValue" \
 					-displaycolumns "nodeID nodeValue" \
                     -xscrollcommand "$flatTreeFrame.x set" \
                     -yscrollcommand "$flatTreeFrame.y set" \
                     -height 30 ]
         $deepTree heading "#0"  -text "XML" -anchor w
-        $deepTree column  "#0"  -width 150
+        $deepTree column  "#0"  -width 100
         $deepTree heading nodeID 	-text "id" 
 		$deepTree column  nodeID 	-width  50 -stretch no
 		$deepTree heading nodeValue -text "Value" 
-        $deepTree column  nodeValue -width 250 
+        $deepTree column  nodeValue -width 150 
         
     scrollbar $deepTreeFrame.x -ori hori -command  "$deepTreeFrame.t xview"
     scrollbar $deepTreeFrame.y -ori vert -command  "$deepTreeFrame.t yview"
@@ -2210,7 +2210,7 @@ exec wish "$0" "$@"
                 
         # --- result flattend svg - textview ---
     set deepText [ text $deepTextFrame.txt -wrap none -xscroll "$deepTextFrame.h set" \
-                                                      -yscroll "$deepTextFrame.v set" -height 46 -width 130 ]
+                                                      -yscroll "$deepTextFrame.v set" -height 46 -width 100 ]
     scrollbar $deepTextFrame.v -orient vertical   -command "$deepTextFrame.txt yview"
     scrollbar $deepTextFrame.h -orient horizontal -command "$deepTextFrame.txt xview"
         # Lay them out
@@ -2223,7 +2223,7 @@ exec wish "$0" "$@"
         
         # --- result canvas ---
         #
-    set resultCanvas [ canvas $canvasFrame.cv -width 600 -height 600 -relief sunken -bg white]
+    set resultCanvas [ canvas $canvasFrame.cv -width 400 -height 600 -relief sunken -bg white]
         pack   $resultCanvas -fill both -expand yes -padx 0 -pady 0
  
 
@@ -2236,11 +2236,11 @@ exec wish "$0" "$@"
                     -yscrollcommand "$flatTreeFrame.y set" \
                     -height 20 ]
         $flatTree heading "#0"  -text "XML" -anchor w
-        $flatTree column  "#0"  -width 150
+        $flatTree column  "#0"  -width 100
         $flatTree heading nodeID 	-text "id" 
-		$flatTree column  nodeID 	-width  80 -stretch no
+		$flatTree column  nodeID 	-width  50 -stretch no
 		$flatTree heading nodeValue -text "Value" 
-        $flatTree column  nodeValue -width 220 
+        $flatTree column  nodeValue -width 150 
         
     scrollbar $flatTreeFrame.x -ori hori -command  "$flatTreeFrame.t xview"
     scrollbar $flatTreeFrame.y -ori vert -command  "$flatTreeFrame.t yview"
@@ -2270,7 +2270,7 @@ exec wish "$0" "$@"
         # --- result flattend svg - textview ---
         #
     set flatText [ text $flatTextFrame.txt -wrap none -xscroll "$flatTextFrame.h set" \
-                                                      -yscroll "$flatTextFrame.v set" -width 60 -height 44]
+                                                      -yscroll "$flatTextFrame.v set" -width 50 -height 44]
     scrollbar $flatTextFrame.v -orient vertical   -command "$flatTextFrame.txt yview"
     scrollbar $flatTextFrame.h -orient horizontal -command "$flatTextFrame.txt xview"
         # Lay them out
