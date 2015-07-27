@@ -102,6 +102,7 @@
                     DerailleurRear_ctr  { createDecoration_DerailleurRear_ctr   $cv_Name    $BB_Position    $type   $updateCommand;     return }
                     DerailleurFront     { createDecoration_DerailleurFront      $cv_Name    $BB_Position    $type   $updateCommand;     return }
                     CrankSet            { createDecoration_CrankSet             $cv_Name    $BB_Position    $type   $updateCommand;     return }
+                    Cassette            { createDecoration_Cassette             $cv_Name    $BB_Position    $type   $updateCommand;     return }
                     Chain               { createDecoration_Chain                $cv_Name    $BB_Position    $type   $updateCommand;     return }
                     SeatPost            { createDecoration_SeatPost             $cv_Name    $BB_Position    $type   $updateCommand;     return }
                     Brake               { createDecoration_Brake                $cv_Name    $BB_Position    $type   $updateCommand;     return }
@@ -202,10 +203,28 @@
             }
                 #
     }
+    proc rattleCAD::rendering::createDecoration_Cassette {cv_Name BB_Position type {updateCommand {}}} {
+                # --- create Cassette ----------
+            set cassette_OuterTeethCount    28    
+            set cassette_InnerTeethCount    [rattleCAD::model::get_Scalar RearWheel FirstSprocket]    
+                # 
+            set cassette_OuterDiameter  [ expr $cassette_OuterTeethCount * 12.7 / $vectormath::CONST_PI ]
+            set cassette_InnerDiameter  [ expr $cassette_InnerTeethCount * 12.7 / $vectormath::CONST_PI ]
+            set Hub(position)           [ rattleCAD::model::get_Position    RearWheel   $BB_Position]
+                #
+            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $cassette_OuterDiameter]     -tags {__Decoration__ __Cassette__}     -fill white
+            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $cassette_InnerDiameter]     -tags {__Decoration__ __Cassette__}     -fill white
+            if {$updateCommand != {}}   { 
+                # rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $Chain(object)  group_Chain_Parameter_15
+                    # $cv_Name bind    $Chain(object)    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {   text://Component(CrankSet/ChainRings)   Component/Derailleur/Rear/Pulley/x   Component/Derailleur/Rear/Pulley/y   Component/Derailleur/Rear/Pulley/teeth }   {Chain Parameter} ]
+                    # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $Chain(object)
+            }
+                #
+    }
     proc rattleCAD::rendering::createDecoration_Chain {cv_Name BB_Position type {updateCommand {}}} {
                 # --- create Chain -------------
             set Chain(object)           [ createChain  $cv_Name  $BB_Position]
-                                      $cv_Name addtag  __Decoration__ withtag $Chain(object)
+            $cv_Name addtag  __Decoration__ withtag $Chain(object)
             if {$updateCommand != {}}   { 
                 rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $Chain(object)  group_Chain_Parameter_15
                     # $cv_Name bind    $Chain(object)    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {   text://Component(CrankSet/ChainRings)   Component/Derailleur/Rear/Pulley/x   Component/Derailleur/Rear/Pulley/y   Component/Derailleur/Rear/Pulley/teeth }   {Chain Parameter} ]
@@ -245,6 +264,11 @@
                                     # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $RearBrake(object)
                             }
                         }
+                    Disc {
+                            set disc_Diameter           [ rattleCAD::model::get_Scalar      RearMockup  DiscDiameter] 
+                            set Hub(position)           [ rattleCAD::model::get_Position    RearWheel   $BB_Position]
+                            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $disc_Diameter]     -tags {__Decoration__ __RearBrake__}     -fill white
+                        }
                     default {}
                 }
             }
@@ -267,6 +291,12 @@
                                     # $cv_Name bind    $FrontBrake(object)    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {   list://Rendering(Brake/Front@SELECT_BrakeType)  file://Component(Brake/Front/File)  Component(Brake/Front/LeverLength)  Component(Brake/Front/Offset) }   {FrontBrake Parameter} ]
                                     # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $FrontBrake(object)
                             }
+                        }
+                    Disc {
+                            set disc_Diameter           [ expr 20 + [ rattleCAD::model::get_Scalar      RearMockup  DiscDiameter] ]
+                            set Hub(position)           [ rattleCAD::model::get_Position    FrontWheel  $BB_Position]
+                            $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $disc_Diameter]     -tags {__Decoration__ __FrontBrake__}    -fill white
+                            $cv_Name create circle  $Hub(position)  -radius 25                                          -tags {__Decoration__ __Hub__}      -fill white
                         }
                     default {}
                 }
@@ -494,7 +524,7 @@
     }  
     proc rattleCAD::rendering::createDecoration_RearWheel {cv_Name BB_Position type {updateCommand {}}} {
                 # --- create RearWheel -----------------
-            set Hub(position)       [ rattleCAD::model::get_Position             RearWheel        $BB_Position]
+            set Hub(position)           [ rattleCAD::model::get_Position             RearWheel        $BB_Position]
             set RimHeight               [ rattleCAD::model::get_Scalar RearWheel RimHeight   ]
             set RimDiameter             [ rattleCAD::model::get_Scalar Geometry RearRim_Diameter ]
             set TyreHeight              [ rattleCAD::model::get_Scalar Geometry RearTyre_Height ]
@@ -502,8 +532,8 @@
                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter + 5]               -tags {__Decoration__ __Rim_01__}   -fill white
             set my_Rim                  [   $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - 4]               -tags {__Decoration__ __Rim_02__}   -fill white ]
                                             $cv_Name create circle  $Hub(position)  -radius [expr 0.5 * $RimDiameter - $RimHeight + 5]  -tags {__Decoration__ __Rim_03__}   -fill white
-                                            $cv_Name create circle  $Hub(position)  -radius 45                                          -tags {__Decoration__ __Hub__}      -fill white
-                                        $cv_Name create circle  $Hub(position)  -radius 23                                          -tags {__Decoration__}              -fill white
+                                          # $cv_Name create circle  $Hub(position)  -radius 45                                          -tags {__Decoration__ __Cassette__} -fill white
+                                            $cv_Name create circle  $Hub(position)  -radius 23                                          -tags {__Decoration__ __Hub__}      -fill white
             if {$updateCommand != {}}   { 
                 rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $my_Rim     single_RearWheel_RimHeight
                     # $cv_Name bind $my_Rim <Double-ButtonPress-1> [list rattleCAD::view::createEdit  %x %y  $cv_Name  { Component(Wheel/Rear/RimHeight) }     {RearWheel Parameter} ]
@@ -865,14 +895,16 @@
                         set do_direction            [ rattleCAD::model::get_Direction   HeadTube ]
                         set do_angle                [ vectormath::angle {0 1} {0 0} $do_direction ]
                             #
-                        set Suspension_ForkRake     40
-                        set Project_ForkRake        [ rattleCAD::model::get_Scalar Geometry Fork_Rake]
-                        set offset                  [ expr $Project_ForkRake-$Suspension_ForkRake]
-                        set offset_x                [ expr -1.0 * $offset/sin([vectormath::rad [expr 180 - $ht_angle]]) ]
-                            # puts "   -> \$offset_x $offset_x"
-                        set vct_move [list $offset_x 0]
-                            #
-                        set ForkDropout(position)   [ vectormath::addVector [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ] $vct_move]
+                            # set Suspension_ForkRake     40
+                            # set Project_ForkRake        [ rattleCAD::model::get_Scalar Geometry Fork_Rake]
+                            # set offset                  [ expr $Project_ForkRake-$Suspension_ForkRake]
+                            # set offset_x                [ expr -1.0 * $offset/sin([vectormath::rad [expr 180 - $ht_angle]]) ]
+                                # puts "   -> \$offset_x $offset_x"
+                            # set vct_move [list $offset_x 0]
+                                #
+                            # set ForkDropout(position)   [ vectormath::addVector [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ] $vct_move]
+                                #
+                        set ForkDropout(position)   [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ]   
                     }
                 default {}
         }
