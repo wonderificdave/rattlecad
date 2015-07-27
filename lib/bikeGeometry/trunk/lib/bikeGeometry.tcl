@@ -258,6 +258,17 @@
  #              ... bikeGeometry::set_StackReach_BottomBracketDepth  
  #              ... bikeGeometry::set_StackReach_BottomBracketHeight
  #
+ # 1.53 - 20150724
+ #      feature:
+ #          ... new coomponents for suspension fork  
+ #
+ # 1.54 - 20150724
+ #      refactor:
+ #          ... handle suspension fork parameter 
+ #              ... Suspension_28 -> replaced
+ #              ... Suspension_27
+ #
+ #
  # 1.xx refactor
  #          split project completely from bikeGeometry
  #
@@ -265,7 +276,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.52
+    package provide bikeGeometry 1.54
         #
     package require vectormath
         #

@@ -265,7 +265,7 @@
 
         <Suspension_20>
             <Geometry>
-              <Rake>40.00</Rake>
+              <Rake>36.00</Rake>
             </Geometry>
             <DropOut>
               <File>fork/_suspension/suspension_bridge_20.svg</File>
@@ -274,6 +274,18 @@
               <Offset>25.00</Offset>
             </Brake>
         </Suspension_20>
+        
+        <Suspension_24>
+            <Geometry>
+              <Rake>38.00</Rake>
+            </Geometry>
+            <DropOut>
+              <File>fork/_suspension/suspension_bridge_24.svg</File>
+            </DropOut>
+            <Brake>
+              <Offset>25.00</Offset>
+            </Brake>
+        </Suspension_24>
         
         <Suspension_26>
             <Geometry>
@@ -287,21 +299,21 @@
             </Brake>
         </Suspension_26>
         
-        <Suspension_28>   
+        <Suspension_27>   
             <Geometry>
-              <Rake>40.00</Rake>
+              <Rake>42.00</Rake>
             </Geometry>
             <DropOut>
-              <File>fork/_suspension/suspension_bridge_28.svg</File>
+              <File>fork/_suspension/suspension_bridge_27.svg</File>
             </DropOut>
             <Brake>
               <Offset>25.00</Offset>
             </Brake>
-        </Suspension_28>
+        </Suspension_27>
         
         <Suspension_29>   
             <Geometry>
-              <Rake>45.00</Rake>
+              <Rake>44.00</Rake>
             </Geometry>
             <DropOut>
               <File>fork/_suspension/suspension_bridge_29.svg</File>

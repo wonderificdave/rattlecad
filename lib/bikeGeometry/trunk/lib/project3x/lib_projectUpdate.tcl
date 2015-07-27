@@ -1416,6 +1416,16 @@
                                 puts "                           ... update File ... /root/Component/CrankSet/ChainRingOffset"
                                 $parentNode appendXML  "<ChainRingOffset>5</ChainRingOffset>"
                         }
+                                # -- get ForkType
+                        set node [$projectDOM selectNode /root/Rendering/Fork/text()]
+                        if {$node != {}} {
+                                set forkType        [$node nodeValue]
+                                # puts "  <D> $forkType"
+                                if {$forkType == {Suspension_28}} {
+                                    $node nodeValue {Suspension_27}
+                                }
+                                puts "                           ... update File ... /root/Rendering/Fork"
+                        }
                     }
                 
                 {ab-xy} {	

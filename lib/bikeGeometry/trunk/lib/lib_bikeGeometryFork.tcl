@@ -565,9 +565,9 @@
                 #
                 #
             set pt_00       $Position(Steerer_Start)
-            set pt_99       $Position(FrontWheel)
-            set pt_01       [ vectormath::addVector $pt_00 $Direction(HeadTube) -$Fork(BladeOffsetCrown) ]
-            set pt_02       [ lindex [ vectormath::parallel  $pt_00  $pt_01  $Fork(BladeOffsetCrownPerp) left ] 1] ;# centerpoint of Blade in ForkCrown
+            #set pt_99       $Position(FrontWheel)
+            #set pt_01       [ vectormath::addVector $pt_00 $Direction(HeadTube) -1.0*$Fork(BladeOffsetCrown) ]
+            #set pt_02       [ lindex [ vectormath::parallel  $pt_00  $pt_01  $Fork(BladeOffsetCrownPerp) left ] 1] ;# centerpoint of Blade in ForkCrown
                 #
                 #
             set Polygon(ForkBlade)        {}
