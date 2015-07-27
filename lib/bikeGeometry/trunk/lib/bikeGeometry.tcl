@@ -268,6 +268,11 @@
  #              ... Suspension_28 -> replaced
  #              ... Suspension_27
  #
+ # 1.55 - 20150725
+ #      feature:
+ #          ... add Variable to store Rake of predefined Forks (Carbon, Suspension, ...)
+ #              ... $bikeGeometry::Fork(Rake) 
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -276,7 +281,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.54
+    package provide bikeGeometry 1.55
         #
     package require vectormath
         #
@@ -585,6 +590,7 @@
             # dict set projDict   Scalar      Fork BrakeAngle               $::bikeGeometry::Fork(BrakeAngle)                               ;#[bikeGeometry::get_Scalar           Fork BrakeAngle                   ]                ;# set _lastValue(Component/Fork/Crown/Brake/Angle)                        
             # dict set projDict   Scalar      Fork BrakeOffset              $::bikeGeometry::Fork(BrakeOffset)                              ;#[bikeGeometry::get_Scalar           Fork BrakeOffset                  ]                ;# set _lastValue(Component/Fork/Crown/Brake/Offset)                       
         dict set projDict   Scalar      Fork BladeBrakeOffset               $::bikeGeometry::Fork(BladeBrakeOffset)                         ;
+        dict set projDict   Scalar      Fork Rake                           $::bikeGeometry::Fork(Rake)                                 ;
             #            
         dict set projDict   Scalar      FrontBrake LeverLength              $::bikeGeometry::FrontBrake(LeverLength)                        ;#[bikeGeometry::get_Scalar           FrontBrake LeverLength            ]                ;# set _lastValue(Component/Brake/Front/LeverLength)                       
         dict set projDict   Scalar      FrontBrake Offset                   $::bikeGeometry::FrontBrake(Offset)                             ;#[bikeGeometry::get_Scalar           FrontBrake Offset                 ]                ;# set _lastValue(Component/Brake/Front/Offset)                            

@@ -45,11 +45,13 @@
         # ---   get Fork ... handle types
     proc bikeGeometry::create_Fork {} {
                 #
+            variable Geometry
             variable CenterLine
             variable Direction
             variable Position
                 #
             variable Config
+            variable Fork
             variable ForkBlade
                 #
             variable Result
@@ -64,6 +66,9 @@
                 # set ForkBlade(Start)       {0 0}    
                 # set ForkBlade(End)         {0 0}    
                 #
+            set Fork(Rake)          $Geometry(Fork_Rake)  
+                #
+                puts "    <-> $Fork(Rake)"
                 #
             # tk_messageBox -message "bikeGeometry::create_Fork $Config(Fork)"
                 #
@@ -585,6 +590,9 @@
             set Fork(CrownAngleBrake)   [[ $initDOM selectNodes /root/Fork/_Suspension/Crown/Brake/Angle    ]  asText ]
                 #
             set Fork(BladeBrakeOffset)  [[ $initDOM selectNodes /root/Fork/$forkSize/Brake/Offset   ]   asText ]  
+            set Fork(Rake)              [[ $initDOM selectNodes /root/Fork/$forkSize/Geometry/Rake  ]   asText ]  
+                #
+            puts "    <-> $Fork(Rake)"
                 #
             return
                 #
