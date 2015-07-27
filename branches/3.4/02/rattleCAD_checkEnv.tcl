@@ -103,10 +103,10 @@ exec tclsh "$0" "$@"
 	    #
 	if {$packageName != {}} {
             if {[catch {set packageVersion   [package require $packageName]} eID]} {
-	          # set packageVersion "... n/a  ->   sudo apt-get install $packageName"
-		set packageVersion "n/a "
-		lappend packageStatus $packageName
-		  # puts "      ... check_Package: \$packageStatus $packageStatus"
+                  # set packageVersion "... n/a  ->   sudo apt-get install $packageName"
+                set packageVersion "n/a "
+                lappend packageStatus $packageName
+                  # puts "      ... check_Package: \$packageStatus $packageStatus"
             }
             puts [format "     tcl package   %-15s  %s" $packageName  $packageVersion]
         }

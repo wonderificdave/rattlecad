@@ -895,16 +895,17 @@
                         set do_direction            [ rattleCAD::model::get_Direction   HeadTube ]
                         set do_angle                [ vectormath::angle {0 1} {0 0} $do_direction ]
                             #
-                            # set Suspension_ForkRake     40
-                            # set Project_ForkRake        [ rattleCAD::model::get_Scalar Geometry Fork_Rake]
-                            # set offset                  [ expr $Project_ForkRake-$Suspension_ForkRake]
-                            # set offset_x                [ expr -1.0 * $offset/sin([vectormath::rad [expr 180 - $ht_angle]]) ]
-                                # puts "   -> \$offset_x $offset_x"
-                            # set vct_move [list $offset_x 0]
-                                #
-                            # set ForkDropout(position)   [ vectormath::addVector [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ] $vct_move]
-                                #
-                        set ForkDropout(position)   [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ]   
+                        set Geometry_ForkRake       [ rattleCAD::model::get_Scalar Geometry Fork_Rake]
+                        set SuspensionFork_Rake     [ rattleCAD::model::get_Scalar Fork Rake]
+                            # puts "\n <-> \$SuspensionFork_Rake $SuspensionFork_Rake\n"
+                        set offset                  [ expr $Geometry_ForkRake - $SuspensionFork_Rake]
+                        set offset_x                [ expr -1.0 * $offset/sin([vectormath::rad [expr 180 - $ht_angle]]) ]
+                            # puts "   -> \$offset_x $offset_x"
+                        set vct_move [list $offset_x 0]
+                            #
+                        set ForkDropout(position)   [ vectormath::addVector [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ] $vct_move]
+                            #
+                            # set ForkDropout(position)   [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ]   
                     }
                 default {}
         }
