@@ -887,6 +887,15 @@
             #
         switch -glob $Config(Fork) {
                 Suspension* {
+                            # puts "\n------------------\n                now Rendering   ... $Rendering(Fork)\n------------------\n"
+                        set do_direction            [ rattleCAD::model::get_Direction   HeadTube ]
+                        set do_angle                [ vectormath::angle {0 1} {0 0} $do_direction ]
+                        set ForkDropout(position)   [ rattleCAD::model::get_Position    FrontDropout_MockUp    $BB_Position ] 
+                            #
+                            # puts "  <-2-> $ForkDropout(position)"
+                            # set ForkDropout(position)   [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ]   
+                    }
+                Suspension___remove {
                             #puts "\n------------------\n                now Rendering   ... $Rendering(Fork)\n------------------\n"
                         set forkSize [lindex [split $Config(Fork) {_}] 1 ]
                         if {$forkSize == {} } { set forkSize "26" }
@@ -905,7 +914,6 @@
                             #
                         set ForkDropout(position)   [ vectormath::addVector [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ] $vct_move]
                             #
-                            # set ForkDropout(position)   [ rattleCAD::model::get_Position    FrontWheel    $BB_Position ]   
                     }
                 default {}
         }
