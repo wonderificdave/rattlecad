@@ -1,10 +1,17 @@
 
 
+3.4.02.62  - 2015.08.04
+-------------------------------------------------------------------------------
+    refactor:
+        ... bikeGeometry 1.56
+            ... $bikeGeometry::Position(FrontDropout_MockUp)
+
+
 3.4.02.61  - 2015.07.25
 -------------------------------------------------------------------------------
     refactor:
         ... bikeGeometry 1.55
-            ... ... $bikeGeometry::Fork(Rake)
+            ... $bikeGeometry::Fork(Rake)
         ... new Template for MTB
 
 
