@@ -592,7 +592,13 @@
             set Fork(BladeBrakeOffset)  [[ $initDOM selectNodes /root/Fork/$forkSize/Brake/Offset   ]   asText ]  
             set Fork(Rake)              [[ $initDOM selectNodes /root/Fork/$forkSize/Geometry/Rake  ]   asText ]  
                 #
-            puts "    <-> $Fork(Rake)"
+                # puts "\n <-> \$Fork(Rake) $Fork(Rake)\n"
+            set offset                  [ expr $Geometry(Fork_Rake) - $Fork(Rake)]
+            set offset_x                [ expr -1.0 * $offset/sin([vectormath::rad [expr 180 - $Geometry(HeadTube_Angle)]]) ]
+                # puts "   -> \$offset_x $offset_x"
+            set vct_move [list $offset_x 0]
+                #
+            set Position(FrontDropout_MockUp)   [ vectormath::addVector $Position(FrontWheel) $vct_move]
                 #
             return
                 #

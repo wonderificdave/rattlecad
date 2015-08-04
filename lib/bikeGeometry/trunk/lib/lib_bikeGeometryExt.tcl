@@ -77,6 +77,7 @@
                 #
             set Position(FrontWheel)        [ vectormath::intersectPoint    $help_05  $help_06 [list 0 $Geometry(FrontWheel_y)] [list 200 $Geometry(FrontWheel_y)] ]
             set Position(FrontDropout)      $Position(FrontWheel)
+            set Position(FrontDropout_MockUp)       $Position(FrontWheel)
             set Geometry(FrontWheel_x)      [ lindex $Position(FrontWheel) 0]
             set Geometry(FrontWheel_xy)     [ expr hypot($Geometry(FrontWheel_x),$Geometry(FrontWheel_y)) ]
                 #

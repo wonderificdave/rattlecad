@@ -273,6 +273,12 @@
  #          ... add Variable to store Rake of predefined Forks (Carbon, Suspension, ...)
  #              ... $bikeGeometry::Fork(Rake) 
  #
+ # 1.56 - 20150725
+ #      feature:
+ #          ... add Variable Position(FrontDropout_MockUp) to store Position of 
+ #              Suspension Fork in case of  $bikeGeometry::Fork(Rake) and Rake of predefined Forks (Carbon, Suspension, ...)
+ #              of predefined Forks (Carbon, Suspension, ...) are not equal
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -281,7 +287,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.55
+    package provide bikeGeometry 1.56
         #
     package require vectormath
         #
