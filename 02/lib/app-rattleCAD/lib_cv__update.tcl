@@ -37,7 +37,10 @@
  #
  #
 
-
+    set rattleCAD::cv_custom::frameTubeColour wheat
+    set rattleCAD::cv_custom::frameTubeColour burlywood
+    set rattleCAD::cv_custom::frameTubeColour #e9b956
+    set rattleCAD::cv_custom::frameTubeColour #edc778
 
     proc rattleCAD::cv_custom::updateView {cv_Name {updatePosition {keep}}} {
 
@@ -196,6 +199,7 @@
                 # -- frame - details
                 #
             variable     bottomCanvasBorder
+            variable     frameTubeColour
                 #
             set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition frame ]
             $cv_Name        clean_StageContent
@@ -251,7 +255,7 @@
                 #
             rattleCAD::rendering::debug_geometry   $cv_Name $xy
                 #
-            update_renderCanvas             $cv_Name    wheat
+            update_renderCanvas             $cv_Name    $frameTubeColour
                 #
             createWaterMark                 $cv_Name    [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
@@ -266,6 +270,7 @@
                 # -- rear - mockup
                 #
             variable     bottomCanvasBorder
+            variable     frameTubeColour
                 #
             set stageScale  [$cv_Name getNodeAttr Stage scale]
             set stageFormat [$cv_Name getNodeAttr Stage format]
@@ -293,6 +298,7 @@
                 # -- dimension summary
                 #
             variable     bottomCanvasBorder
+            variable     frameTubeColour
                 #
             set stageFormat [$cv_Name getNodeAttr Stage format]
             set factor      [ get_FormatFactor $stageFormat ]
@@ -350,7 +356,7 @@
                 #
             rattleCAD::rendering::createBaseline     $cv_Name $xy    black
                 #
-            update_renderCanvas             $cv_Name    wheat   gray98  gray93  gray93
+            update_renderCanvas             $cv_Name    $frameTubeColour   gray98  gray93  gray93
                 #
             createWaterMark                 $cv_Name    [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
@@ -365,6 +371,7 @@
                 # -- frame - drafting
                 #
             variable     bottomCanvasBorder
+            variable     frameTubeColour
                 #
             set stageScale  [$cv_Name getNodeAttr Stage scale]
             set stageFormat [$cv_Name getNodeAttr Stage format]
@@ -398,7 +405,7 @@
                 #
             $cv_Name        centerContent     { 0  25}        {__Decoration__  __CenterLine__  __Dimension__  __Frame__}
                 #
-            update_renderCanvas               $cv_Name         wheat
+            update_renderCanvas               $cv_Name         $frameTubeColour
                 #
             rattleCAD::view::gui::notebook_createButton    $cv_Name     {pageConfig_Scale,pageConfig_Format}
                 #
@@ -409,6 +416,7 @@
                 # -- mockup
                 #
             variable     bottomCanvasBorder
+            variable     frameTubeColour
                 #
             set xy          [rattleCAD::cv_custom::get_BottomBracket_Position $cv_Name $bottomCanvasBorder $updatePosition bicycle ]
                 #
@@ -445,7 +453,7 @@
                 #
             createWaterMark                 $cv_Name    [rattleCAD::control::getSession projectFile]  [rattleCAD::control::getSession dateModified]
                 #
-            update_renderCanvas             $cv_Name    wheat   gray98  gray93  gray93
+            update_renderCanvas             $cv_Name    $frameTubeColour   gray98  gray93  gray93
                 #
             createWaterMark_Logo            $cv_Name    0.4
                 #
@@ -476,6 +484,7 @@
                 # -- drafting - framejig
                 #
             variable     bottomCanvasBorder
+            variable     frameTubeColour
                 #
             set stageScale      [$cv_Name getNodeAttr Stage scale]
             set stageFormat     [$cv_Name getNodeAttr Stage format]
@@ -493,7 +502,7 @@
                 #
             $cv_Name         centerContent    {0  15}         {__Frame__  __Decoration__  __CenterLine__  __Dimension__}
                 #
-            update_renderCanvas               $cv_Name        wheat
+            update_renderCanvas               $cv_Name        $frameTubeColour
                 #
             rattleCAD::view::gui::notebook_createButton    $cv_Name     configMode_FrameJig
                 #
