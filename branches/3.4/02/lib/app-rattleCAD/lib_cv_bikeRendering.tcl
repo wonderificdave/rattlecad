@@ -677,7 +677,7 @@
         set RearWheel(position)     [ rattleCAD::model::get_Position    RearWheel           $BB_Position]
         set RearDropout(file)       [ checkFileString [rattleCAD::model::get_Component RearDropout] ]
         set RearDropout(angle)      [ rattleCAD::model::get_Direction   RearDropout degree]
-        set Config(RearDropOut)  [ rattleCAD::model::get_Config      RearDropout ]
+        set Config(RearDropOut)     [ rattleCAD::model::get_Config      RearDropout ]
             #
         set RearDropout(angle)      [ expr 360 - $RearDropout(angle) ] 
             # puts " <H>  \$RearDropout(angle)   $RearDropout(angle)"  
@@ -712,7 +712,7 @@
             set RearDropout(object) [ $cv_Name readSVG [file join $::APPL_Config(COMPONENT_Dir) $RearDropout(file)] $RearWheel(position)  $RearDropout(angle)  __RearDropout__]
         }
             # --- handle Rear Dropout - properties ---
-                                      $cv_Name addtag  __Frame__ withtag $RearDropout(object)
+        $cv_Name addtag  __Frame__ withtag $RearDropout(object)
         if {$updateCommand != {}}   { 
             rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $RearDropout(object)    group_RearDropout_Parameter_01
                 # $cv_Name bind     $RearDropout(object)    <Double-ButtonPress-1> [list rattleCAD::view::createEdit  %x %y  $cv_Name  { file://Lugs(RearDropOut/File)   list://Lugs(RearDropOut/Direction@SELECT_DropOutDirection)    list://Rendering(RearDropOut@SELECT_DropOutPosition)    Lugs(RearDropOut/RotationOffset)    Lugs(RearDropOut/Derailleur/x)  Lugs(RearDropOut/Derailleur/y)  Lugs(RearDropOut/SeatStay/OffsetPerp)   Lugs(RearDropOut/SeatStay/Offset)   Lugs(RearDropOut/ChainStay/OffsetPerp)  Lugs(RearDropOut/ChainStay/Offset)                               }  {RearDropout Parameter}]
