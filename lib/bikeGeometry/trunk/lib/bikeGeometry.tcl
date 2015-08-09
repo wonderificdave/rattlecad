@@ -273,11 +273,18 @@
  #          ... add Variable to store Rake of predefined Forks (Carbon, Suspension, ...)
  #              ... $bikeGeometry::Fork(Rake) 
  #
- # 1.56 - 20150725
+ # 1.56 - 20150804
  #      feature:
  #          ... add Variable Position(FrontDropout_MockUp) to store Position of 
  #              Suspension Fork in case of  $bikeGeometry::Fork(Rake) and Rake of predefined Forks (Carbon, Suspension, ...)
  #              of predefined Forks (Carbon, Suspension, ...) are not equal
+ #
+ # 1.57 - 20150809
+ #      refactor:
+ #          ... update svg-component of campagnolo_ergopower_11_x.svg
+ #      feature:
+ #          ... add variable ConfigPrev to store values of previous call 
+ #                  proc get_Config
  #
  #
  # 1.xx refactor
@@ -287,7 +294,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.56
+    package provide bikeGeometry 1.57
         #
     package require vectormath
         #
@@ -316,6 +323,8 @@
             variable Config          ; array set Config          {}
             variable ListValue       ; array set ListValue       {}
             variable Result          ; array set Result          {}
+            
+            variable ConfigPrev      ; array set ConfigPrev      {}
             
             variable BottleCage      ; array set BottleCage      {}
             variable BottomBracket   ; array set BottomBracket   {}
@@ -451,6 +460,12 @@
             bikeGeometry::get_from_project
             
             
+            # --- update ConfigPrev ---------------------
+            foreach key [array names [namespace current]::Config] {
+                set [namespace current]::ConfigPrev($key) [bikeGeometry::get_Config $key]
+            }
+
+
             # --- compute geometry ----------------------
                 #
             bikeGeometry::update_Geometry
@@ -474,6 +489,7 @@
                     }
                         # project::pdict $valueDict
             }
+            
             # project::runTime_2_dom
     }
 
@@ -913,6 +929,9 @@
             #
         set configValue [bikeGeometry::get_Config $key]
         puts "              <I> bikeGeometry::set_Config ... $key -> $configValue"
+            #
+        set [namespace current]::ConfigPrev($key) [bikeGeometry::get_Config $key]
+   
             #
         return $configValue
             #

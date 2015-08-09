@@ -8,7 +8,7 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded bikeGeometry  1.56 "\
+package ifneeded bikeGeometry  1.57 "\
             [list source [file join $dir lib project3x project.tcl]]; \
             [list source [file join $dir lib project3x lib_projectUpdate.tcl]]; \
                 \

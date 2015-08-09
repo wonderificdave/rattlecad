@@ -219,6 +219,7 @@
     proc bikeGeometry::trace_ForkConfig {} {
             #
         variable customFork
+        variable ConfigPrev
             #
         variable Component
         variable Config
@@ -234,7 +235,8 @@
         switch -exact $Config(Fork) {
             SteelLugged -
             SteelCustom {
-                    if {$customFork(lastConfig) != $Config(Fork)} {               
+                    # if {$customFork(lastConfig) != $Config(Fork)} {}             
+                    if {$ConfigPrev(Fork) != $Config(Fork)} {               
                             # ... no SteelCustom, last time anything else
                             # ... therefore restore Fork() from customFork()
                             # ... initialy customFork() is empty
@@ -272,14 +274,6 @@
                 }
             default {}
         }
-            #
-        set customFork(lastConfig) $Config(Fork)
-            #
-        # tk_messageBox -message "<03> ... switch from  $customFork(lastConfig) -> \n $Config(Fork)\n old: $lastFile \n new: $Fork(CrownFile)"   
-            #
-            #
-        # parray customFork
-        # parray Fork
             #
         return
             #

@@ -606,6 +606,12 @@
                 # FrontBrake(LeverLength) ... Lever(Arm) Length of FrontBrake 
                 #
                 #
+                # puts "\n\n"
+                # puts "   -> create_BrakePositionFront \$Fork(CrownOffsetBrake) $Fork(CrownOffsetBrake)"
+                # puts "   -> create_BrakePositionFront \$Fork(BladeBrakeOffset) $Fork(BladeBrakeOffset)"
+                # puts "   -> create_BrakePositionFront \$Fork(BrakeOffsetDef)   $Fork(BrakeOffsetDef)"
+                # puts " \n\n"
+                #
                 # puts "   -> \$Fork(BrakeOffsetDef) $Fork(BrakeOffsetDef)"
             set pt_04           [lrange $Fork(BrakeOffsetDef) 0 1]
             set pt_03           [lrange $Fork(BrakeOffsetDef) 2 3]
@@ -623,9 +629,9 @@
                 #
             set dist_00_Ortho   [ expr sqrt(pow($RimBrakeRadius,2)  - pow($dist_00,2)) ]
                 #
-            set pt_10           [ vectormath::addVector    $pt_06 [ vectormath::unifyVector $pt_03 $pt_04 $dist_00_Ortho] ]     ;# Position(FrontBrake_Shoe)
-            set pt_11           [ vectormath::addVector    $pt_10 [ vectormath::unifyVector {0 0} $Direction(HeadTube) $FrontBrake(LeverLength)] ]
-            set pt_12           [ vectormath::rotatePoint    $pt_10    $pt_11    $Fork(CrownAngleBrake) ]                       ;# Position(FrontBrake_Help)
+            set pt_10           [ vectormath::addVector     $pt_06 [ vectormath::unifyVector $pt_03 $pt_04 $dist_00_Ortho] ]     ;# Position(FrontBrake_Shoe)
+            set pt_11           [ vectormath::addVector     $pt_10 [ vectormath::unifyVector {0 0} $Direction(HeadTube) $FrontBrake(LeverLength)] ]
+            set pt_12           [ vectormath::rotatePoint   $pt_10    $pt_11    $Fork(CrownAngleBrake) ]                       ;# Position(FrontBrake_Help)
             set pt_13           [ vectormath::intersectPerp $pt_04 $pt_03 $pt_10 ]
                 #
             set vct_02          [ vectormath::parallel $Position(Steerer_Start) $Position(Steerer_End) $Fork(CrownOffsetBrake)]

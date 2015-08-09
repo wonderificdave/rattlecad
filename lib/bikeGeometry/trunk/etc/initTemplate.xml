@@ -252,14 +252,14 @@
             <Crown>
               <File>fork/_suspension/fork_crown.svg</File>
               <Brake>
-                <Offset>20.00</Offset>
-                <Angle>0.00</Angle>
+                <!--Offset>20.00</Offset-->
+                <!--Angle>0.00</Angle-->
               </Brake>
             </Crown>
             <Leg>
-              <Offset>200.00</Offset>
-              <OffsetPerp>21.00</OffsetPerp>
-              <Diameter>38.00</Diameter>
+              <!--Offset>200.00</Offset-->
+              <OffsetPerp>12.00</OffsetPerp>
+              <Diameter>36.00</Diameter>
             </Leg>
         </_Suspension>
 
@@ -271,7 +271,7 @@
               <File>fork/_suspension/suspension_bridge_20.svg</File>
             </DropOut>
             <Brake>
-              <Offset>25.00</Offset>
+              <Offset>32.00</Offset>
             </Brake>
         </Suspension_20>
         
@@ -283,7 +283,7 @@
               <File>fork/_suspension/suspension_bridge_24.svg</File>
             </DropOut>
             <Brake>
-              <Offset>25.00</Offset>
+              <Offset>32.00</Offset>
             </Brake>
         </Suspension_24>
         
@@ -295,7 +295,7 @@
               <File>fork/_suspension/suspension_bridge_26.svg</File>
             </DropOut>
             <Brake>
-              <Offset>25.00</Offset>
+              <Offset>32.00</Offset>
             </Brake>
         </Suspension_26>
         
@@ -307,7 +307,7 @@
               <File>fork/_suspension/suspension_bridge_27.svg</File>
             </DropOut>
             <Brake>
-              <Offset>25.00</Offset>
+              <Offset>32.00</Offset>
             </Brake>
         </Suspension_27>
         
@@ -319,7 +319,7 @@
               <File>fork/_suspension/suspension_bridge_29.svg</File>
             </DropOut>
             <Brake>
-              <Offset>25.00</Offset>
+              <Offset>32.00</Offset>
             </Brake>
         </Suspension_29>
     </Fork>

@@ -54,6 +54,7 @@
             variable Fork
             variable ForkBlade
                 #
+            variable ConfigPrev
             variable Result
                 #
                 #
@@ -68,10 +69,11 @@
                 #
             set Fork(Rake)          $Geometry(Fork_Rake)  
                 #
-                puts "    <-> $Fork(Rake)"
+                # puts "    <-> $Fork(Rake)"
                 #
             # tk_messageBox -message "bikeGeometry::create_Fork $Config(Fork)"
                 #
+                # puts "\n\n\n  <-00->  ... standard  ... $ConfigPrev(Fork)\n\n\n\n"
             switch -glob $Config(Fork) {
                 SteelLugged     -
                 SteelCustom     {bikeGeometry::create_Fork_SteelCustom}
@@ -81,7 +83,7 @@
                 Suspension*     {bikeGeometry::create_Fork_Suspension}
                 default         {}
             }  
-                #
+                #    
             # tk_messageBox -message $myFork(CrownOffsetBrake)   
                 #
                 #
@@ -339,6 +341,7 @@
         # ---   get Fork_SteelLuggedMAX
     proc bikeGeometry::create_Fork_SteelLuggedMAX {} {
                 #
+            variable ConfigPrev
             variable Geometry
             variable Component
             variable Direction
@@ -444,7 +447,16 @@
             set Fork(CrownOffsetBrake)  [[ $initDOM selectNodes /root/Fork/SteelLuggedMAX/Crown/Brake/Offset    ]  asText ]
             set Fork(CrownAngleBrake)   [[ $initDOM selectNodes /root/Fork/SteelLuggedMAX/Crown/Brake/Angle     ]  asText ]
                 #
-            set Fork(BladeBrakeOffset)  [[ $initDOM selectNodes /root/Fork/SteelLuggedMAX/Brake/Offset  ]  asText ]
+            puts "\n\n\n  <-01->  ... standard  ... $ConfigPrev(Fork)\n\n\n\n"
+            if {$ConfigPrev(Fork) != "SteelLuggedMAX"} {
+                    # puts "\n\n     ->  ... init\n\n"
+                    set Fork(BladeBrakeOffset)  [[ $initDOM selectNodes /root/Fork/SteelLuggedMAX/Brake/Offset  ]  asText ]
+            } else {
+                    # puts "\n\n     ->  ... standard  ... $ConfigPrev(Fork)\n\n"
+                if {[array get Fork BladeBrakeOffset] == {}} {
+                    set Fork(BladeBrakeOffset)  [[ $initDOM selectNodes /root/Fork/SteelLuggedMAX/Brake/Offset  ]  asText ]
+                } 
+            }
                 #
             return
                 #
@@ -579,6 +591,79 @@
                 #
             set forkSize  $Config(Fork)
                 #
+            # set crownOffset       [[ $initDOM selectNodes /root/Fork/_Suspension/Crown/Brake/Offset     ]  asText ]
+            set bladeOffsetPerp     [[ $initDOM selectNodes /root/Fork/_Suspension/Leg/OffsetPerp ]  asText ]
+            set bladeDiameter       [[ $initDOM selectNodes /root/Fork/_Suspension/Leg/Diameter ]    asText ]
+            set bladeBrakeOffset    [[ $initDOM selectNodes /root/Fork/$forkSize/Brake/Offset ]      asText ]
+                #
+            # puts "   -> \$crownOffset $crownOffset"    
+            # puts "   -> \$bladeOffsetPerp $bladeOffsetPerp"    
+            # puts "   -> \$bladeDiameter   $bladeDiameter" 
+                #
+            set brakeOffset [expr $bladeOffsetPerp + 0.5 * $bladeDiameter]    
+                #
+            # puts "   -> \$brakeOffset   $brakeOffset   <-> 40" 
+                #
+            # set pt_60  [ vectormath::rotateLine $pt_00  40.0 [expr  90 - $Geometry(HeadTube_Angle)]]
+            set pt_60  [ vectormath::rotateLine $pt_00 $brakeOffset [expr  90 - $Geometry(HeadTube_Angle)]]
+            set pt_61  [ vectormath::rotateLine $pt_60 100.0    [expr 180 - $Geometry(HeadTube_Angle)]]
+            set Fork(BrakeOffsetDef)    [bikeGeometry::flatten_nestedList $pt_61 $pt_60 ]
+            # puts "   -> \$Fork(BrakeOffsetDef) $Fork(BrakeOffsetDef)"
+                #
+                #
+            set Component(ForkCrown)    [[ $initDOM selectNodes /root/Fork/_Suspension/Crown/File   ]   asText ]
+            set Component(ForkDropout)  [[ $initDOM selectNodes /root/Fork/$forkSize/DropOut/File   ]   asText ]                    
+                #
+                # set Fork(CrownOffsetBrake)  [[ $initDOM selectNodes /root/Fork/_Suspension/Crown/Brake/Offset   ]  asText ]
+            set Fork(CrownOffsetBrake)  [expr $bladeOffsetPerp + 0.5 * $bladeDiameter]
+                # set Fork(CrownAngleBrake)   [[ $initDOM selectNodes /root/Fork/_Suspension/Crown/Brake/Angle    ]  asText ]
+                #
+            set Fork(BladeBrakeOffset)  [[ $initDOM selectNodes /root/Fork/$forkSize/Brake/Offset   ]   asText ]  
+            set Fork(Rake)              [[ $initDOM selectNodes /root/Fork/$forkSize/Geometry/Rake  ]   asText ]  
+                #
+            puts "   -> \$Fork(CrownOffsetBrake)   $Fork(CrownOffsetBrake)"             
+                # puts "\n <-> \$Fork(Rake) $Fork(Rake)\n"
+            set offset                  [ expr $Geometry(Fork_Rake) - $Fork(Rake)]
+            set offset_x                [ expr -1.0 * $offset/sin([vectormath::rad [expr 180 - $Geometry(HeadTube_Angle)]]) ]
+                # puts "   -> \$offset_x $offset_x"
+            set vct_move [list $offset_x 0]
+                #
+            set Position(FrontDropout_MockUp)   [ vectormath::addVector $Position(FrontWheel) $vct_move]
+                #
+            return
+                #
+    }
+    proc bikeGeometry::create_Fork_Suspension__ {} {
+                #
+            variable Geometry
+            variable Component
+            variable Config
+            variable Direction
+            variable Polygon
+            variable Position
+                #
+            variable Fork
+            variable ForkBlade
+            variable Steerer
+            variable HeadTube
+            variable FrontWheel
+            variable FrontBrake
+                #
+            variable Result
+                #
+            variable initDOM
+                #
+                #
+            set pt_00       $Position(Steerer_Start)
+            #set pt_99       $Position(FrontWheel)
+            #set pt_01       [ vectormath::addVector $pt_00 $Direction(HeadTube) -1.0*$Fork(BladeOffsetCrown) ]
+            #set pt_02       [ lindex [ vectormath::parallel  $pt_00  $pt_01  $Fork(BladeOffsetCrownPerp) left ] 1] ;# centerpoint of Blade in ForkCrown
+                #
+                #
+            set Polygon(ForkBlade)        {}
+                #
+            set forkSize  $Config(Fork)
+                #
             set pt_60  [ vectormath::rotateLine $pt_00  40.0 [expr  90 - $Geometry(HeadTube_Angle)]]
             set pt_61  [ vectormath::rotateLine $pt_60 100.0 [expr 180 - $Geometry(HeadTube_Angle)]]
             set Fork(BrakeOffsetDef)    [bikeGeometry::flatten_nestedList $pt_61 $pt_60 ]
@@ -587,7 +672,7 @@
             set Component(ForkDropout)  [[ $initDOM selectNodes /root/Fork/$forkSize/DropOut/File   ]   asText ]                    
                 #
             set Fork(CrownOffsetBrake)  [[ $initDOM selectNodes /root/Fork/_Suspension/Crown/Brake/Offset   ]  asText ]
-            set Fork(CrownAngleBrake)   [[ $initDOM selectNodes /root/Fork/_Suspension/Crown/Brake/Angle    ]  asText ]
+                # set Fork(CrownAngleBrake)   [[ $initDOM selectNodes /root/Fork/_Suspension/Crown/Brake/Angle    ]  asText ]
                 #
             set Fork(BladeBrakeOffset)  [[ $initDOM selectNodes /root/Fork/$forkSize/Brake/Offset   ]   asText ]  
             set Fork(Rake)              [[ $initDOM selectNodes /root/Fork/$forkSize/Geometry/Rake  ]   asText ]  
