@@ -1,5 +1,16 @@
 
 
+3.4.02.64  - 2015.08.18
+-------------------------------------------------------------------------------
+    refactor:
+        ... namespace rattleCAD::control::tool
+        ... chainWheel_SVG
+            ... proc update_board
+            ... proc getChainWheel
+            ... failed to start on auto_path
+        ... remove console from Menu
+
+
 3.4.02.63  - 2015.08.09
 -------------------------------------------------------------------------------
     refactor:

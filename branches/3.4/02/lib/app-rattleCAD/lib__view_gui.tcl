@@ -96,7 +96,6 @@
                 {separator}         
                                     
                 {command "&Config Panel"    {}  "open Config Panel"     {Ctrl m}        -command { rattleCAD::configPanel::create } }
-                {command "show Console"     {}  "show log Consolge"     {}              -command { rattleCAD::view::gui::show_Console } }
                             
                 {separator}         
                             
@@ -150,6 +149,10 @@
         }
         
         return [MainFrame .mainframe  -menu $mainframe_Menue ]
+        
+            # removed 20150818
+            # {command "show Console"   {}  "show log Consolge" {}              -command { rattleCAD::view::gui::show_Console } }
+                
     }
 
 

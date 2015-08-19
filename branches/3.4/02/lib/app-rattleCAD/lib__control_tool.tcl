@@ -38,9 +38,9 @@
  # 
  
  
- namespace eval rattleCAD::control::tool {
+ namespace eval rattleCAD::control::tool {}
 
-    proc check_runTime {} {
+    proc rattleCAD::control::tool::check_runTime {} {
         set nameofExecutable [info nameofexecutable]
         set executableFile [file tail $nameofExecutable]
         set executableExt  [lindex [split $executableFile .] end]
@@ -60,14 +60,14 @@
     }
 
     
-    proc toolException {command runTime} {
+    proc rattleCAD::control::tool::toolException {command runTime} {
         tk_messageBox -icon info \
                 -title   "[file tail $command]   -   tclTk-Runtime required!" \
                 -message "  ... this feature is available in tclTk-Runtime only!\n\n  ... current runtime:\n         $runTime"
         return
     }
 
-    proc start_simplifySVG {} {
+    proc rattleCAD::control::tool::start_simplifySVG {} {
         puts "\n"
         puts "    start simplify_SVG.tcl: "
         puts "  ----------------------------------------"
@@ -102,7 +102,7 @@
     }    
 
 
-    proc start_chainWheelSVG {} {
+    proc rattleCAD::control::tool::start_chainWheelSVG {} {
         puts "\n"
         puts "    start chainWheel_SVG.tcl: "
         puts "  ----------------------------------------"
@@ -136,5 +136,5 @@
         }
     }    
 
-}
+
 
