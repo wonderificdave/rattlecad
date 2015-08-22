@@ -193,7 +193,9 @@
           rattleCAD::view::createEdit  $x $y $cv_Name  {
                 file://Component(CrankSet)
                        Scalar(CrankSet/Length)
-                text://ListValue(CrankSetChainRings)
+                       Scalar(CrankSet/PedalEye)
+               text://ListValue(CrankSetChainRings)
+               text://Config(CrankSet_SpyderArmCount)
               } {Crankset:  Parameter - 003} 
     } 
     proc rattleCAD::view::edit::group_Chain_Parameter_15                {x y cv_Name} {

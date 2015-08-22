@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.4.02.51</rattleCADVersion>
+        <rattleCADVersion>3.4.02.65</rattleCADVersion>
         <Name>specialized_hotrock_24_sl_boys</Name>
-        <modified>2015.05.09 - 00:58:10</modified>
+        <modified>2015.08.22 - 12:19:02</modified>
     </Project>
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
@@ -287,7 +287,7 @@
         <CrankSet>
             <File>etc:crankset/custom.svg</File>
             <Length>152.000</Length>
-            <PedalEye>17.50</PedalEye>
+            <PedalEye>15.000</PedalEye>
             <Q-Factor>175.00</Q-Factor>
             <ArmWidth>13.75</ArmWidth>
             <ChainLine>43.50</ChainLine>
@@ -374,6 +374,9 @@
             <ChainWheelClearance>5.00</ChainWheelClearance>
             <CassetteClearance>3.00</CassetteClearance>
         </RearMockup>
+        <CrankSet>
+            <SpyderArmCount>4</SpyderArmCount>
+        </CrankSet>
     </Rendering>
     <Result>
         <Position>
@@ -393,7 +396,7 @@
             <DerailleurMountFront>-28.625574,125.096828</DerailleurMountFront>
             <CarrierMountFront>538.500133,59.500000</CarrierMountFront>
             <CarrierMountRear>-423.545897,64.500000</CarrierMountRear>
-            <BrakeFront>498.760692,276.731843</BrakeFront>
+            <BrakeFront>502.644658,277.896285</BrakeFront>
             <BrakeRear>-220.443124,204.439980</BrakeRear>
             <SummarySize>982.046030,516.809293</SummarySize>
             <SeatPostSaddle>-159.135140,475.000000</SeatPostSaddle>
@@ -402,10 +405,10 @@
             <ChainStayRearMockup>0.00,0.00</ChainStayRearMockup>
             <Brake>
                 <Front>
-                    <Mount>448.060991,305.471576</Mount>
-                    <Shoe>498.760692,276.731843</Shoe>
-                    <Help>482.634134,318.742962</Help>
-                    <Definition>473.619495,264.406250</Definition>
+                    <Mount>448.170217,305.187031</Mount>
+                    <Shoe>502.644658,277.896285</Shoe>
+                    <Help>486.518100,319.907404</Help>
+                    <Definition>473.911862,263.809893</Definition>
                 </Front>
                 <Rear>
                     <Mount>-171.485930,209.749706</Mount>
@@ -606,7 +609,7 @@
                     <radiant>-0.092310</radiant>
                 </Direction>
                 <Profile>
-                    <xz>0,8.0 250.00000000000006,13.0 290.0,13.0 335.0,11.0 372.0120965775172,11.0</xz>
+                    <xz>0 8.0 250.00000000000006 13.0 290.0 13.0 335.0 11.0 372.0120965775172 11.0</xz>
                     <xy>0 8.0 150.0 9.0 300.0 9.0 375.0 9.0 410.0 9.0</xy>
                 </Profile>
                 <Start>-370.428229,34.291799</Start>
