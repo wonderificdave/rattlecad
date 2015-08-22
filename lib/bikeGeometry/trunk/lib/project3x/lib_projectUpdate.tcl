@@ -1426,6 +1426,13 @@
                                 }
                                 puts "                           ... update File ... /root/Rendering/Fork"
                         }
+                                # -- Crankset Rendering
+                        set node [$projectDOM selectNode /root/Rendering/CrankSet/SpyderArmCount/text()]
+                        if {$node == {}} {
+                                set parentNode      [$projectDOM selectNode /root/Rendering]
+                                puts "                           ... update File ... /root/Rendering/CrankSet/SpyderArmCount"
+                                $parentNode appendXML  "<CrankSet><SpyderArmCount>5</SpyderArmCount></CrankSet>"
+                        }
                     }
                 
                 {ab-xy} {	

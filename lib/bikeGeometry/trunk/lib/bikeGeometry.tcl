@@ -32,7 +32,7 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  #
  # ---------------------------------------------------------------------------
- #    namespace:  bikeGeometry::frame_geometry_custom
+ #    namespace:  bikeGeometry
  # ---------------------------------------------------------------------------
  #
  #
@@ -286,6 +286,11 @@
  #          ... add variable ConfigPrev to store values of previous call 
  #                  proc get_Config
  #
+ # 1.58 - 20150819
+ #      feature:
+ #          ... add lib_paramComponent.tcl
+ #          ... proc get_paramComponent {}
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -294,7 +299,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.57
+    package provide bikeGeometry 1.58
         #
     package require vectormath
         #
@@ -405,6 +410,7 @@
             namespace export get_BoundingBox
             namespace export get_TubeMiter
             namespace export get_TubeMiterDICT
+            namespace export get_paramComponent
             namespace export get_CenterLine
                 #
             namespace export get_ComponentDir 
@@ -538,6 +544,7 @@
         dict set projDict   Config      BottleCage_DownTube_Lower           $::bikeGeometry::Config(BottleCage_DownTube_Lower)              ;#[bikeGeometry::get_Config           BottleCage_DT_L                   ]                ;# set _lastValue(Rendering/BottleCage/DownTube_Lower)                     
         dict set projDict   Config      BottleCage_SeatTube                 $::bikeGeometry::Config(BottleCage_SeatTube)                    ;#[bikeGeometry::get_Config           BottleCage_ST                     ]                ;# set _lastValue(Rendering/BottleCage/SeatTube)                           
         dict set projDict   Config      ChainStay                           $::bikeGeometry::Config(ChainStay)                              ;#[bikeGeometry::get_Config           ChainStay                         ]                ;# set _lastValue(Rendering/ChainStay)                                     
+        dict set projDict   Config      CrankSet_SpyderArmCount             $::bikeGeometry::Config(CrankSet_SpyderArmCount)
         dict set projDict   Config      Fork                                $::bikeGeometry::Config(Fork)                                   ;#[bikeGeometry::get_Config           Fork                              ]                ;# set _lastValue(Rendering/Fork)                                          
         dict set projDict   Config      ForkBlade                           $::bikeGeometry::Config(ForkBlade)                              ;#[bikeGeometry::get_Config           ForkBlade                         ]                ;# set _lastValue(Rendering/ForkBlade)                                     
         dict set projDict   Config      ForkDropout                         $::bikeGeometry::Config(ForkDropout)                            ;#[bikeGeometry::get_Config           ForkDropout                       ]                ;# set _lastValue(Rendering/ForkDropOut)                                   
@@ -922,7 +929,7 @@
         if {[catch {array get [namespace current]::Config $key} eID]} {
             puts "\n              <W> bikeGeometry::set_Config ... \$key not accepted! ... $key / $value\n"
             return {}
-        }
+        }  
             # -- set value to parameter
         set [namespace current]::Config($key) $value
         bikeGeometry::update_Geometry
@@ -1152,6 +1159,109 @@
             #
     } 
         #
+    proc bikeGeometry::get_CustomCrankSetDICT {} {
+            #
+        # variable 
+            #
+        variable Result
+            #
+        
+        set cranksetDict   [dict create crankArm    {} \
+                                        crankSpider {} \
+                                        ChainWheel  {} \
+        ]
+            # 
+        # to be implemented    
+        # ... see get_TubeMiterDICT  
+            #
+        return $cranksetDict            
+            #
+    } 
+        #
+    proc bikeGeometry::get_paramComponent {type args} {
+            #
+        variable Config    
+            #
+        set visMode     "polyline"
+        set armCount    $Config(CrankSet_SpyderArmCount)
+        set bcDiameter  __default__
+            #
+        switch -exact $type {
+            ChainWheel {
+                        #
+                    if {[llength $args] >= 2 } { 
+                        set teethCount      [lindex $args 0]
+                        set position        [lindex $args 1]
+                        if {[llength $args] > 2 } {
+                            set visMode     [lindex $args 2]
+                        }
+                        if {[llength $args] > 3 } {
+                            set armCount    [lindex $args 3]
+                        }
+                        if {[llength $args] > 4 } {
+                            set bcDiameter  [lindex $args 4]
+                        }
+                    } else {
+                        return {}
+                    }
+                        #
+                    return [bikeGeometry::paramComponent::_get_polygon_ChainWheel $teethCount $position $armCount $bcDiameter $visMode ]
+                        #
+                }
+            CrankArm {
+                    if {[llength $args] >= 2 } {
+                        set crankLength [lindex $args 0]
+                        set position    [lindex $args 1]
+                    } else {
+                        return {}
+                    }
+                        #
+                    return [bikeGeometry::paramComponent::_get_polygon_CrankArm $crankLength $position]
+                        #
+                }
+            CrankSpyder {
+                        #
+                    if {[llength $args] >= 2 } {
+                        set teethCount  [lindex $args 0]
+                        set position    [lindex $args 1]
+                            # tk_messageBox -message " ... <$type> in proc bikeGeometry::get_paramComponent"
+                        if {[llength $args] > 2 } {
+                            set armCount    [lindex $args 2]
+                        }
+                        if {[llength $args] > 3 } {
+                            set bcDiameter  [lindex $args 3]
+                        }
+                    } else {
+                        return {}
+                    }
+                        #
+                    return [bikeGeometry::paramComponent::_get_polygon_CrankSpyder $teethCount $position $armCount $bcDiameter]
+                        #
+                }
+            ChainWheelBoltPosition {
+                        #
+                    if {[llength $args] >= 2 } {
+                        set teethCount  [lindex $args 0]
+                        set position    [lindex $args 1]
+                        if {[llength $args] > 2 } {
+                            set armCount    [lindex $args 2]
+                        }
+                        if {[llength $args] > 3 } {
+                            set bcDiameter  [lindex $args 3]
+                        }
+                    }  else {
+                        return {}
+                    }
+                        #
+                    return [bikeGeometry::paramComponent::_get_position_ChainWheelBolts $teethCount $position $armCount $bcDiameter]
+                        #
+                }
+            default {
+                    tk_messageBox -message " ... <$type> not defined in proc bikeGeometry::get_paramComponent"
+                    return {}
+                }
+        }
+    }
         #
         #
         #
@@ -1269,11 +1379,6 @@
         # http://stackoverflow.com/questions/9676651/converting-a-list-to-an-array
         set dict_Geometry [array get ::bikeGeometry::DEBUG_Geometry]
         return $dict_Geometry
-    }
-        #
-    proc bikeGeometry::get_openSCADContent_removed {} {
-        # set scadDict [bikeGeometry::geometry3D::get_scadContent]
-        # return $scadDict
     }
         #
     #-------------------------------------------------------------------------

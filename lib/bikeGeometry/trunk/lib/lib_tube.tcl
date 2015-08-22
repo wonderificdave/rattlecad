@@ -32,7 +32,7 @@
  # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.  
  #
  # ---------------------------------------------------------------------------
- #    namespace:  bikeGeometry::lib_tube
+ #    namespace:  bikeGeometry::tube
  # ---------------------------------------------------------------------------
  #
  # 

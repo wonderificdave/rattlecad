@@ -385,6 +385,9 @@
             <ChainWheelClearance>5.00</ChainWheelClearance>
             <CassetteClearance>3.00</CassetteClearance>
         </RearMockup>
+        <CrankSet>
+            <SpyderArmCount>5</SpyderArmCount>
+        </CrankSet>
 
     </Rendering>
 
