@@ -740,111 +740,104 @@
 
 
     proc rattleCAD::rendering::createCrank_Custom {cv_Name BB_Position} {
-        variable crankLength    [rattleCAD::model::get_Scalar CrankSet Length]
-        variable teethCount     [lindex [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]] end]
-        variable decoRadius     80
-
+            #
+        set crankLength    [rattleCAD::model::get_Scalar CrankSet Length]
+        set teethCount     [lindex [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]] end]
+            #
+        set teethCountList [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]]
+        set teethCountMax  [lindex $teethCountList end]    
+            #
+            
                 puts ""
                 puts "   -------------------------------"
                 puts "   createCrank_Custom"
                 puts "       crankLength:    $crankLength"
-                puts "       teethCount:     $teethCount"
-
-        set polygonChainWheel   [_get_polygonChainWheel  $BB_Position]
-        set polygonCrankArm     [_get_polygonCrankArm    $BB_Position]
+                puts "       teethCountList: $teethCountList"
+                puts "       teethCountMax:  $teethCountMax"
+                
+        
+            #
+            # -- ChainWheel
+            #
+        foreach teethCount $teethCountList {
+            set polygonChainWheel   [rattleCAD::model::get_paramComponent   ChainWheel $teethCount  $BB_Position]
+            set outerChainRingTags {}
+                #
+            set tagName myTags
+            foreach {mode coords} $polygonChainWheel {
+                    #
+                switch -exact $mode {
+                    closed {
+                        set myObject   [$cv_Name create polygon     $coords  -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill white  -outline black]
+                    }
+                    opened {
+                        set myObject   [$cv_Name create line        $coords  -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill black]
+                    }
+                    default {
+                        tk_messageBox -message " $mode \n $coords "
+                    }
+                }
+                catch {$cv_Name addtag $tagName withtag $myObject}
+                catch {lappend outerChainRingTags $myObject}
+            }
+                #
+            catch {$cv_Name addtag $tagName withtag $chainWheel}
+            catch {$cv_Name addtag $tagName withtag $chainWheelRing}
+                #
+        }
+            
+            
+            #
+            # -- SpyderArms
+            #
+        set polygonSpyderArm    [rattleCAD::model::get_paramComponent   CrankSpyder   $teethCountMax $BB_Position ]
+            #
+        set spyderArm           [$cv_Name create polygon    $polygonSpyderArm   -tags {__Decoration__ __Crankset__ __SpyderArm__}        -fill white  -outline black]
+            #
+        catch {$cv_Name addtag $tagName withtag $spyderArm}
+            #
+            
+            
+            #
+            # -- lower SpyderArms under outside ChainWheel
+            #
+            # puts "\n <D>  \$outerChainRingTags $outerChainRingTags"
+        $cv_Name lower $spyderArm  [lindex $outerChainRingTags 0]
+            #
+            
+            
+            #
+            # -- ChaineWheelBolts
+            #
+        set posChaineWheelBolts [rattleCAD::model::get_paramComponent   ChainWheelBoltPosition   $teethCountMax $BB_Position]
+        foreach {x y} $posChaineWheelBolts {
+            set bolt01      [$cv_Name create circle    [list $x $y]   -tags {__Decoration__ __Crankset__ __ChainWheel__} -radius 6.0 -fill white  -outline black]
+            set bolt02      [$cv_Name create circle    [list $x $y]   -tags {__Decoration__ __Crankset__ __ChainWheel__} -radius 2.5 -fill white  -outline black]
+                #
+            catch {$cv_Name addtag $tagName withtag $bolt01}
+            catch {$cv_Name addtag $tagName withtag $bolt02}
+        }
+            #
+                
+            
+            #
+            # -- CrankArm
+            #
+        set polygonCrankArm     [rattleCAD::model::get_paramComponent   CrankArm   $crankLength $BB_Position]
         set positon_00          $BB_Position
         set positon_01          [vectormath::addVector $BB_Position [list $crankLength 0]]
-
-        set chainWheel          [$cv_Name create polygon    $polygonChainWheel  -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill white  -outline black]
-        set chainWheelRing      [$cv_Name create circle     $positon_00         -tags {__Decoration__ __Crankset__ __ChainWheelRing__}  -fill white  -outline black  -radius  $decoRadius ]
+            #
         set crankArm            [$cv_Name create polygon    $polygonCrankArm    -tags {__Decoration__ __Crankset__ __CrankArm__}        -fill white  -outline black]
         set pedalMount          [$cv_Name create circle     $positon_01         -tags {__Decoration__ __Crankset__ __PedalMount__}      -fill white  -outline black  -radius  6 ]
         set crankAxle           [$cv_Name create circle     $positon_00         -tags {__Decoration__ __Crankset__ __PedalMount__}      -fill white  -outline black  -radius 10 ]
-
-        set tagName myTags
-        $cv_Name addtag $tagName withtag $chainWheel
-        $cv_Name addtag $tagName withtag $chainWheelRing
-        $cv_Name addtag $tagName withtag $crankArm
+            #
+        catch {$cv_Name addtag $tagName withtag $crankArm}
+        catch {$cv_Name addtag $tagName withtag $pedalMount}
+        catch {$cv_Name addtag $tagName withtag $crankAxle}
+            #
         return $tagName
+            #
     } 
-
-
-    proc rattleCAD::rendering::_get_polygonChainWheel {BB_Position} {
-            variable teethCount
-            variable decoRadius
-
-                # -----------------------------
-                #   initValues
-            set toothWith           12.7
-            set toothWithAngle      [expr 2*$vectormath::CONST_PI/$teethCount]
-            set chainWheelRadius    [expr 0.5*$toothWith/sin([expr 0.5*$toothWithAngle])]
-            set decoRadius          [expr $chainWheelRadius - 8]
-
-                # -----------------------------
-                #   toothProfile
-                set pt_00 {2 5}                                     ; foreach {x0 y0} $pt_00 break
-                set pt_01 [vectormath::rotateLine {0 0} 3.8 100]    ; foreach {x1 y1} $pt_01 break
-                set pt_02 [vectormath::rotateLine {0 0} 3.8 125]    ; foreach {x2 y2} $pt_02 break
-                set pt_03 [vectormath::rotateLine {0 0} 3.8 150]    ; foreach {x3 y3} $pt_03 break
-                set pt_04 [vectormath::rotateLine {0 0} 3.8 170]    ; foreach {x4 y4} $pt_04 break
-            set toothProfile [list $x0 -$y0    $x1 -$y1    $x2 -$y2    $x3 -$y3    $x4 -$y4    $x4 $y4    $x3 $y3    $x2 $y2    $x1 $y1    $x0 $y0]
-
-                # -----------------------------
-                #    chainwheel profile outside
-            set index 0 ;# start her for symetriy purpose
-            set outsideProfile {}
-            while { $index < $teethCount } {
-                set currentAngle [expr $index * [vectormath::grad $toothWithAngle]]
-                set pos [vectormath::rotateLine {0 0} $chainWheelRadius $currentAngle ]
-
-                set tmpList_01 {}
-                foreach {x y} $toothProfile {
-                    set pt_xy [list $x $y]
-                    set pt_xy [vectormath::rotatePoint {0 0} $pt_xy $currentAngle]
-                    set pt_xy [vectormath::addVector $pos $pt_xy]
-                    set tmpList_01 [lappend tmpList_01 [appUtil::flatten_nestedList $pt_xy] ]
-                }
-                set outsideProfile [lappend teethProfile [appUtil::flatten_nestedList $tmpList_01]]
-                incr index
-            }
-            set chainWheelProfile [appUtil::flatten_nestedList $outsideProfile]
-            set chainWheelProfile [vectormath::addVectorPointList $BB_Position $chainWheelProfile]
-            return $chainWheelProfile
-    }
-    proc rattleCAD::rendering::_get_polygonCrankArm {BB_Position} {
-            variable crankLength
-
-                # -----------------------------
-                #   initValues
-            set index 0
-            set crankArmProfile {{10 -19} {0 -19}}
-                # -----------------------------
-            set point [lindex $crankArmProfile 1]
-            set angle 270
-                # -----------------------------
-            while {$angle > 90} {
-                incr angle -5
-                set point [vectormath::rotatePoint {0 0} $point -5]
-                lappend crankArmProfile $point
-            }
-                # -----------------------------
-            lappend crankArmProfile {10 19}
-            lappend crankArmProfile [list [expr $crankLength -30] 14] [list $crankLength 14]
-                # -----------------------------
-            set point [lindex $crankArmProfile end]
-            set angle 90
-            while {$angle > -90} {
-                incr angle -5
-                set point [vectormath::rotatePoint [list $crankLength 0] $point -5]
-                    # puts "         -> \$angle $angle  -- \$point $point"
-                lappend crankArmProfile $point
-            }
-                # -----------------------------
-            lappend crankArmProfile [list [expr $crankLength -30] -14]
-            set crankArmProfile [appUtil::flatten_nestedList $crankArmProfile]
-            set crankArmProfile [vectormath::addVectorPointList $BB_Position $crankArmProfile]
-            return $crankArmProfile
-    }
 
 
     proc rattleCAD::rendering::createFork {cv_Name BB_Position {updateCommand {}} } {

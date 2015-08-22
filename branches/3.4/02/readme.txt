@@ -1,5 +1,15 @@
 
 
+3.4.02.65  - 2015.08.22
+-------------------------------------------------------------------------------
+    refactor:
+        ... bikeGeometry 1.58
+            ... get_paramComponent
+        ... replace 
+            ... proc rattleCAD::rendering::_get_polygonChainWheel
+            ... proc rattleCAD::rendering::_get_polygonCrankArm
+
+
 3.4.02.64  - 2015.08.18
 -------------------------------------------------------------------------------
     refactor:

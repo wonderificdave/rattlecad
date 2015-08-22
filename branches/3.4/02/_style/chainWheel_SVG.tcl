@@ -154,6 +154,11 @@
 		variable start_length       80
 		variable teethCount         53
 		variable end_length         65
+            #
+        variable crankLength       170    
+        variable crankRadiusPedal   15    
+        variable crankRadiusAxle    20   
+            #
 		variable dim_size            5
 		variable dim_dist           30
 		variable dim_offset          0

@@ -83,6 +83,7 @@ namespace eval rattleCAD::model {
     namespace import ::bikeGeometry::get_CenterLine
     namespace import ::bikeGeometry::get_TubeMiter
     namespace import ::bikeGeometry::get_TubeMiterDICT
+    namespace import ::bikeGeometry::get_paramComponent
         #
     namespace import ::bikeGeometry::get_ComponentDir 
     namespace import ::bikeGeometry::get_ComponentDirectories

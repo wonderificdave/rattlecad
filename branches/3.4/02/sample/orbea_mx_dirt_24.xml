@@ -1,8 +1,8 @@
 <root>
     <Project>
-        <rattleCADVersion>3.4.02.51</rattleCADVersion>
-        <Name>ORBEA_MX_Dirt_24</Name>
-        <modified>2015.05.09 - 01:46:09</modified>
+        <rattleCADVersion>3.4.02.65</rattleCADVersion>
+        <Name>orbea_mx_dirt_24</Name>
+        <modified>2015.08.22 - 12:14:17</modified>
     </Project>
     <Personal>
         <!-- personal geometry based on cyclist body profile -->
@@ -287,7 +287,7 @@
         <CrankSet>
             <File>etc:../components/crankset/custom.svg</File>
             <Length>152.000</Length>
-            <PedalEye>17.50</PedalEye>
+            <PedalEye>15.000</PedalEye>
             <Q-Factor>145.50</Q-Factor>
             <ArmWidth>13.75</ArmWidth>
             <ChainLine>43.50</ChainLine>
@@ -374,6 +374,9 @@
             <ChainWheelClearance>5.00</ChainWheelClearance>
             <CassetteClearance>3.00</CassetteClearance>
         </RearMockup>
+        <CrankSet>
+            <SpyderArmCount>4</SpyderArmCount>
+        </CrankSet>
     </Rendering>
     <Result>
         <Position>
@@ -606,7 +609,7 @@
                     <radiant>-0.073220</radiant>
                 </Direction>
                 <Profile>
-                    <xz>0,6.5 187.00284510421784,14.5 227.0028451042178,14.5 272.0028451042178,14.5 297.00284510421784,14.5</xz>
+                    <xz>0 6.5 187.00284510421784 14.5 227.0028451042178 14.5 272.0028451042178 14.5 297.00284510421784 14.5</xz>
                     <xy>0 6.25 150.0 9.0 300.0 9.0 395.0 11.1 410.0 11.1</xy>
                 </Profile>
                 <Start>-296.207056,21.727168</Start>
