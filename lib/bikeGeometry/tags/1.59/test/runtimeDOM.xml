@@ -1,0 +1,2126 @@
+<root>
+    <activestate>
+        <teapot>
+            <link>
+                <____procedures______>
+                    <setup></setup>
+                    <use>args</use>
+                    <usel>repositories</usel>
+                </____procedures______>
+            </link>
+        </teapot>
+        <____arrays__________>
+            <ActiveTcl>
+                <element name="arch">win32-ix86</element>
+                <element name="as,mode">normal</element>
+                <element name="build">296777</element>
+                <element name="buildtime,fmt">Thu Apr 04 01:08:58 PDT 2013</element>
+                <element name="buildtime,sec">1365062938</element>
+                <element name="maturity">final</element>
+                <element name="product">ActiveTcl</element>
+                <element name="release">8.5.14.0</element>
+            </ActiveTcl>
+            <config>
+                <element name="ActiveTcl">ActiveState ActiveTcl 8.5.14.0.296777 Win32/x86 @ Thu Apr 04 01:08:58 PDT 2013 / normal</element>
+            </config>
+        </____arrays__________>
+    </activestate>
+    <appUtil>
+        <____procedures______>
+            <DelConfig>args</DelConfig>
+            <GetConfig>args</GetConfig>
+            <ReadConfigFile>fname</ReadConfigFile>
+            <SetConfig>key val args</SetConfig>
+            <SetDebugLevel>lvl</SetDebugLevel>
+            <_add_arraykeyValues>domNode arrayName</_add_arraykeyValues>
+            <_add_namespaceContent>domNode namespaceName</_add_namespaceContent>
+            <_add_namespaceReport>domNode namespaceName</_add_namespaceReport>
+            <_add_procArgs>domNode varName</_add_procArgs>
+            <_add_varValue>domNode varName</_add_varValue>
+            <_childArrays>parent_namespace</_childArrays>
+            <_childNamespaces>parent_namespace</_childNamespaces>
+            <_childProcedures>parent_namespace</_childProcedures>
+            <_childVars>parent_namespace</_childVars>
+            <appDebug>mode args</appDebug>
+            <debug_clear></debug_clear>
+            <debug_create>title</debug_create>
+            <debug_destroy></debug_destroy>
+            <debug_out>str</debug_out>
+            <debug_print>text</debug_print>
+            <flatten_nestedList>args</flatten_nestedList>
+            <get_dictValue>_dict _dictPath</get_dictValue>
+            <get_procHierarchy></get_procHierarchy>
+            <namespaceReport>_namespace</namespaceReport>
+            <pdict>d i p s</pdict>
+            <update_font>font</update_font>
+        </____procedures______>
+        <____vars____________>
+            <Config_Value_Notset></Config_Value_Notset>
+            <Config_Value_Separator>.</Config_Value_Separator>
+            <DebugLevel>0</DebugLevel>
+            <config_var>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</config_var>
+            <debug_text></debug_text>
+            <font>-*-Courier-Medium-R-Normal--*-140-*-*-*-*-*-*</font>
+            <widget_id>.d_e_b_u_g</widget_id>
+            <window_title>appUtil::Debug</window_title>
+        </____vars____________>
+    </appUtil>
+    <bikeGeometry>
+        <____procedures______>
+            <coords_flip_y>coordlist</coords_flip_y>
+            <coords_get_xy>coordlist index</coords_get_xy>
+            <fill_resultValues></fill_resultValues>
+            <get_BottleCageMount></get_BottleCageMount>
+            <get_BrakePositionFront></get_BrakePositionFront>
+            <get_BrakePositionRear></get_BrakePositionRear>
+            <get_ChainStay></get_ChainStay>
+            <get_ChainStay_RearMockup>type</get_ChainStay_RearMockup>
+            <get_DerailleurMountFront></get_DerailleurMountFront>
+            <get_DownTube_SeatTube></get_DownTube_SeatTube>
+            <get_Fork></get_Fork>
+            <get_FrameJig></get_FrameJig>
+            <get_HeadSet></get_HeadSet>
+            <get_HeadTube></get_HeadTube>
+            <get_Object>object index centerPoint</get_Object>
+            <get_SeatPost></get_SeatPost>
+            <get_SeatStay></get_SeatStay>
+            <get_Steerer></get_Steerer>
+            <get_Stem></get_Stem>
+            <get_TopTube_SeatTube></get_TopTube_SeatTube>
+            <get_TubeMiter></get_TubeMiter>
+            <get_Value>xpath type args</get_Value>
+            <get_basePoints></get_basePoints>
+            <get_projectDICT></get_projectDICT>
+            <get_projectXML></get_projectXML>
+            <get_resultAngle>position point_1 point_2</get_resultAngle>
+            <project_attribute>attribute</project_attribute>
+            <set_Value>xpath value mode</set_Value>
+            <set_base_Parameters></set_base_Parameters>
+            <set_columbusMAXFork></set_columbusMAXFork>
+            <set_compositeFork></set_compositeFork>
+            <set_forkConfig>_forkDOM</set_forkConfig>
+            <set_newProject>_projectDOM</set_newProject>
+            <set_projectValue_renamed>xpath value mode</set_projectValue_renamed>
+            <set_resultParameter>_array _name value</set_resultParameter>
+            <set_suspensionFork></set_suspensionFork>
+            <trace_Project>varname key operation</trace_Project>
+            <tube_intersection>diameter direction diameter_isect direction_isect isectionPoint side offset</tube_intersection>
+            <tube_miter>diameter direction diameter_isect direction_isect isectionPoint side offset opposite</tube_miter>
+        </____procedures______>
+        <____arrays__________>
+            <BottleCage>
+                <element name="DownTube">210.00</element>
+                <element name="DownTube_Lower">170.00</element>
+                <element name="SeatTube">170.00</element>
+            </BottleCage>
+            <BottomBracket>
+                <element name="Ground">0 -270.0</element>
+                <element name="OffsetCS_TopView">6.00</element>
+                <element name="depth">64.00</element>
+                <element name="height">270.0</element>
+                <element name="inside">36.00</element>
+                <element name="outside">40.00</element>
+                <element name="width">68.00</element>
+            </BottomBracket>
+            <ChainStay>
+                <element name="BottomBracket">0 0</element>
+                <element name="DiameterSS">13.00</element>
+                <element name="Direction">-0.9882740339393475 0.15269064752383885</element>
+                <element name="Height">29.00</element>
+                <element name="HeigthBB">22.20</element>
+                <element name="RearWheel">-372.581525885522 57.56471635312814</element>
+                <element name="SeatStay_IS">-405.4593636028325 62.644419105439795</element>
+                <element name="TaperLength">280.00</element>
+                <element name="WidthBB">22.20</element>
+            </ChainStay>
+            <DEBUG_Geometry>
+                <element name="Base">0 0</element>
+                <element name="pt_03">465.68747895906904,376.9264592862811</element>
+                <element name="pt_04">463.64967392360825,381.49234919269037</element>
+                <element name="pt_13">-249.20067008349247,330.6339190108955</element>
+                <element name="pt_14">446.39590223274047,390.6951786100785</element>
+            </DEBUG_Geometry>
+            <DownTube>
+                <element name="BottleCage_Base">131.85024190642542 164.37766335246738</element>
+                <element name="BottleCage_Lower_Base">129.6466094505504 111.3384891130487</element>
+                <element name="BottleCage_Lower_Offset">173.68818441593578 157.77489373881983</element>
+                <element name="BottleCage_Offset">175.89181687181082 210.8140679782385</element>
+                <element name="BottomBracket">-1.7763568394002505e-15 -1.7763568394002505e-15</element>
+                <element name="DiameterBB">34.90</element>
+                <element name="DiameterHT">31.80</element>
+                <element name="Direction">0.6881496088341469 0.7255688222776738</element>
+                <element name="HeadTube">421.73155656150357 444.6638708842297</element>
+                <element name="OffsetBB">0.00</element>
+                <element name="OffsetHT">8.50</element>
+                <element name="TaperLength">300.00</element>
+            </DownTube>
+            <Fork>
+                <element name="BladeBendRadius">350.00</element>
+                <element name="BladeDiameterDO">13.00</element>
+                <element name="BladeEndLength">10.00</element>
+                <element name="BladeOffsetCrown">35.00</element>
+                <element name="BladeOffsetCrownPerp">0.00</element>
+                <element name="BladeOffsetDO">20.00</element>
+                <element name="BladeOffsetDOPerp">0.00</element>
+                <element name="BladeTaperLength">250.00</element>
+                <element name="BladeWith">28.60</element>
+                <element name="BrakeAngle">0.00</element>
+                <element name="BrakeOffset">19.00</element>
+                <element name="BrakeOffsetDef">463.64967392360825 381.49234919269037 465.68747895906904 376.9264592862811</element>
+                <element name="CrownDirection">-0.3090169943749475 0.9510565162951535</element>
+                <element name="DropoutDirection">0.42935364259487935 -0.9031364512577866</element>
+                <element name="Height">365.00</element>
+                <element name="Rake">45.00</element>
+            </Fork>
+            <ForkBlade/>
+            <FrameJig>
+                <element name="HeadTube">454.6624983518207 343.3128546755337</element>
+                <element name="SeatTube">-53.77624701066918 178.1110914104156</element>
+            </FrameJig>
+            <FrontBrake>
+                <element name="Definition">477.53022673700286 350.3916919250886</element>
+                <element name="Help">489.1934454660224 404.6009433569511</element>
+                <element name="LeverLength">45.00</element>
+                <element name="Mount">458.9689233313 394.7804008061524</element>
+                <element name="Offset">36.00</element>
+                <element name="Shoe">503.09921021289506 361.8034001236692</element>
+            </FrontBrake>
+            <FrontDerailleur>
+                <element name="Distance">150.00</element>
+                <element name="Mount">-34.54843713641469 146.25677930075994</element>
+                <element name="Offset">9.20</element>
+            </FrontDerailleur>
+            <FrontWheel>
+                <element name="DistanceBB">838.2504053378584</element>
+                <element name="Distance_X">592.7325459467718</element>
+                <element name="Distance_Y">64.0</element>
+                <element name="Position">592.7325459467718 64.0</element>
+                <element name="Radius">334.0</element>
+                <element name="RimDiameter">622.00</element>
+                <element name="RimHeight">25.00</element>
+                <element name="TyreHeight">23.00</element>
+            </FrontWheel>
+            <HandleBar>
+                <element name="Distance">471.24</element>
+                <element name="Height">646.31</element>
+                <element name="Position">471.24 646.31</element>
+            </HandleBar>
+            <HeadSet>
+                <element name="Diameter">45.00</element>
+                <element name="Height_Bottom">13.50</element>
+                <element name="Height_Top">15.50</element>
+                <element name="ShimDiameter">36</element>
+                <element name="Stem">381.82975777351845 567.468980117691</element>
+            </HeadSet>
+            <HeadTube>
+                <element name="Angle">72.00</element>
+                <element name="Diameter">36.00</element>
+                <element name="Direction">-0.3090169943749475 0.9510565162951535</element>
+                <element name="Fork">432.97207034257224 410.069126670843</element>
+                <element name="ForkHeight">365.00</element>
+                <element name="ForkRake">45.00</element>
+                <element name="Length">150.00</element>
+                <element name="Stem">386.61952118633013 552.727604115116</element>
+            </HeadTube>
+            <LegClearance>
+                <element name="Length">850.00</element>
+                <element name="Position">80.00 580.0</element>
+            </LegClearance>
+            <Project>
+                <element name="Project">Template Road</element>
+                <element name="modified">2013.03.01/12:00</element>
+            </Project>
+            <RearBrake>
+                <element name="Definition">-249.20067008349247 330.6339190108955</element>
+                <element name="Help">-251.05686297093757 384.6853262244018</element>
+                <element name="LeverLength">45.00</element>
+                <element name="Mount">-225.53892294277708 368.91082748387504</element>
+                <element name="Offset">30.00</element>
+                <element name="Shoe">-274.71860997855435 346.4084176691444</element>
+            </RearBrake>
+            <RearDrop>
+                <element name="Derailleur_x">6.00</element>
+                <element name="Derailleur_y">25.00</element>
+                <element name="Direction">Chainstay</element>
+                <element name="OffsetCS">33.00</element>
+                <element name="OffsetCSPerp">1.30</element>
+                <element name="OffsetCS_TopView">5.00</element>
+                <element name="OffsetSS">35.00</element>
+                <element name="OffsetSSPerp">0.30</element>
+                <element name="RotationOffset">0.00</element>
+            </RearDrop>
+            <RearWheel>
+                <element name="DistanceBB">410.00</element>
+                <element name="Distance_X">404.97407324420163</element>
+                <element name="HubWidth">130.00</element>
+                <element name="Position">-404.97407324420163 64.00</element>
+                <element name="Radius">334.0</element>
+                <element name="RimDiameter">622.00</element>
+                <element name="RimHeight">25.00</element>
+                <element name="TyreHeight">23.00</element>
+            </RearWheel>
+            <Saddle>
+                <element name="Distance">230.82</element>
+                <element name="Height">718.00</element>
+                <element name="Nose">-77.82 703.0</element>
+                <element name="Position">-230.82 718.00</element>
+                <element name="Proposal">-216.200714252777 716.0734956389526</element>
+                <element name="Saddle_Height">40.00</element>
+            </Saddle>
+            <SeatPost>
+                <element name="Diameter">27.20</element>
+                <element name="Height">678.0</element>
+                <element name="Saddle">-230.82 678.0</element>
+                <element name="SeatTube">-206.88706231153233 685.2259597009618</element>
+                <element name="Setback">25.00</element>
+            </SeatPost>
+            <SeatStay>
+                <element name="DiameterCS">11.00</element>
+                <element name="DiameterST">16.00</element>
+                <element name="Direction">0.5258166001692622 0.8505979678946091</element>
+                <element name="OffsetTT">-20.00</element>
+                <element name="RearWheel">-386.3154089844701 93.61302848483916</element>
+                <element name="SeatTube">-145.75675484157568 482.7576509778159</element>
+                <element name="TaperLength">300.00</element>
+                <element name="debug">-151.67995759746995 457.96143073031067 -150.0457169302058 462.64344069263905 -148.02573586068695 471.47997233066286 -146.52650512562968 478.8704906103415 -145.75675484157568 482.7576509778159 -147.5983482258437 482.4205178995639 -151.1119850647237 481.70186851442696 -155.39125735641647 480.3482842326128 -157.85245600554347 478.4052230978388</element>
+            </SeatStay>
+            <SeatTube>
+                <element name="Angle">73.19960552118485</element>
+                <element name="BottleCage_Base">-33.91517759667487 167.33968665139184</element>
+                <element name="BottleCage_Offset">-52.413634431137105 228.60800713386908</element>
+                <element name="BottomBracket">0.0 0.0</element>
+                <element name="DiameterBB">31.80</element>
+                <element name="DiameterTT">28.60</element>
+                <element name="Direction">-0.28903838803847237 0.9573175075387066</element>
+                <element name="DownTube">-2.2121425797942067e-17 7.326787404194036e-17</element>
+                <element name="Extension">20.00</element>
+                <element name="Ground">81.51983449151763 -270.0</element>
+                <element name="OffsetBB">0.00</element>
+                <element name="TaperLength">300.00</element>
+                <element name="TopTube">-160.5301251403166 531.6881965995093</element>
+                <element name="VirtualTopTube">-166.8824548383605 552.727604115116</element>
+            </SeatTube>
+            <Steerer>
+                <element name="Direction">-0.3090169943749475 0.9510565162951535</element>
+                <element name="Fork">437.1438 397.229864</element>
+                <element name="FrontWheel">549.9350027134899 50.09423525312735</element>
+                <element name="Ground">653.9399243978405 -270.0000000000001</element>
+                <element name="Handlebar">356.212757542666 646.31</element>
+                <element name="Stem">363.643764 623.439714</element>
+            </Steerer>
+            <Stem>
+                <element name="Angle">-6.00</element>
+                <element name="Direction">0.9781476007338058 0.20791169081775981</element>
+                <element name="Length">110.00</element>
+            </Stem>
+            <TopTube>
+                <element name="Angle">2.50</element>
+                <element name="DiameterHT">28.60</element>
+                <element name="DiameterST">28.60</element>
+                <element name="Direction">-0.9990482215818578 -0.043619387365336</element>
+                <element name="HeadTube">395.3744532985125 525.7826936843652</element>
+                <element name="OffsetHT">8.50</element>
+                <element name="PivotPosition">80.00</element>
+                <element name="SeatTube">-151.537523 501.904001</element>
+                <element name="Steerer">395.374453 525.782694</element>
+                <element name="TaperLength">300.00</element>
+            </TopTube>
+            <TubeMiter>
+                <element name="DownTube_Head">49.95132319207771 -70 49.95132319207771 -26.638813038393977 47.17624968140672 -26.294555347701422 44.401176170735745 -25.276699684965205 41.62610266006475 -23.63065753743753 38.851029149393774 -21.434765640914716 36.07595563872279 -18.806034904675656 33.30088212805181 -15.912184443404797 30.52580861738082 -12.992733158248637 27.750735106709836 -10.37779144282181 24.975661596038854 -8.437416666255144 22.200588085367873 -7.3775631601769485 19.425514574696887 -7.083437011138317 16.650441064025905 -7.2733714050108285 13.875367553354916 -7.700190937719315 11.100294042683934 -8.19933619450377 8.32522053201295 -8.667794437850707 5.550147021341967 -9.041041955909389 2.7750735106709827 -9.279415233634754 -1.146376903250194e-15 -9.36118696160603 -2.7750735106709854 -9.279415233634754 -5.550147021341969 -9.041041955909389 -8.325220532012954 -8.667794437850704 -11.100294042683938 -8.199336194503767 -13.87536755335492 -7.700190937719311 -16.650441064025905 -7.273371405010825 -19.425514574696887 -7.083437011138312 -22.200588085367873 -7.377563160176943 -24.975661596038854 -8.437416666255137 -27.750735106709836 -10.377791442821803 -30.52580861738082 -12.99273315824863 -33.30088212805181 -15.91218444340479 -36.07595563872279 -18.80603490467565 -38.851029149393774 -21.43476564091471 -41.62610266006475 -23.63065753743752 -44.401176170735745 -25.27669968496519 -47.17624968140672 -26.294555347701408 -49.95132319207771 -26.638813038393963 -49.95132319207771 -70</element>
+                <element name="Reference"> -50 0  50 0  50 10  -50 10 </element>
+                <element name="SeatStay_01">25.132741228718345 -70 25.13274122871834 -19.909363680621645 23.73647782712288 -19.02128017470602 22.340214425527414 -17.728650764416752 20.94395102393195 -16.044138446961558 19.54768762233649 -13.994335138345209 18.151424220741028 -11.618646084620368 16.755160819145562 -8.96777653681559 15.3588974175501 -6.101884180726543 13.962634015954636 -3.088459741804096 12.566370614359172 -1.1058699163865619e-15 11.170107212763709 -0.6324082382351568 9.773843811168245 -1.2644070557025786 8.377580409572781 -1.8958580848989233 6.981317007977318 -2.5271629694090656 5.585053606381854 -3.1595274737825445 4.18879020478639 -3.795216381258036 2.7925268031909267 -4.437791596285147 1.396263401595463 -5.092319934470755 -7.060500723988e-16 -5.765526776788297 -1.3962634015954645 -6.465854952916684 -2.792526803190928 -7.2033628769047455 -4.188790204786391 -7.98936197865012 -5.585053606381855 -8.835656637026474 -6.981317007977319 -9.753228271757974 -8.377580409572783 -10.750235533370384 -9.773843811168247 -11.829334780765425 -11.17010721276371 -12.984590391574974 -12.566370614359174 -14.198591479439077 -13.962634015954638 -15.440641895143914 -15.358897417550102 -16.666811905789388 -16.755160819145566 -17.822153985287056 -18.15142422074103 -18.84471138696927 -19.547687622336493 -19.67046430158914 -20.94395102393196 -20.238284044353637 -22.34021442552742 -20.49422204503635 -23.736477827122886 -20.394815193151945 -25.13274122871835 -19.90936368062164 -25.132741228718345 -70</element>
+                <element name="SeatStay_02">25.132741228718345 -70 25.13274122871834 -19.90936368062165 23.73647782712288 -20.394815193151953 22.340214425527414 -20.494222045036356 20.94395102393195 -20.238284044353644 19.547687622336486 -19.670464301589146 18.151424220741024 -18.844711386969276 16.75516081914556 -17.822153985287063 15.358897417550098 -16.666811905789395 13.962634015954634 -15.440641895143917 12.56637061435917 -14.19859147943908 11.170107212763707 -12.984590391574978 9.773843811168243 -11.829334780765429 8.37758040957278 -10.750235533370388 6.981317007977317 -9.753228271757974 5.585053606381853 -8.835656637026474 4.18879020478639 -7.9893619786501215 2.7925268031909263 -7.2033628769047455 1.3962634015954627 -6.465854952916684 -7.060500723988e-16 -5.765526776788297 -1.3962634015954642 -5.092319934470755 -2.7925268031909276 -4.437791596285147 -4.188790204786391 -3.7952163812580353 -5.585053606381854 -3.1595274737825427 -6.981317007977318 -2.527162969409064 -8.377580409572781 -1.895858084898921 -9.773843811168245 -1.2644070557025764 -11.170107212763709 -0.6324082382351541 -12.566370614359172 1.9719015433796486e-15 -13.962634015954636 -3.0884597418040927 -15.3588974175501 -6.10188418072654 -16.755160819145562 -8.967776536815586 -18.151424220741028 -11.618646084620364 -19.54768762233649 -13.994335138345205 -20.94395102393196 -16.04413844696155 -22.34021442552742 -17.728650764416745 -23.736477827122886 -19.021280174706014 -25.13274122871835 -19.909363680621638 -25.132741228718345 -70</element>
+                <element name="TopTube_Head">44.92477494633405 -70 44.92477494633405 -14.034259019944313 42.42895411598216 -13.922403430541843 39.93313328563026 -13.596217103566135 37.437312455278374 -13.084571773718713 34.941491624926485 -12.438165730186864 32.44567079457459 -11.733739666875536 29.949849964222697 -11.079767069056464 27.454029133870804 -10.619895963719902 24.958208303518916 -10.5218927776118 22.462387473167023 -10.932062934323058 19.96656664281513 -11.899180166183273 17.470745812463242 -13.332622560502154 14.974924982111347 -15.045508049112154 12.479104151759456 -16.831997997287438 9.983283321407564 -18.514033411428606 7.4874624910556715 -19.95343664083316 4.99164166070378 -21.04937217337935 2.4958208303518887 -21.733388357735993 -2.689938597059277e-15 -21.965740980055692 -2.495820830351894 -21.733388357735993 -4.9916416607037855 -21.04937217337935 -7.487462491055677 -19.95343664083316 -9.983283321407567 -18.514033411428606 -12.47910415175946 -16.831997997287438 -14.97492498211135 -15.04550804911215 -17.470745812463242 -13.33262256050215 -19.96656664281513 -11.89918016618327 -22.462387473167023 -10.932062934323051 -24.958208303518916 -10.521892777611793 -27.454029133870804 -10.619895963719895 -29.949849964222697 -11.079767069056457 -32.44567079457459 -11.733739666875529 -34.941491624926485 -12.438165730186856 -37.437312455278374 -13.084571773718702 -39.93313328563026 -13.596217103566124 -42.42895411598216 -13.922403430541832 -44.92477494633405 -14.034259019944303 -44.92477494633405 -70</element>
+                <element name="TopTube_Seat">44.92477494633405 -70 44.92477494633405 -18.265738760587592 42.42895411598216 -17.988241145922256 39.93313328563026 -17.1641799265273 37.437312455278374 -15.81859378555894 34.941491624926485 -13.992367677011048 32.44567079457459 -11.74099055707687 29.949849964222697 -9.132869380293792 27.454029133870804 -6.24725058884539 24.958208303518916 -3.1718122495162584 22.462387473167023 -2.5079347979752895e-15 19.96656664281513 -1.7945256317579676 17.470745812463242 -3.5345255102687436 14.974924982111348 -5.16713061970621 12.479104151759458 -6.642735079958163 9.983283321407564 -7.916503396191726 7.487462491055673 -8.949732762676012 4.991641660703782 -9.711029027949685 2.49582083035189 -10.177260590226897 -1.2655401975844762e-15 -10.334261239412417 -2.4958208303518927 -10.177260590226897 -4.991641660703784 -9.711029027949685 -7.487462491055675 -8.949732762676009 -9.983283321407567 -7.916503396191724 -12.479104151759458 -6.642735079958159 -14.974924982111348 -5.167130619706207 -17.470745812463242 -3.534525510268739 -19.96656664281513 -1.7945256317579628 -22.462387473167023 2.993581686356813e-15 -24.958208303518916 -3.171812249516252 -27.454029133870804 -6.247250588845383 -29.949849964222697 -9.132869380293785 -32.44567079457459 -11.740990557076863 -34.941491624926485 -13.99236767701104 -37.437312455278374 -15.81859378555893 -39.93313328563026 -17.164179926527293 -42.42895411598216 -17.98824114592225 -44.92477494633405 -18.265738760587578 -44.92477494633405 -70</element>
+            </TubeMiter>
+            <_updateValue/>
+            <myFork>
+                <element name="BladeBendRadius">350.00</element>
+                <element name="BladeBrakeOffset">28.00</element>
+                <element name="BladeDiameterDO">14.00</element>
+                <element name="BladeEndLength">10.00</element>
+                <element name="BladeTaperLength">250.00</element>
+                <element name="BladeWith">36.00</element>
+                <element name="CrownBrakeAngle">0.00</element>
+                <element name="CrownBrakeOffset">20.00</element>
+                <element name="CrownFile">fork/_max/longshen_max_36_5.svg</element>
+                <element name="CrownOffset">35.00</element>
+                <element name="CrownOffsetPerp">3.50</element>
+                <element name="DropOutFile">fork/_max/dropout_14.svg</element>
+                <element name="DropOutOffset">20.00</element>
+                <element name="DropOutOffsetPerp">0.00</element>
+            </myFork>
+        </____arrays__________>
+        <____vars____________>
+            <_drag>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</_drag>
+            <_listBoxValues>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</_listBoxValues>
+            <initDOM>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</initDOM>
+            <packageHomeDir>R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/lib</packageHomeDir>
+            <projectDOM>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</projectDOM>
+        </____vars____________>
+    </bikeGeometry>
+    <dom>
+        <DOMImplementation>
+            <____procedures______>
+                <hasFeature>dom feature version</hasFeature>
+                <load>dom url</load>
+            </____procedures______>
+        </DOMImplementation>
+        <Doc>
+            <____procedures______>
+                <importNode>doc importedNode deep</importNode>
+                <info>doc subcommand args</info>
+                <isa>doc className</isa>
+            </____procedures______>
+        </Doc>
+        <Node>
+            <____procedures______>
+                <appendData>node arg</appendData>
+                <childNodesLive>node</childNodesLive>
+                <deleteData>node offset count</deleteData>
+                <info>doc subcommand args</info>
+                <insertData>node offset arg</insertData>
+                <isWithin>node tagName</isWithin>
+                <isa>doc className</isa>
+                <item>nodeListNode index</item>
+                <length>nodeListNode</length>
+                <replaceData>node offset count arg</replaceData>
+                <simpleTranslate>node output_var trans_specs</simpleTranslate>
+                <substringData>node offset count</substringData>
+                <tagName>node</tagName>
+            </____procedures______>
+        </Node>
+        <xpathFunc>
+            <____procedures______>
+                <element-available>ctxNode pos nodeListType nodeList args</element-available>
+                <function-available>ctxNode pos nodeListType nodeList args</function-available>
+                <system-property>ctxNode pos nodeListType nodeList args</system-property>
+            </____procedures______>
+        </xpathFunc>
+        <xpathFuncHelper>
+            <____procedures______>
+                <coerce2number>type value</coerce2number>
+                <coerce2string>type value</coerce2string>
+            </____procedures______>
+        </xpathFuncHelper>
+    </dom>
+    <lib_tube>
+        <____procedures______>
+            <get_ForkBlade>valueDict</get_ForkBlade>
+            <get_shapeInterSection>shape length</get_shapeInterSection>
+            <get_tubeProfileOffset>profile position</get_tubeProfileOffset>
+            <get_tubeShape>centerLine tubeProfile side</get_tubeShape>
+            <init_centerLine>centerLineDef</init_centerLine>
+            <init_tubeProfile>profileDef args</init_tubeProfile>
+        </____procedures______>
+        <____vars____________>
+            <arcPrecission>5</arcPrecission>
+            <unbentShape>&lt;E&gt; ERROR could not get Value: seems to be an array, but is not proper set as ARRAY</unbentShape>
+        </____vars____________>
+    </lib_tube>
+    <pkg/>
+    <platform>
+        <____procedures______>
+            <LibcVersion>base _-&gt;_ vv</LibcVersion>
+            <generic></generic>
+            <identify></identify>
+            <patterns>id</patterns>
+        </____procedures______>
+    </platform>
+    <project>
+        <____procedures______>
+            <add_forkSetting>_forkDOM</add_forkSetting>
+            <add_tracing></add_tracing>
+            <dom_2_runTime></dom_2_runTime>
+            <flatten_nestedList>args</flatten_nestedList>
+            <getValue>key type args</getValue>
+            <get_dictValue>dictPath dictKey</get_dictValue>
+            <get_xPath>node</get_xPath>
+            <import_ProjectSubset>nodeRoot</import_ProjectSubset>
+            <parentNode>node</parentNode>
+            <pdict>d i p s</pdict>
+            <recurse_domTree>node</recurse_domTree>
+            <remove_tracing></remove_tracing>
+            <runTime_2_dict></runTime_2_dict>
+            <runTime_2_dom>_projectDOM</runTime_2_dom>
+            <setValue>key type args</setValue>
+            <set_dictValue>dictPath dictValue</set_dictValue>
+            <trace_ProjectConfig>varname key operation</trace_ProjectConfig>
+            <unifyKey>key</unifyKey>
+            <update_Project></update_Project>
+            <update_ProjectVersion>Version</update_ProjectVersion>
+            <update_projectResult></update_projectResult>
+        </____procedures______>
+        <____arrays__________>
+            <Component>
+                <element name="BottleCage/DownTube/File">etc:bottle_cage/right/bottleCage.svg</element>
+                <element name="BottleCage/DownTube/OffsetBB">210.00</element>
+                <element name="BottleCage/DownTube_Lower/File">etc:bottle_cage/left/bottleCage.svg</element>
+                <element name="BottleCage/DownTube_Lower/OffsetBB">170.00</element>
+                <element name="BottleCage/SeatTube/File">etc:bottle_cage/left/bottleCage.svg</element>
+                <element name="BottleCage/SeatTube/OffsetBB">170.00</element>
+                <element name="Brake/Front/File">etc:brake/front/campagnolo_frontbrake.svg</element>
+                <element name="Brake/Front/LeverLength">45.00</element>
+                <element name="Brake/Front/Offset">36.00</element>
+                <element name="Brake/Rear/File">etc:brake/rear/campagnolo_rearbrake.svg</element>
+                <element name="Brake/Rear/LeverLength">45.00</element>
+                <element name="Brake/Rear/Offset">30.00</element>
+                <element name="CrankSet/ArmWidth">13.75</element>
+                <element name="CrankSet/ChainLine">43.50</element>
+                <element name="CrankSet/ChainRings">39-53</element>
+                <element name="CrankSet/File">etc:crankset/campagnolo_ultra_torque.svg</element>
+                <element name="CrankSet/Length">172.50</element>
+                <element name="CrankSet/PedalEye">17.50</element>
+                <element name="CrankSet/Q-Factor">145.50</element>
+                <element name="Derailleur/Front/Distance">150.00</element>
+                <element name="Derailleur/Front/File">etc:derailleur/front/campagnolo_qs.svg</element>
+                <element name="Derailleur/Front/Offset">9.20</element>
+                <element name="Derailleur/Rear/File">etc:derailleur/rear/campagnolo_2006_short.svg</element>
+                <element name="Fork/Blade/BendRadius">350.00</element>
+                <element name="Fork/Blade/DiameterDO">13.00</element>
+                <element name="Fork/Blade/EndLength">10.00</element>
+                <element name="Fork/Blade/TaperLength">250.00</element>
+                <element name="Fork/Blade/Width">28.60</element>
+                <element name="Fork/Crown/Blade/Offset">35.00</element>
+                <element name="Fork/Crown/Blade/OffsetPerp">0.00</element>
+                <element name="Fork/Crown/Brake/Angle">0.00</element>
+                <element name="Fork/Crown/Brake/Offset">19.00</element>
+                <element name="Fork/Crown/File">etc:fork/crown/longshen_17.svg</element>
+                <element name="Fork/DropOut/File">etc:fork/dropout/LE_17.svg</element>
+                <element name="Fork/DropOut/Offset">20.00</element>
+                <element name="Fork/DropOut/OffsetPerp">0.00</element>
+                <element name="Fork/Height">365.00</element>
+                <element name="Fork/Rake">45.00</element>
+                <element name="HandleBar/File">etc:handlebar/campagnolo_ergopower_11_a.svg</element>
+                <element name="HeadSet/Diameter">45.00</element>
+                <element name="HeadSet/Height/Bottom">13.50</element>
+                <element name="HeadSet/Height/Top">15.50</element>
+                <element name="Logo/File">etc:logo/rattleCAD.svg</element>
+                <element name="Saddle/File">etc:saddle/saddle_c.svg</element>
+                <element name="Saddle/Height">40.00</element>
+                <element name="Saddle/Length">280.00</element>
+                <element name="Saddle/LengthNose">153.00</element>
+                <element name="SeatPost/Diameter">27.20</element>
+                <element name="SeatPost/Setback">25.00</element>
+                <element name="Stem/Angle">-6.00</element>
+                <element name="Stem/Length">110.00</element>
+                <element name="Wheel/Front/RimDiameter">622.00</element>
+                <element name="Wheel/Front/RimHeight">25.00</element>
+                <element name="Wheel/Front/TyreHeight">23.00</element>
+                <element name="Wheel/Rear/FirstSprocket">15</element>
+                <element name="Wheel/Rear/HubWidth">130.00</element>
+                <element name="Wheel/Rear/RimDiameter">622.00</element>
+                <element name="Wheel/Rear/RimHeight">25.00</element>
+                <element name="Wheel/Rear/TyreHeight">23.00</element>
+            </Component>
+            <Custom>
+                <element name="BottomBracket/Depth">64.00</element>
+                <element name="DownTube/OffsetBB">0.00</element>
+                <element name="DownTube/OffsetHT">8.50</element>
+                <element name="HeadTube/Angle">72.00</element>
+                <element name="HeadTube/PositonDT">8.50</element>
+                <element name="HeadTube/PositonTT">8.50</element>
+                <element name="SeatStay/OffsetTT">-20.00</element>
+                <element name="SeatTube/Extension">20.00</element>
+                <element name="SeatTube/OffsetBB">0.00</element>
+                <element name="TopTube/Angle">2.50</element>
+                <element name="TopTube/OffsetHT">8.50</element>
+                <element name="TopTube/PivotPosition">80.00</element>
+                <element name="WheelPosition/Rear">410.00</element>
+            </Custom>
+            <FrameTubes>
+                <element name="ChainStay/CenterLine/angle_01">9.00</element>
+                <element name="ChainStay/CenterLine/angle_02">-5.00</element>
+                <element name="ChainStay/CenterLine/angle_03">0.00</element>
+                <element name="ChainStay/CenterLine/angle_04">0.00</element>
+                <element name="ChainStay/CenterLine/length_01">150.00</element>
+                <element name="ChainStay/CenterLine/length_02">160.00</element>
+                <element name="ChainStay/CenterLine/length_03">47.00</element>
+                <element name="ChainStay/CenterLine/length_04">10.00</element>
+                <element name="ChainStay/CenterLine/length_05">05.00</element>
+                <element name="ChainStay/CenterLine/radius_01">320.00</element>
+                <element name="ChainStay/CenterLine/radius_02">320.00</element>
+                <element name="ChainStay/CenterLine/radius_03">320.00</element>
+                <element name="ChainStay/CenterLine/radius_04">320.00</element>
+                <element name="ChainStay/DiameterSS">13.00</element>
+                <element name="ChainStay/Height">29.00</element>
+                <element name="ChainStay/HeightBB">22.20</element>
+                <element name="ChainStay/Profile/length_01">150.00</element>
+                <element name="ChainStay/Profile/length_02">150.00</element>
+                <element name="ChainStay/Profile/length_03">75.00</element>
+                <element name="ChainStay/Profile/width_00">12.50</element>
+                <element name="ChainStay/Profile/width_01">18.00</element>
+                <element name="ChainStay/Profile/width_02">18.00</element>
+                <element name="ChainStay/Profile/width_03">24.00</element>
+                <element name="ChainStay/TaperLength">280.00</element>
+                <element name="ChainStay/Width">18.00</element>
+                <element name="ChainStay/WidthBB">22.20</element>
+                <element name="DownTube/DiameterBB">34.90</element>
+                <element name="DownTube/DiameterHT">31.80</element>
+                <element name="DownTube/TaperLength">300.00</element>
+                <element name="HeadTube/Diameter">36.00</element>
+                <element name="HeadTube/Length">150.00</element>
+                <element name="SeatStay/DiameterCS">11.00</element>
+                <element name="SeatStay/DiameterST">16.00</element>
+                <element name="SeatStay/TaperLength">300.00</element>
+                <element name="SeatTube/DiameterBB">31.80</element>
+                <element name="SeatTube/DiameterTT">28.60</element>
+                <element name="SeatTube/TaperLength">300.00</element>
+                <element name="TopTube/DiameterHT">28.60</element>
+                <element name="TopTube/DiameterST">28.60</element>
+                <element name="TopTube/TaperLength">300.00</element>
+            </FrameTubes>
+            <Lugs>
+                <element name="BottomBracket/ChainStay/Angle/plus_minus">1.00</element>
+                <element name="BottomBracket/ChainStay/Angle/value">64.00</element>
+                <element name="BottomBracket/ChainStay/Offset_TopView">6.00</element>
+                <element name="BottomBracket/Diameter/inside">36.00</element>
+                <element name="BottomBracket/Diameter/outside">40.00</element>
+                <element name="BottomBracket/DownTube/Angle/plus_minus">1.00</element>
+                <element name="BottomBracket/DownTube/Angle/value">60.00</element>
+                <element name="BottomBracket/Width">68.00</element>
+                <element name="HeadTube/DownTube/Angle/plus_minus">1.00</element>
+                <element name="HeadTube/DownTube/Angle/value">61.00</element>
+                <element name="HeadTube/TopTube/Angle/plus_minus">1.00</element>
+                <element name="HeadTube/TopTube/Angle/value">75.00</element>
+                <element name="RearDropOut/Angle/plus_minus">1.00</element>
+                <element name="RearDropOut/Angle/value">67.00</element>
+                <element name="RearDropOut/ChainStay/Offset">33.00</element>
+                <element name="RearDropOut/ChainStay/OffsetPerp">1.30</element>
+                <element name="RearDropOut/ChainStay/Offset_TopView">5.00</element>
+                <element name="RearDropOut/Derailleur/x">6.00</element>
+                <element name="RearDropOut/Derailleur/y">25.00</element>
+                <element name="RearDropOut/Direction">Chainstay</element>
+                <element name="RearDropOut/File">etc:dropout/dropout_02.svg</element>
+                <element name="RearDropOut/RotationOffset">0.00</element>
+                <element name="RearDropOut/SeatStay/Offset">35.00</element>
+                <element name="RearDropOut/SeatStay/OffsetPerp">0.30</element>
+                <element name="SeatTube/SeatStay/Angle/plus_minus">1.00</element>
+                <element name="SeatTube/SeatStay/Angle/value">40.00</element>
+                <element name="SeatTube/SeatStay/MiterDiameter">28.60</element>
+                <element name="SeatTube/TopTube/Angle/plus_minus">1.00</element>
+                <element name="SeatTube/TopTube/Angle/value">76.00</element>
+            </Lugs>
+            <Personal>
+                <element name="HandleBar_Distance">471.24</element>
+                <element name="HandleBar_Height">646.31</element>
+                <element name="InnerLeg_Length">850.00</element>
+                <element name="Saddle_Distance">230.82</element>
+                <element name="Saddle_Height">718.00</element>
+            </Personal>
+            <Project>
+                <element name="Name">Template Road</element>
+                <element name="modified">2013.03.01/12:00</element>
+                <element name="rattleCADVersion">3.4.00</element>
+            </Project>
+            <Rendering>
+                <element name="BottleCage/DownTube">Cage</element>
+                <element name="BottleCage/DownTube_Lower">off</element>
+                <element name="BottleCage/SeatTube">Cage</element>
+                <element name="Brake/Front">Rim</element>
+                <element name="Brake/Rear">Rim</element>
+                <element name="ChainStay">straight</element>
+                <element name="Fork">SteelLuggedMAX</element>
+                <element name="ForkBlade">bent</element>
+                <element name="ForkDropOut">front</element>
+                <element name="RearDropOut">behind</element>
+                <element name="RearMockup/CassetteClearance">3.00</element>
+                <element name="RearMockup/ChainWheelClearance">5.00</element>
+                <element name="RearMockup/CrankClearance">5.00</element>
+                <element name="RearMockup/DiscClearance">5.00</element>
+                <element name="RearMockup/DiscDiameter">160.00</element>
+                <element name="RearMockup/DiscOffset">15.30</element>
+                <element name="RearMockup/DiscWidth">2.00</element>
+                <element name="RearMockup/TyreClearance">5.00</element>
+            </Rendering>
+            <Result>
+                <element name="Angle/BottomBracket/ChainStay">64.41671963901727</element>
+                <element name="Angle/BottomBracket/DownTube">60.284206820100806</element>
+                <element name="Angle/HeadTube/DownTube">61.48381213659957</element>
+                <element name="Angle/HeadTube/TopTube">74.5000001910888</element>
+                <element name="Angle/SeatStay/ChainStay">67.05965316328479</element>
+                <element name="Angle/SeatTube/Direction">73.200</element>
+                <element name="Angle/SeatTube/SeatStay">48.52362716853668</element>
+                <element name="Angle/SeatTube/TopTube">75.69960552151585</element>
+                <element name="Components/HeadSet/Bottom/Polygon">415.853053,404.506821 413.659163,396.696613 456.456707,410.602378 413.659163,396.696613 415.745028,390.276981 458.542571,404.182746 456.456707,410.602378 450.091088,415.631433 </element>
+                <element name="Components/HeadSet/Top/Polygon">364.710740,561.906674 362.825868,553.145410 405.623411,567.051174 362.825868,553.145410 365.220750,545.774722 408.018293,559.680486 405.623411,567.051174 398.948775,573.031286 </element>
+                <element name="Components/SeatPost/Polygon">-138.518004,505.834923 -172.189665,617.358069 -179.075092,640.159331 -179.534880,641.267013 -180.747795,644.195844 -182.279950,647.296329 -184.103440,650.549733 -185.760016,653.193565 -187.207308,655.312378 -188.376231,656.869371 -189.984611,658.793096 -192.016192,660.935954 -194.454852,663.150093 -197.284333,665.287912 -199.728989,666.802979 -202.108057,668.173118 -204.548582,669.360702 -206.970083,670.341351 -209.664115,671.219243 -211.931582,671.795243 -214.698386,672.306973 -217.228169,672.598303 -220.131044,672.731757 -222.702182,672.673618 -225.376180,672.435465 -228.538838,671.912932 -231.876990,671.054122 -235.452318,669.793822 -238.248438,668.513279 -240.981390,666.989618 -242.972927,665.688868 -244.794049,664.340230 -245.764320,663.184871 -246.191158,662.529318 -246.154792,661.754978 -245.264736,660.239034 -244.799520,659.669699 -244.348585,659.534464 -243.821445,659.502149 -243.343031,659.682423 -242.952518,659.992951 -242.422241,660.506229 -241.162703,661.632454 -239.703163,662.792010 -237.676809,664.179840 -235.592675,665.375258 -233.320988,666.445963 -231.329858,667.206957 -228.819741,667.952604 -226.040846,668.518672 -223.253733,668.823987 -220.436231,668.843903 -217.611019,668.657334 -214.484560,668.107534 -211.757354,667.346728 -209.277485,666.410443 -207.085411,665.369715 -205.020676,664.184725 -203.268963,663.002371 -201.319643,661.463413 -199.803769,659.018504 -199.197230,655.923933 -199.803769,659.018504 -201.319643,661.463413 -203.268963,663.002371 -205.020676,664.184725 -207.085411,665.369715 -209.277485,666.410443 -211.757354,667.346728 -214.484560,668.107534 -217.611019,668.657334 -220.436231,668.843903 -223.253733,668.823987 -226.040846,668.518672 -228.819741,667.952604 -231.329858,667.206957 -233.320988,666.445963 -235.592675,665.375258 -237.676809,664.179840 -239.703163,662.792010 -241.162703,661.632454 -242.422241,660.506229 -242.952518,659.992951 -243.343031,659.682423 -243.821445,659.502149 -244.348585,659.534464 -244.799520,659.669699 -244.432694,659.221078 -244.054331,658.953937 -243.671437,658.827825 -243.117738,658.726229 -242.362074,658.663571 -241.524900,658.618105 -240.694978,658.545799 -239.850843,658.426076 -238.971322,658.238275 -238.034892,657.961632 -233.821371,656.665687 -229.300867,655.083348 -224.615442,652.923634 -218.839109,649.506149 -213.854073,645.777362 -211.735829,643.971956 -210.603550,642.728348 -209.396657,641.208203 -208.557047,640.059660 -207.681615,638.754067 -206.861441,637.367862 -206.187732,635.977548 -205.751662,634.659533 -204.352012,629.773644 -198.228701,609.496225 -164.557041,497.973079 </element>
+                <element name="Components/Stem/Polygon">447.886372,658.725823 451.283629,659.914222 453.661986,662.196994 455.652773,665.270976 456.376772,667.828901 456.632794,668.225088 456.714046,667.053070 456.602568,665.590635 456.195667,663.469585 455.735854,661.188641 453.868927,654.250265 453.327065,652.727121 452.302588,651.529448 451.080400,650.568850 452.302588,651.529448 453.327065,652.727121 453.868927,654.250265 455.735854,661.188641 456.195667,663.469585 456.602568,665.590635 456.714046,667.053070 456.632794,668.225088 456.862992,668.585014 457.548190,668.958129 465.259710,670.597263 467.155803,661.676850 468.720839,662.009509 466.824767,670.929824 471.585314,671.941709 472.296654,671.976362 472.971818,671.743038 473.501637,671.398464 480.107694,667.357332 479.082017,672.178434 478.570456,672.485689 479.296979,668.976763 478.570456,672.485689 473.501637,671.398464 480.308423,667.234481 483.475738,665.004677 485.933052,663.029723 488.566444,660.127312 490.112123,657.776301 491.378083,655.135297 492.128657,652.891211 492.661453,650.863168 492.999599,648.793751 493.226667,646.438391 493.144349,643.510801 492.688543,640.734362 491.463337,637.011780 490.021755,634.208091 488.035211,630.882799 483.510548,624.310243 488.583359,625.378688 487.819862,628.879754 488.583359,625.378688 488.925721,625.867449 487.901804,630.688926 483.510548,624.310243 483.166685,623.779962 482.644793,623.292195 481.980857,623.034525 477.220310,622.022639 475.324239,630.942954 478.519020,632.169592 481.419055,634.091746 483.734632,636.477006 485.526316,639.330473 486.673702,642.474533 487.141563,646.078768 486.792568,649.615698 485.672792,652.988794 483.779405,656.091130 481.452411,658.496688 478.655017,660.374717 475.569459,661.611929 472.138335,662.188355 468.720839,662.009509 467.155803,661.676850 464.614635,660.792997 462.106984,659.329650 459.508768,657.043288 457.598617,654.476863 456.263009,651.653170 455.517870,648.707476 455.349685,645.690378 455.687474,643.004106 456.471494,640.412684 457.852303,637.724835 459.731143,635.336885 462.099780,633.300554 464.888650,631.732936 468.192185,630.701030 471.078236,630.384149 473.759203,630.610295 475.324239,630.942954 473.759203,630.610295 475.655295,621.689883 467.943775,620.050749 467.197627,620.224104 466.686876,620.851728 466.406889,621.451829 465.710222,622.742488 464.475791,624.514662 463.127988,626.411385 458.600373,631.990560 457.485839,633.161626 456.062796,633.839062 454.555561,634.219504 456.062796,633.839062 457.485839,633.161626 458.600373,631.990560 463.127988,626.411385 464.475791,624.514662 465.710222,622.742488 466.406889,621.451829 466.686876,620.851728 464.950915,622.362107 461.670599,624.498271 458.356019,625.693244 454.522148,625.376721 389.580683,611.571512 386.394491,608.433331 354.058570,597.926753 386.394491,608.433331 398.948775,573.031286 364.710740,561.906674 354.058570,597.926753 342.257154,634.247774 374.593076,644.754352 342.257154,634.247774 340.712069,639.003057 373.047991,649.509635 374.593076,644.754352 379.015336,644.088307 </element>
+                <element name="Length/BottomBracket/Height">270.000</element>
+                <element name="Length/FrontWheel/diagonal">596.178</element>
+                <element name="Length/FrontWheel/horizontal">592.733</element>
+                <element name="Length/HeadTube/ReachLength">386.620</element>
+                <element name="Length/HeadTube/StackHeight">552.728</element>
+                <element name="Length/RearWheel/horizontal">404.974</element>
+                <element name="Length/Saddle/Offset_BB">230.820</element>
+                <element name="Length/Saddle/Offset_BB_Nose">77.820</element>
+                <element name="Length/Saddle/Offset_BB_ST">216.782</element>
+                <element name="Length/Saddle/Offset_HB">71.690</element>
+                <element name="Length/SeatTube/TubeHeight">531.688</element>
+                <element name="Length/SeatTube/TubeLength">555.394</element>
+                <element name="Length/SeatTube/VirtualLength">577.371</element>
+                <element name="Length/TopTube/VirtualLength">553.502</element>
+                <element name="Lugs/Dropout/Front/Direction/degree">-64.57345</element>
+                <element name="Lugs/Dropout/Front/Direction/polar">0.429354,-0.903136</element>
+                <element name="Lugs/Dropout/Front/Direction/radiant">-1.127019</element>
+                <element name="Lugs/Dropout/Front/Position">592.732546,64.000000</element>
+                <element name="Lugs/Dropout/Rear/Derailleur">-414.802962,40.243044</element>
+                <element name="Lugs/Dropout/Rear/Direction/degree">0.00</element>
+                <element name="Lugs/Dropout/Rear/Direction/polar">0.00,0.00</element>
+                <element name="Lugs/Dropout/Rear/Direction/radiant">0.00</element>
+                <element name="Lugs/Dropout/Rear/Position">-404.974073,64.000000</element>
+                <element name="Lugs/ForkCrown/Direction/degree">108.00000</element>
+                <element name="Lugs/ForkCrown/Direction/polar">-0.309017,0.951057</element>
+                <element name="Lugs/ForkCrown/Direction/radiant">1.884956</element>
+                <element name="Lugs/ForkCrown/Position">437.143800,397.229864</element>
+                <element name="Position/BottomBracket">0.00,0.00</element>
+                <element name="Position/BottomBracketGround">0.000000,-270.000000</element>
+                <element name="Position/Brake/Front/Definition">477.530227,350.391692</element>
+                <element name="Position/Brake/Front/Help">489.193445,404.600943</element>
+                <element name="Position/Brake/Front/Mount">458.968923,394.780401</element>
+                <element name="Position/Brake/Front/Shoe">503.099210,361.803400</element>
+                <element name="Position/Brake/Rear/Definition">-249.200670,330.633919</element>
+                <element name="Position/Brake/Rear/Help">-251.056863,384.685326</element>
+                <element name="Position/Brake/Rear/Mount">-225.538923,368.910827</element>
+                <element name="Position/Brake/Rear/Shoe">-274.718610,346.408418</element>
+                <element name="Position/BrakeFront">503.099210,361.803400</element>
+                <element name="Position/BrakeRear">-274.718610,346.408418</element>
+                <element name="Position/DerailleurMountFront">-34.548437,146.256779</element>
+                <element name="Position/FrontWheel">592.732546,64.000000</element>
+                <element name="Position/HandleBar">471.240000,646.310000</element>
+                <element name="Position/LegClearance">80.000000,580.000000</element>
+                <element name="Position/RearWheel">-404.974073,64.000000</element>
+                <element name="Position/Saddle">-230.820000,718.000000</element>
+                <element name="Position/SaddleNose">-77.820000,703.000000</element>
+                <element name="Position/SaddleProposal">-216.200714,716.073496</element>
+                <element name="Position/SeatPostSaddle">-230.820000,678.000000</element>
+                <element name="Position/SeatPostSeatTube">-206.887062,685.225960</element>
+                <element name="Position/SeatTubeGround">81.519834,-270.000000</element>
+                <element name="Position/SeatTubeSaddle">-216.782375,718.000000</element>
+                <element name="Position/SeatTubeVirtualTopTube">-166.882455,552.727604</element>
+                <element name="Position/SteererGround">653.939924,-270.000000</element>
+                <element name="Position/SummarySize">997.706619,789.225960</element>
+                <element name="TubeMiter/DownTube_Head/Polygon">49.951323,-70.000000 49.951323,-26.638813 47.176250,-26.294555 44.401176,-25.276700 41.626103,-23.630658 38.851029,-21.434766 36.075956,-18.806035 33.300882,-15.912184 30.525809,-12.992733 27.750735,-10.377791 24.975662,-8.437417 22.200588,-7.377563 19.425515,-7.083437 16.650441,-7.273371 13.875368,-7.700191 11.100294,-8.199336 8.325221,-8.667794 5.550147,-9.041042 2.775074,-9.279415 -0.000000,-9.361187 -2.775074,-9.279415 -5.550147,-9.041042 -8.325221,-8.667794 -11.100294,-8.199336 -13.875368,-7.700191 -16.650441,-7.273371 -19.425515,-7.083437 -22.200588,-7.377563 -24.975662,-8.437417 -27.750735,-10.377791 -30.525809,-12.992733 -33.300882,-15.912184 -36.075956,-18.806035 -38.851029,-21.434766 -41.626103,-23.630658 -44.401176,-25.276700 -47.176250,-26.294555 -49.951323,-26.638813 -49.951323,-70.000000 </element>
+                <element name="TubeMiter/Reference/Polygon">-50.000000,0.000000 50.000000,0.000000 50.000000,10.000000 -50.000000,10.000000 </element>
+                <element name="TubeMiter/SeatStay_01/Polygon">25.132741,-70.000000 25.132741,-19.909364 23.736478,-19.021280 22.340214,-17.728651 20.943951,-16.044138 19.547688,-13.994335 18.151424,-11.618646 16.755161,-8.967777 15.358897,-6.101884 13.962634,-3.088460 12.566371,-0.000000 11.170107,-0.632408 9.773844,-1.264407 8.377580,-1.895858 6.981317,-2.527163 5.585054,-3.159527 4.188790,-3.795216 2.792527,-4.437792 1.396263,-5.092320 -0.000000,-5.765527 -1.396263,-6.465855 -2.792527,-7.203363 -4.188790,-7.989362 -5.585054,-8.835657 -6.981317,-9.753228 -8.377580,-10.750236 -9.773844,-11.829335 -11.170107,-12.984590 -12.566371,-14.198591 -13.962634,-15.440642 -15.358897,-16.666812 -16.755161,-17.822154 -18.151424,-18.844711 -19.547688,-19.670464 -20.943951,-20.238284 -22.340214,-20.494222 -23.736478,-20.394815 -25.132741,-19.909364 -25.132741,-70.000000 </element>
+                <element name="TubeMiter/SeatStay_02/Polygon">25.132741,-70.000000 25.132741,-19.909364 23.736478,-20.394815 22.340214,-20.494222 20.943951,-20.238284 19.547688,-19.670464 18.151424,-18.844711 16.755161,-17.822154 15.358897,-16.666812 13.962634,-15.440642 12.566371,-14.198591 11.170107,-12.984590 9.773844,-11.829335 8.377580,-10.750236 6.981317,-9.753228 5.585054,-8.835657 4.188790,-7.989362 2.792527,-7.203363 1.396263,-6.465855 -0.000000,-5.765527 -1.396263,-5.092320 -2.792527,-4.437792 -4.188790,-3.795216 -5.585054,-3.159527 -6.981317,-2.527163 -8.377580,-1.895858 -9.773844,-1.264407 -11.170107,-0.632408 -12.566371,0.000000 -13.962634,-3.088460 -15.358897,-6.101884 -16.755161,-8.967777 -18.151424,-11.618646 -19.547688,-13.994335 -20.943951,-16.044138 -22.340214,-17.728651 -23.736478,-19.021280 -25.132741,-19.909364 -25.132741,-70.000000 </element>
+                <element name="TubeMiter/TopTube_Head/Polygon">44.924775,-70.000000 44.924775,-14.034259 42.428954,-13.922403 39.933133,-13.596217 37.437312,-13.084572 34.941492,-12.438166 32.445671,-11.733740 29.949850,-11.079767 27.454029,-10.619896 24.958208,-10.521893 22.462387,-10.932063 19.966567,-11.899180 17.470746,-13.332623 14.974925,-15.045508 12.479104,-16.831998 9.983283,-18.514033 7.487462,-19.953437 4.991642,-21.049372 2.495821,-21.733388 -0.000000,-21.965741 -2.495821,-21.733388 -4.991642,-21.049372 -7.487462,-19.953437 -9.983283,-18.514033 -12.479104,-16.831998 -14.974925,-15.045508 -17.470746,-13.332623 -19.966567,-11.899180 -22.462387,-10.932063 -24.958208,-10.521893 -27.454029,-10.619896 -29.949850,-11.079767 -32.445671,-11.733740 -34.941492,-12.438166 -37.437312,-13.084572 -39.933133,-13.596217 -42.428954,-13.922403 -44.924775,-14.034259 -44.924775,-70.000000 </element>
+                <element name="TubeMiter/TopTube_Seat/Polygon">44.924775,-70.000000 44.924775,-18.265739 42.428954,-17.988241 39.933133,-17.164180 37.437312,-15.818594 34.941492,-13.992368 32.445671,-11.740991 29.949850,-9.132869 27.454029,-6.247251 24.958208,-3.171812 22.462387,-0.000000 19.966567,-1.794526 17.470746,-3.534526 14.974925,-5.167131 12.479104,-6.642735 9.983283,-7.916503 7.487462,-8.949733 4.991642,-9.711029 2.495821,-10.177261 -0.000000,-10.334261 -2.495821,-10.177261 -4.991642,-9.711029 -7.487462,-8.949733 -9.983283,-7.916503 -12.479104,-6.642735 -14.974925,-5.167131 -17.470746,-3.534526 -19.966567,-1.794526 -22.462387,0.000000 -24.958208,-3.171812 -27.454029,-6.247251 -29.949850,-9.132869 -32.445671,-11.740991 -34.941492,-13.992368 -37.437312,-15.818594 -39.933133,-17.164180 -42.428954,-17.988241 -44.924775,-18.265739 -44.924775,-70.000000 </element>
+                <element name="Tubes/ChainStay/Direction/degree">171.21711</element>
+                <element name="Tubes/ChainStay/Direction/polar">-0.988274,0.152691</element>
+                <element name="Tubes/ChainStay/Direction/radiant">2.988302</element>
+                <element name="Tubes/ChainStay/End">-372.581526,57.564716</element>
+                <element name="Tubes/ChainStay/Polygon">-373.574015,51.140935 -110.924158,2.465998 -71.393197,-3.641628 -31.343087,-6.389122 -1.694866,-10.969842 1.694866,10.969842 -27.953355,15.550561 -66.965168,25.018319 -106.496129,31.125945 -371.589037,63.988498 </element>
+                <element name="Tubes/ChainStay/SeatStay_IS">-405.459364,62.644419</element>
+                <element name="Tubes/ChainStay/Start">0.000000,0.000000</element>
+                <element name="Tubes/DownTube/BottleCage/Base">131.850242,164.377663</element>
+                <element name="Tubes/DownTube/BottleCage/Offset">175.891817,210.814068</element>
+                <element name="Tubes/DownTube/BottleCage_Lower/Base">129.646609,111.338489</element>
+                <element name="Tubes/DownTube/BottleCage_Lower/Offset">173.688184,157.774894</element>
+                <element name="Tubes/DownTube/Direction/degree">46.51619</element>
+                <element name="Tubes/DownTube/Direction/polar">0.688150,0.725569</element>
+                <element name="Tubes/DownTube/Direction/radiant">0.811861</element>
+                <element name="Tubes/DownTube/End">421.731557,444.663871</element>
+                <element name="Tubes/DownTube/Polygon">119.200860,100.324736 324.521111,319.062015 413.226409,412.590801 413.926710,416.424725 415.448420,426.486359 415.749904,434.344738 415.123702,437.696703 413.807910,440.321581 409.856672,443.695991 404.241518,446.232682 402.042912,447.010066 301.448023,340.945172 93.878509,124.341158 -12.661176,12.008211 12.661176,-12.008211 </element>
+                <element name="Tubes/DownTube/Start">-0.000000,-0.000000</element>
+                <element name="Tubes/ForkBlade/Direction/degree">0.00</element>
+                <element name="Tubes/ForkBlade/Direction/polar">0.00,0.00</element>
+                <element name="Tubes/ForkBlade/Direction/radiant">0.00</element>
+                <element name="Tubes/ForkBlade/End">0.00,0.00</element>
+                <element name="Tubes/ForkBlade/Polygon">577.823518,79.057254 575.480874,83.473174 573.138229,87.889094 570.795585,92.305014 568.452941,96.720934 566.110297,101.136854 563.767653,105.552774 561.425008,109.968694 559.082364,114.384614 556.739720,118.800534 554.397076,123.216454 552.054431,127.632374 549.711787,132.048294 547.369143,136.464214 545.026499,140.880134 542.683855,145.296054 540.341210,149.711974 537.998566,154.127894 535.655922,158.543814 533.313278,162.959734 530.970633,167.375654 528.627989,171.791574 526.285345,176.207494 523.942701,180.623414 521.600057,185.039334 519.257412,189.455254 516.914768,193.871174 514.572124,198.287094 512.229480,202.703014 509.886835,207.118934 507.544191,211.534854 505.201547,215.950774 502.858903,220.366694 500.516259,224.782614 498.173614,229.198534 495.830970,233.614454 493.488326,238.030374 491.145682,242.446294 488.803037,246.862214 486.460393,251.278134 484.117749,255.694054 481.775105,260.109974 479.432461,264.525894 477.089816,268.941814 474.747172,273.357734 472.404528,277.773654 470.061884,282.189574 467.719239,286.605494 465.376595,291.021414 463.033951,295.437334 460.691307,299.853254 460.336799,300.587995 458.091914,305.614689 455.936226,310.444706 453.780537,315.274724 451.624849,320.104742 449.469161,324.934760 447.313473,329.764778 445.157785,334.594796 443.002097,339.424813 440.964292,343.990703 438.926487,348.556593 436.888682,353.122483 434.850877,357.688373 432.813072,362.254263 430.775267,366.820153 463.649674,381.492349 465.687479,376.926459 467.725284,372.360569 469.763089,367.794679 471.800894,363.228790 473.838699,358.662900 475.876504,354.097010 478.032192,349.266992 480.187880,344.436974 482.343569,339.606956 484.499257,334.776938 486.654945,329.946920 488.810633,325.116903 490.966321,320.286885 493.032812,315.653543 493.180381,315.298652 495.126122,310.694043 497.071863,306.089434 499.017604,301.484825 500.963345,296.880216 502.909086,292.275607 504.854827,287.670998 506.800567,283.066389 508.746308,278.461780 510.692049,273.857172 512.637790,269.252563 514.583531,264.647954 516.529272,260.043345 518.475013,255.438736 520.420754,250.834127 522.366495,246.229518 524.312236,241.624909 526.257977,237.020300 528.203718,232.415691 530.149459,227.811082 532.095200,223.206473 534.040941,218.601864 535.986682,213.997255 537.932423,209.392646 539.878164,204.788037 541.823905,200.183428 543.769645,195.578819 545.715386,190.974210 547.661127,186.369601 549.606868,181.764993 551.552609,177.160384 553.498350,172.555775 555.444091,167.951166 557.389832,163.346557 559.335573,158.741948 561.281314,154.137339 563.227055,149.532730 565.172796,144.928121 567.118537,140.323512 569.064278,135.718903 571.010019,131.114294 572.955760,126.509685 574.901501,121.905076 576.847242,117.300467 578.792983,112.695858 580.738724,108.091249 582.684464,103.486640 584.630205,98.882031 586.575946,94.277422 588.521687,89.672813 590.467428,85.068205 </element>
+                <element name="Tubes/ForkBlade/Start">0.00,0.00</element>
+                <element name="Tubes/HeadTube/Direction/degree">108.00000</element>
+                <element name="Tubes/HeadTube/Direction/polar">-0.309017,0.951057</element>
+                <element name="Tubes/HeadTube/Direction/radiant">1.884956</element>
+                <element name="Tubes/HeadTube/End">386.619521,552.727604</element>
+                <element name="Tubes/HeadTube/Polygon">450.091088,415.631433 403.738538,558.289910 369.500504,547.165298 415.853053,404.506821 </element>
+                <element name="Tubes/HeadTube/Start">432.972070,410.069127</element>
+                <element name="Tubes/SeatStay/Direction/degree">58.27677</element>
+                <element name="Tubes/SeatStay/Direction/polar">0.525817,0.850598</element>
+                <element name="Tubes/SeatStay/Direction/radiant">1.017122</element>
+                <element name="Tubes/SeatStay/End">-145.756755,482.757651</element>
+                <element name="Tubes/SeatStay/Polygon">-151.679958,457.961431 -150.045717,462.643441 -148.025736,471.479972 -146.526505,478.870491 -145.756755,482.757651 -147.598348,482.420518 -151.111985,481.701869 -155.391257,480.348284 -157.852456,478.405223 -235.375213,352.998952 -390.993698,96.505020 -381.637120,90.721037 -221.765645,344.585886 </element>
+                <element name="Tubes/SeatStay/Start">-386.315409,93.613028</element>
+                <element name="Tubes/SeatTube/BottleCage/Base">-33.915178,167.339687</element>
+                <element name="Tubes/SeatTube/BottleCage/Offset">-52.413634,228.608007</element>
+                <element name="Tubes/SeatTube/Direction/degree">106.80039</element>
+                <element name="Tubes/SeatTube/Direction/polar">-0.289038,0.957318</element>
+                <element name="Tubes/SeatTube/Direction/radiant">1.864018</element>
+                <element name="Tubes/SeatTube/End">-160.530125,531.688197</element>
+                <element name="Tubes/SeatTube/Polygon">-21.687956,126.842183 -109.931180,413.574973 -146.840485,535.821446 -174.219765,527.554948 -137.310461,405.308475 -52.130653,117.650762 -18.405748,5.951268 -16.080186,5.618767 -9.866454,5.173463 -4.750819,6.182695 -2.392776,7.925059 -0.375468,10.795963 2.731868,18.456839 5.740748,28.626249 6.790896,32.518020 </element>
+                <element name="Tubes/SeatTube/Start">0.000000,0.000000</element>
+                <element name="Tubes/Steerer/Direction/degree">108.00000</element>
+                <element name="Tubes/Steerer/Direction/polar">-0.309017,0.951057</element>
+                <element name="Tubes/Steerer/Direction/radiant">1.884956</element>
+                <element name="Tubes/Steerer/End">363.643764,623.439714</element>
+                <element name="Tubes/Steerer/Polygon">450.743908,401.648807 374.153702,637.369222 346.953486,628.531336 423.543692,392.810921 </element>
+                <element name="Tubes/Steerer/Start">437.143800,397.229864</element>
+                <element name="Tubes/TopTube/Direction/degree">182.50000</element>
+                <element name="Tubes/TopTube/Direction/polar">-0.999048,-0.043619</element>
+                <element name="Tubes/TopTube/Direction/radiant">3.185226</element>
+                <element name="Tubes/TopTube/End">395.374453,525.782694</element>
+                <element name="Tubes/TopTube/Polygon">381.298596,510.854505 382.219654,512.812381 384.124567,518.134701 384.548182,522.824474 384.040588,525.287846 382.955576,527.726008 379.538843,532.248108 374.276948,537.257518 372.127148,539.081318 269.331111,534.593146 -30.383355,521.507330 -141.059717,516.675095 -142.463477,514.696144 -146.298620,509.289548 -149.718071,504.468975 -151.537523,501.904001 -148.236707,499.562583 -142.033203,495.162157 -135.075558,490.226785 -132.528883,488.420313 -29.135841,492.934551 270.578626,506.020367 </element>
+                <element name="Tubes/TopTube/Start">-151.537523,501.904001</element>
+            </Result>
+        </____arrays__________>
+        <____vars____________>
+            <fp>filed6e828</fp>
+            <initDOM>domNode00D74848</initDOM>
+            <initDoc>domDoc009E57D8</initDoc>
+            <initXML>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;root&gt;
+    
+    &lt;Options&gt;
+        
+        &lt;FrameJigType&gt;
+            &lt;rattleCAD/&gt;
+            &lt;vienna/&gt;
+            &lt;nuremberg/&gt;
+            &lt;geldersheim/&gt;
+        &lt;/FrameJigType&gt;
+
+        &lt;DropOutDirection&gt;
+            &lt;Chainstay/&gt;
+            &lt;horizontal/&gt;
+        &lt;/DropOutDirection&gt;
+
+        &lt;Binary_OnOff&gt;
+            &lt;on/&gt;
+            &lt;off/&gt;
+        &lt;/Binary_OnOff&gt;
+
+        &lt;ForkBlade&gt;
+            &lt;straight/&gt;
+            &lt;bent/&gt;
+        &lt;/ForkBlade&gt;
+        
+    &lt;/Options&gt;        
+
+    
+    &lt;Fork&gt;
+
+        &lt;SteelLuggedMAX&gt;
+            &lt;Crown&gt;
+              &lt;File&gt;fork/_max/longshen_max_36_5.svg&lt;/File&gt;
+              &lt;Brake&gt;
+                &lt;Offset&gt;20.00&lt;/Offset&gt;
+                &lt;Angle&gt;0.00&lt;/Angle&gt;
+              &lt;/Brake&gt;
+              &lt;Blade&gt;
+                &lt;Offset&gt;35.00&lt;/Offset&gt;
+                &lt;OffsetPerp&gt;3.50&lt;/OffsetPerp&gt;
+              &lt;/Blade&gt;
+            &lt;/Crown&gt;
+            &lt;Blade&gt;
+              &lt;Width&gt;36.00&lt;/Width&gt;
+              &lt;DiameterDO&gt;14.00&lt;/DiameterDO&gt;
+              &lt;TaperLength&gt;250.00&lt;/TaperLength&gt;
+              &lt;BendRadius&gt;350.00&lt;/BendRadius&gt;
+              &lt;EndLength&gt;10.00&lt;/EndLength&gt;
+            &lt;/Blade&gt;
+            &lt;Brake&gt;
+              &lt;Offset&gt;28.00&lt;/Offset&gt;
+            &lt;/Brake&gt;
+            &lt;DropOut&gt;
+              &lt;File&gt;fork/_max/dropout_14.svg&lt;/File&gt;
+              &lt;Offset&gt;20.00&lt;/Offset&gt;
+              &lt;OffsetPerp&gt;0.00&lt;/OffsetPerp&gt;
+            &lt;/DropOut&gt;
+        &lt;/SteelLuggedMAX&gt;
+
+        &lt;SteelLugged&gt;&lt;/SteelLugged&gt;
+        
+        &lt;Composite&gt;    
+            &lt;Crown&gt;
+              &lt;File&gt;fork/_composite/fork_crown.svg&lt;/File&gt;
+              &lt;Brake&gt;
+                   &lt;Front&gt;
+                        &lt;Mount&gt;0.00,0.00&lt;/Mount&gt;
+                        &lt;Shoe&gt;0.00,0.00&lt;/Shoe&gt;
+                        &lt;Help&gt;0.00,0.00&lt;/Help&gt;
+                        &lt;Definition&gt;0.00,0.00&lt;/Definition&gt;
+                   &lt;/Front&gt;
+                   &lt;Rear&gt;
+                        &lt;Mount&gt;0.00,0.00&lt;/Mount&gt;
+                        &lt;Shoe&gt;0.00,0.00&lt;/Shoe&gt;
+                        &lt;Help&gt;0.00,0.00&lt;/Help&gt;
+                        &lt;Definition&gt;0.00,0.00&lt;/Definition&gt;
+                   &lt;/Rear&gt;
+              &lt;/Brake&gt;
+              &lt;Blade&gt;
+                &lt;Offset&gt;45.00&lt;/Offset&gt;
+                &lt;OffsetPerp&gt;-4.50&lt;/OffsetPerp&gt;
+              &lt;/Blade&gt;
+            &lt;/Crown&gt;
+            &lt;Blade&gt;
+              &lt;Width&gt;50.00&lt;/Width&gt;
+              &lt;DiameterDO&gt;21.00&lt;/DiameterDO&gt;
+            &lt;/Blade&gt;
+            &lt;Brake&gt;
+              &lt;Offset&gt;34.00&lt;/Offset&gt;
+            &lt;/Brake&gt;					&lt;DropOut&gt;
+            &lt;File&gt;fork/_composite/dropout.svg&lt;/File&gt;
+              &lt;Offset&gt;20.00&lt;/Offset&gt;
+            &lt;/DropOut&gt;
+        &lt;/Composite&gt;
+          
+        &lt;_Suspension&gt;
+          &lt;Crown&gt;
+            &lt;File&gt;fork/_suspension/fork_crown.svg&lt;/File&gt;
+            &lt;Brake&gt;
+              &lt;Offset&gt;20.00&lt;/Offset&gt;
+              &lt;Angle&gt;0.00&lt;/Angle&gt;
+            &lt;/Brake&gt;
+          &lt;/Crown&gt;
+          &lt;Leg&gt;
+            &lt;Offset&gt;200.00&lt;/Offset&gt;
+            &lt;OffsetPerp&gt;21.00&lt;/OffsetPerp&gt;
+            &lt;Diameter&gt;38.00&lt;/Diameter&gt;
+          &lt;/Leg&gt;
+        &lt;/_Suspension&gt;
+
+        &lt;Suspension_20&gt;
+          &lt;Geometry&gt;
+            &lt;Rake&gt;40.00&lt;/Rake&gt;
+          &lt;/Geometry&gt;
+          &lt;DropOut&gt;
+            &lt;File&gt;fork/_suspension/suspension_bridge_20.svg&lt;/File&gt;
+          &lt;/DropOut&gt;
+          &lt;Brake&gt;
+            &lt;Offset&gt;25.00&lt;/Offset&gt;
+          &lt;/Brake&gt;
+        &lt;/Suspension_20&gt;
+
+        &lt;Suspension_26&gt;
+          &lt;Geometry&gt;
+            &lt;Rake&gt;40.00&lt;/Rake&gt;
+          &lt;/Geometry&gt;
+          &lt;DropOut&gt;
+            &lt;File&gt;fork/_suspension/suspension_bridge_26.svg&lt;/File&gt;
+          &lt;/DropOut&gt;
+          &lt;Brake&gt;
+            &lt;Offset&gt;25.00&lt;/Offset&gt;
+          &lt;/Brake&gt;
+        &lt;/Suspension_26&gt;
+
+        &lt;Suspension_29&gt;   
+          &lt;Geometry&gt;
+            &lt;Rake&gt;45.00&lt;/Rake&gt;
+          &lt;/Geometry&gt;
+          &lt;DropOut&gt;
+            &lt;File&gt;fork/_suspension/suspension_bridge_29.svg&lt;/File&gt;
+          &lt;/DropOut&gt;
+          &lt;Brake&gt;
+            &lt;Offset&gt;25.00&lt;/Offset&gt;
+          &lt;/Brake&gt;
+        &lt;/Suspension_29&gt;
+        
+        &lt;_bikeGeometry_default_/&gt;
+
+    &lt;/Fork&gt;
+
+
+    &lt;Result&gt;
+        &lt;!-- resulting values --&gt;
+        &lt;Position&gt;
+            &lt;BottomBracket&gt;0.00,0.00&lt;/BottomBracket&gt;
+            &lt;FrontWheel&gt;0.00,0.00&lt;/FrontWheel&gt;
+            &lt;RearWheel&gt;0.00,0.00&lt;/RearWheel&gt;
+            &lt;Saddle&gt;0.00,0.00&lt;/Saddle&gt;
+            &lt;SaddleNose&gt;0.00,0.00&lt;/SaddleNose&gt;
+            &lt;SaddleProposal&gt;0.00,0.00&lt;/SaddleProposal&gt;
+            &lt;HandleBar&gt;0.00,0.00&lt;/HandleBar&gt;
+            &lt;LegClearance&gt;0.00,0.00&lt;/LegClearance&gt;
+            &lt;BottomBracketGround&gt;0.00,0.00&lt;/BottomBracketGround&gt;
+            &lt;SteererGround&gt;0.00,0.00&lt;/SteererGround&gt;
+            &lt;SeatTubeGround&gt;0.00,0.00&lt;/SeatTubeGround&gt;
+            &lt;SeatTubeSaddle&gt;0.00,0.00&lt;/SeatTubeSaddle&gt;
+            &lt;SeatTubeVirtualTopTube&gt;0.00,0.00&lt;/SeatTubeVirtualTopTube&gt;
+            &lt;DerailleurMountFront&gt;0.00,0.00&lt;/DerailleurMountFront&gt;
+            &lt;BrakeFront&gt;0.00,0.00&lt;/BrakeFront&gt;           
+            &lt;BrakeRear&gt;0.00,0.00&lt;/BrakeRear&gt;
+            &lt;SummarySize&gt;0.00,0.00&lt;/SummarySize&gt;
+            &lt;SeatPostSaddle&gt;0.00,0.00&lt;/SeatPostSaddle&gt;
+            &lt;SeatPostSeatTube&gt;0.00,0.00&lt;/SeatPostSeatTube&gt;
+            &lt;Brake&gt;
+                 &lt;Front&gt;
+                      &lt;Mount&gt;0.00,0.00&lt;/Mount&gt;
+                      &lt;Shoe&gt;0.00,0.00&lt;/Shoe&gt;
+                      &lt;Help&gt;0.00,0.00&lt;/Help&gt;
+                      &lt;Definition&gt;0.00,0.00&lt;/Definition&gt;
+                 &lt;/Front&gt;
+                 &lt;Rear&gt;
+                      &lt;Mount&gt;0.00,0.00&lt;/Mount&gt;
+                      &lt;Shoe&gt;0.00,0.00&lt;/Shoe&gt;
+                      &lt;Help&gt;0.00,0.00&lt;/Help&gt;
+                      &lt;Definition&gt;0.00,0.00&lt;/Definition&gt;
+                 &lt;/Rear&gt;
+            &lt;/Brake&gt;
+        &lt;/Position&gt;
+
+        &lt;Length&gt;
+            &lt;HeadTube&gt;
+                &lt;ReachLength&gt;0.00&lt;/ReachLength&gt;
+                &lt;StackHeight&gt;0.00&lt;/StackHeight&gt;
+            &lt;/HeadTube&gt;
+            &lt;TopTube&gt;
+                &lt;VirtualLength&gt;0.00&lt;/VirtualLength&gt;
+            &lt;/TopTube&gt;
+            &lt;SeatTube&gt;
+                &lt;TubeLength&gt;0.00&lt;/TubeLength&gt;
+                &lt;TubeHeight&gt;0.00&lt;/TubeHeight&gt;
+                &lt;VirtualLength&gt;0.00&lt;/VirtualLength&gt;
+            &lt;/SeatTube&gt;
+            &lt;Saddle&gt;
+                &lt;Offset_BB&gt;0.00&lt;/Offset_BB&gt;
+                &lt;Offset_BB_ST&gt;0.00&lt;/Offset_BB_ST&gt;    
+                &lt;Offset_HB&gt;0.00&lt;/Offset_HB&gt;
+                &lt;Offset_BB_Nose&gt;0.00&lt;/Offset_BB_Nose&gt;
+            &lt;/Saddle&gt;
+            &lt;BottomBracket&gt;
+                &lt;Height&gt;0.00&lt;/Height&gt;
+            &lt;/BottomBracket&gt;
+            &lt;FrontWheel&gt;
+                &lt;diagonal&gt;600.00&lt;/diagonal&gt;
+                &lt;horizontal&gt;0.00&lt;/horizontal&gt;
+            &lt;/FrontWheel&gt;
+            &lt;RearWheel&gt;
+                &lt;horizontal&gt;0.00&lt;/horizontal&gt;
+            &lt;/RearWheel&gt;
+        &lt;/Length&gt;
+        
+        &lt;Angle&gt;
+            &lt;HeadTube&gt;
+                &lt;TopTube&gt;0.00&lt;/TopTube&gt;
+                &lt;DownTube&gt;0.00&lt;/DownTube&gt;
+            &lt;/HeadTube&gt;
+            &lt;SeatTube&gt;
+                &lt;Direction&gt;0.00&lt;/Direction&gt;
+                &lt;TopTube&gt;0.00&lt;/TopTube&gt;
+                &lt;SeatStay&gt;0.00&lt;/SeatStay&gt;
+            &lt;/SeatTube&gt;
+            &lt;BottomBracket&gt;
+                &lt;DownTube&gt;0.00&lt;/DownTube&gt;
+                &lt;ChainStay&gt;0.00&lt;/ChainStay&gt;
+            &lt;/BottomBracket&gt;
+            &lt;SeatStay&gt;
+                &lt;ChainStay&gt;0.00&lt;/ChainStay&gt;
+            &lt;/SeatStay&gt;
+        &lt;/Angle&gt;
+
+        &lt;Lugs&gt;
+            &lt;Dropout&gt;
+                &lt;Rear&gt;
+                    &lt;Position&gt;0.00,0.00&lt;/Position&gt;
+                    &lt;Direction&gt;
+                        &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                        &lt;degree&gt;0.00&lt;/degree&gt;
+                        &lt;radiant&gt;0.00&lt;/radiant&gt;
+                    &lt;/Direction&gt;            
+                    &lt;Derailleur&gt;0.00,0.00&lt;/Derailleur&gt;
+                &lt;/Rear&gt;
+                &lt;Front&gt;
+                    &lt;Position&gt;0.00,0.00&lt;/Position&gt;
+                    &lt;Direction&gt;
+                        &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                        &lt;degree&gt;0.00&lt;/degree&gt;
+                        &lt;radiant&gt;0.00&lt;/radiant&gt;
+                    &lt;/Direction&gt;            
+                &lt;/Front&gt;
+            &lt;/Dropout&gt;
+            &lt;ForkCrown&gt;
+                &lt;Position&gt;0.00,0.00&lt;/Position&gt;
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+            &lt;/ForkCrown&gt;
+        &lt;/Lugs&gt;
+
+        &lt;Tubes&gt;
+            &lt;TopTube&gt;                
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+                &lt;Start&gt;0.00,0.00&lt;/Start&gt;
+                &lt;End&gt;0.00,0.00&lt;/End&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/TopTube&gt;        
+            &lt;HeadTube&gt;
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+                &lt;Start&gt;0.00,0.00&lt;/Start&gt;
+                &lt;End&gt;0.00,0.00&lt;/End&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/HeadTube&gt;        
+            &lt;SeatTube&gt;
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+                &lt;Start&gt;0.00,0.00&lt;/Start&gt;
+                &lt;End&gt;0.00,0.00&lt;/End&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+                &lt;BottleCage&gt;
+                    &lt;Base&gt;0.00,0.00&lt;/Base&gt;
+                    &lt;Offset&gt;0.00,0.00&lt;/Offset&gt;
+                &lt;/BottleCage&gt;
+            &lt;/SeatTube&gt;
+            &lt;DownTube&gt;
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+                &lt;Start&gt;0.00,0.00&lt;/Start&gt;
+                &lt;End&gt;0.00,0.00&lt;/End&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+                &lt;BottleCage&gt;
+                    &lt;Base&gt;0.00,0.00&lt;/Base&gt;
+                    &lt;Offset&gt;0.00,0.00&lt;/Offset&gt;
+                &lt;/BottleCage&gt;
+                &lt;BottleCage_Lower&gt;
+                    &lt;Base&gt;0.00,0.00&lt;/Base&gt;
+                    &lt;Offset&gt;0.00,0.00&lt;/Offset&gt;
+                &lt;/BottleCage_Lower&gt;
+            &lt;/DownTube&gt;
+            &lt;SeatStay&gt;
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+                &lt;Start&gt;0.00,0.00&lt;/Start&gt;
+                &lt;End&gt;0.00,0.00&lt;/End&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/SeatStay&gt;
+            &lt;ChainStay&gt;
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+                &lt;Start&gt;0.00,0.00&lt;/Start&gt;
+                &lt;End&gt;0.00,0.00&lt;/End&gt;
+                &lt;SeatStay_IS&gt;0.00,0.00&lt;/SeatStay_IS&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/ChainStay&gt;
+            &lt;ForkBlade&gt;
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+                &lt;Start&gt;0.00,0.00&lt;/Start&gt;
+                &lt;End&gt;0.00,0.00&lt;/End&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/ForkBlade&gt;
+            &lt;Steerer&gt;
+                &lt;Direction&gt;
+                    &lt;polar&gt;0.00,0.00&lt;/polar&gt;
+                    &lt;degree&gt;0.00&lt;/degree&gt;
+                    &lt;radiant&gt;0.00&lt;/radiant&gt;
+                &lt;/Direction&gt;            
+                &lt;Start&gt;0.00,0.00&lt;/Start&gt;
+                &lt;End&gt;0.00,0.00&lt;/End&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/Steerer&gt;
+        &lt;/Tubes&gt;
+
+        &lt;Components&gt;
+            &lt;SeatPost&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/SeatPost&gt;
+            &lt;Stem&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/Stem&gt;
+            &lt;HeadSet&gt;
+                &lt;Bottom&gt;
+                    &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+                &lt;/Bottom&gt;
+                &lt;Top&gt;
+                    &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+                &lt;/Top&gt;
+            &lt;/HeadSet&gt;
+        &lt;/Components&gt;
+
+        &lt;TubeMiter&gt;
+            &lt;TopTube_Head&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/TopTube_Head&gt; 
+            &lt;TopTube_Seat&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/TopTube_Seat&gt; 
+            &lt;DownTube_Head&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/DownTube_Head&gt;            
+            &lt;SeatStay_01&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/SeatStay_01&gt;     
+            &lt;SeatStay_02&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/SeatStay_02&gt;     
+            &lt;Reference&gt;
+                &lt;Polygon&gt;0.00,0.00&lt;/Polygon&gt;
+            &lt;/Reference&gt;     
+        &lt;/TubeMiter&gt;
+    &lt;/Result&gt;
+
+&lt;/root&gt;</initXML>
+            <packageHomeDir>R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/lib</packageHomeDir>
+            <postUpdate></postUpdate>
+            <projDoc>domDoc00D74310</projDoc>
+            <projXML>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;root&gt;
+    &lt;Project&gt;
+        &lt;rattleCADVersion&gt;_any_&lt;/rattleCADVersion&gt;
+        &lt;Name&gt;Template bikeGeometry&lt;/Name&gt;
+        &lt;modified&gt;2013.02.27/12:00&lt;/modified&gt;
+    &lt;/Project&gt;
+
+    &lt;Personal&gt;
+        &lt;!-- personal geometry based on cyclist body profile --&gt;
+        &lt;InnerLeg_Length&gt;850.00&lt;/InnerLeg_Length&gt;
+        &lt;HandleBar_Distance&gt;474.00&lt;/HandleBar_Distance&gt;
+        &lt;HandleBar_Height&gt;642.00&lt;/HandleBar_Height&gt;
+        &lt;Saddle_Distance&gt;245.10&lt;/Saddle_Distance&gt;
+        &lt;Saddle_Height&gt;713.30&lt;/Saddle_Height&gt;
+    &lt;/Personal&gt;
+
+    &lt;Custom&gt;
+        &lt;!-- custom details of bicycle frame --&gt;
+        &lt;HeadTube&gt;
+            &lt;PositonTT&gt;8.50&lt;/PositonTT&gt;
+            &lt;PositonDT&gt;8.50&lt;/PositonDT&gt;
+            &lt;Angle&gt;71.00&lt;/Angle&gt;
+        &lt;/HeadTube&gt;
+        &lt;TopTube&gt;
+            &lt;PivotPosition&gt;80.00&lt;/PivotPosition&gt;
+            &lt;OffsetHT&gt;8.50&lt;/OffsetHT&gt;
+            &lt;Angle&gt;10.0&lt;/Angle&gt;
+        &lt;/TopTube&gt;
+        &lt;SeatTube&gt;
+            &lt;Extension&gt;20.00&lt;/Extension&gt;
+            &lt;OffsetBB&gt;0.00&lt;/OffsetBB&gt;
+        &lt;/SeatTube&gt;
+        &lt;DownTube&gt;
+            &lt;OffsetHT&gt;8.50&lt;/OffsetHT&gt;
+            &lt;OffsetBB&gt;0.00&lt;/OffsetBB&gt;
+        &lt;/DownTube&gt;
+        &lt;SeatStay&gt;
+            &lt;OffsetTT&gt;-30&lt;/OffsetTT&gt;
+        &lt;/SeatStay&gt;
+        &lt;WheelPosition&gt;
+            &lt;Rear&gt;420.00&lt;/Rear&gt;
+        &lt;/WheelPosition&gt;
+        &lt;BottomBracket&gt;
+            &lt;Depth&gt;10.0&lt;/Depth&gt;
+        &lt;/BottomBracket&gt;
+    &lt;/Custom&gt;
+
+    &lt;FrameTubes&gt;
+        &lt;!-- frame tubes --&gt;
+        &lt;TopTube&gt;
+            &lt;DiameterHT&gt;28.60&lt;/DiameterHT&gt;
+            &lt;DiameterST&gt;28.60&lt;/DiameterST&gt;
+            &lt;TaperLength&gt;300.00&lt;/TaperLength&gt;
+        &lt;/TopTube&gt;
+        &lt;HeadTube&gt;
+            &lt;Diameter&gt;36.00&lt;/Diameter&gt;
+            &lt;Length&gt;105.0&lt;/Length&gt;
+        &lt;/HeadTube&gt;
+        &lt;SeatTube&gt;
+            &lt;DiameterTT&gt;28.60&lt;/DiameterTT&gt;
+            &lt;DiameterBB&gt;31.80&lt;/DiameterBB&gt;
+            &lt;TaperLength&gt;300.00&lt;/TaperLength&gt;
+        &lt;/SeatTube&gt;
+        &lt;DownTube&gt;
+            &lt;DiameterBB&gt;34.90&lt;/DiameterBB&gt;
+            &lt;DiameterHT&gt;31.80&lt;/DiameterHT&gt;
+            &lt;TaperLength&gt;300.00&lt;/TaperLength&gt;
+        &lt;/DownTube&gt;
+        &lt;SeatStay&gt;
+            &lt;DiameterST&gt;16.00&lt;/DiameterST&gt;
+            &lt;DiameterCS&gt;11.00&lt;/DiameterCS&gt;
+            &lt;TaperLength&gt;300.00&lt;/TaperLength&gt;
+        &lt;/SeatStay&gt;
+        &lt;ChainStay&gt;
+            &lt;HeightBB&gt;29.00&lt;/HeightBB&gt;
+            &lt;Height&gt;29.00&lt;/Height&gt;
+            &lt;DiameterSS&gt;13.00&lt;/DiameterSS&gt;
+            &lt;TaperLength&gt;280.00&lt;/TaperLength&gt;
+            &lt;Width&gt;18.00&lt;/Width&gt;
+            &lt;WidthBB&gt;18.00&lt;/WidthBB&gt;
+            &lt;CenterLine&gt;
+              &lt;length_01&gt;150.00&lt;/length_01&gt;
+              &lt;length_02&gt;140.00&lt;/length_02&gt;
+              &lt;length_03&gt;78.00&lt;/length_03&gt;
+              &lt;length_04&gt;10.00&lt;/length_04&gt;
+              &lt;length_05&gt;10.00&lt;/length_05&gt;
+              &lt;angle_01&gt;9.00&lt;/angle_01&gt;
+              &lt;angle_02&gt;-9.00&lt;/angle_02&gt;
+              &lt;angle_03&gt;0.00&lt;/angle_03&gt;
+              &lt;angle_04&gt;0.00&lt;/angle_04&gt;
+              &lt;radius_01&gt;320.00&lt;/radius_01&gt;
+              &lt;radius_02&gt;320.00&lt;/radius_02&gt;
+              &lt;radius_03&gt;320.00&lt;/radius_03&gt;
+              &lt;radius_04&gt;320.00&lt;/radius_04&gt;
+            &lt;/CenterLine&gt;
+            &lt;Profile&gt;              
+                &lt;width_00&gt;12.50&lt;/width_00&gt;
+                &lt;length_01&gt;150.00&lt;/length_01&gt;
+                &lt;width_01&gt;18.00&lt;/width_01&gt;
+                &lt;length_02&gt;150.00&lt;/length_02&gt;
+                &lt;width_02&gt;18.00&lt;/width_02&gt;
+                &lt;length_03&gt;75.00&lt;/length_03&gt;
+                &lt;width_03&gt;24.00&lt;/width_03&gt; 
+            &lt;/Profile&gt;
+        &lt;/ChainStay&gt;
+    &lt;/FrameTubes&gt;
+    
+    &lt;Lugs&gt;
+        &lt;!-- lug definitions for frame layout --&gt;
+        &lt;HeadTube&gt;
+            &lt;TopTube&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;80.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+            &lt;/TopTube&gt;
+            &lt;DownTube&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;60.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+            &lt;/DownTube&gt;
+        &lt;/HeadTube&gt;
+        &lt;SeatTube&gt;
+            &lt;TopTube&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;81.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+            &lt;/TopTube&gt;
+            &lt;SeatStay&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;55.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+                &lt;MiterDiameter&gt;28.60&lt;/MiterDiameter&gt;
+            &lt;/SeatStay&gt;
+        &lt;/SeatTube&gt;
+        &lt;BottomBracket&gt;
+            &lt;DownTube&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;69.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+            &lt;/DownTube&gt;
+            &lt;ChainStay&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;70.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+                &lt;Offset_TopView&gt;5.00&lt;/Offset_TopView&gt;
+            &lt;/ChainStay&gt;
+            &lt;Diameter&gt;
+                &lt;outside&gt;40.00&lt;/outside&gt;
+                &lt;inside&gt;36.00&lt;/inside&gt;
+            &lt;/Diameter&gt;
+            &lt;Width&gt;68.00&lt;/Width&gt;
+        &lt;/BottomBracket&gt;
+        &lt;RearDropOut&gt;
+            &lt;Angle&gt;
+                &lt;value&gt;55.00&lt;/value&gt;
+                &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+            &lt;/Angle&gt;
+            &lt;File&gt;etc:dropout/dropout_02.svg&lt;/File&gt;
+            &lt;Direction&gt;Chainstay&lt;/Direction&gt;
+            &lt;RotationOffset&gt;0.00&lt;/RotationOffset&gt;
+            &lt;ChainStay&gt;
+                &lt;Offset&gt;33.00&lt;/Offset&gt;
+                &lt;OffsetPerp&gt;1&lt;/OffsetPerp&gt;
+                &lt;Offset_TopView&gt;5.00&lt;/Offset_TopView&gt;
+            &lt;/ChainStay&gt;
+            &lt;SeatStay&gt;
+                &lt;Offset&gt;35.00&lt;/Offset&gt;
+                &lt;OffsetPerp&gt;-7.10&lt;/OffsetPerp&gt;
+            &lt;/SeatStay&gt;
+            &lt;Derailleur&gt;
+                &lt;x&gt;6.00&lt;/x&gt;
+                &lt;y&gt;25.00&lt;/y&gt;
+            &lt;/Derailleur&gt;
+        &lt;/RearDropOut&gt;
+    &lt;/Lugs&gt;
+
+    &lt;Component&gt;
+        &lt;!-- bicycle components for visulization --&gt;
+        &lt;Logo&gt;
+            &lt;File&gt;etc:logo/rattleCAD.svg&lt;/File&gt;
+        &lt;/Logo&gt;
+        &lt;HeadSet&gt;
+            &lt;Height&gt;
+                &lt;Bottom&gt;13.50&lt;/Bottom&gt;
+                &lt;Top&gt;15.50&lt;/Top&gt;
+            &lt;/Height&gt;
+            &lt;Diameter&gt;45.00&lt;/Diameter&gt;
+        &lt;/HeadSet&gt;
+        &lt;Fork&gt;
+            &lt;Height&gt;465.0&lt;/Height&gt;
+            &lt;Rake&gt;40.0&lt;/Rake&gt;
+            &lt;!--BladeWidth&gt;29.00&lt;/BladeWidth--&gt;
+            &lt;!--CrownDiameter&gt;43.00&lt;/CrownDiameter--&gt;
+            &lt;Crown&gt;
+                &lt;File&gt;etc:fork/crown/longshen_17.svg&lt;/File&gt;
+                &lt;Brake&gt;
+                    &lt;Offset&gt;0.00&lt;/Offset&gt;
+                    &lt;Angle&gt;0.00&lt;/Angle&gt;
+                &lt;/Brake&gt;
+                &lt;Blade&gt;
+                    &lt;Offset&gt;35.00&lt;/Offset&gt;
+                    &lt;OffsetPerp&gt;0.00&lt;/OffsetPerp&gt;
+                &lt;/Blade&gt;
+            &lt;/Crown&gt;
+            &lt;Blade&gt;
+                &lt;Width&gt;28.60&lt;/Width&gt;
+                &lt;DiameterDO&gt;13.00&lt;/DiameterDO&gt;
+                &lt;TaperLength&gt;250.00&lt;/TaperLength&gt;
+                &lt;BendRadius&gt;350.00&lt;/BendRadius&gt;
+                &lt;EndLength&gt;10.00&lt;/EndLength&gt;
+            &lt;/Blade&gt;
+            &lt;DropOut&gt;
+                &lt;File&gt;etc:fork/dropout/LE_17.svg&lt;/File&gt;
+                &lt;Offset&gt;20.00&lt;/Offset&gt;
+                &lt;OffsetPerp&gt;0.00&lt;/OffsetPerp&gt;
+            &lt;/DropOut&gt;
+        &lt;/Fork&gt;
+        &lt;Stem&gt;
+            &lt;Angle&gt;-6.00&lt;/Angle&gt;
+            &lt;Length&gt;110.00&lt;/Length&gt;
+        &lt;/Stem&gt;
+        &lt;Brake&gt;
+            &lt;Front&gt;
+                &lt;File&gt;etc:brake/front/v_frontbrake.svg&lt;/File&gt;
+                &lt;LeverLength&gt;45.00&lt;/LeverLength&gt;
+                &lt;Offset&gt;20.00&lt;/Offset&gt;
+            &lt;/Front&gt;
+            &lt;Rear&gt;
+                &lt;File&gt;etc:brake/rear/v_rearbrake.svg&lt;/File&gt;
+                &lt;LeverLength&gt;45.00&lt;/LeverLength&gt;
+                &lt;Offset&gt;20.00&lt;/Offset&gt;
+            &lt;/Rear&gt;
+        &lt;/Brake&gt;
+        &lt;Wheel&gt;
+            &lt;Front&gt;
+                &lt;RimDiameter&gt;559&lt;/RimDiameter&gt;
+                &lt;RimHeight&gt;25.00&lt;/RimHeight&gt;
+                &lt;TyreHeight&gt;47&lt;/TyreHeight&gt;
+            &lt;/Front&gt;
+            &lt;Rear&gt;
+                &lt;RimDiameter&gt;559&lt;/RimDiameter&gt;
+                &lt;RimHeight&gt;25.00&lt;/RimHeight&gt;
+                &lt;TyreHeight&gt;47&lt;/TyreHeight&gt;
+                &lt;HubWidth&gt;135.00&lt;/HubWidth&gt;
+                &lt;FirstSprocket&gt;15&lt;/FirstSprocket&gt;
+            &lt;/Rear&gt;
+        &lt;/Wheel&gt;
+        &lt;HandleBar&gt;
+            &lt;File&gt;etc:handlebar/flatbar_sti.svg&lt;/File&gt;
+        &lt;/HandleBar&gt;
+        &lt;Saddle&gt;
+            &lt;File&gt;etc:saddle/saddle_c.svg&lt;/File&gt;
+            &lt;Height&gt;40.00&lt;/Height&gt;
+            &lt;Length&gt;280.00&lt;/Length&gt;
+            &lt;LengthNose&gt;153.00&lt;/LengthNose&gt;
+        &lt;/Saddle&gt;
+        &lt;SeatPost&gt;
+            &lt;Setback&gt;25.00&lt;/Setback&gt;
+            &lt;Diameter&gt;27.20&lt;/Diameter&gt;
+        &lt;/SeatPost&gt;
+        &lt;CrankSet&gt;
+            &lt;File&gt;etc:crankset/shimano_FC-M770.svg&lt;/File&gt;
+            &lt;Length&gt;175&lt;/Length&gt;
+            &lt;PedalEye&gt;17.50&lt;/PedalEye&gt;
+            &lt;Q-Factor&gt;175.00&lt;/Q-Factor&gt;
+            &lt;ArmWidth&gt;13.75&lt;/ArmWidth&gt;
+            &lt;ChainLine&gt;43.50&lt;/ChainLine&gt;
+            &lt;ChainRings&gt;22-32-44&lt;/ChainRings&gt;
+        &lt;/CrankSet&gt;
+        &lt;Derailleur&gt;
+            &lt;Front&gt;
+                &lt;File&gt;etc:derailleur/front/campagnolo_qs.svg&lt;/File&gt;
+                &lt;Distance&gt;128.00&lt;/Distance&gt;
+                &lt;Offset&gt;9.20&lt;/Offset&gt;
+            &lt;/Front&gt;
+            &lt;Rear&gt;
+                &lt;File&gt;etc:derailleur/rear/shimano_RD-M773.svg&lt;/File&gt;
+            &lt;/Rear&gt;
+        &lt;/Derailleur&gt;
+        &lt;BottleCage&gt;
+            &lt;SeatTube&gt;
+                &lt;File&gt;etc:bottle_cage/left/bottleCage.svg&lt;/File&gt;
+                &lt;OffsetBB&gt;130.00&lt;/OffsetBB&gt;
+            &lt;/SeatTube&gt;
+            &lt;DownTube&gt;
+                &lt;File&gt;etc:bottle_cage/right/bottleCage.svg&lt;/File&gt;
+                &lt;OffsetBB&gt;210.00&lt;/OffsetBB&gt;
+            &lt;/DownTube&gt;
+            &lt;DownTube_Lower&gt;
+                &lt;File&gt;etc:bottle_cage/left/bottleCage.svg&lt;/File&gt;
+                &lt;OffsetBB&gt;140.00&lt;/OffsetBB&gt;
+            &lt;/DownTube_Lower&gt;
+        &lt;/BottleCage&gt;
+    &lt;/Component&gt;
+
+    &lt;Rendering&gt;
+        &lt;!-- rendering information --&gt;
+        &lt;Fork&gt;Suspension_26&lt;/Fork&gt;
+        &lt;ForkBlade&gt;bent&lt;/ForkBlade&gt;
+        &lt;Brake&gt;
+            &lt;Front&gt;Rim&lt;/Front&gt;
+            &lt;Rear&gt;Rim&lt;/Rear&gt;
+        &lt;/Brake&gt;        
+        &lt;BottleCage&gt;
+            &lt;SeatTube&gt;Cage&lt;/SeatTube&gt;
+            &lt;DownTube&gt;Cage&lt;/DownTube&gt;
+            &lt;DownTube_Lower&gt;off&lt;/DownTube_Lower&gt;
+        &lt;/BottleCage&gt;
+        &lt;RearDropOut&gt;behind&lt;/RearDropOut&gt;
+        &lt;ForkDropOut&gt;front&lt;/ForkDropOut&gt;
+        &lt;ChainStay&gt;bent&lt;/ChainStay&gt;    
+        &lt;RearMockup&gt;
+            &lt;DiscOffset&gt;15.30&lt;/DiscOffset&gt;
+            &lt;DiscWidth&gt;2.00&lt;/DiscWidth&gt;
+            &lt;DiscDiameter&gt;160.00&lt;/DiscDiameter&gt;
+            &lt;DiscClearance&gt;5.00&lt;/DiscClearance&gt;
+            &lt;TyreClearance&gt;5.00&lt;/TyreClearance&gt;
+            &lt;CrankClearance&gt;5.00&lt;/CrankClearance&gt;
+            &lt;ChainWheelClearance&gt;5.00&lt;/ChainWheelClearance&gt;
+            &lt;CassetteClearance&gt;3.00&lt;/CassetteClearance&gt;
+        &lt;/RearMockup&gt;
+    &lt;/Rendering&gt;
+
+    &lt;Result&gt;
+    &lt;/Result&gt;
+&lt;/root&gt;</projXML>
+            <DICT>Project {rattleCADVersion 3.4.00 Name {"Template Road"} modified 2013.03.01/12:00} Personal {InnerLeg_Length 850.00 HandleBar_Distance 471.24 HandleBar_Height 646.31 Saddle_Distance 230.82 Saddle_Height 718.00} Custom {HeadTube {PositonTT 8.50 PositonDT 8.50 Angle 72.00} TopTube {PivotPosition 80.00 OffsetHT 8.50 Angle 2.50} SeatTube {Extension 20.00 OffsetBB 0.00} DownTube {OffsetHT 8.50 OffsetBB 0.00} SeatStay {OffsetTT -20.00} WheelPosition {Rear 410.00} BottomBracket {Depth 64.00}} FrameTubes {TopTube {DiameterHT 28.60 DiameterST 28.60 TaperLength 300.00} HeadTube {Diameter 36.00 Length 150.00} SeatTube {DiameterTT 28.60 DiameterBB 31.80 TaperLength 300.00} DownTube {DiameterBB 34.90 DiameterHT 31.80 TaperLength 300.00} SeatStay {DiameterST 16.00 DiameterCS 11.00 TaperLength 300.00} ChainStay {HeightBB 22.20 Height 29.00 DiameterSS 13.00 TaperLength 280.00 Width 18.00 WidthBB 22.20 CenterLine {length_01 150.00 length_02 160.00 length_03 47.00 length_04 10.00 angle_01 9.00 angle_02 -5.00 angle_03 0.00 radius_01 320.00 radius_02 320.00 radius_03 320.00 length_05 05.00 angle_04 0.00 radius_04 320.00} Profile {width_00 12.50 length_01 150.00 width_01 18.00 length_02 150.00 width_02 18.00 length_03 75.00 width_03 24.00}}} Lugs {HeadTube {TopTube {Angle {value 75.00 plus_minus 1.00}} DownTube {Angle {value 61.00 plus_minus 1.00}}} SeatTube {TopTube {Angle {value 76.00 plus_minus 1.00}} SeatStay {Angle {value 40.00 plus_minus 1.00} MiterDiameter 28.60}} BottomBracket {DownTube {Angle {value 60.00 plus_minus 1.00}} ChainStay {Angle {value 64.00 plus_minus 1.00} Offset_TopView 6.00} Diameter {outside 40.00 inside 36.00} Width 68.00} RearDropOut {Angle {value 67.00 plus_minus 1.00} File etc:dropout/dropout_02.svg Direction Chainstay RotationOffset 0.00 ChainStay {Offset 33.00 OffsetPerp 1.30 Offset_TopView 5.00} SeatStay {Offset 35.00 OffsetPerp 0.30} Derailleur {x 6.00 y 25.00}}} Component {Logo {File etc:logo/rattleCAD.svg} HeadSet {Height {Bottom 13.50 Top 15.50} Diameter 45.00} Fork {Height 365.00 Rake 45.00 Crown {File etc:fork/crown/longshen_17.svg Brake {Offset 19.00 Angle 0.00} Blade {Offset 35.00 OffsetPerp 0.00}} Blade {Width 28.60 DiameterDO 13.00 TaperLength 250.00 BendRadius 350.00 EndLength 10.00} DropOut {File etc:fork/dropout/LE_17.svg Offset 20.00 OffsetPerp 0.00}} Stem {Angle -6.00 Length 110.00} Brake {Front {File etc:brake/front/campagnolo_frontbrake.svg LeverLength 45.00 Offset 36.00} Rear {File etc:brake/rear/campagnolo_rearbrake.svg LeverLength 45.00 Offset 30.00}} Wheel {Front {RimDiameter 622.00 RimHeight 25.00 TyreHeight 23.00} Rear {RimDiameter 622.00 RimHeight 25.00 TyreHeight 23.00 HubWidth 130.00 FirstSprocket 15}} HandleBar {File etc:handlebar/campagnolo_ergopower_11_a.svg} Saddle {File etc:saddle/saddle_c.svg Height 40.00 Length 280.00 LengthNose 153.00} SeatPost {Setback 25.00 Diameter 27.20} CrankSet {File etc:crankset/campagnolo_ultra_torque.svg Length 172.50 PedalEye 17.50 Q-Factor 145.50 ArmWidth 13.75 ChainLine 43.50 ChainRings 39-53} Derailleur {Front {File etc:derailleur/front/campagnolo_qs.svg Distance 150.00 Offset 9.20} Rear {File etc:derailleur/rear/campagnolo_2006_short.svg}} BottleCage {SeatTube {File etc:bottle_cage/left/bottleCage.svg OffsetBB 170.00} DownTube {File etc:bottle_cage/right/bottleCage.svg OffsetBB 210.00} DownTube_Lower {File etc:bottle_cage/left/bottleCage.svg OffsetBB 170.00}}} Rendering {Fork SteelLuggedMAX ForkBlade bent Brake {Front Rim Rear Rim} BottleCage {SeatTube Cage DownTube Cage DownTube_Lower off} RearDropOut behind ChainStay straight RearMockup {DiscOffset 15.30 DiscWidth 2.00 DiscDiameter 160.00 DiscClearance 5.00 TyreClearance 5.00 CrankClearance 5.00 ChainWheelClearance 5.00 CassetteClearance 3.00} ForkDropOut front} Result {Position {BottomBracket 0.00,0.00 FrontWheel 592.732546,64.000000 RearWheel -404.974073,64.000000 Saddle -230.820000,718.000000 SaddleNose -77.820000,703.000000 SaddleProposal -216.200714,716.073496 HandleBar 471.240000,646.310000 LegClearance 80.000000,580.000000 BottomBracketGround 0.000000,-270.000000 SteererGround 653.939924,-270.000000 SeatTubeGround 81.519834,-270.000000 SeatTubeSaddle -216.782375,718.000000 SeatTubeVirtualTopTube -166.882455,552.727604 DerailleurMountFront -34.548437,146.256779 BrakeFront 503.099210,361.803400 BrakeRear -274.718610,346.408418 SummarySize 997.706619,789.225960 SeatPostSaddle -230.820000,678.000000 SeatPostSeatTube -206.887062,685.225960 Brake {Front {Mount 458.968923,394.780401 Shoe 503.099210,361.803400 Help 489.193445,404.600943 Definition 477.530227,350.391692} Rear {Mount -225.538923,368.910827 Shoe -274.718610,346.408418 Help -251.056863,384.685326 Definition -249.200670,330.633919}}} Length {HeadTube {ReachLength 386.620 StackHeight 552.728} TopTube {VirtualLength 553.502} SeatTube {TubeLength 555.394 TubeHeight 531.688 VirtualLength 577.371} Saddle {Offset_BB 230.820 Offset_BB_ST 216.782 Offset_HB 71.690 Offset_BB_Nose 77.820} BottomBracket {Height 270.000} FrontWheel {diagonal 596.178 horizontal 592.733} RearWheel {horizontal 404.974}} Angle {HeadTube {TopTube 74.5000001910888 DownTube 61.48381213659957} SeatTube {Direction 73.200 TopTube 75.69960552151585 SeatStay 48.52362716853668} BottomBracket {DownTube 60.284206820100806 ChainStay 64.41671963901727} SeatStay {ChainStay 67.05965316328479}} Lugs {Dropout {Rear {Position -404.974073,64.000000 Direction {polar 0.00,0.00 degree 0.00 radiant 0.00} Derailleur -414.802962,40.243044} Front {Position 592.732546,64.000000 Direction {polar 0.429354,-0.903136 degree -64.57345 radiant -1.127019}}} ForkCrown {Position 437.143800,397.229864 Direction {polar -0.309017,0.951057 degree 108.00000 radiant 1.884956}}} Tubes {TopTube {Direction {polar -0.999048,-0.043619 degree 182.50000 radiant 3.185226} Start -151.537523,501.904001 End 395.374453,525.782694 Polygon {"381.298596,510.854505 382.219654,512.812381 384.124567,518.134701 384.548182,522.824474 384.040588,525.287846 382.955576,527.726008 379.538843,532.248108 374.276948,537.257518 372.127148,539.081318 269.331111,534.593146 -30.383355,521.507330 -141.059717,516.675095 -142.463477,514.696144 -146.298620,509.289548 -149.718071,504.468975 -151.537523,501.904001 -148.236707,499.562583 -142.033203,495.162157 -135.075558,490.226785 -132.528883,488.420313 -29.135841,492.934551 270.578626,506.020367 "}} HeadTube {Direction {polar -0.309017,0.951057 degree 108.00000 radiant 1.884956} Start 432.972070,410.069127 End 386.619521,552.727604 Polygon {"450.091088,415.631433 403.738538,558.289910 369.500504,547.165298 415.853053,404.506821 "}} SeatTube {Direction {polar -0.289038,0.957318 degree 106.80039 radiant 1.864018} Start 0.000000,0.000000 End -160.530125,531.688197 Polygon {-21.687956,126.842183 -109.931180,413.574973 -146.840485,535.821446 -174.219765,527.554948 -137.310461,405.308475 -52.130653,117.650762 -18.405748,5.951268 -16.080186,5.618767 -9.866454,5.173463 -4.750819,6.182695 -2.392776,7.925059 -0.375468,10.795963 2.731868,18.456839 5.740748,28.626249 6.790896,32.518020 } BottleCage {Base -33.915178,167.339687 Offset -52.413634,228.608007}} DownTube {Direction {polar 0.688150,0.725569 degree 46.51619 radiant 0.811861} Start -0.000000,-0.000000 End 421.731557,444.663871 Polygon {119.200860,100.324736 324.521111,319.062015 413.226409,412.590801 413.926710,416.424725 415.448420,426.486359 415.749904,434.344738 415.123702,437.696703 413.807910,440.321581 409.856672,443.695991 404.241518,446.232682 402.042912,447.010066 301.448023,340.945172 93.878509,124.341158 -12.661176,12.008211 12.661176,-12.008211 } BottleCage {Base 131.850242,164.377663 Offset 175.891817,210.814068} BottleCage_Lower {Base 129.646609,111.338489 Offset 173.688184,157.774894}} SeatStay {Direction {polar 0.525817,0.850598 degree 58.27677 radiant 1.017122} Start -386.315409,93.613028 End -145.756755,482.757651 Polygon {-151.679958,457.961431 -150.045717,462.643441 -148.025736,471.479972 -146.526505,478.870491 -145.756755,482.757651 -147.598348,482.420518 -151.111985,481.701869 -155.391257,480.348284 -157.852456,478.405223 -235.375213,352.998952 -390.993698,96.505020 -381.637120,90.721037 -221.765645,344.585886 }} ChainStay {Direction {polar -0.988274,0.152691 degree 171.21711 radiant 2.988302} Start 0.000000,0.000000 End -372.581526,57.564716 SeatStay_IS -405.459364,62.644419 Polygon {"-373.574015,51.140935 -110.924158,2.465998 -71.393197,-3.641628 -31.343087,-6.389122 -1.694866,-10.969842 1.694866,10.969842 -27.953355,15.550561 -66.965168,25.018319 -106.496129,31.125945 -371.589037,63.988498 "}} ForkBlade {Direction {polar 0.00,0.00 degree 0.00 radiant 0.00} Start 0.00,0.00 End 0.00,0.00 Polygon {"577.823518,79.057254 575.480874,83.473174 573.138229,87.889094 570.795585,92.305014 568.452941,96.720934 566.110297,101.136854 563.767653,105.552774 561.425008,109.968694 559.082364,114.384614 556.739720,118.800534 554.397076,123.216454 552.054431,127.632374 549.711787,132.048294 547.369143,136.464214 545.026499,140.880134 542.683855,145.296054 540.341210,149.711974 537.998566,154.127894 535.655922,158.543814 533.313278,162.959734 530.970633,167.375654 528.627989,171.791574 526.285345,176.207494 523.942701,180.623414 521.600057,185.039334 519.257412,189.455254 516.914768,193.871174 514.572124,198.287094 512.229480,202.703014 509.886835,207.118934 507.544191,211.534854 505.201547,215.950774 502.858903,220.366694 500.516259,224.782614 498.173614,229.198534 495.830970,233.614454 493.488326,238.030374 491.145682,242.446294 488.803037,246.862214 486.460393,251.278134 484.117749,255.694054 481.775105,260.109974 479.432461,264.525894 477.089816,268.941814 474.747172,273.357734 472.404528,277.773654 470.061884,282.189574 467.719239,286.605494 465.376595,291.021414 463.033951,295.437334 460.691307,299.853254 460.336799,300.587995 458.091914,305.614689 455.936226,310.444706 453.780537,315.274724 451.624849,320.104742 449.469161,324.934760 447.313473,329.764778 445.157785,334.594796 443.002097,339.424813 440.964292,343.990703 438.926487,348.556593 436.888682,353.122483 434.850877,357.688373 432.813072,362.254263 430.775267,366.820153 463.649674,381.492349 465.687479,376.926459 467.725284,372.360569 469.763089,367.794679 471.800894,363.228790 473.838699,358.662900 475.876504,354.097010 478.032192,349.266992 480.187880,344.436974 482.343569,339.606956 484.499257,334.776938 486.654945,329.946920 488.810633,325.116903 490.966321,320.286885 493.032812,315.653543 493.180381,315.298652 495.126122,310.694043 497.071863,306.089434 499.017604,301.484825 500.963345,296.880216 502.909086,292.275607 504.854827,287.670998 506.800567,283.066389 508.746308,278.461780 510.692049,273.857172 512.637790,269.252563 514.583531,264.647954 516.529272,260.043345 518.475013,255.438736 520.420754,250.834127 522.366495,246.229518 524.312236,241.624909 526.257977,237.020300 528.203718,232.415691 530.149459,227.811082 532.095200,223.206473 534.040941,218.601864 535.986682,213.997255 537.932423,209.392646 539.878164,204.788037 541.823905,200.183428 543.769645,195.578819 545.715386,190.974210 547.661127,186.369601 549.606868,181.764993 551.552609,177.160384 553.498350,172.555775 555.444091,167.951166 557.389832,163.346557 559.335573,158.741948 561.281314,154.137339 563.227055,149.532730 565.172796,144.928121 567.118537,140.323512 569.064278,135.718903 571.010019,131.114294 572.955760,126.509685 574.901501,121.905076 576.847242,117.300467 578.792983,112.695858 580.738724,108.091249 582.684464,103.486640 584.630205,98.882031 586.575946,94.277422 588.521687,89.672813 590.467428,85.068205 "}} Steerer {Direction {polar -0.309017,0.951057 degree 108.00000 radiant 1.884956} Start 437.143800,397.229864 End 363.643764,623.439714 Polygon {"450.743908,401.648807 374.153702,637.369222 346.953486,628.531336 423.543692,392.810921 "}}} Components {SeatPost {Polygon {-138.518004,505.834923 -172.189665,617.358069 -179.075092,640.159331 -179.534880,641.267013 -180.747795,644.195844 -182.279950,647.296329 -184.103440,650.549733 -185.760016,653.193565 -187.207308,655.312378 -188.376231,656.869371 -189.984611,658.793096 -192.016192,660.935954 -194.454852,663.150093 -197.284333,665.287912 -199.728989,666.802979 -202.108057,668.173118 -204.548582,669.360702 -206.970083,670.341351 -209.664115,671.219243 -211.931582,671.795243 -214.698386,672.306973 -217.228169,672.598303 -220.131044,672.731757 -222.702182,672.673618 -225.376180,672.435465 -228.538838,671.912932 -231.876990,671.054122 -235.452318,669.793822 -238.248438,668.513279 -240.981390,666.989618 -242.972927,665.688868 -244.794049,664.340230 -245.764320,663.184871 -246.191158,662.529318 -246.154792,661.754978 -245.264736,660.239034 -244.799520,659.669699 -244.348585,659.534464 -243.821445,659.502149 -243.343031,659.682423 -242.952518,659.992951 -242.422241,660.506229 -241.162703,661.632454 -239.703163,662.792010 -237.676809,664.179840 -235.592675,665.375258 -233.320988,666.445963 -231.329858,667.206957 -228.819741,667.952604 -226.040846,668.518672 -223.253733,668.823987 -220.436231,668.843903 -217.611019,668.657334 -214.484560,668.107534 -211.757354,667.346728 -209.277485,666.410443 -207.085411,665.369715 -205.020676,664.184725 -203.268963,663.002371 -201.319643,661.463413 -199.803769,659.018504 -199.197230,655.923933 -199.803769,659.018504 -201.319643,661.463413 -203.268963,663.002371 -205.020676,664.184725 -207.085411,665.369715 -209.277485,666.410443 -211.757354,667.346728 -214.484560,668.107534 -217.611019,668.657334 -220.436231,668.843903 -223.253733,668.823987 -226.040846,668.518672 -228.819741,667.952604 -231.329858,667.206957 -233.320988,666.445963 -235.592675,665.375258 -237.676809,664.179840 -239.703163,662.792010 -241.162703,661.632454 -242.422241,660.506229 -242.952518,659.992951 -243.343031,659.682423 -243.821445,659.502149 -244.348585,659.534464 -244.799520,659.669699 -244.432694,659.221078 -244.054331,658.953937 -243.671437,658.827825 -243.117738,658.726229 -242.362074,658.663571 -241.524900,658.618105 -240.694978,658.545799 -239.850843,658.426076 -238.971322,658.238275 -238.034892,657.961632 -233.821371,656.665687 -229.300867,655.083348 -224.615442,652.923634 -218.839109,649.506149 -213.854073,645.777362 -211.735829,643.971956 -210.603550,642.728348 -209.396657,641.208203 -208.557047,640.059660 -207.681615,638.754067 -206.861441,637.367862 -206.187732,635.977548 -205.751662,634.659533 -204.352012,629.773644 -198.228701,609.496225 -164.557041,497.973079 }} Stem {Polygon {"447.886372,658.725823 451.283629,659.914222 453.661986,662.196994 455.652773,665.270976 456.376772,667.828901 456.632794,668.225088 456.714046,667.053070 456.602568,665.590635 456.195667,663.469585 455.735854,661.188641 453.868927,654.250265 453.327065,652.727121 452.302588,651.529448 451.080400,650.568850 452.302588,651.529448 453.327065,652.727121 453.868927,654.250265 455.735854,661.188641 456.195667,663.469585 456.602568,665.590635 456.714046,667.053070 456.632794,668.225088 456.862992,668.585014 457.548190,668.958129 465.259710,670.597263 467.155803,661.676850 468.720839,662.009509 466.824767,670.929824 471.585314,671.941709 472.296654,671.976362 472.971818,671.743038 473.501637,671.398464 480.107694,667.357332 479.082017,672.178434 478.570456,672.485689 479.296979,668.976763 478.570456,672.485689 473.501637,671.398464 480.308423,667.234481 483.475738,665.004677 485.933052,663.029723 488.566444,660.127312 490.112123,657.776301 491.378083,655.135297 492.128657,652.891211 492.661453,650.863168 492.999599,648.793751 493.226667,646.438391 493.144349,643.510801 492.688543,640.734362 491.463337,637.011780 490.021755,634.208091 488.035211,630.882799 483.510548,624.310243 488.583359,625.378688 487.819862,628.879754 488.583359,625.378688 488.925721,625.867449 487.901804,630.688926 483.510548,624.310243 483.166685,623.779962 482.644793,623.292195 481.980857,623.034525 477.220310,622.022639 475.324239,630.942954 478.519020,632.169592 481.419055,634.091746 483.734632,636.477006 485.526316,639.330473 486.673702,642.474533 487.141563,646.078768 486.792568,649.615698 485.672792,652.988794 483.779405,656.091130 481.452411,658.496688 478.655017,660.374717 475.569459,661.611929 472.138335,662.188355 468.720839,662.009509 467.155803,661.676850 464.614635,660.792997 462.106984,659.329650 459.508768,657.043288 457.598617,654.476863 456.263009,651.653170 455.517870,648.707476 455.349685,645.690378 455.687474,643.004106 456.471494,640.412684 457.852303,637.724835 459.731143,635.336885 462.099780,633.300554 464.888650,631.732936 468.192185,630.701030 471.078236,630.384149 473.759203,630.610295 475.324239,630.942954 473.759203,630.610295 475.655295,621.689883 467.943775,620.050749 467.197627,620.224104 466.686876,620.851728 466.406889,621.451829 465.710222,622.742488 464.475791,624.514662 463.127988,626.411385 458.600373,631.990560 457.485839,633.161626 456.062796,633.839062 454.555561,634.219504 456.062796,633.839062 457.485839,633.161626 458.600373,631.990560 463.127988,626.411385 464.475791,624.514662 465.710222,622.742488 466.406889,621.451829 466.686876,620.851728 464.950915,622.362107 461.670599,624.498271 458.356019,625.693244 454.522148,625.376721 389.580683,611.571512 386.394491,608.433331 354.058570,597.926753 386.394491,608.433331 398.948775,573.031286 364.710740,561.906674 354.058570,597.926753 342.257154,634.247774 374.593076,644.754352 342.257154,634.247774 340.712069,639.003057 373.047991,649.509635 374.593076,644.754352 379.015336,644.088307 "}} HeadSet {Bottom {Polygon {"415.853053,404.506821 413.659163,396.696613 456.456707,410.602378 413.659163,396.696613 415.745028,390.276981 458.542571,404.182746 456.456707,410.602378 450.091088,415.631433 "}} Top {Polygon {"364.710740,561.906674 362.825868,553.145410 405.623411,567.051174 362.825868,553.145410 365.220750,545.774722 408.018293,559.680486 405.623411,567.051174 398.948775,573.031286 "}}}} TubeMiter {TopTube_Head {Polygon {44.924775,-70.000000 44.924775,-14.034259 42.428954,-13.922403 39.933133,-13.596217 37.437312,-13.084572 34.941492,-12.438166 32.445671,-11.733740 29.949850,-11.079767 27.454029,-10.619896 24.958208,-10.521893 22.462387,-10.932063 19.966567,-11.899180 17.470746,-13.332623 14.974925,-15.045508 12.479104,-16.831998 9.983283,-18.514033 7.487462,-19.953437 4.991642,-21.049372 2.495821,-21.733388 -0.000000,-21.965741 -2.495821,-21.733388 -4.991642,-21.049372 -7.487462,-19.953437 -9.983283,-18.514033 -12.479104,-16.831998 -14.974925,-15.045508 -17.470746,-13.332623 -19.966567,-11.899180 -22.462387,-10.932063 -24.958208,-10.521893 -27.454029,-10.619896 -29.949850,-11.079767 -32.445671,-11.733740 -34.941492,-12.438166 -37.437312,-13.084572 -39.933133,-13.596217 -42.428954,-13.922403 -44.924775,-14.034259 -44.924775,-70.000000 }} TopTube_Seat {Polygon {44.924775,-70.000000 44.924775,-18.265739 42.428954,-17.988241 39.933133,-17.164180 37.437312,-15.818594 34.941492,-13.992368 32.445671,-11.740991 29.949850,-9.132869 27.454029,-6.247251 24.958208,-3.171812 22.462387,-0.000000 19.966567,-1.794526 17.470746,-3.534526 14.974925,-5.167131 12.479104,-6.642735 9.983283,-7.916503 7.487462,-8.949733 4.991642,-9.711029 2.495821,-10.177261 -0.000000,-10.334261 -2.495821,-10.177261 -4.991642,-9.711029 -7.487462,-8.949733 -9.983283,-7.916503 -12.479104,-6.642735 -14.974925,-5.167131 -17.470746,-3.534526 -19.966567,-1.794526 -22.462387,0.000000 -24.958208,-3.171812 -27.454029,-6.247251 -29.949850,-9.132869 -32.445671,-11.740991 -34.941492,-13.992368 -37.437312,-15.818594 -39.933133,-17.164180 -42.428954,-17.988241 -44.924775,-18.265739 -44.924775,-70.000000 }} DownTube_Head {Polygon {49.951323,-70.000000 49.951323,-26.638813 47.176250,-26.294555 44.401176,-25.276700 41.626103,-23.630658 38.851029,-21.434766 36.075956,-18.806035 33.300882,-15.912184 30.525809,-12.992733 27.750735,-10.377791 24.975662,-8.437417 22.200588,-7.377563 19.425515,-7.083437 16.650441,-7.273371 13.875368,-7.700191 11.100294,-8.199336 8.325221,-8.667794 5.550147,-9.041042 2.775074,-9.279415 -0.000000,-9.361187 -2.775074,-9.279415 -5.550147,-9.041042 -8.325221,-8.667794 -11.100294,-8.199336 -13.875368,-7.700191 -16.650441,-7.273371 -19.425515,-7.083437 -22.200588,-7.377563 -24.975662,-8.437417 -27.750735,-10.377791 -30.525809,-12.992733 -33.300882,-15.912184 -36.075956,-18.806035 -38.851029,-21.434766 -41.626103,-23.630658 -44.401176,-25.276700 -47.176250,-26.294555 -49.951323,-26.638813 -49.951323,-70.000000 }} SeatStay_01 {Polygon {25.132741,-70.000000 25.132741,-19.909364 23.736478,-19.021280 22.340214,-17.728651 20.943951,-16.044138 19.547688,-13.994335 18.151424,-11.618646 16.755161,-8.967777 15.358897,-6.101884 13.962634,-3.088460 12.566371,-0.000000 11.170107,-0.632408 9.773844,-1.264407 8.377580,-1.895858 6.981317,-2.527163 5.585054,-3.159527 4.188790,-3.795216 2.792527,-4.437792 1.396263,-5.092320 -0.000000,-5.765527 -1.396263,-6.465855 -2.792527,-7.203363 -4.188790,-7.989362 -5.585054,-8.835657 -6.981317,-9.753228 -8.377580,-10.750236 -9.773844,-11.829335 -11.170107,-12.984590 -12.566371,-14.198591 -13.962634,-15.440642 -15.358897,-16.666812 -16.755161,-17.822154 -18.151424,-18.844711 -19.547688,-19.670464 -20.943951,-20.238284 -22.340214,-20.494222 -23.736478,-20.394815 -25.132741,-19.909364 -25.132741,-70.000000 }} SeatStay_02 {Polygon {25.132741,-70.000000 25.132741,-19.909364 23.736478,-20.394815 22.340214,-20.494222 20.943951,-20.238284 19.547688,-19.670464 18.151424,-18.844711 16.755161,-17.822154 15.358897,-16.666812 13.962634,-15.440642 12.566371,-14.198591 11.170107,-12.984590 9.773844,-11.829335 8.377580,-10.750236 6.981317,-9.753228 5.585054,-8.835657 4.188790,-7.989362 2.792527,-7.203363 1.396263,-6.465855 -0.000000,-5.765527 -1.396263,-5.092320 -2.792527,-4.437792 -4.188790,-3.795216 -5.585054,-3.159527 -6.981317,-2.527163 -8.377580,-1.895858 -9.773844,-1.264407 -11.170107,-0.632408 -12.566371,0.000000 -13.962634,-3.088460 -15.358897,-6.101884 -16.755161,-8.967777 -18.151424,-11.618646 -19.547688,-13.994335 -20.943951,-16.044138 -22.340214,-17.728651 -23.736478,-19.021280 -25.132741,-19.909364 -25.132741,-70.000000 }} Reference {Polygon {"-50.000000,0.000000 50.000000,0.000000 50.000000,10.000000 -50.000000,10.000000 "}}}}</DICT>
+            <DOM>domNode00D74AB8</DOM>
+            <resultNode>domNode009B6070</resultNode>
+            <xPath>root/Result/TubeMiter/Reference/Polygon</xPath>
+        </____vars____________>
+    </project>
+    <tDOM>
+        <____procedures______>
+            <IANAEncoding2TclEncoding>IANAName</IANAEncoding2TclEncoding>
+            <baseURL>path</baseURL>
+            <xmlOpenFile>filename encodingString</xmlOpenFile>
+            <xmlReadFile>filename encodingString</xmlReadFile>
+        </____procedures______>
+        <____vars____________>
+            <extRefHandlerDebug>0</extRefHandlerDebug>
+            <useForeignDTD></useForeignDTD>
+        </____vars____________>
+    </tDOM>
+    <tcl>
+        <Pkg>
+            <____procedures______>
+                <CompareExtension>fileName ext</CompareExtension>
+                <Create>args</Create>
+            </____procedures______>
+        </Pkg>
+        <chan/>
+        <clock>
+            <____procedures______>
+                <add>args</add>
+                <format>args</format>
+                <scan>args</scan>
+            </____procedures______>
+            <____vars____________>
+                <TclLibDir>D:/Programme/TclTk/lib/tcl8.5</TclLibDir>
+            </____vars____________>
+        </clock>
+        <dict/>
+        <info/>
+        <mathfunc>
+            <____procedures______>
+                <max>args</max>
+                <min>args</min>
+            </____procedures______>
+        </mathfunc>
+        <mathop/>
+        <string/>
+        <tm>
+            <____procedures______>
+                <Defaults></Defaults>
+                <UnknownHandler>original name args</UnknownHandler>
+                <add>path args</add>
+                <list></list>
+                <remove>path args</remove>
+                <roots>paths</roots>
+            </____procedures______>
+            <____vars____________>
+                <paths>D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/site-tcl D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.0 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.1 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.2 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.3 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.4 D:/Programme/TclTk/lib/teapot/package/tcl/teapot/tcl8/8.5 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/site-tcl D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.0 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.1 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.2 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.3 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.4 D:/Programme/TclTk/lib/teapot/package/win32-ix86/teapot/tcl8/8.5 D:/Programme/TclTk/lib/tcl8/site-tcl D:/Programme/TclTk/lib/tcl8/8.0 D:/Programme/TclTk/lib/tcl8/8.1 D:/Programme/TclTk/lib/tcl8/8.2 D:/Programme/TclTk/lib/tcl8/8.3 D:/Programme/TclTk/lib/tcl8/8.4 D:/Programme/TclTk/lib/tcl8/8.5</paths>
+                <pkgpattern>^([_[:alpha:]][:_[:alnum:]]*)-([[:digit:]].*)[.]tm$</pkgpattern>
+            </____vars____________>
+        </tm>
+        <unsupported/>
+        <____procedures______>
+            <CopyDirectory>action src dest</CopyDirectory>
+            <EnvTraceProc>lo n1 n2 op</EnvTraceProc>
+            <InitWinEnv></InitWinEnv>
+            <MacOSXPkgUnknown>original name args</MacOSXPkgUnknown>
+        </____procedures______>
+        <____vars____________>
+            <Dir>D:/Programme/TclTk/lib/tcl8.5/encoding</Dir>
+            <Path>D:/Programme/TclTk/lib/tcl8.5/encoding</Path>
+            <auto_oldpath>{R:\_devlp\_svn_local\rattleCAD_3.4.00\bikeGeometry} D:/Programme/TclTk/lib/tcl8.5 D:/Programme/TclTk/lib</auto_oldpath>
+        </____vars____________>
+    </tcl>
+    <vectormath>
+        <____procedures______>
+            <VCross>v1 v2</VCross>
+            <VRotate>v beta unit</VRotate>
+            <___scalarProduct>v s</___scalarProduct>
+            <addVector>v1 v2 scaling</addVector>
+            <addVectorPointList>v p_list scaling</addVectorPointList>
+            <angle>p1 pc p3</angle>
+            <angle__>p1 pc p3</angle__>
+            <bisectAngle>p1 p2 p3</bisectAngle>
+            <cathetusPoint>p1 p2 cathetus position</cathetusPoint>
+            <center>p1 p2</center>
+            <checkPointCoincidence>p1 p2 tolerance</checkPointCoincidence>
+            <dirAngle>p1 p2</dirAngle>
+            <dirAngle_Coincidence>p1 p2 tolerance p_perp</dirAngle_Coincidence>
+            <distancePerp>p1 p2 p3</distancePerp>
+            <grad>arc</grad>
+            <intersectPerp>p1 p2 p3</intersectPerp>
+            <intersectPoint>p1 p2 p3 p4 errorMode</intersectPoint>
+            <intersectPointVector>p1 v1 p3 v3 errorMode</intersectPointVector>
+            <intersectVector>v1 v2 errorMode</intersectVector>
+            <length>p1 p2</length>
+            <mirrorPoint>p1 p2 p3</mirrorPoint>
+            <offsetOrientation>p1 p2 p3</offsetOrientation>
+            <parallel>p1 p2 distance direction</parallel>
+            <rad>arc</rad>
+            <rotateLine>p l angle</rotateLine>
+            <rotatePoint>p_cent p_rot angle</rotatePoint>
+            <rotatePointList>p_cent p_list angle</rotatePointList>
+            <scalePointList>pRef ptList scale</scalePointList>
+            <subVector>v1 v2</subVector>
+            <trisectAngle>p1 p2 p3</trisectAngle>
+            <unifyVector>p1 p2 length</unifyVector>
+            <unifyVectorPointList>vct length</unifyVectorPointList>
+        </____procedures______>
+        <____vars____________>
+            <CONST_PI>3.141592653589793</CONST_PI>
+        </____vars____________>
+    </vectormath>
+    <xml/>
+    <____procedures______>
+        <auto_execok>name</auto_execok>
+        <auto_import>pattern</auto_import>
+        <auto_load>cmd namespace</auto_load>
+        <auto_load_index></auto_load_index>
+        <auto_qualify>cmd namespace</auto_qualify>
+        <check_loaded_Tk></check_loaded_Tk>
+        <check_nodeName>_name</check_nodeName>
+        <check_nodeValue>_value</check_nodeValue>
+        <pkg_mkIndex>args</pkg_mkIndex>
+        <tclLog>string</tclLog>
+        <tclPkgSetup>dir pkg version files</tclPkgSetup>
+        <tclPkgUnknown>name args</tclPkgUnknown>
+        <unknown>args</unknown>
+    </____procedures______>
+    <____arrays__________>
+        <auto_index>
+            <element name="::auto_mkindex_parser::cleanup">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::command">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::commandInit">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::fullname">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::hook">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::init">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::mkindex">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::auto_mkindex_parser::slavehook">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="::pkg::create">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="::safe::AddSubDirs">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::AliasEncoding">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::AliasLoad">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::AliasSource">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::AliasSubset">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::CheckFileName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::CheckInterp">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::DeleteHookName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Exists">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::FileInAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::GetAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpCreate">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpInit">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpNested">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpSetConfig">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpStateName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::InterpStatics">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::IsInterp">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Lappend">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Log">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::NestedOk">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::NestedOkName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::PathListName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::PathNumberName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::PathToken">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Set">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::StaticsOk">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::StaticsOkName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Subset">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::SyncAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Toplevel">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::TranslatePath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::Unset">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::VirtualPathListName">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpAddToAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpConfigure">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpCreate">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpDelete">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpFindInAccessPath">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::interpInit">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::safe::setLogCmd">source D:/Programme/TclTk/lib/tcl8.5/safe.tcl</element>
+            <element name="::tcl::HistAdd">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistChange">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistClear">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistEvent">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistIndex">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistInfo">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistKeep">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::HistRedo">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="::tcl::MacOSXPkgUnknown">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="::tcl::tm::UnknownHandler">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::add">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::list">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::path">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::remove">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="::tcl::tm::roots">source D:/Programme/TclTk/lib/tcl8.5/tm.tcl</element>
+            <element name="auto_mkindex">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="auto_mkindex_old">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="auto_reset">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="history">source D:/Programme/TclTk/lib/tcl8.5/history.tcl</element>
+            <element name="parray">source D:/Programme/TclTk/lib/tcl8.5/parray.tcl</element>
+            <element name="pkg_mkIndex">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="tclPkgSetup">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="tclPkgUnknown">source D:/Programme/TclTk/lib/tcl8.5/package.tcl</element>
+            <element name="tcl_endOfWord">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+            <element name="tcl_findLibrary">source D:/Programme/TclTk/lib/tcl8.5/auto.tcl</element>
+            <element name="tcl_startOfNextWord">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+            <element name="tcl_startOfPreviousWord">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+            <element name="tcl_wordBreakAfter">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+            <element name="tcl_wordBreakBefore">source D:/Programme/TclTk/lib/tcl8.5/word.tcl</element>
+        </auto_index>
+        <env>
+            <element name="ALLUSERSPROFILE">D:\Dokumente und Einstellungen\All Users</element>
+            <element name="APPDATA">E:\manfred\_profile\Anwendungsdaten</element>
+            <element name="COMPUTERNAME">HP7600</element>
+            <element name="ComSpec">D:\WINDOWS\system32\cmd.exe</element>
+            <element name="CommonProgramFiles">D:\Programme\Gemeinsame Dateien</element>
+            <element name="FP_NO_HOST_CHECK">NO</element>
+            <element name="HOME">D:\Dokumente und Einstellungen\manfred</element>
+            <element name="HOMEDRIVE">D:</element>
+            <element name="HOMEPATH">\Dokumente und Einstellungen\manfred</element>
+            <element name="LOGONSERVER">\\HP7600</element>
+            <element name="MYTCL">D:\Programme\MyTcl</element>
+            <element name="NUMBER_OF_PROCESSORS">2</element>
+            <element name="OS">Windows_NT</element>
+            <element name="PATHEXT">.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.tcl;.py;.pyw</element>
+            <element name="PROCESSOR_ARCHITECTURE">x86</element>
+            <element name="PROCESSOR_IDENTIFIER">x86 Family 15 Model 4 Stepping 1, GenuineIntel</element>
+            <element name="PROCESSOR_LEVEL">15</element>
+            <element name="PROCESSOR_REVISION">0401</element>
+            <element name="PROMPT">$P$G</element>
+            <element name="Path">D:/Programme/Java/jre7/bin/client;D:/Programme/Java/jre7/bin;D:/Programme/Java/jre7/lib/i386;D:\Programme\PC Connectivity Solution\;D:\Programme\ImageMagick-6.7.5-Q8;D:\Programme\ImageMagick-6.7.4-Q16;D:\Programme\Python\3.2\Lib\site-packages\PyQt4;D:\Programme\Python\3.2\;D:\Programme\Python\3.2\Scripts;D:\Python\3.2\Lib\site-packages\PyQt4;D:\Programme\TclTk\bin;D:\WINDOWS\system32;D:\WINDOWS;D:\WINDOWS\System32\Wbem;D:\Programme\ATI Technologies\ATI.ACE\Core-Static;D:\Programme\Gemeinsame Dateien\Teleca Shared;D:\Programme\SlikSvn\bin;D:\Programme\Instant Reality\bin\;D:\Programme\TortoiseSVN\bin;D:\Programme\BRLCAD 7.22.0\bin;D:\Programme\Python\3.2\Lib\site-packages\PyQt4;D:\Programme\eclipse\juno;</element>
+            <element name="ProgramFiles">D:\Programme</element>
+            <element name="SESSIONNAME">Console</element>
+            <element name="SystemDrive">D:</element>
+            <element name="SystemRoot">D:\WINDOWS</element>
+            <element name="TCLLIBPATH">{R:\_devlp\_svn_local\rattleCAD_3.4.00\bikeGeometry}</element>
+            <element name="TEMP">D:\WINDOWS\TEMP</element>
+            <element name="TMP">D:\WINDOWS\TEMP</element>
+            <element name="USERDOMAIN">HP7600</element>
+            <element name="USERNAME">manfred</element>
+            <element name="USERPROFILE">D:\Dokumente und Einstellungen\manfred</element>
+            <element name="VBOX_INSTALL_PATH">D:\Programme\Oracle\VirtualBox\</element>
+            <element name="windir">D:\WINDOWS</element>
+        </env>
+        <tcl_platform>
+            <element name="byteOrder">littleEndian</element>
+            <element name="machine">intel</element>
+            <element name="os">Windows NT</element>
+            <element name="osVersion">5.1</element>
+            <element name="platform">windows</element>
+            <element name="pointerSize">4</element>
+            <element name="threaded">1</element>
+            <element name="user">manfred</element>
+            <element name="wordSize">4</element>
+        </tcl_platform>
+    </____arrays__________>
+    <____vars____________>
+        <BASE_Dir>R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry</BASE_Dir>
+        <SAMPLE_Dir>R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/test/sample</SAMPLE_Dir>
+        <TEST_Dir>R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/test</TEST_Dir>
+        <_proc>::bikeGeometry::get_basePoints</_proc>
+        <argc>0</argc>
+        <argv></argv>
+        <argv0>R:\_devlp\_svn_local\rattleCAD_3.4.00\bikeGeometry\test\test_bikeGoemetry_0.x.tcl</argv0>
+        <auto_path>{R:\_devlp\_svn_local\rattleCAD_3.4.00\bikeGeometry} D:/Programme/TclTk/lib/tcl8.5 D:/Programme/TclTk/lib d:/programme/tcltk/lib/teapot/package/win32-ix86/lib d:/programme/tcltk/lib/teapot/package/tcl/lib R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/lib R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/..</auto_path>
+        <errorCode>NONE</errorCode>
+        <errorInfo>can't read "::lib_tube::unbentShape": no such variable
+    while executing
+"set _varValue $::lib_tube::unbentShape"
+    ("eval" body line 1)
+    invoked from within
+"eval $cmdString"</errorInfo>
+        <fp>filede41d8</fp>
+        <runTime_DICT>Project {rattleCADVersion 3.4.00 Name {"Template Road"} modified 2013.03.01/12:00} Personal {InnerLeg_Length 850.00 HandleBar_Distance 471.24 HandleBar_Height 646.31 Saddle_Distance 230.82 Saddle_Height 718.00} Custom {HeadTube {PositonTT 8.50 PositonDT 8.50 Angle 72.00} TopTube {PivotPosition 80.00 OffsetHT 8.50 Angle 2.50} SeatTube {Extension 20.00 OffsetBB 0.00} DownTube {OffsetHT 8.50 OffsetBB 0.00} SeatStay {OffsetTT -20.00} WheelPosition {Rear 410.00} BottomBracket {Depth 64.00}} FrameTubes {TopTube {DiameterHT 28.60 DiameterST 28.60 TaperLength 300.00} HeadTube {Diameter 36.00 Length 150.00} SeatTube {DiameterTT 28.60 DiameterBB 31.80 TaperLength 300.00} DownTube {DiameterBB 34.90 DiameterHT 31.80 TaperLength 300.00} SeatStay {DiameterST 16.00 DiameterCS 11.00 TaperLength 300.00} ChainStay {HeightBB 22.20 Height 29.00 DiameterSS 13.00 TaperLength 280.00 Width 18.00 WidthBB 22.20 CenterLine {length_01 150.00 length_02 160.00 length_03 47.00 length_04 10.00 angle_01 9.00 angle_02 -5.00 angle_03 0.00 radius_01 320.00 radius_02 320.00 radius_03 320.00 length_05 05.00 angle_04 0.00 radius_04 320.00} Profile {width_00 12.50 length_01 150.00 width_01 18.00 length_02 150.00 width_02 18.00 length_03 75.00 width_03 24.00}}} Lugs {HeadTube {TopTube {Angle {value 75.00 plus_minus 1.00}} DownTube {Angle {value 61.00 plus_minus 1.00}}} SeatTube {TopTube {Angle {value 76.00 plus_minus 1.00}} SeatStay {Angle {value 40.00 plus_minus 1.00} MiterDiameter 28.60}} BottomBracket {DownTube {Angle {value 60.00 plus_minus 1.00}} ChainStay {Angle {value 64.00 plus_minus 1.00} Offset_TopView 6.00} Diameter {outside 40.00 inside 36.00} Width 68.00} RearDropOut {Angle {value 67.00 plus_minus 1.00} File etc:dropout/dropout_02.svg Direction Chainstay RotationOffset 0.00 ChainStay {Offset 33.00 OffsetPerp 1.30 Offset_TopView 5.00} SeatStay {Offset 35.00 OffsetPerp 0.30} Derailleur {x 6.00 y 25.00}}} Component {Logo {File etc:logo/rattleCAD.svg} HeadSet {Height {Bottom 13.50 Top 15.50} Diameter 45.00} Fork {Height 365.00 Rake 45.00 Crown {File etc:fork/crown/longshen_17.svg Brake {Offset 19.00 Angle 0.00} Blade {Offset 35.00 OffsetPerp 0.00}} Blade {Width 28.60 DiameterDO 13.00 TaperLength 250.00 BendRadius 350.00 EndLength 10.00} DropOut {File etc:fork/dropout/LE_17.svg Offset 20.00 OffsetPerp 0.00}} Stem {Angle -6.00 Length 110.00} Brake {Front {File etc:brake/front/campagnolo_frontbrake.svg LeverLength 45.00 Offset 36.00} Rear {File etc:brake/rear/campagnolo_rearbrake.svg LeverLength 45.00 Offset 30.00}} Wheel {Front {RimDiameter 622.00 RimHeight 25.00 TyreHeight 23.00} Rear {RimDiameter 622.00 RimHeight 25.00 TyreHeight 23.00 HubWidth 130.00 FirstSprocket 15}} HandleBar {File etc:handlebar/campagnolo_ergopower_11_a.svg} Saddle {File etc:saddle/saddle_c.svg Height 40.00 Length 280.00 LengthNose 153.00} SeatPost {Setback 25.00 Diameter 27.20} CrankSet {File etc:crankset/campagnolo_ultra_torque.svg Length 172.50 PedalEye 17.50 Q-Factor 145.50 ArmWidth 13.75 ChainLine 43.50 ChainRings 39-53} Derailleur {Front {File etc:derailleur/front/campagnolo_qs.svg Distance 150.00 Offset 9.20} Rear {File etc:derailleur/rear/campagnolo_2006_short.svg}} BottleCage {SeatTube {File etc:bottle_cage/left/bottleCage.svg OffsetBB 170.00} DownTube {File etc:bottle_cage/right/bottleCage.svg OffsetBB 210.00} DownTube_Lower {File etc:bottle_cage/left/bottleCage.svg OffsetBB 170.00}}} Rendering {Fork SteelLuggedMAX ForkBlade bent Brake {Front Rim Rear Rim} BottleCage {SeatTube Cage DownTube Cage DownTube_Lower off} RearDropOut behind ChainStay straight RearMockup {DiscOffset 15.30 DiscWidth 2.00 DiscDiameter 160.00 DiscClearance 5.00 TyreClearance 5.00 CrankClearance 5.00 ChainWheelClearance 5.00 CassetteClearance 3.00} ForkDropOut front} Result {Position {BottomBracket 0.00,0.00 FrontWheel 592.732546,64.000000 RearWheel -404.974073,64.000000 Saddle -230.820000,718.000000 SaddleNose -77.820000,703.000000 SaddleProposal -216.200714,716.073496 HandleBar 471.240000,646.310000 LegClearance 80.000000,580.000000 BottomBracketGround 0.000000,-270.000000 SteererGround 653.939924,-270.000000 SeatTubeGround 81.519834,-270.000000 SeatTubeSaddle -216.782375,718.000000 SeatTubeVirtualTopTube -166.882455,552.727604 DerailleurMountFront -34.548437,146.256779 BrakeFront 503.099210,361.803400 BrakeRear -274.718610,346.408418 SummarySize 997.706619,789.225960 SeatPostSaddle -230.820000,678.000000 SeatPostSeatTube -206.887062,685.225960 Brake {Front {Mount 458.968923,394.780401 Shoe 503.099210,361.803400 Help 489.193445,404.600943 Definition 477.530227,350.391692} Rear {Mount -225.538923,368.910827 Shoe -274.718610,346.408418 Help -251.056863,384.685326 Definition -249.200670,330.633919}}} Length {HeadTube {ReachLength 386.620 StackHeight 552.728} TopTube {VirtualLength 553.502} SeatTube {TubeLength 555.394 TubeHeight 531.688 VirtualLength 577.371} Saddle {Offset_BB 230.820 Offset_BB_ST 216.782 Offset_HB 71.690 Offset_BB_Nose 77.820} BottomBracket {Height 270.000} FrontWheel {diagonal 596.178 horizontal 592.733} RearWheel {horizontal 404.974}} Angle {HeadTube {TopTube 74.5000001910888 DownTube 61.48381213659957} SeatTube {Direction 73.200 TopTube 75.69960552151585 SeatStay 48.52362716853668} BottomBracket {DownTube 60.284206820100806 ChainStay 64.41671963901727} SeatStay {ChainStay 67.05965316328479}} Lugs {Dropout {Rear {Position -404.974073,64.000000 Direction {polar 0.00,0.00 degree 0.00 radiant 0.00} Derailleur -414.802962,40.243044} Front {Position 592.732546,64.000000 Direction {polar 0.429354,-0.903136 degree -64.57345 radiant -1.127019}}} ForkCrown {Position 437.143800,397.229864 Direction {polar -0.309017,0.951057 degree 108.00000 radiant 1.884956}}} Tubes {TopTube {Direction {polar -0.999048,-0.043619 degree 182.50000 radiant 3.185226} Start -151.537523,501.904001 End 395.374453,525.782694 Polygon {"381.298596,510.854505 382.219654,512.812381 384.124567,518.134701 384.548182,522.824474 384.040588,525.287846 382.955576,527.726008 379.538843,532.248108 374.276948,537.257518 372.127148,539.081318 269.331111,534.593146 -30.383355,521.507330 -141.059717,516.675095 -142.463477,514.696144 -146.298620,509.289548 -149.718071,504.468975 -151.537523,501.904001 -148.236707,499.562583 -142.033203,495.162157 -135.075558,490.226785 -132.528883,488.420313 -29.135841,492.934551 270.578626,506.020367 "}} HeadTube {Direction {polar -0.309017,0.951057 degree 108.00000 radiant 1.884956} Start 432.972070,410.069127 End 386.619521,552.727604 Polygon {"450.091088,415.631433 403.738538,558.289910 369.500504,547.165298 415.853053,404.506821 "}} SeatTube {Direction {polar -0.289038,0.957318 degree 106.80039 radiant 1.864018} Start 0.000000,0.000000 End -160.530125,531.688197 Polygon {-21.687956,126.842183 -109.931180,413.574973 -146.840485,535.821446 -174.219765,527.554948 -137.310461,405.308475 -52.130653,117.650762 -18.405748,5.951268 -16.080186,5.618767 -9.866454,5.173463 -4.750819,6.182695 -2.392776,7.925059 -0.375468,10.795963 2.731868,18.456839 5.740748,28.626249 6.790896,32.518020 } BottleCage {Base -33.915178,167.339687 Offset -52.413634,228.608007}} DownTube {Direction {polar 0.688150,0.725569 degree 46.51619 radiant 0.811861} Start -0.000000,-0.000000 End 421.731557,444.663871 Polygon {119.200860,100.324736 324.521111,319.062015 413.226409,412.590801 413.926710,416.424725 415.448420,426.486359 415.749904,434.344738 415.123702,437.696703 413.807910,440.321581 409.856672,443.695991 404.241518,446.232682 402.042912,447.010066 301.448023,340.945172 93.878509,124.341158 -12.661176,12.008211 12.661176,-12.008211 } BottleCage {Base 131.850242,164.377663 Offset 175.891817,210.814068} BottleCage_Lower {Base 129.646609,111.338489 Offset 173.688184,157.774894}} SeatStay {Direction {polar 0.525817,0.850598 degree 58.27677 radiant 1.017122} Start -386.315409,93.613028 End -145.756755,482.757651 Polygon {-151.679958,457.961431 -150.045717,462.643441 -148.025736,471.479972 -146.526505,478.870491 -145.756755,482.757651 -147.598348,482.420518 -151.111985,481.701869 -155.391257,480.348284 -157.852456,478.405223 -235.375213,352.998952 -390.993698,96.505020 -381.637120,90.721037 -221.765645,344.585886 }} ChainStay {Direction {polar -0.988274,0.152691 degree 171.21711 radiant 2.988302} Start 0.000000,0.000000 End -372.581526,57.564716 SeatStay_IS -405.459364,62.644419 Polygon {"-373.574015,51.140935 -110.924158,2.465998 -71.393197,-3.641628 -31.343087,-6.389122 -1.694866,-10.969842 1.694866,10.969842 -27.953355,15.550561 -66.965168,25.018319 -106.496129,31.125945 -371.589037,63.988498 "}} ForkBlade {Direction {polar 0.00,0.00 degree 0.00 radiant 0.00} Start 0.00,0.00 End 0.00,0.00 Polygon {"577.823518,79.057254 575.480874,83.473174 573.138229,87.889094 570.795585,92.305014 568.452941,96.720934 566.110297,101.136854 563.767653,105.552774 561.425008,109.968694 559.082364,114.384614 556.739720,118.800534 554.397076,123.216454 552.054431,127.632374 549.711787,132.048294 547.369143,136.464214 545.026499,140.880134 542.683855,145.296054 540.341210,149.711974 537.998566,154.127894 535.655922,158.543814 533.313278,162.959734 530.970633,167.375654 528.627989,171.791574 526.285345,176.207494 523.942701,180.623414 521.600057,185.039334 519.257412,189.455254 516.914768,193.871174 514.572124,198.287094 512.229480,202.703014 509.886835,207.118934 507.544191,211.534854 505.201547,215.950774 502.858903,220.366694 500.516259,224.782614 498.173614,229.198534 495.830970,233.614454 493.488326,238.030374 491.145682,242.446294 488.803037,246.862214 486.460393,251.278134 484.117749,255.694054 481.775105,260.109974 479.432461,264.525894 477.089816,268.941814 474.747172,273.357734 472.404528,277.773654 470.061884,282.189574 467.719239,286.605494 465.376595,291.021414 463.033951,295.437334 460.691307,299.853254 460.336799,300.587995 458.091914,305.614689 455.936226,310.444706 453.780537,315.274724 451.624849,320.104742 449.469161,324.934760 447.313473,329.764778 445.157785,334.594796 443.002097,339.424813 440.964292,343.990703 438.926487,348.556593 436.888682,353.122483 434.850877,357.688373 432.813072,362.254263 430.775267,366.820153 463.649674,381.492349 465.687479,376.926459 467.725284,372.360569 469.763089,367.794679 471.800894,363.228790 473.838699,358.662900 475.876504,354.097010 478.032192,349.266992 480.187880,344.436974 482.343569,339.606956 484.499257,334.776938 486.654945,329.946920 488.810633,325.116903 490.966321,320.286885 493.032812,315.653543 493.180381,315.298652 495.126122,310.694043 497.071863,306.089434 499.017604,301.484825 500.963345,296.880216 502.909086,292.275607 504.854827,287.670998 506.800567,283.066389 508.746308,278.461780 510.692049,273.857172 512.637790,269.252563 514.583531,264.647954 516.529272,260.043345 518.475013,255.438736 520.420754,250.834127 522.366495,246.229518 524.312236,241.624909 526.257977,237.020300 528.203718,232.415691 530.149459,227.811082 532.095200,223.206473 534.040941,218.601864 535.986682,213.997255 537.932423,209.392646 539.878164,204.788037 541.823905,200.183428 543.769645,195.578819 545.715386,190.974210 547.661127,186.369601 549.606868,181.764993 551.552609,177.160384 553.498350,172.555775 555.444091,167.951166 557.389832,163.346557 559.335573,158.741948 561.281314,154.137339 563.227055,149.532730 565.172796,144.928121 567.118537,140.323512 569.064278,135.718903 571.010019,131.114294 572.955760,126.509685 574.901501,121.905076 576.847242,117.300467 578.792983,112.695858 580.738724,108.091249 582.684464,103.486640 584.630205,98.882031 586.575946,94.277422 588.521687,89.672813 590.467428,85.068205 "}} Steerer {Direction {polar -0.309017,0.951057 degree 108.00000 radiant 1.884956} Start 437.143800,397.229864 End 363.643764,623.439714 Polygon {"450.743908,401.648807 374.153702,637.369222 346.953486,628.531336 423.543692,392.810921 "}}} Components {SeatPost {Polygon {-138.518004,505.834923 -172.189665,617.358069 -179.075092,640.159331 -179.534880,641.267013 -180.747795,644.195844 -182.279950,647.296329 -184.103440,650.549733 -185.760016,653.193565 -187.207308,655.312378 -188.376231,656.869371 -189.984611,658.793096 -192.016192,660.935954 -194.454852,663.150093 -197.284333,665.287912 -199.728989,666.802979 -202.108057,668.173118 -204.548582,669.360702 -206.970083,670.341351 -209.664115,671.219243 -211.931582,671.795243 -214.698386,672.306973 -217.228169,672.598303 -220.131044,672.731757 -222.702182,672.673618 -225.376180,672.435465 -228.538838,671.912932 -231.876990,671.054122 -235.452318,669.793822 -238.248438,668.513279 -240.981390,666.989618 -242.972927,665.688868 -244.794049,664.340230 -245.764320,663.184871 -246.191158,662.529318 -246.154792,661.754978 -245.264736,660.239034 -244.799520,659.669699 -244.348585,659.534464 -243.821445,659.502149 -243.343031,659.682423 -242.952518,659.992951 -242.422241,660.506229 -241.162703,661.632454 -239.703163,662.792010 -237.676809,664.179840 -235.592675,665.375258 -233.320988,666.445963 -231.329858,667.206957 -228.819741,667.952604 -226.040846,668.518672 -223.253733,668.823987 -220.436231,668.843903 -217.611019,668.657334 -214.484560,668.107534 -211.757354,667.346728 -209.277485,666.410443 -207.085411,665.369715 -205.020676,664.184725 -203.268963,663.002371 -201.319643,661.463413 -199.803769,659.018504 -199.197230,655.923933 -199.803769,659.018504 -201.319643,661.463413 -203.268963,663.002371 -205.020676,664.184725 -207.085411,665.369715 -209.277485,666.410443 -211.757354,667.346728 -214.484560,668.107534 -217.611019,668.657334 -220.436231,668.843903 -223.253733,668.823987 -226.040846,668.518672 -228.819741,667.952604 -231.329858,667.206957 -233.320988,666.445963 -235.592675,665.375258 -237.676809,664.179840 -239.703163,662.792010 -241.162703,661.632454 -242.422241,660.506229 -242.952518,659.992951 -243.343031,659.682423 -243.821445,659.502149 -244.348585,659.534464 -244.799520,659.669699 -244.432694,659.221078 -244.054331,658.953937 -243.671437,658.827825 -243.117738,658.726229 -242.362074,658.663571 -241.524900,658.618105 -240.694978,658.545799 -239.850843,658.426076 -238.971322,658.238275 -238.034892,657.961632 -233.821371,656.665687 -229.300867,655.083348 -224.615442,652.923634 -218.839109,649.506149 -213.854073,645.777362 -211.735829,643.971956 -210.603550,642.728348 -209.396657,641.208203 -208.557047,640.059660 -207.681615,638.754067 -206.861441,637.367862 -206.187732,635.977548 -205.751662,634.659533 -204.352012,629.773644 -198.228701,609.496225 -164.557041,497.973079 }} Stem {Polygon {"447.886372,658.725823 451.283629,659.914222 453.661986,662.196994 455.652773,665.270976 456.376772,667.828901 456.632794,668.225088 456.714046,667.053070 456.602568,665.590635 456.195667,663.469585 455.735854,661.188641 453.868927,654.250265 453.327065,652.727121 452.302588,651.529448 451.080400,650.568850 452.302588,651.529448 453.327065,652.727121 453.868927,654.250265 455.735854,661.188641 456.195667,663.469585 456.602568,665.590635 456.714046,667.053070 456.632794,668.225088 456.862992,668.585014 457.548190,668.958129 465.259710,670.597263 467.155803,661.676850 468.720839,662.009509 466.824767,670.929824 471.585314,671.941709 472.296654,671.976362 472.971818,671.743038 473.501637,671.398464 480.107694,667.357332 479.082017,672.178434 478.570456,672.485689 479.296979,668.976763 478.570456,672.485689 473.501637,671.398464 480.308423,667.234481 483.475738,665.004677 485.933052,663.029723 488.566444,660.127312 490.112123,657.776301 491.378083,655.135297 492.128657,652.891211 492.661453,650.863168 492.999599,648.793751 493.226667,646.438391 493.144349,643.510801 492.688543,640.734362 491.463337,637.011780 490.021755,634.208091 488.035211,630.882799 483.510548,624.310243 488.583359,625.378688 487.819862,628.879754 488.583359,625.378688 488.925721,625.867449 487.901804,630.688926 483.510548,624.310243 483.166685,623.779962 482.644793,623.292195 481.980857,623.034525 477.220310,622.022639 475.324239,630.942954 478.519020,632.169592 481.419055,634.091746 483.734632,636.477006 485.526316,639.330473 486.673702,642.474533 487.141563,646.078768 486.792568,649.615698 485.672792,652.988794 483.779405,656.091130 481.452411,658.496688 478.655017,660.374717 475.569459,661.611929 472.138335,662.188355 468.720839,662.009509 467.155803,661.676850 464.614635,660.792997 462.106984,659.329650 459.508768,657.043288 457.598617,654.476863 456.263009,651.653170 455.517870,648.707476 455.349685,645.690378 455.687474,643.004106 456.471494,640.412684 457.852303,637.724835 459.731143,635.336885 462.099780,633.300554 464.888650,631.732936 468.192185,630.701030 471.078236,630.384149 473.759203,630.610295 475.324239,630.942954 473.759203,630.610295 475.655295,621.689883 467.943775,620.050749 467.197627,620.224104 466.686876,620.851728 466.406889,621.451829 465.710222,622.742488 464.475791,624.514662 463.127988,626.411385 458.600373,631.990560 457.485839,633.161626 456.062796,633.839062 454.555561,634.219504 456.062796,633.839062 457.485839,633.161626 458.600373,631.990560 463.127988,626.411385 464.475791,624.514662 465.710222,622.742488 466.406889,621.451829 466.686876,620.851728 464.950915,622.362107 461.670599,624.498271 458.356019,625.693244 454.522148,625.376721 389.580683,611.571512 386.394491,608.433331 354.058570,597.926753 386.394491,608.433331 398.948775,573.031286 364.710740,561.906674 354.058570,597.926753 342.257154,634.247774 374.593076,644.754352 342.257154,634.247774 340.712069,639.003057 373.047991,649.509635 374.593076,644.754352 379.015336,644.088307 "}} HeadSet {Bottom {Polygon {"415.853053,404.506821 413.659163,396.696613 456.456707,410.602378 413.659163,396.696613 415.745028,390.276981 458.542571,404.182746 456.456707,410.602378 450.091088,415.631433 "}} Top {Polygon {"364.710740,561.906674 362.825868,553.145410 405.623411,567.051174 362.825868,553.145410 365.220750,545.774722 408.018293,559.680486 405.623411,567.051174 398.948775,573.031286 "}}}} TubeMiter {TopTube_Head {Polygon {44.924775,-70.000000 44.924775,-14.034259 42.428954,-13.922403 39.933133,-13.596217 37.437312,-13.084572 34.941492,-12.438166 32.445671,-11.733740 29.949850,-11.079767 27.454029,-10.619896 24.958208,-10.521893 22.462387,-10.932063 19.966567,-11.899180 17.470746,-13.332623 14.974925,-15.045508 12.479104,-16.831998 9.983283,-18.514033 7.487462,-19.953437 4.991642,-21.049372 2.495821,-21.733388 -0.000000,-21.965741 -2.495821,-21.733388 -4.991642,-21.049372 -7.487462,-19.953437 -9.983283,-18.514033 -12.479104,-16.831998 -14.974925,-15.045508 -17.470746,-13.332623 -19.966567,-11.899180 -22.462387,-10.932063 -24.958208,-10.521893 -27.454029,-10.619896 -29.949850,-11.079767 -32.445671,-11.733740 -34.941492,-12.438166 -37.437312,-13.084572 -39.933133,-13.596217 -42.428954,-13.922403 -44.924775,-14.034259 -44.924775,-70.000000 }} TopTube_Seat {Polygon {44.924775,-70.000000 44.924775,-18.265739 42.428954,-17.988241 39.933133,-17.164180 37.437312,-15.818594 34.941492,-13.992368 32.445671,-11.740991 29.949850,-9.132869 27.454029,-6.247251 24.958208,-3.171812 22.462387,-0.000000 19.966567,-1.794526 17.470746,-3.534526 14.974925,-5.167131 12.479104,-6.642735 9.983283,-7.916503 7.487462,-8.949733 4.991642,-9.711029 2.495821,-10.177261 -0.000000,-10.334261 -2.495821,-10.177261 -4.991642,-9.711029 -7.487462,-8.949733 -9.983283,-7.916503 -12.479104,-6.642735 -14.974925,-5.167131 -17.470746,-3.534526 -19.966567,-1.794526 -22.462387,0.000000 -24.958208,-3.171812 -27.454029,-6.247251 -29.949850,-9.132869 -32.445671,-11.740991 -34.941492,-13.992368 -37.437312,-15.818594 -39.933133,-17.164180 -42.428954,-17.988241 -44.924775,-18.265739 -44.924775,-70.000000 }} DownTube_Head {Polygon {49.951323,-70.000000 49.951323,-26.638813 47.176250,-26.294555 44.401176,-25.276700 41.626103,-23.630658 38.851029,-21.434766 36.075956,-18.806035 33.300882,-15.912184 30.525809,-12.992733 27.750735,-10.377791 24.975662,-8.437417 22.200588,-7.377563 19.425515,-7.083437 16.650441,-7.273371 13.875368,-7.700191 11.100294,-8.199336 8.325221,-8.667794 5.550147,-9.041042 2.775074,-9.279415 -0.000000,-9.361187 -2.775074,-9.279415 -5.550147,-9.041042 -8.325221,-8.667794 -11.100294,-8.199336 -13.875368,-7.700191 -16.650441,-7.273371 -19.425515,-7.083437 -22.200588,-7.377563 -24.975662,-8.437417 -27.750735,-10.377791 -30.525809,-12.992733 -33.300882,-15.912184 -36.075956,-18.806035 -38.851029,-21.434766 -41.626103,-23.630658 -44.401176,-25.276700 -47.176250,-26.294555 -49.951323,-26.638813 -49.951323,-70.000000 }} SeatStay_01 {Polygon {25.132741,-70.000000 25.132741,-19.909364 23.736478,-19.021280 22.340214,-17.728651 20.943951,-16.044138 19.547688,-13.994335 18.151424,-11.618646 16.755161,-8.967777 15.358897,-6.101884 13.962634,-3.088460 12.566371,-0.000000 11.170107,-0.632408 9.773844,-1.264407 8.377580,-1.895858 6.981317,-2.527163 5.585054,-3.159527 4.188790,-3.795216 2.792527,-4.437792 1.396263,-5.092320 -0.000000,-5.765527 -1.396263,-6.465855 -2.792527,-7.203363 -4.188790,-7.989362 -5.585054,-8.835657 -6.981317,-9.753228 -8.377580,-10.750236 -9.773844,-11.829335 -11.170107,-12.984590 -12.566371,-14.198591 -13.962634,-15.440642 -15.358897,-16.666812 -16.755161,-17.822154 -18.151424,-18.844711 -19.547688,-19.670464 -20.943951,-20.238284 -22.340214,-20.494222 -23.736478,-20.394815 -25.132741,-19.909364 -25.132741,-70.000000 }} SeatStay_02 {Polygon {25.132741,-70.000000 25.132741,-19.909364 23.736478,-20.394815 22.340214,-20.494222 20.943951,-20.238284 19.547688,-19.670464 18.151424,-18.844711 16.755161,-17.822154 15.358897,-16.666812 13.962634,-15.440642 12.566371,-14.198591 11.170107,-12.984590 9.773844,-11.829335 8.377580,-10.750236 6.981317,-9.753228 5.585054,-8.835657 4.188790,-7.989362 2.792527,-7.203363 1.396263,-6.465855 -0.000000,-5.765527 -1.396263,-5.092320 -2.792527,-4.437792 -4.188790,-3.795216 -5.585054,-3.159527 -6.981317,-2.527163 -8.377580,-1.895858 -9.773844,-1.264407 -11.170107,-0.632408 -12.566371,0.000000 -13.962634,-3.088460 -15.358897,-6.101884 -16.755161,-8.967777 -18.151424,-11.618646 -19.547688,-13.994335 -20.943951,-16.044138 -22.340214,-17.728651 -23.736478,-19.021280 -25.132741,-19.909364 -25.132741,-70.000000 }} Reference {Polygon {"-50.000000,0.000000 50.000000,0.000000 50.000000,10.000000 -50.000000,10.000000 "}}}}</runTime_DICT>
+        <runTime_XML>domNode00D74AB8</runTime_XML>
+        <sampleDOC>domDoc00DCE340</sampleDOC>
+        <sampleDOM>domNode00D74AB8</sampleDOM>
+        <sampleFile>R:/_devlp/_svn_local/rattleCAD_3.4.00/bikeGeometry/test/sample/template_road_3.4.xml</sampleFile>
+        <tcl_interactive>0</tcl_interactive>
+        <tcl_library>D:/Programme/TclTk/lib/tcl8.5</tcl_library>
+        <tcl_patchLevel>8.5.14</tcl_patchLevel>
+        <tcl_rcFileName>~/tclshrc.tcl</tcl_rcFileName>
+        <tcl_version>8.5</tcl_version>
+        <xml>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;root&gt;
+    &lt;Project&gt;
+        &lt;rattleCADVersion&gt;3.4.00&lt;/rattleCADVersion&gt;
+        &lt;Name&gt;Template Road&lt;/Name&gt;
+        &lt;modified&gt;2013.03.01/12:00&lt;/modified&gt;
+    &lt;/Project&gt;
+
+    &lt;Personal&gt;
+        &lt;!-- personal geometry based on cyclist body profile --&gt;
+        &lt;InnerLeg_Length&gt;850.00&lt;/InnerLeg_Length&gt;
+        &lt;HandleBar_Distance&gt;471.24&lt;/HandleBar_Distance&gt;
+        &lt;HandleBar_Height&gt;646.31&lt;/HandleBar_Height&gt;
+        &lt;Saddle_Distance&gt;230.82&lt;/Saddle_Distance&gt;
+        &lt;Saddle_Height&gt;718.00&lt;/Saddle_Height&gt;
+    &lt;/Personal&gt;    
+
+    &lt;Custom&gt;
+        &lt;!-- custom details of bicycle frame --&gt;
+        &lt;HeadTube&gt;
+            &lt;PositonTT&gt;8.50&lt;/PositonTT&gt;
+            &lt;PositonDT&gt;8.50&lt;/PositonDT&gt;
+            &lt;Angle&gt;72.00&lt;/Angle&gt;
+        &lt;/HeadTube&gt;
+        &lt;TopTube&gt;
+            &lt;PivotPosition&gt;80.00&lt;/PivotPosition&gt;
+            &lt;OffsetHT&gt;8.50&lt;/OffsetHT&gt;
+            &lt;Angle&gt;2.50&lt;/Angle&gt;
+        &lt;/TopTube&gt;
+        &lt;SeatTube&gt;
+            &lt;Extension&gt;20.00&lt;/Extension&gt;
+            &lt;OffsetBB&gt;0.00&lt;/OffsetBB&gt;
+        &lt;/SeatTube&gt;
+        &lt;DownTube&gt;
+            &lt;OffsetHT&gt;8.50&lt;/OffsetHT&gt;
+            &lt;OffsetBB&gt;0.00&lt;/OffsetBB&gt;
+        &lt;/DownTube&gt;
+        &lt;SeatStay&gt;
+            &lt;OffsetTT&gt;-20.00&lt;/OffsetTT&gt;
+        &lt;/SeatStay&gt;
+        &lt;WheelPosition&gt;
+            &lt;Rear&gt;410.00&lt;/Rear&gt;
+        &lt;/WheelPosition&gt;    
+        &lt;BottomBracket&gt;
+            &lt;Depth&gt;64.00&lt;/Depth&gt;
+        &lt;/BottomBracket&gt;
+    &lt;/Custom&gt;
+
+    &lt;FrameTubes&gt;
+        &lt;!-- frame tubes --&gt;
+        &lt;TopTube&gt;
+            &lt;DiameterHT&gt;28.60&lt;/DiameterHT&gt;
+            &lt;DiameterST&gt;28.60&lt;/DiameterST&gt;
+            &lt;TaperLength&gt;300.00&lt;/TaperLength&gt;
+        &lt;/TopTube&gt;        
+        &lt;HeadTube&gt;
+            &lt;Diameter&gt;36.00&lt;/Diameter&gt;
+            &lt;Length&gt;150.00&lt;/Length&gt;
+        &lt;/HeadTube&gt;        
+        &lt;SeatTube&gt;
+            &lt;DiameterTT&gt;28.60&lt;/DiameterTT&gt;
+            &lt;DiameterBB&gt;31.80&lt;/DiameterBB&gt;
+            &lt;TaperLength&gt;300.00&lt;/TaperLength&gt;
+        &lt;/SeatTube&gt;
+        &lt;DownTube&gt;
+            &lt;DiameterBB&gt;34.90&lt;/DiameterBB&gt;
+            &lt;DiameterHT&gt;31.80&lt;/DiameterHT&gt;
+            &lt;TaperLength&gt;300.00&lt;/TaperLength&gt;
+        &lt;/DownTube&gt;
+        &lt;SeatStay&gt;
+            &lt;DiameterST&gt;16.00&lt;/DiameterST&gt;
+            &lt;DiameterCS&gt;11.00&lt;/DiameterCS&gt;
+            &lt;TaperLength&gt;300.00&lt;/TaperLength&gt;
+        &lt;/SeatStay&gt;
+        &lt;ChainStay&gt;
+            &lt;HeightBB&gt;22.20&lt;/HeightBB&gt;
+            &lt;Height&gt;29.00&lt;/Height&gt;
+            &lt;DiameterSS&gt;13.00&lt;/DiameterSS&gt;
+            &lt;TaperLength&gt;280.00&lt;/TaperLength&gt;
+            &lt;Width&gt;18.00&lt;/Width&gt;
+            &lt;WidthBB&gt;22.20&lt;/WidthBB&gt;
+            &lt;CenterLine&gt;
+              &lt;length_01&gt;150.00&lt;/length_01&gt;
+              &lt;length_02&gt;160.00&lt;/length_02&gt;
+              &lt;length_03&gt;47.00&lt;/length_03&gt;
+              &lt;length_04&gt;10.00&lt;/length_04&gt;
+              &lt;angle_01&gt;9.00&lt;/angle_01&gt;
+              &lt;angle_02&gt;-5.00&lt;/angle_02&gt;
+              &lt;angle_03&gt;0.00&lt;/angle_03&gt;
+              &lt;radius_01&gt;320.00&lt;/radius_01&gt;
+              &lt;radius_02&gt;320.00&lt;/radius_02&gt;
+              &lt;radius_03&gt;320.00&lt;/radius_03&gt;
+            &lt;/CenterLine&gt;
+            &lt;Profile&gt;              
+                &lt;width_00&gt;12.50&lt;/width_00&gt;
+                &lt;length_01&gt;150.00&lt;/length_01&gt;
+                &lt;width_01&gt;18.00&lt;/width_01&gt;
+                &lt;length_02&gt;150.00&lt;/length_02&gt;
+                &lt;width_02&gt;18.00&lt;/width_02&gt;
+                &lt;length_03&gt;75.00&lt;/length_03&gt;
+                &lt;width_03&gt;24.00&lt;/width_03&gt; 
+            &lt;/Profile&gt;
+        &lt;/ChainStay&gt;
+    &lt;/FrameTubes&gt;
+    
+    &lt;Lugs&gt;
+        &lt;!-- lug definitions for frame layout --&gt;
+        &lt;HeadTube&gt;
+            &lt;TopTube&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;75.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+            &lt;/TopTube&gt;
+            &lt;DownTube&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;61.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+            &lt;/DownTube&gt;
+        &lt;/HeadTube&gt;
+        &lt;SeatTube&gt;
+            &lt;TopTube&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;76.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+            &lt;/TopTube&gt;
+            &lt;SeatStay&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;40.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+                &lt;MiterDiameter&gt;28.60&lt;/MiterDiameter&gt;
+            &lt;/SeatStay&gt;
+        &lt;/SeatTube&gt;
+        &lt;BottomBracket&gt;
+            &lt;DownTube&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;60.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+            &lt;/DownTube&gt;
+            &lt;ChainStay&gt;
+                &lt;Angle&gt;
+                    &lt;value&gt;64.00&lt;/value&gt;
+                    &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+                &lt;/Angle&gt;
+                &lt;Offset_TopView&gt;6.00&lt;/Offset_TopView&gt;
+            &lt;/ChainStay&gt;
+            &lt;Diameter&gt;
+                &lt;outside&gt;40.00&lt;/outside&gt;
+                &lt;inside&gt;36.00&lt;/inside&gt;
+            &lt;/Diameter&gt;
+            &lt;Width&gt;68.00&lt;/Width&gt;
+        &lt;/BottomBracket&gt;
+        &lt;RearDropOut&gt;
+            &lt;Angle&gt;
+                &lt;value&gt;67.00&lt;/value&gt;
+                &lt;plus_minus&gt;1.00&lt;/plus_minus&gt;
+            &lt;/Angle&gt;
+            &lt;File&gt;etc:dropout/dropout_02.svg&lt;/File&gt;
+            &lt;Direction&gt;Chainstay&lt;/Direction&gt;
+            &lt;RotationOffset&gt;0.00&lt;/RotationOffset&gt;
+            &lt;ChainStay&gt;
+                &lt;Offset&gt;33.00&lt;/Offset&gt;
+                &lt;OffsetPerp&gt;1.30&lt;/OffsetPerp&gt;
+                &lt;Offset_TopView&gt;5.00&lt;/Offset_TopView&gt;
+            &lt;/ChainStay&gt;
+            &lt;SeatStay&gt;
+                &lt;Offset&gt;35.00&lt;/Offset&gt;
+                &lt;OffsetPerp&gt;0.30&lt;/OffsetPerp&gt;
+            &lt;/SeatStay&gt;
+            &lt;Derailleur&gt;
+                &lt;x&gt;6.00&lt;/x&gt;
+                &lt;y&gt;25.00&lt;/y&gt;
+            &lt;/Derailleur&gt;
+
+        &lt;/RearDropOut&gt;
+    &lt;/Lugs&gt;
+
+    &lt;Component&gt;
+        &lt;!-- bicycle components for visulization --&gt;
+        &lt;Logo&gt;
+            &lt;File&gt;etc:logo/rattleCAD.svg&lt;/File&gt;
+        &lt;/Logo&gt;
+        &lt;HeadSet&gt;
+            &lt;Height&gt;
+                &lt;Bottom&gt;13.50&lt;/Bottom&gt;
+                &lt;Top&gt;15.50&lt;/Top&gt;
+            &lt;/Height&gt;
+            &lt;Diameter&gt;45.00&lt;/Diameter&gt;
+        &lt;/HeadSet&gt;
+        &lt;Fork&gt;
+            &lt;Height&gt;365.00&lt;/Height&gt;
+            &lt;Rake&gt;45.00&lt;/Rake&gt;
+            &lt;!--BladeWidth&gt;29.00&lt;/BladeWidth--&gt;
+            &lt;!--CrownDiameter&gt;43.00&lt;/CrownDiameter--&gt;
+            &lt;Crown&gt;
+                &lt;File&gt;etc:fork/crown/longshen_17.svg&lt;/File&gt;
+                &lt;Brake&gt;
+                    &lt;Offset&gt;19.00&lt;/Offset&gt;
+                    &lt;Angle&gt;0.00&lt;/Angle&gt;
+                &lt;/Brake&gt;
+                &lt;Blade&gt;
+                    &lt;Offset&gt;35.00&lt;/Offset&gt;
+                    &lt;OffsetPerp&gt;0.00&lt;/OffsetPerp&gt;
+                &lt;/Blade&gt;
+            &lt;/Crown&gt;
+            &lt;Blade&gt;
+                &lt;Width&gt;28.60&lt;/Width&gt;
+                &lt;DiameterDO&gt;13.00&lt;/DiameterDO&gt;
+                &lt;TaperLength&gt;250.00&lt;/TaperLength&gt;
+                &lt;BendRadius&gt;350.00&lt;/BendRadius&gt;
+                &lt;EndLength&gt;10.00&lt;/EndLength&gt;
+            &lt;/Blade&gt;
+            &lt;DropOut&gt;
+                &lt;File&gt;etc:fork/dropout/LE_17.svg&lt;/File&gt;
+                &lt;Offset&gt;20.00&lt;/Offset&gt;
+                &lt;OffsetPerp&gt;0.00&lt;/OffsetPerp&gt;
+            &lt;/DropOut&gt;
+        &lt;/Fork&gt;
+        &lt;Stem&gt;
+            &lt;Angle&gt;-6.00&lt;/Angle&gt;
+            &lt;Length&gt;110.00&lt;/Length&gt;
+        &lt;/Stem&gt;
+        &lt;Brake&gt;
+            &lt;Front&gt;
+                &lt;File&gt;etc:brake/front/campagnolo_frontbrake.svg&lt;/File&gt;
+                &lt;LeverLength&gt;45.00&lt;/LeverLength&gt;
+                &lt;Offset&gt;36.00&lt;/Offset&gt;
+            &lt;/Front&gt;
+            &lt;Rear&gt;
+                &lt;File&gt;etc:brake/rear/campagnolo_rearbrake.svg&lt;/File&gt;
+                &lt;LeverLength&gt;45.00&lt;/LeverLength&gt;
+                &lt;Offset&gt;30.00&lt;/Offset&gt;
+            &lt;/Rear&gt;
+        &lt;/Brake&gt;
+        &lt;Wheel&gt;
+            &lt;Front&gt;
+                &lt;RimDiameter&gt;622.00&lt;/RimDiameter&gt;
+                &lt;RimHeight&gt;25.00&lt;/RimHeight&gt;
+                &lt;TyreHeight&gt;23.00&lt;/TyreHeight&gt;
+            &lt;/Front&gt;            
+            &lt;Rear&gt;
+                &lt;RimDiameter&gt;622.00&lt;/RimDiameter&gt;
+                &lt;RimHeight&gt;25.00&lt;/RimHeight&gt;
+                &lt;TyreHeight&gt;23.00&lt;/TyreHeight&gt;
+                &lt;HubWidth&gt;130.00&lt;/HubWidth&gt;
+                &lt;FirstSprocket&gt;15&lt;/FirstSprocket&gt;
+            &lt;/Rear&gt;
+        &lt;/Wheel&gt;
+        &lt;HandleBar&gt;
+            &lt;File&gt;etc:handlebar/campagnolo_ergopower_11_a.svg&lt;/File&gt;
+        &lt;/HandleBar&gt;
+        &lt;Saddle&gt;
+            &lt;File&gt;etc:saddle/saddle_c.svg&lt;/File&gt;
+            &lt;Height&gt;40.00&lt;/Height&gt;
+            &lt;Length&gt;280.00&lt;/Length&gt;
+            &lt;LengthNose&gt;153.00&lt;/LengthNose&gt;
+        &lt;/Saddle&gt;
+        &lt;SeatPost&gt;
+            &lt;Setback&gt;25.00&lt;/Setback&gt;
+            &lt;Diameter&gt;27.20&lt;/Diameter&gt;
+        &lt;/SeatPost&gt;
+        &lt;CrankSet&gt;
+            &lt;File&gt;etc:crankset/campagnolo_ultra_torque.svg&lt;/File&gt;
+            &lt;Length&gt;172.50&lt;/Length&gt;
+            &lt;PedalEye&gt;17.50&lt;/PedalEye&gt;
+            &lt;Q-Factor&gt;145.50&lt;/Q-Factor&gt;
+            &lt;ArmWidth&gt;13.75&lt;/ArmWidth&gt;
+            &lt;ChainLine&gt;43.50&lt;/ChainLine&gt;
+            &lt;ChainRings&gt;39-53&lt;/ChainRings&gt;
+        &lt;/CrankSet&gt;
+        &lt;Derailleur&gt;
+            &lt;Front&gt;
+                &lt;File&gt;etc:derailleur/front/campagnolo_qs.svg&lt;/File&gt;
+                &lt;Distance&gt;150.00&lt;/Distance&gt;
+                &lt;Offset&gt;9.20&lt;/Offset&gt;
+            &lt;/Front&gt;
+            &lt;Rear&gt;
+                &lt;File&gt;etc:derailleur/rear/campagnolo_2006_short.svg&lt;/File&gt;
+            &lt;/Rear&gt;
+        &lt;/Derailleur&gt;
+        &lt;BottleCage&gt;
+            &lt;SeatTube&gt;
+                &lt;File&gt;etc:bottle_cage/left/bottleCage.svg&lt;/File&gt;
+                &lt;OffsetBB&gt;170.00&lt;/OffsetBB&gt;
+            &lt;/SeatTube&gt;
+            &lt;DownTube&gt;
+                &lt;File&gt;etc:bottle_cage/right/bottleCage.svg&lt;/File&gt;
+                &lt;OffsetBB&gt;210.00&lt;/OffsetBB&gt;
+            &lt;/DownTube&gt;
+            &lt;DownTube_Lower&gt;
+                &lt;File&gt;etc:bottle_cage/left/bottleCage.svg&lt;/File&gt;
+                &lt;OffsetBB&gt;170.00&lt;/OffsetBB&gt;
+            &lt;/DownTube_Lower&gt;
+        &lt;/BottleCage&gt;
+    &lt;/Component&gt;
+
+    &lt;Rendering&gt;
+        &lt;!-- rendering information --&gt;
+        &lt;Fork&gt;SteelLuggedMAX&lt;/Fork&gt;
+        &lt;ForkBlade&gt;bent&lt;/ForkBlade&gt;
+        &lt;Brake&gt;
+            &lt;Front&gt;Rim&lt;/Front&gt;
+            &lt;Rear&gt;Rim&lt;/Rear&gt;
+        &lt;/Brake&gt;        
+        &lt;BottleCage&gt;
+            &lt;SeatTube&gt;Cage&lt;/SeatTube&gt;
+            &lt;DownTube&gt;Cage&lt;/DownTube&gt;
+            &lt;DownTube_Lower&gt;off&lt;/DownTube_Lower&gt;
+        &lt;/BottleCage&gt;
+        &lt;RearDropOut&gt;behind&lt;/RearDropOut&gt;
+        &lt;ChainStay&gt;straight&lt;/ChainStay&gt;
+        &lt;RearMockup&gt;
+            &lt;DiscOffset&gt;15.30&lt;/DiscOffset&gt;
+            &lt;DiscWidth&gt;2.00&lt;/DiscWidth&gt;
+            &lt;DiscDiameter&gt;160.00&lt;/DiscDiameter&gt;
+            &lt;DiscClearance&gt;5.00&lt;/DiscClearance&gt;
+            &lt;TyreClearance&gt;5.00&lt;/TyreClearance&gt;
+            &lt;CrankClearance&gt;5.00&lt;/CrankClearance&gt;
+            &lt;ChainWheelClearance&gt;5.00&lt;/ChainWheelClearance&gt;
+            &lt;CassetteClearance&gt;3.00&lt;/CassetteClearance&gt;
+        &lt;/RearMockup&gt;
+    &lt;/Rendering&gt;
+
+&lt;/root&gt;</xml>
+    </____vars____________>
+</root>
+
