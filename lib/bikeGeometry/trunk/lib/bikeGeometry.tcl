@@ -291,6 +291,11 @@
  #          ... add lib_paramComponent.tcl
  #          ... proc get_paramComponent {}
  #
+ # 1.59 - 20150819
+ #      refactor:
+ #          ... lib_paramComponent.tcl
+ #          ... ChainWheel
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -299,7 +304,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.58
+    package provide bikeGeometry 1.59
         #
     package require vectormath
         #
@@ -1183,11 +1188,17 @@
         variable Config    
             #
         set visMode     "polyline"
-        set armCount    $Config(CrankSet_SpyderArmCount)
+        set armCount    __default__
         set bcDiameter  __default__
             #
         switch -exact $type {
             ChainWheel {
+                        #
+                        # teethCount
+                        # position
+                        # visMode
+                        # armCount
+                        # bcDiameter
                         #
                     if {[llength $args] >= 2 } { 
                         set teethCount      [lindex $args 0]
@@ -1205,7 +1216,7 @@
                         return {}
                     }
                         #
-                    return [bikeGeometry::paramComponent::_get_polygon_ChainWheel $teethCount $position $armCount $bcDiameter $visMode ]
+                    return [bikeGeometry::paramComponent::_get_polygon_ChainWheel $teethCount $position $visMode $armCount $bcDiameter ]
                         #
                 }
             CrankArm {
@@ -1254,6 +1265,12 @@
                     }
                         #
                     return [bikeGeometry::paramComponent::_get_position_ChainWheelBolts $teethCount $position $armCount $bcDiameter]
+                        #
+                }
+            BoltCircleDiameter {
+                        #
+                    set bcRadius [bikeGeometry::paramComponent::__get_BCRadius [lindex $args 0]]
+                    return [expr 2 * $bcRadius]
                         #
                 }
             default {

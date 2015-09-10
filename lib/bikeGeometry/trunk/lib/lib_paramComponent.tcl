@@ -72,18 +72,19 @@ namespace eval bikeGeometry::paramComponent {
                 #
             __updateValues    
                 #
-            if {$teethCount > 33} {
+            if {$teethCount > 50} {
+                set innerRadius [expr 0.5 * 130]
+            } elseif {$teethCount > 33} {
                 set innerRadius [expr 0.5 * 110]
-            } else {
+            } elseif {$teethCount > 25} {
                 set innerRadius [expr 0.5 *  74]
-                if {$teethCount < 26} {
+            } else {
                 set innerRadius [expr 0.5 *  60]
-                }
             }
             return $innerRadius
     }
 
-    proc bikeGeometry::paramComponent::_get_polygon_ChainWheel {teethCount position armCount bcDiameter visMode} {
+    proc bikeGeometry::paramComponent::_get_polygon_ChainWheel {teethCount position visMode armCount bcDiameter} {
                 #
                 # visMode:
                 #   opened ... is used in Tk::canvas to show objects behind
@@ -93,11 +94,16 @@ namespace eval bikeGeometry::paramComponent {
             variable toothWith
             variable crankSpyderArm_Count
                 #
-            set crankSpyderArm_Count $armCount
-            __updateValues    
+            if {$teethCount < 21} {
+                return {}
+            }
                 #
-            set armCount        $crankSpyderArm_Count
+            if {$armCount == {__default__}} {
+                set armCount    $crankSpyderArm_Count
+            }
             set spyderArmAngle  [expr 360 / $armCount]
+            __updateValues
+                #
                 #
             if {$bcDiameter == {__default__}} {
                 set radiusBC    [__get_BCRadius $teethCount]
@@ -105,7 +111,14 @@ namespace eval bikeGeometry::paramComponent {
                 set radiusBC    [expr 0.5 * $bcDiameter]
             }
                 #
-
+                # puts " ------------------------------------------"    
+                # puts "          \$teethCount  $teethCount   "
+                # puts "          \$position    $position     "
+                # puts "          \$armCount    $armCount     "
+                # puts "          \$bcDiameter  $bcDiameter   "
+                # puts "          \$visMode     $visMode      "    
+                # puts " ------------------------------------------"    
+                #
                 # -----------------------------
                 #   initValues
                 # set toothWith           12.7
@@ -161,7 +174,7 @@ namespace eval bikeGeometry::paramComponent {
                 # -----------------------------
                 #    inner profile
             set innerRadius     [expr $radiusBC -7.5]
-            set ringWidth       [expr 9 - ($teethCount - 30)/10]
+            set ringWidth       [expr 8 - ($teethCount - 30)/20]
             if {$ringWidth < 7} {set ringWidth 7}
             set ringRadius      [expr $toothBaseRadius - $ringWidth]
                 #
@@ -178,32 +191,55 @@ namespace eval bikeGeometry::paramComponent {
                 set shapeProfile_right {}
                 
                 set radius01        [expr $radiusInnerProfile + 0.20 * ($ringRadius - $radiusInnerProfile)]
-                set radius10        [expr $radiusInnerProfile + 0.90 * ($ringRadius - $radiusInnerProfile)]
-                set radius11        $ringRadius
-                set radius21        $ringRadius
+                set radius02        [expr $radiusInnerProfile + 0.45 * ($ringRadius - $radiusInnerProfile)]
+                set radius05        [expr $radiusInnerProfile + 0.65 * ($ringRadius - $radiusInnerProfile)]
+                set radius06        [expr $radiusInnerProfile + 0.80 * ($ringRadius - $radiusInnerProfile)]
+                set radius08        [expr $radiusInnerProfile + 0.95 * ($ringRadius - $radiusInnerProfile)]
                     #
-                set pos01           [vectormath::unifyVector        {0 0} [lrange $eyeProfile 0 1]  $radius01]
-                set pos10           [vectormath::rotateLine         {0 0} $radius10                 [expr 0.18 * $spyderArmAngle]]
-                set pos11           [vectormath::rotateLine         {0 0} $radius11                 [expr 0.22 * $spyderArmAngle]]
-                set pos21           [vectormath::rotateLine         {0 0} $radius21                 [expr 0.50 * $spyderArmAngle]]
                     #
-                set diffAngle       [expr [vectormath::dirAngle {0 0} $pos11] - [vectormath::dirAngle {0 0} $pos21]]  
+                set pos01           [vectormath::unifyVector    {0 0} [lrange $eyeProfile 0 1]  $radius01]
+                set pos02           [vectormath::rotateLine     {0 0} $radius02                 [expr 0.14 * $spyderArmAngle]]
+                set pos05           [vectormath::rotateLine     {0 0} $radius05                 [expr 0.18 * $spyderArmAngle]]
+                set pos06           [vectormath::rotateLine     {0 0} $radius06                 [expr 0.23 * $spyderArmAngle]]
+                set pos08           [vectormath::rotateLine     {0 0} $radius08                 [expr 0.30 * $spyderArmAngle]]
+                set pos20           [vectormath::rotateLine     {0 0} $ringRadius               [expr 0.35 * $spyderArmAngle]]
+                set pos21           [vectormath::rotateLine     {0 0} $ringRadius               [expr 0.50 * $spyderArmAngle]]
+                    #
+                    #
+                set diffAngle       [expr [vectormath::dirAngle {0 0} $pos20] - [vectormath::dirAngle {0 0} $pos21]]  
                 set rotAngle 0
                 while {$rotAngle > $diffAngle} {
-                    set pos         [vectormath::rotatePoint        {0 0} $pos21 $rotAngle]
+                    set pos         [vectormath::rotatePoint    {0 0} $pos21 $rotAngle]
                     append shapeProfile_left $pos " "
                     set rotAngle    [expr $rotAngle -0.5 * $anglePrecStep]
                 }
                     #
-                append shapeProfile_left $pos11 " "
-                append shapeProfile_left $pos10 " "
-                append shapeProfile_left $pos01 " "
+                    #
+                if {$teethCount > 33} {
+                    append shapeProfile_left $pos20 " "
+                    append shapeProfile_left $pos08 " "
+                    append shapeProfile_left $pos06 " "
+                    append shapeProfile_left $pos05 " "
+                    append shapeProfile_left $pos02 " "
+                    append shapeProfile_left $pos01 " "
+                } elseif {$teethCount > 27} {
+                    append shapeProfile_left $pos20 " "
+                    append shapeProfile_left $pos08 " "
+                    append shapeProfile_left $pos06 " "
+                } else {
+                    append shapeProfile_left $pos20 " "
+                    append shapeProfile_left $pos08 " "
+                }
+                    #
+                    #
                 append shapeProfile_left [appUtil::flatten_nestedList $eyeProfile]
+                    #
                     #
                 foreach {x y} [appUtil::flatten_nestedList $shapeProfile_left] {
                     set shapeProfile_right "$x [expr -1 * $y] $shapeProfile_right"
                 }
                 set shapeProfile_right [lrange $shapeProfile_right 0 end-2]
+                    #
                     #
                 set shapeProfile "$shapeProfile_left $shapeProfile_right "
                     #
@@ -215,6 +251,7 @@ namespace eval bikeGeometry::paramComponent {
                     append innerProfile [appUtil::flatten_nestedList $myProfile] " "
                     incr i -1
                 }
+                #
                 #
             set innerProfile       [vectormath::addVectorPointList $position $innerProfile] 
                 #
@@ -242,7 +279,7 @@ namespace eval bikeGeometry::paramComponent {
                 #puts "<debug> \${chainWheelProfile} ${chainWheelProfile}"
                 return [list    closed ${outerProfile}  \
                                 closed ${toothBaseProfile} \
-                                closed ${innerProfile}]
+                                closed ${innerProfile} ]
             }
                 #
     }
