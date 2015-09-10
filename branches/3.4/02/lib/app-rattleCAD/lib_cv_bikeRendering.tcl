@@ -181,8 +181,8 @@
     }
     proc rattleCAD::rendering::createDecoration_CrankSet {cv_Name BB_Position type {updateCommand {}}} {
                 # --- create Crankset --------------
-            set CrankSet(position)        $BB_Position
-            set CrankSet(file)            [ checkFileString [rattleCAD::model::get_Component    CrankSet] ]
+            set CrankSet(position)          $BB_Position
+            set CrankSet(file)              [ checkFileString [rattleCAD::model::get_Component    CrankSet] ]
             set compString [file tail $CrankSet(file)]
             if {[file tail $CrankSet(file)] == {custom.svg}} {
                 set CrankSet(object)        [ createCrank_Custom  $cv_Name  $CrankSet(position) ]
@@ -195,7 +195,7 @@
             } else {
                 set CrankSet(object)        [ $cv_Name readSVG $CrankSet(file) $CrankSet(position)  0  __CrankSet__ ]
                                               $cv_Name addtag  __Decoration__ withtag $CrankSet(object)
-                if {$updateCommand != {}}     { 
+                if {$updateCommand != {}}   { 
                     rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $CrankSet(object)      single_CrankSetFile
                         # $cv_Name bind    $CrankSet(object)    <Double-ButtonPress-1>  [list rattleCAD::view::createEdit  %x %y  $cv_Name  {   file://Component(CrankSet/File) }   {CrankSet Parameter} ]
                         # rattleCAD::view::gui::object_CursorBinding     $cv_Name    $CrankSet(object)
@@ -741,40 +741,59 @@
 
     proc rattleCAD::rendering::createCrank_Custom {cv_Name BB_Position} {
             #
-        set crankLength    [rattleCAD::model::get_Scalar CrankSet Length]
-        set teethCount     [lindex [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]] end]
-            #
-        set teethCountList [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]]
-        set teethCountMax  [lindex $teethCountList end]    
+        set crankLength     [rattleCAD::model::get_Scalar CrankSet Length]
+        set teethCount      [lindex [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]] end]
+            #   
+        set teethCountList  [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]]
+        set teethCountMax   [lindex $teethCountList end]    
+            #   
+        set bcDiameter      [rattleCAD::model::get_paramComponent   BoltCircleDiameter $teethCountMax]
+        set visMode         polyline
             #
             
-                puts ""
-                puts "   -------------------------------"
-                puts "   createCrank_Custom"
-                puts "       crankLength:    $crankLength"
-                puts "       teethCountList: $teethCountList"
-                puts "       teethCountMax:  $teethCountMax"
+            # puts ""
+            # puts "   -------------------------------"
+            # puts "   createCrank_Custom"
+            # puts "       crankLength:    $crankLength"
+            # puts "       teethCountList: $teethCountList"
+            # puts "       teethCountMax:  $teethCountMax"
+            # puts "       bcDiameter:     $bcDiameter"
                 
         
             #
             # -- ChainWheel
             #
+        set chainWheelList {}
         foreach teethCount $teethCountList {
-            set polygonChainWheel   [rattleCAD::model::get_paramComponent   ChainWheel $teethCount  $BB_Position]
-            set outerChainRingTags {}
+            lappend chainWheelList $teethCount __default__
+        }
+            #   puts "\n -- $chainWheelList  --\n"
+        catch {set chainWheelList [lreplace $chainWheelList end   end   $bcDiameter]}
+        catch {set chainWheelList [lreplace $chainWheelList end-2 end-2 $bcDiameter]}
+            # puts "\n -- $chainWheelList  --\n"
+            #
+        foreach {teethCount bcDiameter} $chainWheelList {
+                #
+            # puts " ------------------------------------- "    
+            # puts "          -> \$teethCount $teethCount"    
+            # puts "          -> \$visMode    $visMode"    
+            # puts "          -> \$bcDiameter $bcDiameter"    
+                #
+            set polygonChainWheel   [rattleCAD::model::get_paramComponent   ChainWheel  $teethCount  $BB_Position  $visMode  __default__ $bcDiameter]
+            set outerChainRingTags  {}
                 #
             set tagName myTags
-            foreach {mode coords} $polygonChainWheel {
+            foreach {key value} $polygonChainWheel {
                     #
-                switch -exact $mode {
+                switch -exact $key {
                     closed {
-                        set myObject   [$cv_Name create polygon     $coords  -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill white  -outline black]
+                        set myObject   [$cv_Name create polygon     $value  -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill white  -outline black]
                     }
                     opened {
-                        set myObject   [$cv_Name create line        $coords  -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill black]
+                        set myObject   [$cv_Name create line        $value  -tags {__Decoration__ __Crankset__ __ChainWheel__}      -fill black]
                     }
                     default {
-                        tk_messageBox -message " $mode \n $coords "
+                        tk_messageBox -message " $key \n $value "
                     }
                 }
                 catch {$cv_Name addtag $tagName withtag $myObject}
