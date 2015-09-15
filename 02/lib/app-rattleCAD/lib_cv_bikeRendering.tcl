@@ -744,10 +744,6 @@
         set crankLength     [rattleCAD::model::get_Scalar CrankSet Length]
         set teethCount      [lindex [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]] end]
             #   
-        set teethCountList  [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]]
-        set teethCountMax   [lindex $teethCountList end]    
-            #   
-        set bcDiameter      [rattleCAD::model::get_paramComponent   BoltCircleDiameter $teethCountMax]
         set visMode         polyline
             #
             
@@ -764,12 +760,9 @@
             # -- ChainWheel
             #
         set chainWheelList {}
-        foreach teethCount $teethCountList {
-            lappend chainWheelList $teethCount __default__
-        }
-            #   puts "\n -- $chainWheelList  --\n"
-        catch {set chainWheelList [lreplace $chainWheelList end   end   $bcDiameter]}
-        catch {set chainWheelList [lreplace $chainWheelList end-2 end-2 $bcDiameter]}
+        set chainWheelList [rattleCAD::model::get_paramComponent   ChainWheelDefinition]
+            # puts "\n -- $chainWheelList  --\n"
+            # exit
             # puts "\n -- $chainWheelList  --\n"
             #
         foreach {teethCount bcDiameter} $chainWheelList {
@@ -779,6 +772,7 @@
             # puts "          -> \$visMode    $visMode"    
             # puts "          -> \$bcDiameter $bcDiameter"    
                 #
+                # puts "  ...  rattleCAD::model::get_paramComponent   ChainWheel  $teethCount  $BB_Position  $visMode  __default__ $bcDiameter"
             set polygonChainWheel   [rattleCAD::model::get_paramComponent   ChainWheel  $teethCount  $BB_Position  $visMode  __default__ $bcDiameter]
             set outerChainRingTags  {}
                 #
@@ -809,7 +803,9 @@
             #
             # -- SpyderArms
             #
-        set polygonSpyderArm    [rattleCAD::model::get_paramComponent   CrankSpyder   $teethCountMax $BB_Position ]
+        set bcDiameter          [lindex $chainWheelList end]    
+            #
+        set polygonSpyderArm    [rattleCAD::model::get_paramComponent   CrankSpyder   $bcDiameter $BB_Position ]
             #
         set spyderArm           [$cv_Name create polygon    $polygonSpyderArm   -tags {__Decoration__ __Crankset__ __SpyderArm__}        -fill white  -outline black]
             #
@@ -828,7 +824,7 @@
             #
             # -- ChaineWheelBolts
             #
-        set posChaineWheelBolts [rattleCAD::model::get_paramComponent   ChainWheelBoltPosition   $teethCountMax $BB_Position]
+        set posChaineWheelBolts [rattleCAD::model::get_paramComponent   ChainWheelBoltPosition   $bcDiameter $BB_Position]
         foreach {x y} $posChaineWheelBolts {
             set bolt01      [$cv_Name create circle    [list $x $y]   -tags {__Decoration__ __Crankset__ __ChainWheel__} -radius 6.0 -fill white  -outline black]
             set bolt02      [$cv_Name create circle    [list $x $y]   -tags {__Decoration__ __Crankset__ __ChainWheel__} -radius 2.5 -fill white  -outline black]
