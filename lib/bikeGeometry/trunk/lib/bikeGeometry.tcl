@@ -296,6 +296,12 @@
  #          ... lib_paramComponent.tcl
  #          ... ChainWheel
  #
+ # 1.60 - 20150915
+ #      debug/refactor:
+ #          ... custom Crankset
+ #              ... __get_BCDiameter
+ #              ... _get_ChainWheelDefinition
+ #
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -304,7 +310,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.59
+    package provide bikeGeometry 1.60
         #
     package require vectormath
         #
@@ -1186,12 +1192,25 @@
     proc bikeGeometry::get_paramComponent {type args} {
             #
         variable Config    
+        variable ListValue    
             #
         set visMode     "polyline"
         set armCount    __default__
         set bcDiameter  __default__
             #
         switch -exact $type {
+            ChainWheelDefinition {
+                        #
+                        # teethCount
+                        # position
+                        # visMode
+                        # armCount
+                        # bcDiameter
+                        #
+                        #
+                    return [bikeGeometry::paramComponent::_get_ChainWheelDefinition $ListValue(CrankSetChainRings) ]
+                        #
+                }
             ChainWheel {
                         #
                         # teethCount
@@ -1233,43 +1252,37 @@
             CrankSpyder {
                         #
                     if {[llength $args] >= 2 } {
-                        set teethCount  [lindex $args 0]
+                        set bcDiameter  [lindex $args 0]
                         set position    [lindex $args 1]
                             # tk_messageBox -message " ... <$type> in proc bikeGeometry::get_paramComponent"
                         if {[llength $args] > 2 } {
                             set armCount    [lindex $args 2]
                         }
-                        if {[llength $args] > 3 } {
-                            set bcDiameter  [lindex $args 3]
-                        }
                     } else {
                         return {}
                     }
                         #
-                    return [bikeGeometry::paramComponent::_get_polygon_CrankSpyder $teethCount $position $armCount $bcDiameter]
+                    return [bikeGeometry::paramComponent::_get_polygon_CrankSpyder $bcDiameter $position $armCount]
                         #
                 }
             ChainWheelBoltPosition {
                         #
                     if {[llength $args] >= 2 } {
-                        set teethCount  [lindex $args 0]
+                        set bcDiameter  [lindex $args 0]
                         set position    [lindex $args 1]
                         if {[llength $args] > 2 } {
                             set armCount    [lindex $args 2]
-                        }
-                        if {[llength $args] > 3 } {
-                            set bcDiameter  [lindex $args 3]
                         }
                     }  else {
                         return {}
                     }
                         #
-                    return [bikeGeometry::paramComponent::_get_position_ChainWheelBolts $teethCount $position $armCount $bcDiameter]
+                    return [bikeGeometry::paramComponent::_get_position_ChainWheelBolts $bcDiameter $position $armCount]
                         #
                 }
             BoltCircleDiameter {
                         #
-                    set bcRadius [bikeGeometry::paramComponent::__get_BCRadius [lindex $args 0]]
+                    set bcRadius [bikeGeometry::paramComponent::__get_BCDiameter [lindex $args 0]]
                     return [expr 2 * $bcRadius]
                         #
                 }

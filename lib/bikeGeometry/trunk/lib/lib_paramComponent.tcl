@@ -67,21 +67,70 @@ namespace eval bikeGeometry::paramComponent {
         return  
             #
     }
-    
-    proc bikeGeometry::paramComponent::__get_BCRadius {teethCount} {
+
+    proc bikeGeometry::paramComponent::__get_BCDiameter {teethCount {option diameter}} {
                 #
             __updateValues    
                 #
-            if {$teethCount > 50} {
-                set innerRadius [expr 0.5 * 130]
-            } elseif {$teethCount > 33} {
-                set innerRadius [expr 0.5 * 110]
-            } elseif {$teethCount > 25} {
-                set innerRadius [expr 0.5 *  74]
+            if     {$teethCount >= 39} {    set innerDiameter 130 } \
+            elseif {$teethCount >= 34} {    set innerDiameter 110 } \
+            elseif {$teethCount >= 30} {    set innerDiameter 100 } \
+            elseif {$teethCount >= 25} {    set innerDiameter  74 } \
+            else                       {    set innerDiameter  60 }
+                #
+            if {$option == {radius}} {
+                return [expr 0.5 * $innerDiameter]
             } else {
-                set innerRadius [expr 0.5 *  60]
+                return $innerDiameter
             }
-            return $innerRadius
+    }
+
+    proc bikeGeometry::paramComponent::_get_ChainWheelDefinition {crankSetChainRings} {
+                #
+            __updateValues    
+                #
+            set teethCountList  [lreverse [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]]]
+            set chainWheelCount [llength $teethCountList]
+                # 
+                # puts "   ... $teethCountList  ->  $chainWheelCount"
+                #
+            set _chainWheelDef   {}
+            set bcDiameter_Min  [__get_BCDiameter   [lindex $teethCountList 0] diameter]
+                #
+            if {$chainWheelCount == 1} {
+                set teethCount $teethCountList
+                puts $teethCount
+                set _bcDiameter [__get_BCDiameter   $teethCount diameter]
+                set _chainWheelDef [list $teethCount $_bcDiameter]
+            } elseif {$chainWheelCount >= 2} {
+                foreach teethCount [lrange $teethCountList 0 1] {
+                        # puts "    ... \$teethCount $teethCount"
+                    set _bcDiameter [__get_BCDiameter   $teethCount diameter]
+                    if {$_bcDiameter < $bcDiameter_Min} {
+                        set bcDiameter_Min $_bcDiameter
+                    }
+                        # puts "    ... \$teethCount     $teethCount"
+                        # puts "    ... \$bcDiameter_Min $bcDiameter_Min"
+                }
+                foreach teethCount [lrange $teethCountList 0 1] {
+                    lappend _chainWheelDef $teethCount $bcDiameter_Min
+                }
+                
+            }
+            if {$chainWheelCount == 3} {
+                set teethCount [lindex $teethCountList 2]
+                set bcDiameter [__get_BCDiameter   $teethCount diameter]
+                lappend _chainWheelDef $teethCount $bcDiameter
+            }   
+                # puts "   -> $_chainWheelDef"
+            set  chainWheelDef {}
+            foreach {bcd teeth} [lreverse $_chainWheelDef] {
+                lappend chainWheelDef $teeth $bcd
+            }
+                # puts "   -> $chainWheelDef"
+                #
+            return $chainWheelDef
+                #
     }
 
     proc bikeGeometry::paramComponent::_get_polygon_ChainWheel {teethCount position visMode armCount bcDiameter} {
@@ -105,8 +154,9 @@ namespace eval bikeGeometry::paramComponent {
             __updateValues
                 #
                 #
+                # puts " <D>... \$bcDiameter $bcDiameter"
             if {$bcDiameter == {__default__}} {
-                set radiusBC    [__get_BCRadius $teethCount]
+                set radiusBC    [__get_BCDiameter $teethCount]
             } else {
                 set radiusBC    [expr 0.5 * $bcDiameter]
             }
@@ -327,7 +377,7 @@ namespace eval bikeGeometry::paramComponent {
             return $crankArmProfile
     }
 
-    proc bikeGeometry::paramComponent::_get_polygon_CrankSpyder {teethCount position armCount bcDiameter} {
+    proc bikeGeometry::paramComponent::_get_polygon_CrankSpyder {bcDiameter position armCount} {
                 #
             variable anglePrecStep
             variable crankWidth_BB
@@ -339,13 +389,7 @@ namespace eval bikeGeometry::paramComponent {
             set armCount $crankSpyderArm_Count
             set spyderArmAngle  [expr 360 / $armCount]
                 #
-            if {$bcDiameter == {__default__}} {
-                set radiusBC    [__get_BCRadius $teethCount]
-            } else {
-                set radiusBC    [expr 0.5 * $bcDiameter]
-            }
-                #
-                
+            set radiusBC [expr 0.5 * $bcDiameter]    
                 
                 # -----------------------------
                 #    base Values    
@@ -396,7 +440,7 @@ namespace eval bikeGeometry::paramComponent {
              
     }
 
-    proc bikeGeometry::paramComponent::_get_position_ChainWheelBolts {teethCount position armCount bcDiameter} {
+    proc bikeGeometry::paramComponent::_get_position_ChainWheelBolts {bcDiameter position armCount} {
                 #
             variable anglePrecStep
             variable crankWidth_BB
@@ -408,14 +452,9 @@ namespace eval bikeGeometry::paramComponent {
             set armCount $crankSpyderArm_Count
             set spyderArmAngle  [expr 360 / $armCount]
                 #
-            if {$bcDiameter == {__default__}} {
-                set radiusBC    [__get_BCRadius $teethCount]
-            } else {
-                set radiusBC    [expr 0.5 * $bcDiameter]
-            }
-                #        
-                
-                
+            set radiusBC [expr 0.5 * $bcDiameter]    
+                #
+                    
                 # -----------------------------
                 #    get position    
             set boltPositonList       {}
