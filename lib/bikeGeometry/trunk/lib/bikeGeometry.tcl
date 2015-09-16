@@ -302,6 +302,13 @@
  #              ... __get_BCDiameter
  #              ... _get_ChainWheelDefinition
  #
+ # 1.61 - 20150916
+ #      debug:
+ #          ... proc bikeGeometry::paramComponent::_get_ChainWheelDefinition {}
+ #              ... remove "rattleCAD::model::get_ListValue"
+ #
+ 
+ 
  #
  # 1.xx refactor
  #          split project completely from bikeGeometry
@@ -310,7 +317,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.60
+    package provide bikeGeometry 1.61
         #
     package require vectormath
         #

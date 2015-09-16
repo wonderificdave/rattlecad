@@ -88,8 +88,9 @@ namespace eval bikeGeometry::paramComponent {
     proc bikeGeometry::paramComponent::_get_ChainWheelDefinition {crankSetChainRings} {
                 #
             __updateValues    
-                #
-            set teethCountList  [lreverse [lsort [split [rattleCAD::model::get_ListValue CrankSetChainRings] -]]]
+            variable ListValue    
+            #
+            set teethCountList  [lreverse [lsort [split $crankSetChainRings -]]]
             set chainWheelCount [llength $teethCountList]
                 # 
                 # puts "   ... $teethCountList  ->  $chainWheelCount"
