@@ -307,6 +307,10 @@
  #          ... proc bikeGeometry::paramComponent::_get_ChainWheelDefinition {}
  #              ... remove "rattleCAD::model::get_ListValue"
  #
+ # 1.62 - 20150919
+ #      refactor:
+ #          ... new representations for suspenison fork bridges
+ #
  
  
  #
@@ -317,7 +321,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.61
+    package provide bikeGeometry 1.62
         #
     package require vectormath
         #
