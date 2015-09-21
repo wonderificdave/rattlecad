@@ -311,7 +311,10 @@
  #      refactor:
  #          ... new representations for suspenison fork bridges
  #
- 
+ # 1.63 - 20150922
+ #      refactor:
+ #          ... new representations for suspenison fork bridges
+ #
  
  #
  # 1.xx refactor
@@ -321,7 +324,7 @@
   
     package require tdom
         #
-    package provide bikeGeometry 1.62
+    package provide bikeGeometry 1.63
         #
     package require vectormath
         #
