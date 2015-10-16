@@ -1,9 +1,21 @@
 
 
+3.4.02.72  - 2015.10.16
+-------------------------------------------------------------------------------
+    debug:
+        ... configCorner fails on Mockup-Tab
+            ... rattleCAD::view::edit::group_Rendering_Parameter 
+                ... rattleCAD::view::create_FileEdit
+                ... rattleCAD::view::svgEdit::create_svgEdit
+                ... rattleCAD::view::svgEdit::cleanup_svgEdit (new)
+        ... update canvas fails in configPanel
+            ... rattleCAD::configPanel::updateCanvas
+
+
 3.4.02.71  - 2015.10.15
 -------------------------------------------------------------------------------
     feature:
-        ... change scale an format of canvas on DraftingFrame
+        ... change Canvas Scale and Format on Values in DraftingFrame
             ... Format
             ... Scale
 
