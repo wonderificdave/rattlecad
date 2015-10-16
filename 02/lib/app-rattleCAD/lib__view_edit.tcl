@@ -47,9 +47,26 @@
  }
  
         #
+        # -- Page - Options -------------------------------
+        #
+    proc rattleCAD::view::edit::page_FormatDIN  {x y cv_Name}   { 
+        set cv      [$cv_Name getNodeAttr Canvas path]
+        set cvEdit  [rattleCAD::view::createEdit        $x $y $cv_Name  {} {DIN-Format}]
+        rattleCAD::view::gui::add_ConfigFormat          $cvEdit {noHeader}
+        rattleCAD::view::fit_EditContainer              $cv     $cvEdit
+    }
+    proc rattleCAD::view::edit::page_PageScale  {x y cv_Name}   { 
+        set cv      [$cv_Name getNodeAttr Canvas path]
+        set cvEdit  [rattleCAD::view::createEdit        $x $y $cv_Name  {} {Page-Scale}]
+        rattleCAD::view::gui::add_ConfigScale           $cvEdit {noHeader}
+        rattleCAD::view::fit_EditContainer              $cv     $cvEdit
+    } 
+    
+#[format {rattleCAD::view::gui::notebook_ButtonEvent %s %s} $cv $cv_ButtonContent ]    
+        #
         # -- Rendering - Options --------------------------
         #
-    proc rattleCAD::view::edit::option_ForkType                         {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   list://Config(Fork@SELECT_ForkType)                          }   ;#  list://Config(Fork@SELECT_ForkType)                          }
+    proc rattleCAD::view::edit::option_ForkType                         {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   list://Config(Fork@SELECT_ForkType)                          }   ;#  list://Config(Fork@SELECT_ForkType)                             }
     proc rattleCAD::view::edit::option_ChainStay                        {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   list://Config(ChainStay@SELECT_ChainStay)                    }   ;#  list://Rendering(ChainStay@SELECT_ChainStay)                    }
     proc rattleCAD::view::edit::option_FrontFenderBinary                {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   list://Config(FrontFender@SELECT_Binary_OnOff)               }   ;#  list://Rendering(Fender/Front@SELECT_Binary_OnOff)              }    
     proc rattleCAD::view::edit::option_RearFenderBinary                 {x y cv_Name}   { rattleCAD::view::createEdit  $x $y $cv_Name   list://Config(RearFender@SELECT_Binary_OnOff)                }   ;#  list://Rendering(Fender/Rear@SELECT_Binary_OnOff)               }     

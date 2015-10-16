@@ -164,7 +164,7 @@
             
             
                 # --- get stageScale
-            set stageScale        [ $cv_Name  getNodeAttr  Stage    scale ]
+            set stageScale                  [$cv_Name  getNodeAttr  Stage    scale ]
 
 
                 # --- get Rendering Style
@@ -707,24 +707,27 @@
 
 
                 # --- create Text:
-            set textSize            5
-            set textHeight            [expr $textSize * $scaleFactor ]
+            set textSize        5
+            set textHeight      [expr $textSize * $scaleFactor ]
 
                 # --- create Text: DIN Format
-            set textPos                [scale_toStage [list [expr $df_Border + $tb_BottomLeft +  5 ] [ expr $df_Border + 13.5 ] ]    $scaleFactor]
-            set textText            "$DIN_Format"
-            $cv_Name create draftText $textPos  -text $textText -size $textSize
+            set textPos         [scale_toStage [list [expr $df_Border + $tb_BottomLeft +  5 ] [ expr $df_Border + 13.5 ] ]    $scaleFactor]
+            set textText        "$DIN_Format"
+            set text_DINFormat  [$cv_Name create draftText $textPos  -text $textText -size $textSize]
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $text_DINFormat     page_FormatDIN
+                    
 
                 # --- create Text: Software & Version
-            set textPos                [scale_toStage [list [expr $df_Border + $tb_BottomLeft + 128 ] [ expr $df_Border + 13.5 ] ]    $scaleFactor]
-            set textText            [format "rattleCAD  V%s.%s" $::APPL_Config(RELEASE_Version) $::APPL_Config(RELEASE_Revision)]
+            set textPos         [scale_toStage [list [expr $df_Border + $tb_BottomLeft + 128 ] [ expr $df_Border + 13.5 ] ]    $scaleFactor]
+            set textText        [format "rattleCAD  V%s.%s" $::APPL_Config(RELEASE_Version) $::APPL_Config(RELEASE_Revision)]
             $cv_Name create draftText $textPos  -text $textText -size $textSize -anchor se
 
                 # --- create Text: Scale
-            set textPos                [scale_toStage [list [expr $df_Border + $tb_BottomLeft +   5 ] [ expr $df_Border +  3.0 ] ]    $scaleFactor]
-            set textText            "1:$formatScaleFactor"
-            $cv_Name create draftText $textPos  -text $textText -size $textSize
-
+            set textPos         [scale_toStage [list [expr $df_Border + $tb_BottomLeft +   5 ] [ expr $df_Border +  3.0 ] ]    $scaleFactor]
+            set textText        "1:$formatScaleFactor"
+            set text_PageScale  [$cv_Name create draftText $textPos  -text $textText -size $textSize]
+            rattleCAD::view::gui::dimension_CursorBinding   $cv_Name    $text_PageScale     page_PageScale
+            
                 # --- create Text: Project-File
             set textPos                [scale_toStage [list [expr $df_Border + $df_Width      -   2 ] [ expr $df_Border +  3.0 ] ]    $scaleFactor]
             set textText            [file tail $projectFile]

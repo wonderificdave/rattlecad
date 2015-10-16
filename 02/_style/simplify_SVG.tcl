@@ -17,6 +17,11 @@ exec wish "$0" "$@"
  # http://www.selfsvg.info/?section=3.5
  #
  #
+ # 20150923:
+ #       search polygons, polylines defined by only one point
+ #
+ #
+ #
 
     package require Tk
     package require tdom
@@ -26,19 +31,20 @@ exec wish "$0" "$@"
     
     variable exportFileName {export.svg}
     
-    variable min_SegmentLength 0.4
-    variable fillGeometry      {gray80}
-    variable centerNode        {}
-    variable svg_LastHighlight {}
-    variable free_ObjectID     0
-    variable file_saveCount    0
-    variable tmpSVG            [dom parse "<root/>"]
-    variable my_Center_Object  {}
-    variable fitVector         {0 0 1}
+    variable min_SegmentLength  0.4
+    variable fillGeometry       {gray80}
+    variable centerNode         {}
+    variable trashNode          {}
+    variable svg_LastHighlight  {}
+    variable free_ObjectID      0
+    variable file_saveCount     0
+    variable tmpSVG             [dom parse "<root/>"]
+    variable my_Center_Object   {}
+    variable fitVector          {0 0 1}
             
-    variable CONST_PI [expr 4*atan(1)]
+    variable CONST_PI           [expr 4*atan(1)]
     
-    set currentVersion "3.4.00 - AA"
+    set currentVersion "3.4.02 - AA"
 
     # -- handling puts
     # http://wiki.tcl.tk/1290
@@ -390,6 +396,45 @@ exec wish "$0" "$@"
     }
 
 
+    proc checkPoly__x {node} {
+                #
+            variable trashNode
+                #
+            # puts ""
+            # puts "checkPoly__x:   -> [$node asXML]"
+            # puts ""
+                #
+                # points="52.43729999999999,-32.5785"
+                #
+            set nodeName        [$node nodeName]
+                # puts "   -> \$nodeName          $nodeName"
+                #
+            switch -exact $nodeName {
+                polygon  -
+                polyline {
+                        set pointAttribute  [$node getAttribute points]
+                            # puts "   -> \$pointAttribute    $pointAttribute"
+                        set pointCount      [llength $pointAttribute]
+                            # puts "   -> \$pointCount        $pointCount"
+                            #
+                        if {$pointCount > 1} {
+                            # puts "   -> \$node $node"
+                            return $node
+                        } else {
+                            # puts "   -> \$trashNode $trashNode"
+                            # puts "   -> \$node $node"
+                            $trashNode appendChild $node
+                            return {} 
+                        }
+                    }
+                default {
+                    return $node
+                }
+            }
+                #
+    }
+
+    
     proc format_absPath {pathDefinition {position {0 0}} } {
     
         set transform(x) [lindex $position 0]
@@ -1130,25 +1175,28 @@ exec wish "$0" "$@"
               # $newNode setAttribute children  [llength $svgPath]
             set i 0
             foreach pathSegment $svgPath {
-                  set pathSegment [flatten_nestedList $pathSegment]
+                set pathSegment [flatten_nestedList $pathSegment]
                     # puts "\n--<D>---- loop ----------"
                     # puts "    01 -> \$pathSegment $pathSegment"
                     # puts "   ->   ende: [lindex $pathSegment end]"
-                  if { [lindex $pathSegment end] == {Z} } {
+                if { [lindex $pathSegment end] == {Z} } {
                       set pathSegment [lrange $pathSegment 0 end-1]
                       # puts "    02 -> \$pathSegment $pathSegment"
                       set loopNode    [get_pathNode $node $pathSegment $translateMatrix $transformMatrix polygon ]
-                  } else {
+                } else {
                       set loopNode    [get_pathNode $node $pathSegment $translateMatrix $transformMatrix polyline]
-                  }
-                  if {[$loopNode hasAttribute id]} {
+                }
+                if {[$loopNode hasAttribute id]} {
                       set loopID [$loopNode getAttribute id]
                       $loopNode setAttribute id [format "%s___%s" $loopID $i]
-                  } else {
+                } else {
                       $loopNode setAttribute id [get_svgID]
-                  }
-                  $newNode appendChild $loopNode
-                  incr i
+                }
+                set loopNode [checkPoly__x $loopNode]
+                if {$loopNode != {}} {
+                    $newNode appendChild $loopNode
+                } 
+                incr i
             }
         } else {
             set pathSegment $svgPath
@@ -1184,33 +1232,47 @@ exec wish "$0" "$@"
             variable flatSVG
             variable fillGeometry
             variable free_ObjectID
+            variable trashNode
             
             set fillGeometry {gray80}
                         
                 # puts [$targetNode asXML]
 
                 # puts "  ... [ $flatSVG asXML]\n"
-            set root [ $flatSVG documentElement ]
+            set root        [ $flatSVG documentElement ]
                 # puts "  ... [ $root asXML]\n"
-            foreach node [$domSVG childNodes] {
+                
+                #
+                #
+            set trashNode   [$root appendXML "<g id=\"trashNode_001\"></g>"]
+            set trashNode   [$root find id trashNode_001]
+                # puts "[$trashNode asXML]"
+                # exit
+                #
+                
+                #
+            foreach node    [$domSVG childNodes] {
                 add_SVGNode $node $root $parentTransform
             }
-
+                #
+                
+                #
             return $root
+                #
     }
 
 
-
-
     proc add_SVGNode {node targetNode parentTransform} {
-
+                
+                #
             variable detailText
             variable min_SegmentLength
             variable flatSVG
             variable fillGeometry
             variable free_ObjectID
+                #
 
-            # puts "   ... $node"
+                # puts "   ... $node"
             if {[$node nodeType] != {ELEMENT_NODE}} return ;#continue
         
 
@@ -1261,59 +1323,76 @@ exec wish "$0" "$@"
                             }
                         }
                     rect {
-                                set myNode  [simplify_Rectangle $node $parentPosition]
-                                $myNode setAttribute id $nodeID
-                                $targetNode appendChild $myNode 
+                            set myNode  [simplify_Rectangle $node $parentPosition]
+                            $myNode setAttribute id $nodeID
+                            $targetNode appendChild $myNode 
                         }
                     polygon {
-                                set myNode  [simplify_Polygon   $node $parentPosition]
-                                $myNode setAttribute id $nodeID
-                                $targetNode appendChild $myNode 
+                            set myNode  [simplify_Polygon   $node $parentPosition]
+                            $myNode setAttribute id $nodeID
+                                #
+                            set myNode [checkPoly__x $myNode]
+                                #
+                            if {$myNode != ""} {
+                                $targetNode appendChild $myNode
+                            }
+                                #
                         }
                     polyline { # polyline class="fil0 str0" points="44.9197,137.492 47.3404,135.703 48.7804,133.101 ..."
-                                set polygonNode  [simplify_Polygon $node $parentPosition]
-                                
-                                set myNode [$flatSVG createElement polyline]
-                                $myNode setAttribute id $nodeID
-                                foreach attr [$polygonNode attributes] {
-                                    $myNode setAttribute $attr [$polygonNode getAttribute $attr]
-                                }
+                            set polygonNode  [simplify_Polygon $node $parentPosition]
+                            
+                            set myNode [$flatSVG createElement polyline]
+                            $myNode setAttribute id $nodeID
+                            foreach attr [$polygonNode attributes] {
+                                $myNode setAttribute $attr [$polygonNode getAttribute $attr]
+                            }
+                                #
+                            set myNode [checkPoly__x $myNode]
+                                #
+                            if {$myNode != ""} {
                                 $targetNode appendChild $myNode
+                            }
+                                #
                         }
                     line { # line class="fil0 str0" x1="89.7519" y1="133.41" x2="86.9997" y2= "119.789"
-                                set myNode  [simplify_Line $node $parentPosition]
-                                if {$myNode != {}} {
-                                  $myNode setAttribute id $nodeID
-                                  $targetNode appendChild $myNode
-                                }                                        
+                            set myNode  [simplify_Line $node $parentPosition]
+                            if {$myNode != {}} {
+                                $myNode setAttribute id $nodeID
+                                $targetNode appendChild $myNode
+                            }                                        
                         }
                     ellipse { # circle class="fil0 str2" cx="58.4116" cy="120.791" r="5.04665"
-                                set myNode  [simplify_Ellipse $node $parentPosition $targetNode]
-                                $myNode setAttribute id $nodeID
-                                $targetNode appendChild $myNode                                         
+                            set myNode  [simplify_Ellipse $node $parentPosition $targetNode]
+                            $myNode setAttribute id $nodeID
+                            $targetNode appendChild $myNode                                         
                         }
                     circle { # circle cx="58.4116" cy="120.791" r="5.04665"
-                                    # --- dont display the center_object with id="center_00"
-                                set myNode  [simplify_Circle $node $parentPosition]
-                                $myNode setAttribute id $nodeID
-                                $targetNode appendChild $myNode 
-                        }
+                                # --- dont display the center_object with id="center_00"
+                            set myNode  [simplify_Circle $node $parentPosition]
+                            $myNode setAttribute id $nodeID
+                            $targetNode appendChild $myNode 
+                    }
                     path { # path d="M ......."
-                                puts "   path: ->  $parentPosition"
-                                set tmpNodes [ simplify_Path $node $parentPosition]
-                                set loopID 0
-                                  # puts "\n\n  tmpNodes -> $tmpNodes \n\n"
-                                foreach myNode $tmpNodes {
-                                    if {$myNode == {}} continue
-                                    incr loopID
-                                    $myNode setAttribute id [format "%s_%s" $nodeID $loopID]
+                            puts "   path: ->  $parentPosition"
+                            set tmpNodes [ simplify_Path $node $parentPosition]
+                            set loopID 0
+                              # puts "\n\n  tmpNodes -> $tmpNodes \n\n"
+                            foreach myNode $tmpNodes {
+                                if {$myNode == {}} continue
+                                incr loopID
+                                $myNode setAttribute id [format "%s_%s" $nodeID $loopID]
+                                    #
+                                set myNode [checkPoly__x $myNode]
+                                    #
+                                if {$myNode != {}} {
                                     $targetNode appendChild $myNode
                                 }
+                            }
                         }        
 
                     default { 
-                                # -- for temporary use, will never be added to $targetNode
-                                set myNode [$flatSVG createElement unused ]
+                            # -- for temporary use, will never be added to $targetNode
+                            set myNode [$flatSVG createElement unused ]
                         }
             }
             
@@ -1651,7 +1730,7 @@ exec wish "$0" "$@"
             variable flatText 
             variable flatSVG
             variable currentVersion
-
+            
             
             variable exportFileName {exportFile.svg}
         
@@ -1694,7 +1773,9 @@ exec wish "$0" "$@"
                 # --- compute results ------            
             dom parse  $svg doc
             $doc documentElement root
-
+            
+                            
+                #
             set flatSVG [simplifySVG $root]
                 # set flatSVG [simplifySVG $root {50 50} ]
             $flatSVG setAttribute xmlns "http://www.w3.org/2000/svg"
@@ -1992,10 +2073,10 @@ exec wish "$0" "$@"
 
 
     proc open_toNode {w itemID} {
-				if {$itemID != {}} {
-					$w item [$w parent $itemID] -open 1
-					open_toNode $w [$w parent $itemID]
-				}
+			if {$itemID != {}} {
+				$w item [$w parent $itemID] -open 1
+				open_toNode $w [$w parent $itemID]
+			}
     }
 
 

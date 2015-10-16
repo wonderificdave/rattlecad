@@ -49,8 +49,8 @@
     
     variable    noteBook_top
     
-    variable    stageFormat
-    variable    stageScale
+    variable    stageFormat             A4
+    variable    stageScale              1.00
 
     variable    external_canvasCAD  ;   array    set external_canvasCAD {}
     variable    rattleCAD_AddOn     ;   array    set rattleCAD_AddOn {}
@@ -994,7 +994,7 @@
     #-------------------------------------------------------------------------
        #  create a Button inside a canvas of notebookCanvas
        #
-    proc rattleCAD::view::gui::notebook_createButton {nb_Canvas cv_ButtonContent    {type {default}}} {
+    proc rattleCAD::view::gui::notebook_createButton {nb_Canvas cv_ButtonContent} {
             
             puts ""
             puts "         -------------------------------"
@@ -1029,63 +1029,6 @@
             
                 #
             return
-
-            
-            foreach cv_Button $cv_ButtonContent {
-                set x_Position  4
-                set y_Position  4
-                  # set x_Position  [expr 10 + $idx * 25]
-                  # set y_Position  [expr 10 + $idx * 25]
-                incr idx
-                switch -regexp $cv_Button {
-                        change_FormatScale {
-                                    # -- create a Button to change Format and Scale of Stage
-                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FormatScale %s %s %s %s} $cv $x_Position $y_Position $type ]
-                                }
-                        change_FrameConfigMode {
-                                    # -- create a Button to change config mode of Frame: free, lug ...
-                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameConfig %s %s %s} $cv $x_Position $y_Position]
-                                }
-                        change_FrameJigMode {
-                                    # -- create a Button to set FrameJigVersion
-                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_FrameJig %s %s %s} $cv $x_Position $y_Position ]
-                                }
-                        change_Rendering {
-                                    # -- create a Button to set Rendering: BottleCage, Fork, ...
-                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::change_Rendering %s %s %s} $cv $x_Position $y_Position ]
-                                } 
-                        check_TubingAngles {
-                                    # -- create a Button to execute tubing_checkAngles
-                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::tubing_checkAngles %s} $cv]                   
-                                }
-                        rem_ChainStayRendering {
-                                    # -- create a Button to set ChainStayRendering
-                                    $nb_Canvas configCorner [format {rattleCAD::view::gui::rendering_ChainStay %s} $cv]
-                                    
-                                        # catch { destroy $cv.buttonFrame.button_CSR }
-                                        # button  $cv.buttonFrame.button_CSR \
-                                                -text "switch: straight/bent/off" \
-                                                -command [format {rattleCAD::view::gui::rendering_ChainStay %s} $cv]                                
-                                        # pack $cv.buttonFrame.button_CSR         -fill x
-                                }
-                        rem_Reference2Custom {
-                                    # -- create a Button to execute geometry_reference2personal
-                                    $nb_Canvas configCorner rattleCAD::view::gui::geometry_reference2personal
-                                    
-                                        # catch { destroy $cv.buttonFrame.button_R2C }
-                                        # button  $cv.buttonFrame.button_R2C \
-                                                -text "copy settings to Base Geometry" \
-                                                -command rattleCAD::view::gui::geometry_reference2personal                                
-                                        # pack $cv.buttonFrame.button_R2C         -fill x
-                                }
-                }
-            }
-            
-            # $cv create window 7 8 \
-                -window $cv.buttonFrame \
-                -anchor nw \
-                -tags {__NB_Button__}
-            # pack append $cv.buttonFrame
             
     }            
 
@@ -1346,11 +1289,18 @@
     #-------------------------------------------------------------------------
        #  create menue to change size of Stage 
        #
-    proc rattleCAD::view::gui::add_ConfigFormat {w {type {default}}}  {
+    proc rattleCAD::view::gui::add_ConfigFormat {w {header {default}}}  {
                 #
-            set     rattleCAD::view::gui::stageFormat    A4
-            set     rattleCAD::view::gui::stageScale     0.20        
                 #
+            variable noteBook_top
+                #
+                #
+                # --- get stageScale
+            set currentTab [$noteBook_top select]
+            set cv_Name    [notebook_getVarName $currentTab]
+                # puts "  -- > $cv_Name < --"
+            set rattleCAD::view::gui::stageFormat  [$cv_Name getNodeAttr Stage format]
+                # puts "  -- > $rattleCAD::view::gui::stageScale < --"
                 #
             set contentFrame [frame $w.pageFormat]
             pack $contentFrame -fill x 
@@ -1376,22 +1326,39 @@
             set newFont [format {%s bold}  [$contentFrame.label cget -font]]
             $contentFrame.label configure   -font $newFont
                 #
+                #
+            set rbName [format "%s.%s" $contentFrame [string tolower $rattleCAD::view::gui::stageFormat]]
+                # puts "  -> $contentFrame "
+                # puts "  -> $rbName "
+            catch {$rbName select}
+                #
+            if {$header == {noHeader}} {
+                grid forget $contentFrame.label
+            }    
+                #
+                #
             return    
                 #          
     }
     #-------------------------------------------------------------------------
        #  create menue to change scale of Stage 
        #
-    proc rattleCAD::view::gui::add_ConfigScale {w {type {default}}}  {
+    proc rattleCAD::view::gui::add_ConfigScale {w {header {default}}}  {
                 #
-            set     rattleCAD::view::gui::stageFormat    A4
-            set     rattleCAD::view::gui::stageScale     0.20        
+            variable noteBook_top
                 #
+                #
+                # --- get stageScale
+            set currentTab [$noteBook_top select]
+            set cv_Name    [notebook_getVarName $currentTab]
+                # puts "  -- > $cv_Name < --"
+            set rattleCAD::view::gui::stageScale  [format %.2f [$cv_Name  getNodeAttr  Stage    scale ]]
+                # puts "  -- > $rattleCAD::view::gui::stageScale < --"
                 #
             set contentFrame [frame $w.pageScale]
             pack $contentFrame -fill x 
                 #
-            # ttk::separator $contentFrame.seperator
+                # ttk::separator $contentFrame.seperator
                 #
             label       $contentFrame.label     -text "Page Scale:"
                 #
@@ -1402,7 +1369,7 @@
             radiobutton $contentFrame.s050 -text "1:2  "     -value 0.50 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
             radiobutton $contentFrame.s100 -text "1:1  "     -value 1.00 -anchor w     -variable rattleCAD::view::gui::stageScale -command {rattleCAD::view::gui::notebook_formatCanvas}
                 #
-            # grid config $contentFrame.seperator -column 0 -row  1 -sticky "news"
+                # grid config $contentFrame.seperator -column 0 -row  1 -sticky "news"
             grid config $contentFrame.label     -column 0 -row  2 -sticky "w"
             grid config $contentFrame.s020      -column 0 -row  3 -sticky "w"
             grid config $contentFrame.s025      -column 0 -row  4 -sticky "w"
@@ -1413,7 +1380,16 @@
                 #
             set newFont [format {%s bold}  [$contentFrame.label cget -font]]
             $contentFrame.label configure   -font $newFont
-
+                #
+            set rbName [format "%s.s%03i" $contentFrame [expr int(100*$rattleCAD::view::gui::stageScale)]]
+                # puts "  -> $contentFrame "
+                # puts "  -> $rbName "
+            catch {$rbName select}
+                #
+            if {$header == {noHeader}} {
+                grid forget $contentFrame.label
+            }       
+                #
                 #
             return    
                 #          

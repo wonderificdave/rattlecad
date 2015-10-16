@@ -216,9 +216,13 @@ namespace eval rattleCAD::view {
                 }
             } else {
                 puts "       _arrayNameList:  $_arrayNameList"
-                set key     [lindex $_arrayNameList 0]
-                set title   [string trim [rattleCAD::view::get_LabelText $key]]
-                set title   [lindex [split $title] end]
+                if {$_arrayNameList == {}} {
+                    # ... used to return the container only
+                } else {
+                    set key     [lindex $_arrayNameList 0]
+                    set title   [string trim [rattleCAD::view::get_LabelText $key]]
+                    set title   [lindex [split $title] end]
+                }
             }
             puts ""
 
@@ -256,7 +260,7 @@ namespace eval rattleCAD::view {
                 # --- reposition if out of canvas border ---
             fit_EditContainer $cv $cvEdit
                 #
-            return
+            return $cvEdit
                 #
     }
 
