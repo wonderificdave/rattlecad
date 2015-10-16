@@ -663,7 +663,7 @@
 
             set fileName {}
 			switch -glob $compFile {
-                etc:*  {  set fileName  [file join $::APPL_Config(COMPONENT_Dir))           [lindex [split $compFile {:}] 1] ] }
+                etc:*  {  set fileName  [file join $::APPL_Config(COMPONENT_Dir)            [lindex [split $compFile {:}] 1] ] }
                 user:* {  set fileName  [file join $::APPL_Config(USER_Dir)   components    [lindex [split $compFile {:}] 1] ] }
                 default {}
             }

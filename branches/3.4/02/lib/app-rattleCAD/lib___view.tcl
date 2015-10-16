@@ -244,6 +244,9 @@ namespace eval rattleCAD::view {
                 
                 #
                 # ------ 
+            rattleCAD::view::svgEdit::cleanup_svgEdit  
+                #
+                # ------ 
             set cv      [$cv_Name getNodeAttr Canvas path]
                 #
                 # --- cvContentFrame ---
@@ -259,6 +262,9 @@ namespace eval rattleCAD::view {
                 #
                 # --- reposition if out of canvas border ---
             fit_EditContainer $cv $cvEdit
+                #
+                # ------ 
+            rattleCAD::view::svgEdit::update_svgEdit
                 #
             return $cvEdit
                 #
@@ -753,7 +759,7 @@ namespace eval rattleCAD::view {
         puts "                          -> $key <- $currentValue  "
             #
             # --- create listBox content ---
-        set myFrame [frame $cvContentFrame.compFrame]
+        set myFrame [frame $cvContentFrame.compFrame_$index]
             #
             # --- create cvSelect ---
         set cfgWidgets [rattleCAD::view::svgEdit::create_svgEdit \

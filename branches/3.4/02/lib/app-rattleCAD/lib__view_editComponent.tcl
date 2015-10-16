@@ -46,6 +46,22 @@ namespace eval rattleCAD::view::svgEdit {
     variable compID_Current {}
         #
     variable updateCommand  {}
+        #
+    variable dict_svgEdit
+    set dict_svgEdit [dict create   _template \
+                                        [list \
+                                                parentWidget   {} \
+                                                compList       {} \
+                                                compCanvas     {} \
+                                                compID         {} \
+                                                compID_Current {} \
+                                                updateCommand  {} \
+                                        ]
+                                    ]
+                                    
+        #
+    variable id_svgEdit     0
+        #
 }   
 
     #-------------------------------------------------------------------------
@@ -55,6 +71,22 @@ namespace eval rattleCAD::view::svgEdit {
 
             	# -----------------
                 #			
+            variable id_svgEdit
+            variable dict_svgEdit
+                #
+            incr id_svgEdit
+            set  _id    [format "%03s" $id_svgEdit]
+                #
+            # report_Dict
+            # puts "#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#"
+            # puts "======================================================="
+            # appUtil::pdict $dict_svgEdit
+            # puts $id_svgEdit
+            # puts $id
+            # puts "======================================================="
+            # puts "#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#"
+                #
+                #
             variable compList
             variable compCanvas
             variable compID_Current
@@ -100,15 +132,16 @@ namespace eval rattleCAD::view::svgEdit {
             grid columnconfigure $f_select $compList -weight 1
                 #
                 # -----------------
-            if {$compCanvas != {}} {
-                $compCanvas destroy
-            }
+                
+                
+                #####
                 #
                 # -----------------
-            set f_canvas     [ frame     $w.canvasFrame ]
+            set f_canvas    [frame  $w.canvasFrame ]
                 #
-            set compCanvas [canvasCAD::newCanvas \
-                                    cv_Components \
+                #report_CanvaCAD prev_02
+            if {[catch {set compCanvas  [canvasCAD::newCanvas \
+                                    cv_Components_$_id \
                                     $f_canvas.cvCAD \
                                     "_editComp_"  \
                                     120 100  \
@@ -116,7 +149,12 @@ namespace eval rattleCAD::view::svgEdit {
                                     1.0  0  \
                                     -bd 1  \
                                     -bg white  \
-                                    -relief sunken]
+                                    -relief sunken]} fid]} \
+            {
+                puts "   ... could not register $compCanvas"
+                puts "      <E> $fid"
+            }
+                # report_CanvaCAD post
                 #
                 # -----------------
             set key  $xPath
@@ -125,67 +163,174 @@ namespace eval rattleCAD::view::svgEdit {
                 # -----------------
             [namespace current]::fillSelectionList $type $key
                 #
+                #------------------
+            dict set dict_svgEdit  $_id  parentWidget    $parentWidget   
+            dict set dict_svgEdit  $_id  compList        $compList   
+            dict set dict_svgEdit  $_id  compCanvas      $compCanvas   
+            dict set dict_svgEdit  $_id  compID_Current  $compID_Current   
+            dict set dict_svgEdit  $_id  updateCommand   $updateCommand   
+                #
+                #
+            report_Dict
+                #
+                #
                 # -----------------
-            bind $compList <<TreeviewSelect>>       [list [namespace current]::listSelection  %W]        
-            bind $compList <Return>                 [list [namespace current]::commitSelected %W $key]        
-            bind $compList <Double-ButtonPress-1>   [list [namespace current]::commitSelected %W $key]        
+            bind $compList <<TreeviewSelect>>       [list [namespace current]::listSelection  %W $_id ]        
+            bind $compList <Return>                 [list [namespace current]::commitSelected %W $_id $key]        
+            bind $compList <Double-ButtonPress-1>   [list [namespace current]::commitSelected %W $_id $key]        
                 #
             set cv [$compCanvas getNodeAttr Canvas path]
-            bind $cv       <Double-ButtonPress-1>   [list [namespace current]::commitSelected %W $key]        
+            bind $cv       <Double-ButtonPress-1>   [list [namespace current]::commitSelected %W $_id $key]        
                 #
                 # -----------------
-            # update
-            # [namespace current]::selectCurrent
                 #
                 #
             return [list $f_select $f_canvas]
                 #
+    }    
+
+    #-------------------------------------------------------------------------
+       #  update canvas Content
+       #
+    proc rattleCAD::view::svgEdit::update_svgEdit {} {
+                #
+            variable dict_svgEdit
+                #
+            puts "\n"
+            puts "   -------------------------------"
+            puts "    update_svgEdit"
+            puts ""
+                # rattleCAD::view::svgEdit::report_Dict
+                # puts "\n\n"
+                # report_Dict
+                # report_CanvaCAD 
+                #
+            update
+                #
+            foreach key [dict keys $dict_svgEdit] {
+                puts "           -> key $key"
+                set compCanvas      [dict get $dict_svgEdit $key compCanvas]
+                set compID_Current  [dict get $dict_svgEdit $key compID_Current]
+                catch {updateCanvas $compCanvas $compID_Current}
+            }
+                # report_Dict
+                # report_CanvaCAD    
+    }
+
+    #-------------------------------------------------------------------------
+       #  cleanup Content
+       #
+    proc rattleCAD::view::svgEdit::cleanup_svgEdit {} {
+                #
+            variable dict_svgEdit
+                #
+            puts "\n"
+            puts "   -------------------------------"
+            puts "    cleanup_svgEdit"
+            puts ""
+                # rattleCAD::view::svgEdit::report_Dict
+                # puts "\n\n"
+                # report_Dict
+                # report_CanvaCAD
+            foreach key [dict keys $dict_svgEdit] {
+                puts "           -> key $key"
+                set compCanvas [dict get $dict_svgEdit $key compCanvas]
+                if {[catch {$compCanvas destroy} fid]} {
+                    puts "               <E> could not delete $compCanvas"
+                    puts "                   ... $fid"
+                } else {
+                    set dict_svgEdit [dict remove $dict_svgEdit $key]
+                }
+            }
+                # report_Dict
+                # report_CanvaCAD    
+    }
+
+    #-------------------------------------------------------------------------
+        #  debug procedures
+        #
+    proc rattleCAD::view::svgEdit::report_Dict {} {
+            variable dict_svgEdit
+            puts "#\n#\n#\n#\n#"
+            puts "======================================================="
+            appUtil::pdict $dict_svgEdit
+            puts "======================================================="
+            puts "#\n#\n#\n#\n#"
+    }
+    proc rattleCAD::view::svgEdit::report_CanvaCAD {{message {}}} {
+            variable dict_svgEdit
+            set dom_canvasCAD $canvasCAD::__packageRoot
+            puts "==== - report_CanvaCAD - ====== - $message - ========================"
+                # puts "[$dom_canvasCAD asXML]"
+            foreach childNode [$dom_canvasCAD childNodes] {
+                set id_Value {}
+                catch {set id_Value [$childNode getAttribute "id"]}
+                puts "      -> < [$childNode nodeName] $id_Value >"
+                #puts "      -> < [$childNode nodeName] ... [$childNode getAttribute "id"] >"
+            }
+            puts "======================================================="
     }
 
     #-------------------------------------------------------------------------
         #  listSelection
         #
-    proc rattleCAD::view::svgEdit::listSelection {args} {
-            #
-        variable compList    
-        variable compID    
-            #
-        set node [$compList focus]
-            #
-        set compID      [$compList set $node keyString]
-        set compKey     [$compList set $node key]
-        set compValue   [$compList set $node value]
-            #
-        # puts "   ... 1 - $compID"
-        # puts "   ... 2 - $compKey"
-        # puts "   ... 3 - $compValue"
-            #
-        if {[catch {[namespace current]::updateCanvas $compID} fid]} {
-            puts "   ... could not open file $compID"
-        }
-            #
-        # puts "   ... tried to open file $compID"
-            #
+    proc rattleCAD::view::svgEdit::listSelection {w _id args} {
+                #
+            variable dict_svgEdit
+            #variable compList    
+            variable compID    
+                #
+            # report_Dict
+                #
+            puts "  --> $_id"
+            puts "  --> $args"
+                #
+            set compList    [dict get $dict_svgEdit $_id compList]
+            set compCanvas  [dict get $dict_svgEdit $_id compCanvas]
+            puts " -> \$compList   $compList"
+            puts " -> \$compCanvas $compCanvas"
+                #
+                #
+            set node [$compList focus]
+                #
+            set compID      [$compList set $node keyString]
+            set compKey     [$compList set $node key]
+            set compValue   [$compList set $node value]
+                #
+            dict set dict_svgEdit $_id compID_Current $compID 
+                #
+            # puts "   ... 1 - $compID"
+            # puts "   ... 2 - $compKey"
+            # puts "   ... 3 - $compValue"
+                #
+            if {[catch {[namespace current]::updateCanvas $compCanvas $compID} fid]} {
+                puts "   ... could not open file $compID"
+                puts "      <E> $fid"
+            }
+                #
+            # puts "   ... tried to open file $compID"
+                #
     }
 
     #-------------------------------------------------------------------------
         #  updateCanvas
         #
-    proc rattleCAD::view::svgEdit::updateCanvas {{compFile {}}} {
+    proc rattleCAD::view::svgEdit::updateCanvas {compCanvas compID} {
                 #
-            variable compCanvas
+            #variable compCanvas
                 #
             puts ""
             puts "   -------------------------------"
             puts "    updateCanvas"
-            puts "       compFile:       $compFile"
+            puts "       compCanvas:       $compCanvas"
+            puts "       compID:           $compID"
             puts "           $::APPL_Config(COMPONENT_Dir)"
             puts "           $::APPL_Config(USER_Dir)"
 
             set fileName {}
-            switch -glob $compFile {
-                etc:*  {  set fileName  [file join $::APPL_Config(COMPONENT_Dir)            [lindex [split $compFile {:}] 1] ] }
-                user:* {  set fileName  [file join $::APPL_Config(USER_Dir)   components    [lindex [split $compFile {:}] 1] ] }
+            switch -glob $compID {
+                etc:*  {  set fileName  [file join $::APPL_Config(COMPONENT_Dir)            [lindex [split $compID {:}] 1] ] }
+                user:* {  set fileName  [file join $::APPL_Config(USER_Dir)   components    [lindex [split $compID {:}] 1] ] }
                 default {}
             }
                 #
@@ -195,8 +340,9 @@ namespace eval rattleCAD::view::svgEdit {
                     #
                 $compCanvas clean_StageContent
                 set __my_Component__        [ $compCanvas readSVG $fileName {0 0} 0  __Decoration__ ]
-                $compCanvas fit2Stage $__my_Component__
+                puts "  --> $__my_Component__"
                 $compCanvas refitStage
+                $compCanvas fit2Stage $__my_Component__
                     #
                 puts "           ... canvas updated!"
             } else {
@@ -208,91 +354,44 @@ namespace eval rattleCAD::view::svgEdit {
     #-------------------------------------------------------------------------
         #  commitSelected
         #
-    proc rattleCAD::view::svgEdit::commitSelected {w key args} {
-            #
-        variable compID
-        variable compID_Current
-            #
-        variable parentWidget
-        variable updateCommand
-            #
-        puts "\n       ... rattleCAD::view::svgEdit::commitSelected"
-        puts "\n             ... $w $key $args"
-        puts "\n"
-            #
-        if {$compID != {}} {
-                # puts "\n         ... $compID\n"
-                # puts "    ... \$key $key"
+    proc rattleCAD::view::svgEdit::commitSelected {w _id key args} {
                 #
-            rattleCAD::control::setValue [list $key $compID]
+            variable dict_svgEdit
                 #
-            if {$updateCommand != {}} {
-                {*}${updateCommand}
-            }
+            # variable compID
+            # variable compID_Current
                 #
-            return $compID
+            variable parentWidget
+            variable updateCommand
                 #
-        } else {
+            puts "\n       ... rattleCAD::view::svgEdit::commitSelected"
+            puts "\n             ... $w $_id $key $args"
+            puts "\n"
                 #
-            puts "\n         ... $compID_Current\n"
+            set compID_Current  [dict get $dict_svgEdit $_id compID_Current]
+                # puts " -> \$compID_Current $compID_Current"
                 #
-            return $compID_Current
-                #
-        }
-            #
-    }
-
-    #-------------------------------------------------------------------------
-        #  selectCurrent
-        #
-    proc rattleCAD::view::svgEdit::selectCurrent {} {
-            #
-        variable compID_Current
-        variable compList
-            #
-            # puts "\n   ... selectCurrent: $compID_Current\n"
-            #
-        foreach {key value} [split $compID_Current :] break
-        set checkString [format "%s:%s" $key [file tail $value]]
-        #set checkString $compID_Current
-            #
-        puts "\n   ... selectCurrent: $checkString\n"
-            #
-            #
-        set children [$compList children {}]
-            #
-        foreach node $children {  
-                puts "  ... $node"
-            set compID  [$compList set $node keyString]
-            set key     [$compList set $node key]
-            set value   [$compList set $node value]
-                # puts "           ... $compID"
-                # puts "           ... $key"
-                # puts "           ... $value"
-            set nodeString [format "%s:%s" $key $value]
-                # puts "           ... >$nodeString<"
-            if {[string equal $checkString $nodeString]} {
+            if {$compID_Current != {}} {
+                    # puts "\n         ... $compID_Current\n"
+                    # puts "    ... \$key $key"
                     #
-                    # puts ""
-                    # puts "           -> ... $checkString"
-                    puts "           -> ... $nodeString"
-                $compList selection set $node
-                focus $compList
-                    puts "           -> ... $compID"
+                rattleCAD::control::setValue [list $key $compID_Current]
                     #
-                if {[catch {[namespace current]::updateCanvas $compID} fid]} {
-                    puts "   ... could not open file $compID"
-                }                
+                if {$updateCommand != {}} {
+                    {*}${updateCommand}
+                }
+                    #
+                return $compID_Current
+                    #
             } else {
-                    # puts ""
-                    # puts "              ... $checkString"
-                    # puts "              ... $nodeString"
+                    #
+                puts "\n         ... $compID_Current\n"
+                    #
+                return $compID_Current
+                    #
             }
-        }
-            #
-        return
-            #
-    } 
+                #
+    }
 
     #-------------------------------------------------------------------------
         #  fillSelectionList
@@ -327,3 +426,26 @@ namespace eval rattleCAD::view::svgEdit {
         }
     }
 
+
+    proc rattleCAD::view::svgEdit::listSelection_old {args} {
+            #
+        variable compList    
+        variable compID    
+            #
+        set node [$compList focus]
+            #
+        set compID      [$compList set $node keyString]
+        set compKey     [$compList set $node key]
+        set compValue   [$compList set $node value]
+            #
+        # puts "   ... 1 - $compID"
+        # puts "   ... 2 - $compKey"
+        # puts "   ... 3 - $compValue"
+            #
+        if {[catch {[namespace current]::updateCanvas $compID} fid]} {
+            puts "   ... could not open file $compID"
+        }
+            #
+        # puts "   ... tried to open file $compID"
+            #
+    }
