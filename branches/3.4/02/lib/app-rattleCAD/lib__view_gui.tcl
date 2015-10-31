@@ -264,6 +264,12 @@
             rattleCAD::view::setTooltip    $tb_frame.donate    "donate to rattleCAD"    
                 #
                 
+                #
+                # ---------------------------------------------
+                # bind doubleclick
+                # 
+            bind $tb_frame.resize  <Double-1>                  {rattleCAD::view::gui::toggle_Fullscreen}               
+                
     }
 
 
@@ -392,7 +398,7 @@
         #
     proc rattleCAD::view::gui::exit_rattleCAD {{type {yesnocancel}} {exitMode {}}} {   
                 
-              set changeIndex [rattleCAD::control::changeList::get_changeIndex]
+            set changeIndex [rattleCAD::control::changeList::get_changeIndex]
                 
                 puts "\n"
                 puts "  ====== e x i t   r a t t l e C A D =============="
@@ -459,6 +465,42 @@
 
     #-------------------------------------------------------------------------
         #  exit application   
+        #
+    proc rattleCAD::view::gui::toggle_Fullscreen {} {   
+                
+            set changeIndex [rattleCAD::control::changeList::get_changeIndex]
+                
+            puts "\n"
+            puts "  ====== fullscreen   r a t t l e C A D ==========="
+            puts ""
+
+                # puts "     ... wm maxsize: [wm maxsize .]"
+            update
+                # set x [winfo screenwidth  .]
+                # set y [winfo screenheight .]
+                # puts "     ... $x / $y"
+            
+            set currentState [wm attribute . -fullscreen]
+            puts "     ... \$currentState: $currentState"
+                #
+            if {$currentState == 0} {
+                wm attribute . -fullscreen 1
+            } else {
+                wm attribute . -fullscreen 0
+            }
+                #
+            puts "\n"
+            rattleCAD::view::gui::notebook_refitCanvas
+                #
+            puts "\n"
+                #
+            return
+                #
+    }
+
+
+    #-------------------------------------------------------------------------
+        #  show Console   
         #
     proc rattleCAD::view::gui::show_Console {} {   
         if {[catch { console show } eID]} {
@@ -653,6 +695,9 @@
     proc rattleCAD::view::gui::notebook_refitCanvas {} {
             variable noteBook_top
 
+                #
+            update
+                #
             set currentTab [$noteBook_top select]
             set varName    [notebook_getVarName $currentTab]
                 puts "       ... notebook_refitCanvas: \$varName $varName"

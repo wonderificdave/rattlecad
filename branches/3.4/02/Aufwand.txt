@@ -574,6 +574,7 @@
 
 2015.08.19                   50:00   3.4.02 ... 64 ... bikeGeometry 1.57   ... different changes
 2015.08.20                   10:00   3.4.02 ... 65 ... bikeGeometry 1.58   ... add lib_paramComponent.tcl
+2015.10.31                  100:00   3.4.02 ... 73 ... a lot
 
 
 
