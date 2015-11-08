@@ -1,5 +1,20 @@
 
 
+3.4.02.74  - 2015.11.08
+-------------------------------------------------------------------------------
+    refactor:
+        ... remove EXIT button per default
+            ... but appear at FullScreen-Mode
+        ... add variable
+            rattleCAD::view::gui::toggleFullScreenWidgets
+
+
+3.4.02.73  - 2015.10.29
+-------------------------------------------------------------------------------
+    feature:
+        ... toggle fullscreen mode by <doubleclick> on resize button
+
+
 3.4.02.73  - 2015.10.29
 -------------------------------------------------------------------------------
     feature:
